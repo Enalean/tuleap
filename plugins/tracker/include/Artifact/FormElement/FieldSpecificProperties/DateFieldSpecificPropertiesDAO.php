@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class DateFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties
+final class DateFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
@@ -50,5 +50,30 @@ final class DateFieldSpecificPropertiesDAO extends DataAccessObject implements D
                 WHERE field_id = ? ';
 
         return $this->getDB()->row($sql, $field_id);
+    }
+
+    public function saveSpecificProperties(int $field_id, array $row): void
+    {
+        $default_value = 'NULL';
+        if (isset($row['default_value'])) {
+            if (is_numeric($row['default_value'])) {
+                $default_value = $row['default_value'];
+            } else {
+                $default_value = strtotime($row['default_value']);
+            }
+        }
+
+        if (isset($row['default_value_type'])) {
+            $default_value_type = $row['default_value_type'];
+        } else {
+            $default_value_type = isset($row['default_value']) ? 1 : 0;
+        }
+
+        $display_time = (int) (isset($row['display_time']) && $row['display_time']);
+
+        $sql = 'REPLACE INTO tracker_field_date (field_id, default_value, default_value_type, display_time)
+                VALUES (?, ?, ?, ?)';
+
+        $this->getDB()->run($sql, $field_id, $default_value, $default_value_type, $display_time);
     }
 }

@@ -23,7 +23,6 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\IntegerFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
-use Tuleap\Tracker\FormElement\Field\Integer\IntegerFieldDao;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
@@ -132,11 +131,6 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new IntegerValueDao();
     }
 
-    protected function getDao()
-    {
-        return new IntegerFieldDao();
-    }
-
     protected function getDuplicateSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
     {
         return new IntegerFieldSpecificPropertiesDAO();
@@ -148,6 +142,11 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
     }
 
     protected function getSearchSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
+    {
+        return new IntegerFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSaveSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
     {
         return new IntegerFieldSpecificPropertiesDAO();
     }

@@ -21,7 +21,6 @@
 
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\RichTextFieldSpecificPropertiesDAO;
-use Tuleap\Tracker\FormElement\Field\StaticField\RichText\RichTextFieldDao;
 
 class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -48,11 +47,6 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         }
     }
 
-    protected function getDao()
-    {
-        return new RichTextFieldDao();
-    }
-
     protected function getDuplicateSpecificPropertiesDao(): ?RichTextFieldSpecificPropertiesDAO
     {
         return new RichTextFieldSpecificPropertiesDAO();
@@ -64,6 +58,11 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     }
 
     protected function getSearchSpecificPropertiesDao(): RichTextFieldSpecificPropertiesDAO
+    {
+        return new RichTextFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSaveSpecificPropertiesDao(): RichTextFieldSpecificPropertiesDAO
     {
         return new RichTextFieldSpecificPropertiesDAO();
     }

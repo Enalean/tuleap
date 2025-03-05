@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties
+final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
@@ -48,5 +48,24 @@ final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements D
                 WHERE field_id = ? ';
 
         return $this->getDB()->row($sql, $field_id);
+    }
+
+    public function saveSpecificProperties(int $field_id, array $row): void
+    {
+        $rows = 10;
+        if (isset($row['rows']) && (int) $row['rows']) {
+            $rows = $row['rows'];
+        }
+
+        $cols = 50;
+        if (isset($row['cols']) && (int) $row['cols']) {
+            $cols = $row['cols'];
+        }
+
+        $default_value = $row['default_value'] ?? '';
+
+        $sql = 'REPLACE INTO tracker_field_text (field_id, `rows`, cols, default_value)
+                VALUES (?, ?, ?, ?)';
+        $this->getDB()->run($sql, $field_id, $rows, $cols, $default_value);
     }
 }

@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private ComputedFieldSpecificPropertiesDAO $dao;
     private int $computed_field_id;
-    private ComputedFieldDao $old_dao;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -43,11 +41,10 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new ComputedFieldSpecificPropertiesDAO();
-        $this->old_dao = new ComputedFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new ComputedFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -62,7 +59,7 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
         self::assertEquals(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
 
-        $this->old_dao->save($this->computed_field_id, []);
+        $this->dao->saveSpecificProperties($this->computed_field_id, []);
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
         self::assertEquals(['field_id' => $this->computed_field_id, 'target_field_name' => '', 'default_value' => 0.0], $properties);
 
@@ -77,7 +74,7 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
         self::assertEquals(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
 
-        $this->old_dao->save($this->computed_field_id, ['target_field_name' => 'target_name', 'default_value' => 22]);
+        $this->dao->saveSpecificProperties($this->computed_field_id, ['target_field_name' => 'target_name', 'default_value' => 22]);
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
         self::assertEquals(['field_id' => $this->computed_field_id, 'target_field_name' => 'target_name', 'default_value' => 22.0], $properties);
 

@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class FloatFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private FloatFieldSpecificPropertiesDAO $dao;
     private int $float_field_id;
-    private FloatFieldDao $old_dao;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -43,11 +41,10 @@ final class FloatFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new FloatFieldSpecificPropertiesDAO();
-        $this->old_dao = new FloatFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new FloatFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -62,7 +59,7 @@ final class FloatFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->float_field_id);
         self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
 
-        $this->old_dao->save($this->float_field_id, []);
+        $this->dao->saveSpecificProperties($this->float_field_id, []);
         $properties = $this->dao->searchByFieldId($this->float_field_id);
         self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 30, 'default_value' => null], $properties);
 
@@ -77,7 +74,7 @@ final class FloatFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->float_field_id);
         self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
 
-        $this->old_dao->save($this->float_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45.01']);
+        $this->dao->saveSpecificProperties($this->float_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45.01']);
         $properties = $this->dao->searchByFieldId($this->float_field_id);
         self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45.01], $properties);
 

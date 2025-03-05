@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
 
-final class ListFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties
+class ListFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
@@ -52,5 +52,12 @@ final class ListFieldSpecificPropertiesDAO extends DataAccessObject implements D
 
         $bind_type = $this->getDB()->cell($sql, $field_id);
         return ($bind_type === false) ? Option::nothing(\Psl\Type\string()) : Option::fromValue($bind_type);
+    }
+
+    public function saveBindForFieldId(int $field_id, string $bind_type): void
+    {
+        $sql = 'REPLACE INTO tracker_field_list (field_id, bind_type)
+                VALUES (?, ?)';
+        $this->getDB()->run($sql, $field_id, $bind_type);
     }
 }

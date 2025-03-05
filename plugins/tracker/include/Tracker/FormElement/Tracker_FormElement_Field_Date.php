@@ -24,8 +24,8 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
-use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Criteria\CriteriaDateValueDAO;
@@ -251,16 +251,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $value;
     }
 
-    /**
-     * Return the Field_Date_Dao
-     *
-     * @return DateFieldDao The dao
-     */
-    protected function getDao()
-    {
-        return new DateFieldDao();
-    }
-
     protected function getDuplicateSpecificPropertiesDao(): ?DateFieldSpecificPropertiesDAO
     {
         return new DateFieldSpecificPropertiesDAO();
@@ -272,6 +262,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     }
 
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
+    {
+        return new DateFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new DateFieldSpecificPropertiesDAO();
     }

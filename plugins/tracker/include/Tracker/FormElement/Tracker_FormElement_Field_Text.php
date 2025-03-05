@@ -31,12 +31,12 @@ use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
+use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\TextFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
@@ -220,11 +220,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return new TextValueDao();
     }
 
-    protected function getDao()
-    {
-        return new TextFieldDao();
-    }
-
     protected function getDuplicateSpecificPropertiesDao(): DuplicateSpecificProperties
     {
         return new TextFieldSpecificPropertiesDAO();
@@ -236,6 +231,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     }
 
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
+    {
+        return new TextFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new TextFieldSpecificPropertiesDAO();
     }

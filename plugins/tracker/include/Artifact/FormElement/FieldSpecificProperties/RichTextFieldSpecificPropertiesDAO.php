@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties
+final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
@@ -50,5 +50,16 @@ final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implemen
                 WHERE field_id = ? ';
 
         return $this->getDB()->row($sql, $field_id);
+    }
+
+    public function saveSpecificProperties(int $field_id, array $row): void
+    {
+        if (! isset($row['static_value'])) {
+            return;
+        }
+
+        $sql = 'REPLACE INTO tracker_staticfield_richtext (field_id, static_value)
+                VALUES (?, ?)';
+        $this->getDB()->run($sql, $field_id, $row['static_value']);
     }
 }

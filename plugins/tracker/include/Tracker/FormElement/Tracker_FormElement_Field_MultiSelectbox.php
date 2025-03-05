@@ -23,7 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\MultiSelectboxFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
-use Tuleap\Tracker\FormElement\Field\ListFields\MultiSelectboxFieldDao;
 
 class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -45,14 +44,14 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }
 
+    protected function getSaveSpecificPropertiesDao(): \Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties
+    {
+        return new MultiSelectboxFieldSpecificPropertiesDAO();
+    }
+
     public function isMultiple(): bool
     {
         return true;
-    }
-
-    protected function getDao()
-    {
-        return new MultiSelectboxFieldDao();
     }
 
     protected function getMaxSize()

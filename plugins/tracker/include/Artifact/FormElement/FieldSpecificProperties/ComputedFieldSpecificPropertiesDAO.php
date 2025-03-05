@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class ComputedFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties
+final class ComputedFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
@@ -40,7 +40,7 @@ final class ComputedFieldSpecificPropertiesDAO extends DataAccessObject implemen
     }
 
     /**
-     * @return array{field_id: int, target_field_name: string, default_value: int}
+     * @return array{field_id: int, target_field_name: string, default_value: int | null}
      */
     public function searchByFieldId(int $field_id): ?array
     {
@@ -49,5 +49,16 @@ final class ComputedFieldSpecificPropertiesDAO extends DataAccessObject implemen
                 WHERE field_id = ? ';
 
         return $this->getDB()->row($sql, $field_id);
+    }
+
+    public function saveSpecificProperties(int $field_id, array $row): void
+    {
+        $target_field_name = $row['target_field_name'] ?? '';
+        $default_value     = $row['default_value'] !== '' ? $row['default_value'] : null;
+
+        $sql = 'REPLACE INTO tracker_field_computed (field_id, default_value, target_field_name)
+            VALUES (?, ?, ?)';
+
+        $this->getDB()->run($sql, $field_id, $default_value, $target_field_name);
     }
 }

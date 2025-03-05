@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\ListFields\MultiSelectboxFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private MultiSelectboxFieldSpecificPropertiesDAO $dao;
     private int $list_field_id;
-    private MultiSelectboxFieldDao $old_dao;
 
     protected function setUp(): void
     {
@@ -42,11 +40,10 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new MultiSelectboxFieldSpecificPropertiesDAO();
-        $this->old_dao = new MultiSelectboxFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new MultiSelectboxFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -60,7 +57,7 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
         $properties = $this->dao->searchByFieldId($this->list_field_id);
         self::assertNull($properties);
 
-        $this->old_dao->save($this->list_field_id, []);
+        $this->dao->saveSpecificProperties($this->list_field_id, []);
         $properties = $this->dao->searchByFieldId($this->list_field_id);
 
         self::assertEquals(['field_id' => $this->list_field_id, 'size' => 7], $properties);
@@ -76,7 +73,7 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
         $properties = $this->dao->searchByFieldId($this->list_field_id);
         self::assertNull($properties);
 
-        $this->old_dao->save($this->list_field_id, ['size' => 12]);
+        $this->dao->saveSpecificProperties($this->list_field_id, ['size' => 12]);
         $properties = $this->dao->searchByFieldId($this->list_field_id);
         self::assertEquals(['field_id' => $this->list_field_id, 'size' => 12], $properties);
     }

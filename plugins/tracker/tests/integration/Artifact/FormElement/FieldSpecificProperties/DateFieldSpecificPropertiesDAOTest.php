@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class DateFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private DateFieldSpecificPropertiesDAO $dao;
     private int $date_field_id;
-    private DateFieldDao $old_dao;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -43,11 +41,10 @@ final class DateFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new DateFieldSpecificPropertiesDAO();
-        $this->old_dao = new DateFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new DateFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -62,7 +59,7 @@ final class DateFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->date_field_id);
         self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => null, 'display_time' => 1], $properties);
 
-        $this->old_dao->save($this->date_field_id, []);
+        $this->dao->saveSpecificProperties($this->date_field_id, []);
         $properties = $this->dao->searchByFieldId($this->date_field_id);
         self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => 0, 'display_time' => 0], $properties);
 
@@ -77,7 +74,7 @@ final class DateFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $properties = $this->dao->searchByFieldId($this->date_field_id);
         self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => null, 'display_time' => 1], $properties);
 
-        $this->old_dao->save($this->date_field_id, ['default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0]);
+        $this->dao->saveSpecificProperties($this->date_field_id, ['default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0]);
         $properties = $this->dao->searchByFieldId($this->date_field_id);
         self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0], $properties);
 

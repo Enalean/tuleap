@@ -27,14 +27,12 @@ use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\FormElement\Field\StaticField\RichText\RichTextFieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private RichTextFieldSpecificPropertiesDAO $dao;
     private int $rich_text_field_id;
-    private RichTextFieldDao $old_dao;
 
     protected function setUp(): void
     {
@@ -42,11 +40,10 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao     = new RichTextFieldSpecificPropertiesDAO();
-        $this->old_dao = new RichTextFieldDao();
-        $project       = $core_builder->buildProject('project_name');
-        $project_id    = (int) $project->getID();
-        $user          = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $this->dao  = new RichTextFieldSpecificPropertiesDAO();
+        $project    = $core_builder->buildProject('project_name');
+        $project_id = (int) $project->getID();
+        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
 
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
@@ -60,7 +57,7 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
         self::assertNull($properties);
 
-        $this->old_dao->save($this->rich_text_field_id, []);
+        $this->dao->saveSpecificProperties($this->rich_text_field_id, []);
         $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
 
         self::assertNull($properties);
@@ -71,7 +68,7 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
         self::assertNull($properties);
 
-        $this->old_dao->save($this->rich_text_field_id, ['static_value' => 'My value']);
+        $this->dao->saveSpecificProperties($this->rich_text_field_id, ['static_value' => 'My value']);
         $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
         self::assertEquals(['field_id' => $this->rich_text_field_id, 'static_value' => 'My value'], $properties);
 
