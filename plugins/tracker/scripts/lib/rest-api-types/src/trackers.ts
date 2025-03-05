@@ -18,7 +18,6 @@
  */
 
 import type {
-    ArtifactLinkFieldIdentifier,
     CheckBoxFieldIdentifier,
     ColorName,
     ColumnIdentifier,
@@ -39,10 +38,12 @@ import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type { UserGroupRepresentation } from "./artifacts";
 import type { OpenListFieldStructure } from "./open-list-field";
 import type { ListFieldStructure } from "./list-field";
+import type { ArtifactLinkFieldStructure } from "./link-field";
 
 export * from "./open-list-field";
 export * from "./list-field";
 export * from "./file-field";
+export * from "./link-field";
 
 export type PermissionsArray = readonly [ReadPermission, CreatePermission?, UpdatePermission?];
 
@@ -94,19 +95,6 @@ export interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure 
         readonly is_used_by_default: boolean;
         readonly ugroup_representations: ReadonlyArray<UserGroupRepresentation>;
     };
-}
-
-export interface AllowedLinkTypeRepresentation {
-    readonly shortname: string;
-    readonly forward_label: string;
-    readonly reverse_label: string;
-}
-
-export interface ArtifactLinkFieldStructure extends BaseFieldStructure {
-    readonly type: ArtifactLinkFieldIdentifier;
-    readonly label: string;
-    readonly allowed_types: ReadonlyArray<AllowedLinkTypeRepresentation>;
-    readonly permissions: PermissionsArray;
 }
 
 export type StructureFields =
@@ -186,14 +174,14 @@ export interface TrackerReference extends MinimalTrackerResponse {
     readonly project: TrackerProjectRepresentation;
 }
 
+export type TrackerWithProjectAndColor = TrackerResponseWithProject & TrackerResponseWithColor;
+
 /**
  * Do not use this type directly as it contains way too many things.
  * Instead, create your own type with Pick:
  * `type Subset = Pick<TrackerResponseNoInstance, "id" | "label" | "fields">;`
  */
-export interface TrackerResponseNoInstance
-    extends TrackerResponseWithColor,
-        TrackerResponseWithProject {
+export interface TrackerResponseNoInstance extends TrackerWithProjectAndColor {
     readonly _pick_what_you_need: never;
     readonly item_name: string;
     readonly fields: ReadonlyArray<StructureFields>;
@@ -202,9 +190,4 @@ export interface TrackerResponseNoInstance
     readonly workflow: WorkflowRepresentation;
     readonly notifications: NotificationsRepresentation;
     readonly parent: TrackerReference | null;
-}
-
-export interface TrackerUsedArtifactLinkResponse {
-    readonly shortname: string;
-    readonly forward_label: string;
 }

@@ -26,11 +26,11 @@ import { mergeConfig } from "vite";
 const config: StorybookConfig = {
     framework: "@storybook/web-components-vite",
     stories: ["../stories/**/*.mdx", "../stories/**/*.stories.ts"],
+    staticDirs: ["../public"],
     addons: [
         "@storybook/addon-essentials",
         "@storybook/addon-interactions",
         "@storybook/addon-links",
-        "@storybook/addon-themes",
     ],
     features: {
         backgroundsStoryGlobals: true,

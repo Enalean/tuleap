@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import { FORWARD_DIRECTION, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
 import type { HostElement } from "./LinkTypeSelectorElement";
 import { renderLinkTypeSelectorElement } from "./LinkTypeSelectorElement";
@@ -27,7 +27,7 @@ import { setTranslator } from "../../gettext-catalog";
 import { ArtifactCrossReferenceStub } from "../../../tests/stubs/ArtifactCrossReferenceStub";
 import type { ArtifactCrossReference } from "../../domain/ArtifactCrossReference";
 import { LinkTypeStub } from "../../../tests/stubs/links/LinkTypeStub";
-import { FORWARD_DIRECTION, LinkType } from "../../domain/links/LinkType";
+import { LinkType } from "../../domain/links/LinkType";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { LinkTypesCollectionStub } from "../../../tests/stubs/links/LinkTypesCollectionStub";
 

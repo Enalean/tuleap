@@ -30,6 +30,6 @@ export type ArtifactWithStatus = Pick<
     "id" | "xref" | "title" | "html_url" | "is_open" | "full_status"
 > & {
     readonly tracker: Pick<TrackerResponseWithColor, "color_name"> & {
-        readonly project: Pick<TrackerProject, "id" | "label" | "icon">;
+        readonly project: TrackerProject;
     };
 };

@@ -22,6 +22,7 @@ import type { Meta, StoryObj } from "@storybook/web-components";
 import { fn } from "@storybook/test";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
+import { mswDecorator } from "msw-storybook-addon";
 import {
     CurrentArtifactIdentifier,
     CurrentProjectIdentifier,
@@ -42,6 +43,7 @@ import {
 import { en_US_LOCALE } from "@tuleap/core-constants";
 import { Option } from "@tuleap/option";
 import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
+import { RequestHandlersBuilder } from "./RequestHandlersBuilder";
 
 type LinkTypes = "Parent / Child" | "Covers" | "Custom Type";
 const LinkTypesOptions: LinkTypes[] = ["Parent / Child", "Covers", "Custom Type"];
@@ -79,9 +81,18 @@ function getAllowedLinkTypes(args: LinkFieldProps): ReadonlyArray<AllowedLinkTyp
     });
 }
 
+const CURRENT_TRACKER_SHORTNAME = "story";
+const CURRENT_ARTIFACT_ID = 647;
+const CURRENT_PROJECT_ID = 125;
+const handlers_builder = RequestHandlersBuilder(
+    CURRENT_PROJECT_ID,
+    CURRENT_ARTIFACT_ID,
+    CURRENT_TRACKER_SHORTNAME,
+);
+
 function renderLinkField(args: LinkFieldProps): TemplateResult {
     const current_artifact: Option<CurrentArtifactIdentifier> = args.is_editing_existing
-        ? Option.fromValue(CurrentArtifactIdentifier.fromId(647))
+        ? Option.fromValue(CurrentArtifactIdentifier.fromId(CURRENT_ARTIFACT_ID))
         : Option.nothing();
     const parent_artifact: Option<ParentArtifactIdentifier> = args.will_have_parent_artifact
         ? Option.fromValue(ParentArtifactIdentifier.fromId(731))
@@ -98,10 +109,10 @@ function renderLinkField(args: LinkFieldProps): TemplateResult {
         current_artifact,
         ArtifactCrossReference.fromCurrentArtifact(
             current_artifact,
-            TrackerShortname.fromString("story"),
+            TrackerShortname.fromString(CURRENT_TRACKER_SHORTNAME),
             "plum-crazy",
         ),
-        CurrentProjectIdentifier.fromId(200),
+        CurrentProjectIdentifier.fromId(CURRENT_PROJECT_ID),
         CurrentTrackerIdentifier.fromId(36),
         parent_artifact,
         parent_tracker,
@@ -128,9 +139,8 @@ const meta: Meta<LinkFieldProps> = {
     title: "Tracker/Fields/Link Field",
     render: renderLinkField,
     parameters: {
-        controls: {
-            exclude: ["onChange"],
-        },
+        controls: { exclude: ["onChange"] },
+        msw: { handlers: [...handlers_builder.build()] },
     },
     args: {
         label: "Links",
@@ -166,7 +176,10 @@ const meta: Meta<LinkFieldProps> = {
             options: LinkTypesOptions,
         },
     },
-    decorators: [(story): TemplateResult => html`<div class="link-field-wrapper">${story()}</div>`],
+    decorators: [
+        mswDecorator,
+        (story): TemplateResult => html`<div class="link-field-wrapper">${story()}</div>`,
+    ],
 };
 export default meta;
 type Story = StoryObj<LinkFieldProps>;

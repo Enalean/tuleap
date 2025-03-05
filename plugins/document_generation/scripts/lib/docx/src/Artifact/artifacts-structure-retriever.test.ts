@@ -26,7 +26,7 @@ import type {
     TrackerStructure,
 } from "../type";
 import { retrieveArtifactsStructure } from "./artifacts-structure-retriever";
-import type { TrackerResponseWithColor } from "@tuleap/plugin-tracker-rest-api-types";
+import type { TrackerWithProjectAndColor } from "@tuleap/plugin-tracker-rest-api-types";
 
 describe("retrieveArtifactsStructure", () => {
     it("retrieves full artifacts structure", async () => {
@@ -35,7 +35,7 @@ describe("retrieveArtifactsStructure", () => {
                 id: 74,
                 title: null,
                 xref: "bug #74",
-                tracker: { id: 102 } as TrackerResponseWithColor,
+                tracker: { id: 102 } as TrackerWithProjectAndColor,
                 html_url: "/plugins/tracker/?aid=74",
                 status: "irrelevant",
                 is_open: true,
@@ -200,7 +200,7 @@ describe("retrieveArtifactsStructure", () => {
                     {
                         id: 359,
                         xref: "bug #359",
-                        tracker: { id: 102 } as TrackerResponseWithColor,
+                        tracker: { id: 102 } as TrackerWithProjectAndColor,
                         html_url: "/plugins/tracker/?aid=359",
                         title: "Linked artifact",
                         status: "irrelevant",
@@ -213,7 +213,7 @@ describe("retrieveArtifactsStructure", () => {
                     {
                         id: 3,
                         xref: "bug #3",
-                        tracker: { id: 102 } as TrackerResponseWithColor,
+                        tracker: { id: 102 } as TrackerWithProjectAndColor,
                         html_url: "/plugins/tracker/?aid=3",
                         title: "Reverse linked artifact",
                         status: "irrelevant",
