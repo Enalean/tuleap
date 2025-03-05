@@ -30,6 +30,7 @@ use UserManager;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ColumnsGetter $columns_getter;

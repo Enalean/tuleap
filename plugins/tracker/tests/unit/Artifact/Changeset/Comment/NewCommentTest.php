@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SUBMISSION_TIMESTAMP = 1680808942;

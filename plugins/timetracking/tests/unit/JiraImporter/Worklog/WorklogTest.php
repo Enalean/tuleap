@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAWorklogObjectFromAPIResponse(): void

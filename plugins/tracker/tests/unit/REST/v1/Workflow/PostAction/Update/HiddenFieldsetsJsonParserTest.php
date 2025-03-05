@@ -26,6 +26,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

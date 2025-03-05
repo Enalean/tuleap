@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestonesInSidebarDaoTest extends TestIntegrationTestCase
 {
     private MilestonesInSidebarDao $dao;

@@ -21,6 +21,7 @@
 /**
  * @group ArtifactsChangesets
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private $artifact_resource;

@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 require_once __DIR__ . '/../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WikiAttachmentTest extends TestCase
 {
     use TemporaryTestDirectory;

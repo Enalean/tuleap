@@ -27,6 +27,7 @@ use Tuleap\Reference\Metadata\CreatedByPresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferencePresenterTest extends TestCase
 {
     public function testWithTitle(): void

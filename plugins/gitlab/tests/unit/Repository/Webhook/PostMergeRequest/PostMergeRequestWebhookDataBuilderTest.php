@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TestLogger $logger;

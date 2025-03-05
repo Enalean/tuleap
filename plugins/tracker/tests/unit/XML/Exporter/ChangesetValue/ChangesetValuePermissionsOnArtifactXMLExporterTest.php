@@ -25,6 +25,7 @@ use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 use Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $exporter;

@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
 use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
 use Tuleap\Tracker\XML\XMLTracker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraXMLNodeBuilderTest extends TestCase
 {
     public function testItAppendsTrackerNode(): void

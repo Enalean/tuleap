@@ -84,6 +84,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsSt
 use Tuleap\User\UserGroup\NameTranslator;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldResultBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;

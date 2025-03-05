@@ -29,6 +29,7 @@ use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotExportAnything(): void

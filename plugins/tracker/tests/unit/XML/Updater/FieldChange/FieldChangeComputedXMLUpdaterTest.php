@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\XML\Updater\FieldChange;
 use Tracker_FormElement_Field_Computed;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

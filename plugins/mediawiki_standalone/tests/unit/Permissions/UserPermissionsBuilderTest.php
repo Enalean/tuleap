@@ -34,6 +34,7 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 use Tuleap\User\ForgePermissionsRetriever;
 use User_ForgeUserGroupPermission;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserPermissionsBuilderTest extends TestCase
 {
     private const READER_UGROUP_ID = 103;

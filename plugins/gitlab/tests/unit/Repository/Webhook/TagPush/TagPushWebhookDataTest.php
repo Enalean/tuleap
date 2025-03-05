@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TagPushWebhookDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTagNameFromPath(): void

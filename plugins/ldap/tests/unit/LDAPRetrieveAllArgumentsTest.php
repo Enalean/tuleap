@@ -35,6 +35,7 @@ use Tuleap\ForgeConfigSandbox;
  *
  * @see https://tuleap.net/plugins/tracker/?aid=7151
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPRetrieveAllArgumentsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

@@ -24,6 +24,7 @@ use DateTimeImmutable;
 use REST_TestDataBuilder;
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AccessKeyTest extends RestBase
 {
     private const DESCRIPTION_ACCESS_KEY = 'test_key';

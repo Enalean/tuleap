@@ -28,6 +28,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

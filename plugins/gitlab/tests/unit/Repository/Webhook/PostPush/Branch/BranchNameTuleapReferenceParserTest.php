@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BranchNameTuleapReferenceParserTest extends TestCase
 {
     private BranchNameTuleapReferenceParser $parser;

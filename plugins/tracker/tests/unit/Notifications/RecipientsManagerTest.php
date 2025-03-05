@@ -46,6 +46,7 @@ use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(RemoveRecipientWhenTheyAreInCreationOnlyMode::class)]
 final class RecipientsManagerTest extends TestCase
 {

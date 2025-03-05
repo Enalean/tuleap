@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\Text\XML;
 
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLTextFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasRowsAndColsProperty(): void

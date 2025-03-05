@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLMediaWikiExporterTest extends TestCase
 {
     use GlobalLanguageMock;

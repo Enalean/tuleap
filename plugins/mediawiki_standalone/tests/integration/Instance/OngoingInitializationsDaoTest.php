@@ -27,6 +27,7 @@ use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OngoingInitializationsDaoTest extends TestIntegrationTestCase
 {
     private OngoingInitializationsDao $dao;

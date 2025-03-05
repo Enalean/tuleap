@@ -25,6 +25,7 @@ namespace Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VariableBooleanTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataForBooleanTests')]

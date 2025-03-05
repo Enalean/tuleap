@@ -34,6 +34,7 @@ use Tuleap\HudsonGit\PollingResponse;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\UUIDTestContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private HookTriggerController $controller;

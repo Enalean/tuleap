@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

@@ -22,6 +22,7 @@
 namespace Tuleap\Dashboard;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DashboardTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public static function dashboardLayoutProvider()

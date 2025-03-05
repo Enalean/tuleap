@@ -29,6 +29,7 @@ use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RoleAssignmentsSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItSavesRoleAssignments(): void

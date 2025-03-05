@@ -33,6 +33,7 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLExporterTest extends TestCase
 {
     private XMLExporter $exporter;

@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialTimeboxTrackerConfigurationCollectionTest extends TestCase
 {
     public function testItBuildsAListOfPotentialPlannableTrackers(): void

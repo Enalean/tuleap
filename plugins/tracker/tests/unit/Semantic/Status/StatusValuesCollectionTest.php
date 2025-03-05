@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValuesCollectionTest extends TestCase
 {
     private StatusValuesCollection $status_values_collection;

@@ -24,6 +24,7 @@ namespace Tuleap\Taskboard\Column;
 
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ColumnPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testConstructAssignsTLPColor(): void

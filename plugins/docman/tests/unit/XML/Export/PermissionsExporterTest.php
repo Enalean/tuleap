@@ -26,6 +26,7 @@ use Docman_Item;
 use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsExporterTest extends TestCase
 {
     public function testItDoesNotExportIfNoPermissions(): void

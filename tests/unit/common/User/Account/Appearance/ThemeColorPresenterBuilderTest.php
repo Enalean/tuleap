@@ -25,6 +25,7 @@ namespace Tuleap\User\Account\Appearance;
 use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThemeColorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetColorPresenterCollection(): void

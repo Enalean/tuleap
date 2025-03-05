@@ -30,6 +30,7 @@
  * @see https://tuleap.net/plugins/tracker/?aid=6429
  * @group Regressions
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Regressions_MilestonesContentOrderTest extends RestBase
 {
     public function testItSetsTheContentOrder()

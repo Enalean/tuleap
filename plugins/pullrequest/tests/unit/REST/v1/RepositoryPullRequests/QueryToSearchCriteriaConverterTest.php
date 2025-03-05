@@ -26,6 +26,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\Criterion\MalformedQueryFault;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QueryToSearchCriteriaConverterTest extends TestCase
 {
     private QueryToSearchCriteriaConverter $converter;

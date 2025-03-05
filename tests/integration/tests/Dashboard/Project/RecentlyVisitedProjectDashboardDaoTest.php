@@ -24,6 +24,7 @@ namespace Tuleap\Dashboard\Project;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecentlyVisitedProjectDashboardDaoTest extends TestIntegrationTestCase
 {
     public function testDeleteOldEntriesPerUser(): void

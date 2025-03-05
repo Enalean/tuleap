@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialCh
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID               = 745;

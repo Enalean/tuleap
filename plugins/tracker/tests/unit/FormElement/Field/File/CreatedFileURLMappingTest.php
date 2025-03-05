@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CreatedFileURLMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testMapping()

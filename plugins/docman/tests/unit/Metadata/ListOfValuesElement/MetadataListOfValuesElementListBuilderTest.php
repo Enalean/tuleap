@@ -26,6 +26,7 @@ use Docman_MetadataListOfValuesElementDao;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataListOfValuesElementListBuilderTest extends TestCase
 {
     private Docman_MetadataListOfValuesElementDao&MockObject $dao;

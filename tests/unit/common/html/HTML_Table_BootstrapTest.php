@@ -24,6 +24,7 @@
 
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HTML_Table_BootstrapTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

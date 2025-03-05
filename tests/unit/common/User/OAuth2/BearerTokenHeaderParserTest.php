@@ -24,6 +24,7 @@ namespace Tuleap\User\OAuth2;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[DataProvider('dataProviderValidHeaderLines')]

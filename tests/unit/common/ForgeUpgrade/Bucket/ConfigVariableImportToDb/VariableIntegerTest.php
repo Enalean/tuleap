@@ -25,6 +25,7 @@ namespace Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VariableIntegerTest extends TestCase
 {
     public function testStringConversion(): void

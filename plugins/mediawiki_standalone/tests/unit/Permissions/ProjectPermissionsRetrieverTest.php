@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectPermissionsRetrieverTest extends TestCase
 {
     public function testReaders(): void

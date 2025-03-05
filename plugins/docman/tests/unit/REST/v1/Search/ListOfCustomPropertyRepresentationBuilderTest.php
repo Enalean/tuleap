@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Search;
 use Tuleap\REST\JsonCast;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListOfCustomPropertyRepresentationBuilderTest extends TestCase
 {
     public function testGetCustomProperties(): void

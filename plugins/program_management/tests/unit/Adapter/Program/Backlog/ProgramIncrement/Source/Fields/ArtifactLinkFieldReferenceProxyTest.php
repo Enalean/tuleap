@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID    = 157;

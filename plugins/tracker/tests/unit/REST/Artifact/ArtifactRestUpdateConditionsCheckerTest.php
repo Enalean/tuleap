@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactRestUpdateConditionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected function tearDown(): void

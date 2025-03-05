@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Action;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldCanBeEasilyMigratedVerifierTest extends TestCase
 {
     /**

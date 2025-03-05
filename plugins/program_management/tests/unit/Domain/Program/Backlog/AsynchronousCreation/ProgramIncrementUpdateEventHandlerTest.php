@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID                            = 108;

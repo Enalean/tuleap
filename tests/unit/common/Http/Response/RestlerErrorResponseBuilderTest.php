@@ -26,6 +26,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use function Psl\Json\decode as psl_json_decode;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RestlerErrorResponseBuilderTest extends TestCase
 {
     public function testItCreateAResponseWithCorrespondingErrorMessage(): void

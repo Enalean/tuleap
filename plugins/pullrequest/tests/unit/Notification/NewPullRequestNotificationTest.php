@@ -35,6 +35,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewPullRequestNotificationTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -28,6 +28,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\SearchReverseLinksStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReverseLinksRetrieverTest extends TestCase
 {
     public function testItReturnsTheRetrievedNonNullReverseLinksArtifact(): void

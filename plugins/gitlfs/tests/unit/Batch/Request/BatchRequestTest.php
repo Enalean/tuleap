@@ -24,6 +24,7 @@ namespace Tuleap\GitLFS\Batch\Request;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BatchRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testParsingRequestWithAllProperties(): void

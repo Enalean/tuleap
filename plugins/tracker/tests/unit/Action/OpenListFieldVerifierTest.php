@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Action;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private OpenListFieldVerifier $open_list_verifier;

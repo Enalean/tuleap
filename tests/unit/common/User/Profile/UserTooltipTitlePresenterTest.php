@@ -24,6 +24,7 @@ namespace Tuleap\User\Profile;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTooltipTitlePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const REAL_NAME  = 'Donetta Humphrys';

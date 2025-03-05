@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use RuntimeException;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsIssuesLinkedToOneEpicFromBoard(): void

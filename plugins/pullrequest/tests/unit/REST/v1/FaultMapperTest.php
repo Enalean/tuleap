@@ -36,6 +36,7 @@ use Tuleap\PullRequest\InlineComment\RootInlineCommentHasAParentFault;
 use Tuleap\PullRequest\PullRequest\REST\v1\UserNotFoundFault;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FaultMapperTest extends TestCase
 {
     public static function dataProviderFaults(): iterable

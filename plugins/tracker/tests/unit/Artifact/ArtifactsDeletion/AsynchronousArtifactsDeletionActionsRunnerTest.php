@@ -28,6 +28,7 @@ use Tuleap\Queue\QueueFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AsynchronousArtifactsDeletionActionsRunner $runner;

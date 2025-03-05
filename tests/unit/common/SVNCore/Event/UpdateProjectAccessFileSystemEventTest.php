@@ -31,6 +31,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use SystemEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateProjectAccessFileSystemEventTest extends TestCase
 {
     private const PROJECT_ID = 102;

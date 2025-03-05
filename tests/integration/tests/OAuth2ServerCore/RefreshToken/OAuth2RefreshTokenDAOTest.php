@@ -29,6 +29,7 @@ use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2RefreshTokenDAOTest extends TestIntegrationTestCase
 {
     /**

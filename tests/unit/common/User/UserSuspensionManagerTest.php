@@ -39,6 +39,7 @@ use Tuleap\Mail\MailAccountSuspensionAlertPresenter;
 use Tuleap\Mail\MailAccountSuspensionPresenter;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

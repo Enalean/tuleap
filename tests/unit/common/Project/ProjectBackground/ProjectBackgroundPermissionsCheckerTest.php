@@ -25,6 +25,7 @@ namespace Tuleap\Project\ProjectBackground;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectBackgroundPermissionsChecker $permissions_checker;

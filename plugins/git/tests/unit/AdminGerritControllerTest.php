@@ -37,6 +37,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use User_SSHKeyValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdminGerritControllerTest extends TestCase
 {
     use GlobalResponseMock;

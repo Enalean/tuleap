@@ -30,6 +30,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

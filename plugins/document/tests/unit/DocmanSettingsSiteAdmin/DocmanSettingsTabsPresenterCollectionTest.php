@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\DocmanSettingsSiteAdmin;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanSettingsTabsPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAnArrayWithActiveTab(): void

@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 17;

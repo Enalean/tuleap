@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BlockScrumAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testScrumAccessIsEnabledByDefault(): void

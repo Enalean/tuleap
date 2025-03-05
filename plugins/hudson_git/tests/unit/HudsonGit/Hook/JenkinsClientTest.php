@@ -33,6 +33,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private EncryptionKey $encryption_key;

@@ -22,6 +22,7 @@ namespace Tuleap\XML;
 
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectXMLMergerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

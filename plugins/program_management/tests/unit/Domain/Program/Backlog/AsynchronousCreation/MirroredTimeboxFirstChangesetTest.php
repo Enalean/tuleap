@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxFirstChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const MIRRORED_TIMEBOX_TRACKER_ID = 41;

@@ -25,6 +25,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BatchResponseActionContentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testActionContentHasAnAuthenticationHeader(): void

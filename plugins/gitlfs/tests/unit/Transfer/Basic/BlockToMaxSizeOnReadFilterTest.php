@@ -24,6 +24,7 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BlockToMaxSizeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFilterBlocksOnceMaximumExpectedSizeIsReached(): void

@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Admin;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinksUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ArtifactLinksUsageDao&MockObject $dao;

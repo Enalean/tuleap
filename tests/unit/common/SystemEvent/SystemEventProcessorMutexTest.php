@@ -36,6 +36,7 @@ use SystemEventProcessorMutex;
 use Tuleap\DB\DBConnection;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEventProcessorMutexTest extends TestCase
 {
     private IRunInAMutex&MockObject $object;

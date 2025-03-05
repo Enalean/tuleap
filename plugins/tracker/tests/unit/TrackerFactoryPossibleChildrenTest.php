@@ -23,6 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalResponseMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFactoryPossibleChildrenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

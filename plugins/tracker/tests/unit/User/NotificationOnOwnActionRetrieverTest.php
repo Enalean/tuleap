@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationOnOwnActionRetrieverTest extends TestCase
 {
     private const USER_ID = 120;

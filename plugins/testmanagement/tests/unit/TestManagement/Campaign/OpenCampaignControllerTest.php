@@ -31,6 +31,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private OpenCampaignController $controller;

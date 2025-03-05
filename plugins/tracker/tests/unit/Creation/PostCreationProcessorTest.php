@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

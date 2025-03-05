@@ -26,6 +26,7 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

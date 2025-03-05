@@ -21,6 +21,7 @@
 /**
  * @group Regressions
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactsCreationWithWrongWorkflowTest extends RestBase
 {
     private \Test\Rest\Tracker\TrackerFactory $tracker_test_helper;

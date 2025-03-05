@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\REST\FaultMapper;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FaultMapperTest extends TestCase
 {
     public static function dataProviderFaults(): iterable

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Webhook;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRetrievesWebhooks(): void

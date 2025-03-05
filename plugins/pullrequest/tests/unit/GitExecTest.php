@@ -24,6 +24,7 @@ use Git_Command_Exception;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

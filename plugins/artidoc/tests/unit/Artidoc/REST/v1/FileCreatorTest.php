@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileCreatorTest extends TestCase
 {
     public function testItCreatesANewFileUpload(): void

@@ -45,6 +45,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataUpdatorTest extends TestCase
 {
     private MetadataValueUpdator&MockObject $metadata_value_updator;

@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RoleAssignmentsHistoryEntryAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItAddsAProjectHistoryEntryForRoleAndGroups(): void

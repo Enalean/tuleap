@@ -33,6 +33,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValuesCollection;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldsDataFromRequestRetrieverTest extends TestCase
 {
     private Tracker|Stub $tracker;

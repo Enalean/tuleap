@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\NullLogger;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCallsTheEpicsURL(): void

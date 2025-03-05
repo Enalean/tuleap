@@ -28,6 +28,7 @@ use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 use Workflow_Transition_Condition_CommentNotEmpty_Factory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

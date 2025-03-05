@@ -42,6 +42,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentToUploadCreatorTest extends TestCase
 {
     use ForgeConfigSandbox;

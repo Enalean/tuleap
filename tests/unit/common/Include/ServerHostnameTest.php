@@ -24,6 +24,7 @@ namespace Tuleap;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServerHostnameTest extends TestCase
 {
     use ForgeConfigSandbox;

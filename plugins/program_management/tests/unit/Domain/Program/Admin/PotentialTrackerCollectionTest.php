@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialTrackerCollectionTest extends TestCase
 {
     public function testReturnCollection(): void

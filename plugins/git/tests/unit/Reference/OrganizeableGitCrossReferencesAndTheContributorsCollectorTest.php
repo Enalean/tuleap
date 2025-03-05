@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends TestCase
 {
     private PFUser $user;

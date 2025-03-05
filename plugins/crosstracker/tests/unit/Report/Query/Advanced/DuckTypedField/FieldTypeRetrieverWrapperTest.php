@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldTypeRetrieverWrapperTest extends TestCase
 {
     public function testItReturnsDatetime(): void

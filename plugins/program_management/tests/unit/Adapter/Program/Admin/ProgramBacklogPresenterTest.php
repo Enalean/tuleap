@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramBacklogPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID                   = 114;

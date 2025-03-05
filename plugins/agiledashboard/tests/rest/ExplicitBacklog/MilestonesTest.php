@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\REST\TestBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestonesTest extends TestBase
 {
     public function testGetProjectMilestones(): void

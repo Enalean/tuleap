@@ -26,6 +26,7 @@ use Tuleap\SVN\Repository\Exception\CannotDeleteRepositoryException;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -29,6 +29,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testWebhooksAreEmitted(): void

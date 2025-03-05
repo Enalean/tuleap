@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_ID                       = 63;

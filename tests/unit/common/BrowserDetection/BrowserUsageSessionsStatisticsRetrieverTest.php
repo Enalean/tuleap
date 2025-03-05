@@ -24,6 +24,7 @@ namespace Tuleap\BrowserDetection;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BrowserUsageSessionsStatisticsRetrieverTest extends TestCase
 {
     /**

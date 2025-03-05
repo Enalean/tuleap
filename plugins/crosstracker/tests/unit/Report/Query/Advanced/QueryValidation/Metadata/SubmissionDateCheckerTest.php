@@ -46,6 +46,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmissionDateCheckerTest extends TestCase
 {
     private Metadata $metadata;

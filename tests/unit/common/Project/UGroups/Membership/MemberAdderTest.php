@@ -38,6 +38,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

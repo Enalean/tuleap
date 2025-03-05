@@ -27,6 +27,7 @@ use Http\Mock\Client;
 use Psr\Log\NullLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PwnedPasswordRangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAPIResponseIsRetrieved(): void

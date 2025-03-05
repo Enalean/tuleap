@@ -29,6 +29,7 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PackageRepresentationBuilder $builder;

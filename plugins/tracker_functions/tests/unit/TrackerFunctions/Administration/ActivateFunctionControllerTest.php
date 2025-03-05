@@ -34,6 +34,7 @@ use Tuleap\TrackerFunctions\Stubs\Administration\LogFunctionActivatedStub;
 use Tuleap\TrackerFunctions\Stubs\Administration\LogFunctionDeactivatedStub;
 use Tuleap\TrackerFunctions\Stubs\Administration\UpdateFunctionActivationStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ActivateFunctionControllerTest extends TestCase
 {
     public function testExceptionWhenNoTracker(): void

@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use Psr\Log\LogLevel;
 use ColinODell\PsrTestLogger\TestLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixedLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PREFIX = '| |';

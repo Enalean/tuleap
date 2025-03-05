@@ -27,6 +27,7 @@ require_once __DIR__ . '/../bootstrap.php';
 /**
  * @group GitTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectTest extends TestBase
 {
     public function testGetGitRepositories(): void

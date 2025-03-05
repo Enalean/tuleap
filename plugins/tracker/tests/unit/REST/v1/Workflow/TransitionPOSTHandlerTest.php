@@ -32,6 +32,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

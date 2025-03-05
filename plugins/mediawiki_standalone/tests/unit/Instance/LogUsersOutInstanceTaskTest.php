@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LogUsersOutInstanceTaskTest extends TestCase
 {
     public function testBuildsTaskToLogOutUsersOnAllInstances(): void

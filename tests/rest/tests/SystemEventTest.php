@@ -28,6 +28,7 @@ use REST_TestDataBuilder;
 /**
  * @group SystemEventTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEventTest extends RestBase
 {
     public function testGET(): void

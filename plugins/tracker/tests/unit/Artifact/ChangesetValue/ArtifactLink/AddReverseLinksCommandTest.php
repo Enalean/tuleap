@@ -26,6 +26,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddReverseLinksCommandTest extends TestCase
 {
     public function testItBuildsFromParts(): void

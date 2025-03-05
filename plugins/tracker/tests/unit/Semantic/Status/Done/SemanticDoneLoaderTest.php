@@ -29,6 +29,7 @@ use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Semantic_Status;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticDoneValueChecker&MockObject $value_checker;

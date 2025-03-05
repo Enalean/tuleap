@@ -25,6 +25,7 @@ namespace Tuleap\OpenIDConnectClient\Login\Registration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

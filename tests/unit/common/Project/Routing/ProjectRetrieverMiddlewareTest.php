@@ -27,6 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ProjectRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProcessAttachesProjectToRequest(): void

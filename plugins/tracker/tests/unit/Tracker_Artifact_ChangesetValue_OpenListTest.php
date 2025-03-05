@@ -30,6 +30,7 @@ use Tracker_Artifact_ChangesetValue_OpenList;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_Field_OpenList;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_Artifact_ChangesetValue_OpenListTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

@@ -26,6 +26,7 @@ use PFUser;
 use Tracker;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

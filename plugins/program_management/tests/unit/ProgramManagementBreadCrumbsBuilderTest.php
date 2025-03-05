@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement;
 
 use Project;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramManagementBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

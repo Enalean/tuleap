@@ -24,6 +24,7 @@ namespace Tuleap\Project;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DelegatedUserAccessForProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testThatByDefaultUserCanNotAccessProject(): void

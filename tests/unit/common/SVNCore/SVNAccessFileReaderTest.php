@@ -24,6 +24,7 @@ namespace Tuleap\SVNCore;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNAccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

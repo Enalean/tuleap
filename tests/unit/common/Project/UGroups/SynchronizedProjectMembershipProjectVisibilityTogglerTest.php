@@ -26,6 +26,7 @@ namespace Tuleap\Project\UGroups;
 use Project;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

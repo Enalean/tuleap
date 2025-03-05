@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Tests\REST\OpenLists;
 
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenListsTest extends TrackerBase
 {
     public function testGetArtifactOpenListsValues(): int

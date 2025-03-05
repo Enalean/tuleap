@@ -32,6 +32,7 @@ use Tracker_Workflow_Trigger_RulesProcessor;
 use Tracker_Workflow_Trigger_TriggerRule;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

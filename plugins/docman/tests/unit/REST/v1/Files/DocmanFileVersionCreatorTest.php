@@ -37,6 +37,7 @@ use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanFileVersionCreatorTest extends TestCase
 {
     private VersionToUploadCreator&MockObject $creator;

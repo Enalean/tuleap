@@ -24,6 +24,7 @@ namespace Tuleap\User\AccessKey\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CoreAccessKeyScopeBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCoreAccessKeyScopeBuilderFactoryTest(): void

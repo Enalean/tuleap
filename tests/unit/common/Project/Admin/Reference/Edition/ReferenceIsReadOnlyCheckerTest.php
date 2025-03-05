@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\Reference\Edition;
 
 use Event;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceIsReadOnlyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ReferenceIsReadOnlyChecker $checker;

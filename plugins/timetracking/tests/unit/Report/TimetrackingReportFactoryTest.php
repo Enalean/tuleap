@@ -32,6 +32,7 @@ use Tuleap\Timetracking\Time\TimetrackingReport;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimetrackingReportFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimetrackingReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

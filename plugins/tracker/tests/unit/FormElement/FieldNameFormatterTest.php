@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FieldNameFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItFormatsFieldName(): void

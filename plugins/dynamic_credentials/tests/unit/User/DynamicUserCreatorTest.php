@@ -29,6 +29,7 @@ use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSessionNotInitializedException;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DynamicUserCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

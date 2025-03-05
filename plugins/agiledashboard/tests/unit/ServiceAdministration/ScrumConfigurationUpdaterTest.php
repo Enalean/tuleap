@@ -37,6 +37,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MentionedUserInTextRetrieverTest extends TestCase
 {
     private MentionedUserInTextRetriever $mentioned_user_in_text_retriever;

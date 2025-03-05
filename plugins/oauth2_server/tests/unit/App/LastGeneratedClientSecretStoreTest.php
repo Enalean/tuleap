@@ -28,6 +28,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LastGeneratedClientSecretStoreTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

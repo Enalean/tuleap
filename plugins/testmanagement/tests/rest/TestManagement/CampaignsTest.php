@@ -27,6 +27,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group TestManagementTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CampaignsTest extends TestManagementRESTTestCase
 {
     public function testGetCampaign(): void

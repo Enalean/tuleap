@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentCreatorTest extends TestCase
 {
     private const INSERTED_ID = 57;

@@ -22,6 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query;
 
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParametrizedFromTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testArrayUniqueOfArrayOfParametrizedFromObjectsExcludSameObjects(): void

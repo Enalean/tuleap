@@ -38,6 +38,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

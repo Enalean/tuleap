@@ -28,6 +28,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_ARTIFACT_ID  = 103;

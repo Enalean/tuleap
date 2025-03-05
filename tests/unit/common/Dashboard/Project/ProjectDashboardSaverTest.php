@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROJECT_ID   = 145;

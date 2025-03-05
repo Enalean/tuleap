@@ -32,6 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddToTopBacklogPostActionFactoryTest extends TestCase
 {
     private AddToTopBacklogPostActionFactory $factory;

@@ -24,6 +24,7 @@ use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BatchResponseObjectWithActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBatchResponseObjectsWithActionsCanBeSerialized(): void

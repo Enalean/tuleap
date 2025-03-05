@@ -22,6 +22,7 @@ namespace Tuleap\SVN\REST;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RepositoryTestNonRegressionTest extends TestBase
 {
     public const TULEAP_MAGIC_GROUP_ID_ANONYMOUS = 1;

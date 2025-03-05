@@ -37,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID = 188;

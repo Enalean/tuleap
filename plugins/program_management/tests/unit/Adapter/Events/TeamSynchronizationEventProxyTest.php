@@ -26,6 +26,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TestLogger $logger;

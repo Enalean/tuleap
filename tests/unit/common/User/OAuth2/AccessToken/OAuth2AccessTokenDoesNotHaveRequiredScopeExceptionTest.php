@@ -28,6 +28,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRequiredScopeIsKept(): void

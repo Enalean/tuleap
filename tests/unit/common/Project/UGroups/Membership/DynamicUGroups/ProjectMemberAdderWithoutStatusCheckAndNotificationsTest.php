@@ -31,6 +31,7 @@ use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowi
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

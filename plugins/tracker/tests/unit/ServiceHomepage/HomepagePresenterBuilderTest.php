@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HomepagePresenterBuilderTest extends TestCase
 {
     use GlobalLanguageMock;

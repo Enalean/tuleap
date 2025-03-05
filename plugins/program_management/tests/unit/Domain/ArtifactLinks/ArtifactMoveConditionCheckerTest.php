@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchLinkedArtifactsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactMoveConditionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 105;

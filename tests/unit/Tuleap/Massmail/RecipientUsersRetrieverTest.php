@@ -24,6 +24,7 @@ namespace Tuleap\Massmail;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecipientUsersRetrieverTest extends TestCase
 {
     private RecipientUsersRetriever $retriever;

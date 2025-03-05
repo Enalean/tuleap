@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Authentication\Scope;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testStopLookingForTheAccessKeyScopeAsSoonAsOneItBuilt(): void

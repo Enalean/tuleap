@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddCopiedArtifactsToTopBacklogTest extends TestCase
 {
     private const SOURCE_ARTIFACT_ID = 9930;

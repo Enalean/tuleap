@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmissionDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SUBMISSION_TIMESTAMP = 1631191239;

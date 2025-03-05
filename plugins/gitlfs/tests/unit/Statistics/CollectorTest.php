@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\Statistics;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSizeOccupiedByProjectAndCollectionTimeAreRetrieved(): void

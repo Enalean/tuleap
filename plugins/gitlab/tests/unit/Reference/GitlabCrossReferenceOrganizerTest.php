@@ -48,6 +48,7 @@ use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

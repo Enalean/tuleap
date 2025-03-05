@@ -27,6 +27,7 @@ use Docman_MetadataValueScalar;
 use LogicException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanMetadataTypeValueFactoryTest extends TestCase
 {
     private DocmanMetadataTypeValueFactory $type_value_factory;

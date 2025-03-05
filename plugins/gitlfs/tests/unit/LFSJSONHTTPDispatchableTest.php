@@ -28,6 +28,7 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[RunInSeparateProcess]

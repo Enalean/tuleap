@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFormElementExportPermissionsToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

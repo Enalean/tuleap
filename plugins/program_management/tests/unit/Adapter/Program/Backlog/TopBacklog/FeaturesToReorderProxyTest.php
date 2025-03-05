@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeaturesToReorderProxyTest extends TestCase
 {
     public function testItBuildFeatureToReorder(): void

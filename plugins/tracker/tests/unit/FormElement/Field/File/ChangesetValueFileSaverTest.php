@@ -29,6 +29,7 @@ use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_File;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

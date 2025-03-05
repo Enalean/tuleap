@@ -37,6 +37,7 @@ use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DoneValueRetrieverTest extends TestCase
 {
     private DoneValueRetriever $retriever;

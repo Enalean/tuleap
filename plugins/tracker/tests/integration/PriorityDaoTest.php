@@ -28,6 +28,7 @@ use Tracker_Artifact_PriorityDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PriorityDaoTest extends TestIntegrationTestCase
 {
     private Tracker_Artifact_PriorityDao $dao;

@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private AgileDashboard_XMLFullStructureExporter $xml_exporter;

@@ -24,6 +24,7 @@ namespace Tuleap\ForgeAccess;
 
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ForgeAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

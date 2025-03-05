@@ -28,6 +28,7 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Stubs\GitlabClientWrapperStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabGroupInformationRetrieverTest extends TestCase
 {
     private GitlabClientWrapperStub $gitlab_client;

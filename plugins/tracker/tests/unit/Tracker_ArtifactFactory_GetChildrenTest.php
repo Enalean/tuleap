@@ -35,6 +35,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

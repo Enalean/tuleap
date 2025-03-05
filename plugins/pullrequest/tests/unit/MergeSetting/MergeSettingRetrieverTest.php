@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\MergeSetting;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MergeSettingRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MergeSettingDAO&MockObject $dao;

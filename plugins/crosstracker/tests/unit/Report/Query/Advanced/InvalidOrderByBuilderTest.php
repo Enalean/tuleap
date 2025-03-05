@@ -72,6 +72,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidOrderByBuilderTest extends TestCase
 {
     use LegacyTabTranslationsSupport;

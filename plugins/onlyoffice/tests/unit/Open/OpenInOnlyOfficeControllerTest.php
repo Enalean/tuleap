@@ -37,6 +37,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\TemplateRendererStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenInOnlyOfficeControllerTest extends TestCase
 {
     public function testDisplaysPage(): void

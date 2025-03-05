@@ -26,6 +26,7 @@ namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
 use Tuleap\GlobalLanguageMock;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GraphOnTrackersV5_Engine_BurndownTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

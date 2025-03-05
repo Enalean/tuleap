@@ -28,6 +28,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerCreationSettingsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

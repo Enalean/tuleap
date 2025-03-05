@@ -36,6 +36,7 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
 {
     private Docman_PermissionsManager&MockObject $permission_manager;

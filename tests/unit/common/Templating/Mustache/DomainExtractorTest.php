@@ -24,6 +24,7 @@ namespace Tuleap\Templating\Mustache;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Language\Gettext\POTFileDumper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DomainExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

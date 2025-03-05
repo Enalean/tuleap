@@ -34,6 +34,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

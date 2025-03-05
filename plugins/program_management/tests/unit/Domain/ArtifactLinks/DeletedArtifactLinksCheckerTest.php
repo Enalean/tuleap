@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Tests\Stub\DeletedArtifactLinksEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchLinkedArtifactsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DeletedArtifactLinksCheckerTest extends TestCase
 {
     private const ARTIFACT_ID        = 7821;

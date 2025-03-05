@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use TrackerFromXmlException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CreateTrackerFromXMLChecker $checker;

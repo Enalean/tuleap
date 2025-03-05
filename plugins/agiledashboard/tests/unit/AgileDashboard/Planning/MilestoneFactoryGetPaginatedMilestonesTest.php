@@ -57,6 +57,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 {
     private const PROJECT_ID = 101;

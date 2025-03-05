@@ -25,6 +25,7 @@ namespace Tuleap\Authentication\SplitToken;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TEST_PREFIX = 'foo.prefix-';

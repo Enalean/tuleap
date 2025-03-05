@@ -39,6 +39,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID = 666;

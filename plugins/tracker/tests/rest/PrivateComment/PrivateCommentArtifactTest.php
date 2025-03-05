@@ -27,6 +27,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PrivateCommentArtifactTest extends TrackerBase
 {
     public function testProjectAdminCanSeePrivateComment(): void

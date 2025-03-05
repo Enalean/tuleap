@@ -24,6 +24,7 @@ namespace Tuleap\REST;
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

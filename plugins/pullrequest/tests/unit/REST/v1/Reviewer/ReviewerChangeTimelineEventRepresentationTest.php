@@ -26,6 +26,7 @@ use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerChangeTimelineEventRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanBuildRepresentationFromAReviewerChange(): void

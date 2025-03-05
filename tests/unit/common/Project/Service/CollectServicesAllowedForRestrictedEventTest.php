@@ -24,6 +24,7 @@ namespace Tuleap\Project\Service;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectServicesAllowedForRestrictedEventTest extends TestCase
 {
     private const ALLOWED_SERVICE_SHORTNAME = 'git';

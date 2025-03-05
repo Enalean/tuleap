@@ -41,6 +41,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmilestoneFinderTest extends TestCase
 {
     private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $finder;

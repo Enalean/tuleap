@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EnableUniqueAuthenticationEndpointVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItAcceptsToEnableIfUserIsSuperUserAndLinkedToTheProvider(): void

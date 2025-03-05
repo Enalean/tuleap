@@ -30,6 +30,7 @@ use Tuleap\CLI\AssertRunner;
 use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PluginUpdateHookCommandTest extends TestCase
 {
     public function testLaunchesEvent(): void

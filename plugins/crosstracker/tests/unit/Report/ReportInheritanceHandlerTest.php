@@ -28,6 +28,7 @@ use Tuleap\CrossTracker\Tests\Stub\Report\CloneWidgetStub;
 use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportInheritanceHandlerTest extends TestCase
 {
     private const TEMPLATE_REPORT_ID = 90;

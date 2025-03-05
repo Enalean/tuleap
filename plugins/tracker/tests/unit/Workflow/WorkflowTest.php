@@ -24,6 +24,7 @@ declare(strict_types=1);
 use Tuleap\Tracker\Workflow\Transition\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

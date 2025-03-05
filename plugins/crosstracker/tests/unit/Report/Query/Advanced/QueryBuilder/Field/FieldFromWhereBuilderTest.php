@@ -48,6 +48,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldFromWhereBuilderTest extends TestCase
 {
     use LegacyTabTranslationsSupport;

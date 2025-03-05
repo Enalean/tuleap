@@ -43,6 +43,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportCriteriaJsonBuilderTest extends TestCase
 {
     use GlobalLanguageMock;

@@ -31,6 +31,7 @@ use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

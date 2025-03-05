@@ -24,6 +24,7 @@ namespace Tuleap\dao;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserDaoTest extends TestIntegrationTestCase
 {
     private \UserDao $dao;

@@ -33,6 +33,7 @@ use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class LicenseAgreementDisplayTest extends TestCase
 {
     use ForgeConfigSandbox;

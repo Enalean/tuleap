@@ -44,6 +44,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
 {
     private PlanningFactory&MockObject $planning_factory;

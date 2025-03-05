@@ -37,6 +37,7 @@ use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Tracker\XML\XMLUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupMembersImporterTest extends TestCase
 {
     #[DataProvider('getJiraServerTestsData')]

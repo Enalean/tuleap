@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramManagementXMLConfigExtractorTest extends TestCase
 {
     public function testItThrowsWhenTheSourceTrackerReferenceIsNotValid(): void

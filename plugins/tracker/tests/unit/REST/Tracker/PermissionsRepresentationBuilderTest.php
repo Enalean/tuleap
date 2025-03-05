@@ -28,6 +28,7 @@ use ProjectUGroup;
 use Tracker;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;

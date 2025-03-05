@@ -26,6 +26,7 @@ use Codendi_Request;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueIfRequestMustRedirectToADHomepage(): void

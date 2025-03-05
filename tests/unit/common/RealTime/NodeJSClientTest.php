@@ -26,6 +26,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NodeJSClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

@@ -25,6 +25,7 @@ namespace Tuleap\Redis;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedisInitializerTest extends TestCase
 {
     public function testRedisConnectionInitialization(): void

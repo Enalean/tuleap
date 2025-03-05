@@ -23,6 +23,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 use Tuleap\OpenIDConnectClient\Login\Controller;
 use Tuleap\Test\Builders\LayoutBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AzureADUserLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProcessRequest(): void

@@ -24,6 +24,7 @@ namespace Tuleap\Velocity\Semantic;
 
 use Tracker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSemanticAreNotCorrectlySetWhenTrackerIsATopBacklogAndChildrenTrackersHaveMissingVelocitySemanticAndBacklogTrackersHasMissingRequiredSemantics(): void

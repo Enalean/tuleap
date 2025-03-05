@@ -30,6 +30,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;

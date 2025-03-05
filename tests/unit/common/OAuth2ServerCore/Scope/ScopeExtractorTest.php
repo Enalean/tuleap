@@ -26,6 +26,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var ScopeExtractor */

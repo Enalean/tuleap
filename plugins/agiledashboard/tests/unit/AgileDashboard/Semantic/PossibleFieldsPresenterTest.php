@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Semantic;
 use AgileDashBoard_Semantic_InitialEffort;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PossibleFieldsPresenterTest extends TestCase
 {
     public function testItBuildsPresenterFromNumericFieldList(): void

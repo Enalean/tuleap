@@ -24,6 +24,7 @@ namespace Tuleap\Taskboard\Tracker;
 
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappedFieldsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTheMappedFieldForTracker(): void

@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_Date;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 158;

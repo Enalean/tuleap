@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryCanDeletedTest extends TestCase
 {
     private Git_Backend_Interface&MockObject $backend;

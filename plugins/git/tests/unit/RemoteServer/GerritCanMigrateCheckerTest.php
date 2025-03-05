@@ -26,6 +26,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Project $project;

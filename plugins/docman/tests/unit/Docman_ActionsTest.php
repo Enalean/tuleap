@@ -41,6 +41,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
 // Make easier the navigation in IDE between the main class and this class
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testCannotDeleteVersionOnNonFile(): void

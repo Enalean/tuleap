@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 51;

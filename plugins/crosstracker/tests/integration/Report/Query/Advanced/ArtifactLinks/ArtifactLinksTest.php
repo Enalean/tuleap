@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinksTest extends CrossTrackerFieldTestCase
 {
     private UUID $uuid;

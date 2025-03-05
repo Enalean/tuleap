@@ -33,6 +33,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AppsPresenterBuilder */

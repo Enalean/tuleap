@@ -25,6 +25,7 @@ use Tuleap\Docman\Metadata\CreationMetadataValidator;
 use Tuleap\Docman\Tests\Stub\ResponseFeedbackWrapperStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreationMetadataValidatorTest extends TestCase
 {
     /**

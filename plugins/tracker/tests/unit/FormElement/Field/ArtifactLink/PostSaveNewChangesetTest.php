@@ -29,6 +29,7 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostSaveNewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

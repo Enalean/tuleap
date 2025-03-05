@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestStatusTypeConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

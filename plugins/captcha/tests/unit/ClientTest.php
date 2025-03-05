@@ -24,6 +24,7 @@ use Exception;
 use Psr\Http\Client\ClientExceptionInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidRequestIsAccepted(): void

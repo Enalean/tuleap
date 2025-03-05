@@ -27,6 +27,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Symfony\Component\Console\Tester\CommandTester;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

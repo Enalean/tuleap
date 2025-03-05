@@ -24,6 +24,7 @@ namespace Tuleap\Reference;
 
 use Tuleap\Test\Builders\ReferenceBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceInstanceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 49;

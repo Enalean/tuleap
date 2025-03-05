@@ -27,6 +27,7 @@ use HudsonJobURLMalformedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HudsonBuildTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

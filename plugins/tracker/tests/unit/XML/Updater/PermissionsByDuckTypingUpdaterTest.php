@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Test\Stub\MatchPermissionsByDuckTypingStub;
 use Tuleap\Tracker\Tracker\XML\Updater\PermissionsByDuckTypingUpdater;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsByDuckTypingUpdaterTest extends TestCase
 {
     public function testItRemovesAllUserGroupsNotAppearingInDestinationField(): void

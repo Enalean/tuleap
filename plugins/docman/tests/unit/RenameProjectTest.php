@@ -29,6 +29,7 @@ use org\bovigo\vfs\vfsStreamWrapper;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RenameProjectTest extends TestCase
 {
     public function testRenameProjectTest(): void

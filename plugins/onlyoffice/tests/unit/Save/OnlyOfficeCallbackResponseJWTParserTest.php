@@ -49,6 +49,7 @@ use Tuleap\Option\Option;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
 {
     use ForgeConfigSandbox;

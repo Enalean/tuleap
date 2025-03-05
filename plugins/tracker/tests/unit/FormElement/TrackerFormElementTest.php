@@ -34,6 +34,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

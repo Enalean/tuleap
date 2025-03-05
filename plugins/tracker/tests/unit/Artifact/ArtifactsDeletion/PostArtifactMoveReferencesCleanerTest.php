@@ -37,6 +37,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostArtifactMoveReferencesCleanerTest extends TestCase
 {
     private const FIRST_PARENT_ARTIFACT_ID  = 102;

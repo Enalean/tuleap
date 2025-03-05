@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmissionDateProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SUBMISSION_TIMESTAMP = 1631178060;

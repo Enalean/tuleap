@@ -40,6 +40,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MembershipManagerBindedUGroupsTest extends TestCase
 {
     private Git_RemoteServer_GerritServer&MockObject $remote_server;

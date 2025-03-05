@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChan
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesInChangesetStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinkedFeaturesDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAFeaturesDiffFromChangesets(): void

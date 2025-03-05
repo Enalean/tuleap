@@ -24,6 +24,7 @@ namespace Tuleap\FRS\PermissionsPerGroup;
 use Project;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PaneCollectorTest extends TestCase
 {
     public function testItDoesNotBuildPaneIfServiceNotUsed(): void

@@ -28,6 +28,7 @@ use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_FormElement_Field_File;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

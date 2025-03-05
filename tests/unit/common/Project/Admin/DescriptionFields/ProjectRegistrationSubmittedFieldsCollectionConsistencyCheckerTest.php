@@ -27,6 +27,7 @@ use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest extends TestCase
 {
     private ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $checker;

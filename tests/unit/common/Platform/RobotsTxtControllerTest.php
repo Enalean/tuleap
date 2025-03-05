@@ -28,6 +28,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RobotsTxtControllerTest extends TestCase
 {
     use GlobalLanguageMock;

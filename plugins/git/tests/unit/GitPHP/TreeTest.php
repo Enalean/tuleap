@@ -24,6 +24,7 @@ namespace Tuleap\Git\GitPHP;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TreeTest extends TestCase
 {
     /**

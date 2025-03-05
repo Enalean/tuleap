@@ -37,6 +37,7 @@ use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitBackendGitoliteUserAccessRightsTest extends TestCase
 {
     private Git_Backend_Gitolite $backend;

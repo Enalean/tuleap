@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Action;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenListFieldsCompatibilityVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseWhenTheFieldsDoNotHaveTheSameBindType(): void

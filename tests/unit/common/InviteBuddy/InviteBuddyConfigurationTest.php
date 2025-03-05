@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

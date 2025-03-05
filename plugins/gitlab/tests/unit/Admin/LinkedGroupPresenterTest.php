@@ -27,6 +27,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\URIInterfaceBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinkedGroupPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

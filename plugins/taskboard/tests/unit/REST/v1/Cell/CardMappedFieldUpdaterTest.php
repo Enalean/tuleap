@@ -54,6 +54,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\RetrieveUsedLi
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\XML\MappingsRegistry;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MappingsRegistry $registry;

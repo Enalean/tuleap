@@ -37,6 +37,7 @@ use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DaoTest extends TestCase
 {
     private const REPOSITORY_ID = 5;

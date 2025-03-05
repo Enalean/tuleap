@@ -36,6 +36,7 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $form_element_factory;

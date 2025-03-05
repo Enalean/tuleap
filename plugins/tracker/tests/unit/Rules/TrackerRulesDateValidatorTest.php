@@ -26,6 +26,7 @@ use Mockery;
 use Tracker_Rule_Date;
 use Tuleap\Layout\BaseLayout;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

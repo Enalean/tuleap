@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanProgramIncrementChangeTest extends TestCase
 {
     public function testItBuildsAValidPlanProgramIncrementChange(): void

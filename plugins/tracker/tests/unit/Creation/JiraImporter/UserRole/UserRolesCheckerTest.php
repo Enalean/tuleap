@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserRolesCheckerTest extends TestCase
 {
     public function testItDoesNotThrowAnExceptionIfUserIsInAdminstrators(): void

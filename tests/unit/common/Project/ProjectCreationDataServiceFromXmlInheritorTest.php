@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Service;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectCreationDataServiceFromXmlInheritor $service_inheritor;

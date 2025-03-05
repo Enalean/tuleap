@@ -26,6 +26,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildValidAuthorizationCode(): void

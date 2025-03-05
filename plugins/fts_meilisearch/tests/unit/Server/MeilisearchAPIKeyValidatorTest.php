@@ -26,6 +26,7 @@ use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MeilisearchAPIKeyValidatorTest extends TestCase
 {
     public function testNoExceptionWhenAPIKeyIsValid(): void

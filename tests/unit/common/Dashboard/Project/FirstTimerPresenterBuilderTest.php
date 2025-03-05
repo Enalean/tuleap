@@ -32,6 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FirstTimerPresenterBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -27,6 +27,7 @@ use Tracker_ArtifactLinkInfo;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\GlobalResponseMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

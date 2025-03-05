@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AuthorizationCodeRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRevokeByAuthCodeId(): void

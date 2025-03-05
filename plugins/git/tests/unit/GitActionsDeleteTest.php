@@ -59,6 +59,7 @@ use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitActionsDeleteTest extends TestCase
 {
     private GitActions $git_actions;

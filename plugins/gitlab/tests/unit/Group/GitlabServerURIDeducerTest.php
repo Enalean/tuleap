@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Group;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabServerURIDeducerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const WEB_URL = 'https://user@my.gitlab.example.com:7010/groups/cottonbush/nonannuitant#enzone?id=1';

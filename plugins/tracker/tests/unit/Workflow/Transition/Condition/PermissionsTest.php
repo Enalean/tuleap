@@ -29,6 +29,7 @@ use Tracker_Workflow_WorkflowUser;
 use Transition;
 use Workflow_Transition_Condition_Permissions;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -31,6 +31,7 @@ use Symfony\Component\Process\Process;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CleanUpGitoliteAdminRepoTest extends TestCase
 {
     use TemporaryTestDirectory;

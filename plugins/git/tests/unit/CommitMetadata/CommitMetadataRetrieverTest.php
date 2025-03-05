@@ -32,6 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitMetadataRetrieverTest extends TestCase
 {
     private readonly MockObject&CommitStatusRetriever $status_retriever;

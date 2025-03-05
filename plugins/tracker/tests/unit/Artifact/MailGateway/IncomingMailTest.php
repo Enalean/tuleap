@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class IncomingMailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[DataProvider('mailProvider')]

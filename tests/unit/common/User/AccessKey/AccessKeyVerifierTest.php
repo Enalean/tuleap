@@ -33,6 +33,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

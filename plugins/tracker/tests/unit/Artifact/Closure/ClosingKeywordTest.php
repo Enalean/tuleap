@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Closure;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public static function provideKeywordVariants(): array

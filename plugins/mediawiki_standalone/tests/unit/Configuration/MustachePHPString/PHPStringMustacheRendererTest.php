@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\Configuration\MustachePHPString;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PHPStringMustacheRendererTest extends TestCase
 {
     public function testEscapesContentAsPHPString(): void

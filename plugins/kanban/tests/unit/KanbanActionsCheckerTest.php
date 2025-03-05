@@ -39,6 +39,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const STRING_FIELD_ID = 201;

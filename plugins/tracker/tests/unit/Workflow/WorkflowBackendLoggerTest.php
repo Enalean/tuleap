@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow;
 use Mockery;
 use Psr\Log\LoggerInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowBackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

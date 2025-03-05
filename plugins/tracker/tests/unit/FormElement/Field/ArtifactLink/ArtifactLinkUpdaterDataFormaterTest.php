@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

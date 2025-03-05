@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\NeverThrow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ResultTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCreatesANewOkWithValue(): void

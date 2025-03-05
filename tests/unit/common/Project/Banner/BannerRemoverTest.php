@@ -24,6 +24,7 @@ namespace Tuleap\Project\Banner;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBannerIsRemoved(): void

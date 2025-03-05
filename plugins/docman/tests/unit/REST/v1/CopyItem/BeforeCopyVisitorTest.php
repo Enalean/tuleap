@@ -38,6 +38,7 @@ use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BeforeCopyVisitorTest extends TestCase
 {
     private const VISITOR_PROCESSABLE_CLASSES = [

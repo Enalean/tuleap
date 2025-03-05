@@ -26,6 +26,7 @@ use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Request\NotFoundException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&LSFAPIHTTPAuthorization $lfs_http_api_access_control;

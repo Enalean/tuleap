@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SessionStateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderSessionStates')]

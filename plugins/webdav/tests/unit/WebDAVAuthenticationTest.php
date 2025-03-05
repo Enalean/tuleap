@@ -31,6 +31,7 @@ use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator;
 use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyMisusageException;
 use Tuleap\Webdav\Authentication\HeadersSender;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

@@ -40,6 +40,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailGatewayTokenTest extends TestCase
 {
     private const BODY          = 'justaucorps';
@@ -83,10 +84,14 @@ final class MailGatewayTokenTest extends TestCase
 
         $filter = $this->createMock(MailGatewayFilter::class);
 
+        $notifier = $this->createStub(Tracker_Artifact_MailGateway_Notifier::class);
+        $notifier->method('sendErrorMailTrackerGeneric');
+        $notifier->method('sendErrorMailInsufficientPermissionUpdate');
+
         $this->mailgateway = new Tracker_Artifact_MailGateway_TokenMailGateway(
             $incoming_message_factory,
             $citation_stripper,
-            $this->createMock(Tracker_Artifact_MailGateway_Notifier::class),
+            $notifier,
             $this->incoming_mail_dao,
             $this->artifact_creator,
             $this->createMock(Tracker_FormElementFactory::class),
@@ -149,6 +154,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
         $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
+        $this->artifact->method('getId')->willReturn(101);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(false);
 
         $this->artifact->expects(self::never())->method('createNewChangeset');

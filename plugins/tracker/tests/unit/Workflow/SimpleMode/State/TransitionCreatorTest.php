@@ -30,6 +30,7 @@ use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TransitionFactory&MockObject $transition_factory;

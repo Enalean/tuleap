@@ -28,6 +28,7 @@ use PluginManager;
 use Project;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
 {
     /**

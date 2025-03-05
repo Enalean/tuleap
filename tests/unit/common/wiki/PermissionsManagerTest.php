@@ -26,6 +26,7 @@ use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Test\PHPUnit\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Wiki_PermissionsManagerTest extends TestCase
 {
     private Wiki_PermissionsManager $wiki_permissions_manager;

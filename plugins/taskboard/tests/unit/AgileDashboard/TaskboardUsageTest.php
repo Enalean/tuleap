@@ -24,6 +24,7 @@ namespace Tuleap\Taskboard\AgileDashboard;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskboardUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

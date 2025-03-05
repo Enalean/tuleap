@@ -35,6 +35,7 @@ use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use CurrentUserContext;

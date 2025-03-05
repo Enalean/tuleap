@@ -25,6 +25,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private HudsonCrossReferenceOrganizer $organizer;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPSetOfUserIDsForDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValuesArePreserved(): void

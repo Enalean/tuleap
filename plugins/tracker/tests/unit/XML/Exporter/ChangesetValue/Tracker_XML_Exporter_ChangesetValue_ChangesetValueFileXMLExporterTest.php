@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FileInfoXMLExporter&MockObject $file_exporter;

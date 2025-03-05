@@ -43,6 +43,7 @@ use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLExportVisitorTest extends TestCase
 {
     private TestLogger $logger;

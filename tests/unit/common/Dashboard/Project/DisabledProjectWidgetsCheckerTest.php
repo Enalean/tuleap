@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Dashboard\User\UserDashboard;
 use Widget;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -24,6 +24,7 @@ namespace Tuleap\Language\Gettext;
 
 use org\bovigo\vfs\vfsStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class POTFileDumperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

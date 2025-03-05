@@ -27,6 +27,7 @@ use Docman_SettingsBo;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

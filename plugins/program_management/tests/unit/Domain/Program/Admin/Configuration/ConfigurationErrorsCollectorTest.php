@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigurationErrorsCollectorTest extends TestCase
 {
     private ConfigurationErrorsCollector $collector;

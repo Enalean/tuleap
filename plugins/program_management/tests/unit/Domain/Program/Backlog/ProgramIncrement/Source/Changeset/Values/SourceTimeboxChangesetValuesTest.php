@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_VALUE                         = 'pseudographeme';

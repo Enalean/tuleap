@@ -34,6 +34,7 @@ use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

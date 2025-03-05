@@ -27,6 +27,7 @@ use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanArtifactMessageSenderMercureTest extends TestCase
 {
     private RealTimeMercureArtifactMessageSender&MockObject $artifact_message_sender;

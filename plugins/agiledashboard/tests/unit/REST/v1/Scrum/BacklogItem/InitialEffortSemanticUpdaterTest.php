@@ -42,6 +42,7 @@ use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InitialEffortSemanticUpdaterTest extends TestCase
 {
     private InitialEffortSemanticUpdater $updater;

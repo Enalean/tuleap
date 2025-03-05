@@ -41,6 +41,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use UGroupManager;
 use UserXMLExporter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MediawikiMaintenanceWrapper&MockObject $maintenance_wrapper;

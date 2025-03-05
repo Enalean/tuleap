@@ -37,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
 {
     private Tracker_RulesManager&MockObject $tracker_rules_manager;

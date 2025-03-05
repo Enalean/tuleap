@@ -44,6 +44,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\ProvideEmai
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\SendMailStub;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmailNotificationTaskTest extends TestCase
 {
     private LoggerInterface $logger;
@@ -58,25 +59,39 @@ final class EmailNotificationTaskTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger                          = new NullLogger();
-        $this->mail_gateway_config             = $this->createMock(MailGatewayConfig::class);
+        $this->logger              = new NullLogger();
+        $this->mail_gateway_config = $this->createMock(MailGatewayConfig::class);
+        $this->mail_gateway_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->mail_gateway_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
         $this->config_notification_assigned_to = $this->createMock(ConfigNotificationAssignedTo::class);
-        $this->mail_gateway_recipient_factory  = $this->createMock(Tracker_Artifact_MailGateway_RecipientFactory::class);
-        $this->user_helper                     = $this->createMock(UserHelper::class);
-        $this->custom_email_sender             = $this->createMock(ConfigNotificationEmailCustomSender::class);
+        $this->config_notification_assigned_to->method('isAssignedToSubjectEnabled')->willReturn(false);
+        $this->mail_gateway_recipient_factory = $this->createMock(Tracker_Artifact_MailGateway_RecipientFactory::class);
+        $this->user_helper                    = $this->createMock(UserHelper::class);
+        $this->user_helper->method('getDisplayNameFromUserId')->willReturn('User Display Name');
+        $this->custom_email_sender = $this->createMock(ConfigNotificationEmailCustomSender::class);
 
         $this->custom_email_sender->method('getCustomSender')->willReturn(['format' => '', 'enabled' => 0]);
 
         $language = $this->createStub(BaseLanguage::class);
         $language->method('getText')->willReturn('');
 
-        $this->tracker  = $this->createMock(Tracker::class);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getItemName')->willReturn('story');
         $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getId')->willReturn(666);
         $this->artifact->method('getTracker')->willReturn($this->tracker);
         $this->artifact->method('fetchMailTitle')->willReturn('The title in the mail');
+        $this->artifact->method('isFirstChangeset')->willReturn(false);
+        $this->artifact->method('fetchMail')->willReturn('');
         $this->changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $this->changeset->method('getId')->willReturn(741);
         $this->changeset->method('getTracker')->willReturn($this->tracker);
         $this->changeset->method('getArtifact')->willReturn($this->artifact);
+        $this->changeset->method('getSubmittedBy')->willReturn(987);
+        $this->changeset->method('getSubmittedOn')->willReturn(1);
+        $this->changeset->method('mailDiffToPrevious')->willReturn('');
+        $this->changeset->method('diffToPrevious')->willReturn('');
+        $this->changeset->method('getComment')->willReturn(null);
         $this->changeset->method('getSubmitter')->willReturn(
             UserTestBuilder::anActiveUser()->withTimezone('Europe/Paris')->withLanguage($language)->build()
         );

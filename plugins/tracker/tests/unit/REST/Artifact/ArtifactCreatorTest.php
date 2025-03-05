@@ -58,6 +58,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCreatorTest extends TestCase
 {
     use GlobalResponseMock;

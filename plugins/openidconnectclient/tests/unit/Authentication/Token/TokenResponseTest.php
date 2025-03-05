@@ -25,6 +25,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 use Psr\Http\Message\ResponseInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNotValidJSONISRejected(): void

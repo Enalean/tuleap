@@ -20,6 +20,7 @@
  */
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Rule_ProjectNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidNamesAreValid(): void

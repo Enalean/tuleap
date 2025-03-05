@@ -45,6 +45,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneRepresentationBuilderTest extends TestCase
 {
     private const PROJECT_ID = 101;

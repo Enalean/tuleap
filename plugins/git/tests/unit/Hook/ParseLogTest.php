@@ -30,6 +30,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParseLogTest extends TestCase
 {
     private CrossReferencesExtractor&MockObject $extract_cross_ref;

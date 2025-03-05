@@ -35,6 +35,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
 {
     use GlobalLanguageMock;

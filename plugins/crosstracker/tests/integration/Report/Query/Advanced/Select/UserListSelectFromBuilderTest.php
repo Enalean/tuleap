@@ -37,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use UserHelper;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
     private UUID $uuid;

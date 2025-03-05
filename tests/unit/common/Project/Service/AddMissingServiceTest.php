@@ -27,6 +27,7 @@ use Service;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddMissingServiceTest extends TestCase
 {
     public function testItDoesntAddAServiceThatIsAlreadyThereBecauseOfTheDatabase(): void

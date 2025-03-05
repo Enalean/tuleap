@@ -29,6 +29,7 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsTheExternalChangeset(): void

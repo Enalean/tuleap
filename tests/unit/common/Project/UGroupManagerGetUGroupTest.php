@@ -26,6 +26,7 @@ use ProjectUGroup;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $non_existent_ugroup_id;

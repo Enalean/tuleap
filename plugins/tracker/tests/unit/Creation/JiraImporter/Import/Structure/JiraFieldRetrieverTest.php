@@ -35,6 +35,7 @@ use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public static function getTestData(): iterable

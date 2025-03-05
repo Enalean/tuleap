@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerErrorTest extends TestCase
 {
     private VerifyIsTeamStub $verify_is_team;

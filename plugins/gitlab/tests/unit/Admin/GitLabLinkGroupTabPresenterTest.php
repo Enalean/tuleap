@@ -22,6 +22,7 @@ namespace Tuleap\Gitlab\Admin;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GitLabLinkGroupTabPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testWithInactiveState(): void

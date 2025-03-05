@@ -24,6 +24,7 @@ namespace Tuleap\REST\v1;
 use REST_TestDataBuilder;
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectFieldsTest extends RestBase
 {
     public function testGETProjectFields(): void

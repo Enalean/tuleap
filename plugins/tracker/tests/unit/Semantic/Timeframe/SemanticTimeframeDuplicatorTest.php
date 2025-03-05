@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&SemanticTimeframeDao $dao;

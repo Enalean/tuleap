@@ -36,6 +36,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private VelocityRepresentationBuilder $builder;

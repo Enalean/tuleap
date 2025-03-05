@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SnapshotCollectionTest extends TestCase
 {
     public function testItHasAnInitialSnapshot(): void

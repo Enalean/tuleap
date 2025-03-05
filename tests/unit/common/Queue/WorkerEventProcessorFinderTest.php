@@ -28,6 +28,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\Template\Upload\ExtractArchiveAndCreateProject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkerEventProcessorFinderTest extends TestCase
 {
     use ForgeConfigSandbox;

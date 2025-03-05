@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use UserGroupDao;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

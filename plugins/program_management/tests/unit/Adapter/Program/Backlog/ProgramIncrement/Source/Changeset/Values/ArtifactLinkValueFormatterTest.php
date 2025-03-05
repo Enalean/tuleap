@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TIMEBOX_ID = 90;

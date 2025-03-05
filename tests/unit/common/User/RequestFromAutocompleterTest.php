@@ -29,6 +29,7 @@ use Rule_Email;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

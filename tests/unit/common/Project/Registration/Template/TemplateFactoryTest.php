@@ -34,6 +34,7 @@ use Tuleap\XML\ProjectXMLMerger;
 use URLVerification;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

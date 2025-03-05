@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersWithUnreadableStatusCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotLogAnythingIfThereIsNoTracker(): void

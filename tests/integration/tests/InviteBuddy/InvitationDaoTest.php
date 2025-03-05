@@ -28,6 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InvitationDaoTest extends TestIntegrationTestCase
 {
     private const CREATED_ON_TIMESTAMP = 1234567890;

@@ -28,6 +28,7 @@ use Psr\Log\NullLogger;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WillBeCreatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

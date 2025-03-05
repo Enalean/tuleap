@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogTrackerRemovalCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AddToTopBacklogPostActionDao & \PHPUnit\Framework\MockObject\MockObject $add_to_top_backlog_post_action_dao;

@@ -38,6 +38,7 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LatestHeartbeatsCollector $collector;

@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\GlobalResponseMock;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\FilenamePattern;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilenamePatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnTrueWhenThereIsNoPattern(): void

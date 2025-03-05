@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID     = 110;

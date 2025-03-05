@@ -31,6 +31,7 @@ use Docman_MetadataFactory;
 use Docman_Report;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilterFactoryTest extends TestCase
 {
     public function testCloneFilter(): void

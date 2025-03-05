@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactDaoTest extends TestIntegrationTestCase
 {
     private ArtifactDao $dao;

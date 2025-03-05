@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class StatusBadgeBuilderTest extends TestCase
 {
     public function testEmptyArrayWhenSemanticStatusIsNotDefined(): void

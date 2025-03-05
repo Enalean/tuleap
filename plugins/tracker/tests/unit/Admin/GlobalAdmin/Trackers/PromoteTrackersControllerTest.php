@@ -38,6 +38,7 @@ use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TrackerFactory&MockObject $tracker_factory;

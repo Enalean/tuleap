@@ -24,6 +24,7 @@
 
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Rule_EmailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;

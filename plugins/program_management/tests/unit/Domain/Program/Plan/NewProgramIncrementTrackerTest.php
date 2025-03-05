@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewProgramIncrementTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 28;

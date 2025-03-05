@@ -29,6 +29,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamTemplateTest extends TestCase
 {
     use ForgeConfigSandbox;

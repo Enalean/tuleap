@@ -28,6 +28,7 @@ namespace Tuleap\Timetracking\Time;
 use Tuleap\Timetracking\REST\v1\TimetrackingQueryChecker;
 use Luracast\Restler\RestException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimetrackingQueryChecker $checker;

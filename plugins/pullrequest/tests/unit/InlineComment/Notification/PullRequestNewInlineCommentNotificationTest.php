@@ -39,6 +39,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestNewInlineCommentNotificationTest extends TestCase
 {
     use ForgeConfigSandbox;

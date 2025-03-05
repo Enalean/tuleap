@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RejectAnonymousMiddlewareTest extends TestCase
 {
     public function testCurrentUserIsLoggedIn(): void

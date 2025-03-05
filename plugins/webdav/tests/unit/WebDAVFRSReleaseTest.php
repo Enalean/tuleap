@@ -41,6 +41,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 /**
  * This is the unit test of WebDAVFRSRelease
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

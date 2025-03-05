@@ -32,6 +32,7 @@ use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Pie;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_ChartFactory;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GraphOnTrackersV5_Renderer&\PHPUnit\Framework\MockObject\MockObject $graph_renderer;

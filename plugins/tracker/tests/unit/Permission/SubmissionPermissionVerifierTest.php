@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmissionPermissionVerifierTest extends TestCase
 {
     private \PFUser $user;

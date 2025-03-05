@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveArtifactLinkFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const MIRRORED_PROGRAM_INCREMENT_ID = 80;

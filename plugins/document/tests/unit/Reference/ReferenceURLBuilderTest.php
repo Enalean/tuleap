@@ -28,6 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceURLBuilderTest extends TestCase
 {
     public function testItReturnsBaseURLIfNotLinkedToDocman(): void

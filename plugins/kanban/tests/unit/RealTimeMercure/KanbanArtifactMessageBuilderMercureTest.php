@@ -29,6 +29,7 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanArtifactMessageBuilderMercureTest extends TestCase
 {
     private \Tuleap\Kanban\KanbanItemDao&MockObject $kanban_item_dao;

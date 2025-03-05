@@ -27,6 +27,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IncludeViteAssetsTest extends TestCase
 {
     private vfsStreamDirectory $assets_dir;

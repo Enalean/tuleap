@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramBaseInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProgramBaseInfo(): void

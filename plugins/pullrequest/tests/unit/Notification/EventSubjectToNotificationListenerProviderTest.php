@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Notification;
 
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventSubjectToNotificationListenerProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFindsRegisteredListener(): void

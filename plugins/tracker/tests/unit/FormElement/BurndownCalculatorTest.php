@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

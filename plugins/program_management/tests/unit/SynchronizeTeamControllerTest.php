@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -22,6 +22,7 @@ namespace Tuleap\Templating\Mustache;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItTranslateASimpleString(): void

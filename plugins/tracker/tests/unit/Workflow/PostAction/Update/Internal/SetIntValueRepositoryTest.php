@@ -30,6 +30,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

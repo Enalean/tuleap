@@ -34,6 +34,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEvent_GIT_GERRIT_PROJECT_DELETETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Git_RemoteServer_GerritServer&MockObject $server;

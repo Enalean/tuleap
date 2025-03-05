@@ -44,6 +44,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\CommentWithoutPrivateCheckFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -25,6 +25,7 @@ namespace Tuleap\CLI;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AssertRunnerTest extends TestCase
 {
     use ForgeConfigSandbox;

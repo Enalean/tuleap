@@ -33,6 +33,7 @@ use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddLicenseAgreementControllerTest extends TestCase
 {
     private AddLicenseAgreementController $controller;

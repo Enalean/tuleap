@@ -27,6 +27,7 @@ use TestHelper;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use GlobalResponseMock;

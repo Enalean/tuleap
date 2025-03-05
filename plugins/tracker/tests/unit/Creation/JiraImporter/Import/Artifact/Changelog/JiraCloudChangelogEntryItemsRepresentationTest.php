@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JiraCloudChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsARepresentationFromAPIResponse(): void

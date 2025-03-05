@@ -24,6 +24,7 @@ use Tuleap\SVNCore\CoreApacheConfRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVN_Apache_SvnrootConfTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

@@ -27,6 +27,7 @@ use Tuleap\SVN\Repository\CoreRepository;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Extractor $extractor;

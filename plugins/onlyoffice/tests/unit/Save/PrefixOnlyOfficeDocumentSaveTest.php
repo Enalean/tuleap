@@ -24,6 +24,7 @@ namespace Tuleap\OnlyOffice\Save;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixOnlyOfficeDocumentSaveTest extends TestCase
 {
     public function testHasSpecificPrefix(): void

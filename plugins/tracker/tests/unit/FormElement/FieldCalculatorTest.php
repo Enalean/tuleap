@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

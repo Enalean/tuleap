@@ -85,6 +85,7 @@ use UGroupManager;
 use UserManager;
 use XMLImportHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitXmlImporterTest extends TestIntegrationTestCase
 {
     use TemporaryTestDirectory;

@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const STORY_TRACKER_ID = 42;

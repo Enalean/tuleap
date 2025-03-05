@@ -34,6 +34,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\User\AccessKey\AccessKeyException;
 use User_StatusInvalidException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRequestIsProcessedWhenCurrentUserIsNotRejected(): void

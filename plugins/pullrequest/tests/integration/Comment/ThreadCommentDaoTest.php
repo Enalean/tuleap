@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\Comment;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThreadCommentDaoTest extends TestIntegrationTestCase
 {
     private const PULL_REQUEST_1_ID = 1;

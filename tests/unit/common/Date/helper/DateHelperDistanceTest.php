@@ -24,6 +24,7 @@ namespace Tuleap\Date\helper;
 
 use Tuleap\Date\DateHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateHelperDistanceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $today_at_midnight;

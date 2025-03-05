@@ -22,6 +22,7 @@
 /**
  * @group TokenTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TokenTest extends RestBase
 {
     public function testPostThrowExceptionIfUsernameDoesNotExist()

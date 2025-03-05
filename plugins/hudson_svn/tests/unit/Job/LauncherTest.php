@@ -28,6 +28,7 @@ use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Project $project;

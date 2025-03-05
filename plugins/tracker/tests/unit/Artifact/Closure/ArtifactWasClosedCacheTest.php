@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Closure;
 
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactWasClosedCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItStoresClosedArtifacts(): void

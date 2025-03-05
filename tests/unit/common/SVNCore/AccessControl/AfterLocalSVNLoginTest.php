@@ -26,6 +26,7 @@ use Tuleap\SVNCore\AccessControl\AfterLocalSVNLogin;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AfterLocalSVNLoginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testLoginIsAllowedByDefault(): void

@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\DispatchProgramIncrementCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RemovePlannedFeaturesFromTopBacklogStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ArtifactCreatedEvent $event;

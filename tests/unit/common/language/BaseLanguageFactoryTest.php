@@ -27,6 +27,7 @@ use BaseLanguageFactory;
 use ForgeConfig;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use LegacyTabTranslationsSupport;

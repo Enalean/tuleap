@@ -29,6 +29,7 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

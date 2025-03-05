@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

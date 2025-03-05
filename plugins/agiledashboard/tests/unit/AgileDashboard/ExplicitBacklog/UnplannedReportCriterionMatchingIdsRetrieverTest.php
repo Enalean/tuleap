@@ -33,6 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 {
     private UnplannedReportCriterionMatchingIdsRetriever $retriever;

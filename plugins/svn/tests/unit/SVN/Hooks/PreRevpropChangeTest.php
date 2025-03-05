@@ -31,6 +31,7 @@ use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PreRevpropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

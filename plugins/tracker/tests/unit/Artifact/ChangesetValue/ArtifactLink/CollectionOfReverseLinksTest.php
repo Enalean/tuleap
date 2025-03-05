@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfReverseLinksTest extends TestCase
 {
     private const ARTIFACT_ID_1 = 15;

@@ -35,6 +35,7 @@ use Tuleap\SVN\SvnAdmin;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

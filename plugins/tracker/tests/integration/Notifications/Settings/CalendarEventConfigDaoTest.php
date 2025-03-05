@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CalendarEventConfigDaoTest extends TestIntegrationTestCase
 {
     private const BUG_TRACKER_ID   = 1;

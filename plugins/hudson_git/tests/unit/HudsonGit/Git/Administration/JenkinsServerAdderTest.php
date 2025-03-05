@@ -28,6 +28,7 @@ use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Valid_HTTPURI;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private JenkinsServerAdder $adder;

@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Metadata;
 use Docman_SubItemsWritableVisitor;
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Docman_MetadataFactory|MockObject $metadata_factory;

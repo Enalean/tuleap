@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewFileUploadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FILE_FIELD_ID     = 63;

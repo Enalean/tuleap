@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

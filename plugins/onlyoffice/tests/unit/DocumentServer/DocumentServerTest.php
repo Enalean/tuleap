@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentServerTest extends TestCase
 {
     public function testDetectsWhenASecretKeyIsAvailable(): void

@@ -27,6 +27,7 @@ use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\PullRequest\UniDiffLine;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FileUniDiff $original_diff;

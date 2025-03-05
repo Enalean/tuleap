@@ -27,6 +27,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

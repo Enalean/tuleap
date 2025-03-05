@@ -44,6 +44,7 @@ use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \CSRFSynchronizerToken&MockObject $csrf_token;

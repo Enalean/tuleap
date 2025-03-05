@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ServiceBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ServiceManager&MockObject $service_manager;

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkTypeProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsMirrorTimeboxType(): void

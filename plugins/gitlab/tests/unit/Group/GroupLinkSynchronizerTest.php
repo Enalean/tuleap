@@ -46,6 +46,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkSynchronizerTest extends TestCase
 {
     private const GROUP_LINK_ID = 10;

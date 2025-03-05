@@ -28,6 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\User\Admin\GetUserAuthenticatorsEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GetUserAuthenticatorsEventHandlerTest extends TestCase
 {
     use GlobalLanguageMock;

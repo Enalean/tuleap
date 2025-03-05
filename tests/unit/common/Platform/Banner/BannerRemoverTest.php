@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Platform\Banner;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBannerIsRemoved(): void

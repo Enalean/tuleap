@@ -24,6 +24,7 @@ namespace Tuleap\Project\XML\Import;
 
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

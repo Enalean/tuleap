@@ -29,6 +29,7 @@ use Tuleap\Document\Config\Project\SearchCriteriaDao;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 {
     public function testItShouldAlwaysReturnIdCriterion(): void

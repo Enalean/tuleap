@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindValueIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromStaticBindValue(): void

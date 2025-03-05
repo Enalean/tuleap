@@ -27,6 +27,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JsonCastTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDoesNotReturnNullIfValueIsInt(): void

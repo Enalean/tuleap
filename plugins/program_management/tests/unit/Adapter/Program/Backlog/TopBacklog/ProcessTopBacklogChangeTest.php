@@ -43,6 +43,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID = 101;

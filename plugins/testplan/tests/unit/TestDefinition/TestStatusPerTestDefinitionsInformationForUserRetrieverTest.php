@@ -28,6 +28,7 @@ use TrackerFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

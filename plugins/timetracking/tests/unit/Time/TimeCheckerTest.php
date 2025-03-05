@@ -26,6 +26,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimeChecker $time_checker;

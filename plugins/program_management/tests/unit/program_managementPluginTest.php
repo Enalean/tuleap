@@ -24,6 +24,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TimeboxArtifactLinkPresente
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProvidesArtLinkTypes(): void

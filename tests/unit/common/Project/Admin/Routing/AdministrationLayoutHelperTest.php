@@ -29,6 +29,7 @@ use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdministrationLayoutHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AdministrationLayoutHelper $helper;

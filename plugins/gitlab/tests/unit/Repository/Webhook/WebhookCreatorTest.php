@@ -33,6 +33,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

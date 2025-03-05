@@ -25,6 +25,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GenericProviderIssuerClaimValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

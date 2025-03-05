@@ -24,6 +24,7 @@ namespace Tuleap\TrackerFunctions\Administration;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FunctionDaoTest extends TestIntegrationTestCase
 {
     private const BUG_TRACKER_ID  = 1;

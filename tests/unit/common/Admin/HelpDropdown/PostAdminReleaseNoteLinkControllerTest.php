@@ -30,6 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PostAdminReleaseNoteLinkController $post_admin_release_note_controller;

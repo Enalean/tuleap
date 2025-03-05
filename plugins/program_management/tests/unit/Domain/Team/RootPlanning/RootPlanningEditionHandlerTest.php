@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROJECT_ID = 110;

@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdatedInlineCommentEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEventCanBeTransformedToAWorkerEventPayload(): void

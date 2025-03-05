@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization;
 
 use Tuleap\ProgramManagement\Tests\Stub\CleanPendingSynchronizationDailyStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizationCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCleansSynchronizationsStartedMoreThanADayAgo(): void

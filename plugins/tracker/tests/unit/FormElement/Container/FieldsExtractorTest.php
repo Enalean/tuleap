@@ -26,6 +26,7 @@ use Tracker_FormElement_Container;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

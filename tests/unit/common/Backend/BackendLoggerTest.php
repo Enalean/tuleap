@@ -27,6 +27,7 @@ use TruncateLevelLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

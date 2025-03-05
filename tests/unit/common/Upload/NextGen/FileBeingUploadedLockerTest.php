@@ -29,6 +29,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 use Tuleap\Tus\NextGen\TusFileInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

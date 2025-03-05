@@ -38,6 +38,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DuckTypedFieldWhereTest extends TestCase
 {
     private const FIELD_NAME        = 'initial_effort';

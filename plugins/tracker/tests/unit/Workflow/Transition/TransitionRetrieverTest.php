@@ -31,6 +31,7 @@ use Tracker_FormElement_Field_Selectbox;
 use Transition;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

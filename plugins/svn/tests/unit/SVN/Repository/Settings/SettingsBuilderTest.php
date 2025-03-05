@@ -40,6 +40,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SettingsBuilderTest extends TestCase
 {
     private UserGroupRetriever&\PHPUnit\Framework\MockObject\MockObject $ugroup_retriever;

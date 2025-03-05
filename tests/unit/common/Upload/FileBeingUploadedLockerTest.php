@@ -27,6 +27,7 @@ use RecursiveIteratorIterator;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

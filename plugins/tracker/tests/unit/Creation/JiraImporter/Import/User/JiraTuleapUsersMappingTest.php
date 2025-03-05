@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

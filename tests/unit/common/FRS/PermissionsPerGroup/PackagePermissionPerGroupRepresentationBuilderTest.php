@@ -34,6 +34,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentat
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

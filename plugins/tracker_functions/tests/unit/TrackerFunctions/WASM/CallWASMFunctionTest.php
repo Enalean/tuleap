@@ -29,6 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\WebAssembly\WASMCaller;
 use Tuleap\WebAssembly\WASMCallerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CallWASMFunctionTest extends TestCase
 {
     private WASMResponseProcessor&MockObject $response_processor;

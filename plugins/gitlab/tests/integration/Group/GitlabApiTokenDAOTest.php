@@ -29,6 +29,7 @@ use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabApiTokenDAOTest extends TestIntegrationTestCase
 {
     private GroupLinkApiTokenDAO $token_dao;

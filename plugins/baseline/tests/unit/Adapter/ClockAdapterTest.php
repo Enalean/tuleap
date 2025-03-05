@@ -27,6 +27,7 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Before;
 use Tuleap\Baseline\Domain\Clock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ClockAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Clock $clock;

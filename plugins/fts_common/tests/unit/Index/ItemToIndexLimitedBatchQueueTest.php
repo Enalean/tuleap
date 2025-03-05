@@ -26,6 +26,7 @@ use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ItemToIndexLimitedBatchQueueTest extends TestCase
 {
     public function testAddsAllItemsToIndexPerBatch(): void

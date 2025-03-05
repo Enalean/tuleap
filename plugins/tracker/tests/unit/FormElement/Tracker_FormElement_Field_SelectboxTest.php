@@ -34,6 +34,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

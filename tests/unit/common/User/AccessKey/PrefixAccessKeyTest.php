@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixAccessKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasSpecificPrefix(): void

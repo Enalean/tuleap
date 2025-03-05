@@ -88,6 +88,7 @@ use UserXMLExporter;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
 {
     use ForgeConfigSandbox;

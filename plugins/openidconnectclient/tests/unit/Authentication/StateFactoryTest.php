@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use RandomNumberGenerator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class StateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItKeepsSameKey(): void

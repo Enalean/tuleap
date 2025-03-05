@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediaWikiInstallAndUpdateHandlerExceptionTest extends TestCase
 {
     public function testBuildsMessageFromCommandFailures(): void

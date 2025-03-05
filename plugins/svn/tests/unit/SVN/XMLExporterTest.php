@@ -31,6 +31,7 @@ use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

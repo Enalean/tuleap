@@ -26,6 +26,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\Account\Register\InvitationShouldBeToEmailException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InvitationToEmailTest extends TestCase
 {
     public function testItReturnsAnInvitationToEmailObject(): void

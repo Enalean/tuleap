@@ -27,6 +27,7 @@ namespace Tuleap\Date;
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DatePeriodWithOpenDaysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $week_day_timestamp;

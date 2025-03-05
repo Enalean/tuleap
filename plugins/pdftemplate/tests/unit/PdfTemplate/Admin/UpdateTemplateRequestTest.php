@@ -27,6 +27,7 @@ use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateTemplateRequestTest extends TestCase
 {
     public function testChangedFields(): void

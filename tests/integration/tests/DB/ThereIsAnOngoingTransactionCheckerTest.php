@@ -24,6 +24,7 @@ namespace Tuleap\DB;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThereIsAnOngoingTransactionCheckerTest extends TestCase
 {
     protected function tearDown(): void

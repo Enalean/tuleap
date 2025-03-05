@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUriStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAnIterationFromArtifact(): void

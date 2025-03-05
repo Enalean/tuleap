@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialTeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildPotentialTeamsPresenter(): void

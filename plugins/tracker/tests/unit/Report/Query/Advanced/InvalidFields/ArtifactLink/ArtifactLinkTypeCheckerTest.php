@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\VisibleTypesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkTypeCheckerTest extends TestCase
 {
     public function testValidType(): void

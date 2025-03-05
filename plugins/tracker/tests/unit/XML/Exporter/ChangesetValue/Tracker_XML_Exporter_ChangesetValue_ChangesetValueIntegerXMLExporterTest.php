@@ -26,6 +26,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $exporter;

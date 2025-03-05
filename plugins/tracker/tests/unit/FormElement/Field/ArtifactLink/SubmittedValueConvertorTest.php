@@ -26,6 +26,7 @@ use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

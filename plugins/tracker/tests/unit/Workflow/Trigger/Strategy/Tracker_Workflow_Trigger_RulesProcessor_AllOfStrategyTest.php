@@ -25,6 +25,7 @@ use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

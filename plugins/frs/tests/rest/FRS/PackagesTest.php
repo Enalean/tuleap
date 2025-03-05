@@ -26,6 +26,7 @@ use RestBase;
 /**
  * @group FRSTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PackagesTest extends RestBase
 {
     public const PROJECT_NAME = 'frs-test';

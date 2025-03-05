@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

@@ -24,6 +24,7 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

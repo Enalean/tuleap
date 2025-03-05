@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_HierarchyTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testWithEmptyHierarchyGetLevelShouldThrowExceptionForAnyTracker(): void

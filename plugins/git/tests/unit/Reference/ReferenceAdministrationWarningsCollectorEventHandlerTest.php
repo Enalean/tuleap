@@ -25,6 +25,7 @@ use Git;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ReferenceAdministrationWarningsCollectorEventHandlerTest extends TestCase
 {
     /**

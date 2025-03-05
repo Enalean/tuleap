@@ -24,6 +24,7 @@ namespace Tuleap\User\AccessKey\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

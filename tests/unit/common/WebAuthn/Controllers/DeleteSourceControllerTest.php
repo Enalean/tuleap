@@ -43,6 +43,7 @@ use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\GetCredentialSourceById;
 use function Psl\Json\encode as psl_json_encode;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DeleteSourceControllerTest extends TestCase
 {
     public FeedbackSerializerStub $serializer;

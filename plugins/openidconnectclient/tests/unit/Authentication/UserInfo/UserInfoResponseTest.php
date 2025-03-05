@@ -25,6 +25,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 use Psr\Http\Message\ResponseInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testContentTypeNotAnnouncedAsJSONIsRejected(): void

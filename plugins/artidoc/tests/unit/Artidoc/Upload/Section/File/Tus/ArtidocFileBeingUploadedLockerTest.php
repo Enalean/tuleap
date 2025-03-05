@@ -32,6 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 use Tuleap\Upload\NextGen\FileBeingUploadedInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocFileBeingUploadedLockerTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Gitlab\REST;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupTest extends TestBase
 {
     public function testOptionsGitLabGroups(): void

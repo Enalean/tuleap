@@ -30,6 +30,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraProjectCollection;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertSame;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNotExpectedContent(): void

@@ -28,6 +28,7 @@ use Tuleap\Request\CaptureRequestHandler;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectByNameRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProcessAttachesProjectToRequest(): void

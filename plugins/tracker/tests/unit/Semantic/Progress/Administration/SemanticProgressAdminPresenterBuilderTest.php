@@ -33,6 +33,7 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_FormElementFactory&MockObject $form_element_factory;

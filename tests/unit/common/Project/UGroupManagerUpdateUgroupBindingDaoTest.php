@@ -25,6 +25,7 @@ namespace Tuleap\Project;
 use PHPUnit\Framework\MockObject\MockObject;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupManagerUpdateUgroupBindingDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \UGroupDao&MockObject $dao;

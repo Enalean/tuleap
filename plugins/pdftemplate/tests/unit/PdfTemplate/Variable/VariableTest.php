@@ -24,6 +24,7 @@ namespace Tuleap\PdfTemplate\Variable;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VariableTest extends TestCase
 {
     public function testGetDefaultForPreview(): void

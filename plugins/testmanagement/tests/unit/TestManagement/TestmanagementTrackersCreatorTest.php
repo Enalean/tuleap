@@ -30,6 +30,7 @@ use TrackerXmlImport;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TrackerXmlImport|MockObject $xml_import;

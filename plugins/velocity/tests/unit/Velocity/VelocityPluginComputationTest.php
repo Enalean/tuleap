@@ -34,6 +34,7 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private VelocityCalculator&\PHPUnit\Framework\MockObject\MockObject $velocity_calculator;

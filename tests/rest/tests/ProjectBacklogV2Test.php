@@ -27,6 +27,7 @@ use RestBase;
 /**
  * @group BacklogItemsTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectBacklogV2Test extends RestBase
 {
     public function testOPTIONSBacklog(): void

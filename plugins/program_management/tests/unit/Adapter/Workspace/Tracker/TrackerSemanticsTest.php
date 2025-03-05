@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerSemanticsTest extends TestCase
 {
     /**

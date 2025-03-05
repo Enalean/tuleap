@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ProvidedArtifactLinksTypesEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchLinkedArtifactsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinksNewTypesCheckerTest extends TestCase
 {
     private const ARTIFACT_ID        = 9624;

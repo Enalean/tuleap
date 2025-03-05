@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\GlobalResponseMock;

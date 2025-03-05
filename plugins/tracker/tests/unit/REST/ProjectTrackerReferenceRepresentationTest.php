@@ -26,6 +26,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectTrackerReferenceRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

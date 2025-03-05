@@ -36,6 +36,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

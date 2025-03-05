@@ -30,6 +30,7 @@ use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

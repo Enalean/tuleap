@@ -23,6 +23,7 @@ namespace Tuleap\GraphOnTrackersV5\GraphicLibrary;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BarChartDataBuilderTest extends TestCase
 {
     /**

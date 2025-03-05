@@ -43,6 +43,7 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

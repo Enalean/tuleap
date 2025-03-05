@@ -26,6 +26,7 @@ use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetFieldData(): void

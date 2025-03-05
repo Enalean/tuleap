@@ -28,6 +28,7 @@ use Tuleap\User\UserNameNormalizer;
 
 require_once(__DIR__ . '/../../bootstrap.php');
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UserNameNormalizer&\PHPUnit\Framework\MockObject\MockObject $userNameNormalizer;

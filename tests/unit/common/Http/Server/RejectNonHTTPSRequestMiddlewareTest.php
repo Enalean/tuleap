@@ -25,6 +25,7 @@ namespace Tuleap\Http\Server;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RejectNonHTTPSRequestMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

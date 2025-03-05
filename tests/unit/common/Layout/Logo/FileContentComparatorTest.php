@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\Logo;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FileContentComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDoesFilesHaveTheSameContent(): void

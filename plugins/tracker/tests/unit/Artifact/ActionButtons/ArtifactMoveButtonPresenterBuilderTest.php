@@ -29,6 +29,7 @@ use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddToBacklogPostActionAllPowerfulUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

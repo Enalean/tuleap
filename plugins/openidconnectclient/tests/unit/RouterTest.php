@@ -25,6 +25,7 @@ namespace Tuleap\OpenIDConnectClient;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProcessRequest(): void

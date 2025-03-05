@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StateStorageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testStoredStateIsRetrieved(): void

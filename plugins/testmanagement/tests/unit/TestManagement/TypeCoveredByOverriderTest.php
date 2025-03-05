@@ -27,6 +27,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Config|MockObject $config;

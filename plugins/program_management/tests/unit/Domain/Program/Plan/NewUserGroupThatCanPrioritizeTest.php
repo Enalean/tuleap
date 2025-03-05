@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsVal
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewUserGroupThatCanPrioritizeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramForAdministrationIdentifier $program;

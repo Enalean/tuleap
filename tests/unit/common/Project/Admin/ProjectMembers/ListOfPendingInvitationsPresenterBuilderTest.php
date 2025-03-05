@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
 {
     use GlobalLanguageMock;

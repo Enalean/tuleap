@@ -60,6 +60,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\PostCreatio
 use UserXMLExporter;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;

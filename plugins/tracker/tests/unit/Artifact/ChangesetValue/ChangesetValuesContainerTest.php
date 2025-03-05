@@ -30,6 +30,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksComman
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID               = 170;

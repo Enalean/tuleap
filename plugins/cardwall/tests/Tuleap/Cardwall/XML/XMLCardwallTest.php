@@ -24,6 +24,7 @@ namespace Tuleap\Cardwall\XML;
 
 use SimpleXMLElement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLCardwallTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsCardwallWithTracker(): void

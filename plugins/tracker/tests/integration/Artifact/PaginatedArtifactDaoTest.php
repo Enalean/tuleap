@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PaginatedArtifactDaoTest extends TestIntegrationTestCase
 {
     private int $stories_id;

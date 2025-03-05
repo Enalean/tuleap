@@ -20,6 +20,7 @@
 
 namespace Tuleap\ProjectOwnership\ProjectOwner;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectOwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

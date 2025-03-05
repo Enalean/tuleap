@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&\Tracker_FormElementFactory $factory;

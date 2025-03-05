@@ -42,6 +42,7 @@ use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XMLImportHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;

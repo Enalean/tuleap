@@ -29,6 +29,7 @@ namespace Tuleap\Chart {
         \Tuleap\header($header, $replace, $http_response_code);
     }
 
+    #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
     final class ChartTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // See https://tools.ietf.org/html/rfc2083#section-12.11

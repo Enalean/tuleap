@@ -28,6 +28,7 @@ use Tuleap\DB\DBConnection;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

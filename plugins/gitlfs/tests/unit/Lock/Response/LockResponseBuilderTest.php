@@ -25,6 +25,7 @@ namespace Tuleap\GitLFS\Lock\Response;
 use Tuleap\GitLFS\Lock\Lock;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LockResponseBuilder $lock_response_builder;

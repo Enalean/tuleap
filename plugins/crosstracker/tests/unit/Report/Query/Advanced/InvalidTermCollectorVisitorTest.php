@@ -103,6 +103,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidTermCollectorVisitorTest extends TestCase
 {
     use LegacyTabTranslationsSupport;

@@ -26,6 +26,7 @@ use Project;
 use SimpleXMLElement;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private XMLExporter $exporter;

@@ -28,6 +28,7 @@ use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkDAOTest extends TestIntegrationTestCase
 {
     private const GITLAB_GROUP_ID                = 99;

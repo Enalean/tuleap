@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Heartbeat;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExcludeTrackersFromArtifactHeartbeatsTest extends TestCase
 {
     public function testDefaultsToNoExclusion(): void

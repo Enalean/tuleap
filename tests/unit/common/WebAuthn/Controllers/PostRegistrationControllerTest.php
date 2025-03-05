@@ -52,6 +52,7 @@ use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
 use function Psl\Json\encode as psl_json_encode;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostRegistrationControllerTest extends TestCase
 {
     private WebAuthnCredentialSourceDaoStub $source_dao;

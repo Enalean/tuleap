@@ -30,6 +30,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var OAuth2RefreshTokenRevoker */

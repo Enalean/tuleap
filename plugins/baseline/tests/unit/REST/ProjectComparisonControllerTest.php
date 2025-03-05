@@ -36,6 +36,7 @@ use Tuleap\Baseline\Domain\ProjectRepository;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use CurrentUserContext;

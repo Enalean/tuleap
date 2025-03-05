@@ -30,6 +30,7 @@ use Tuleap\Test\Stubs\BuildDisplayNameStub;
 use Tuleap\Test\Stubs\ProvideUserFromRowStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AllOwnerRetrieverTest extends TestCase
 {
     public function testItReturnsAnEmptyArrayIfThereIsNoDocumentOwner(): void

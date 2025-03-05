@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactAttachmentExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\TemporaryTestDirectory;

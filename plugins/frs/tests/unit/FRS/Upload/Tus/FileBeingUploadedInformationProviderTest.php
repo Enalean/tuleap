@@ -29,6 +29,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFileInformationCanBeProvided(): void

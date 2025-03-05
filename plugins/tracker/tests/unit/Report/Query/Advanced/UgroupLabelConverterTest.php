@@ -24,6 +24,7 @@ use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UgroupLabelConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

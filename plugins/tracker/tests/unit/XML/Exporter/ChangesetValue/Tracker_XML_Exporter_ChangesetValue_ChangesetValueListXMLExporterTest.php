@@ -25,6 +25,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter $exporter;

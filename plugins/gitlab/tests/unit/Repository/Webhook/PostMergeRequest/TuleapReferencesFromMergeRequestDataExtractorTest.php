@@ -26,6 +26,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferencePa
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferenceCollection;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TuleapReferencesFromMergeRequestDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExtractsReferencesFromTitleConcatenatedToDescription(): void

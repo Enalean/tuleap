@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PossibleParentSelectorRendererTest extends TestCase
 {
     use ForgeConfigSandbox;

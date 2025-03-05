@@ -27,6 +27,7 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostFileImporterTest extends TestCase
 {
     public function testPostImport(): void

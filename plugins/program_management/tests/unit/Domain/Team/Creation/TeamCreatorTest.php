@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID = 101;

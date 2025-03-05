@@ -33,6 +33,7 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationUpdateEventProxyTest extends TestCase
 {
     private const ITERATION_ID = 20;

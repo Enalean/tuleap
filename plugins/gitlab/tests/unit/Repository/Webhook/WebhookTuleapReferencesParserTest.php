@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

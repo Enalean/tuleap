@@ -32,6 +32,7 @@ use Tuleap\Git\GitPHP\Project;
 use Tuleap\Git\GitPHP\Tree;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitTreeRepresentationFactoryTest extends TestCase
 {
     private GitTreeRepresentationFactory $git_tree_representation_factory;

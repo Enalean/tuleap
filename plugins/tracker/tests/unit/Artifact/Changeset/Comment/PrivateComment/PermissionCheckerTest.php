@@ -33,6 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionCheckerTest extends TestCase
 {
     private PermissionChecker $checker;
@@ -110,6 +111,7 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
+        $this->tracker->method('userIsAdmin')->willReturn(false);
         $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
         $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
@@ -130,6 +132,7 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
+        $this->tracker->method('userIsAdmin')->willReturn(false);
         $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
         $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
@@ -144,6 +147,7 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
+        $this->tracker->method('userIsAdmin')->willReturn(false);
         $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
         $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
@@ -162,6 +166,8 @@ final class PermissionCheckerTest extends TestCase
             ->willReturn(true);
         $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
         $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+
+        $this->tracker->method('userIsAdmin')->willReturn(false);
 
         $ugroup_1 = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
         $ugroup_2 = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
@@ -242,6 +248,8 @@ final class PermissionCheckerTest extends TestCase
         $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
         $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
 
+        $this->tracker->method('userIsAdmin')->willReturn(false);
+
         $this->user->method('isMemberOfUGroup')
             ->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)
             ->willReturnCallback(static fn(int $id) => in_array($id, [1, 3]));
@@ -266,6 +274,8 @@ final class PermissionCheckerTest extends TestCase
             ->willReturn(true);
         $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
         $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+
+        $this->tracker->method('userIsAdmin')->willReturn(false);
 
         $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
         $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();

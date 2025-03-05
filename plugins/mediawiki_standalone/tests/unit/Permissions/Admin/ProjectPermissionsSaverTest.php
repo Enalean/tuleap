@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EnqueueTaskStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectPermissionsSaverTest extends TestCase
 {
     private const PROJECT_ID = 101;

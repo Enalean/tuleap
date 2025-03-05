@@ -31,6 +31,7 @@ use TemplateRenderer;
 use Tuleap\Notification\Notification;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;

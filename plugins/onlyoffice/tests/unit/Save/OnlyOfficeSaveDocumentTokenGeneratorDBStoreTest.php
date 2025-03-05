@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
 {
     /**

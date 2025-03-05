@@ -25,6 +25,7 @@ namespace Tuleap\XML;
 use SimpleXMLElement;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SimpleXMLCDATAFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItAddACDATAContentToXML(): void

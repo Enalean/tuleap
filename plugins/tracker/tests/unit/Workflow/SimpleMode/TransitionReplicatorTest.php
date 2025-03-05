@@ -43,6 +43,7 @@ use Workflow_Transition_Condition_FieldNotEmpty;
 use Workflow_Transition_Condition_Permissions;
 use Workflow_Transition_ConditionFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionReplicatorTest extends TestCase
 {
     private TransitionReplicator $transition_replicator;

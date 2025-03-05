@@ -27,6 +27,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2OfflineAccessScopeTest extends AuthenticationScopeTestCase
 {
     public function getAuthenticationScopeClassname(): string

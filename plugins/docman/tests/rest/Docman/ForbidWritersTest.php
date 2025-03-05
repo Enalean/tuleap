@@ -26,6 +26,7 @@ use Tuleap\Docman\Test\rest\DocmanForbidWritersDataBuilder;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ForbidWritersTest extends \RestBase
 {
     private const MANAGERS_UGROUP_NAME = 'Managers';

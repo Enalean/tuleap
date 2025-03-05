@@ -23,6 +23,7 @@ namespace Tuleap\CreateTestEnv;
 
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

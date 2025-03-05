@@ -28,6 +28,7 @@ use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 {
     public function testGetMetadataForProject(): array

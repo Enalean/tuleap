@@ -25,6 +25,7 @@ namespace Tuleap\User\Account;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PasswordPreUpdateEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testUserCannotChangePasswordIfTheyDoNotAlreadyHaveOne(): void

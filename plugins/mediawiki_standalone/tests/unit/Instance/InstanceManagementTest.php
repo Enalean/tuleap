@@ -48,6 +48,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(CreateInstance::class)]
 #[CoversClass(ResumeInstance::class)]
 #[CoversClass(SuspendInstance::class)]

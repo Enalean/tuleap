@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateTimeValueRounderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

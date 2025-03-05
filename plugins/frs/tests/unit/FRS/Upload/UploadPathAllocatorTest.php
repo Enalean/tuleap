@@ -24,6 +24,7 @@ namespace Tuleap\FRS\Upload;
 
 use Tuleap\Upload\FileBeingUploadedInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID(): void

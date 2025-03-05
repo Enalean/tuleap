@@ -35,6 +35,7 @@ use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private UUID $uuid;

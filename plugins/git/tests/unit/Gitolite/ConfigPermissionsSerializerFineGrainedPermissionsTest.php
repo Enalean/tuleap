@@ -39,6 +39,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
 {
     private FineGrainedRetriever&MockObject $retriever;

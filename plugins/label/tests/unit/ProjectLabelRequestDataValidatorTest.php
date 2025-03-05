@@ -22,6 +22,7 @@ namespace Tuleap\Label\Widget;
 
 require_once __DIR__ . '/bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectLabelRequestDataValidator $validator;

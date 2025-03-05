@@ -29,6 +29,7 @@ use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&ReviewerChangeDAO $reviewer_change_dao;

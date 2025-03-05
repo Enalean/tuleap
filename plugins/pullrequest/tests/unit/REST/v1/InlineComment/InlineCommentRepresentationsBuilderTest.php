@@ -32,6 +32,7 @@ use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InlineCommentRepresentationsBuilderTest extends TestCase
 {
     private const COMMENTS_AUTHOR_ID = 190;

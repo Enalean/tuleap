@@ -26,6 +26,7 @@ namespace Tuleap\Project\XML;
 use PHPUnit\Framework\MockObject\MockObject;
 use PluginFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceEnableForXmlImportRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ServiceEnableForXmlImportRetriever $retriever;

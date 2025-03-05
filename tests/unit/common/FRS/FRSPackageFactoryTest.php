@@ -34,6 +34,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FRSPackageFactoryTest extends TestCase
 {
     protected int $group_id   = 12;

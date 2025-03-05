@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

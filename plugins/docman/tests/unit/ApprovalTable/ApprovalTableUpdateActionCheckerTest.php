@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ApprovalTableUpdateActionCheckerTest extends TestCase
 {
     private ApprovalTableRetriever&MockObject $approval_table_retriever;

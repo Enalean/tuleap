@@ -36,6 +36,7 @@ use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 use Tuleap\User\ProvideCurrentRequestUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectFileBeingUploadedInformationProviderTest extends TestCase
 {
     private const FILE_ONGOING_UPLOAD_ID = 10;

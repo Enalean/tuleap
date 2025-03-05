@@ -30,6 +30,7 @@ use Tuleap\ForgeConfigSandbox;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(DatabaseConfigurator::class)]
 final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
 {

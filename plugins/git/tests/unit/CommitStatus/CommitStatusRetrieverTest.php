@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitStatusRetrieverTest extends TestCase
 {
     private readonly CommitStatusDAO&MockObject $dao;

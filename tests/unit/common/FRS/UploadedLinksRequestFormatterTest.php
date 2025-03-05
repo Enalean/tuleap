@@ -24,6 +24,7 @@ namespace Tuleap\FRS;
 use HTTPRequest;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UploadedLinksRequestFormatterTest extends TestCase
 {
     public function testItExtractsOneArrayFromLinksProvidedInRequest(): void

@@ -36,6 +36,7 @@ use UGroupManager;
 use User\XML\Import\IFindUserFromXMLReference;
 use XML_RNGValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private XML_RNGValidator $rng_validator;

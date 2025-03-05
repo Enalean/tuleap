@@ -28,6 +28,7 @@ use PDOException;
 use Tuleap\Git\Gitolite\SSHKey\Key;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GerritServerTest extends TestCase
 {
     public function testItExtractsGerritServerSSHKey(): void

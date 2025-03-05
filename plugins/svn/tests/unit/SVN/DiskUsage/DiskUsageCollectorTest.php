@@ -27,6 +27,7 @@ use Statistics_DiskUsageDao;
 use SvnPlugin;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DiskUsageCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCollectsTheDiskUsage(): void

@@ -41,6 +41,7 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\OpenIDConnectTokenBuilder;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

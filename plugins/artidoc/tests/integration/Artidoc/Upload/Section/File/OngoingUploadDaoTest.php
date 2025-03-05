@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OngoingUploadDaoTest extends TestIntegrationTestCase
 {
     private const USER_ID = 101;

@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private InviteBuddyAdminUpdateController $controller;

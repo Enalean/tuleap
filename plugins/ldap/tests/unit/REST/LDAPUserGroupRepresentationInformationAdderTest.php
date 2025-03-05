@@ -25,6 +25,7 @@ use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPUserGroupRepresentationInformationAdderTest extends TestCase
 {
     /**

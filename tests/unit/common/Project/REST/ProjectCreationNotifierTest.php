@@ -31,6 +31,7 @@ use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use TuleapRegisterMail;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LoggerInterface&MockObject $logger;

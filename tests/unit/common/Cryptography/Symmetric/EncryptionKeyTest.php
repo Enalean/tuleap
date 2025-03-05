@@ -25,6 +25,7 @@ namespace Tuleap\Cryptography\Symmetric;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EncryptionKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEncryptionKeyConstruction(): void

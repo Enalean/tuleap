@@ -24,6 +24,7 @@ namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

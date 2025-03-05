@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;

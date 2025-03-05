@@ -43,6 +43,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidFromCollectionBuilderTest extends TestCase
 {
     private SearchCrossTrackerWidget $widget_retriever;

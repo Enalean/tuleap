@@ -25,6 +25,7 @@ namespace Tuleap;
 
 use org\bovigo\vfs\vfsStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TmpWatchTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $target_dir;

@@ -25,6 +25,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use WrapperLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LoggerInterface&MockObject $logger;

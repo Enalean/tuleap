@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidTypeParameterExcep
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('getData')]

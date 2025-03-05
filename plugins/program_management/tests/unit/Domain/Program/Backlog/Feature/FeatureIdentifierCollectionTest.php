@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_FEATURE_ID  = 424;

@@ -24,6 +24,7 @@ namespace Tuleap\Docman\Settings;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForbidWritersSettingsTest extends TestCase
 {
     /**

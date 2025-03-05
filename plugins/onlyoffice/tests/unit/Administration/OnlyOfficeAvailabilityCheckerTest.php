@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 {
     private const PROJECT_ID = 101;

@@ -27,6 +27,7 @@ use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFirstProjectAdministratorFoundNotBeingTheCreatorIsSetAsProjectOwner(): void

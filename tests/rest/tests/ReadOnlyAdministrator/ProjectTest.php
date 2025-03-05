@@ -27,6 +27,7 @@ use Tuleap\REST\ProjectBase;
 /**
  * @group ProjectTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectTest extends ProjectBase
 {
     protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_BOT_USER_NAME): ResponseInterface

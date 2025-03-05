@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewPlannableTrackerStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewTrackerThatCanBePlannedCollectionTest extends TestCase
 {
     private const FIRST_TRACKER_ID  = 1;

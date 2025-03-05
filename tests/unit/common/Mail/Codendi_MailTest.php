@@ -30,6 +30,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap_Template_Mail;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Codendi_MailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FieldChangeListBuilder $builder;

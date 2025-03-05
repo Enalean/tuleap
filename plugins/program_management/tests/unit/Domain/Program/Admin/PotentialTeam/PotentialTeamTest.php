@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialTeamTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAPotentialTeamFromId(): void

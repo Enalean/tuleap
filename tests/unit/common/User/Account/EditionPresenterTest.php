@@ -25,6 +25,7 @@ namespace Tuleap\User\Account;
 
 use PFUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EditionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItChecksTheCommonMarkFormatByDefault(): void

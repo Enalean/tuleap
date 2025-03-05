@@ -40,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesCheckerInterface;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\IncludeAssetsBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private BuildProgram $build_program;

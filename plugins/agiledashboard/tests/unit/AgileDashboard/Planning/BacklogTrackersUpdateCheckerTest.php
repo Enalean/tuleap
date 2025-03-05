@@ -28,6 +28,7 @@ use Tracker_HierarchyFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogTrackersUpdateCheckerTest extends TestCase
 {
     private BacklogTrackersUpdateChecker $checker;

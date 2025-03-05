@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

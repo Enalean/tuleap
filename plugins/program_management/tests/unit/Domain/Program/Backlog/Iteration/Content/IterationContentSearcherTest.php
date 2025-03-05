@@ -48,6 +48,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationContentSearcherTest extends TestCase
 {
     private const USER_STORY_ONE_ID = 555;

@@ -28,6 +28,7 @@ use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ImmutableTagCommitValidatorTest extends TestCase
 {
     public function testImmutableTagWithAPercentCharacterInPathIsCorrectlyProcessed(): void

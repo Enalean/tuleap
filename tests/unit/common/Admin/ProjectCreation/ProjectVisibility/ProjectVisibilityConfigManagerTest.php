@@ -28,6 +28,7 @@ use ForgeConfig;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectVisibilityConfigManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

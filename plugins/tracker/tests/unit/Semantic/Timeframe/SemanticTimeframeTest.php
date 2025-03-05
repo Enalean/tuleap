@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SemanticTimeframeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testisTimeframeNotConfiguredNorImpliedReturnsTrueWhenTimeframeNotConfigured(): void

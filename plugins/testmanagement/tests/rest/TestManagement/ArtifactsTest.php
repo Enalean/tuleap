@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsTest extends TestManagementRESTTestCase
 {
     public function testItPostAnArtifactWithStepDefinitionFieldId(): int

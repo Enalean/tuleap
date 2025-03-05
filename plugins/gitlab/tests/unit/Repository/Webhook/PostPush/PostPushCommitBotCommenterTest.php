@@ -37,6 +37,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Templating\TemplateCache;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

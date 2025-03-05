@@ -22,6 +22,7 @@ namespace Tuleap\Authentication\SplitToken;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SplitTokenVerificationStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testIncorrectlySizedVerificationStringAreRejected()

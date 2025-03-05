@@ -27,6 +27,7 @@ use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertTrue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLStepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItsExportedAsAnExternalField(): void

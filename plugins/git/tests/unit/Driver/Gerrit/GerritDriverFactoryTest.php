@@ -31,6 +31,7 @@ use Git_RemoteServer_GerritServer;
 require_once __DIR__ . '/../../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GerritDriverFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

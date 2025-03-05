@@ -35,6 +35,7 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanFileDownloadControllerTest extends TestCase
 {
     private Docman_ItemFactory&MockObject $item_factory;

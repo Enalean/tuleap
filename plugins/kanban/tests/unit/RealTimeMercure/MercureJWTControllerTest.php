@@ -40,6 +40,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MercureJWTControllerTest extends TestCase
 {
     use \Tuleap\GlobalLanguageMock;

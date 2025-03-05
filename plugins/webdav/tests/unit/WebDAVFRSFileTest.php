@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVFRSFile;
 use WebDAVUtils;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVFRSFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

@@ -28,6 +28,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group GitTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GerritTest extends TestBase
 {
     protected function getResponseForNonMember($request)

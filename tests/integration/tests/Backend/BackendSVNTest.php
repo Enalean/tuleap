@@ -37,6 +37,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BackendSVNTest extends TestIntegrationTestCase
 {
     use TemporaryTestDirectory;

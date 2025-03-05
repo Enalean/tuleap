@@ -27,6 +27,7 @@ use Tracker;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticProgressDao&MockObject $dao;

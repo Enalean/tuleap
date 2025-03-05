@@ -27,6 +27,7 @@ use Tuleap\Config\ConfigDao;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediaWikiSharedSecretGeneratorForgeConfigStoreTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -32,6 +32,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSe
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\UpdateCalendarConfigStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CalendarConfigUpdaterTest extends TestCase
 {
     private readonly \Tracker_Semantic_Title & \PHPUnit\Framework\MockObject\MockObject $semantic_title;

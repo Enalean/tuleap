@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkerTest extends TestCase
 {
     use GlobalResponseMock;

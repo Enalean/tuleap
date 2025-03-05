@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Stub\AllTypesRetrieverStub;
 use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
 use Tuleap\Tracker\Tracker\XML\Updater\FieldChangeArtifactLinksUpdater;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldChangeArtifactLinksUpdaterTest extends TestCase
 {
     private const ARTIFACT_ID  = '101';

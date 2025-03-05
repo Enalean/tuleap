@@ -35,6 +35,7 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AdminPermissionsControllerTest extends TestCase
 {
     use \Tuleap\TemporaryTestDirectory;

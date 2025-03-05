@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitDetailsCrossReferenceInformationBuilderTest extends TestCase
 {
     private Git_ReferenceManager&MockObject $git_reference_manager;

@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostCreationContextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public static function dataProviderSendNotifications(): array

@@ -26,6 +26,7 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_Report_Renderer_Table;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

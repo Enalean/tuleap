@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixOAuth2AuthCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasSpecificPrefix(): void

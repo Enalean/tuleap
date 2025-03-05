@@ -26,6 +26,7 @@ use Git_Exec;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TagTest extends TestCase
 {
     use TemporaryTestDirectory;

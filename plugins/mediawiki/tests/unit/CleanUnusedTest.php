@@ -33,6 +33,7 @@ use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CleanUnusedDao&MockObject $dao;

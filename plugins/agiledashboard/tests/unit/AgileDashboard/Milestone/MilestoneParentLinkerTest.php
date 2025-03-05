@@ -42,6 +42,7 @@ use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneParentLinkerTest extends TestCase
 {
     private MilestoneParentLinker $milestone_parent_linker;

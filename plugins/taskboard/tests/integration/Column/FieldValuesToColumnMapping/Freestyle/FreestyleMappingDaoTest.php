@@ -27,6 +27,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegrationTestCase
 {
     private const TODO_COLUMN_ID                 = 46;

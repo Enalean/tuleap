@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
 {
     private TrackerPrivateCommentUGroupEnabledDao&MockObject $dao;

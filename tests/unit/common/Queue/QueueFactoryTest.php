@@ -25,6 +25,7 @@ namespace Tuleap\Queue;
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QueueFactoryTest extends TestCase
 {
     public function testGetPersistentQueue(): void

@@ -21,6 +21,7 @@
 namespace Tuleap\Git\RepositoryList;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DaoByRepositoryPathSorterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSort()

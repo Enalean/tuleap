@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
 use Tuleap\ProgramManagement\Tests\Stub\Program\Backlog\TopBacklog\TopBacklogChangeProcessorStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddToTopBacklogPostActionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsRepresentationFromPostAction(): void

@@ -38,6 +38,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersDuplicatedHandlerTest extends TestCase
 {
     private const SOURCE_PROJECT_ID                   = 114;

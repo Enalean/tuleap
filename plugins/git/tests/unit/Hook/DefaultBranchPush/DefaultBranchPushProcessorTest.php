@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\UserName;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_COMMIT_MESSAGE  = 'closes story #822';

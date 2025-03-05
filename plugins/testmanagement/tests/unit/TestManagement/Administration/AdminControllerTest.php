@@ -31,6 +31,7 @@ use Tuleap\TestManagement\TrackerDefinitionNotValidException;
 use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Valid_UInt;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindValuesAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

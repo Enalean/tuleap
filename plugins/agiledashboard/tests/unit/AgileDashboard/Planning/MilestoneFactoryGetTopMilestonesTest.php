@@ -49,6 +49,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneFactoryGetTopMilestonesTest extends TestCase
 {
     private Planning_MilestoneFactory $milestone_factory;

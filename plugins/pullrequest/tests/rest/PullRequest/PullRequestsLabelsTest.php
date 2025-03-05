@@ -28,6 +28,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group PullRequest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestsLabelsTest extends RestBase
 {
     public function testOPTIONS(): void

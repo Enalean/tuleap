@@ -28,6 +28,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HelpMenuOpenedControllerTest extends TestCase
 {
     /**

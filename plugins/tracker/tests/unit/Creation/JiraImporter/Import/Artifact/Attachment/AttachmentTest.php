@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAnAttachmentFromIssueRESTResponseAPI(): void

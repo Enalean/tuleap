@@ -29,6 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidFromCollectionBuilderTest extends TestCase
 {
     public function testItThrowsWhenCalled(): void

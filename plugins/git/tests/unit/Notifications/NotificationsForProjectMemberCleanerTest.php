@@ -31,6 +31,7 @@ use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationsForProjectMemberCleanerTest extends TestCase
 {
     private Project $project;

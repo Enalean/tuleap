@@ -28,6 +28,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

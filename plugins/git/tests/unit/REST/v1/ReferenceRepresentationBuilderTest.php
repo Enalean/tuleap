@@ -24,6 +24,7 @@ namespace Tuleap\Git\REST\v1;
 
 use CrossReferenceFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CrossReferenceFactory $cross_reference_factory;

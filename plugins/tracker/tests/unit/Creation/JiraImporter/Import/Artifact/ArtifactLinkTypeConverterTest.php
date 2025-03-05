@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkTypeConverterTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('getGetMissingArtifactLinkTypeData')]

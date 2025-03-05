@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\xml\InvalidDateException;
 use User\XML\Import\UserNotFoundException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NodeImporterTest extends TestCase
 {
     private LoggerInterface&MockObject $logger;

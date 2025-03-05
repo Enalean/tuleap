@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ValidArtifactLinkPayloadBuilderTest extends TestCase
 {
     private const PARENT_ARTIFACT_ID = 100;

@@ -32,6 +32,7 @@ use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser $user;

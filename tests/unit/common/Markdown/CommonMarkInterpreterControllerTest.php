@@ -29,6 +29,7 @@ use Tuleap\Project\Routing\ProjectRetrieverMiddleware;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommonMarkInterpreterControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CommonMarkInterpreterController $interpreter_controller;

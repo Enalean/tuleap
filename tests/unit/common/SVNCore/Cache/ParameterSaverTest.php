@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVNCore\Cache;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParameterSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItSavesParameters(): void

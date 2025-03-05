@@ -36,6 +36,7 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UploadImageControllerTest extends TestCase
 {
     private PdfTemplateImageIdentifierFactory $image_identifier_factory;

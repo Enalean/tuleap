@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_ITERATION_ID  = 828;

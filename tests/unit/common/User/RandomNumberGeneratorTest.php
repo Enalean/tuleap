@@ -20,6 +20,7 @@
  */
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RandomNumberGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItGeneratesTokenOfTheAskedSize(): void

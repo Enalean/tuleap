@@ -36,6 +36,7 @@ use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmbeddedFileVersionCreatorTest extends TestCase
 {
     private EmbeddedFileVersionCreator $embedded_updator;

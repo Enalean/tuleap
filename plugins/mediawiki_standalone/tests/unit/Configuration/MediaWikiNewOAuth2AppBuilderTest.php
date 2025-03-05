@@ -26,6 +26,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediaWikiNewOAuth2AppBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationUpdateStub;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TestLogger $logger;

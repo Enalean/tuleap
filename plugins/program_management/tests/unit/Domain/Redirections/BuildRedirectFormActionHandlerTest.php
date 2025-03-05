@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\IterationRedirectionParametersStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramRedirectionParametersStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BuildRedirectFormActionHandlerTest extends TestCase
 {
     private BuildRedirectFormActionEventStub $event;

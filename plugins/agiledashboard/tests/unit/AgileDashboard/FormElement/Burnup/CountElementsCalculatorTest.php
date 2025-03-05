@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CountElementsCalculatorTest extends TestCase
 {
     private CountElementsCalculator $calculator;

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Hudson;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HudsonJobLazyExceptionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHudsonJobIsRetrievedWhenNoErrorExists(): void

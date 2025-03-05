@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostReceiveMailsRetrieverTest extends TestCase
 {
     private GitRepository&MockObject $repository;

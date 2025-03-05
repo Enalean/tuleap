@@ -24,6 +24,7 @@ use Cocur\Slugify\Slugify;
 use Rule_UserName;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserNameNormalizerTest extends TestCase
 {
     private \PHPUnit\Framework\MockObject\MockObject&Rule_UserName $rules;

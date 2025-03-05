@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Planning\XML;
 
 use SimpleXMLElement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsPlanningInXML(): void

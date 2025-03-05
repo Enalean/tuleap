@@ -35,6 +35,7 @@ use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

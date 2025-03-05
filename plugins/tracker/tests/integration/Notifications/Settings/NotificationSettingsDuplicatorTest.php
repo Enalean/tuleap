@@ -32,6 +32,7 @@ use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
 {
     private NotificationSettingsDuplicator $duplicator;

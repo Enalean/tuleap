@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TASK_ID                      = 42;

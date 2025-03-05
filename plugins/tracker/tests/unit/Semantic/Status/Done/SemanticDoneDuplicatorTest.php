@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tracker_Semantic_StatusDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticDoneDuplicator $duplicator;

@@ -26,6 +26,7 @@ use Tuleap\Cryptography\Asymmetric\SignaturePublicKey;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Option\Option;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;

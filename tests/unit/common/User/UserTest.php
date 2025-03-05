@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testStatus(): void

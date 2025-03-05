@@ -32,6 +32,7 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactDependenciesDeletorTest extends TestCase
 {
     private const PROJECT_ID = 109;

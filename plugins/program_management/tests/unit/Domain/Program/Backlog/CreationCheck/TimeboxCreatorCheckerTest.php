@@ -51,6 +51,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GatherSynchronizedFields $fields_adapter;

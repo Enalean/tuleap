@@ -30,6 +30,7 @@ use SystemEventProcess;
 use SystemEventProcessManager;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEventProcessManagerTest extends TestCase
 {
     private SystemEventProcessManager $process_manager;

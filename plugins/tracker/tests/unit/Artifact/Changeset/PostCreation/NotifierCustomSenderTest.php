@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\ProvideEmai
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\SendMailStub;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotifierCustomSenderTest extends TestCase
 {
     use GlobalLanguageMock;
@@ -68,9 +69,12 @@ final class NotifierCustomSenderTest extends TestCase
 
         $this->custom_email_sender = $this->createMock(ConfigNotificationEmailCustomSender::class);
 
+        $user_helper = $this->createStub(UserHelper::class);
+        $user_helper->method('getDisplayNameFromUserId')->willReturn('User Display Name');
+
         $this->mail_notification_task = new EmailNotificationTask(
             new NullLogger(),
-            $this->createMock(UserHelper::class),
+            $user_helper,
             $this->recipients_manager,
             $this->createMock(Tracker_Artifact_MailGateway_RecipientFactory::class),
             $mail_gateway_config,
@@ -91,7 +95,9 @@ final class NotifierCustomSenderTest extends TestCase
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset->method('getId')->willReturn(66);
         $changeset->method('mailDiffToPrevious')->willReturn(false);
-        $changeset->method('getComment')->willReturn($this->createMock(Tracker_Artifact_Changeset_Comment::class));
+        $changeset_comment = $this->createStub(Tracker_Artifact_Changeset_Comment::class);
+        $changeset_comment->method('fetchMailFollowUp')->willReturn('');
+        $changeset->method('getComment')->willReturn($changeset_comment);
 
         $this->recipients_manager->method('getRecipients')->willReturn([
             'a_user'            => true,
@@ -111,7 +117,10 @@ final class NotifierCustomSenderTest extends TestCase
             ->build();
 
         $changeset->method('getSubmitter')->willReturn($user);
+        $changeset->method('getSubmittedBy')->willReturn($user->getId());
         $this->recipients_manager->method('getUserFromRecipientName')->willReturn($user);
+        $changeset->method('getSubmittedOn')->willReturn(1);
+        $changeset->method('diffToPrevious')->willReturn('');
 
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('story')->build();
 
@@ -121,6 +130,7 @@ final class NotifierCustomSenderTest extends TestCase
         $artifact->method('getId')->willReturn(666);
         $artifact->method('getTracker')->willReturn($tracker);
         $artifact->method('fetchMailTitle')->willReturn('The title in the mail');
+        $artifact->method('fetchMail')->willReturn('Mail content');
 
         $changeset->method('getArtifact')->willReturn($artifact);
 

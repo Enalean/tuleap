@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParametrizedSelectFromBaseTest extends TestCase
 {
     public function testItMergeAllSelects(): void

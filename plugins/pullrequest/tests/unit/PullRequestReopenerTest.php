@@ -32,6 +32,7 @@ use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestReopenerTest extends TestCase
 {
     private PullRequestReopener $reopener;

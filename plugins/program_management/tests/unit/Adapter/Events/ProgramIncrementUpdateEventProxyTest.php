@@ -33,6 +33,7 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementUpdateEventProxyTest extends TestCase
 {
     private const PROGRAM_INCREMENT_ID               = 29;

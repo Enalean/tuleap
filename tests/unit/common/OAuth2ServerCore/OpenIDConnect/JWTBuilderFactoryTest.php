@@ -26,6 +26,7 @@ use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Builder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JWTBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsCleanBuilder(): void

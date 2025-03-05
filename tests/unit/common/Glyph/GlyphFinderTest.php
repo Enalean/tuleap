@@ -26,6 +26,7 @@ use EventManager;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

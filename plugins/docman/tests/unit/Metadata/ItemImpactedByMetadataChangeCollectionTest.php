@@ -29,6 +29,7 @@ use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\PUTRecursiveStatusRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ItemImpactedByMetadataChangeCollectionTest extends TestCase
 {
     public function testItBuildCollectionForLegacy(): void

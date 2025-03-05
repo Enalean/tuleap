@@ -25,6 +25,7 @@ namespace Tuleap\Docman\FilenamePattern;
 use Tuleap\Docman\Settings\SearchFilenamePatternInSettings;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FilenamePatternRetrieverTest extends TestCase
 {
     public function testGetPattern(): void

@@ -20,6 +20,7 @@
 
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ColorHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $colorSet = [

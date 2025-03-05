@@ -26,6 +26,7 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForceDisableErrorDisplayMiddlewareTest extends TestCase
 {
     #[RunInSeparateProcess]

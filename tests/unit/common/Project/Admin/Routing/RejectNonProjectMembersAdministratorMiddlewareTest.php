@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\RequestHandlerInterfaceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RejectNonProjectMembersAdministratorMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProcessThrowsWhenProjectIsNotAnAttributeOfRequest(): void

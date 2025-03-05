@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private string $external_address           = 'toto@example.com';

@@ -24,6 +24,7 @@ namespace Tuleap\APIExplorer;
 
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class api_explorerPluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testBuildsPluginInformation(): void

@@ -46,6 +46,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use function PHPUnit\Framework\assertTrue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID = 128;

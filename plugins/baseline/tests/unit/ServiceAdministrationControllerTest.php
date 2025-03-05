@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use User_ForgeUGroup;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ServiceAdministrationControllerTest extends TestCase
 {
     use \Tuleap\TemporaryTestDirectory;

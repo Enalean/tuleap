@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FormattedChangesetValueForIntFieldRetriever $formatted_changeset_value_for_int_field_retriever;

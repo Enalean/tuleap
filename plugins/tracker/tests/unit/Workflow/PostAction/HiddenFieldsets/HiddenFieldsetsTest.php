@@ -28,6 +28,7 @@ use SimpleXMLElement;
 use Tracker_FormElement_Container_Fieldset;
 use Transition;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HiddenFieldsetsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

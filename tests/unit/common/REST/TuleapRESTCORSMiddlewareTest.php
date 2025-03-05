@@ -25,6 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TuleapRESTCORSMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ResponseFactoryInterface $message_factory;

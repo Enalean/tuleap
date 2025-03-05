@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 85;

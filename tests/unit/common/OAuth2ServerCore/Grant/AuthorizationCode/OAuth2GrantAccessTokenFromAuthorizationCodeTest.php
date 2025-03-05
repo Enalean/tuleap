@@ -39,6 +39,7 @@ use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

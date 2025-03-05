@@ -25,6 +25,7 @@ namespace Tuleap\Queue\Noop;
 use Tuleap\Queue\PersistentQueueStatistics;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PersistentQueueTest extends TestCase
 {
     private PersistentQueue $queue;

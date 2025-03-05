@@ -26,6 +26,7 @@ use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebAuthnChallengeDaoTest extends TestIntegrationTestCase
 {
     private WebAuthnChallengeDao $dao;

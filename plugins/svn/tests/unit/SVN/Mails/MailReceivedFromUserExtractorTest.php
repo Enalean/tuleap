@@ -23,6 +23,7 @@ namespace Tuleap\SVN\Admin;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class MailReceivedFromUserExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItVerifyThatMailListIsValid(): void

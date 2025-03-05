@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use User\XML\Import\IFindUserFromXMLReference;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCase
 {
     private Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $artifact_fields_data_builder;

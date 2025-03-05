@@ -24,6 +24,7 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItGetsDaysToCacheWhenPeriodIsOngoing()

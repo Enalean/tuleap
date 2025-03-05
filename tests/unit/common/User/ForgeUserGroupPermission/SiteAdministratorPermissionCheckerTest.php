@@ -22,6 +22,7 @@ namespace Tuleap\User\ForgeUserGroupPermission;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SiteAdministratorPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SiteAdministratorPermissionChecker $permission_checker;

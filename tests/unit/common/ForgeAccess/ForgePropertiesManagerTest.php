@@ -29,6 +29,7 @@ use PermissionsManager;
 use ProjectManager;
 use Tuleap\FRS\FRSPermissionCreator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

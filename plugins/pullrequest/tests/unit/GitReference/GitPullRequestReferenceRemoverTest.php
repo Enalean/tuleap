@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\GitReference;
 
 use Tuleap\PullRequest\GitExec;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAllReferencesInPullRequestNamespaceAreRemoved(): void

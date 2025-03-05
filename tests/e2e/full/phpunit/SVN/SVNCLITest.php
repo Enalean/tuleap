@@ -25,6 +25,7 @@ namespace Tuleap\Tests\Selenium\SVN;
 
 use SimpleXMLElement;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $init_pwd;

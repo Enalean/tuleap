@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 use Tuleap\Upload\UploadPathAllocator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentBeingUploadedInformationProviderTest extends TestCase
 {
     public function testFileInformationCanBeProvided(): void

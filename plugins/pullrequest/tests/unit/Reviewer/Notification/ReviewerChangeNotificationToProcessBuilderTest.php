@@ -31,6 +31,7 @@ use Tuleap\PullRequest\Reviewer\Change\ReviewerChangePullRequestAssociation;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerChangeNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

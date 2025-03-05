@@ -24,6 +24,7 @@ namespace Tuleap\Project\REST;
 
 use Exception;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserGroupRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

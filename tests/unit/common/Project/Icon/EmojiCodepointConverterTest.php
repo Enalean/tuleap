@@ -25,6 +25,7 @@ namespace Tuleap\Project\Icon;
 
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmojiCodepointConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsEmptyCharacterIfThereIsNothing(): void

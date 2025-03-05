@@ -25,6 +25,7 @@ namespace Tuleap\Queue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\DB\CheckThereIsAnOngoingTransactionStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PersistentQueueNoTransactionWrapperTest extends TestCase
 {
     public function testPushSinglePersistentMessageIsDelegatedIfNoTransaction(): void

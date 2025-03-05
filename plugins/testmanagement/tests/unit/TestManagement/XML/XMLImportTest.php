@@ -31,6 +31,7 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\MissingArtifactLinkException;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItImportsConfigurationFromXMLContent(): void

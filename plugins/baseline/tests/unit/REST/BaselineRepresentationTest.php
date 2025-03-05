@@ -32,6 +32,7 @@ use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselineRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

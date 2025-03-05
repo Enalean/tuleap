@@ -29,6 +29,7 @@ use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use Tuleap\Markdown\BlockRenderer\EnhancedCodeBlockRenderer;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EnhancedCodeBlockExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddsTheEnhancedCodeBlockRendererToTheEnvironmentAndOverridesDefaultCodeBlockRenderer(): void

@@ -26,6 +26,7 @@ use PhpParser\PrettyPrinter;
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectConvertorTest extends TestCase
 {
     public function testItExportsABasicProject(): void

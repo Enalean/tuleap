@@ -26,6 +26,7 @@ namespace Tuleap\MediawikiStandalone\Service;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceAvailabilityHandlerTest extends TestCase
 {
     private ServiceAvailabilityHandler $handler;

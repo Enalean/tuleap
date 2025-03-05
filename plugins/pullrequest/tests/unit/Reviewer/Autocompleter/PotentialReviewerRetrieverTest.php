@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use UserDao;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -24,6 +24,7 @@ namespace Tuleap\User\Account\Register;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RegisterFormValidationIssueTest extends TestCase
 {
     public function testGetFieldError(): void

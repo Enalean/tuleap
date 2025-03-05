@@ -28,6 +28,7 @@ use Tuleap\Search\SearchResultEntryBadge;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\SearchResultEntryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchResultEntryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TYPE            = 'countersale';

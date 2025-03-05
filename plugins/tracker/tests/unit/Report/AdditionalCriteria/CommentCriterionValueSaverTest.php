@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\AdditionalCriteria;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Report_AdditionalCriterion;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentCriterionValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

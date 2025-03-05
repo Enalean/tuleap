@@ -62,6 +62,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitActionsTest extends TestCase
 {
     use GlobalLanguageMock;

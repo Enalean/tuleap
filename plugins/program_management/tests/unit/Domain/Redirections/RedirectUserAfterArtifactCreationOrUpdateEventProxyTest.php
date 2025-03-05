@@ -30,6 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectUserAfterArtifactCreationOrUpdateEventProxyTest extends TestCase
 {
     private Tracker_Artifact_Redirect $redirect;

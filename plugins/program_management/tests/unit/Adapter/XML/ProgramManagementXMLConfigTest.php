@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\ExtractXMLConfigStub;
 use Tuleap\ProgramManagement\Tests\Stub\ParseXMLConfigStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFromXML(): void

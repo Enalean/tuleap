@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\AgileDashboard\Planning;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BypassTrackerPermissionDuringImportTest extends TestCase
 {
     public function testCanUserViewTrackerIsAlwaysTrue(): void

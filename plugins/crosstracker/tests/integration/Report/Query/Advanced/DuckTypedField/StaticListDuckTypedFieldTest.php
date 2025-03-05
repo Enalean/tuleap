@@ -34,6 +34,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
 {
     use GlobalLanguageMock;

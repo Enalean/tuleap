@@ -31,6 +31,7 @@ use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNCheckRepositoriesWithDuplicatedAccessFileSectionsTest extends TestCase
 {
     private SVNCheckRepositoriesWithDuplicatedAccessFileSections $command;

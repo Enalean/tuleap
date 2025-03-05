@@ -22,6 +22,7 @@ namespace Tuleap\Layout;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThemeVariationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCondensedModeThemeVariation(): void

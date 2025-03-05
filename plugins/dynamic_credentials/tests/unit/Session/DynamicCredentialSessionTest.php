@@ -27,6 +27,7 @@ use Tuleap\DynamicCredentials\Credential\Credential;
 use Tuleap\DynamicCredentials\Credential\CredentialAuthenticationException;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSessionIsStartedWhenAuthenticationIsSuccessful(): void

@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCollectsLinksForTrackers(): void

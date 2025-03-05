@@ -27,6 +27,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ReportArtifactFactory $report_artifact_factory;

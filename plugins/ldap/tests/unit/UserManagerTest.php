@@ -29,6 +29,7 @@ namespace Tuleap\LDAP;
 use SystemEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testUpdateLdapUidShouldPrepareRenameOfUserInTheWholePlatform(): void

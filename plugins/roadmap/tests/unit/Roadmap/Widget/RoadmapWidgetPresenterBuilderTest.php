@@ -27,6 +27,7 @@ use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAPresenterThatExcludesIsChildFromVisibleNatures(): void

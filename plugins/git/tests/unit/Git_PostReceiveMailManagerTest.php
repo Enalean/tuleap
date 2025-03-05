@@ -31,6 +31,7 @@ use GitRepository;
 use Tuleap\Test\PHPUnit\TestCase;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Git_PostReceiveMailManagerTest extends TestCase
 {
     public function testRemoveMailByRepository(): void

@@ -25,6 +25,7 @@ namespace Tuleap\GitLFS\GitPHPDisplay;
 use GitRepository;
 use PFUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DownloadURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GitRepository&\PHPUnit\Framework\MockObject\MockObject $repository;

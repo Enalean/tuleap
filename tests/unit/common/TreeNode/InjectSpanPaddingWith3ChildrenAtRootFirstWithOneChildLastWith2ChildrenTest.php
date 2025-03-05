@@ -21,6 +21,7 @@
 require_once __DIR__ . '/InjectSpanPadding.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest extends InjectSpanPadding
 {
     /**

@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndDateValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\StartDateFieldReferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TIMESTAMP = 1436068265;

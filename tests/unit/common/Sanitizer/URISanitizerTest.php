@@ -22,6 +22,7 @@ namespace Tuleap\Sanitizer;
 
 use Valid_HTTPURI;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotTouchValidURI(): void

@@ -29,6 +29,7 @@ use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
 {
     public function testExecutesInstallAndUpdateCommands(): void

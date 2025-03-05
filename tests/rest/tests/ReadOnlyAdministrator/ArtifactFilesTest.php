@@ -26,6 +26,7 @@ namespace Tuleap\REST\ReadOnlyAdministrator;
 /**
  * @group ArtifactFilesTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactFilesTest extends \ArtifactFilesTest
 {
     /**

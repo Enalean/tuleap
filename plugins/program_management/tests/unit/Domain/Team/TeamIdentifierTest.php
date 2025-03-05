@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_TEAM_ID  = 134;

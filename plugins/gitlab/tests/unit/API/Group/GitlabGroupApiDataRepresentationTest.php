@@ -28,6 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 /**
  * [{"id": 10, "name": "my_group", "full_path": "https://gitlab.example.com/path/full", "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabGroupApiDataRepresentationTest extends TestCase
 {
     /**

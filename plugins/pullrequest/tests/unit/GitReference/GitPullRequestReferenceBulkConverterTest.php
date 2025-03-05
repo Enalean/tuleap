@@ -26,6 +26,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

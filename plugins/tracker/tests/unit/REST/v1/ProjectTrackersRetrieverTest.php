@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackersByProjectIdUserCanAdministrateStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackersByProjectIdUserCanViewStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectTrackersRetrieverTest extends TestCase
 {
     /**

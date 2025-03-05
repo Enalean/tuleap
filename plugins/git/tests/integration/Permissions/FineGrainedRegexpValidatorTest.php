@@ -22,6 +22,7 @@ namespace Tuleap\Git\Permissions;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FineGrainedRegexpValidatorTest extends TestIntegrationTestCase
 {
     public function testValidatesPattern(): void

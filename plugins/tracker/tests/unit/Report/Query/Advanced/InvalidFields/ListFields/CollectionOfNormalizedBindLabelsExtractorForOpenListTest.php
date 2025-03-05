@@ -33,6 +33,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\Bind\BindVisitorStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends TestCase
 {
     private CollectionOfNormalizedBindLabelsExtractorForOpenList $extractor;

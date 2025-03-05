@@ -39,6 +39,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Stub\TrackerXmlFieldsMappingStub;
 use User\XML\Import\IFindUserFromXMLReference;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(Tracker_Artifact_XMLImport_XMLImportFieldStrategyList::class)]
 final class XMLImportFieldStrategyListTest extends TestCase
 {

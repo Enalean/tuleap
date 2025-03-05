@@ -35,6 +35,7 @@ use ZipStream\Exception\FileNotFoundException;
 use ZipStream\Exception\FileNotReadableException;
 use ZipStream\ZipStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ZipStream&MockObject $zip;

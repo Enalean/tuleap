@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ClientIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testIdentifierKeyIsHeldAsIs(): void

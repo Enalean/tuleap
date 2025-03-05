@@ -24,6 +24,7 @@ namespace Tuleap\Project;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupSourceInitializationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \ProjectUGroup&MockObject $ugroup;

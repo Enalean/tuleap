@@ -24,6 +24,7 @@ namespace Tuleap\language;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LanguageTagFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[DataProvider('dataProviderLanguageTags')]

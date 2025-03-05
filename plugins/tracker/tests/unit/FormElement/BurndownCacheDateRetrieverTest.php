@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\FormElement;
 use DateTime;
 use Tuleap\Date\DatePeriodWithOpenDays;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

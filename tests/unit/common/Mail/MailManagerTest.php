@@ -26,6 +26,7 @@ use Codendi_Mail_Interface;
 use MailManager;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetMailPrefsShouldReturnUsersAccordingToPreferences(): void

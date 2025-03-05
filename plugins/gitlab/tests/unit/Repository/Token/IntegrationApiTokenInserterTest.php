@@ -28,6 +28,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

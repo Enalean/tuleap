@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_TRACKER_ID = 101;

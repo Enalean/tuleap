@@ -46,6 +46,7 @@ use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertNull;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PossibleParentHandlerTest extends TestCase
 {
     private const FEATURE_ID   = 123;

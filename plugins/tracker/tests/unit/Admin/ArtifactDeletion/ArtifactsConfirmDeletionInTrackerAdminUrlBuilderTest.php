@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsConfirmDeletionInTrackerAdminUrlBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactsConfirmDeletionInTrackerAdminUrlBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsTheUrlToTheConfrmArtifactDeletionUiFromTracker(): void

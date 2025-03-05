@@ -34,6 +34,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkUpdaterTest extends TestCase
 {
     private UpdateBranchPrefixOfGroupLinkStub $branch_prefix_updater;

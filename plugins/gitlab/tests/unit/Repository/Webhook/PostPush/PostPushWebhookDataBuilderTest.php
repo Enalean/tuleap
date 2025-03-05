@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Psr\Log\NullLogger;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

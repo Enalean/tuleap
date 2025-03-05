@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CloseCampaignController $controller;

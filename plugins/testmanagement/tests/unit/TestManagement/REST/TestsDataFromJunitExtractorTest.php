@@ -29,6 +29,7 @@ use Tuleap\TestManagement\REST\v1\AutomatedTestsResultPATCHRepresentation;
 use Tuleap\TestManagement\REST\v1\ExtractedTestResultFromJunit;
 use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TestsDataFromJunitExtractor $tests_data_from_junit_extractor;

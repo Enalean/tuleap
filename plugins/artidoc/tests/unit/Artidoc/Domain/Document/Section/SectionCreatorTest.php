@@ -39,6 +39,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SectionCreatorTest extends TestCase
 {
     public const DUMMY_SECTION_ID   = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';

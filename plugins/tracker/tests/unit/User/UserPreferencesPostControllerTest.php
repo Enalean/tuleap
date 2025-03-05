@@ -38,6 +38,7 @@ use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 use Tuleap\User\Account\DisplayNotificationsController;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserPreferencesPostControllerTest extends TestCase
 {
     private StoreUserPreferenceStub $preferences_store;

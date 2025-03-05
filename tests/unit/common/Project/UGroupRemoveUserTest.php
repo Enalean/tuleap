@@ -25,6 +25,7 @@ use PFUser;
 use ProjectUGroup;
 use UGroup_Invalid_Exception;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $user_id = 400;

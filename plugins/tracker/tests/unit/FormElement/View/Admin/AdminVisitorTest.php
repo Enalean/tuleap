@@ -19,6 +19,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdminVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -24,6 +24,7 @@ namespace Tuleap\DB;
 
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DBFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

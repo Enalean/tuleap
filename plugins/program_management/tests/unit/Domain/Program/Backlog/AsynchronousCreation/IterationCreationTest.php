@@ -42,6 +42,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID                            = 101;

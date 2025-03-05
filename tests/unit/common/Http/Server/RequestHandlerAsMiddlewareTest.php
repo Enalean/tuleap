@@ -25,6 +25,7 @@ namespace Tuleap\Http\Server;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequestHandlerAsMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testARequestHandlerIsTransformedAsAMiddleware(): void

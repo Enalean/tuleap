@@ -23,6 +23,7 @@ use Tuleap\REST\MilestoneBase;
 /**
  * @group MilestonesTest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var Test\Rest\Tracker\Tracker */

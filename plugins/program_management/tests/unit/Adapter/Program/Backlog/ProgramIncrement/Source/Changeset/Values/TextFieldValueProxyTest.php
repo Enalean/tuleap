@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TextFieldValueProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromChangesetValue(): void

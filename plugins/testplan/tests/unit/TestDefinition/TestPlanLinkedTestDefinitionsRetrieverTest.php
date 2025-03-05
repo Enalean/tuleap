@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Config;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestPlanLinkedTestDefinitionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

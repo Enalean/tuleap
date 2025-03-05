@@ -43,6 +43,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceSavePermissionsControllerTest extends TestCase
 {
     use \Tuleap\TemporaryTestDirectory;

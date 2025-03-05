@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromotedMilestoneListTest extends TestCase
 {
     public function testItAddsReleaseUntilMaxListSizeIsReached(): void

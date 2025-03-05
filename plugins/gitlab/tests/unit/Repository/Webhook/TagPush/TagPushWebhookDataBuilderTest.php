@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionIfRefIsNotInContent(): void

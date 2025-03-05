@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Project;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Project */

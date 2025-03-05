@@ -46,6 +46,7 @@ use Project_AccessProjectNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use AgileDashboardPlugin;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectMilestonesPresenterBuilder $builder;

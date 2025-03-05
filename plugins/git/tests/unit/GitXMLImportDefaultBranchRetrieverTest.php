@@ -24,6 +24,7 @@ namespace Tuleap\Git;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
 {
     public function testItReturnsEmptyIfNoBranchInRepository(): void

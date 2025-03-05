@@ -30,6 +30,7 @@ use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentIconPresenterBuilderTest extends TestCase
 {
     public function testBuildForItem(): void

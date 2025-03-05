@@ -25,6 +25,7 @@ use ServiceManager;
 use trackerPlugin;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ReferenceCreator $creator;

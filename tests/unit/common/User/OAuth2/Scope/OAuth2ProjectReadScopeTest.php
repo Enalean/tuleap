@@ -24,6 +24,7 @@ namespace Tuleap\User\OAuth2\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ProjectReadScopeTest extends AuthenticationScopeTestCase
 {
     public function getAuthenticationScopeClassname(): string

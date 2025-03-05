@@ -32,6 +32,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use CurrentUserContext;

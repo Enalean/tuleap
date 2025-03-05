@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitPullRequestReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testInvalidStatusIsRejected(): void

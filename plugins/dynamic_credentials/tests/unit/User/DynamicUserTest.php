@@ -27,6 +27,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DynamicUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

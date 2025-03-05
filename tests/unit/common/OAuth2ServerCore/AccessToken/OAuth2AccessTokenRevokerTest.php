@@ -32,6 +32,7 @@ use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevok
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var OAuth2AccessTokenRevoker */

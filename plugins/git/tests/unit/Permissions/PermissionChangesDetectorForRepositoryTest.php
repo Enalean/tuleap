@@ -29,6 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionChangesDetectorForRepositoryTest extends TestCase
 {
     private PermissionChangesDetector $detector;

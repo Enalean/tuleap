@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Builder\MirroredTimeboxChangesetValuesBuilder
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactLinkFieldReferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const MAPPED_STATUS_BIND_VALUE_ID = 7227;

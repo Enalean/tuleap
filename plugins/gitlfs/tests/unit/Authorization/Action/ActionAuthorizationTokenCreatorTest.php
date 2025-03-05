@@ -28,6 +28,7 @@ use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ActionAuthorizationTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAuthorizationTokenIsCreated(): void

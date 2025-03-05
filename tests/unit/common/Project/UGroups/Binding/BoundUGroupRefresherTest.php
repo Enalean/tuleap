@@ -27,6 +27,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

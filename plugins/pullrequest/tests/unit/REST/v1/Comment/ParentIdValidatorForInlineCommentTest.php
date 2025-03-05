@@ -28,6 +28,7 @@ use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParentIdValidatorForInlineCommentTest extends TestCase
 {
     private const PULL_REQUEST_ID = 10;

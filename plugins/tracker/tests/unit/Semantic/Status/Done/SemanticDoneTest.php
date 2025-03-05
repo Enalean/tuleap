@@ -26,6 +26,7 @@ use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticDoneValueChecker&MockObject $value_checker;

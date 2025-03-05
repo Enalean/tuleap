@@ -34,6 +34,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -39,6 +39,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\UserName;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PUSHING_USER_ID = 136;

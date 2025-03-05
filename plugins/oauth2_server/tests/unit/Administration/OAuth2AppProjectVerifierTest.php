@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\Administration;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

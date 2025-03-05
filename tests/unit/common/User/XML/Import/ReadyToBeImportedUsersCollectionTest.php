@@ -24,6 +24,7 @@ namespace User\XML\Import;
 
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ReadyToBeImportedUsersCollection $collection;

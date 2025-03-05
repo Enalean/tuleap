@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceDocmanOrganizerTest extends TestCase
 {
     private ProjectManager&MockObject $project_manager;

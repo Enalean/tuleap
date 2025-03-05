@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredIterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 21;

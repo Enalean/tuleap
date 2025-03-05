@@ -23,6 +23,7 @@ namespace Tuleap\SVN\Repository;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HookConfigCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PHPUnit\Framework\MockObject\MockObject&HookConfigRetriever $config_hook_retriever;

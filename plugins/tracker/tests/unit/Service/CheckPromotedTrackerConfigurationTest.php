@@ -26,6 +26,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CheckPromotedTrackerConfigurationTest extends TestCase
 {
     use ForgeConfigSandbox;

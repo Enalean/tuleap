@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ValidateArtifactLinkValueEventTest extends TestCase
 {
     private const FIRST_ARTIFACT_ID  = 4457;

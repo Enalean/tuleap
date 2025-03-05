@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestAppsLoaderTest extends TestCase
 {
     private TestLayout $base_layout;

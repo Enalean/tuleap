@@ -25,6 +25,7 @@ namespace Tuleap\Git\Hook\DefaultBranchPush;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefaultBranchPushReceivedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_COMMIT_SHA1  = '14fdcf24';

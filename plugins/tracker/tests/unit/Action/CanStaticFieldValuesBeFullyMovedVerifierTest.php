@@ -34,6 +34,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 {
     private Artifact $artifact;

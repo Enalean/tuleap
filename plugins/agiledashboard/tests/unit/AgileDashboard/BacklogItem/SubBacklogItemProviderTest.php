@@ -37,6 +37,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Dao\ArtifactDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubBacklogItemProviderTest extends TestCase
 {
     private SubBacklogItemProvider $provider;

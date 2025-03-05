@@ -40,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

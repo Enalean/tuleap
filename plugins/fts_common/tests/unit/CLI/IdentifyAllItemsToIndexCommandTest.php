@@ -26,6 +26,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IdentifyAllItemsToIndexCommandTest extends TestCase
 {
     public function testCommandCanAskForTheIdentificationOfAllItemsToIndex(): void

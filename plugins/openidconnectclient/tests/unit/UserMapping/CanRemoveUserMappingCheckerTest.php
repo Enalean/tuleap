@@ -25,6 +25,7 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanRemoveUserMappingCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

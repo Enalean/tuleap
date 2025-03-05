@@ -26,6 +26,7 @@ namespace Tuleap\TestManagement\Step\Definition\Field;
 use Luracast\Restler\RestException;
 use Tracker_Artifact_ChangesetValue_Text;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItConvertsStepDefinitionRESTFormatToDBCompatibleFormat(): void

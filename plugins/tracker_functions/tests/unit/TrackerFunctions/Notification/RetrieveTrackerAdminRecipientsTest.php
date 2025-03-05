@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\ProjectAdminsUGroupRetrieverStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrieveTrackerAdminRecipientsTest extends TestCase
 {
     public function testItFaultWhenRetrieveNoUser(): void

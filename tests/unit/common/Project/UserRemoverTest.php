@@ -29,6 +29,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

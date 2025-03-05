@@ -24,6 +24,7 @@ namespace Tuleap\Layout\NewDropdown;
 
 use Tuleap\Option\Option;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCreatesANewSection(): void

@@ -25,6 +25,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_Exporter_ChangesetXMLExporter $exporter;
@@ -49,7 +50,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
     {
         $this->user_manager      = $this->createMock(\UserManager::class);
         $this->user_xml_exporter = $this->getMockBuilder(\UserXMLExporter::class)
-            ->setConstructorArgs([$this->user_manager, $this->createMock(UserXMLExportedCollection::class)])
+            ->setConstructorArgs([$this->user_manager, new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())])
             ->onlyMethods(['exportUserByMail'])
             ->getMock();
         $this->artifact_xml      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
@@ -83,6 +84,8 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
 
     public function testItAppendsChangesetNodeToArtifactNode(): void
     {
+        $this->values_exporter->method('exportSnapshot');
+
         $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset);
 
         $this->assertCount(1, $this->artifact_xml->changeset);
@@ -123,6 +126,8 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
             'ldap_id' => 'ldap_01',
         ]);
         $this->user_manager->method('getUserById')->with(101)->willReturn($user);
+        $this->values_exporter->method('exportChangedFields');
+        $this->comment->method('exportToXML');
 
         $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
 
@@ -133,10 +138,16 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
     {
         $this->user_xml_exporter->expects($this->once())->method('exportUserByMail');
 
+        $this->values_exporter->method('exportChangedFields');
+
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset->method('getId')->willReturn(101);
         $changeset->method('getValues')->willReturn([]);
         $changeset->method('getSubmittedBy')->willReturn(null);
-        $changeset->method('getEmail')->willReturn('veloc@dino.com');
+        $changeset->method('getSubmittedOn')->willReturn(1);
+        $changeset->method('getEmail')->willReturn('veloc@example.com');
+        $changeset->method('getComment')->willReturn(null);
+        $changeset->method('forceFetchAllValues');
         $changeset->method('getArtifact')->willReturn($this->artifact);
         $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
     }
@@ -147,7 +158,15 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
 
         $this->values_exporter->expects($this->once())->method('exportChangedFields')->with(self::anything(), self::anything(), self::anything(), [101 => $value]);
 
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(101)->build();
+        $this->user_manager->method('getUserById')->with(101)->willReturn($user);
+
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset->method('getId')->willReturn(741);
+        $changeset->method('getSubmittedBy')->willReturn($user->getId());
+        $changeset->method('getSubmittedOn')->willReturn(1);
+        $changeset->method('getComment')->willReturn(null);
+        $changeset->method('forceFetchAllValues');
         $changeset->method('getValues')->willReturn([
             101 => $value,
             102 => null,

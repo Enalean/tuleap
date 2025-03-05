@@ -39,6 +39,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use UserXMLExporter;
 use function Psl\Type\bool;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLMediawikiExportabilityCheckerTest extends TestCase
 {
     private \Project $project;

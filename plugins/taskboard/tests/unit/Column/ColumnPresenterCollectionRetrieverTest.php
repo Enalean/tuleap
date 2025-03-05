@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ColumnFactory&MockObject $column_factory;

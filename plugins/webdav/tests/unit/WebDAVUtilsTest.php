@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVUtilsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

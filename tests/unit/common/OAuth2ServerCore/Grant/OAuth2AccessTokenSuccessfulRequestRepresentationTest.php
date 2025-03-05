@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2ServerCore\Grant;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenWithIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsSuccessfulRequestRepresentationThatCanBeJSONEncoded(): void

@@ -32,6 +32,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureFlagControllerTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArchiveWithoutDataCheckerTest extends TestCase
 {
     public function testArchiveContainsUsers(): void

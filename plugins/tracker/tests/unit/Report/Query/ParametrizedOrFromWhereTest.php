@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Report\Query;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParametrizedOrFromWhereTest extends TestCase
 {
     public function testGetFromWhere(): void

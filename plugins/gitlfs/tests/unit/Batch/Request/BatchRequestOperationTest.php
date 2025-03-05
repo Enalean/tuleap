@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\Batch\Request;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BatchRequestOperationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidOperation(): void

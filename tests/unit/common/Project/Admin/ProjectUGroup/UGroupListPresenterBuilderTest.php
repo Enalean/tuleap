@@ -27,6 +27,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupListPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

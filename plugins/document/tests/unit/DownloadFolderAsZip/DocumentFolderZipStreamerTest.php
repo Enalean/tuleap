@@ -32,6 +32,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentFolderZipStreamerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private DocumentFolderZipStreamer $controller;

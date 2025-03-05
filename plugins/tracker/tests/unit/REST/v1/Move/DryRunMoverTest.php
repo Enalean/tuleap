@@ -36,6 +36,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DryRunMoverTest extends TestCase
 {
     private Tracker $source_tracker;

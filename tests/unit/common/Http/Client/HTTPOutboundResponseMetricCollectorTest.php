@@ -26,6 +26,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HTTPOutboundResponseMetricCollectorTest extends TestCase
 {
     public function testCollectsHTTPStatusCodeOnFulfilledRequests(): void

@@ -28,6 +28,7 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\OpenIDConnectSigningKeyFactoryStaticForTestPurposes;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JWKSDocumentEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsResponse(): void

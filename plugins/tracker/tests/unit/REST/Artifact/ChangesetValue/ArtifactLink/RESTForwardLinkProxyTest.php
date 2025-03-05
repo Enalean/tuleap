@@ -24,6 +24,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFromPayload()

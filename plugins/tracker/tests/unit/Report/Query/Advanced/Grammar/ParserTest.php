@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParserTest extends TestCase
 {
     public function testItThrowsASyntaxErrorIfQueryIsEmpty(): void

@@ -25,6 +25,7 @@ namespace Tuleap\Config;
 use Tuleap\Test\Builders\Config\ConfigKeyMetadataBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigSetTest extends TestCase
 {
     public function testExceptionIfKeyDoesNotExist(): void

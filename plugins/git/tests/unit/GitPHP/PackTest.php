@@ -28,6 +28,7 @@ use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PackTest extends TestCase
 {
     private const SHA1_PACK = 'e9760fd950093eb1efd59a6200469e8c2d8c9632';

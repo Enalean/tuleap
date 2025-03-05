@@ -23,6 +23,7 @@ namespace Tuleap\Gitlab\Reference;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabReferenceValueWithoutSeparatorSplitValuesBuilderTest extends TestCase
 {
     public function testItReturnsANullRepositoryNameAndANullSha1WhenTheStringDoesNotContainAPath(): void

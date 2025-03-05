@@ -45,6 +45,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
 use Tuleap\Test\Stubs\TemplateRendererStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitLabLinkGroupControllerTest extends TestCase
 {
     use GlobalLanguageMock;

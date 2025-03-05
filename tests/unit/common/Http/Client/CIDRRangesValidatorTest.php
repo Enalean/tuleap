@@ -25,6 +25,7 @@ namespace Tuleap\Http\Client;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CIDRRangesValidatorTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidRanges')]

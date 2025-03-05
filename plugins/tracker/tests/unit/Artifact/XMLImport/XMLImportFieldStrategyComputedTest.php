@@ -30,6 +30,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLImportFieldStrategyComputedTest extends TestCase
 {
     public function testItShouldWorkWithAManualValue(): void

@@ -26,6 +26,7 @@ require_once __DIR__ . '/BaselineFixtureData.php';
 
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselinesResourceTest extends RestBase
 {
     /** @var int */

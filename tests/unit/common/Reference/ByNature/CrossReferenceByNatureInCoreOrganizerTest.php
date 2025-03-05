@@ -32,6 +32,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
 {
     private CrossReferenceWikiOrganizer&MockObject $wiki_organizer;

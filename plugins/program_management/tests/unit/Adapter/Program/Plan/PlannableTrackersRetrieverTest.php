@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersIdsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlannableTrackersRetrieverTest extends TestCase
 {
     private RetrievePlannableTrackersIds $plan_dao;

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 use Tracker;
 use Tuleap\Tracker\Notifications\GlobalNotification;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UserNotificationSettingsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNoNotificationWhenTrackerModeIsNoNotifications(): void

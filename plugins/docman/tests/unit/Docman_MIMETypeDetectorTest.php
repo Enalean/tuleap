@@ -21,6 +21,7 @@
 
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Docman_MIMETypeDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTheRightOfficeMimeType(): void

@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Plugin;
 use PluginDependencySolver;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PluginDependencySolverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Plugin&MockObject $tracker_plugin;

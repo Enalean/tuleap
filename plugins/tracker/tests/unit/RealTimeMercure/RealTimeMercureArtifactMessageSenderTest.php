@@ -32,6 +32,7 @@ use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RealTimeMercureArtifactMessageSenderTest extends TestCase
 {
     public function testNoError(): void

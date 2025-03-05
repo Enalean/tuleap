@@ -25,6 +25,7 @@ namespace Tuleap\CLI;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CLICommandsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testALoadedCommandCanBeFoundInTheApplication(): void

@@ -25,6 +25,7 @@ namespace Tuleap\Http\Client\Authentication;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BasicAuthTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

@@ -28,6 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 use Tuleap\Test\Stubs\SearchLinkedProjectsStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectLinkedProjectsTest extends TestCase
 {
     private \Project $source_project;

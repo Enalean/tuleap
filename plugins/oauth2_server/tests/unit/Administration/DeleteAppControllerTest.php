@@ -33,6 +33,7 @@ use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

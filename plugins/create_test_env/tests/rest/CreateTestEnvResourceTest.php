@@ -21,6 +21,7 @@
 
 namespace Tuleap\CreateTestEnv\REST;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CreateTestEnvResourceTest extends \RestBase
 {
     public function testOptions()

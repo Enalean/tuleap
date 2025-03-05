@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanServicePermissionsForGroupsBuilderTest extends TestCase
 {
     private IPermissionsManagerNG&MockObject $permissions_manager;

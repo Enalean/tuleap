@@ -29,6 +29,7 @@ use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

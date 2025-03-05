@@ -45,6 +45,7 @@ use Tuleap\XML\ParseExceptionWithErrors;
 use XML_ParseException;
 use XML_RNGValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardwallConfigXmlImportTest extends TestCase
 {
     use GlobalResponseMock;

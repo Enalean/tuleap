@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\BrowserDetection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const CHROME_USER_AGENT_STRING           = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36';

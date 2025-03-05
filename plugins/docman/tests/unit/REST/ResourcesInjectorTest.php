@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST;
 use Project;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ResourcesInjectorTest extends TestCase
 {
     public function testProjectResourcesAreInjectedWhenTheProjectUsesTheDocumentManagerService(): void

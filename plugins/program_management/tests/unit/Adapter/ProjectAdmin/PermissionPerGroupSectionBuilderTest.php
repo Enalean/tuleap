@@ -29,6 +29,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\ProgramManagement\ProgramService;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

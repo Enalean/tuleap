@@ -43,6 +43,7 @@ use User_InvalidPasswordException;
 use User_LoginManager;
 use UserDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HTTPAccessControlTest extends TestCase
 {
     private TestLogger $logger;

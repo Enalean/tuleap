@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Report_Renderer;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

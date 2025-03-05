@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEve
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummaryStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmailNotificationAttachmentProviderTest extends TestCase
 {
     private readonly Tracker_Artifact_Changeset $changeset;

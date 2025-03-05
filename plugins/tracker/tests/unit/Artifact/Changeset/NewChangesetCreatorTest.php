@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\ProcessChangesetPostCreationStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\ValidateNewChangesetStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;

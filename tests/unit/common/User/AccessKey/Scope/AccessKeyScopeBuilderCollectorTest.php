@@ -26,6 +26,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessKeyScopeBuilderCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNoBuildersAreCollectedByDefault(): void

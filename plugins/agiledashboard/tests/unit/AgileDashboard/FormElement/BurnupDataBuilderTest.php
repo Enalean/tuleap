@@ -43,6 +43,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BurnupDataBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;

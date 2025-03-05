@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DisplayAdminRegisterFormControllerTest extends TestCase
 {
     public function testAdminShouldProvideAPassword(): void

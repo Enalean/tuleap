@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddToTopBacklogValueUpdaterTest extends TestCase
 {
     private AddToTopBacklogValueUpdater $value_updater;

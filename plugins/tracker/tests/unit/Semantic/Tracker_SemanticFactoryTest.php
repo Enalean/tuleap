@@ -34,6 +34,7 @@ use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

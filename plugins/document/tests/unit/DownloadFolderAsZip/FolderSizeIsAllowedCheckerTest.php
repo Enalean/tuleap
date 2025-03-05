@@ -25,6 +25,7 @@ namespace Tuleap\Document\DownloadFolderAsZip;
 use Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor;
 use Tuleap\Document\Config\FileDownloadLimits;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FolderSizeIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

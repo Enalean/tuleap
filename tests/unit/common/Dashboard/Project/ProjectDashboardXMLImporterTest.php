@@ -25,6 +25,7 @@ use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
 {
     public function testItLogsAWarningWhenUserDontHavePrivilegeToAddAProjectDashboard(): void

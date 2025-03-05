@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
 {
     private const PROJECT_ID   = 111;

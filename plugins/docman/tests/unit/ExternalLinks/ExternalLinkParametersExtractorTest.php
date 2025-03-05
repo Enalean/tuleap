@@ -25,6 +25,7 @@ namespace Tuleap\Docman\ExternalLinks;
 use HTTPRequest;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExternalLinkParametersExtractorTest extends TestCase
 {
     public function testItReturnZeroWhenFolderIdIsNotProvided(): void

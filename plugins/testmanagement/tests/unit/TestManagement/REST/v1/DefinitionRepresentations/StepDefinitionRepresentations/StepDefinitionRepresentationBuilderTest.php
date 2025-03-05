@@ -28,6 +28,7 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTheTextRepresentationOfTheStep(): void

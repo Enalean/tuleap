@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\FormElement;
 use Tracker_FormElement_StaticField_Separator;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_FormElement_SeparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFetchDescription()

@@ -26,6 +26,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenResponse;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserInfoRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAnEmptyRequestIsCreatedWhenNoUserEndpointIsAvailable(): void

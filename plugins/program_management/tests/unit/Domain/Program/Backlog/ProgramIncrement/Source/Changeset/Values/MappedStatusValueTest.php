@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_BIND_VALUE_ID  = 3786;

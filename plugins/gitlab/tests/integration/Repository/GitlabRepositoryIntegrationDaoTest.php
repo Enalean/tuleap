@@ -27,6 +27,7 @@ use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabRepositoryIntegrationDaoTest extends TestIntegrationTestCase
 {
     private const GITLAB_REPOSITORY_ID = 23;

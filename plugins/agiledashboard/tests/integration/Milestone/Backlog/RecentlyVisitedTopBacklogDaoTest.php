@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RecentlyVisitedTopBacklogDaoTest extends TestIntegrationTestCase
 {
     public function testDeleteOldEntriesPerUser(): void

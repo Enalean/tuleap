@@ -25,6 +25,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private IsUserGroupListFieldVerifier $verifier;

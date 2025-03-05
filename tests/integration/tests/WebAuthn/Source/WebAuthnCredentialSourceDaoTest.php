@@ -28,6 +28,7 @@ use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\TrustPath\TrustPathLoader;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
 {
     private WebAuthnCredentialSourceDao $dao;

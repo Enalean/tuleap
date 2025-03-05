@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsageDetectorTest extends TestCase
 {
     private PdfTemplateImageIdentifierFactory $identifier_factory;

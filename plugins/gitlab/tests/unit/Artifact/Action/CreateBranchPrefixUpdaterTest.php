@@ -32,6 +32,7 @@ use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreateBranchPrefixUpdaterTest extends TestCase
 {
     private const INTEGRATION_ID = 18;

@@ -27,6 +27,7 @@ use Tuleap\Docman\Tests\Stub\ResponseFeedbackWrapperStub;
 use Tuleap\Docman\Tests\Stub\SettingsDAOStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilenamePatternFeedbackHandlerTest extends TestCase
 {
     public function testItLogsAnInfoMessageWhenTheUpdateIsOk(): void

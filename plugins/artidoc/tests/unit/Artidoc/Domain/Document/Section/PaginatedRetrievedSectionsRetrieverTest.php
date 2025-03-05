@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Stubs\Domain\Document\Section\SearchPaginatedRetrievedSection
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PaginatedRetrievedSectionsRetrieverTest extends TestCase
 {
     public function testHappyPath(): void

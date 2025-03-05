@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangeReverseLinksCommandTest extends TestCase
 {
     private const FIRST_ARTIFACT_ID  = 976;

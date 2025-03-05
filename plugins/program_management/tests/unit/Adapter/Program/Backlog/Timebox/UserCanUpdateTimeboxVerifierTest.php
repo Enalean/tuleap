@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserCanUpdateTimeboxVerifierTest extends TestCase
 {
     private Artifact & Stub $artifact;

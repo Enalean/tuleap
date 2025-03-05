@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\IterationRedirectionParametersStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BuildRedirectFormActionEventProxyTest extends TestCase
 {
     use GlobalResponseMock;

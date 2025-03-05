@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const REMOVED_ARTIFACT_ID          = 103;

@@ -29,6 +29,7 @@ use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ImmutableTagCreatorTest extends TestCase
 {
     private ImmutableTagCreator $immutable_tag_creator;

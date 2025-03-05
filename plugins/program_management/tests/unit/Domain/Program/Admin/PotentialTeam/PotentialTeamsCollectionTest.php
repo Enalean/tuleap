@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TEAM    = 123;

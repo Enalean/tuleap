@@ -30,6 +30,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotLeakUserInfoIfCurrentUserIsAnonymous(): void

@@ -42,6 +42,7 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\ForceLoginStub;
 use function Psl\Filesystem\create_directory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExtractArchiveAndCreateProjectTest extends TestCase
 {
     use TemporaryTestDirectory;

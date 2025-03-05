@@ -54,6 +54,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
  *       - same type
  *     - for list of values, the same value exist in both projects.
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CopyItemsTest extends TestCase
 {
     public function testDocumentCopyWithinTheSameProject(): void

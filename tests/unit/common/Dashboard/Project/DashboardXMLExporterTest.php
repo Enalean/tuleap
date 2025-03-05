@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Widget\IBuildInstanceOfWidgets;
 use Tuleap\Widget\ProjectMembers\ProjectMembers;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DashboardXMLExporterTest extends TestCase
 {
     public function testItExportsNothingIfNoDashboard(): void

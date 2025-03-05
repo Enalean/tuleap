@@ -39,6 +39,7 @@ use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private BaselineController $controller;

@@ -24,6 +24,7 @@ namespace Tuleap\Project\Registration\Template\Upload;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NoNeedToCheckArchiveContentForCliXmlImportTest extends TestCase
 {
     public function testCheckArchiveContent(): void

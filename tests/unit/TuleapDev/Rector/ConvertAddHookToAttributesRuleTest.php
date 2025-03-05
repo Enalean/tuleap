@@ -27,6 +27,7 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ConvertAddHookToAttributesRuleTest extends AbstractRectorTestCase
 {
     use TemporaryTestDirectory;

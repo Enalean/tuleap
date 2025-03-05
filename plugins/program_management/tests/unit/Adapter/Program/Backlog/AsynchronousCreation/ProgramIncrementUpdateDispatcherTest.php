@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_ID = 83;

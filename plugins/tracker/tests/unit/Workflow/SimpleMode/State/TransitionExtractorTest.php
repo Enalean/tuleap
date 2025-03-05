@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TransitionExtractor $extractor;

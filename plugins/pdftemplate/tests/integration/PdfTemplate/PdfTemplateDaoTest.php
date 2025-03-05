@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PdfTemplateDaoTest extends TestIntegrationTestCase
 {
     public function testTemplatesAreRetrievedOrderedByLabel(): void

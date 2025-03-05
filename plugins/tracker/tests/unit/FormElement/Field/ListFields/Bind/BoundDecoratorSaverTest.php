@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BoundDecoratorSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

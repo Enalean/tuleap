@@ -31,6 +31,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReferenceManager;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataValueStoreTest extends TestCase
 {
     private MetadataValueStore $store;

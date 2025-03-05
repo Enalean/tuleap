@@ -25,6 +25,7 @@ use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use XML_RNGValidator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

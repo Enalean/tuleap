@@ -58,6 +58,7 @@ use Tuleap\Tracker\Tracker\XML\Updater\PermissionsByDuckTypingUpdater;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
 {
     private const CURRENT_USER_ID               = 104;

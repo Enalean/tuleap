@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Action;
 
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectMovableExternalFieldEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheFieldIsNotMigrateableWhenNoPluginHasAnswered(): void

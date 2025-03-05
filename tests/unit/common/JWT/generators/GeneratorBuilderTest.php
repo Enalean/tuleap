@@ -26,6 +26,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GeneratorBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;

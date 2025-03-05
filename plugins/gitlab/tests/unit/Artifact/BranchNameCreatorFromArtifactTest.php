@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BranchNameCreatorFromArtifactTest extends TestCase
 {
     private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact;

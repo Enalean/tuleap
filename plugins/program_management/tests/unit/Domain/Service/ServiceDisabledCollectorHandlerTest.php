@@ -32,6 +32,7 @@ use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ServiceDisabledCollector $event;

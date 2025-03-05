@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Stub\Tracker\Permission\SearchUserGroupsPermissionOnFiel
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\SearchUserGroupsPermissionOnTrackersStub;
 use Tuleap\User\TuleapFunctionsUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersPermissionsRetrieverTest extends TestCase
 {
     use ForgeConfigSandbox;

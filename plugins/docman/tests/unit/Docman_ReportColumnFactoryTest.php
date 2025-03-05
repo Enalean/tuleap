@@ -25,6 +25,7 @@ use Tuleap\Docman\Search\IdColumnReport;
 use Tuleap\Test\PHPUnit\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Docman_ReportColumnFactoryTest extends TestCase
 {
     private Docman_ReportColumnFactory $report_column_factory;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\User\OAuth2\Scope;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidIdentifierKey')]

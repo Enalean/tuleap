@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;

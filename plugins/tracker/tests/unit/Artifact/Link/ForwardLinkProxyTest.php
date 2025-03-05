@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Link;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForwardLinkProxyTest extends TestCase
 {
     public function testFromData(): void

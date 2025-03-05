@@ -31,6 +31,7 @@ use Tuleap\Kanban\KanbanUserCantAddArtifactException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

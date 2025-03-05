@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\PlanUserStoriesInMirroredProgramIncremen
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_TEAM_ID        = 102;

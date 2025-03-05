@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Tests\Stub\DescriptionFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DescriptionValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const DESCRIPTION_VALUE  = 'unrosed adhamant';

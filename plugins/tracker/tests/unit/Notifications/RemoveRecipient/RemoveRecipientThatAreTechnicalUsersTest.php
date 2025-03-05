@@ -28,6 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RemoveRecipientThatAreTechnicalUsersTest extends TestCase
 {
     public function testRemovesTechnicalUserFromTheRecipients(): void

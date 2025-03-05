@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessTeamSynchronizationStub;
 use Tuleap\ProgramManagement\Tests\Stub\TeamSynchronizationEventStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamSynchronizationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNothingWhenThereIsNoEvent(): void

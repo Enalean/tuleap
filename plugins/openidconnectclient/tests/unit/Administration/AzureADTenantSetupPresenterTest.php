@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\Administration;
 
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AzureADTenantSetupPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildPresentersFromSetOfValues(): void

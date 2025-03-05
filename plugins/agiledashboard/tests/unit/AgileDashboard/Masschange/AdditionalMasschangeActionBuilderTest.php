@@ -38,6 +38,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\TemplateRendererStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdditionalMasschangeActionBuilderTest extends TestCase
 {
     private AdditionalMasschangeActionBuilder $builder;

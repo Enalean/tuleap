@@ -36,6 +36,7 @@ use Tuleap\PullRequest\Tests\Stub\ThreadColorUpdaterStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const INSERTED_ID = 47;

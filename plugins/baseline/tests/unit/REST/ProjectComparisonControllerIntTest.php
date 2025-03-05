@@ -30,6 +30,7 @@ use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\REST\JsonCast;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectComparisonControllerIntTest extends IntegrationTestCaseWithStubs
 {
     /** @var ProjectComparisonController */

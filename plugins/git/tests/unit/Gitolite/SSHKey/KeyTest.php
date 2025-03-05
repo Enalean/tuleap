@@ -26,6 +26,7 @@ use InvalidArgumentException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KeyTest extends TestCase
 {
     use GlobalLanguageMock;

@@ -33,6 +33,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

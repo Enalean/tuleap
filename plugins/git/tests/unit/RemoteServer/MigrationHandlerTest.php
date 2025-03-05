@@ -47,6 +47,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MigrationHandlerTest extends TestCase
 {
     private Git_SystemEventManager&MockObject $git_system_event_manager;

@@ -28,6 +28,7 @@ use EventManager;
 use ForgeConfig;
 use URLVerification;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

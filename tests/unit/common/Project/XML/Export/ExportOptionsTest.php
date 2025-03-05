@@ -25,6 +25,7 @@ namespace Project\XML\Export;
 use Tuleap\Project\XML\Export\ExportOptions;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ExportOptionsTest extends TestCase
 {
     /**

@@ -35,6 +35,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Workflow;
 use Workflow_Dao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

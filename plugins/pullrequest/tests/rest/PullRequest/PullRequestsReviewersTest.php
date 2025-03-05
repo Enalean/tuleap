@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest;
 use REST_TestDataBuilder;
 use RestBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestsReviewersTest extends RestBase
 {
     public function testRetrievingUsersOnANonExistingPullRequest(): void

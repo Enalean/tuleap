@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\DelayExecution;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExecutionDelayerRandomizedSleepTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanBeExecuted(): void

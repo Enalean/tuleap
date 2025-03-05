@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchPlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsLinkedToAnotherMilestoneStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureHasPlannedUserStoriesVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SearchPlannedUserStory $search_planned_user_story;

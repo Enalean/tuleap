@@ -28,6 +28,7 @@ use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PKCECodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

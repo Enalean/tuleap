@@ -22,6 +22,7 @@ namespace Tuleap\ProjectOwnership\ProjectOwner;
 
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectOwnerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

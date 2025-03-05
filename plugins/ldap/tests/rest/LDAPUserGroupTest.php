@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP\REST;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPUserGroupTest extends \RestBase
 {
     public function testGetLDAPUserGroupRepresentation(): void

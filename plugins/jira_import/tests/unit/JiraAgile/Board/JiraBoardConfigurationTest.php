@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile\Board;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraBoardConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAConfigurationWithColumns(): void

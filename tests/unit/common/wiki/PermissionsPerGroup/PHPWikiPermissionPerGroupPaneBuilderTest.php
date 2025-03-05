@@ -26,6 +26,7 @@ use Service;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PHPWikiPermissionPerGroupPaneBuilder $builder;

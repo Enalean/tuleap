@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Progress\Events;
 
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GetSemanticProgressUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GetSemanticProgressUsageEvent $event;

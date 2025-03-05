@@ -34,6 +34,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 /**
  * @psalm-immutable
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EditReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

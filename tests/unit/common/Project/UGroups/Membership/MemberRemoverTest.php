@@ -29,6 +29,7 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

@@ -29,6 +29,7 @@ use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SSHAuthenticate $auth;

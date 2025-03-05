@@ -24,6 +24,7 @@ namespace Tuleap\Platform\Banner;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerDaoTest extends TestIntegrationTestCase
 {
     private BannerDao $dao;

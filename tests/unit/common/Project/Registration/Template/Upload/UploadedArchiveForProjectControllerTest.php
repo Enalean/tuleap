@@ -32,6 +32,7 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use function Psl\Filesystem\create_directory_for_file;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UploadedArchiveForProjectControllerTest extends TestCase
 {
     private const PROJECT_ID = 101;

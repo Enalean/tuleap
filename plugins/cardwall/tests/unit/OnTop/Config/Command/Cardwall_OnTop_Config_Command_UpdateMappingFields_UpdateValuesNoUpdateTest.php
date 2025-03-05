@@ -30,6 +30,7 @@ use HTTPRequest;
 use TestHelper;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     protected function setUp(): void

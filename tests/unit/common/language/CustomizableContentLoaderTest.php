@@ -26,6 +26,7 @@ namespace Tuleap\Language;
 use ForgeConfig;
 use PFUser;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CustomizableContentLoader $loader;

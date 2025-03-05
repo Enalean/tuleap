@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeP
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

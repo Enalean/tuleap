@@ -25,6 +25,7 @@ namespace Tuleap\Test\Builders;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectTestBuilderTest extends TestCase
 {
     public function testItHasAProvidedService(): void

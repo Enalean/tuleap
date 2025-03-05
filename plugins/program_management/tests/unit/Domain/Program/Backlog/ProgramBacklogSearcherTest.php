@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramBacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID            = 118;

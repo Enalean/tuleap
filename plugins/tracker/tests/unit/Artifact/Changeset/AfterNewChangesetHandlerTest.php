@@ -28,6 +28,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SaveArtifactStub $artifact_saver;

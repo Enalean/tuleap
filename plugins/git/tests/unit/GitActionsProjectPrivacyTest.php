@@ -30,6 +30,7 @@ use GitRepositoryFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitActionsProjectPrivacyTest extends TestCase
 {
     private GitDao&MockObject $dao;

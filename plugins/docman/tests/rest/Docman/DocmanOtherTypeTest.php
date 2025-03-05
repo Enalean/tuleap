@@ -26,6 +26,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanOtherTypeTest extends DocmanTestExecutionHelper
 {
     public function testOptionsMetadata(): void

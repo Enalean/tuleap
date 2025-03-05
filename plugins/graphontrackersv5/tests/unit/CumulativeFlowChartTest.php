@@ -31,6 +31,7 @@ use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_CumulativeFlow
 
 require_once __DIR__ . '/bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GraphOnTrackersV5_CumulativeFlow_DataBuilder $data_builder;

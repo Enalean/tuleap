@@ -31,6 +31,7 @@ use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceFactoryTest extends TestCase
 {
     private GitRepositoryFactory&MockObject $repository_factory;

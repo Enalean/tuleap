@@ -24,6 +24,7 @@ namespace Tuleap\Docman\View\Admin;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ValueRanksBuilderTest extends TestCase
 {
     public function testGetRanks(): void

@@ -26,6 +26,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RealTimeArtifactMessageControllerMercureTest extends TestCase
 {
     private KanbanFactory&MockObject $kanban_factory;

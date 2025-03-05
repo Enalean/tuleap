@@ -29,6 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostArtifactDeletionCleanerTest extends TestCase
 {
     private CrossReferenceManager|\PHPUnit\Framework\MockObject\MockObject $reference_manager;

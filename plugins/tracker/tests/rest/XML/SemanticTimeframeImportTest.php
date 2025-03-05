@@ -24,6 +24,7 @@ namespace Tracker\Tests\Rest;
 
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SemanticTimeframeImportTest extends TrackerBase
 {
     public function testImportSemanticTimeframe(): void

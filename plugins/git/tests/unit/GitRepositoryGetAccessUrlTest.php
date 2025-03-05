@@ -27,6 +27,7 @@ use GitRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryGetAccessUrlTest extends TestCase
 {
     private Git_Backend_Interface&MockObject $backend;

@@ -23,6 +23,7 @@ namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MarkdownMustacheRendererTest extends TestCase
 {
     public function testItVerifiesThatMarkdownEngineConvertSpecialCharactersIntoHtmlEntities(): void

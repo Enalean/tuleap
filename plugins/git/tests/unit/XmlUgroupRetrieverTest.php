@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XmlUgroupRetrieverTest extends TestCase
 {
     private XmlUgroupRetriever $retriever;

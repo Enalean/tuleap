@@ -27,6 +27,7 @@ use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalResponseMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

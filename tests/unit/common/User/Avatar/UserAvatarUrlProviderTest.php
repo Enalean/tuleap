@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\Avatar\AvatarHashStorageStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserAvatarUrlProviderTest extends TestCase
 {
     use ForgeConfigSandbox;

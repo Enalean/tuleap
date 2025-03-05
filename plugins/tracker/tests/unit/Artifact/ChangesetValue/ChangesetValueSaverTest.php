@@ -28,6 +28,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID         = 533;

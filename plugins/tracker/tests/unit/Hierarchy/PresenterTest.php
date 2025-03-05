@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Hierarchy_PresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetPossibleChildrenReturnsAttributesForSelect(): void

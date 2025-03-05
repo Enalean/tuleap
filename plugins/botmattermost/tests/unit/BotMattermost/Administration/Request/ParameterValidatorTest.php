@@ -25,6 +25,7 @@ namespace Tuleap\BotMattermost\Administration\Request;
 use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParameterValidatorTest extends TestCase
 {
     public function testItDoesNotValidateIfMandatoryBotNameIsMissing(): void

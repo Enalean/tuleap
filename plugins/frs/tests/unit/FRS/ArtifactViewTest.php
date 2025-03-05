@@ -25,6 +25,7 @@ namespace Tuleap\FRS;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactViewTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $release_id = 78;

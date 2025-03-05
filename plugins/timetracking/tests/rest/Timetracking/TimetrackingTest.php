@@ -26,6 +26,7 @@ namespace Tuleap\Timetracking\REST;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TimetrackingTest extends TimetrackingBase
 {
     public function testGetTimesForUserWithDates(): void

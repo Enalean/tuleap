@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsTuleapPluginHookTokenGeneratorDBStoreTest extends TestCase
 {
     public function testTokenIsGeneratedAndStored(): void

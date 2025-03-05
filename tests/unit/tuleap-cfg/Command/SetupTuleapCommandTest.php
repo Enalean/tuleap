@@ -33,6 +33,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\ForgeUpgrade\ForgeUpgradeRecordOnly;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SetupTuleapCommandTest extends TestCase
 {
     use ForgeConfigSandbox;

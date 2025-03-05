@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AllLinkPayloadParserTest extends TestCase
 {
     public function testItBuildsACollectionOfReverseLinks(): void

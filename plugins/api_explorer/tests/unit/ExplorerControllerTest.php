@@ -27,6 +27,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Templating\TemplateCache;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExplorerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanProcessARequest(): void

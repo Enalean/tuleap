@@ -30,6 +30,7 @@ use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselineArtifactServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use CurrentUserContext;

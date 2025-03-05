@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilterReportDaoTest extends TestIntegrationTestCase
 {
     public function testSaveReportId(): void

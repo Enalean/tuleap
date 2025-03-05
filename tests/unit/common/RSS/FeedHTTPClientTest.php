@@ -28,6 +28,7 @@ use Laminas\Feed\Exception\RuntimeException as FeedRuntimeException;
 use Psr\Http\Message\RequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeedHTTPClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

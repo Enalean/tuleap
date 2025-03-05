@@ -28,6 +28,7 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private IndexController $controller;

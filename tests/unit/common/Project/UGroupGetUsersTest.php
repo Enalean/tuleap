@@ -25,6 +25,7 @@ use ProjectUGroup;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

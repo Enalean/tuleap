@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\Milestone\Request;
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilteringQueryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanBeBuiltFromStatusQuery(): void

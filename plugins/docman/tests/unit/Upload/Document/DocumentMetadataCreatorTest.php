@@ -29,6 +29,7 @@ use TestHelper;
 use Tuleap\Docman\Metadata\MetadataValueCreator;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentMetadataCreatorTest extends TestCase
 {
     private MetadataValueCreator&MockObject $value_creator;

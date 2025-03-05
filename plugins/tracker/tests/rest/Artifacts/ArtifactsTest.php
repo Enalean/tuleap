@@ -29,6 +29,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsTest extends TrackerBase
 {
     public function testGetArtifactWithMinimalStructure(): void

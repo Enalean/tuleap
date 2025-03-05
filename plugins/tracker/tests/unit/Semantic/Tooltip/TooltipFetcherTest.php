@@ -31,6 +31,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Tooltip\TooltipFieldsStub;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TooltipFetcherTest extends TestCase
 {
     public function testNothingWhenArtifactIsNotReadable(): void

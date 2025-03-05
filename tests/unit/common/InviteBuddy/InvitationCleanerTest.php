@@ -33,6 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvitationCleanerTest extends TestCase
 {
     use TemporaryTestDirectory;

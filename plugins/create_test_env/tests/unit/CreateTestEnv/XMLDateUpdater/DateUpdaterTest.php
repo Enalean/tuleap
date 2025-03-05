@@ -22,6 +22,7 @@ namespace XMLDateUpdater;
 
 use Tuleap\CreateTestEnv\XMLDateUpdater\DateUpdater;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DateUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItUpdatesTheDatesInTheXMLFileWithDateInArtifacts(): void

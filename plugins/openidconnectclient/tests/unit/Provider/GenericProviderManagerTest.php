@@ -26,6 +26,7 @@ use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCreatesNewGenericProvider(): void

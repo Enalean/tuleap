@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\BuildTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID     = 102;

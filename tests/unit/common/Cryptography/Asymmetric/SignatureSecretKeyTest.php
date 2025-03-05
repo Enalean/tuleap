@@ -25,6 +25,7 @@ namespace Tuleap\Cryptography\Asymmetric;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SignatureSecretKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function itConstructsSignatureSecretKey(): void

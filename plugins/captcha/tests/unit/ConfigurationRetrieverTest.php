@@ -22,6 +22,7 @@ namespace Tuleap\Captcha;
 
 require_once __DIR__ . '/bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testConfigurationIsRetrieved(): void

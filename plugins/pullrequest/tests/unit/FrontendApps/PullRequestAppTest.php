@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\FrontendApps;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestAppTest extends TestCase
 {
     public function testItIsTheOverviewAppWhenTheRequestHasATabParameterOverview(): void

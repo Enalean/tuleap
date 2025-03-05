@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\NewDropdown;
 use Tuleap\Layout\NewDropdown\DataAttributePresenter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerNewDropdownLinkPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuild(): void

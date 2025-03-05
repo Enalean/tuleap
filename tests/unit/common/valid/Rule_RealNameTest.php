@@ -20,6 +20,7 @@
 
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Rule_RealNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $rule;

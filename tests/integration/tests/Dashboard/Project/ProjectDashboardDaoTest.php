@@ -30,6 +30,7 @@ use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectDashboardDaoTest extends TestIntegrationTestCase
 {
     private ProjectDashboardDao $dao;

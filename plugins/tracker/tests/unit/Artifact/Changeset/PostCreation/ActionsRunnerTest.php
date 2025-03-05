@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ActionsRunnerTest extends TestCase
 {
     public function testAllPostCreationTasksAreExecuted(): void

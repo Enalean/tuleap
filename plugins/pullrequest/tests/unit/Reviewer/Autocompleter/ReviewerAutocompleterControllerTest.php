@@ -39,6 +39,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

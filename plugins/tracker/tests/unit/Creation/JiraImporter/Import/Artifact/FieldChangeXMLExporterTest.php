@@ -51,6 +51,7 @@ use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use function PHPUnit\Framework\assertFalse;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

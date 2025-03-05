@@ -26,6 +26,7 @@ use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestMergedEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEventCanBeTransformedToAWorkerEventPayload(): void

@@ -31,6 +31,7 @@ use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

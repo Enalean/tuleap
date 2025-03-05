@@ -28,6 +28,7 @@ use PFUser;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SSHKeyMassDumperTest extends GitoliteTestCase
 {
     use GlobalLanguageMock;

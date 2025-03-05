@@ -30,6 +30,7 @@ use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\GetTokenByGroupLinkIdStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkTokenRetrieverTest extends TestCase
 {
     private const STORED_TOKEN = 'L4l4';

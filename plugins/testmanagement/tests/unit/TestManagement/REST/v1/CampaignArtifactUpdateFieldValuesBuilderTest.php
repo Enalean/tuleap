@@ -37,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CampaignArtifactUpdateFieldValuesBuilder $builder;

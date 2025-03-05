@@ -31,6 +31,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostActionCheckerTest extends TestCase
 {
     private const TRACKER_ID = 101;

@@ -56,6 +56,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 {
     private Tracker $tracker;

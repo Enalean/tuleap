@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectProxyTest extends TestCase
 {
     public function testItBuildsPrimitive(): void

@@ -30,6 +30,7 @@ use Tuleap\PullRequest\Notification\NotificationToProcess;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

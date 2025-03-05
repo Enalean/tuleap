@@ -35,6 +35,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CellPatcher $patcher;

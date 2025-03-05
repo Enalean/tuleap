@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusValueForChangesetProvider&MockObject $provider;

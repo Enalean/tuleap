@@ -37,6 +37,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use URLVerification;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusPatcher $patcher;

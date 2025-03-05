@@ -22,6 +22,7 @@ namespace Tuleap\SVNCore\Cache;
 
 use TestHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsDefaultParametersIfParameterDoesNotExist(): void

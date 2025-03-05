@@ -26,6 +26,7 @@ use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\ThreadColorUpdaterStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThreadCommentColorAssignerTest extends TestCase
 {
     private const PARENT_ID = 1;

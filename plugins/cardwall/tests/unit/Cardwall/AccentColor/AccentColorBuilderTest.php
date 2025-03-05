@@ -32,6 +32,7 @@ use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AccentColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AccentColorBuilder */

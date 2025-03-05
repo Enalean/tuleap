@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\TitleFieldReferenceStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TitleValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_VALUE = 'uncomprehended Sinupallialia';

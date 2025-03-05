@@ -25,6 +25,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectTrackerTest extends TrackerBase
 {
     public function testProjectAdministratorHaveAllTheTrackersOfTheProject()

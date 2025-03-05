@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_STORY_ID     = 993;

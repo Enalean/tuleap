@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\TrackerFunctions\Stubs\Logs\RetrievePayloadsForChangesetStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PayloadDownloaderControllerTest extends TestCase
 {
     public function testRetrievesPayloadsForTrackerAdmins(): void

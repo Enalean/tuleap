@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PermissionsFromRequestExtractorTest extends TestCase
 {
     /**

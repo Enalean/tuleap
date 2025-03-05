@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DescriptionFieldAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

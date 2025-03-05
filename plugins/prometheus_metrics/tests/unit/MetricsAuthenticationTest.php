@@ -31,6 +31,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\AlwaysSuccessfulRequestHandler;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[CoversClass(MetricsAuthentication::class)]
 final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
 {

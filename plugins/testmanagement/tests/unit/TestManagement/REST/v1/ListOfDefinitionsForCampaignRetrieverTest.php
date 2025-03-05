@@ -31,6 +31,7 @@ use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\REST\v1\Execution\ListOfDefinitionsForCampaignRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser $user;

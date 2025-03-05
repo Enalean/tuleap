@@ -26,6 +26,7 @@ namespace Tuleap\Gitlab\API;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Stubs\GitlabClientWrapperStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

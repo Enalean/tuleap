@@ -32,6 +32,7 @@ use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\UniDiffLine;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject & FileUniDiffBuilder $file_unidiff_builder;

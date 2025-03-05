@@ -24,6 +24,7 @@ use Tracker_FormElement_Field_String;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\GlobalLanguageMock;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

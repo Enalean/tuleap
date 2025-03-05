@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

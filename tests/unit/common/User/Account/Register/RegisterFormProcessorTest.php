@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\IGenerateMailConfirmationCodeStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RegisterFormProcessorTest extends TestCase
 {
     public function testHappyPath(): void

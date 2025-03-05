@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TaskboardUsageDao&MockObject $dao;

@@ -24,6 +24,7 @@ namespace Tuleap\BuildVersion;
 
 use org\bovigo\vfs\vfsStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FlavorFinderFromFilePresenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

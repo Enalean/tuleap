@@ -29,6 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
 {
     private TrackerPrivateCommentUGroupPermissionDao&MockObject $permission_dao;

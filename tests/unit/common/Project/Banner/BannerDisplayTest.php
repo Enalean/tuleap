@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Banner;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerDisplayTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testVisibleBanner(): void

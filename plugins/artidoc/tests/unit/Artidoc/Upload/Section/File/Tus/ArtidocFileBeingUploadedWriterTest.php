@@ -35,6 +35,7 @@ use Tuleap\Tus\CannotWriteFileException;
 use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 use Tuleap\Upload\NextGen\FileBeingUploadedInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocFileBeingUploadedWriterTest extends TestCase
 {
     use ForgeConfigSandbox;

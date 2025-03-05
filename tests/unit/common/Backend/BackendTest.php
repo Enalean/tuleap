@@ -32,6 +32,7 @@ use Event;
 use EventManager;
 use org\bovigo\vfs\vfsStream;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected function tearDown(): void

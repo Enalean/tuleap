@@ -30,6 +30,7 @@ use UserHelper;
 use UserImport;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private string $user_email_filename;

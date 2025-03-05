@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

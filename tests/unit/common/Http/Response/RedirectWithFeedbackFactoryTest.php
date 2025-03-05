@@ -27,6 +27,7 @@ use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectWithFeedbackFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCreateResponseForUser(): void

@@ -29,6 +29,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SwaggerJsonOAuth2SecurityDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

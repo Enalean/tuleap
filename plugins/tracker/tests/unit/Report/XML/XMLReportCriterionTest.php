@@ -32,6 +32,7 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNull;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLReportCriterionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItSimpleSearchWhenThereIsOnlyOneValueSelected(): void

@@ -29,6 +29,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JenkinsTuleapPluginHookTokenVerifierControllerTest extends TestCase
 {
     public function testSuccessfulRequest(): void

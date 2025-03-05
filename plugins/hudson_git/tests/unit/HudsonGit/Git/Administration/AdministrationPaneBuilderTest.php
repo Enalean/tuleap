@@ -25,6 +25,7 @@ namespace Tuleap\HudsonGit\Git\Administration;
 use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Project $project;

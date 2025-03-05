@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanConfigurationMapperTest extends TestCase
 {
     private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID                 = 37;

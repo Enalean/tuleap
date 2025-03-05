@@ -27,6 +27,7 @@ use Cardwall_CardInCellPresenterNode;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_CardInCellPresenterNodeTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testItHoldsTheGivenPresenter(): void

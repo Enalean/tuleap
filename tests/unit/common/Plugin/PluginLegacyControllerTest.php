@@ -24,6 +24,7 @@ namespace Tuleap\Plugin;
 
 use Tuleap\Layout\BaseLayout;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PluginLegacyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testLegacyPluginCanBeAccessed(): void

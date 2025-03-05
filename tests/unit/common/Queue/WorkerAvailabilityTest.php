@@ -24,6 +24,7 @@ namespace Tuleap\Queue;
 
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkerAvailabilityTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

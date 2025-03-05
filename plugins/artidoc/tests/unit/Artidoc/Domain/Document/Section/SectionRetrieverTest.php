@@ -34,6 +34,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SectionRetrieverTest extends TestCase
 {
     public const SECTION_ID  = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';

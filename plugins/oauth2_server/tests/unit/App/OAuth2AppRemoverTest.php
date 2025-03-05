@@ -27,6 +27,7 @@ use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AppRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRemovesAnApp(): void

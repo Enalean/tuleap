@@ -24,6 +24,7 @@ namespace Tuleap\Queue;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PersistentQueueStatisticsTest extends TestCase
 {
     public function testBuildStatisticsForAnEmptyQueue(): void

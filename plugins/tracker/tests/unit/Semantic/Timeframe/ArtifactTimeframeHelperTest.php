@@ -26,6 +26,7 @@ use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private NullLogger $logger;

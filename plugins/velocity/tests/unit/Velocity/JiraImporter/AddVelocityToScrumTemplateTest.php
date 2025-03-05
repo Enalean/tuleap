@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\XML\XMLTracker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddVelocityToScrumTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportVelocityFieldAndSemantic(): void

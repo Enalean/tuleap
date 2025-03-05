@@ -28,6 +28,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ScopeExtractorRESTEndpointTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&AuthenticationScopeBuilder $scope_builder;

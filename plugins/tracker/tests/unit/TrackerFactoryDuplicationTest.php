@@ -31,6 +31,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \TrackerFactory & MockObject $tracker_factory;

@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseIfTrackerIdIsNotFoundInProperty(): void

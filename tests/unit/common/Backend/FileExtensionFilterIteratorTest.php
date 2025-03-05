@@ -24,6 +24,7 @@ namespace Tuleap\Backend;
 
 use RecursiveIteratorIterator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileExtensionFilterIteratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItGetsAllTheFiles(): void

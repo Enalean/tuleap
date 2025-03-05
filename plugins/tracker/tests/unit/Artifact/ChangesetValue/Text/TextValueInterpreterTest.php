@@ -26,6 +26,7 @@ use Codendi_HTMLPurifier;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Markdown\CommonMarkInterpreter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TextValueInterpreterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CommonMarkInterpreter $commonmark_interpreter;

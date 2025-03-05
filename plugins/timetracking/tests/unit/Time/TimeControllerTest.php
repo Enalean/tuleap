@@ -27,6 +27,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

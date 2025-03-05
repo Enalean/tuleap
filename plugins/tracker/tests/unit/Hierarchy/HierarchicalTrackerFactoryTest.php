@@ -22,6 +22,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testGetWithChildren(): void

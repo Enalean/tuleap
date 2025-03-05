@@ -25,6 +25,7 @@ namespace Tuleap\Search;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ItemToIndexQueueEventBasedTest extends TestCase
 {
     public function testDispatchEvent(): void

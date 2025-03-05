@@ -26,6 +26,7 @@ use PFUser;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserXMLExportedDevNullCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItIgnoresUsersAddedToTheCollection(): void

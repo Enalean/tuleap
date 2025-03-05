@@ -24,6 +24,7 @@ namespace Tuleap\Layout\Feedback;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeedbackSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSerialize(): void

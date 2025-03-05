@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\TrackerColor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

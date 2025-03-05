@@ -40,6 +40,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 {
     private const MIRRORED_TIMEBOX_ID = 666;

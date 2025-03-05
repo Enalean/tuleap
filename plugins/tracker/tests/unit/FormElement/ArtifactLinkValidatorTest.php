@@ -31,6 +31,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

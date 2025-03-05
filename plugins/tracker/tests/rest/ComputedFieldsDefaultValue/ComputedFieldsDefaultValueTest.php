@@ -25,6 +25,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../TrackerBase.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ComputedFieldsDefaultValueTest extends TrackerBase
 {
     public function testComputedFieldHasDefaultValueKey()

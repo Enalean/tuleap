@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraCredentialsTest extends TestCase
 {
     public function testHoldsValues(): void

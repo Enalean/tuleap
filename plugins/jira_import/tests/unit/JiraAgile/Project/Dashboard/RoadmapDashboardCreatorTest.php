@@ -28,6 +28,7 @@ use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RoadmapDashboardCreatorTest extends TestCase
 {
     public function testItCreatesRoadmapDashboardIfEpicTrackerHasTimeframeSemantic(): void

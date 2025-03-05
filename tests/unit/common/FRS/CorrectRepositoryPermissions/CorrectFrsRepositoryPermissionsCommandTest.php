@@ -29,6 +29,7 @@ use ProjectManager;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 {
     private string $directory;

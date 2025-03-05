@@ -24,6 +24,7 @@ namespace Tuleap\Widget\XML;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLPreferenceValueTest extends TestCase
 {
     public function testExportRefValue(): void

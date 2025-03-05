@@ -22,6 +22,7 @@ namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MarkdownTemplateRendererFactoryTest extends TestCase
 {
     public function testItGetsAMarkdownRenderer(): void

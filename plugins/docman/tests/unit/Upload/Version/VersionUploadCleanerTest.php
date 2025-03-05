@@ -28,6 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VersionUploadCleanerTest extends TestCase
 {
     public function testDanglingDocumentBeingUploadedAreCleaned(): void

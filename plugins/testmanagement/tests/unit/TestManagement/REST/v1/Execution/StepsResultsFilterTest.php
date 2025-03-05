@@ -29,6 +29,7 @@ use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var StepsResultsFilter */

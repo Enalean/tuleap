@@ -28,6 +28,7 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AssignedToRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAssignedToRepresentationCanBeBuiltWhenThereIsNoAssignedToField(): void

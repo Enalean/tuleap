@@ -24,6 +24,7 @@ namespace Tuleap\Git;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PullRequestEndpointsAvailableEventTest extends TestCase
 {
     public function testEndpointsAreNotAvailableByDefault(): void

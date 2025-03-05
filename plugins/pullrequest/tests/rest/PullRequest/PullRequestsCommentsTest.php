@@ -26,6 +26,7 @@ use RestBase;
 /**
  * @group PullRequest
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestsCommentsTest extends RestBase
 {
     protected function getResponseForNonMember($request)

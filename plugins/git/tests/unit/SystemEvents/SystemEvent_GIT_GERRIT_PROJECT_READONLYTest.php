@@ -33,6 +33,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TestCase
 {
     public function testItMakesGerritProjectReadOnly(): void

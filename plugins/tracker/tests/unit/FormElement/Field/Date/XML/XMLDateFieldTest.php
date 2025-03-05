@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\FormElement\Field\Date\XML;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLDateFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoPropertiesByDefault(): void

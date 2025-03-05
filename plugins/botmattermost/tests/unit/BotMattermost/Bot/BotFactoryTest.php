@@ -26,6 +26,7 @@ use Tuleap\BotMattermost\Exception\EmptyUpdateException;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BotFactoryTest extends TestCase
 {
     private BotFactory $bot_factory;

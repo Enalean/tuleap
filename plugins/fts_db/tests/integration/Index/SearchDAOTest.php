@@ -29,6 +29,7 @@ use Tuleap\FullTextSearchCommon\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SearchDAO $dao;

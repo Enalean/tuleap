@@ -26,6 +26,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerChangeDAOTest extends TestIntegrationTestCase
 {
     /** @var int */

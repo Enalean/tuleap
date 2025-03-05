@@ -26,6 +26,7 @@ namespace Tuleap\Git\Gitolite;
 use PFUser;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SSHKeyDumperTest extends GitoliteTestCase
 {
     protected string $key1;

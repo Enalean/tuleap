@@ -25,6 +25,7 @@ namespace Tuleap\User;
 use StandardPasswordHandler;
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StandardPasswordHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const HASHED_WORD = 'Tuleap';

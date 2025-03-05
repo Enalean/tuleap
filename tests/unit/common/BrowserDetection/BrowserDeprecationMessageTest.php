@@ -25,6 +25,7 @@ namespace Tuleap\BrowserDetection;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

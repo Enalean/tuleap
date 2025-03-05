@@ -20,6 +20,7 @@
 
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InjectPaddingInTreeNodeVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItInjectsPadding(): void

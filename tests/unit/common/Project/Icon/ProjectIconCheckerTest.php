@@ -28,6 +28,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Icons\InvalidProjectIconException;
 use Tuleap\Project\Icons\ProjectIconChecker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

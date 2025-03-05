@@ -30,6 +30,7 @@ use Statistics_DiskUsageManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectorTest extends TestCase
 {
     private Statistics_DiskUsageManager&MockObject $disk_usage_manager;

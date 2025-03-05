@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsACommentFromAPIResponse(): void

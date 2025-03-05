@@ -24,6 +24,7 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class URLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAnURL(): void

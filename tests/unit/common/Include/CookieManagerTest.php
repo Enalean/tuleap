@@ -22,6 +22,7 @@ namespace Tuleap;
 
 use ForgeConfig;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CookieManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

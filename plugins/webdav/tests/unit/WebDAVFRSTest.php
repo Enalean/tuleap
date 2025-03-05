@@ -39,6 +39,7 @@ use WebDAVUtils;
 /**
  * This is the unit test of WebDAVProject
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

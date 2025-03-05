@@ -29,6 +29,7 @@ use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ConsentCheckerTest extends TestCase
 {
     private OAuth2ConsentChecker $consent_checker;

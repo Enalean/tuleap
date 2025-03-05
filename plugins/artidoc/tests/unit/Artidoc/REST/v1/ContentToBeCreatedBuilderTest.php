@@ -31,6 +31,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ContentToBeCreatedBuilderTest extends TestCase
 {
     public function testItThrowsWhenImportAndContentAreBothProvided(): void

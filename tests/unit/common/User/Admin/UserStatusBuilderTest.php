@@ -26,6 +26,7 @@ use PFUser;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

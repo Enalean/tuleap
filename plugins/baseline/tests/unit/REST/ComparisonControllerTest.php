@@ -35,6 +35,7 @@ use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ComparisonController $controller;

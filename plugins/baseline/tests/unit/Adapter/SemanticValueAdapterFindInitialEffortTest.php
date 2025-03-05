@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 use Tracker_FormElement_Field;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTestCase
 {
     public function testFindInitialEffort(): void

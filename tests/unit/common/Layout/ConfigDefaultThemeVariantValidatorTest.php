@@ -23,6 +23,7 @@ namespace Tuleap\Layout;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\ForgeConfigSandbox;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigDefaultThemeVariantValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

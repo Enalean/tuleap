@@ -29,6 +29,7 @@ use Tracker_FormElement;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;

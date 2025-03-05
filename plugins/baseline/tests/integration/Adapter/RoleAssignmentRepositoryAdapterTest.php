@@ -34,6 +34,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RoleAssignmentRepositoryAdapterTest extends TestIntegrationTestCase
 {
     private RoleAssignmentRepositoryAdapter $repository;

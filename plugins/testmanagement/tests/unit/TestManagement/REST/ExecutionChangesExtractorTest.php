@@ -28,6 +28,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FormattedChangesetValueForFileFieldRetriever&MockObject $formatted_changeset_value_for_file_field_retriever;

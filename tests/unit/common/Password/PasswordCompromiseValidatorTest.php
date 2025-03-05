@@ -22,6 +22,7 @@ namespace Tuleap\Password;
 
 use Tuleap\Password\HaveIBeenPwned\PwnedPasswordChecker;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PasswordCompromiseValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPasswordAcceptation()

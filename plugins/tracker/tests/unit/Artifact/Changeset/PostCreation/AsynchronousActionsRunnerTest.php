@@ -34,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AsynchronousActionsRunnerTest extends TestCase
 {
     private MockObject&ActionsRunner $actions_runner;

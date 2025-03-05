@@ -26,6 +26,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UsersToBeImportedCollectionBuilder $builder;

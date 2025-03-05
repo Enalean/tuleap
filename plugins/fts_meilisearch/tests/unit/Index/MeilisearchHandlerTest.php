@@ -30,6 +30,7 @@ use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MeilisearchHandlerTest extends TestCase
 {
     /**

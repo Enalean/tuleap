@@ -28,6 +28,7 @@ use ForgeConfig;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class URLVerificationPermissionsOverriderRestrictedPlatformTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

@@ -35,6 +35,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AddController $controller;

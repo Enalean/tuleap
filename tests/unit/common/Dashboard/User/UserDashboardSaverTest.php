@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\User;
 use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UserDashboardDao&MockObject $dao;

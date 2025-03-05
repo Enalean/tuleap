@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use DomainException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitStatusWithKnownStatusTest extends TestCase
 {
     private readonly DateTimeImmutable $date;

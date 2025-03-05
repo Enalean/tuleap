@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

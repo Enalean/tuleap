@@ -22,6 +22,7 @@ namespace Tuleap\Baseline\Adapter\Administration;
 
 use Tuleap\Http\Server\NullServerRequest;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RoleAssignmentFromRequestExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExtractRoleAssignmentsFromRequest(): void

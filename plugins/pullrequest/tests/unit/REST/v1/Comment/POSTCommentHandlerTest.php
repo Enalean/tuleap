@@ -46,6 +46,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class POSTCommentHandlerTest extends TestCase
 {
     private const INSERTED_ID    = 59;

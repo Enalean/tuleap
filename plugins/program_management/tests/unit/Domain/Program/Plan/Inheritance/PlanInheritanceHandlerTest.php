@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\Program\Plan\RetrievePlanConfigurationSt
 use Tuleap\ProgramManagement\Tests\Stub\SaveNewPlanConfigurationStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanInheritanceHandlerTest extends TestCase
 {
     private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID          = 37;

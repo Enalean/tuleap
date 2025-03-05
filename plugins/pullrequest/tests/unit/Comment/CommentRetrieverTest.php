@@ -27,6 +27,7 @@ use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentRetrieverTest extends TestCase
 {
     private const COMMENT_ID = 15;

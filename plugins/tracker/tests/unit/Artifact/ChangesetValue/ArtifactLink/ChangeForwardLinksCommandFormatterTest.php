@@ -26,6 +26,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangeForwardLinksCommandFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CollectionOfForwardLinks $links_to_add;

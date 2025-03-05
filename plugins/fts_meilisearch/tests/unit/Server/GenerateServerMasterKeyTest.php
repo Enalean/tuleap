@@ -26,6 +26,7 @@ use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GenerateServerMasterKeyTest extends TestCase
 {
     public function testGeneratesAKey(): void

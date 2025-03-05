@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\IterationView;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
 use Tuleap\ProgramManagement\Tests\Builder\IterationLabelsBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationLabelsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const LABEL     = 'Cycles';

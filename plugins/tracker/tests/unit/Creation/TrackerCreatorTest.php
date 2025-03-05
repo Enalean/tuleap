@@ -30,6 +30,7 @@ use TrackerXmlImport;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

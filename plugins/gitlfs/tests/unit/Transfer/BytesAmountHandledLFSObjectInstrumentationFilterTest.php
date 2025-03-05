@@ -25,6 +25,7 @@ namespace Tuleap\GitLFS\Transfer;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BytesAmountHandledLFSObjectInstrumentationFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReceivedBytesAreCounted(): void

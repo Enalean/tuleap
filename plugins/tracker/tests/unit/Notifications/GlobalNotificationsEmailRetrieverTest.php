@@ -27,6 +27,7 @@ use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_GlobalNotification $notification;

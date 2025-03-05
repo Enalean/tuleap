@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Action;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IsPermissionsOnArtifactFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseWhenFieldIsNotAPermissionsOnArtifactField(): void

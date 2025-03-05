@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MethodNotConfiguredTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsNullProgressWhenTheSemanticIsNotDefined(): void

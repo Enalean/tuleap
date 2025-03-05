@@ -36,6 +36,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\Appearance\AppearancePresenterBuilder;
 use Tuleap\User\Account\Appearance\AppearancePresenter;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

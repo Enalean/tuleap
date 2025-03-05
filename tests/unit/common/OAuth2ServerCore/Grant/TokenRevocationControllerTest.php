@@ -34,6 +34,7 @@ use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\User\OAuth2\OAuth2Exception;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

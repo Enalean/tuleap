@@ -40,6 +40,7 @@ use Tuleap\User\Account\UpdateAccountInformationController;
 use Tuleap\User\Profile\AvatarGenerator;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

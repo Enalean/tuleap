@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Notifications;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const FIELD1_DATA = '123456';

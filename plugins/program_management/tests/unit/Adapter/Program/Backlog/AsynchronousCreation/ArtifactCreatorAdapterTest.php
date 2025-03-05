@@ -47,6 +47,7 @@ use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const NEW_MIRRORED_TIMEBOX_ID     = 201;

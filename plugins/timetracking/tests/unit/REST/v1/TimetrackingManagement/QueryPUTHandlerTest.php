@@ -33,6 +33,7 @@ use Tuleap\Timetracking\Tests\Stub\GetQueryUsersStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QueryPUTHandlerTest extends TestCase
 {
     private CheckPermissionStub $check_permission_stub;

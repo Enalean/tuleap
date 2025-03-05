@@ -33,6 +33,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TaskRepresentationBuilderForTrackerCache $cache;

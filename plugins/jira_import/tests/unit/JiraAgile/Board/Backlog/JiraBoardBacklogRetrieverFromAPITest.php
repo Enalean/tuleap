@@ -29,6 +29,7 @@ use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertEquals;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCatchesIfJiraReturnsAPayloadWeCannotWorkWith(): void

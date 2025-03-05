@@ -30,6 +30,7 @@ require_once __DIR__ . '/../bootstrap.php';
 /**
  * @group TrackerTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactTest extends TrackerBase
 {
     protected $project_id;

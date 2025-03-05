@@ -39,6 +39,7 @@ use WebDAVTree;
 
 require_once __DIR__ . '/bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

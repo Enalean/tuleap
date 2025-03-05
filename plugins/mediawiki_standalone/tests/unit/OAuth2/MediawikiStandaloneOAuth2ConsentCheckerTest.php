@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediawikiStandaloneOAuth2ConsentCheckerTest extends TestCase
 {
     public function testDoesNotRequireConsentForAllowedScopes(): void

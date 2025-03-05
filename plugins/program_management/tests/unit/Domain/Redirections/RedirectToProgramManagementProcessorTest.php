@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ProgramRedirectionParametersStub;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectToProgramManagementProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROJECT_SHORTNAME = 'my_project';

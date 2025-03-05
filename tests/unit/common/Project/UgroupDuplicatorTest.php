@@ -37,6 +37,7 @@ use UGroupBinding;
 use UGroupDao;
 use UGroupManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

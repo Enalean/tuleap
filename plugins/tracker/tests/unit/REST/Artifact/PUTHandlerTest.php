@@ -46,6 +46,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PUTHandlerTest extends TestCase
 {
     use GlobalResponseMock;

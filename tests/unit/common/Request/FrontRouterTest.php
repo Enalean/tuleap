@@ -48,6 +48,7 @@ use URLVerification;
 use URLVerificationFactory;
 use function PHPUnit\Framework\assertInstanceOf;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FrontRouterTest extends TestCase
 {
     use ForgeConfigSandbox;

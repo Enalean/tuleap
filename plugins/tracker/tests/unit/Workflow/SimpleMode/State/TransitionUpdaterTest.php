@@ -29,6 +29,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionUpdaterTest extends TestCase
 {
     private ConditionsUpdater&MockObject $condition_updater;

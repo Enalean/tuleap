@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROJECT_ID = 130;

@@ -24,6 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TusCORSMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTusInformationIsAdded(): void

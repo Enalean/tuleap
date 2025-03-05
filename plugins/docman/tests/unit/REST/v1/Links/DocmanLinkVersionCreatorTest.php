@@ -39,6 +39,7 @@ use Tuleap\Docman\Version\LinkVersionDataUpdator;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanLinkVersionCreatorTest extends TestCase
 {
     private DBTransactionExecutor&MockObject $transaction_executor;

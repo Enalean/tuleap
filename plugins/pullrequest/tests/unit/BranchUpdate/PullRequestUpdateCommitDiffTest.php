@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\BranchUpdate;
 
 use Git_Command_Exception;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAdditionalCommitsAreFound(): void

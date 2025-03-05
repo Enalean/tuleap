@@ -28,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @see https://tools.ietf.org/html/rfc7617
  * @see https://tools.ietf.org/html/rfc7235#section-4.2
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderValidAuthorizationHeaders')]

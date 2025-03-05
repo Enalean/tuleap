@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\String;
 use Mockery;
 use Tracker_FormElement_Field_String;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFormElementFieldStringRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

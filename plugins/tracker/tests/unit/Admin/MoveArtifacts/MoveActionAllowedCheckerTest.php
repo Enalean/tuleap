@@ -26,6 +26,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MoveActionAllowedCheckerTest extends TestCase
 {
     public function testItReturnsOKIfMoveIsAllowed(): void

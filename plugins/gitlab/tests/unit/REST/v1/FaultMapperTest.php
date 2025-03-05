@@ -34,6 +34,7 @@ use Tuleap\Gitlab\Permission\UserIsNotGitAdministratorFault;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FaultMapperTest extends TestCase
 {
     public static function dataProviderFaults(): iterable

@@ -23,8 +23,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\UploadedLinksUpdater;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class FRSPackageFactoryMock extends FRSPackageFactory
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+class FRSPackageFactoryMock extends FRSPackageFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     // bypass it for the tests as it calls global functions which access to the db
     public function setDefaultPermissions(FRSPackage $package)
@@ -36,8 +36,8 @@ class FRSPackageFactoryMock extends FRSPackageFactory
     }
 }
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses,Squiz.Classes.ValidClassName.NotCamelCaps
-class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
@@ -46,8 +46,8 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
     }
 }
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses
-class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses
 {
     use \Tuleap\TemporaryTestDirectory;
     use \Tuleap\GlobalLanguageMock;

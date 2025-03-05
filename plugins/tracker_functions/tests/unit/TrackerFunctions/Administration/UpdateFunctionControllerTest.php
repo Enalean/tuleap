@@ -39,6 +39,7 @@ use Tuleap\TrackerFunctions\Stubs\Administration\UpdateFunctionActivationStub;
 use Tuleap\TrackerFunctions\Stubs\Administration\UploadedFileStub;
 use Tuleap\TrackerFunctions\WASM\FindWASMFunctionPath;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateFunctionControllerTest extends TestCase
 {
     use ForgeConfigSandbox;

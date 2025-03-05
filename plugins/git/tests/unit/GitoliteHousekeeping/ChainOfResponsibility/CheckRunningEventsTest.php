@@ -30,6 +30,7 @@ use SystemEventProcess;
 use SystemEventProcessManager;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CheckRunningEventsTest extends TestCase
 {
     private SystemEventProcessManager&MockObject $process_manager;

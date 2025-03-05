@@ -35,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const COMMENT_BODY         = 'roisteringly reconvalescent';

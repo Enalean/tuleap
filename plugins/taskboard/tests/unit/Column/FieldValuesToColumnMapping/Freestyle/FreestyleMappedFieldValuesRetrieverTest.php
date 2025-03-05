@@ -30,6 +30,7 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FreestyleMappedFieldValuesRetrieverTest extends TestCase
 {
     private VerifyMappingExistsStub $verify_mapping_exists;

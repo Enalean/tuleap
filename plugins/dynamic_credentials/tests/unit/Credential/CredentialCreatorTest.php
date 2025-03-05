@@ -26,6 +26,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CredentialCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testQueryFailureIsConsideredAsDuplicateCredential(): void

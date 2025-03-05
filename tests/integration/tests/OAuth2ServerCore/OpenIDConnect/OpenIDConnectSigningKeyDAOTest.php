@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Tuleap\DB\DBFactory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenIDConnectSigningKeyDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

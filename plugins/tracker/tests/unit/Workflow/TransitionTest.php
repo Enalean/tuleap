@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

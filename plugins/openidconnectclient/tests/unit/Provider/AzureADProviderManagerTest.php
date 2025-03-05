@@ -28,6 +28,7 @@ use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCreatesNewAzureProvider(): void

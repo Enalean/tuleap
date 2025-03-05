@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchDB\REST\v1;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchResourceTest extends \RestBase
 {
     public function testCanGetSearchItems(): void

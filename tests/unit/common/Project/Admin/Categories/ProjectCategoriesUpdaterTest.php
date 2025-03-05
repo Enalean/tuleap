@@ -29,6 +29,7 @@ use TroveCat;
 use TroveCatFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Project $project;

@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AuthorizationCreator */

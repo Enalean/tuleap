@@ -50,6 +50,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

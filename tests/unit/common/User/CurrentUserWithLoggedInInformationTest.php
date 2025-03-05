@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CurrentUserWithLoggedInInformationTest extends TestCase
 {
     public function testCreatesCurrentUserFromALoggedInUser(): void

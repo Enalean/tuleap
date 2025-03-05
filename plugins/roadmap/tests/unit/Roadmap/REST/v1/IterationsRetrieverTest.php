@@ -41,6 +41,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ROADMAP_ID           = 42;

@@ -31,6 +31,7 @@ use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_InSessionChartSorter;
 require_once __DIR__ . '/bootstrap.php';
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var GraphOnTrackersV5_Chart_Pie&\PHPUnit\Framework\MockObject\MockObject */

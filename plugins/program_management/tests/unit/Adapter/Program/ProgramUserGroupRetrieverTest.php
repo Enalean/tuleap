@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistExceptio
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\Project\REST\UserGroupRetriever;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramUserGroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramUserGroupRetriever $program_user_group_retriever;

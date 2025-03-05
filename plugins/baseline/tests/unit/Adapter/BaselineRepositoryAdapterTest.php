@@ -37,6 +37,7 @@ use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var BaselineRepositoryAdapter */

@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SystemEventManagerTest extends TestCase
 {
     public function testConcatParameters(): void

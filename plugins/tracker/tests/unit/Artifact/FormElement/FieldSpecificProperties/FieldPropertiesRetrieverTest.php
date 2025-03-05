@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldPropertiesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRetrievesSpecificPropertiesInCache(): void

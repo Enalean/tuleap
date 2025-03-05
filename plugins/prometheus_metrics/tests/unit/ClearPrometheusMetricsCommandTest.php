@@ -23,6 +23,7 @@ namespace Tuleap\PrometheusMetrics;
 use Enalean\Prometheus\Storage\FlushableStorage;
 use Symfony\Component\Console\Tester\CommandTester;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ClearPrometheusMetricsCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCommandFlushesTheStorage(): void

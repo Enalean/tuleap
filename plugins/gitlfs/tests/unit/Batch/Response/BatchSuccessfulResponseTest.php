@@ -22,6 +22,7 @@ namespace Tuleap\GitLFS\Batch\Response;
 
 use Tuleap\GitLFS\Transfer\Transfer;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BatchSuccessfulResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testResponseCanBeJsonSerialized(): void

@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\Grant;
 
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessTokenGrantErrorResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

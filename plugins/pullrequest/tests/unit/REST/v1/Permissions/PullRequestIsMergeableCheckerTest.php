@@ -29,6 +29,7 @@ use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestIsMergeableCheckerTest extends TestCase
 {
     private PullRequestIsMergeableChecker $pull_request_is_mergeable_checker;

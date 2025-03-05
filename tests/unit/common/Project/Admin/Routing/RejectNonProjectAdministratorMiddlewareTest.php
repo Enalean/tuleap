@@ -27,6 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RejectNonProjectAdministratorMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RejectNonProjectAdministratorMiddleware $middleware;

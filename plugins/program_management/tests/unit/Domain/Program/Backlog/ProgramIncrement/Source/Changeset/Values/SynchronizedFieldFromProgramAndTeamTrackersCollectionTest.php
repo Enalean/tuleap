@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_LINK_ID = 1;

@@ -25,6 +25,7 @@ namespace Tuleap\DynamicCredentials\Plugin;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DynamicCredentialsPublicKeySignatureValidatorTest extends TestCase
 {
     private const VALID_PUBLIC_KEY = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';

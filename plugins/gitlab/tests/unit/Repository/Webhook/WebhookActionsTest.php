@@ -34,6 +34,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDat
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

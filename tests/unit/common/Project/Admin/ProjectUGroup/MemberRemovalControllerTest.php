@@ -34,6 +34,7 @@ use Tuleap\Project\UserRemover as ProjectMemberRemover;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

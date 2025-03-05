@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementTrackerIdentifierBuil
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_ID         = 615;

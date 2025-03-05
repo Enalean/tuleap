@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TitleValueRetrieverTest extends TestCase
 {
     private const ARTIFACT_ID = 1;

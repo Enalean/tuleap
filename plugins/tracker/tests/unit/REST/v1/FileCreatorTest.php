@@ -31,6 +31,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\Upload\NewFileUpload;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const NEW_FILE_UPLOAD_ID = 147;

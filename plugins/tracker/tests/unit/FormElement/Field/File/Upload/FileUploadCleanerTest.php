@@ -27,6 +27,7 @@ use org\bovigo\vfs\vfsStream;
 use Tracker_FormElementFactory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

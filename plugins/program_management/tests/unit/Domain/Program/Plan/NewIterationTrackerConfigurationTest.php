@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewIterationTrackerStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_TRACKER_ID = 84;

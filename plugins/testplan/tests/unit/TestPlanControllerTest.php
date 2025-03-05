@@ -33,6 +33,7 @@ use Tuleap\Option\Option;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

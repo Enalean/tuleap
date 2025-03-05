@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Tuleap\Cryptography\ConcealedString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SigningPrivateKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SIGNING_PUBLIC_KEY_FINGERPRINT = '13e908c0c14b52fa364f6573cda85971d16de83b17d6ef8793447724c464c01c';

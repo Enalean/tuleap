@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 use Tuleap\Test\Stubs\TemplateRendererStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

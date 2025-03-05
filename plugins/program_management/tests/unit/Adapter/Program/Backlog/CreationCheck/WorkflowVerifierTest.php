@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 758;

@@ -28,6 +28,7 @@ use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private XMLImporter $importer;

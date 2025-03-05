@@ -45,6 +45,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 /**
  * @psalm-immutable
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromotedMilestoneBuilderTest extends TestCase
 {
     private \PFUser $user;

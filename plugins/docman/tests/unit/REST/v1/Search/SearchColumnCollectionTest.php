@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1\Search;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchColumnCollectionTest extends TestCase
 {
     public function testEmptyCollectionByDefault(): void

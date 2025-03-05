@@ -46,6 +46,7 @@ use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentUploadFinisherTest extends TestCase
 {
     private DocmanItemsEventAdder&MockObject $event_adder;

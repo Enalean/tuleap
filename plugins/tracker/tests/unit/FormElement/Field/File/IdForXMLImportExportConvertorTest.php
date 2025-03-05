@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File;
 
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class IdForXMLImportExportConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItConvertsForXMLExport(): void

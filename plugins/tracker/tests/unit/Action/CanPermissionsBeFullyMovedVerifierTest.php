@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Artifact $artifact;

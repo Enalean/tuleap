@@ -25,6 +25,7 @@ namespace Tuleap\Statistics\DiskUsage\Subversion;
 use Statistics_DiskUsageDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

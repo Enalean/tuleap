@@ -26,6 +26,7 @@ namespace Tuleap\Test\Stubs;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectByIDFactoryStubTest extends TestCase
 {
     public function testItHasOneProject(): void

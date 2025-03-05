@@ -30,6 +30,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Reference\CrossReference;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReferenceIsCommunicatedToTheBugzillaServer(): void

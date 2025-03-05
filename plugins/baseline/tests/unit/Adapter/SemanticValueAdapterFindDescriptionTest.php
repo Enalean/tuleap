@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 use Tracker_FormElement_Field_Text;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTestCase
 {
     public function testFindDescription(): void

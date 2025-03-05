@@ -33,6 +33,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ActionAuthorizationTokenCreator&\PHPUnit\Framework\MockObject\Stub $token_creator;

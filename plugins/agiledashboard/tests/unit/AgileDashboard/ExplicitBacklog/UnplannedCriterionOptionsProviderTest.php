@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UnplannedCriterionOptionsProvider $provider;

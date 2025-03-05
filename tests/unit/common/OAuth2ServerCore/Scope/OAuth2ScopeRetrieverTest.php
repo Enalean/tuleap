@@ -28,6 +28,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

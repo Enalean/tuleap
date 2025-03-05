@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\DB\DBConnection;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReplaceStringInList(): void

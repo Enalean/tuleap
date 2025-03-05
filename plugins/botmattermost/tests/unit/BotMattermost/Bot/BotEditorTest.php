@@ -26,6 +26,7 @@ use Tuleap\BotMattermost\Administration\Request\ParameterValidator;
 use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BotEditorTest extends TestCase
 {
     private BotEditor $bot_editor;

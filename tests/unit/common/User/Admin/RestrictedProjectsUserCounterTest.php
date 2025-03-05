@@ -29,6 +29,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserGroupDao;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RestrictedProjectsUserCounterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

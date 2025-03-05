@@ -25,6 +25,7 @@ namespace Tuleap\BotMattermost\Bot;
 use Tuleap\BotMattermost\Exception\BotCannotBeUsedInProjectException;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BotValidityCheckerTest extends TestCase
 {
     public function testItDoesNotThrowExceptionIfBotIsASystemBot(): void

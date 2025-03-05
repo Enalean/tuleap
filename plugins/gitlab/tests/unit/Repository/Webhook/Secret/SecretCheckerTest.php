@@ -32,6 +32,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

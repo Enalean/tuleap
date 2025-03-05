@@ -38,6 +38,7 @@ use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

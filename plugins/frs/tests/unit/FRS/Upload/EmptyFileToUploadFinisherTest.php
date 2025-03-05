@@ -27,6 +27,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\Upload\Tus\FileUploadFinisher;
 use Tuleap\Tus\TusFileInformation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

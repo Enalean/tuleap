@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VisitCleanerTest extends TestCase
 {
     public function testItClearsVisitedArtifacts(): void

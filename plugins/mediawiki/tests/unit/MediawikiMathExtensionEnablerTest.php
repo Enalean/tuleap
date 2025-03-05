@@ -26,6 +26,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private vfsStreamDirectory $mediawiki_installation_path;

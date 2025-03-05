@@ -32,6 +32,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LatestHeartbeatsCollectorTest extends TestCase
 {
     private LatestHeartbeatsCollector $collector;

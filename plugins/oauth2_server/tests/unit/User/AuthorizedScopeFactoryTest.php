@@ -29,6 +29,7 @@ use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AuthorizedScopeFactory */

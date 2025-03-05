@@ -29,6 +29,7 @@ use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

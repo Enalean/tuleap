@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_TRACKER_ID = 75;

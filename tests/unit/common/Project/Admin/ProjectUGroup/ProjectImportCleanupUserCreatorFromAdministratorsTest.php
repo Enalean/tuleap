@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 use ProjectUGroup;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectImportCleanupUserCreatorFromAdministratorsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValuesHoldByTheEventCanBeAccessed(): void

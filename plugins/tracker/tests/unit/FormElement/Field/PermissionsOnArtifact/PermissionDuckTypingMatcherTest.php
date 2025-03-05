@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionDuckTypingMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseWhenUserGroupNameDoesNotExistInDestinationField(): void

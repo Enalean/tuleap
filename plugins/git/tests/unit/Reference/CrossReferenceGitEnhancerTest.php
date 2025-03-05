@@ -33,6 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
 use UserHelper;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceGitEnhancerTest extends TestCase
 {
     use GlobalLanguageMock;

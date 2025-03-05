@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 require_once __DIR__ . '/bootstrap.php';
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdminRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;

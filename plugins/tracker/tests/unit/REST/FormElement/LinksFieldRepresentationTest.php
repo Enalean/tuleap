@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_List_Bind;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeRepresentation;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsWithAllowedLinkTypes(): void

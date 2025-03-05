@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport as ConfigureAtXMLImportEvent;
 use Tuleap\XML\MappingsRegistry;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesntCreateTheWidgetThatIsNotProjectMilestone(): void

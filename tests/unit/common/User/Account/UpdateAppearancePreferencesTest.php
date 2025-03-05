@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

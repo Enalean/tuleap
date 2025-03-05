@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProvideSiteLevelInitializationLanguageCodeTest extends TestCase
 {
     use ForgeConfigSandbox;

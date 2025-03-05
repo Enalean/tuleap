@@ -40,6 +40,7 @@ use Tuleap\Test\Builders\UserTestBuilder as UserTestBuilderAlias;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PushSSHKeysControllerTest extends TestCase
 {
     private readonly MockObject&Git_UserAccountManager $user_account_manager;

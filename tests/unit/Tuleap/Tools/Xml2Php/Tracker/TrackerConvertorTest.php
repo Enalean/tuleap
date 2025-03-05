@@ -25,6 +25,7 @@ namespace Tuleap\Tools\Xml2Php\Tracker;
 use PhpParser\PrettyPrinter;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerConvertorTest extends TestCase
 {
     public function testItBuildsABasicTracker(): void

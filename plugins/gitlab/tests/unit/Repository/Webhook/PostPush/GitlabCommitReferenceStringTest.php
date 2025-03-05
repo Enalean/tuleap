@@ -26,6 +26,7 @@ use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabCommitReferenceStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const REPOSITORY_NAME = 'numerably';

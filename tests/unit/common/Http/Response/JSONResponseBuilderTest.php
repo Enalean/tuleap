@@ -25,6 +25,7 @@ namespace Tuleap\Http\Response;
 use JsonException;
 use Tuleap\Http\HTTPFactoryBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JSONResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCreateAJSONResponse(): void

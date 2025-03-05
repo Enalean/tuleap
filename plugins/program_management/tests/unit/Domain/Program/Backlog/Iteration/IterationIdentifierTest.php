@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_NOT_VISIBLE_ARTIFACT_ID  = 307;

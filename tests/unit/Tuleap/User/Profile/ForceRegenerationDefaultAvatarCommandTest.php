@@ -28,6 +28,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\User\Avatar\AvatarHashStorageDeletorStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForceRegenerationDefaultAvatarCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;

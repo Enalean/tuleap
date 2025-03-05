@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Templates;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AsciiRegisteredToUnicodeConvertorTest extends TestCase
 {
     public function testConvertSafeRegisteredBecauseOurGettextExtractionIsClumsy(): void

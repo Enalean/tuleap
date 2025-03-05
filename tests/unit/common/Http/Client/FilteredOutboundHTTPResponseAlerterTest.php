@@ -27,6 +27,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilteredOutboundHTTPResponseAlerterTest extends TestCase
 {
     use ForgeConfigSandbox;

@@ -24,6 +24,7 @@ namespace Tuleap\Git\CommitMetadata;
 
 use Tuleap\TemporaryTestDirectory;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommitMessageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;

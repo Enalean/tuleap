@@ -55,6 +55,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyTeamSynchronizationHasErrorStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramAdminTest extends TestCase
 {
     private BuildProgramStub $build_program;

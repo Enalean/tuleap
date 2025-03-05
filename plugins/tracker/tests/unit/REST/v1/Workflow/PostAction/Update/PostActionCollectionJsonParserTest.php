@@ -29,6 +29,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Workflow;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

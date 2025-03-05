@@ -30,6 +30,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FilesDownloadLimitsAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FilesDownloadLimitsAdminController $controller;

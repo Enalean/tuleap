@@ -31,6 +31,7 @@ use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAu
 use Tuleap\OAuth2ServerCore\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

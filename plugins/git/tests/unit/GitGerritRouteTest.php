@@ -81,6 +81,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 use UserManager;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitGerritRouteTest extends TestCase
 {
     use ForgeConfigSandbox;

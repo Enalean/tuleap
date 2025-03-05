@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TopMilestoneRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueIfItsFilteringQueryIsFuture(): void

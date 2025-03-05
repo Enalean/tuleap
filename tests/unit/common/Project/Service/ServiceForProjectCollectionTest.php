@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\Service\ListOfAllowedServicesForProjectRetrieverStub;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceForProjectCollectionTest extends TestCase
 {
     public function testGetMinimalRankReturnsSummaryRank(): void

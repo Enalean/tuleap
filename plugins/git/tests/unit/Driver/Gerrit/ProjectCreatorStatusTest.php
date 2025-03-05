@@ -29,6 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SystemEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectCreatorStatusTest extends TestCase
 {
     private Git_Driver_Gerrit_ProjectCreatorStatusDao&MockObject $dao;

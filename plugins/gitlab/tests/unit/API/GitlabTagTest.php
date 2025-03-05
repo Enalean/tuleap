@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\API\Tag;
 
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsATagRepresentation(): void

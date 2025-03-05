@@ -39,6 +39,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&\Tracker_FormElementFactory $tracker_form_element_factory;
@@ -264,6 +265,8 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $definition_artifact->method('getTracker')->willReturn($tracker);
         $definition_artifact->method('getTrackerId')->willReturn($tracker_id);
         $definition_artifact->method('getStatus')->willReturn('open');
+
+        $definition_artifact->method('getLastChangeset')->willReturn(null);
 
         $this->conformance_validator->method('isArtifactADefinition')->with(
             $definition_artifact

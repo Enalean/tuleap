@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CIBuildValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;

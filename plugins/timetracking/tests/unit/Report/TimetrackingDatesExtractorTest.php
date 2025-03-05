@@ -32,6 +32,7 @@ use Luracast\Restler\RestException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Timetracking\REST\v1\TimetrackingDatesExtractor;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

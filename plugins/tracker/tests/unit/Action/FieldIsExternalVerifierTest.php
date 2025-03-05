@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Action;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FieldIsExternalVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueWhenTheFieldIsExternal(): void

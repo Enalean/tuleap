@@ -26,6 +26,7 @@ use Tracker;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactViewBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

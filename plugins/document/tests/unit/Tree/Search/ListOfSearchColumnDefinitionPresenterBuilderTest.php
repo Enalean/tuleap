@@ -27,6 +27,7 @@ use Tuleap\Document\Config\Project\IRetrieveColumns;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 {
     public function testItBuildsPresenters(): void

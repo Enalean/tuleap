@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\MergeRequest;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GitlabMergeRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReturnsFalseIfAuthorNameIsNull(): void

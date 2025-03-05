@@ -25,6 +25,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * @group TrackersTests
  */
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersTest extends TrackerBase
 {
     public function testOptionsTrackers(): void

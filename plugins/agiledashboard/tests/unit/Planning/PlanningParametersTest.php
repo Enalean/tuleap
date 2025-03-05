@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Planning;
 use PlanningParameters;
 use Tuleap\Test\PHPUnit\TestCase;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanningParametersTest extends TestCase
 {
     public function testPlanningParametersIsAnEmptyArrayWhenKeyDoesNotExists(): void
