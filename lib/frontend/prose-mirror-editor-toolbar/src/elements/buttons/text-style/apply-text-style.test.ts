@@ -26,6 +26,7 @@ import type { InternalTextStyleItem } from "./text-style";
 import { OPTION_PLAIN_TEXT } from "./plain-text-option-template";
 import { OPTION_PREFORMATTED } from "./preformatted-text-option-template";
 import { OPTION_HEADING_1, OPTION_HEADING_2, OPTION_HEADING_3 } from "./heading-option-template";
+import { OPTION_SUBTITLE } from "./subtitle-option-template";
 
 describe("apply-text-style", () => {
     let toolbar_bus: ToolbarBus;
@@ -91,6 +92,36 @@ describe("apply-text-style", () => {
             applyTextStyle(host, OPTION_PREFORMATTED);
 
             expect(applyPreformattedText).not.toHaveBeenCalledOnce();
+        });
+    });
+
+    describe("subtitle", () => {
+        let applySubtitle: MockInstance;
+
+        beforeEach(() => {
+            applySubtitle = vi.spyOn(toolbar_bus, "subtitle");
+        });
+
+        it("When the option is selected, then it should call toolbar_bus.applySubtitle()", () => {
+            const host = {
+                is_subtitle_activated: false,
+                toolbar_bus,
+            } as InternalTextStyleItem;
+
+            applyTextStyle(host, OPTION_SUBTITLE);
+
+            expect(applySubtitle).toHaveBeenCalledOnce();
+        });
+
+        it("When the option is selected, then it should NOT call toolbar_bus.applySubtitle() if the option was already selected", () => {
+            const host = {
+                is_subtitle_activated: true,
+                toolbar_bus,
+            } as InternalTextStyleItem;
+
+            applyTextStyle(host, OPTION_SUBTITLE);
+
+            expect(applySubtitle).not.toHaveBeenCalledOnce();
         });
     });
 

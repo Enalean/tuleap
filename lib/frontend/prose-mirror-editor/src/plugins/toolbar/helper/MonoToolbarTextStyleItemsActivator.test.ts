@@ -33,13 +33,14 @@ describe("MonoToolbarTextStyleItemsActivator", () => {
             activateHeading: vi.fn(),
             activatePlainText: vi.fn(),
             activatePreformattedText: vi.fn(),
+            activateSubtitle: vi.fn(),
         } as unknown as ToolbarView;
 
         state = {} as EditorState;
     });
 
     it("When only a heading is in the current selection, then headings should be activated", () => {
-        const current_heading = { level: 1 };
+        const current_heading = { level: 3 };
         const activator = MonoToolbarTextStyleItemsActivator(
             RetrieveHeadingStub.withOnlyOneHeading(current_heading),
             DetectPreformattedTextInSelectionStub.withoutOnlyPreformattedText(),
@@ -51,6 +52,7 @@ describe("MonoToolbarTextStyleItemsActivator", () => {
         expect(toolbar_view.activateHeading).toHaveBeenCalledWith(current_heading);
         expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(false);
         expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(false);
+        expect(toolbar_view.activateSubtitle).toHaveBeenCalledWith(false);
     });
 
     it("When there is only paragraphs in the current selection, then plainText should be activated", () => {
@@ -65,6 +67,7 @@ describe("MonoToolbarTextStyleItemsActivator", () => {
         expect(toolbar_view.activateHeading).toHaveBeenCalledWith(null);
         expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(true);
         expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(false);
+        expect(toolbar_view.activateSubtitle).toHaveBeenCalledWith(false);
     });
 
     it("When there is only preformatted text in the current selection, then preformattedText should be activated", () => {
@@ -79,6 +82,35 @@ describe("MonoToolbarTextStyleItemsActivator", () => {
         expect(toolbar_view.activateHeading).toHaveBeenCalledWith(null);
         expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(false);
         expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(true);
+        expect(toolbar_view.activateSubtitle).toHaveBeenCalledWith(false);
+    });
+
+    describe("activateSubtitle", () => {
+        it("When only a heading 1 is in the current selection, then subtitle should be activated", () => {
+            const current_heading = { level: 1 };
+            const activator = MonoToolbarTextStyleItemsActivator(
+                RetrieveHeadingStub.withOnlyOneHeading(current_heading),
+                DetectPreformattedTextInSelectionStub.withoutOnlyPreformattedText(),
+                DetectParagraphsInSelectionStub.withoutOnlyParagraphs(),
+            );
+
+            activator.activateTextStyleItems(toolbar_view, state);
+
+            expect(toolbar_view.activateSubtitle).toHaveBeenCalledWith(true);
+        });
+
+        it("else subtitle should NOT be activated", () => {
+            const current_heading = { level: 2 };
+            const activator = MonoToolbarTextStyleItemsActivator(
+                RetrieveHeadingStub.withOnlyOneHeading(current_heading),
+                DetectPreformattedTextInSelectionStub.withoutOnlyPreformattedText(),
+                DetectParagraphsInSelectionStub.withoutOnlyParagraphs(),
+            );
+
+            activator.activateTextStyleItems(toolbar_view, state);
+
+            expect(toolbar_view.activateSubtitle).toHaveBeenCalledWith(false);
+        });
     });
 
     it("When several headings/preformatted text/paragraphs are detected in the current selection, all styles should be deactivated", () => {
@@ -93,5 +125,6 @@ describe("MonoToolbarTextStyleItemsActivator", () => {
         expect(toolbar_view.activateHeading).toHaveBeenCalledWith(null);
         expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(false);
         expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(false);
+        expect(toolbar_view.activateSubtitle).toHaveBeenCalledWith(false);
     });
 });

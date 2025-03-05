@@ -25,6 +25,7 @@ import {
     OPTION_HEADING_2,
     OPTION_HEADING_3,
 } from "./heading-option-template";
+import { OPTION_SUBTITLE } from "./subtitle-option-template";
 import type { InternalTextStyleItem } from "./text-style";
 
 const applyPlainText = (host: InternalTextStyleItem): void => {
@@ -51,6 +52,14 @@ const applyHeading = (host: InternalTextStyleItem, level: number): void => {
     host.toolbar_bus.heading({ level });
 };
 
+const applySubtitle = (host: InternalTextStyleItem): void => {
+    if (host.is_subtitle_activated) {
+        return;
+    }
+
+    host.toolbar_bus.subtitle();
+};
+
 export const applyTextStyle = (
     host: InternalTextStyleItem,
     selected_option_value: string,
@@ -61,6 +70,9 @@ export const applyTextStyle = (
             break;
         case OPTION_PREFORMATTED:
             applyPreformattedText(host);
+            break;
+        case OPTION_SUBTITLE:
+            applySubtitle(host);
             break;
         case OPTION_HEADING_1:
             applyHeading(host, 1);

@@ -59,9 +59,12 @@ const getTemplate = (args: ProseMirrorEditorToolbarProps): TemplateResult => {
         bullet_list: args.list_elements.includes("bullet_list"),
     };
     toolbar.style_elements = {
-        headings: args.style_elements.includes("headings"),
+        headings:
+            args.style_elements.includes("headings") && !args.style_elements.includes("subtitles"),
         text: args.style_elements.includes("text"),
         preformatted: args.style_elements.includes("preformatted"),
+        subtitles:
+            args.style_elements.includes("subtitles") && !args.style_elements.includes("headings"),
     };
 
     initToolbarDemo(toolbar_bus, args.is_toolbar_disabled);
@@ -112,7 +115,7 @@ const meta: Meta<ProseMirrorEditorToolbarProps> = {
             name: "style_elements",
             description: "Enable style options in the text-style select box",
             control: "check",
-            options: ["headings", "text", "preformatted"],
+            options: ["headings", "subtitles", "text", "preformatted"],
         },
         list_elements: {
             name: "list_elements",

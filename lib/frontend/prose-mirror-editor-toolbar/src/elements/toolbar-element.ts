@@ -97,6 +97,7 @@ export type LinkElements = {
 
 export type StyleElements = {
     headings: boolean;
+    subtitles: boolean;
     text: boolean;
     preformatted: boolean;
 };
@@ -250,6 +251,7 @@ export const renderToolbar = (
     const has_at_least_one_style_element_activated =
         host.style_elements !== null &&
         (host.style_elements.headings ||
+            host.style_elements.subtitles ||
             host.style_elements.text ||
             host.style_elements.preformatted);
     const text_style_item: ItemGroup = {
@@ -290,6 +292,12 @@ export const renderToolbar = (
     `.style(scss_styles);
 };
 
+const checkToolbarItemsValidity = (host: ProseMirrorToolbarElement): void => {
+    if (host.style_elements && host.style_elements.headings && host.style_elements.subtitles) {
+        throw new Error("You cannot activate headings and subtitles together.");
+    }
+};
+
 initGettext(
     getLocaleWithDefault(document),
     "tlp-prose-mirror-toolbar",
@@ -307,6 +315,8 @@ initGettext(
         is_disabled: {
             value: true,
             connect: (host) => {
+                checkToolbarItemsValidity(host);
+
                 host.controller.getToolbarBus().setView({
                     toggleToolbarState: (is_enabled: boolean): void => {
                         host.is_disabled = !is_enabled;

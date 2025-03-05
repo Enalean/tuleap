@@ -32,6 +32,7 @@ export interface ToolbarHandler {
     toggleSubscript: () => void;
     toggleSuperScript: () => void;
     toggleHeading: (heading: Heading) => void;
+    toggleSubtitle: () => void;
     togglePlainText: () => void;
     togglePreformattedText: () => void;
     applyLink: (link: LinkProperties) => void;
@@ -57,6 +58,7 @@ export interface ToolbarView {
     activateHeading: (current_heading: Heading | null) => void;
     activatePlainText: (is_activated: boolean) => void;
     activatePreformattedText: (is_activated: boolean) => void;
+    activateSubtitle: (is_activated: boolean) => void;
     toggleToolbarState: (is_enabled: boolean) => void;
     toggleToolbarMenu: (menu: string) => void;
 }
@@ -76,6 +78,7 @@ export interface ToolbarBus {
     orderedList: () => void;
     bulletList: () => void;
     heading: (heading: Heading) => void;
+    subtitle: () => void;
     plainText: () => void;
     preformattedText: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
@@ -104,6 +107,7 @@ const default_view: ToolbarView = {
     activateHeading: noop,
     activatePlainText: noop,
     activatePreformattedText: noop,
+    activateSubtitle: noop,
     toggleToolbarState: noop,
     toggleToolbarMenu: noop,
 };
@@ -146,6 +150,9 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     heading(heading: Heading): void {
         this.handler?.toggleHeading(heading);
+    },
+    subtitle(): void {
+        this.handler?.toggleSubtitle();
     },
     plainText(): void {
         this.handler?.togglePlainText();

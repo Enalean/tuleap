@@ -25,6 +25,7 @@ import { renderHeadingsOptions } from "./heading-option-template";
 import { renderPlainTextOption } from "./plain-text-option-template";
 import { renderStylesOption } from "./styles-option-template";
 import { renderPreformattedTextOption } from "./preformatted-text-option-template";
+import { renderSubtitleOption } from "./subtitle-option-template";
 import type { GetText } from "@tuleap/gettext";
 import { applyTextStyle } from "./apply-text-style";
 
@@ -38,6 +39,7 @@ export type TextStyleItem = {
 
 export type InternalTextStyleItem = Readonly<TextStyleItem> & {
     current_heading: Heading | null;
+    is_subtitle_activated: boolean;
     is_plain_text_activated: boolean;
     is_preformatted_text_activated: boolean;
     is_disabled: boolean;
@@ -71,6 +73,14 @@ export const connect = (host: InternalTextStyleItem): void => {
             },
         });
     }
+
+    if (host.style_elements.subtitles) {
+        host.toolbar_bus.setView({
+            activateSubtitle: (is_activated: boolean) => {
+                host.is_subtitle_activated = is_activated;
+            },
+        });
+    }
 };
 
 const onChangeApplySelectedStyle = (host: InternalTextStyleItem): void => {
@@ -88,6 +98,7 @@ define<InternalTextStyleItem>({
     current_heading: null,
     is_plain_text_activated: false,
     is_preformatted_text_activated: false,
+    is_subtitle_activated: false,
     is_disabled: false,
     style_elements: (host, style_elements) => style_elements,
     toolbar_bus: {
@@ -111,6 +122,7 @@ define<InternalTextStyleItem>({
             ${renderStylesOption(host, host.gettext_provider)}
             ${renderPlainTextOption(host, host.gettext_provider)}
             ${renderHeadingsOptions(host, host.gettext_provider)}
+            ${renderSubtitleOption(host, host.gettext_provider)}
             ${renderPreformattedTextOption(host, host.gettext_provider)}
         </select>
     `,

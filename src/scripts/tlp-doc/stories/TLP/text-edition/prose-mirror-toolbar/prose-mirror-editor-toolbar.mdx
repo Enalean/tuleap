@@ -31,7 +31,8 @@ import * as ToolbarStories from "./prose-mirror-editor-toolbar.stories"
 - <code>style_elements: StyleElements | null</code>: Allows to add a select to style the text:
     - It takes three parameter:
         - <code>text: boolean</code> Add the text option to the select box.
-        - <code>headings: boolean</code> Add headings options to the select box.
+        - <code>headings: boolean</code> Add headings options to the select box. Cannot be used together with the <code>subtitles</code> option.
+        - <code>subtitles: boolean</code> Add a subtitle option to the select box. Cannot be used together with the <code>headings</code> option.
         - <code>preformatted: boolean</code> Add the preformatted text option to the select box.
     - When all the options are disabled, then the select won't be added to the toolbar.
 
