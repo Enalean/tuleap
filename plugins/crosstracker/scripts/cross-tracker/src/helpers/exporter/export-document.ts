@@ -23,17 +23,17 @@ import { ok } from "neverthrow";
 import type { ReportSection } from "./xlsx/data-formater";
 import { formatData } from "./xlsx/data-formater";
 import type { GetColumnName } from "../../domain/ColumnNameGetter";
+import type { Query } from "../../type";
 
 export function downloadXLSXDocument(
     artifact_table_retriever: RetrieveArtifactsTable,
-    report_id: number,
-    query_id: string,
+    query: Query,
     column_name_getter: GetColumnName,
-    download_document: (formated_data: ReportSection, report_id: number) => void,
+    download_document: (formated_data: ReportSection, title: string) => void,
 ): ResultAsync<null, Fault> {
-    return artifact_table_retriever.getSelectableFullReport(query_id).andThen((table) => {
+    return artifact_table_retriever.getSelectableFullReport(query.id).andThen((table) => {
         const formated_data = formatData(table, column_name_getter);
-        download_document(formated_data, report_id);
+        download_document(formated_data, query.title);
         return ok(null);
     });
 }
