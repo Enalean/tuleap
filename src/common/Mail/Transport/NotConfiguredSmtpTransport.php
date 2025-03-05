@@ -20,17 +20,18 @@
 
 namespace Tuleap\Mail\Transport;
 
-use Laminas\Mail;
-use Laminas\Mail\Transport\TransportInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\RawMessage;
 
-final class NotConfiguredSmtpTransport implements TransportInterface
+final class NotConfiguredSmtpTransport implements MailerInterface
 {
     public function __construct(private LoggerInterface $logger)
     {
     }
 
-    public function send(Mail\Message $message): void
+    public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         // We don't send any mail if the smtp transport if not configured using "email_relayhost"
         // We only log that there is an issue

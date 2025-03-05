@@ -157,7 +157,7 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . '
         $cid_logo       = '';
         $path_logo      = $logo_retriever->getLegacyPath();
         if ($path_logo) {
-            $id_attachment = 'logo';
+            $id_attachment = 'logo@tuleap';
             $mail->addInlineAttachment(file_get_contents($path_logo), $logo_retriever->getMimetype(), $id_attachment);
             $cid_logo = 'cid:' . $id_attachment;
         }
