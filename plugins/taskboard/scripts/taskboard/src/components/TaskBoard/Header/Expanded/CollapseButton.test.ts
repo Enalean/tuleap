@@ -24,8 +24,9 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import CollapseButton from "./CollapseButton.vue";
 import type { ColumnDefinition } from "../../../../type";
 import type { RootState } from "../../../../store/type";
+import type Vue from "vue";
 
-async function getWrapper(column: ColumnDefinition): Promise<Wrapper<CollapseButton>> {
+async function getWrapper(column: ColumnDefinition): Promise<Wrapper<Vue>> {
     return shallowMount(CollapseButton, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
