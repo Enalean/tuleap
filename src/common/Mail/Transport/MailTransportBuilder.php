@@ -29,6 +29,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\ConfigKeySecret;
 use Tuleap\Config\ConfigKeyString;
@@ -44,7 +45,7 @@ class MailTransportBuilder
     #[ConfigKey("Option to define the relay host used when email_transport is configured to 'smtp'. The used port must be provided here.")]
     #[ConfigKeyString('')]
     public const RELAYHOST_CONFIG_KEY    = 'email_relayhost';
-    #[ConfigKey('Force activate the usage of TLS for the SMTP relay host')]
+    #[ConfigKey('Force activate the usage of TLS for the SMTP relay host, do not set if your mail relay is using "STARTTLS"')]
     #[ConfigKeyInt(0)]
     public const RELAYHOST_SMTP_USE_TLS  = 'email_relayhost_smtp_use_tls';
     #[ConfigKey('Username to use to authenticate against the SMTP relay host')]
@@ -56,6 +57,10 @@ class MailTransportBuilder
 
     public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
     public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
+    #[ConfigKey('Type of authentication to use against the SMTP relay host (either plain, login or xoauth2), indicative only not used anymore')]
+    #[ConfigKeyString('plain')]
+    #[ConfigKeyHidden] // Not used anymore keeping it around for now to ease the migration
+    public const RELAYHOST_SMTP_AUTH_TYPE       = 'email_relayhost_smtp_auth_type';
 
     private function __construct()
     {
