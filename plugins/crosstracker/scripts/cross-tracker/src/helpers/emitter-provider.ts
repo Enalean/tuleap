@@ -34,6 +34,7 @@ export const NOTIFY_SUCCESS_EVENT = "notify-success";
 export const CLEAR_FEEDBACK_EVENT = "clear-feedback";
 export const DISPLAY_QUERY_PREVIEW_EVENT = "display_query_preview";
 export const UPDATE_WIDGET_TITLE_EVENT = "update-widget-title";
+export const TOGGLE_QUERY_DETAILS_EVENT = "toggle-query-details";
 
 export type Events = {
     [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
@@ -46,12 +47,16 @@ export type Events = {
     [CLEAR_FEEDBACK_EVENT]: void;
     [DISPLAY_QUERY_PREVIEW_EVENT]: DisplayQueryPreviewEvent;
     [UPDATE_WIDGET_TITLE_EVENT]: UpdateWidgetTitleEvent;
+    [TOGGLE_QUERY_DETAILS_EVENT]: ToggleQueryDetailsEvent;
 };
 
 export type UpdateWidgetTitleEvent = {
     readonly new_title: string;
 };
 
+export type ToggleQueryDetailsEvent = {
+    readonly display_query_details: boolean;
+};
 export type CreatedQueryEvent = {
     readonly created_query: Query;
 };

@@ -137,6 +137,9 @@ msgstr "Requête créée avec succés !"
 msgid "Query creation is under implementation"
 msgstr "La création de requête est en cours d'implémentation"
 
+msgid "Query details & tools"
+msgstr "Détails & outils de la requête"
+
 msgid "Query is empty"
 msgstr "La requête est vide"
 

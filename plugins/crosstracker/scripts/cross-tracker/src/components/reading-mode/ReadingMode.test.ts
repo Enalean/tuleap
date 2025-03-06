@@ -27,7 +27,14 @@ import ReadingMode from "./ReadingMode.vue";
 import * as rest_querier from "../../api/rest-querier";
 import type { Query } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { EMITTER, IS_USER_ADMIN, REPORT_STATE, WIDGET_ID } from "../../injection-symbols";
+import {
+    EMITTER,
+    IS_EXPORT_ALLOWED,
+    IS_MULTIPLE_QUERY_SUPPORTED,
+    IS_USER_ADMIN,
+    REPORT_STATE,
+    WIDGET_ID,
+} from "../../injection-symbols";
 import type {
     EmitterProvider,
     Events,
@@ -36,13 +43,16 @@ import type {
 } from "../../helpers/emitter-provider";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import mitt from "mitt";
+import ExportXLSXButton from "../ExportXLSXButton.vue";
 
 describe("ReadingMode", () => {
     let backend_query: Query,
         reading_query: Query,
         is_user_admin: boolean,
         has_error: boolean,
-        emitter: EmitterProvider;
+        emitter: EmitterProvider,
+        is_multiple_query_supported: boolean,
+        is_xslx_export_allowed: boolean;
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_refresh_events: RefreshArtifactsEvent[];
 
@@ -51,16 +61,18 @@ describe("ReadingMode", () => {
             id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
             tql_query: "",
             title: "",
-            description: "",
+            description: "a great backend query",
         };
         reading_query = {
             id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
             tql_query: "",
             title: "",
-            description: "",
+            description: "a great reading query",
         };
         is_user_admin = true;
         has_error = false;
+        is_multiple_query_supported = false;
+        is_xslx_export_allowed = true;
         emitter = mitt<Events>();
         dispatched_fault_events = [];
         dispatched_refresh_events = [];
@@ -81,6 +93,8 @@ describe("ReadingMode", () => {
                     [WIDGET_ID.valueOf()]: 875,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
+                    [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: is_multiple_query_supported,
+                    [IS_EXPORT_ALLOWED.valueOf()]: is_xslx_export_allowed,
                 },
             },
             props: {
@@ -171,6 +185,38 @@ describe("ReadingMode", () => {
             expect(dispatched_refresh_events[0]).toStrictEqual({
                 query: backend_query,
             });
+        });
+    });
+
+    describe(`render XLSX button`, () => {
+        it(`does not show the XLSX export button when told not to`, () => {
+            is_xslx_export_allowed = false;
+            const wrapper = instantiateComponent();
+            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
+        });
+
+        it(`shows the XLSX export button otherwise`, () => {
+            const wrapper = instantiateComponent();
+            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(true);
+        });
+    });
+
+    describe("renders query description", () => {
+        it("does not show query’s description if multiple query mode is not enabled", () => {
+            is_multiple_query_supported = false;
+
+            const wrapper = instantiateComponent();
+            expect(wrapper.find("[data-test=query-description]").exists()).toBe(false);
+        });
+
+        it("shows query’s description if multiple query mode is enabled", () => {
+            is_multiple_query_supported = true;
+
+            const wrapper = instantiateComponent();
+            const element = wrapper.find("[data-test=query-description]");
+
+            expect(element.exists()).toBe(true);
+            expect(element.text()).toBe("a great reading query");
         });
     });
 });

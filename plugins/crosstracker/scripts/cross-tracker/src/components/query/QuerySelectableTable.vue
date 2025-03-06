@@ -158,10 +158,6 @@ function isLastCellOfRow(index: number, size: number): boolean {
 <style scoped lang="scss">
 @use "../../../themes/cell";
 
-.export-button-box {
-    margin: var(--tlp-medium-spacing) 0 0 0;
-}
-
 .overflow-wrapper {
     margin: 0 calc(-1 * var(--tlp-medium-spacing));
     overflow-y: auto;

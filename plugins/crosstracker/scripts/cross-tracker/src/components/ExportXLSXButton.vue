@@ -20,7 +20,7 @@
 <template>
     <button
         type="button"
-        class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-actions-element"
+        class="tlp-button-primary tlp-button-mini tlp-button-outline"
         v-bind:disabled="is_loading"
         v-on:click="exportXSLX()"
         data-test="export-xlsx-button"

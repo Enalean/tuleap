@@ -19,9 +19,6 @@
 
 <template>
     <empty-state v-if="is_table_empty" v-bind:tql_query="writing_query.tql_query" />
-    <div class="tlp-table-actions" v-if="should_show_export_button">
-        <export-x-l-s-x-button v-bind:current_query="writing_query" />
-    </div>
     <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
     <div class="overflow-wrapper" v-if="total > 0">
         <div class="selectable-table" v-if="!is_loading">
@@ -62,7 +59,6 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     EMITTER,
     GET_COLUMN_NAME,
-    IS_EXPORT_ALLOWED,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
@@ -76,7 +72,6 @@ import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
 import EditCell from "./EditCell.vue";
-import ExportXLSXButton from "../ExportXLSXButton.vue";
 import type { RefreshArtifactsEvent } from "../../helpers/emitter-provider";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import type { Query } from "../../type";
@@ -85,7 +80,6 @@ const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const report_state = strictInject(REPORT_STATE);
-const is_xslx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 
 const props = defineProps<{
     writing_query: Query;
@@ -99,10 +93,6 @@ let offset = 0;
 const limit = 30;
 
 const is_table_empty = computed<boolean>(() => !is_loading.value && total.value === 0);
-
-const should_show_export_button = computed(
-    () => is_xslx_export_allowed.value && !is_table_empty.value,
-);
 
 const emitter = strictInject(EMITTER);
 
@@ -206,10 +196,6 @@ function isLastCellOfRow(index: number, size: number): boolean {
 
 <style scoped lang="scss">
 @use "../../../themes/cell";
-
-.export-button-box {
-    margin: var(--tlp-medium-spacing) 0 0 0;
-}
 
 .overflow-wrapper {
     margin: 0 calc(-1 * var(--tlp-medium-spacing));
