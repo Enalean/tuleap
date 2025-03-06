@@ -19,12 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Part\DataPart;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Mail\MailLogger;
-use Laminas\Mail;
-use Laminas\Mime\Message as MimeMessage;
-use Laminas\Mime\Mime;
-use Laminas\Mime\Part as MimePart;
 
 /**
  * It allows to send mails in html format
@@ -50,10 +49,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     private $logger;
 
-    /**
-     * @var Mail\Message
-     */
-    private $message;
+    private \Symfony\Component\Mime\Email $message;
 
     /**
      * @var Tuleap_Template_Mail
@@ -65,46 +61,35 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     private $recipient_list_builder;
 
-    /**
-     * @var Mail\Transport\TransportInterface
-     */
-    private $transport;
+    private MailerInterface $mailer;
+
+    private string $body_text = '';
+
+    private string $body_html = '';
 
     /**
-     * @var string
+     * @psalm-var list<array{'data': string, 'filename': string, 'mime_type': string}>
      */
-    private $body_text = '';
+    private array $attachments = [];
 
     /**
-     * @var string
+     * @psalm-var list<array{'data': string, 'cid': string, 'mime_type': string}>
      */
-    private $body_html = '';
-
-    /**
-     * @var MimePart[]
-     */
-    private $attachments = [];
-
-    /**
-     * @var MimePart[]
-     */
-    private $inline_attachments = [];
+    private array $inline_attachments = [];
 
     public function __construct()
     {
-        $this->message = new Mail\Message();
-        $this->message->setEncoding('UTF-8');
+        $this->message                = new \Symfony\Component\Mime\Email();
         $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
         $this->logger                 = new MailLogger();
-        $this->transport              = MailTransportBuilder::buildMailTransport($this->logger);
+        $this->mailer                 = MailTransportBuilder::buildMailTransport($this->logger);
     }
 
     public function setMessageId($message_id)
     {
-        $message_id_header = new Mail\Header\MessageId();
-        $message_id_header->setId($message_id);
-        $this->message->getHeaders()->removeHeader($message_id_header->getFieldName());
-        $this->message->getHeaders()->addHeader($message_id_header);
+        $message_headers = $this->message->getHeaders();
+        $message_headers->remove('Message-ID');
+        $message_headers->addIdHeader('Message-ID', (string) $message_id);
     }
 
     /**
@@ -164,16 +149,16 @@ class Codendi_Mail implements Codendi_Mail_Interface
     {
         $allowed = ['To', 'Cc', 'Bcc'];
         if (in_array($recipient_type, $allowed)) {
-            $headers          = $this->message->getHeaders();
-            $recipient_header = $headers->get($recipient_type);
-            if ($recipient_header !== false) {
-                $list_addresses = $recipient_header->getAddressList();
-                $addresses      = [];
-                foreach ($list_addresses as $address) {
-                    $addresses[] = $address->getEmail();
-                }
-                return implode(', ', $addresses);
+            $addresses = match ($recipient_type) {
+                'To' => $this->message->getTo(),
+                'Cc' => $this->message->getCc(),
+                'Bcc' => $this->message->getBcc(),
+            };
+            $emails = [];
+            foreach ($addresses as $address) {
+                $emails[] = $address->getAddress();
             }
+            return implode(', ', $emails);
         }
         return '';
     }
@@ -181,17 +166,18 @@ class Codendi_Mail implements Codendi_Mail_Interface
     public function setFrom($email)
     {
         list($email, $name) = $this->cleanupMailFormat($email);
-        $this->message->setFrom($email, $name);
+        $this->message->getHeaders()->remove('From');
+        $this->message->addFrom(new Address($email, $name));
     }
 
     public function clearFrom()
     {
-        $this->message->setFrom([]);
+        $this->message->getHeaders()->remove('From');
     }
 
     public function setSubject($subject)
     {
-        $this->message->setSubject($subject);
+        $this->message->subject($subject);
     }
 
     public function getSubject()
@@ -225,7 +211,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         if ($email === '') {
             return;
         }
-        $this->message->addTo($email, $name);
+        $this->message->addTo(new Address($email, $name));
     }
 
     /**
@@ -263,7 +249,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         if ($email === '') {
             return;
         }
-        $this->message->addBcc($email, $name);
+        $this->message->addBcc(new Address($email, $name));
     }
 
     /**
@@ -301,7 +287,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         if ($email === '') {
             return;
         }
-        $this->message->addCc($email, $name);
+        $this->message->addCc(new Address($email, $name));
     }
 
     /**
@@ -330,22 +316,6 @@ class Codendi_Mail implements Codendi_Mail_Interface
     public function getBodyText()
     {
         return $this->body_text;
-    }
-
-    /**
-     * @return null|MimePart
-     */
-    private function getTextPart()
-    {
-        if ($this->body_text === '') {
-            return null;
-        }
-        $text_part           = new MimePart($this->body_text);
-        $text_part->type     = Mime::TYPE_TEXT;
-        $text_part->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-        $text_part->charset  = 'UTF-8';
-
-        return $text_part;
     }
 
     /**
@@ -407,35 +377,6 @@ class Codendi_Mail implements Codendi_Mail_Interface
     }
 
     /**
-     * @return null|MimePart
-     */
-    private function getHtmlPart()
-    {
-        if ($this->body_html === '') {
-            return null;
-        }
-        $html_code_part           = new MimePart($this->body_html);
-        $html_code_part->type     = Mime::TYPE_HTML;
-        $html_code_part->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-        $html_code_part->charset  = 'UTF-8';
-
-        if (empty($this->inline_attachments)) {
-            return $html_code_part;
-        }
-
-        $html_message = new MimeMessage();
-        $html_message->addPart($html_code_part);
-        foreach ($this->inline_attachments as $attachment) {
-            $html_message->addPart($attachment);
-        }
-        $html_part           = new MimePart($html_message->generateMessage());
-        $html_part->type     = Laminas\Mime\Mime::MULTIPART_RELATED;
-        $html_part->boundary = $html_message->getMime()->boundary();
-
-        return $html_part;
-    }
-
-    /**
      * @param String $body
      */
     public function setBody($body)
@@ -464,7 +405,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         $arrayTo         = $this->validateArrayOfUsers($to);
         $arrayToRealName = [];
         foreach ($arrayTo as $to) {
-            $this->message->addTo($to['email'], $to['real_name']);
+            $this->message->addTo(new Address($to['email'], $to['real_name']));
             $arrayToRealName[] = $to['real_name'];
         }
         return $arrayToRealName;
@@ -481,7 +422,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         $arrayBcc         = $this->validateArrayOfUsers($bcc);
         $arrayBccRealName = [];
         foreach ($arrayBcc as $user) {
-            $this->message->addBcc($user['email'], $user['real_name']);
+            $this->message->addBcc(new Address($user['email'], $user['real_name']));
             $arrayBccRealName[] = $user['real_name'];
         }
         return $arrayBccRealName;
@@ -496,33 +437,40 @@ class Codendi_Mail implements Codendi_Mail_Interface
     {
         $status = true;
 
-        $mime_message = new MimeMessage();
-        $mime_message->addPart($this->getBodyPart());
-        foreach ($this->attachments as $attachment) {
-            $mime_message->addPart($attachment);
+
+
+        if ($this->body_text !== '') {
+            $this->message->text($this->body_text);
         }
-        $this->message->setBody($mime_message);
+        if ($this->body_html !== '') {
+            $this->message->html($this->body_html);
+        }
+        foreach ($this->attachments as $attachment) {
+            $this->message->attach($attachment['data'], $attachment['filename'], $attachment['mime_type']);
+        }
+        foreach ($this->inline_attachments as $attachment) {
+            $data_part = (new DataPart($attachment['data'], null, $attachment['mime_type']))->asInline();
+            $data_part->setContentId($attachment['cid']);
+        }
         if (count($this->message->getTo()) === 0) {
             $this->setTo(ForgeConfig::get('sys_noreply'), true);
         }
         \Tuleap\Mail\MailInstrumentation::increment();
         try {
-            $this->transport->send($this->message);
+            $this->mailer->send($this->message);
         } catch (Exception $e) {
             $status = false;
             \Tuleap\Mail\MailInstrumentation::incrementFailure();
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
             $this->logger->error('Mail notification failed', ['exception' => $e]);
 
-            $to_header = $this->message->getHeaders()->get('to');
-            if ($to_header) {
-                $list      = $to_header->getAddressList();
-                $addresses = [];
-                foreach ($list as $address) {
-                    $addresses[] = $address->getEmail();
+            $to_addresses = $this->message->getTo();
+            if (count($to_addresses) > 0) {
+                $emails = [];
+                foreach ($to_addresses as $address) {
+                    $emails[] = $address->getAddress();
                 }
-                $addresses = implode(',', $addresses);
-                $this->logger->debug("Message sent to: $addresses");
+                $this->logger->debug('Message sent to: ' . implode(',', $emails));
             } else {
                 $this->logger->error("No 'to' found");
             }
@@ -531,69 +479,26 @@ class Codendi_Mail implements Codendi_Mail_Interface
         return $status;
     }
 
-    private function getBodyPart()
+    private function clearRecipients(): void
     {
-        $text_part = $this->getTextPart();
-        $html_part = $this->getHtmlPart();
-
-        if ($text_part === null && $html_part !== null) {
-            return $html_part;
-        }
-
-        if ($text_part !== null && $html_part === null) {
-            return $text_part;
-        }
-
-        $body_message = new MimeMessage();
-        if ($text_part !== null) {
-            $body_message->addPart($text_part);
-        }
-        if ($html_part !== null) {
-            $body_message->addPart($html_part);
-        }
-        $body_part           = new MimePart($body_message->generateMessage());
-        $body_part->type     = Laminas\Mime\Mime::MULTIPART_ALTERNATIVE;
-        $body_part->boundary = $body_message->getMime()->boundary();
-
-        return $body_part;
+        $headers = $this->message->getHeaders();
+        $headers->remove('To');
+        $headers->remove('Cc');
+        $headers->remove('Bcc');
     }
 
-    private function clearRecipients()
+    public function addAdditionalHeader($name, $value): void
     {
-        $this->message->setTo([]);
-        $this->message->setCc([]);
-        $this->message->setBcc([]);
+        $this->message->getHeaders()->addHeader($name, $value);
     }
 
-    public function addAdditionalHeader($name, $value)
+    public function addInlineAttachment($data, $mime_type, $cid): void
     {
-        $header = new Mail\Header\GenericHeader($name, $value);
-        $this->message->getHeaders()->addHeader($header);
-    }
-
-    public function addInlineAttachment($data, $mime_type, $cid)
-    {
-        $mime_part                  = $this->getMimePartAttachment($data, $mime_type);
-        $mime_part->id              = $cid;
-        $mime_part->disposition     = Laminas\Mime\Mime::DISPOSITION_INLINE;
-        $this->inline_attachments[] = $mime_part;
+        $this->inline_attachments[] = ['data' => $data, 'cid' => $cid, 'mime_type' => $mime_type];
     }
 
     public function addAttachment(string $data, string $filename, string $mime_type): void
     {
-        $mime_part              = $this->getMimePartAttachment($data, $mime_type);
-        $mime_part->disposition = Laminas\Mime\Mime::DISPOSITION_ATTACHMENT;
-        $mime_part->filename    = $filename;
-
-        $this->attachments[] = $mime_part;
-    }
-
-    private function getMimePartAttachment($data, $mime_type)
-    {
-        $mime_part           = new MimePart($data);
-        $mime_part->type     = $mime_type;
-        $mime_part->encoding = Laminas\Mime\Mime::ENCODING_BASE64;
-
-        return $mime_part;
+        $this->attachments[] = ['data' => $data, 'filename' => $filename, 'mime_type' => $mime_type];
     }
 }

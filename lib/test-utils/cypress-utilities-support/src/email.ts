@@ -64,14 +64,19 @@ Cypress.Commands.add(
                 }
                 const last_received_email = response.body.items[0];
 
-                if (last_received_email.MIME.Parts.length < 3) {
-                    return false;
+                for (const mime_part of last_received_email.MIME.Parts) {
+                    const content_disposition =
+                        (mime_part.Headers["Content-Disposition"] ?? [])[0] ?? "";
+                    const content_type = (mime_part.Headers["Content-Type"] ?? [])[0] ?? "";
+                    if (
+                        content_disposition.startsWith("attachment") &&
+                        content_type.startsWith(attachment_type)
+                    ) {
+                        return true;
+                    }
                 }
-                const contains_attachment: boolean = quotedPrintable
-                    .decode(last_received_email.MIME.Parts[2].Headers["Content-Type"][0])
-                    .includes(attachment_type);
 
-                return contains_attachment;
+                return false;
             });
         };
         cy.reloadUntilCondition(
@@ -129,7 +134,8 @@ Cypress.Commands.add("deleteAllMessagesInMailbox", (): void => {
 interface Parts {
     Body: string;
     Headers: {
-        "Content-Type": Array<string>;
+        "Content-Type"?: Array<string>;
+        "Content-Disposition"?: Array<string>;
     };
 }
 interface EmailItem {

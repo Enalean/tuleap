@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fcc5f1285863f75485dc20cca1f8441f",
+    "content-hash": "abe44bf104c336ad13bcc7105868472f",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -569,6 +569,150 @@
                 }
             ],
             "time": "2022-12-30T00:15:36+00:00"
+        },
+        {
+            "name": "doctrine/lexer",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/lexer.git",
+                "reference": "31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd",
+                "reference": "31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^12",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.5",
+                "psalm/plugin-phpunit": "^0.18.3",
+                "vimeo/psalm": "^5.21"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Lexer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.",
+            "homepage": "https://www.doctrine-project.org/projects/lexer.html",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "lexer",
+                "parser",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/doctrine/lexer/issues",
+                "source": "https://github.com/doctrine/lexer/tree/3.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Flexer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-02-05T11:56:58+00:00"
+        },
+        {
+            "name": "egulias/email-validator",
+            "version": "4.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/EmailValidator.git",
+                "reference": "b115554301161fa21467629f1e1391c1936de517"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/b115554301161fa21467629f1e1391c1936de517",
+                "reference": "b115554301161fa21467629f1e1391c1936de517",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "^2.0 || ^3.0",
+                "php": ">=8.1",
+                "symfony/polyfill-intl-idn": "^1.26"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.2",
+                "vimeo/psalm": "^5.12"
+            },
+            "suggest": {
+                "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Egulias\\EmailValidator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis"
+                }
+            ],
+            "description": "A library for validating emails against several RFCs",
+            "homepage": "https://github.com/egulias/EmailValidator",
+            "keywords": [
+                "email",
+                "emailvalidation",
+                "emailvalidator",
+                "validation",
+                "validator"
+            ],
+            "support": {
+                "issues": "https://github.com/egulias/EmailValidator/issues",
+                "source": "https://github.com/egulias/EmailValidator/tree/4.0.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/egulias",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-12-27T00:36:43+00:00"
         },
         {
             "name": "embed/embed",
@@ -1688,198 +1832,6 @@
             "time": "2024-01-04T10:50:34+00:00"
         },
         {
-            "name": "laminas/laminas-loader",
-            "version": "2.10.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-loader.git",
-                "reference": "e6fe952304ef40ce45cd814751ab35d42afdad12"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-loader/zipball/e6fe952304ef40ce45cd814751ab35d42afdad12",
-                "reference": "e6fe952304ef40ce45cd814751ab35d42afdad12",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
-            },
-            "conflict": {
-                "zendframework/zend-loader": "*"
-            },
-            "require-dev": {
-                "laminas/laminas-coding-standard": "~2.4.0",
-                "phpunit/phpunit": "~9.5.25"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Loader\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Autoloading and plugin loading strategies",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "laminas",
-                "loader"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-loader/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-loader/issues",
-                "rss": "https://github.com/laminas/laminas-loader/releases.atom",
-                "source": "https://github.com/laminas/laminas-loader"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2023-10-18T09:58:51+00:00"
-        },
-        {
-            "name": "laminas/laminas-mail",
-            "version": "2.25.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-mail.git",
-                "reference": "110e04497395123998220e244cceecb167cc6dda"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-mail/zipball/110e04497395123998220e244cceecb167cc6dda",
-                "reference": "110e04497395123998220e244cceecb167cc6dda",
-                "shasum": ""
-            },
-            "require": {
-                "ext-iconv": "*",
-                "laminas/laminas-loader": "^2.9.0",
-                "laminas/laminas-mime": "^2.11.0",
-                "laminas/laminas-stdlib": "^3.17.0",
-                "laminas/laminas-validator": "^2.31.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "symfony/polyfill-intl-idn": "^1.27.0",
-                "symfony/polyfill-mbstring": "^1.27.0",
-                "webmozart/assert": "^1.11.0"
-            },
-            "require-dev": {
-                "laminas/laminas-coding-standard": "~2.5.0",
-                "laminas/laminas-db": "^2.18",
-                "laminas/laminas-servicemanager": "^3.22.1",
-                "phpunit/phpunit": "^10.4.2",
-                "psalm/plugin-phpunit": "^0.18.4",
-                "symfony/process": "^6.3.4",
-                "vimeo/psalm": "^5.15"
-            },
-            "suggest": {
-                "laminas/laminas-servicemanager": "^3.21 when using SMTP to deliver messages"
-            },
-            "type": "library",
-            "extra": {
-                "laminas": {
-                    "component": "Laminas\\Mail",
-                    "config-provider": "Laminas\\Mail\\ConfigProvider"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Mail\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Provides generalized functionality to compose and send both text and MIME-compliant multipart e-mail messages",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "laminas",
-                "mail"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-mail/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-mail/issues",
-                "rss": "https://github.com/laminas/laminas-mail/releases.atom",
-                "source": "https://github.com/laminas/laminas-mail"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2023-11-02T10:32:34+00:00"
-        },
-        {
-            "name": "laminas/laminas-mime",
-            "version": "2.12.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-mime.git",
-                "reference": "08cc544778829b7d68d27a097885bd6e7130135e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-mime/zipball/08cc544778829b7d68d27a097885bd6e7130135e",
-                "reference": "08cc544778829b7d68d27a097885bd6e7130135e",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-stdlib": "^2.7 || ^3.0",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
-            },
-            "conflict": {
-                "zendframework/zend-mime": "*"
-            },
-            "require-dev": {
-                "laminas/laminas-coding-standard": "~2.4.0",
-                "laminas/laminas-mail": "^2.19.0",
-                "phpunit/phpunit": "~9.5.25"
-            },
-            "suggest": {
-                "laminas/laminas-mail": "Laminas\\Mail component"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Mime\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Create and parse MIME messages and parts",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "laminas",
-                "mime"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-mime/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-mime/issues",
-                "rss": "https://github.com/laminas/laminas-mime/releases.atom",
-                "source": "https://github.com/laminas/laminas-mime"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2023-11-02T16:47:19+00:00"
-        },
-        {
             "name": "laminas/laminas-servicemanager",
             "version": "3.22.1",
             "source": {
@@ -2027,90 +1979,6 @@
                 }
             ],
             "time": "2024-01-19T12:39:49+00:00"
-        },
-        {
-            "name": "laminas/laminas-validator",
-            "version": "2.46.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-validator.git",
-                "reference": "98330256f8d8a1357a93f6f7f1a987036aff6329"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-validator/zipball/98330256f8d8a1357a93f6f7f1a987036aff6329",
-                "reference": "98330256f8d8a1357a93f6f7f1a987036aff6329",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-servicemanager": "^3.21.0",
-                "laminas/laminas-stdlib": "^3.13",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "psr/http-message": "^1.0.1 || ^2.0.0"
-            },
-            "conflict": {
-                "zendframework/zend-validator": "*"
-            },
-            "require-dev": {
-                "laminas/laminas-coding-standard": "^2.5",
-                "laminas/laminas-db": "^2.18",
-                "laminas/laminas-filter": "^2.33",
-                "laminas/laminas-i18n": "^2.24.1",
-                "laminas/laminas-session": "^2.17",
-                "laminas/laminas-uri": "^2.11.0",
-                "phpunit/phpunit": "^10.5.2",
-                "psalm/plugin-phpunit": "^0.18.4",
-                "psr/http-client": "^1.0.3",
-                "psr/http-factory": "^1.0.2",
-                "vimeo/psalm": "^5.17"
-            },
-            "suggest": {
-                "laminas/laminas-db": "Laminas\\Db component, required by the (No)RecordExists validator",
-                "laminas/laminas-filter": "Laminas\\Filter component, required by the Digits validator",
-                "laminas/laminas-i18n": "Laminas\\I18n component to allow translation of validation error messages",
-                "laminas/laminas-i18n-resources": "Translations of validator messages",
-                "laminas/laminas-servicemanager": "Laminas\\ServiceManager component to allow using the ValidatorPluginManager and validator chains",
-                "laminas/laminas-session": "Laminas\\Session component, ^2.8; required by the Csrf validator",
-                "laminas/laminas-uri": "Laminas\\Uri component, required by the Uri and Sitemap\\Loc validators",
-                "psr/http-message": "psr/http-message, required when validating PSR-7 UploadedFileInterface instances via the Upload and UploadFile validators"
-            },
-            "type": "library",
-            "extra": {
-                "laminas": {
-                    "component": "Laminas\\Validator",
-                    "config-provider": "Laminas\\Validator\\ConfigProvider"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Validator\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Validation classes for a wide range of domains, and the ability to chain validators to create complex validation criteria",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "laminas",
-                "validator"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-validator/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-validator/issues",
-                "rss": "https://github.com/laminas/laminas-validator/releases.atom",
-                "source": "https://github.com/laminas/laminas-validator"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2024-01-03T12:43:04+00:00"
         },
         {
             "name": "lasserafn/php-initial-avatar-generator",
@@ -5084,6 +4952,162 @@
             "time": "2024-09-25T14:20:29+00:00"
         },
         {
+            "name": "symfony/event-dispatcher",
+            "version": "v7.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/event-dispatcher.git",
+                "reference": "910c5db85a5356d0fea57680defec4e99eb9c8c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/910c5db85a5356d0fea57680defec4e99eb9c8c1",
+                "reference": "910c5db85a5356d0fea57680defec4e99eb9c8c1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/event-dispatcher-contracts": "^2.5|^3"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<6.4",
+                "symfony/service-contracts": "<2.5"
+            },
+            "provide": {
+                "psr/event-dispatcher-implementation": "1.0",
+                "symfony/event-dispatcher-implementation": "2.0|3.0"
+            },
+            "require-dev": {
+                "psr/log": "^1|^2|^3",
+                "symfony/config": "^6.4|^7.0",
+                "symfony/dependency-injection": "^6.4|^7.0",
+                "symfony/error-handler": "^6.4|^7.0",
+                "symfony/expression-language": "^6.4|^7.0",
+                "symfony/http-foundation": "^6.4|^7.0",
+                "symfony/service-contracts": "^2.5|^3",
+                "symfony/stopwatch": "^6.4|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides tools that allow your application components to communicate with each other by dispatching events and listening to them",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/event-dispatcher/tree/v7.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-09-25T14:21:43+00:00"
+        },
+        {
+            "name": "symfony/event-dispatcher-contracts",
+            "version": "v3.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/event-dispatcher-contracts.git",
+                "reference": "7642f5e970b672283b7823222ae8ef8bbc160b9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/7642f5e970b672283b7823222ae8ef8bbc160b9f",
+                "reference": "7642f5e970b672283b7823222ae8ef8bbc160b9f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "psr/event-dispatcher": "^1"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
+                "branch-alias": {
+                    "dev-main": "3.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Contracts\\EventDispatcher\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to dispatching event",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.5.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-09-25T14:20:29+00:00"
+        },
+        {
             "name": "symfony/lock",
             "version": "v7.2.3",
             "source": {
@@ -5160,6 +5184,170 @@
                 }
             ],
             "time": "2025-01-17T06:59:03+00:00"
+        },
+        {
+            "name": "symfony/mailer",
+            "version": "v7.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/mailer.git",
+                "reference": "f3871b182c44997cf039f3b462af4a48fb85f9d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/mailer/zipball/f3871b182c44997cf039f3b462af4a48fb85f9d3",
+                "reference": "f3871b182c44997cf039f3b462af4a48fb85f9d3",
+                "shasum": ""
+            },
+            "require": {
+                "egulias/email-validator": "^2.1.10|^3|^4",
+                "php": ">=8.2",
+                "psr/event-dispatcher": "^1",
+                "psr/log": "^1|^2|^3",
+                "symfony/event-dispatcher": "^6.4|^7.0",
+                "symfony/mime": "^7.2",
+                "symfony/service-contracts": "^2.5|^3"
+            },
+            "conflict": {
+                "symfony/http-client-contracts": "<2.5",
+                "symfony/http-kernel": "<6.4",
+                "symfony/messenger": "<6.4",
+                "symfony/mime": "<6.4",
+                "symfony/twig-bridge": "<6.4"
+            },
+            "require-dev": {
+                "symfony/console": "^6.4|^7.0",
+                "symfony/http-client": "^6.4|^7.0",
+                "symfony/messenger": "^6.4|^7.0",
+                "symfony/twig-bridge": "^6.4|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mailer\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Helps sending emails",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/mailer/tree/v7.2.3"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-01-27T11:08:17+00:00"
+        },
+        {
+            "name": "symfony/mime",
+            "version": "v7.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/mime.git",
+                "reference": "87ca22046b78c3feaff04b337f33b38510fd686b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/87ca22046b78c3feaff04b337f33b38510fd686b",
+                "reference": "87ca22046b78c3feaff04b337f33b38510fd686b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/polyfill-intl-idn": "^1.10",
+                "symfony/polyfill-mbstring": "^1.0"
+            },
+            "conflict": {
+                "egulias/email-validator": "~3.0.0",
+                "phpdocumentor/reflection-docblock": "<3.2.2",
+                "phpdocumentor/type-resolver": "<1.4.0",
+                "symfony/mailer": "<6.4",
+                "symfony/serializer": "<6.4.3|>7.0,<7.0.3"
+            },
+            "require-dev": {
+                "egulias/email-validator": "^2.1.10|^3.1|^4",
+                "league/html-to-markdown": "^5.0",
+                "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
+                "symfony/dependency-injection": "^6.4|^7.0",
+                "symfony/process": "^6.4|^7.0",
+                "symfony/property-access": "^6.4|^7.0",
+                "symfony/property-info": "^6.4|^7.0",
+                "symfony/serializer": "^6.4.3|^7.0.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mime\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Allows manipulating MIME messages",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "mime",
+                "mime-type"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/mime/tree/v7.2.4"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-02-19T08:51:20+00:00"
         },
         {
             "name": "symfony/options-resolver",

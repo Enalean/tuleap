@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Mail\Transport;
 
 use ForgeConfig;
-use Laminas\Mail;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\ConfigKeySecret;
 use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\ConfigKeyValueValidator;
-use Tuleap\Mail\Transport\SmtpOptions\SMTPAuthTypeValidator;
-use Tuleap\Mail\Transport\SmtpOptions\SmtpOptionsBuilder;
+use Tuleap\Mail\Transport\SmtpOptions\SmtpTransportBuilder;
 
 #[ConfigKeyCategory('Email')]
 class MailTransportBuilder
@@ -43,37 +43,29 @@ class MailTransportBuilder
 
     #[ConfigKey("Option to define the relay host used when email_transport is configured to 'smtp'. The used port must be provided here.")]
     #[ConfigKeyString('')]
-    public const RELAYHOST_CONFIG_KEY     = 'email_relayhost';
-    #[ConfigKey('Activate the usage of TLS for the SMTP relay host')]
+    public const RELAYHOST_CONFIG_KEY    = 'email_relayhost';
+    #[ConfigKey('Force activate the usage of TLS for the SMTP relay host')]
     #[ConfigKeyInt(0)]
-    public const RELAYHOST_SMTP_USE_TLS   = 'email_relayhost_smtp_use_tls';
+    public const RELAYHOST_SMTP_USE_TLS  = 'email_relayhost_smtp_use_tls';
     #[ConfigKey('Username to use to authenticate against the SMTP relay host')]
     #[ConfigKeyString('')]
-    public const RELAYHOST_SMTP_USERNAME  = 'email_relayhost_smtp_username';
+    public const RELAYHOST_SMTP_USERNAME = 'email_relayhost_smtp_username';
     #[ConfigKey('Password to use to authenticate against the SMTP relay host')]
     #[ConfigKeySecret]
-    public const RELAYHOST_SMTP_PASSWORD  = 'email_relayhost_smtp_password';
-    #[ConfigKey('Type of authentication to use against the SMTP relay host (either plain, login or xoauth2)')]
-    #[ConfigKeyString('plain')]
-    #[ConfigKeyValueValidator(SMTPAuthTypeValidator::class)]
-    public const RELAYHOST_SMTP_AUTH_TYPE = 'email_relayhost_smtp_auth_type';
+    public const RELAYHOST_SMTP_PASSWORD = 'email_relayhost_smtp_password';
 
     public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
     public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
-
-    public const EMAIL_AUTH_PLAIN   = 'plain';
-    public const EMAIL_AUTH_LOGIN   = 'login';
-    public const EMAIL_AUTH_XOAUTH2 = 'xoauth2';
 
     private function __construct()
     {
     }
 
-    public static function buildMailTransport(LoggerInterface $logger): Mail\Transport\TransportInterface
+    public static function buildMailTransport(LoggerInterface $logger): MailerInterface
     {
         return self::buildFromMailConfiguration(
-            static fn() => new Mail\Transport\Sendmail(),
-            static fn(string $relay_host) => new Mail\Transport\Smtp(SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig($relay_host)),
+            static fn() => new Mailer(new SendmailTransport()),
+            static fn(string $relay_host) => new Mailer(SmtpTransportBuilder::buildSmtpTransportFromForgeConfig($relay_host)),
             static fn() => new NotConfiguredSmtpTransport($logger),
             static fn() => new InvalidDefinedTransport($logger),
         );

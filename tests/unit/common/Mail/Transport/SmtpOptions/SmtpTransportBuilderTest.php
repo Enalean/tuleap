@@ -23,12 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Mail\Transport\SmtpOptions;
 
 use org\bovigo\vfs\vfsStream;
+use Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SmtpOptionsBuilderTest extends TestCase
+final class SmtpTransportBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -41,26 +42,32 @@ final class SmtpOptionsBuilderTest extends TestCase
 
     public function testItBuildsSmtpOptionsWithHostAndPortFromConfig(): void
     {
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('url:443');
+        $transport        = SmtpTransportBuilder::buildSmtpTransportFromForgeConfig('url:443');
+        $transport_stream = $transport->getStream();
+        assert($transport_stream instanceof SocketStream);
 
-        self::assertSame('url', $smtp_options->getHost());
-        self::assertSame(443, $smtp_options->getPort());
+        self::assertSame('url', $transport_stream->getHost());
+        self::assertSame(443, $transport_stream->getPort());
     }
 
     public function testItBuildsSmtpOptionsWithHostOnlyFromConfig(): void
     {
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('url');
+        $transport        = SmtpTransportBuilder::buildSmtpTransportFromForgeConfig('url');
+        $transport_stream = $transport->getStream();
+        assert($transport_stream instanceof SocketStream);
 
-        self::assertSame('url', $smtp_options->getHost());
-        self::assertSame(self::DEFAULT_PORT, $smtp_options->getPort());
+        self::assertSame('url', $transport_stream->getHost());
+        self::assertSame(self::DEFAULT_PORT, $transport_stream->getPort());
     }
 
     public function testItBuildsSmtpOptionsWithHostAndEmptyPortFromConfig(): void
     {
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('url:');
+        $transport        = SmtpTransportBuilder::buildSmtpTransportFromForgeConfig('url:');
+        $transport_stream = $transport->getStream();
+        assert($transport_stream instanceof SocketStream);
 
-        self::assertSame('url', $smtp_options->getHost());
-        self::assertSame(self::DEFAULT_PORT, $smtp_options->getPort());
+        self::assertSame('url', $transport_stream->getHost());
+        self::assertSame(self::DEFAULT_PORT, $transport_stream->getPort());
     }
 
     public function testSetupSMTPAuthWithTLS(): void
@@ -72,28 +79,14 @@ final class SmtpOptionsBuilderTest extends TestCase
         \ForgeConfig::set('email_relayhost_smtp_username', 'username');
         \ForgeConfig::set('email_relayhost_smtp_password', \ForgeConfig::encryptValue(new ConcealedString('password')));
 
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('smtp.example.com');
+        $transport = SmtpTransportBuilder::buildSmtpTransportFromForgeConfig('smtp.example.com');
 
-        self::assertSame(['username' => 'username', 'password' => 'password', 'ssl' => 'tls'], $smtp_options->getConnectionConfig());
-        self::assertSame('login', $smtp_options->getConnectionClass());
-    }
+        self::assertSame('username', $transport->getUsername());
+        self::assertSame('password', $transport->getPassword());
 
-    public function testItBuildsSmtpOptionsForXOAuth2Config(): void
-    {
-        \ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
+        $transport_stream = $transport->getStream();
+        assert($transport_stream instanceof SocketStream);
 
-        \ForgeConfig::set('email_relayhost_smtp_use_tls', '1');
-        \ForgeConfig::set('email_relayhost_smtp_auth_type', 'xoauth2');
-        \ForgeConfig::set('email_relayhost_smtp_username', 'username');
-        \ForgeConfig::set('email_relayhost_smtp_password', \ForgeConfig::encryptValue(new ConcealedString('password')));
-
-        $smtp_options = SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig('smtp.example.com');
-
-        self::assertEqualsCanonicalizing([
-            'username' => 'username',
-            'access_token' => 'password',
-            'ssl' => 'tls',
-        ], $smtp_options->getConnectionConfig());
-        self::assertSame('xoauth2', $smtp_options->getConnectionClass());
+        self::assertSame(true, $transport_stream->isTLS());
     }
 }
