@@ -46,6 +46,7 @@
                     v-bind:class="{
                         'artidoc-display-level-for-edition': has_add_button,
                         'artidoc-display-level-for-readonly': !has_add_button,
+                        [`level-${section.value.level}`]: true,
                     }"
                 >
                     {{ section.value.display_level }}
@@ -104,14 +105,6 @@ function getId(section: ArtidocSection): string {
 
 $section-number-padding-left: var(--tlp-small-spacing);
 $section-number-padding-right: var(--tlp-medium-spacing);
-$display-level-top-for-readonly: calc(
-    var(--tlp-large-spacing) + var(--tlp-medium-spacing) + #{size.$header-title-height} - var(--tlp-large-spacing)
-);
-$display-level-top-for-edition: calc(
-    #{size.$add-section-button-container-height} + var(--tlp-medium-spacing) + var(
-            --editor-padding
-        ) + #{size.$header-title-height} - var(--tlp-large-spacing)
-);
 
 ul {
     margin: 0;
@@ -131,11 +124,43 @@ li {
         }
 
         > .artidoc-display-level-for-edition {
-            top: calc($display-level-top-for-edition + var(--tlp-small-spacing));
+            &.level-1 {
+                top: calc(
+                    #{size.$header-level-1-top-offset-for-edition} + var(--tlp-small-spacing)
+                );
+            }
+
+            &.level-2 {
+                top: calc(
+                    #{size.$header-level-2-top-offset-for-edition} + var(--tlp-small-spacing)
+                );
+            }
+
+            &.level-3 {
+                top: calc(
+                    #{size.$header-level-3-top-offset-for-edition} + var(--tlp-small-spacing)
+                );
+            }
         }
 
         > .artidoc-display-level-for-readonly {
-            top: calc($display-level-top-for-readonly + var(--tlp-small-spacing));
+            &.level-1 {
+                top: calc(
+                    #{size.$header-level-1-top-offset-for-readonly} + var(--tlp-small-spacing)
+                );
+            }
+
+            &.level-2 {
+                top: calc(
+                    #{size.$header-level-2-top-offset-for-readonly} + var(--tlp-small-spacing)
+                );
+            }
+
+            &.level-3 {
+                top: calc(
+                    #{size.$header-level-3-top-offset-for-readonly} + var(--tlp-small-spacing)
+                );
+            }
         }
     }
 }
@@ -153,12 +178,34 @@ li {
 
 .artidoc-display-level-for-readonly {
     position: relative;
-    top: $display-level-top-for-readonly;
+
+    &.level-1 {
+        top: size.$header-level-1-top-offset-for-readonly;
+    }
+
+    &.level-2 {
+        top: size.$header-level-2-top-offset-for-readonly;
+    }
+
+    &.level-3 {
+        top: size.$header-level-3-top-offset-for-readonly;
+    }
 }
 
 .artidoc-display-level-for-edition {
     position: absolute;
-    top: $display-level-top-for-edition;
+
+    &.level-1 {
+        top: size.$header-level-1-top-offset-for-edition;
+    }
+
+    &.level-2 {
+        top: size.$header-level-2-top-offset-for-edition;
+    }
+
+    &.level-3 {
+        top: size.$header-level-3-top-offset-for-edition;
+    }
 }
 
 .tlp-card {

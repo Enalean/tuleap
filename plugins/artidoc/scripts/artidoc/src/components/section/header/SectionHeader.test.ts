@@ -23,15 +23,32 @@ import { shallowMount } from "@vue/test-utils";
 import SectionHeader from "./SectionHeader.vue";
 import { createGettext } from "vue3-gettext";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-
-const current_title = "Current section title";
-const current_display_level = "1. ";
-const number_and_title = current_display_level + current_title;
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import type { Level } from "@/sections/levels/SectionsNumberer";
+import { LEVEL_1, LEVEL_2, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 describe("SectionHeader", () => {
     let can_user_edit_document: boolean, is_print_mode: boolean;
 
-    const getWrapper = (): VueWrapper =>
+    const buildSectionWithLevel = (level: Level): ReactiveStoredArtidocSection =>
+        ReactiveStoredArtidocSectionStub.fromSection(
+            ArtifactSectionFactory.override({
+                level,
+                title: "Section title",
+                display_level:
+                    level === LEVEL_1
+                        ? "1. "
+                        : level === LEVEL_2
+                          ? "1. 1. "
+                          : level === LEVEL_3
+                            ? "1. 1. 1. "
+                            : "",
+            }),
+        );
+
+    const getWrapper = (section: ReactiveStoredArtidocSection): VueWrapper =>
         shallowMount(SectionHeader, {
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -40,10 +57,8 @@ describe("SectionHeader", () => {
                 },
             },
             props: {
-                title: current_title,
                 is_print_mode,
-                is_freetext: false,
-                display_level: current_display_level,
+                section,
             },
         });
 
@@ -51,22 +66,46 @@ describe("SectionHeader", () => {
         can_user_edit_document = false;
         is_print_mode = false;
 
-        const readonly_title = getWrapper().find("h1");
-        expect(readonly_title.text()).toBe(current_title);
+        const section = buildSectionWithLevel(LEVEL_1);
+
+        expect(getWrapper(section).find("h1").text()).toBe(section.value.title);
     });
 
     it("When the user can edit the document, but it is in print mode, then it should display a readonly title", () => {
         can_user_edit_document = true;
         is_print_mode = true;
 
-        const readonly_title = getWrapper().find("h1");
-        expect(readonly_title.text()).toBe(number_and_title);
+        const section = buildSectionWithLevel(LEVEL_1);
+
+        expect(getWrapper(section).find("h1").text()).toBe(
+            `${section.value.display_level}${section.value.title}`,
+        );
     });
 
     it("When the user can edit the document, and it is NOT in print mode, then it should display nothing", () => {
         can_user_edit_document = true;
         is_print_mode = false;
 
-        expect(getWrapper().find("h1").exists()).toBe(false);
+        const section = buildSectionWithLevel(LEVEL_1);
+
+        expect(getWrapper(section).find("h1").exists()).toBe(false);
     });
+
+    it.each([
+        [LEVEL_1, "h1"],
+        [LEVEL_2, "h2"],
+        [LEVEL_3, "h3"],
+    ])(
+        "When the section is at level %s, then the title should be rendered as a <%s> title.",
+        (level, expected_tag) => {
+            can_user_edit_document = false;
+            is_print_mode = true;
+
+            const section = buildSectionWithLevel(level);
+
+            expect(getWrapper(section).find(expected_tag).text()).toBe(
+                `${section.value.display_level}${section.value.title}`,
+            );
+        },
+    );
 });

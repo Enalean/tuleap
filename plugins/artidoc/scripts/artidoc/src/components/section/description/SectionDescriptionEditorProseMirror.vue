@@ -138,11 +138,29 @@ artidoc-section-title {
     display: block;
     margin: 0 0 var(--tlp-large-spacing);
     padding: 0 0 var(--tlp-small-spacing);
+}
+
+.artidoc-section-level-1 artidoc-section-title {
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
     color: var(--tlp-dark-color);
     font-size: 36px;
     font-weight: 600;
     line-height: 40px;
+}
+
+.artidoc-section-level-2 artidoc-section-title {
+    color: var(--tlp-dark-color);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 36px;
+}
+
+.artidoc-section-level-3 artidoc-section-title {
+    color: var(--tlp-dimmed-color);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    text-transform: uppercase;
 }
 
 artidoc-section-description {
