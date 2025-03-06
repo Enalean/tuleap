@@ -19,16 +19,16 @@
 
 @use "@/themes/includes/whitespace";
 
-@function compute-header-top-offset-for-edition($header-height) {
+@function compute-header-top-offset-for-edition($header-height, $offset) {
     @return calc(
         #{$add-section-button-container-height} + var(--tlp-medium-spacing) + var(--editor-padding) +
-            #{$header-height} - var(--tlp-large-spacing)
+            #{$header-height} + #{$offset}px - var(--tlp-large-spacing)
     );
 }
 
-@function compute-header-top-offset-for-readonly($header-height) {
+@function compute-header-top-offset-for-readonly($header-height, $offset) {
     @return calc(
-        var(--tlp-large-spacing) + var(--tlp-medium-spacing) + #{$header-height} - var(--tlp-large-spacing)
+        var(--tlp-large-spacing) + var(--tlp-medium-spacing) + #{$header-height} + #{$offset}px - var(--tlp-large-spacing)
     );
 }
 
@@ -43,24 +43,32 @@ $document-container-width-ratio: 0.7;
 $document-width: 960px;
 $header-level-1-title-height: 40px; // line-height of TLP h1
 $header-level-1-top-offset-for-edition: compute-header-top-offset-for-edition(
-    $header-level-1-title-height
+    $header-level-1-title-height,
+    0
 );
 $header-level-1-top-offset-for-readonly: compute-header-top-offset-for-readonly(
-    $header-level-1-title-height
+    $header-level-1-title-height,
+    0
 );
 $header-level-2-title-height: 36px; // line-height of TLP h2
 $header-level-2-top-offset-for-edition: compute-header-top-offset-for-edition(
-    $header-level-2-title-height
+    $header-level-2-title-height,
+    0
 );
+$header-level-2-magic-value-to-align-level-to-title: -1;
 $header-level-2-top-offset-for-readonly: compute-header-top-offset-for-readonly(
-    $header-level-2-title-height
+    $header-level-2-title-height,
+    $header-level-2-magic-value-to-align-level-to-title
 );
 $header-level-3-title-height: 24px; // line-height of TLP h3
+$header-level-3-magic-value-to-align-level-to-title: 2;
 $header-level-3-top-offset-for-edition: compute-header-top-offset-for-edition(
-    $header-level-3-title-height
+    $header-level-3-title-height,
+    $header-level-3-magic-value-to-align-level-to-title
 );
 $header-level-3-top-offset-for-readonly: compute-header-top-offset-for-readonly(
-    $header-level-3-title-height
+    $header-level-3-title-height,
+    $header-level-3-magic-value-to-align-level-to-title
 );
 $artidoc-title-height: 40px; // line-height of TLP h1
 
