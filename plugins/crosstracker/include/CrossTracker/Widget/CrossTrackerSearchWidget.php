@@ -88,7 +88,8 @@ class CrossTrackerSearchWidget extends Widget
                     $is_admin,
                     $user,
                     ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
-                    $row['dashboard_type']
+                    $row['dashboard_type'],
+                    $this->getTitleAttributeValue(),
                 )),
             ]
         );
@@ -171,5 +172,27 @@ class CrossTrackerSearchWidget extends Widget
     public function isManagingItsOwnSection(): bool
     {
         return true;
+    }
+
+    public function hasCustomTitle(): bool
+    {
+        return true;
+    }
+
+    public function getPurifiedCustomTitle(): string
+    {
+        $renderer = TemplateRendererFactory::build()->getRenderer(
+            __DIR__ . '/../../../templates/widgets'
+        );
+
+        return $renderer->renderToString(
+            'widget-title',
+            ['title_attribute' => $this->getTitleAttributeValue()],
+        );
+    }
+
+    private function getTitleAttributeValue(): string
+    {
+        return "crosstracker-$this->content_id";
     }
 }

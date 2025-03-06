@@ -47,6 +47,7 @@ import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 import { SuggestedQueries } from "./domain/SuggestedQueriesGetter";
 import { NewQueryCreator } from "./api/NewQueryCreator";
 import type { WidgetData } from "./type";
+import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -72,6 +73,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const widget_json_data = getAttributeOrThrow(widget_element, "data-widget-json-data");
         const widget_data: WidgetData = JSON.parse(widget_json_data);
+        const emitter = mitt<Events>();
+
+        if (widget_data.is_multiple_query_supported) {
+            const title_element = selectOrThrow(
+                document,
+                `[data-widget-title="${widget_data.title_attribute}"]`,
+            );
+            WidgetTitleUpdater(emitter, title_element).listenToSwitchQuery();
+        }
 
         const new_query_creator = NewQueryCreator();
 
@@ -90,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(IS_USER_ADMIN, widget_data.is_widget_admin)
             .provide(DOCUMENTATION_BASE_URL, widget_data.documentation_base_url)
             .provide(GET_COLUMN_NAME, column_name_getter)
-            .provide(EMITTER, mitt<Events>())
+            .provide(EMITTER, emitter)
             .provide(IS_MULTIPLE_QUERY_SUPPORTED, widget_data.is_multiple_query_supported)
             .provide(GET_SUGGESTED_QUERIES, SuggestedQueries({ $gettext: gettext_plugin.$gettext }))
             .provide(DASHBOARD_TYPE, widget_data.dashboard_type)

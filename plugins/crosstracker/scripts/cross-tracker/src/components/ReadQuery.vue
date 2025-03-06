@@ -153,8 +153,8 @@ function loadBackendReport(): void {
 
                     return;
                 }
-                backend_query.value = reports[0];
-                initQueries();
+
+                emitter.emit(SWITCH_QUERY_EVENT, { query: reports[0] });
             },
             (fault) => {
                 notifyFault(ReportRetrievalFault(fault));
@@ -166,9 +166,9 @@ function loadBackendReport(): void {
 }
 
 onMounted(() => {
-    loadBackendReport();
     emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
     emitter.on(NEW_QUERY_CREATED_EVENT, handleAddQuery);
+    loadBackendReport();
 });
 
 onBeforeUnmount(() => {
