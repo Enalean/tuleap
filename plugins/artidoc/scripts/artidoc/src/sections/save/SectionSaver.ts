@@ -58,10 +58,7 @@ export const getSectionSaver = (
 ): SaveSection => {
     function getLatestVersionOfCurrentSection(): ResultAsync<ArtidocSection, Fault> {
         if (isArtifactSection(section.value) || isFreetextSection(section.value)) {
-            return getSection(section.value.id).map((recovered_section) => {
-                recovered_section.display_level = section.value.display_level;
-                return recovered_section;
-            });
+            return getSection(section.value.id);
         }
         return okAsync(section.value);
     }

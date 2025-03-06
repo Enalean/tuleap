@@ -40,24 +40,12 @@ const artifact_section = ReactiveStoredArtidocSectionStub.fromSection(
 const freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
     FreetextSectionFactory.create(),
 );
-const display_level = "1.2.3. ";
-const current_artifact_section = ReactiveStoredArtidocSectionStub.fromSection(
-    ArtifactSectionFactory.override({
-        display_level,
-    }),
-);
-const current_freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
-    FreetextSectionFactory.override({
-        display_level,
-    }),
-);
 const document_id = 105;
 
 describe("SectionSaver", () => {
     describe("forceSave", () => {
         it("should save artifact section", async () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section.value));
-            const updater = SectionsUpdaterStub.withExpectedCall();
 
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putSection")
@@ -65,13 +53,13 @@ describe("SectionSaver", () => {
 
             const { forceSave } = getSectionSaver(
                 document_id,
-                current_artifact_section,
+                artifact_section,
                 SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                updater,
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(current_artifact_section.value),
+                SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
                 SectionEditorCloserStub.withExpectedCall(),
             );
 
@@ -79,25 +67,22 @@ describe("SectionSaver", () => {
             await flushPromises();
 
             expect(mock_put_artifact_description).toHaveBeenCalledOnce();
-            expect(updater.getLastUpdatedSection()?.display_level).toStrictEqual(display_level);
         });
         it("should save freetext section", async () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section.value));
-            const updater = SectionsUpdaterStub.withExpectedCall();
-
             const mock_put_freetext_description = vi
                 .spyOn(rest_querier, "putSection")
                 .mockReturnValue(okAsync(new Response()));
 
             const { forceSave } = getSectionSaver(
                 document_id,
-                current_freetext_section,
+                freetext_section,
                 SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                updater,
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(current_freetext_section.value),
+                SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
                 SectionEditorCloserStub.withExpectedCall(),
             );
 
@@ -105,13 +90,11 @@ describe("SectionSaver", () => {
             await flushPromises();
 
             expect(mock_put_freetext_description).toHaveBeenCalledOnce();
-            expect(updater.getLastUpdatedSection()?.display_level).toStrictEqual(display_level);
         });
     });
     describe("save", () => {
         it("should save artifact sections", async () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(artifact_section.value));
-            const updater = SectionsUpdaterStub.withExpectedCall();
 
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putSection")
@@ -119,13 +102,13 @@ describe("SectionSaver", () => {
 
             const { save } = getSectionSaver(
                 document_id,
-                current_artifact_section,
+                artifact_section,
                 SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                updater,
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(current_artifact_section.value),
+                SectionAttachmentFilesManagerStub.forSection(artifact_section.value),
                 SectionEditorCloserStub.withExpectedCall(),
             );
 
@@ -133,12 +116,10 @@ describe("SectionSaver", () => {
             await flushPromises();
 
             expect(mock_put_artifact_description).toHaveBeenCalledOnce();
-            expect(updater.getLastUpdatedSection()?.display_level).toStrictEqual(display_level);
         });
 
         it("should save freetext sections", async () => {
             vi.spyOn(rest_querier, "getSection").mockReturnValue(okAsync(freetext_section.value));
-            const updater = SectionsUpdaterStub.withExpectedCall();
 
             const mock_put_freetext_description = vi
                 .spyOn(rest_querier, "putSection")
@@ -146,13 +127,13 @@ describe("SectionSaver", () => {
 
             const { save } = getSectionSaver(
                 document_id,
-                current_freetext_section,
+                freetext_section,
                 SectionStateStub.withEditedContent(),
                 SectionErrorManagerStub.withNoExpectedFault(),
                 PendingSectionsReplacerStub.withNoExpectedCall(),
-                updater,
+                SectionsUpdaterStub.withExpectedCall(),
                 SectionsPositionsForSaveRetrieverStub.withDefaultPositionAtTheEnd(),
-                SectionAttachmentFilesManagerStub.forSection(current_freetext_section.value),
+                SectionAttachmentFilesManagerStub.forSection(freetext_section.value),
                 SectionEditorCloserStub.withExpectedCall(),
             );
 
@@ -160,7 +141,6 @@ describe("SectionSaver", () => {
             await flushPromises();
 
             expect(mock_put_freetext_description).toHaveBeenCalledOnce();
-            expect(updater.getLastUpdatedSection()?.display_level).toStrictEqual(display_level);
         });
 
         it("When the saved section is a pending artifact section, Then it should create it and replace it by the saved one.", async () => {

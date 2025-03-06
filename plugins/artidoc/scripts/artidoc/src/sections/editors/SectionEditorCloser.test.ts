@@ -31,7 +31,6 @@ import { SectionsRemoverStub } from "@/sections/stubs/SectionsRemoverStub";
 import { getFileUploadsCollection } from "@/sections/attachments/FileUploadsCollection";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
-import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 
 describe("SectionEditorCloser", () => {
     let resetErrorStates: MockInstance,
@@ -43,12 +42,7 @@ describe("SectionEditorCloser", () => {
     const getSectionCloser = (section: ReactiveStoredArtidocSection): CloseSectionEditor => {
         const section_state = SectionStateStub.withEditedContent();
         const error_state_manager = SectionErrorManagerStub.withNoExpectedFault();
-        const sections_collection = SectionsCollectionStub.withSections([]);
-        const section_editor_state_manager = getSectionEditorStateManager(
-            section,
-            section_state,
-            sections_collection.sections.value,
-        );
+        const section_editor_state_manager = getSectionEditorStateManager(section, section_state);
         const section_attachments_manager = SectionAttachmentFilesManagerStub.forSection(
             section.value,
         );

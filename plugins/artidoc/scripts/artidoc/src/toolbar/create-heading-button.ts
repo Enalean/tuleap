@@ -18,21 +18,21 @@
  */
 import type { HeadingsButton } from "@/toolbar/HeadingsButton";
 import { TAG } from "@/toolbar/HeadingsButton";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
 const isHeadingsButtonElement = (element: HTMLElement): element is HeadingsButton & HTMLElement =>
     element.tagName === TAG.toUpperCase();
 
 export const createHeadingButton = (
-    section: StoredArtidocSection | undefined,
+    section: ReactiveStoredArtidocSection | undefined,
 ): HeadingsButton & HTMLElement => {
     const button = document.createElement(TAG);
     if (!isHeadingsButtonElement(button)) {
         throw new Error("Unable to create the headings button");
     }
 
-    if (section) {
-        button.section = section;
+    if (section !== undefined) {
+        button.section = section.value;
     }
 
     return button;

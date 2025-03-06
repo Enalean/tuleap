@@ -146,11 +146,7 @@ watch(
 );
 
 const section_attachments_manager = getSectionAttachmentFilesManager(props.section, document_id);
-const section_editor_state_manager = getSectionEditorStateManager(
-    props.section,
-    section_state,
-    sections_collection.sections.value,
-);
+const section_editor_state_manager = getSectionEditorStateManager(props.section, section_state);
 const error_state_manager = getSectionErrorManager(section_state);
 const sections_remover = getSectionsRemover(sections_collection, states_collection);
 const sections_updater = getSectionsUpdater(sections_collection);

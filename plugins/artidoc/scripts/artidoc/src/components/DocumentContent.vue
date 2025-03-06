@@ -21,7 +21,7 @@
 <template>
     <editor-toolbar
         v-if="can_user_edit_document"
-        v-bind:sections="sections_collection.sections.value"
+        v-bind:sections="sections_collection"
         v-bind:states_collection="states_collection"
     />
     <notification-container />
@@ -78,12 +78,18 @@ import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.vue";
 import { getSectionsRemover } from "@/sections/remove/SectionsRemover";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
+import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const sections_inserter = getSectionsInserter(sections_collection, states_collection);
+const sections_numberer = getSectionsNumberer(sections_collection);
+const sections_inserter = getSectionsInserter(
+    sections_collection,
+    states_collection,
+    sections_numberer,
+);
 const sections_remover = getSectionsRemover(sections_collection, states_collection);
 const has_add_button = can_user_edit_document;
 

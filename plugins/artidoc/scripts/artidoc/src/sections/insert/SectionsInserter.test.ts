@@ -27,6 +27,7 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 
 const section1 = ArtifactSectionFactory.create();
 const section2 = PendingArtifactSectionFactory.create();
@@ -44,7 +45,11 @@ describe("SectionsInserter", () => {
             ReactiveStoredArtidocSectionStub.fromCollection([section1, section2]),
         );
 
-        inserter = getSectionsInserter(sections_collection, states_collection);
+        inserter = getSectionsInserter(
+            sections_collection,
+            states_collection,
+            getSectionsNumberer(sections_collection),
+        );
     });
 
     const expectSectionStateToHaveBeenCreated = (section_index: number): void => {

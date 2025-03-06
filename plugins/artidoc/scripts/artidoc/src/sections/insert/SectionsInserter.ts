@@ -29,10 +29,7 @@ import type {
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
-import {
-    initLevelAccordingToPreviousSectionLevel,
-    updateDisplayLevelToSections,
-} from "@/sections/levels/SectionsNumberer";
+import type { NumberSections } from "@/sections/levels/SectionsNumberer";
 
 export type InsertSections = {
     insertSection(section: ArtidocSection, position: PositionForSection): void;
@@ -43,6 +40,7 @@ export const AT_THE_END: AtTheEnd = null;
 export const getSectionsInserter = (
     sections_collection: SectionsCollection,
     states_collection: SectionsStatesCollection,
+    sections_numberer: NumberSections,
 ): InsertSections => {
     const NOT_FOUND = -1;
 
@@ -59,28 +57,20 @@ export const getSectionsInserter = (
 
     return {
         insertSection(section, position): void {
-            const index = getIndexWhereSectionShouldBeInserted(
-                sections_collection.sections.value,
-                position,
-            );
             const new_section = ref(CreateStoredSections.fromArtidocSection(section));
             states_collection.createStateForSection(new_section);
-            if (index === NOT_FOUND) {
-                sections_collection.sections.value.push(new_section);
-                new_section.value.level = initLevelAccordingToPreviousSectionLevel(
-                    sections_collection.sections.value,
-                    sections_collection.sections.value.length - 1,
-                );
-                updateDisplayLevelToSections(sections_collection.sections.value);
-                return;
-            }
-            sections_collection.sections.value.splice(index, 0, new_section);
 
-            new_section.value.level = initLevelAccordingToPreviousSectionLevel(
-                sections_collection.sections.value,
-                index,
-            );
-            updateDisplayLevelToSections(sections_collection.sections.value);
+            if (position === AT_THE_END) {
+                sections_collection.sections.value.push(new_section);
+            } else {
+                const index = getIndexWhereSectionShouldBeInserted(
+                    sections_collection.sections.value,
+                    position,
+                );
+                sections_collection.sections.value.splice(index, 0, new_section);
+            }
+
+            sections_numberer.setInsertedSectionLevel(new_section);
         },
     };
 };

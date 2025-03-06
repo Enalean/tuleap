@@ -58,13 +58,13 @@ import {
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { onClickActivateOrDeactivateToolbar } from "@/helpers/toolbar-activator";
-import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type { SectionsCollection } from "@/sections/SectionsCollection";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import { createHeadingButton } from "@/toolbar/create-heading-button";
 import { HEADINGS_BUTTON_STATE } from "@/headings-button-state-injection-key";
-import { updateDisplayLevelToSections } from "@/sections/levels/SectionsNumberer";
 import { isUpdateSectionLevelEvent } from "@/toolbar/HeadingsButton";
 import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
+import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 const headings_button_state = strictInject(HEADINGS_BUTTON_STATE);
@@ -74,9 +74,10 @@ const is_freetext_allowed = strictInject(IS_FREETEXT_ALLOWED);
 const toolbar = ref<HTMLElement | undefined>();
 
 const props = defineProps<{
-    sections: ReactiveStoredArtidocSection[];
+    sections: SectionsCollection;
     states_collection: SectionsStatesCollection;
 }>();
+const sections_numberer = getSectionsNumberer(props.sections);
 
 const headings_button = is_freetext_allowed
     ? createHeadingButton(headings_button_state.active_section.value)
@@ -90,16 +91,17 @@ if (headings_button) {
 
         const level = event.detail.level;
         const section = headings_button_state.active_section.value;
-        if (section === undefined || section.level === level) {
+
+        if (section === undefined || section.value.level === level) {
             return;
         }
 
-        const section_state = props.states_collection.getSectionState(section);
+        const section_state = props.states_collection.getSectionState(section.value);
         section_state.is_section_in_edit_mode.value = section_state.initial_level.value !== level;
-        section.level = level;
-        updateDisplayLevelToSections(props.sections);
 
-        headings_button.section = section;
+        sections_numberer.setSectionLevel(section, level);
+
+        headings_button.section = section.value;
     });
 
     watch(
@@ -112,7 +114,8 @@ if (headings_button) {
     watch(
         () => headings_button_state.active_section.value,
         (active_section) => {
-            headings_button.section = active_section;
+            headings_button.section =
+                active_section !== undefined ? active_section.value : undefined;
         },
     );
 }

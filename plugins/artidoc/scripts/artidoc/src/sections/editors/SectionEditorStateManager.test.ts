@@ -26,11 +26,9 @@ import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStore
 import type { BuildSectionState } from "@/sections/states/SectionStateBuilder";
 import { getSectionStateBuilder } from "@/sections/states/SectionStateBuilder";
 import { getSectionEditorStateManager } from "@/sections/editors/SectionEditorStateManager";
-import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 
 describe("SectionEditorStateManager", () => {
     let state_builder: BuildSectionState;
-    const sections_collection = SectionsCollectionStub.withSections([]);
 
     beforeEach(() => {
         state_builder = getSectionStateBuilder(true, ref([]));
@@ -50,11 +48,10 @@ describe("SectionEditorStateManager", () => {
                 const new_title = "New title";
                 const new_description = "New description";
 
-                getSectionEditorStateManager(
-                    section,
-                    section_state,
-                    sections_collection.sections.value,
-                ).setEditedContent(new_title, new_description);
+                getSectionEditorStateManager(section, section_state).setEditedContent(
+                    new_title,
+                    new_description,
+                );
 
                 expect(section_state.edited_title.value).toBe(new_title);
                 expect(section_state.edited_description.value).toBe(new_description);
@@ -67,11 +64,10 @@ describe("SectionEditorStateManager", () => {
             );
             const section_state = state_builder.forSection(section);
 
-            getSectionEditorStateManager(
-                section,
-                section_state,
-                sections_collection.sections.value,
-            ).setEditedContent("New title", section.value.description);
+            getSectionEditorStateManager(section, section_state).setEditedContent(
+                "New title",
+                section.value.description,
+            );
 
             expect(section_state.is_editor_reset_needed.value).toBe(true);
             expect(section_state.is_section_in_edit_mode.value).toBe(true);
@@ -83,11 +79,10 @@ describe("SectionEditorStateManager", () => {
             );
             const section_state = state_builder.forSection(section);
 
-            getSectionEditorStateManager(
-                section,
-                section_state,
-                sections_collection.sections.value,
-            ).setEditedContent(section.value.title, "New description");
+            getSectionEditorStateManager(section, section_state).setEditedContent(
+                section.value.title,
+                "New description",
+            );
 
             expect(section_state.is_editor_reset_needed.value).toBe(true);
             expect(section_state.is_section_in_edit_mode.value).toBe(true);
@@ -103,11 +98,7 @@ describe("SectionEditorStateManager", () => {
                 }),
             );
             const section_state = state_builder.forSection(section);
-            const manager = getSectionEditorStateManager(
-                section,
-                section_state,
-                sections_collection.sections.value,
-            );
+            const manager = getSectionEditorStateManager(section, section_state);
 
             manager.setEditedContent("New title", "New description");
 
@@ -128,11 +119,7 @@ describe("SectionEditorStateManager", () => {
                 }),
             );
             const section_state = state_builder.forSection(section);
-            const manager = getSectionEditorStateManager(
-                section,
-                section_state,
-                sections_collection.sections.value,
-            );
+            const manager = getSectionEditorStateManager(section, section_state);
             manager.resetContent();
 
             manager.setEditedContent("New title", "New description");
@@ -152,11 +139,7 @@ describe("SectionEditorStateManager", () => {
                 FreetextSectionFactory.create(),
             );
             const section_state = state_builder.forSection(section);
-            const manager = getSectionEditorStateManager(
-                section,
-                section_state,
-                sections_collection.sections.value,
-            );
+            const manager = getSectionEditorStateManager(section, section_state);
 
             manager.setEditedContent("new title", "new description");
 
