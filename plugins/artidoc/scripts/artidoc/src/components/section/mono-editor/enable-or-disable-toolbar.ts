@@ -40,19 +40,15 @@ export const EnableOrDisableToolbarPlugin = (
     toolbar_bus: ToolbarBus,
     headings_button_state: HeadingsButtonState,
     section: ReactiveStoredArtidocSection,
-): Plugin => {
-    let is_first_update = true;
-
-    return new Plugin({
+): Plugin =>
+    new Plugin({
         key: new PluginKey("enable-or-disable-toolbar"),
         view(): PluginView {
             return {
                 update: (view: EditorView): void => {
-                    if (is_first_update) {
+                    if (!view.hasFocus()) {
                         toolbar_bus.disableToolbar();
                         headings_button_state.deactivateButton();
-
-                        is_first_update = false;
                         return;
                     }
 
@@ -65,12 +61,12 @@ export const EnableOrDisableToolbarPlugin = (
                     if (is_cursor_in_description) {
                         toolbar_bus.enableToolbar();
                         headings_button_state.deactivateButton();
-                    } else {
-                        toolbar_bus.disableToolbar();
-                        headings_button_state.activateButtonForSection(section);
+                        return;
                     }
+
+                    toolbar_bus.disableToolbar();
+                    headings_button_state.activateButtonForSection(section);
                 },
             };
         },
     });
-};
