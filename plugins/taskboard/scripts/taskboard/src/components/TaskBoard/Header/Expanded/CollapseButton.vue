@@ -30,26 +30,23 @@
     </button>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { ColumnDefinition } from "../../../../type";
-import { namespace } from "vuex-class";
+import { useNamespacedActions } from "vuex-composition-helpers";
 
-const column_store = namespace("column");
+const { $gettext, interpolate } = useGettext();
 
-@Component
-export default class CollapseButton extends Vue {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const props = defineProps<{
+    column: ColumnDefinition;
+}>();
 
-    @column_store.Action
-    readonly collapseColumn!: (column: ColumnDefinition) => void;
+const { collapseColumn } = useNamespacedActions("column", ["collapseColumn"]);
 
-    get title(): string {
-        return this.$gettextInterpolate(this.$gettext('Collapse "%{ label }" column'), {
-            label: this.column.label,
-        });
-    }
-}
+const title = computed((): string => {
+    return interpolate($gettext('Collapse "%{ label }" column'), {
+        label: props.column.label,
+    });
+});
 </script>
