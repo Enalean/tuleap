@@ -47,7 +47,7 @@ class Statistics_Formatter
      */
     public function addLine($line)
     {
-        fputcsv($this->csv_handle, $line, $this->separator);
+        fputcsv($this->csv_handle, $line, $this->separator, '"', '\\');
     }
 
     /**

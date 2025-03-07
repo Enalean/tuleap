@@ -57,7 +57,7 @@ class UserEvolutionHistoryExporter
 
         if (! file_exists($this->history_file_location)) {
             $csv_file = fopen($this->history_file_location, 'a');
-            fputcsv($csv_file, ['date', 'nb active users', 'nb visitor users', 'nb due licenses']);
+            fputcsv($csv_file, ['date', 'nb active users', 'nb visitor users', 'nb due licenses'], ',', '"', '\\');
         } else {
             $csv_file = fopen($this->history_file_location, 'a');
         }
@@ -65,7 +65,7 @@ class UserEvolutionHistoryExporter
         $nb_visitors = $nb_active_users - $nb_real_users;
         $data        = [$current_timestamp->format('Y-m-d'), $nb_active_users, $nb_visitors, $nb_real_users];
 
-        fputcsv($csv_file, $data);
+        fputcsv($csv_file, $data, ',', '"', '\\');
         fclose($csv_file);
 
         $this->output->writeln('<comment>Forge users evolution history saved. You can consult it here : ' . $this->history_file_location . '</comment>');

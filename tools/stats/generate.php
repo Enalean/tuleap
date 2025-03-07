@@ -28,10 +28,10 @@ function dumpStats($dao, $sql, ZipArchive $archive, $name)
     $fp = fopen('php://temp', 'r+');
     foreach ($dao->retrieve($sql) as $value) {
         if ($is_header_needed) {
-            fputcsv($fp, array_keys($value));
+            fputcsv($fp, array_keys($value), ',', '"', '\\');
             $is_header_needed = false;
         }
-        fputcsv($fp, $value);
+        fputcsv($fp, $value, ',', '"', '\\');
     }
     rewind($fp);
 

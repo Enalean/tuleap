@@ -449,10 +449,10 @@ class ReadFileData
                 return false;
         }
         $tmp        = [];
-        $lineofdata = fgetcsv($rh, 1000, ',');
+        $lineofdata = fgetcsv($rh, 1000, ',', '"', '\\');
         while ($lineofdata !== false) {
             $tmp        = array_merge($tmp, $lineofdata);
-            $lineofdata = fgetcsv($rh, $aMaxLineLength, $aSepChar);
+            $lineofdata = fgetcsv($rh, $aMaxLineLength, $aSepChar, '"', '\\');
         }
         fclose($rh);
 
@@ -520,8 +520,8 @@ class ReadFileData
             $rh,
             $aOptions['readlength'],
             $aOptions['separator'],
-            $aOptions['enclosure']
-            /*, $aOptions['escape']     # PHP >= 5.3 only */
+            $aOptions['enclosure'],
+            '\\',
         );
 
         // Use numeric array keys for the columns by default
@@ -555,8 +555,8 @@ class ReadFileData
                 $rh,
                 $aOptions['readlength'],
                 $aOptions['separator'],
-                $aOptions['enclosure']
-                /*, $aOptions['escape']     # PHP >= 5.3 only*/
+                $aOptions['enclosure'],
+                '\\',
             );
         }
 

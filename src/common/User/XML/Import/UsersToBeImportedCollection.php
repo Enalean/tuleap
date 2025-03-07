@@ -32,11 +32,11 @@ class UsersToBeImportedCollection
     {
         $file    = fopen($filename, 'w');
         $headers = ['name', 'action', 'comments'];
-        fputcsv($file, $headers);
+        fputcsv($file, $headers, ',', '"', '\\');
         foreach ($this->users as $user) {
             $data = $user->getCSVData();
             if ($data) {
-                fputcsv($file, $data);
+                fputcsv($file, $data, ',', '"', '\\');
             }
         }
         fclose($file);

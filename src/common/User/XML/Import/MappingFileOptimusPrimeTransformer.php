@@ -210,10 +210,10 @@ class MappingFileOptimusPrimeTransformer
             throw new MappingFileDoesNotExistException("$filename does not exist");
         }
 
-        $header = fgetcsv($csv);
+        $header = fgetcsv($csv, null, ',', '"', '\\');
         $lines  = [];
 
-        while (($data = fgetcsv($csv)) !== false) {
+        while (($data = fgetcsv($csv, null, ',', '"', '\\')) !== false) {
             $username = $data[0];
             $action   = $data[1];
 

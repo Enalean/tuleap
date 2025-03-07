@@ -529,7 +529,7 @@ class ArtifactImport
 
         require_once __DIR__ . '/../../www/project/export/project_export_utils.php';
 
-        while ($data = fgetcsv($csv_file, $length, get_csv_separator())) {
+        while ($data = fgetcsv($csv_file, $length, get_csv_separator(), '"', '\\')) {
             // do the real parsing here
 
             //parse the first line with all the field names

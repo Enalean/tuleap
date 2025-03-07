@@ -91,7 +91,7 @@ class Gitolite3LogParser
                 }
                 fseek($log_file, $last_read_char['end_line']);
                 while (! feof($log_file)) {
-                    $log_line = fgetcsv($log_file, 0, "\t");
+                    $log_line = fgetcsv($log_file, 0, "\t", '"', '\\');
                     if ($log_line !== false) {
                         $this->parseLine($log_line, $log);
                     }

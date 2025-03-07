@@ -742,7 +742,7 @@ display_slides();"));
             if (! $fp) {
                 return $this->error(fmt("Unable to read src='%s'", $src));
             }
-            while ($data = fgetcsv($fp, 1024, ';')) {
+            while ($data = fgetcsv($fp, 1024, ';', '"', '\\')) {
                 if (
                     count($data) == 0 || empty($data[0])
                                       || preg_match('/^#/', $data[0])
