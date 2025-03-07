@@ -31,49 +31,55 @@ import {
 import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import type { EditorView } from "prosemirror-view";
+import type { EditorState } from "prosemirror-state";
 
 describe("enable-or-disable-toolbar", () => {
-    const toolbar_bus = buildToolbarBus();
-    const headings_button = getHeadingsButtonState();
-
-    const state = initStateWithPlugins([
-        EnableOrDisableToolbarPlugin(
-            toolbar_bus,
-            headings_button,
-            ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create()),
-        ),
-    ]);
-    const view = initViewWithState(state);
+    let enableToolbar: MockInstance,
+        disableToolbar: MockInstance,
+        activateHeadingButtonForSection: MockInstance,
+        deactivateHeadingButton: MockInstance,
+        view: EditorView,
+        state: EditorState;
 
     const setCursorPosition = (position: number): void => {
         view.dispatch(state.tr.setSelection(TextSelection.create(state.doc, position)));
     };
 
-    let enableToolbar: MockInstance;
-    let disableToolbar: MockInstance;
-    let activateHeadingButtonForSection: MockInstance;
-    let deactivateHeadingButton: MockInstance;
-
     beforeEach(() => {
+        const toolbar_bus = buildToolbarBus();
+        const headings_button = getHeadingsButtonState();
+
+        state = initStateWithPlugins([
+            EnableOrDisableToolbarPlugin(
+                toolbar_bus,
+                headings_button,
+                ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create()),
+            ),
+        ]);
+        view = initViewWithState(state);
+
         enableToolbar = vi.spyOn(toolbar_bus, "enableToolbar");
         disableToolbar = vi.spyOn(toolbar_bus, "disableToolbar");
         activateHeadingButtonForSection = vi.spyOn(headings_button, "activateButtonForSection");
         deactivateHeadingButton = vi.spyOn(headings_button, "deactivateButton");
     });
 
-    it("should disable the toolbar and deactivate the headings button, at the first update", () => {
+    it("should disable the toolbar and deactivate the headings button when the view is not focused", () => {
         setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
         expect(disableToolbar).toHaveBeenCalledOnce();
         expect(deactivateHeadingButton).toHaveBeenCalledOnce();
     });
 
     it("should enable the toolbar and deactivate the headings button, when the current selection is in the description", () => {
+        view.focus();
         setCursorPosition(SOMEWHERE_IN_THE_DESCRIPTION_POSITION);
         expect(enableToolbar).toHaveBeenCalledOnce();
         expect(deactivateHeadingButton).toHaveBeenCalledOnce();
     });
 
     it("should disable the toolbar and active the headings button, when the current selection is in the title", () => {
+        view.focus();
         setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
         expect(disableToolbar).toHaveBeenCalledOnce();
         expect(activateHeadingButtonForSection).toHaveBeenCalledOnce();
