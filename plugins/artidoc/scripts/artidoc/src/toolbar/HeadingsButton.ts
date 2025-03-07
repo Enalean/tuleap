@@ -80,6 +80,7 @@ export const renderHeadingsButton = (
             class="prose-mirror-button tlp-button-secondary tlp-button-outline"
             disabled="${host.is_disabled}"
             title="${gettext_provider.gettext("Change section heading level")}"
+            data-test="change-section-level"
         >
             <i class="fa-solid fa-heading" aria-hidden="true"></i>
             <span id="dropdown-menu-level" class="tlp-dropdown-menu" role="menu">
@@ -88,6 +89,7 @@ export const renderHeadingsButton = (
                     role="menuitem"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_1)}"
                     title="${gettext_provider.gettext("Change to heading 1")}"
+                    data-test="change-section-level-1"
                 >
                     <span class="artidoc-heading-icon">H1</span>
                     ${gettext_provider.gettext("Heading 1")}
@@ -97,6 +99,7 @@ export const renderHeadingsButton = (
                     role="menuitem"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_2)}"
                     title="${gettext_provider.gettext("Change to heading 2")}"
+                    data-test="change-section-level-2"
                 >
                     <span class="artidoc-heading-icon">H2</span>
                     ${gettext_provider.gettext("Heading 2")}
@@ -106,6 +109,7 @@ export const renderHeadingsButton = (
                     role="menuitem"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_3)}"
                     title="${gettext_provider.gettext("Change to heading 3")}"
+                    data-test="change-section-level-3"
                 >
                     <span class="artidoc-heading-icon">H3</span>
                     ${gettext_provider.gettext("Heading 3")}
