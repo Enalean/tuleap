@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div v-dompurify-html="section.value.description" ref="root"></div>
+    <div v-dompurify-html="section.value.description" class="section-description" ref="root"></div>
 </template>
 
 <script setup lang="ts">

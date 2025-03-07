@@ -27,6 +27,14 @@ h3 { font-size: 14pt; }
 h4 { font-size: 13pt; }
 h6 { font-size: 12pt; }
 
+.section-description {
+    h1 { font-size: 13pt; }
+    h2 { font-size: 12.5pt; }
+    h3 { font-size: 12pt; }
+    h4 { font-size: 11.5pt; }
+    h6 { font-size: 11pt; }
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: system-ui, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
@@ -96,9 +104,11 @@ h1, h2, h3, h4, h5, h6 {
     counter-increment: section;
 }
 
-.section-title {
+h1.section-title {
     border-bottom: 1pt solid var(--main-color);
+}
 
+.section-title {
     &::before {
         display: inline;
         content: counter(section) ". ";
