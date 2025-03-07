@@ -34,10 +34,13 @@
     <!-- Force space around logical operators -->
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <!-- Forbid space around typehint union (Ok|Err) and force replacing Type|null by ?Type -->)
-    <rule ref="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat">
+    <rule ref="SlevomatCodingStandard.TypeHints.DNFTypeHintFormat">
         <properties>
-            <property name="withSpaces" value="no"/>
+            <property name="enable" value="yes"/>
+            <property name="withSpacesAroundOperators" value="no"/>
+            <property name="withSpacesInsideParentheses" value="no"/>
             <property name="shortNullable" value="yes"/>
+            <property name="nullPosition" value="last"/>
         </properties>
     </rule>
     <!-- Force space after a type cast -->
