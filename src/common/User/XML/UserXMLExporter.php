@@ -18,20 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\RetrieveUserById;
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UserXMLExporter
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
+    private readonly RetrieveUserById $user_manager;
 
     /**
      * @var UserXMLExportedCollection
      */
     private $collection;
 
-    public function __construct(UserManager $user_manager, UserXMLExportedCollection $collection)
+    public function __construct(RetrieveUserById $user_manager, UserXMLExportedCollection $collection)
     {
         $this->user_manager = $user_manager;
         $this->collection   = $collection;
