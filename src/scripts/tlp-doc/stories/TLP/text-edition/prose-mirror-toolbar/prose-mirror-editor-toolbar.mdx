@@ -35,6 +35,20 @@ import * as ToolbarStories from "./prose-mirror-editor-toolbar.stories"
         - <code>subtitles: boolean</code> Add a subtitle option to the select box. Cannot be used together with the <code>headings</code> option.
         - <code>preformatted: boolean</code> Add the preformatted text option to the select box.
     - When all the options are disabled, then the select won't be added to the toolbar.
+- <code>additional_elements: AdditionalElement[] | null</code>: Allows to add custom buttons to the toolbar.
+    - An <code>AdditionalElement</code> takes three parameters:
+        - <code>target_name: ItemGroupName</code> which targets an existing item group.
+            - <code>BASIC_TEXT_ITEMS_GROUP</code> targets the group of items containing the inline text styles buttons (see <code>text_elements</code>).
+            - <code>LIST_ITEMS_GROUP</code> targets the group containing the list buttons (see <code>list_elements</code>).
+            - <code>LINK_ITEMS_GROUP</code> targets the group containing the links/image buttons (see <code>link_elements</code>).
+            - <code>SCRIPTS_ITEMS_GROUP</code> targets the group containing the special scripts format buttons (see <code>script_elements</code>).
+            - <code>TEXT_STYLES_ITEMS_GROUP</code> targets the group containing the select box changing the style of the text (see <code>style_elements</code>).
+        - <code>position: AdditionalElementPosition</code> defines where to add the element:
+            - Use <code>"before"</code> to position your element outside of the target item group, before it.
+            - Use <code>"after"</code> to position your element outside of the target item group, after it.
+            - Use <code>"at_the_start"</code> to position your element inside the target item group, before its first element.
+            - Use <code>"at_the_end"</code> to position your element inside the target item group, after its last element.
+        - <code>item_element: HTMLElement</code>: The HTMLElement to add to the toolbar at the desired location.
 
 <Canvas withToolbar={true} of={ToolbarStories.ProseMirrorEditorToolbar}></Canvas>
 
