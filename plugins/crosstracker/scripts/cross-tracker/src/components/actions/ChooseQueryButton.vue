@@ -74,7 +74,7 @@ import { EMITTER, IS_USER_ADMIN } from "../../injection-symbols";
 import type { Query } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
-    CREATE_NEW_QUERY,
+    CREATE_NEW_QUERY_EVENT,
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
 } from "../../helpers/emitter-provider";
@@ -134,7 +134,7 @@ function resetFilter(): void {
 }
 
 function handleCreateNewQueryButton(): void {
-    emitter.emit(CREATE_NEW_QUERY);
+    emitter.emit(CREATE_NEW_QUERY_EVENT);
 }
 
 onBeforeUnmount(() => {

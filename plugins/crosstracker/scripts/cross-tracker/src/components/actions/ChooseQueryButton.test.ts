@@ -27,7 +27,7 @@ import type { Query } from "../../type";
 import {
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
-    CREATE_NEW_QUERY,
+    CREATE_NEW_QUERY_EVENT,
 } from "../../helpers/emitter-provider";
 
 vi.mock("@tuleap/tlp-dropdown", () => ({
@@ -105,7 +105,7 @@ describe("ChooseQueryButton", () => {
         await wrapper.find("[data-test=query-create-new-button]").trigger("click");
 
         expect(emitter.emitted_event_name.length).toBe(1);
-        expect(emitter.emitted_event_name[0]).toBe(CREATE_NEW_QUERY);
+        expect(emitter.emitted_event_name[0]).toBe(CREATE_NEW_QUERY_EVENT);
     });
 
     it.each([

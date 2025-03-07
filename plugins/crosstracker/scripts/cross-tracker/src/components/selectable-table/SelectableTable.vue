@@ -63,7 +63,6 @@ import {
     EMITTER,
     GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
-    NOTIFY_FAULT,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
@@ -79,14 +78,13 @@ import type { ColumnName } from "../../domain/ColumnName";
 import EditCell from "./EditCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 import type { RefreshArtifactsEvent } from "../../helpers/emitter-provider";
-import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import type { Query } from "../../type";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const report_state = strictInject(REPORT_STATE);
-const notifyFault = strictInject(NOTIFY_FAULT);
 const is_xslx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 
 const props = defineProps<{
@@ -146,7 +144,10 @@ function loadArtifacts(): void {
                 total.value = report_with_total.total;
             },
             (fault) => {
-                notifyFault(ArtifactsRetrievalFault(fault));
+                emitter.emit(NOTIFY_FAULT_EVENT, {
+                    fault: ArtifactsRetrievalFault(fault),
+                    tql_query: props.writing_query.tql_query,
+                });
             },
         )
         .then(() => {
@@ -165,7 +166,10 @@ function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
                 total.value = report_with_total.total;
             },
             (fault) => {
-                notifyFault(ArtifactsRetrievalFault(fault));
+                emitter.emit(NOTIFY_FAULT_EVENT, {
+                    fault: ArtifactsRetrievalFault(fault),
+                    tql_query: event.query.tql_query,
+                });
             },
         )
         .then(() => {

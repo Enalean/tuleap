@@ -20,35 +20,37 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
-import { describe, expect, it, vi, type Mock, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import CreateNewQuery from "./CreateNewQuery.vue";
 import QuerySuggested from "../QuerySuggested.vue";
 import TitleInput from "../TitleInput.vue";
-import {
-    CLEAR_FEEDBACKS,
-    CURRENT_FAULT,
-    CURRENT_SUCCESS,
-    EMITTER,
-    NEW_QUERY_CREATOR,
-    NOTIFY_FAULT,
-    NOTIFY_SUCCESS,
-    WIDGET_ID,
-} from "../../../injection-symbols";
-import { EmitterStub } from "../../../../tests/stubs/EmitterStub";
-import { Option } from "@tuleap/option";
+import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
 import { Fault } from "@tuleap/fault";
-import { SEARCH_ARTIFACTS_EVENT } from "../../../helpers/emitter-provider";
+import type {
+    EmitterProvider,
+    Events,
+    NotifyFaultEvent,
+    NotifySuccessEvent,
+} from "../../../helpers/emitter-provider";
+import {
+    CLEAR_FEEDBACK_EVENT,
+    NOTIFY_FAULT_EVENT,
+    NOTIFY_SUCCESS_EVENT,
+    SEARCH_ARTIFACTS_EVENT,
+} from "../../../helpers/emitter-provider";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import { PostNewQueryStub } from "../../../../tests/stubs/PostNewQueryStub";
 import type { PostNewQuery } from "../../../domain/PostNewQuery";
+import mitt from "mitt";
 
 vi.useFakeTimers();
 
 describe("CreateNewQuery", () => {
-    let resetSpy: Mock, errorSpy: Mock, successSpy: Mock;
-    let emitter: EmitterStub;
-    const success = Option.fromValue("success");
-    const fault = Option.fromValue(Fault.fromMessage("fail"));
+    let dispatched_clear_feedback_events: true[];
+    let dispatched_fault_events: NotifyFaultEvent[];
+    let dispatched_success_events: NotifySuccessEvent[];
+    let dispatched_search_events: true[];
+    let emitter: EmitterProvider;
 
     const QueryEditorForCreation = {
         name: "QueryEditorForCreation",
@@ -59,11 +61,25 @@ describe("CreateNewQuery", () => {
     };
 
     beforeEach(() => {
-        successSpy = vi.fn();
-        resetSpy = vi.fn();
-        errorSpy = vi.fn();
-        emitter = EmitterStub();
+        emitter = mitt<Events>();
+        dispatched_clear_feedback_events = [];
+        dispatched_fault_events = [];
+        dispatched_success_events = [];
+        dispatched_search_events = [];
+        emitter.on(CLEAR_FEEDBACK_EVENT, () => {
+            dispatched_clear_feedback_events.push(true);
+        });
+        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
+            dispatched_fault_events.push(event);
+        });
+        emitter.on(NOTIFY_SUCCESS_EVENT, (event) => {
+            dispatched_success_events.push(event);
+        });
+        emitter.on(SEARCH_ARTIFACTS_EVENT, () => {
+            dispatched_search_events.push(true);
+        });
     });
+
     function getWrapper(
         new_query_creator: PostNewQuery = PostNewQueryStub.withDefaultContent(),
     ): VueWrapper<InstanceType<typeof CreateNewQuery>> {
@@ -75,11 +91,6 @@ describe("CreateNewQuery", () => {
                     [WIDGET_ID.valueOf()]: 96,
                     [EMITTER.valueOf()]: emitter,
                     [NEW_QUERY_CREATOR.valueOf()]: true,
-                    [NOTIFY_FAULT.valueOf()]: errorSpy,
-                    [NOTIFY_SUCCESS.valueOf()]: successSpy,
-                    [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
-                    [CURRENT_FAULT.valueOf()]: fault,
-                    [CURRENT_SUCCESS.valueOf()]: success,
                     [NEW_QUERY_CREATOR.valueOf()]: new_query_creator,
                 },
             },
@@ -90,7 +101,7 @@ describe("CreateNewQuery", () => {
         const wrapper = getWrapper();
         await wrapper.find("[data-test=query-creation-cancel-button]").trigger("click");
         expect(wrapper.emitted()).toHaveProperty("return-to-active-query-pane");
-        expect(resetSpy).toHaveBeenCalled();
+        expect(dispatched_clear_feedback_events).toHaveLength(1);
     });
 
     describe("'Save' and 'Search' buttons", () => {
@@ -165,8 +176,7 @@ describe("CreateNewQuery", () => {
 
             await wrapper.find("[data-test=query-creation-search-button]").trigger("click");
 
-            expect(emitter.emitted_event_name.length).toBe(1);
-            expect(emitter.emitted_event_name[0]).toBe(SEARCH_ARTIFACTS_EVENT);
+            expect(dispatched_search_events).toHaveLength(1);
         });
         it("Search a tql query result by emitting an event when the shortcut (ctrl+enter) is pressed", async () => {
             const wrapper = getWrapper();
@@ -177,8 +187,7 @@ describe("CreateNewQuery", () => {
 
             await wrapper.find("[data-test=query-creation-search-button]").trigger("click");
 
-            expect(emitter.emitted_event_name.length).toBe(1);
-            expect(emitter.emitted_event_name[0]).toBe(SEARCH_ARTIFACTS_EVENT);
+            expect(dispatched_search_events).toHaveLength(1);
         });
 
         it("displays the right icon according to the loading state", async () => {
@@ -236,9 +245,9 @@ describe("CreateNewQuery", () => {
 
             await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
 
-            expect(errorSpy).not.toHaveBeenCalled();
-            expect(resetSpy).toHaveBeenCalled();
-            expect(successSpy).toHaveBeenCalled();
+            expect(dispatched_fault_events).toHaveLength(0);
+            expect(dispatched_clear_feedback_events).toHaveLength(2);
+            expect(dispatched_success_events).toHaveLength(1);
             expect(wrapper.emitted()).toHaveProperty("return-to-active-query-pane");
         });
         it("show an error if the save failed", async () => {
@@ -257,9 +266,9 @@ describe("CreateNewQuery", () => {
 
             await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
 
-            expect(errorSpy).toHaveBeenCalled();
-            expect(resetSpy).toHaveBeenCalled();
-            expect(successSpy).not.toHaveBeenCalled();
+            expect(dispatched_fault_events).toHaveLength(1);
+            expect(dispatched_clear_feedback_events).toHaveLength(2);
+            expect(dispatched_success_events).toHaveLength(0);
             expect(wrapper.emitted()).not.toHaveProperty("return-to-active-query-pane");
         });
     });

@@ -64,19 +64,12 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { updateQuery, createQuery } from "../../api/rest-querier";
 import type { Query } from "../../type";
-import {
-    EMITTER,
-    IS_USER_ADMIN,
-    NOTIFY_FAULT,
-    REPORT_STATE,
-    WIDGET_ID,
-} from "../../injection-symbols";
+import { EMITTER, IS_USER_ADMIN, REPORT_STATE, WIDGET_ID } from "../../injection-symbols";
 import { SaveReportFault } from "../../domain/SaveReportFault";
-import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);
-const notifyFault = strictInject(NOTIFY_FAULT);
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 
@@ -122,7 +115,10 @@ function saveReport(): void {
                     emit("saved", query);
                 },
                 (fault) => {
-                    notifyFault(SaveReportFault(fault));
+                    emitter.emit(NOTIFY_FAULT_EVENT, {
+                        fault: SaveReportFault(fault),
+                        tql_query: props.reading_query.tql_query,
+                    });
                 },
             )
             .then(() => {
@@ -137,7 +133,10 @@ function saveReport(): void {
                 emit("saved", query);
             },
             (fault) => {
-                notifyFault(SaveReportFault(fault));
+                emitter.emit(NOTIFY_FAULT_EVENT, {
+                    fault: SaveReportFault(fault),
+                    tql_query: props.reading_query.tql_query,
+                });
             },
         )
         .then(() => {

@@ -17,25 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Mock } from "vitest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import WritingMode from "./WritingMode.vue";
-import { CLEAR_FEEDBACKS, NOTIFY_FAULT, EMITTER } from "../../injection-symbols";
+import { EMITTER } from "../../injection-symbols";
 import type { Query } from "../../type";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 
 describe("WritingMode", () => {
-    let resetSpy: Mock, errorSpy: Mock;
     let emitter: EmitterStub;
     let backend_query: Query;
 
     beforeEach(() => {
-        resetSpy = vi.fn();
-        errorSpy = vi.fn();
         emitter = EmitterStub();
         backend_query = {
             id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
@@ -54,8 +50,6 @@ describe("WritingMode", () => {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
-                    [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
-                    [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [EMITTER.valueOf()]: emitter,
                 },
             },

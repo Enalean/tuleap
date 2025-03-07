@@ -118,4 +118,8 @@ const code_to_show = computed(
 .code-snippet {
     background: none;
 }
+
+.cross-tracker-report-error {
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+}
 </style>
