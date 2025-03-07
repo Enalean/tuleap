@@ -54,7 +54,8 @@ final class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
 
-            public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool
+            public function verifyHashPassword(ConcealedString $plain_password, #[\SensitiveParameter]
+            string $hash_password,): bool
             {
                 return true;
             }
@@ -64,7 +65,8 @@ final class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 throw new \RuntimeException('Not expected to be called');
             }
 
-            public function isPasswordNeedRehash(string $hash_password): bool
+            public function isPasswordNeedRehash(#[\SensitiveParameter]
+            string $hash_password,): bool
             {
                 throw new \RuntimeException('Not expected to be called');
             }

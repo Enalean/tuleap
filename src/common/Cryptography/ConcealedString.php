@@ -29,13 +29,10 @@ use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
  */
 final class ConcealedString implements \Stringable
 {
-    /**
-     * @var string
-     */
-    private $value;
-
-    public function __construct(string $value)
-    {
+    public function __construct(
+        #[\SensitiveParameter]
+        private string $value,
+    ) {
         $this->value = $value;
     }
 

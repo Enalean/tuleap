@@ -23,9 +23,16 @@ use Tuleap\Cryptography\ConcealedString;
 
 interface PasswordHandler
 {
-    public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool;
+    public function verifyHashPassword(
+        ConcealedString $plain_password,
+        #[\SensitiveParameter]
+        string $hash_password,
+    ): bool;
 
     public function computeHashPassword(ConcealedString $plain_password): string;
 
-    public function isPasswordNeedRehash(string $hash_password): bool;
+    public function isPasswordNeedRehash(
+        #[\SensitiveParameter]
+        string $hash_password,
+    ): bool;
 }
