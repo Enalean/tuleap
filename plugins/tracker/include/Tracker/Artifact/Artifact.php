@@ -219,10 +219,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     private $hierarchy_factory;
 
-    /**
-     * @var String
-     */
-    private $title;
+    private ?string $title;
     private string $description = '';
 
     /**
@@ -691,7 +688,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $provider->getPostProcessedDescription($this);
     }
 
-    public function getCachedTitle()
+    public function getCachedTitle(): ?string
     {
         return $this->title;
     }

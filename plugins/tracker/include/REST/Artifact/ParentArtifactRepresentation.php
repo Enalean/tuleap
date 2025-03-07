@@ -44,7 +44,7 @@ final class ParentArtifactRepresentation
         $artifact_id = $artifact->getId();
         return new self(
             $artifact_id,
-            $artifact->getCachedTitle(),
+            $artifact->getCachedTitle() ?? '',
             $artifact->getXRef(),
             ArtifactRepresentation::ROUTE . '/' . $artifact_id,
             $artifact->getUri(),
