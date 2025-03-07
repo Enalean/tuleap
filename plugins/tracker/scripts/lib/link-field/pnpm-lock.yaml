@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/cross-ref-badges':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/cross-ref-badges
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../../lib/frontend/dom
