@@ -13,8 +13,6 @@ clarck.robinson@enalean.com valid-after="20220808" sk-ecdsa-sha2-nistp256@openss
 nicolas.terray@enalean.com valid-after="20230504" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBGXW/yyfLXZwIj7ryJj2UVT1xIDmpK+mZq/ZoraCgioaCEWa6fBkG2uer0xTxE/Ycaq1sLoudpItz5Tqm3NdGyIAAAAEc3NoOg==
 # Kevin TRAINI
 kevin.traini@enalean.com valid-after="20240102" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBLGn4UIXjAb7cLgPMS3w7/pmMTGSB0PZIMZ8/WfbYdL+7g08w/CEkVJeQaM4NfIvzw1yPmx7zQd0fWcFDS29hpoAAAAEc3NoOg==
-# Sandra ECHINARD
-sandra.echinard@enalean.com valid-after="20240507" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBPpMMUjNmixEGzFOkeA9ZPS/0PKjIJjPt7BmtM/XM8fKQLsTZ45er00tJC4VcvmYPjhifJchLVnA3NiGH3CDA+UAAAAEc3NoOg==
 # Thomas GORKA
 thomas.gorka@enalean.com valid-after="20241024" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBOu/lx1jsmOvAsWjfSPYe2FSMu3c4UdaCMxUHZiVKZRMVvVpzb0lAI+Eb/jYxjh/c5RLF/J9DEVAa3alydOQA/AAAAAEc3NoOg==
 # Clarisse DESCHAMPS
@@ -29,3 +27,5 @@ joris.masson@enalean.com valid-after="20220309",valid-before="20230725" sk-ecdsa
 thomas.gerbet@enalean.com valid-after="20220307",valid-before="20230901" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBkQCdKDiEH+Rht+TICKsZqrUrLpypgJB6ZrYBfktNkxWB59Cvks6dPaynzDeYZjJsoCkhjGreG1oA9kTsPscqv+9gxm2eGGy1q7yCvEGeEd2uHu6v9vMg0ZtQzIWQ/dp3WJ5IDOoWmW9usBfdEU6+3mZy0jp3cMd4m7dssaZfCZdEc++HLURlGVc+ltP1TLIpegT0RH5MhkrN47EQ5R7WBfAUeRhMtQiqdcYkaECxjL+yMoem2fCLOiijIkNyXJjh4qvy7WCBjAe3TIsNilF/nkKu8qF/TIaXzHEpvym8vro5j5y0b5einRjXlECHZL8qBybktFmVpyaGBiYGQs6n
 # Yannis ROSSETTO
 yannis.rossetto@enalean.com valid-after="20220316",valid-before="20240508" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBGiWz+MOn2ejhS6Kr6/TwCvD4eaiPD2DMQP2G3wTSg307+Lo8CVw8IL6wng8D4oEMwIuzEhM1/6a7l2JcLdnI6YAAAAEc3NoOg==
+# Sandra ECHINARD
+sandra.echinard@enalean.com valid-after="20240507",valid-before="20250307" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBPpMMUjNmixEGzFOkeA9ZPS/0PKjIJjPt7BmtM/XM8fKQLsTZ45er00tJC4VcvmYPjhifJchLVnA3NiGH3CDA+UAAAAEc3NoOg==
