@@ -67,7 +67,12 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
     {
         $this->event_manager->processEvent('before_lostpw-confirm', []);
 
-        $user = $this->user_manager->getUserByUserName($request->get('form_loginname'));
+        $user     = null;
+        $username = (string) $request->get('form_loginname');
+        if ($username !== '') {
+            $user = $this->user_manager->getUserByUserName($username);
+        }
+
         if ($user === null || $user->getUserPw() === null) {
             $this->redisplayFormWithError($request, $layout, $variables, _('That user does not exist.'));
             return;
