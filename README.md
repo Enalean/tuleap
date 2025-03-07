@@ -30,7 +30,6 @@ be added.
 
 ### Integrators
 
-* Sandra Echinard
 * Marie Ange Garnier
 * Thomas Gerbet
 * Thomas Gorka
@@ -53,6 +52,7 @@ be added.
 
 ### Previous contributors (no longer active committers)
 
+* Sandra Echinard
 * Yannis Rossetto
 * Florian Caillol
 * Thomas Piras
