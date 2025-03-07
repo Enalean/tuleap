@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset_Comment;
@@ -26,7 +27,10 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 
 final class ChangesetCommentTestBuilder
 {
-    private string $body = '';
+    private string $body      = '';
+    private int $submitted_by = 101;
+    private int $submitted_on = 1636896700;
+
     private function __construct()
     {
     }
@@ -38,8 +42,20 @@ final class ChangesetCommentTestBuilder
 
     public function withCommentBody(string $comment_body): self
     {
-            $this->body = $comment_body;
-            return $this;
+        $this->body = $comment_body;
+        return $this;
+    }
+
+    public function submittedBy(int $user_id): self
+    {
+        $this->submitted_by = $user_id;
+        return $this;
+    }
+
+    public function submittedOn(int $timestamp): self
+    {
+        $this->submitted_on = $timestamp;
+        return $this;
     }
 
     public function build(): Tracker_Artifact_Changeset_Comment
@@ -49,8 +65,8 @@ final class ChangesetCommentTestBuilder
             ChangesetTestBuilder::aChangeset(15)->build(),
             0,
             0,
-            101,
-            1636896700,
+            $this->submitted_by,
+            $this->submitted_on,
             $this->body,
             CommentFormatIdentifier::COMMONMARK->value,
             1,
