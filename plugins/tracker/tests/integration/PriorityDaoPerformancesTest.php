@@ -67,7 +67,7 @@ final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
         }
         $out = fopen('/tuleap/stats-artifact-priority.csv', 'w');
         foreach ($csv as $line) {
-            fputcsv($out, $line);
+            fputcsv($out, $line, ',', '"', '\\');
         }
         fclose($out);
     }

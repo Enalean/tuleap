@@ -2373,7 +2373,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $csv_file = fopen('php://output', 'a');
             $this->addBOMToCSVContent($csv_file);
             foreach ($lines as $line) {
-                fputcsv($csv_file, $line, $separator, '"');
+                fputcsv($csv_file, $line, $separator, '"', '\\');
             }
             die();
         } else {

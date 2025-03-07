@@ -2264,7 +2264,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $is_valid = true;
                 $i        = 0;
                 $lines    = [];
-                while ($line = fgetcsv($f, 0, $separator)) {
+                while ($line = fgetcsv($f, 0, $separator, '"', '\\')) {
                     if ($line === false) {
                         $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Error in CSV file at line %1$s'), $i));
                         $is_valid = false;

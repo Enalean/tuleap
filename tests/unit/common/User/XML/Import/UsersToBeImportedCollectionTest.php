@@ -56,8 +56,8 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
     private function parseCSVFile(): array
     {
         $csv        = fopen($this->output_filename, 'r');
-        $header     = fgetcsv($csv);
-        $first_data = fgetcsv($csv);
+        $header     = fgetcsv($csv, null, ',', '"', '\\');
+        $first_data = fgetcsv($csv, null, ',', '"', '\\');
         fclose($csv);
 
         return [$header, $first_data];
