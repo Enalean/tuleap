@@ -198,6 +198,24 @@ const delete_section = getSectionDeletor(
 const { is_in_error, is_outdated } = section_state;
 </script>
 
+<style lang="scss">
+artidoc-section-description,
+.section-description {
+    h1 {
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 17px;
+    }
+}
+</style>
+
 <style lang="scss" scoped>
 @use "@/themes/includes/whitespace";
 
