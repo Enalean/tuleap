@@ -36,8 +36,8 @@ msgstr "Changer en texte préformaté"
 msgid "Change to small heading `Ctrl+Shift+%(heading_level)s`"
 msgstr "Changer en petit titre `Ctrl+Shift+%(heading_level)s`"
 
-msgid "Change to subtitle"
-msgstr "Changer en sous-titre"
+msgid "Change to subtitle `Ctrl+Shift+1`"
+msgstr "Changer en sous-titre `Ctrl+Shift+1`"
 
 msgid "Create link"
 msgstr "Créer un lien"

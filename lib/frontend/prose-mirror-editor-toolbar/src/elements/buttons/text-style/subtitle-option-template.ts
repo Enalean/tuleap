@@ -34,7 +34,7 @@ export const renderSubtitleOption = (
 
     return html`
         <option
-            title="${gettext_provider.gettext("Change to subtitle")}"
+            title="${gettext_provider.gettext("Change to subtitle `Ctrl+Shift+1`")}"
             selected="${host.is_subtitle_activated}"
             value="${OPTION_SUBTITLE}"
         >

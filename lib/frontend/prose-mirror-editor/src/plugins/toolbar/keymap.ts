@@ -25,6 +25,7 @@ import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirr
 import { getHeadingCommand } from "./text-style/transform-text";
 import type { DetectSingleListInSelection } from "./list/SingleListInSelectionDetector";
 import type { BuildOpenImageMenuCommand } from "./image/OpenImageMenuCommandBuilder";
+import { NB_HEADING } from "./index";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
 export function buildKeymap(
@@ -32,7 +33,8 @@ export function buildKeymap(
     detect_ordered_list: DetectSingleListInSelection,
     detect_bullet_list: DetectSingleListInSelection,
     open_image_command: BuildOpenImageMenuCommand,
-    nb_heading: number,
+    are_headings_enabled: boolean,
+    are_subtitles_enabled: boolean,
     map_keys?: { [key: string]: false | string },
 ): ProseMirrorKeyMap {
     const keys: ProseMirrorKeyMap = {};
@@ -101,9 +103,15 @@ export function buildKeymap(
     bind("Mod-Enter", cmd);
     bind("Shift-Enter", cmd);
 
-    Array.from({ length: nb_heading }, (_, i) => i).forEach((index) => {
-        bind(`Ctrl-Shift-${index + 1}`, getHeadingCommand(index + 1));
-    });
+    if (are_headings_enabled) {
+        Array.from({ length: NB_HEADING }, (_, i) => i).forEach((index) => {
+            bind(`Ctrl-Shift-${index + 1}`, getHeadingCommand(index + 1));
+        });
+    }
+
+    if (!are_headings_enabled && are_subtitles_enabled) {
+        bind(`Ctrl-Shift-1`, getHeadingCommand(1));
+    }
 
     bind("Enter", splitListItem(schema.nodes.list_item));
     bind("Shift-Tab", liftListItem(schema.nodes.list_item));

@@ -124,7 +124,11 @@ onMounted(async () => {
         renderArtidocSectionNode(props.section),
         getProjectIdFromSection(props.section.value) ?? current_project_id,
         toolbar_bus,
-        artidoc_editor_schema,
+        {
+            custom_editor_nodes: artidoc_editor_schema,
+            are_headings_enabled: false,
+            are_subtitles_enabled: true,
+        },
     );
     editorView.value = useEditorInstance.editor;
 });
