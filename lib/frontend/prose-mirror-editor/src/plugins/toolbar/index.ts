@@ -20,13 +20,13 @@
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import type { Plugin } from "prosemirror-state";
+import type { Schema } from "prosemirror-model";
+import type { ToolbarBus } from "./helper/toolbar-bus";
+import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
+import { OpenImageMenuCommandBuilder } from "./image/OpenImageMenuCommandBuilder";
 import { buildKeymap } from "./keymap";
 import { buildInputRules } from "./input-rules";
 import { setupMonoToolbar } from "./mono-toolbar";
-import type { ToolbarBus } from "./helper/toolbar-bus";
-import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
-import type { Schema } from "prosemirror-model";
-import { OpenImageMenuCommandBuilder } from "./image/OpenImageMenuCommandBuilder";
 
 export { buildKeymap };
 export type { LinkState } from "./links/LinkState";
@@ -36,7 +36,12 @@ export type { Heading } from "./text-style/Heading";
 
 export const NB_HEADING = 3;
 
-export function setupToolbar(schema: Schema, toolbar_bus: ToolbarBus): Plugin[] {
+export function setupToolbar(
+    schema: Schema,
+    toolbar_bus: ToolbarBus,
+    are_headings_enabled: boolean,
+    are_subtitles_enabled: boolean,
+): Plugin[] {
     return [
         keymap(
             buildKeymap(
@@ -44,7 +49,8 @@ export function setupToolbar(schema: Schema, toolbar_bus: ToolbarBus): Plugin[] 
                 SingleListInSelectionDetector(schema.nodes.ordered_list),
                 SingleListInSelectionDetector(schema.nodes.bullet_list),
                 OpenImageMenuCommandBuilder(toolbar_bus),
-                NB_HEADING,
+                are_headings_enabled,
+                are_subtitles_enabled,
             ),
         ),
         keymap(baseKeymap),

@@ -49,6 +49,12 @@ export type UseEditorType = {
     resetContent: (initialContent: HTMLElement) => Promise<void>;
 };
 
+export type EditorConfigOptions = {
+    custom_editor_nodes: EditorNodes;
+    are_headings_enabled: boolean;
+    are_subtitles_enabled: boolean;
+};
+
 export async function useEditor(
     editor_element: HTMLElement,
     setupUploadPlugin: (gettext_provider: GetText) => PluginDropFile,
@@ -58,7 +64,11 @@ export async function useEditor(
     initial_content: HTMLElement,
     project_id: number,
     toolbar_bus: ToolbarBus,
-    custom_editor_nodes?: EditorNodes,
+    config_options: EditorConfigOptions = {
+        custom_editor_nodes: {},
+        are_headings_enabled: true,
+        are_subtitles_enabled: false,
+    },
 ): Promise<UseEditorType> {
     const gettext_provider = await initGettext(
         getLocaleWithDefault(document),
@@ -68,7 +78,7 @@ export async function useEditor(
 
     const upload_plugin = setupUploadPlugin(gettext_provider);
 
-    const schema = buildCustomSchema(custom_editor_nodes);
+    const schema = buildCustomSchema(config_options.custom_editor_nodes);
     const editor_id = uuidv4();
     const plugins: Plugin[] = [
         ...setupAdditionalPlugins(),
@@ -84,7 +94,12 @@ export async function useEditor(
               ]
             : []),
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
-        ...setupToolbar(schema, toolbar_bus),
+        ...setupToolbar(
+            schema,
+            toolbar_bus,
+            config_options.are_headings_enabled,
+            config_options.are_subtitles_enabled,
+        ),
         initPluginCloseMarksAfterSpace(),
         ...initCrossReferencesPlugins(project_id),
         initAddMarkAfterEnterPlugin(buildAddMarkAfterEnterPluginMap(schema, project_id)),
