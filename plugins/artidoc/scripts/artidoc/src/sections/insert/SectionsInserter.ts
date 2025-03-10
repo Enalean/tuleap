@@ -27,6 +27,7 @@ import type {
     AtTheEnd,
 } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isPendingSection } from "@/helpers/artidoc-section.type";
 import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import type { NumberSections } from "@/sections/levels/SectionsNumberer";
@@ -55,8 +56,33 @@ export const getSectionsInserter = (
         return sections.findIndex((sibling) => sibling.value.id === position.before);
     };
 
+    function removeExistingLonelyPendingSection(): void {
+        if (sections_collection.sections.value.length !== 1) {
+            return;
+        }
+
+        const existing_section = sections_collection.sections.value[0].value;
+        if (!isPendingSection(existing_section)) {
+            return;
+        }
+
+        const state = states_collection.getSectionState(existing_section);
+        const has_changed =
+            state.edited_title.value !== existing_section.title ||
+            state.edited_description.value !== existing_section.description;
+
+        if (has_changed) {
+            return;
+        }
+
+        states_collection.destroySectionState(existing_section);
+        sections_collection.sections.value.splice(0, 1);
+    }
+
     return {
         insertSection(section, position): void {
+            removeExistingLonelyPendingSection();
+
             const new_section = ref(CreateStoredSections.fromArtidocSection(section));
             states_collection.createStateForSection(new_section);
 
