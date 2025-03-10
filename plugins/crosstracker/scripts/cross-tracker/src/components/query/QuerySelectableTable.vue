@@ -56,16 +56,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    EMITTER,
-    GET_COLUMN_NAME,
-    NOTIFY_FAULT,
-    RETRIEVE_ARTIFACTS_TABLE,
-} from "../../injection-symbols";
+import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import type { ColumnName } from "../../domain/ColumnName";
-import { SEARCH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT, SEARCH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import SelectablePagination from "../selectable-table/SelectablePagination.vue";
 import EditCell from "../selectable-table/EditCell.vue";
 import SelectableCell from "../selectable-table/SelectableCell.vue";
@@ -74,7 +69,6 @@ import EmptyState from "../EmptyState.vue";
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
-const notifyFault = strictInject(NOTIFY_FAULT);
 
 const props = defineProps<{
     tql_query: string;
@@ -138,7 +132,10 @@ function loadArtifacts(): void {
                 total.value = report_with_total.total;
             },
             (fault) => {
-                notifyFault(ArtifactsRetrievalFault(fault));
+                emitter.emit(NOTIFY_FAULT_EVENT, {
+                    fault: ArtifactsRetrievalFault(fault),
+                    tql_query: props.tql_query,
+                });
             },
         )
         .then(() => {

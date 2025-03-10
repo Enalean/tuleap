@@ -23,26 +23,30 @@ import { shallowMount } from "@vue/test-utils";
 import { nextTick } from "vue";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import { Option } from "@tuleap/option";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import * as rest_querier from "../api/rest-querier";
 import ReadingMode from "../components/reading-mode/ReadingMode.vue";
 import WritingMode from "../components/writing-mode/WritingMode.vue";
 import {
-    CLEAR_FEEDBACKS,
-    CURRENT_FAULT,
-    CURRENT_SUCCESS,
     EMITTER,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
-    NOTIFY_FAULT,
-    NOTIFY_SUCCESS,
     WIDGET_ID,
 } from "../injection-symbols";
 import ReadQuery from "./ReadQuery.vue";
-import { useFeedbacks } from "../composables/useFeedbacks";
-import type { EmitterProvider, Events, SwitchQueryEvent } from "../helpers/emitter-provider";
-import { SWITCH_QUERY_EVENT } from "../helpers/emitter-provider";
+import type {
+    EmitterProvider,
+    Events,
+    NotifyFaultEvent,
+    NotifySuccessEvent,
+    SwitchQueryEvent,
+} from "../helpers/emitter-provider";
+import {
+    CLEAR_FEEDBACK_EVENT,
+    NOTIFY_FAULT_EVENT,
+    NOTIFY_SUCCESS_EVENT,
+    SWITCH_QUERY_EVENT,
+} from "../helpers/emitter-provider";
 import type { Query } from "../type";
 import mitt from "mitt";
 
@@ -51,14 +55,29 @@ vi.useFakeTimers();
 describe("ReadQuery", () => {
     let is_user_admin: boolean;
     let dispatched_switch_query_events: SwitchQueryEvent[];
+    let dispatched_clear_feedback_events: true[];
+    let dispatched_fault_events: NotifyFaultEvent[];
+    let dispatched_success_events: NotifySuccessEvent[];
     let emitter: EmitterProvider;
 
     beforeEach(() => {
         is_user_admin = true;
         dispatched_switch_query_events = [];
+        dispatched_clear_feedback_events = [];
+        dispatched_fault_events = [];
+        dispatched_success_events = [];
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, (event) => {
             dispatched_switch_query_events.push(event);
+        });
+        emitter.on(CLEAR_FEEDBACK_EVENT, () => {
+            dispatched_clear_feedback_events.push(true);
+        });
+        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
+            dispatched_fault_events.push(event);
+        });
+        emitter.on(NOTIFY_SUCCESS_EVENT, (event) => {
+            dispatched_success_events.push(event);
         });
 
         vi.spyOn(rest_querier, "getQueries").mockReturnValue(
@@ -74,8 +93,6 @@ describe("ReadQuery", () => {
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ReadQuery>> {
-        const { notifyFault, notifySuccess, clearFeedbacks, current_fault, current_success } =
-            useFeedbacks();
         return shallowMount(ReadQuery, {
             global: {
                 ...getGlobalTestOptions(),
@@ -84,11 +101,6 @@ describe("ReadQuery", () => {
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
                     [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
-                    [NOTIFY_FAULT.valueOf()]: notifyFault,
-                    [NOTIFY_SUCCESS.valueOf()]: notifySuccess,
-                    [CLEAR_FEEDBACKS.valueOf()]: clearFeedbacks,
-                    [CURRENT_FAULT.valueOf()]: current_fault,
-                    [CURRENT_SUCCESS.valueOf()]: current_success,
                 },
             },
         });
@@ -106,7 +118,7 @@ describe("ReadQuery", () => {
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
             expect(wrapper.vm.report_state).toBe("edit-query");
-            expect(wrapper.vm.current_fault.isNothing()).toBe(true);
+            expect(dispatched_clear_feedback_events).toHaveLength(2);
         });
 
         it(`Given I am not admin,
@@ -135,8 +147,7 @@ describe("ReadQuery", () => {
             wrapper.findComponent(WritingMode).vm.$emit("cancel-query-edition");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(wrapper.vm.current_fault.isNothing()).toBe(true);
-            expect(wrapper.vm.current_success.isNothing()).toBe(true);
+            expect(dispatched_clear_feedback_events).toHaveLength(3);
         });
     });
 
@@ -159,8 +170,7 @@ describe("ReadQuery", () => {
             });
 
             expect(wrapper.vm.report_state).toBe("result-preview");
-            expect(wrapper.vm.current_fault.isNothing()).toBe(true);
-            expect(wrapper.vm.current_success.isNothing()).toBe(true);
+            expect(dispatched_clear_feedback_events).toHaveLength(3);
         });
     });
 
@@ -188,8 +198,9 @@ describe("ReadQuery", () => {
             });
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(wrapper.vm.current_fault.isNothing()).toBe(true);
-            expect(wrapper.vm.current_success.unwrapOr(null)).toStrictEqual(expect.any(String));
+            expect(dispatched_fault_events).toHaveLength(0);
+            expect(dispatched_success_events).toHaveLength(1);
+            expect(dispatched_success_events[0].message).toStrictEqual(expect.any(String));
         });
     });
 
@@ -213,8 +224,7 @@ describe("ReadQuery", () => {
             wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-report");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(wrapper.vm.current_fault.isNothing()).toBe(true);
-            expect(wrapper.vm.current_success.isNothing()).toBe(true);
+            expect(dispatched_clear_feedback_events).toHaveLength(4);
         });
     });
 
@@ -235,10 +245,11 @@ describe("ReadQuery", () => {
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(
                 errAsync(Fault.fromMessage("Report 41 not found")),
             );
-            const wrapper = getWrapper();
+            getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.current_fault.unwrapOr(null)?.isReportRetrieval()).toBe(true);
+            expect(dispatched_fault_events).toHaveLength(1);
+            expect(dispatched_fault_events[0].fault.isReportRetrieval()).toBe(true);
         });
 
         it("Force edit mode when widget has no query", async () => {
@@ -283,9 +294,12 @@ describe("ReadQuery", () => {
             expect(wrapper.vm.is_export_allowed).toBe(false);
         });
 
-        it(`when there was an error, it does not allow XLSX export`, () => {
+        it(`when there was an error, it does not allow XLSX export`, async () => {
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(
+                errAsync(Fault.fromMessage("Oops an error")),
+            );
             const wrapper = getWrapper();
-            wrapper.vm.current_fault = Option.fromValue(Fault.fromMessage("Ooops"));
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.is_export_allowed).toBe(false);
         });
@@ -305,7 +319,6 @@ describe("ReadQuery", () => {
             );
 
             const wrapper = getWrapper();
-            wrapper.vm.current_fault = Option.fromValue(Fault.fromMessage("Ooops"));
 
             await vi.runOnlyPendingTimersAsync();
 

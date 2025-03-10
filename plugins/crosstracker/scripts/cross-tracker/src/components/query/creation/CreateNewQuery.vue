@@ -19,7 +19,6 @@
 
 <template>
     <section class="tlp-pane-section create-new-query-section">
-        <error-message v-bind:fault="current_fault" v-bind:tql_query="tql_query" />
         <query-suggested v-on:query-chosen="handleChosenQuery" />
         <div class="create-new-query-title-description-container">
             <title-input v-model:title="title" />
@@ -102,18 +101,14 @@ import type { QuerySuggestion } from "../../../domain/SuggestedQueriesGetter";
 import QuerySuggested from "../QuerySuggested.vue";
 
 import { strictInject } from "@tuleap/vue-strict-inject";
+import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
 import {
-    CLEAR_FEEDBACKS,
-    CURRENT_FAULT,
-    EMITTER,
-    NEW_QUERY_CREATOR,
-    NOTIFY_FAULT,
-    NOTIFY_SUCCESS,
-    WIDGET_ID,
-} from "../../../injection-symbols";
-import { SEARCH_ARTIFACTS_EVENT } from "../../../helpers/emitter-provider";
+    CLEAR_FEEDBACK_EVENT,
+    NOTIFY_FAULT_EVENT,
+    NOTIFY_SUCCESS_EVENT,
+    SEARCH_ARTIFACTS_EVENT,
+} from "../../../helpers/emitter-provider";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
-import ErrorMessage from "../../feedback/ErrorMessage.vue";
 import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
 import { useGettext } from "vue3-gettext";
 
@@ -128,11 +123,6 @@ const emitter = strictInject(EMITTER);
 const widget_id = strictInject(WIDGET_ID);
 
 const new_query_creator = strictInject(NEW_QUERY_CREATOR);
-
-const notifyFault = strictInject(NOTIFY_FAULT);
-const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
-const current_fault = strictInject(CURRENT_FAULT);
-const notifySuccess = strictInject(NOTIFY_SUCCESS);
 
 const title = ref("");
 const description = ref("");
@@ -157,7 +147,7 @@ const is_save_button_disabled = computed((): boolean => {
 });
 
 function handleCancelButton(): void {
-    clearFeedbacks();
+    emitter.emit(CLEAR_FEEDBACK_EVENT);
     emit("return-to-active-query-pane");
 }
 
@@ -167,7 +157,7 @@ function handleSearch(tql_query: string): void {
 }
 
 function handleSaveButton(): void {
-    clearFeedbacks();
+    emitter.emit(CLEAR_FEEDBACK_EVENT);
     is_save_loading.value = true;
     const new_query: PostQueryRepresentation = {
         tql_query: searched_tql_query.value,
@@ -179,11 +169,13 @@ function handleSaveButton(): void {
         .postNewQuery(new_query)
         .match(
             () => {
-                notifySuccess($gettext("Query created with success!"));
+                emitter.emit(NOTIFY_SUCCESS_EVENT, {
+                    message: $gettext("Query created with success!"),
+                });
                 emit("return-to-active-query-pane");
             },
             (fault) => {
-                notifyFault(fault);
+                emitter.emit(NOTIFY_FAULT_EVENT, { fault, tql_query: tql_query.value });
             },
         )
         .then(() => {
@@ -197,7 +189,7 @@ function handleSearchButton(): void {
 }
 
 function search(): void {
-    clearFeedbacks();
+    emitter.emit(CLEAR_FEEDBACK_EVENT);
     is_selectable_table_displayed.value = true;
     emitter.emit(SEARCH_ARTIFACTS_EVENT);
 }

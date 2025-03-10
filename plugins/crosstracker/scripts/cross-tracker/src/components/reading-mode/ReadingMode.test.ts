@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -28,23 +27,24 @@ import ReadingMode from "./ReadingMode.vue";
 import * as rest_querier from "../../api/rest-querier";
 import type { Query } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import {
-    IS_USER_ADMIN,
-    NOTIFY_FAULT,
-    WIDGET_ID,
-    REPORT_STATE,
-    EMITTER,
-} from "../../injection-symbols";
-import { EmitterStub } from "../../../tests/stubs/EmitterStub";
-import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { EMITTER, IS_USER_ADMIN, REPORT_STATE, WIDGET_ID } from "../../injection-symbols";
+import type {
+    EmitterProvider,
+    Events,
+    NotifyFaultEvent,
+    RefreshArtifactsEvent,
+} from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import mitt from "mitt";
 
 describe("ReadingMode", () => {
     let backend_query: Query,
         reading_query: Query,
         is_user_admin: boolean,
         has_error: boolean,
-        errorSpy: Mock,
-        emitter: EmitterStub;
+        emitter: EmitterProvider;
+    let dispatched_fault_events: NotifyFaultEvent[];
+    let dispatched_refresh_events: RefreshArtifactsEvent[];
 
     beforeEach(() => {
         backend_query = {
@@ -61,8 +61,15 @@ describe("ReadingMode", () => {
         };
         is_user_admin = true;
         has_error = false;
-        errorSpy = vi.fn();
-        emitter = EmitterStub();
+        emitter = mitt<Events>();
+        dispatched_fault_events = [];
+        dispatched_refresh_events = [];
+        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
+            dispatched_fault_events.push(event);
+        });
+        emitter.on(REFRESH_ARTIFACTS_EVENT, (event) => {
+            dispatched_refresh_events.push(event);
+        });
     });
 
     function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {
@@ -71,7 +78,6 @@ describe("ReadingMode", () => {
                 ...getGlobalTestOptions(),
                 provide: {
                     [REPORT_STATE.valueOf()]: ref("result-preview"),
-                    [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [WIDGET_ID.valueOf()]: 875,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
@@ -149,8 +155,8 @@ describe("ReadingMode", () => {
 
             await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
 
-            expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][0].isSaveReport()).toBe(true);
+            expect(dispatched_fault_events).toHaveLength(1);
+            expect(dispatched_fault_events[0].fault.isSaveReport()).toBe(true);
         });
     });
 
@@ -161,9 +167,8 @@ describe("ReadingMode", () => {
             await wrapper.get("[data-test=cross-tracker-cancel-report]").trigger("click");
 
             expect(wrapper.emitted("discard-unsaved-report")).toBeDefined();
-            expect(emitter.emitted_event_name.length).toBe(1);
-            expect(emitter.emitted_event_name[0]).toBe(REFRESH_ARTIFACTS_EVENT);
-            expect(emitter.emitted_event_message[0].unwrapOr("")).toStrictEqual({
+            expect(dispatched_refresh_events).toHaveLength(1);
+            expect(dispatched_refresh_events[0]).toStrictEqual({
                 query: backend_query,
             });
         });

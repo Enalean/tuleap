@@ -17,19 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
 import { nextTick } from "vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import {
-    EMITTER,
-    GET_COLUMN_NAME,
-    NOTIFY_FAULT,
-    RETRIEVE_ARTIFACTS_TABLE,
-} from "../../injection-symbols";
+import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
@@ -40,9 +34,11 @@ import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "../EmptyState.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
-import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 import QuerySelectableTable from "./QuerySelectableTable.vue";
 import SelectableCell from "../selectable-table/SelectableCell.vue";
+import type { EmitterProvider, Events, NotifyFaultEvent } from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT } from "../../helpers/emitter-provider";
+import mitt from "mitt";
 
 vi.useFakeTimers();
 
@@ -51,10 +47,15 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
-    let errorSpy: Mock;
+    let emitter: EmitterProvider;
+    let dispatched_fault_events: NotifyFaultEvent[];
 
     beforeEach(() => {
-        errorSpy = vi.fn();
+        emitter = mitt<Events>();
+        dispatched_fault_events = [];
+        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
+            dispatched_fault_events.push(event);
+        });
     });
 
     const getWrapper = (
@@ -69,11 +70,10 @@ describe(`SelectableTable`, () => {
                 },
                 provide: {
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
-                    [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
                         createVueGettextProviderPassThrough(),
                     ),
-                    [EMITTER.valueOf()]: EmitterStub(),
+                    [EMITTER.valueOf()]: emitter,
                 },
             },
             props: {
@@ -159,8 +159,8 @@ describe(`SelectableTable`, () => {
 
             await vi.runOnlyPendingTimersAsync();
 
-            expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][0].isArtifactsRetrieval()).toBe(true);
+            expect(dispatched_fault_events).toHaveLength(1);
+            expect(dispatched_fault_events[0].fault.isArtifactsRetrieval()).toBe(true);
         });
     });
     describe("loadArtifact()", () => {
@@ -187,7 +187,7 @@ describe(`SelectableTable`, () => {
 
             expect(wrapper.emitted()).toHaveProperty("search-finished");
             expect(headers.length).toBe(0);
-            expect(errorSpy).toHaveBeenCalled();
+            expect(dispatched_fault_events).toHaveLength(1);
             expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(0);
         });
         it("returns the result of the tql query", async () => {
