@@ -42,8 +42,8 @@ use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Artifact\GetFileUploadDataStub;
 use Tuleap\Tracker\Test\Stub\REST\Artifact\CreateArtifactStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactContentCreatorTest extends TestCase

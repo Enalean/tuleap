@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
+use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase

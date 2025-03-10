@@ -40,8 +40,8 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\SendMailStub;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\SendMailStub;
 use UserHelper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

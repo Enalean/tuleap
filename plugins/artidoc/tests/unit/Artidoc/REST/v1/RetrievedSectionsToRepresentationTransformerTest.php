@@ -33,8 +33,8 @@ use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
-use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
@@ -53,8 +53,8 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Artifact\GetFileUploadDataStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrievedSectionsToRepresentationTransformerTest extends TestCase

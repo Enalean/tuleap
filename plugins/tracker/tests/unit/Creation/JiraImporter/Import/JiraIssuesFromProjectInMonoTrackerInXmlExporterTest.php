@@ -72,7 +72,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Import\JiraClientMonoTrackerStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\Import\JiraClientMonoTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;

@@ -25,8 +25,8 @@ namespace Tuleap\Timetracking\JiraImporter\Worklog;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraServerClientStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

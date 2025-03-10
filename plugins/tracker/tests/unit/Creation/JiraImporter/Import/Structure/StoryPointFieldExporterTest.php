@@ -28,7 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
 use function PHPUnit\Framework\assertCount;

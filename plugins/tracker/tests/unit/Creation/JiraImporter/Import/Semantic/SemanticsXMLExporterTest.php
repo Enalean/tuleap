@@ -88,7 +88,7 @@ final class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $collection = new StatusValuesCollection(
-            new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
+            new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
             },
             new NullLogger()
         );

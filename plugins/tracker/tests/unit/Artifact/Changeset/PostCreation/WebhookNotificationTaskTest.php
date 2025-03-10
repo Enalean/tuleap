@@ -27,7 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
+use Tuleap\Tracker\Test\Stub\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\Tracker\Webhook\ArtifactPayload;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;

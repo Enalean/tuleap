@@ -39,8 +39,8 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialCh
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
+use Tuleap\Tracker\Test\Stub\Artifact\Creation\AddReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\CreateInitialChangesetStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Creation\AddReverseLinksStub;
 use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

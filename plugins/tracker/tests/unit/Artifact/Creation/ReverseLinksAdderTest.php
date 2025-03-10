@@ -40,11 +40,11 @@ use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Stub\Artifact\ChangesetValue\ArtifactLink\ConvertAddReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\ChangesetValue\ArtifactLink\ConvertAddReverseLinksStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReverseLinksAdderTest extends TestCase

@@ -35,8 +35,8 @@ use PlanningFactory;
 use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_Integer;
-use Tuleap\AgileDashboard\BacklogItemPresenter;
 use Tuleap\AgileDashboard\BacklogItemDao;
+use Tuleap\AgileDashboard\BacklogItemPresenter;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
@@ -46,7 +46,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Permission\TrackersPermissionsPassthroughRetriever;
+use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

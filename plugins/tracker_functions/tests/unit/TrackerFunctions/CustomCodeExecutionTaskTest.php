@@ -32,7 +32,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskConfiguration
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
+use Tuleap\Tracker\Test\Stub\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\TrackerFunctions\Logs\FunctionLogLineStatus;
 use Tuleap\TrackerFunctions\Stubs\Administration\CheckFunctionIsActivatedStub;
 use Tuleap\TrackerFunctions\Stubs\Logs\SaveFunctionLogStub;

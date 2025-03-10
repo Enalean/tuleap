@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
-use Psr\Log\NullLogger;
 use ColinODell\PsrTestLogger\TestLogger;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -50,7 +50,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;

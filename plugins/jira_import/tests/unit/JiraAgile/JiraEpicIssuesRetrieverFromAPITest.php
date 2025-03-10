@@ -31,7 +31,7 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
 {
     public function testItSearchForIssuesWithGivenEpicAsParentBecauseCallingTheEpicsIssueURLDontWorkWithJiraNextGenIssues(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
             public bool $called = false;
             public function getUrl(string $url): ?array
             {
@@ -52,7 +52,7 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItReturnsTheIssueIds(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [

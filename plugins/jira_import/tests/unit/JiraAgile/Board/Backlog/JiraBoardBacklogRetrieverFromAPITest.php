@@ -34,7 +34,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 {
     public function testItCatchesIfJiraReturnsAPayloadWeCannotWorkWith(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -63,7 +63,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItQueriesTheURL(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -91,7 +91,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsEmptySetWhenNoIssues(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -118,7 +118,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsOneIssue(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public int $called = 0;
 
@@ -157,7 +157,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsIssuesOnSeveralPages(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public int $called = 0;
 
