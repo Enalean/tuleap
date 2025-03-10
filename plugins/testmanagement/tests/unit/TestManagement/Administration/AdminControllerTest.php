@@ -55,8 +55,6 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->config               = $this->createMock(Config::class);
         $this->field_usage_detector = $this->createMock(FieldUsageDetector::class);
 
@@ -72,6 +70,9 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_manager = $this->createMock(\EventManager::class);
         $event_manager->method('processEvent');
 
+        $project_history_dao = $this->createMock(\ProjectHistoryDao::class);
+        $project_history_dao->method('addHistory');
+
         return new AdminController(
             $request,
             $this->config,
@@ -81,7 +82,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_checker,
             new Valid_UInt(),
             $this->createMock(AdminTrackersRetriever::class),
-            $this->createMock(\ProjectHistoryDao::class)
+            $project_history_dao
         );
     }
 
