@@ -52,7 +52,7 @@ final class PullRequestRepresentationFactoryTest extends TestCase
     private const FIRST_REVIEWER_USER_ID  = 101;
     private const SECOND_REVIEWER_USER_ID = 102;
     private const CREATOR_USER_ID         = 172;
-    private AccessControlVerifier & Stub $access_control_verifier;
+    private AccessControlVerifier&Stub $access_control_verifier;
     private \PFUser $current_user;
     private RetrieveUserByIdStub $user_retriever;
 

@@ -47,7 +47,7 @@ final class TimeframeValueRetrieverTest extends TestCase
 {
     private const USER_ID = 154;
     private Artifact $artifact;
-    private SemanticTimeframeBuilder & Stub $semantic_timeframe_builder;
+    private SemanticTimeframeBuilder&Stub $semantic_timeframe_builder;
     private TimeboxIdentifier $artifact_identifier;
     private UserIdentifier $user_identifier;
 

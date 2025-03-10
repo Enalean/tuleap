@@ -33,8 +33,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private AdminPageRenderer & \PHPUnit\Framework\MockObject\MockObject $renderer;
-    private BannerRetriever & \PHPUnit\Framework\MockObject\Stub $banner_retriever;
+    private AdminPageRenderer&\PHPUnit\Framework\MockObject\MockObject $renderer;
+    private BannerRetriever&\PHPUnit\Framework\MockObject\Stub $banner_retriever;
     private \PFUser $user;
 
     protected function setUp(): void

@@ -44,9 +44,9 @@ use UserHelper;
 final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RetrieveUserByIdStub $user_retriever;
-    private OwnerRetriever & MockObject $owner_retriever;
-    private UserHelper & MockObject $user_helper;
-    private HTMLURLBuilder & MockObject $html_url_builder;
+    private OwnerRetriever&MockObject $owner_retriever;
+    private UserHelper&MockObject $user_helper;
+    private HTMLURLBuilder&MockObject $html_url_builder;
     private CommentSearcherStub $comment_dao;
     private PullRequest $pull_request;
     private \PFUser $change_user;

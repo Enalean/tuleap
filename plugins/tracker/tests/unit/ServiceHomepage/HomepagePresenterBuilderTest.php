@@ -37,8 +37,8 @@ final class HomepagePresenterBuilderTest extends TestCase
     use GlobalLanguageMock;
 
     private const PROJECT_NAME = 'contemptibleness-prenotion';
-    private \TrackerFactory & Stub $tracker_factory;
-    private \Tracker_Migration_MigrationManager & MockObject $migration_manager;
+    private \TrackerFactory&Stub $tracker_factory;
+    private \Tracker_Migration_MigrationManager&MockObject $migration_manager;
     private bool $is_tracker_admin;
 
     protected function setUp(): void
@@ -170,7 +170,7 @@ final class HomepagePresenterBuilderTest extends TestCase
     private function mockTracker(
         bool $user_can_view,
         bool $user_has_full_access,
-    ): Stub & \Tracker {
+    ): Stub&\Tracker {
         $tracker = $this->createStub(\Tracker::class);
         $tracker->method('getId')->willReturn(15);
         $tracker->method('getColor')->willReturn(TrackerColor::fromName('sherwood-green'));

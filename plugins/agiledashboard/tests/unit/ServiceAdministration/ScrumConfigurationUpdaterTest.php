@@ -44,9 +44,9 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private const PROJECT_ID = 165;
 
-    private ConfigurationResponse & MockObject $response;
+    private ConfigurationResponse&MockObject $response;
     private EventDispatcherStub $event_dispatcher;
-    private ConfigurationUpdater & MockObject $explicit_backlog_updater;
+    private ConfigurationUpdater&MockObject $explicit_backlog_updater;
     private ConfigurationDao&MockObject $configuration_dao;
     private UpdateMilestonesInSidebarConfig&MockObject $update_sidebar_config;
     private \Project $project;

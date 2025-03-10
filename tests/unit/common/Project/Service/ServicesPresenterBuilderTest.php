@@ -35,7 +35,7 @@ final class ServicesPresenterBuilderTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private ServiceManager & MockObject $service_manager;
+    private ServiceManager&MockObject $service_manager;
     private Project $project;
     private EventDispatcherStub $event_manager;
 

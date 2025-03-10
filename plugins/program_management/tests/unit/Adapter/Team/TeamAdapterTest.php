@@ -45,7 +45,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TEAM_ID = 202;
     private const USER_ID = 192;
     private VerifyIsProgramStub $program_verifier;
-    private ExplicitBacklogDao & Stub $explicit_backlog_dao;
+    private ExplicitBacklogDao&Stub $explicit_backlog_dao;
     private RetrieveUserStub $retrieve_user;
     private \Project $team_project;
     private CheckUserCanAccessProjectAndIsAdmin $url_verification;

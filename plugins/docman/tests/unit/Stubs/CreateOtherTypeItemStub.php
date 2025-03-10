@@ -34,7 +34,7 @@ final class CreateOtherTypeItemStub implements CreateOtherTypeItem
 {
     private function __construct(
         private ?CreatedItemRepresentation $representation,
-        private null|HardCodedMetadataException|CustomMetadataException $exception,
+        private HardCodedMetadataException|CustomMetadataException|null $exception,
     ) {
     }
 

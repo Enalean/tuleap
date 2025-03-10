@@ -36,7 +36,7 @@ final class BannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\Test
 {
     private const PROJECT_ID = 102;
     private TemplateRendererStub $renderer;
-    private BannerRetriever & \PHPUnit\Framework\MockObject\Stub $banner_retriever;
+    private BannerRetriever&\PHPUnit\Framework\MockObject\Stub $banner_retriever;
 
     protected function setUp(): void
     {

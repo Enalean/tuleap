@@ -32,10 +32,10 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Stub & \Tracker_FormElement_Field_List $source_field;
-    private Stub & \Tracker_FormElement_Field_List $destination_field;
+    private Stub&\Tracker_FormElement_Field_List $source_field;
+    private Stub&\Tracker_FormElement_Field_List $destination_field;
     private Artifact $artifact;
-    private Stub & Tracker_Artifact_ChangesetValue_List $changeset_value;
+    private Stub&Tracker_Artifact_ChangesetValue_List $changeset_value;
     private \PFUser $user;
 
     protected function setUp(): void

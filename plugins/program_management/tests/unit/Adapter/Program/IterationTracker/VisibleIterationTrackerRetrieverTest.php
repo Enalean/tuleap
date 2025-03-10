@@ -36,7 +36,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_TRACKER_ID = 75;
-    private TrackerFactory & MockObject $tracker_factory;
+    private TrackerFactory&MockObject $tracker_factory;
     private RetrieveIterationTrackerStub $tracker_id_retriever;
 
     protected function setUp(): void

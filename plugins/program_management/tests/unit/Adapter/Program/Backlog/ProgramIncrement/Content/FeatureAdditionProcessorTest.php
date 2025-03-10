@@ -48,7 +48,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROGRAM_ID           = 110;
     private const USER_ID              = 123;
     private RetrieveFullArtifactStub $artifact_retriever;
-    private ArtifactLinkUpdater & MockObject $artifact_link_updater;
+    private ArtifactLinkUpdater&MockObject $artifact_link_updater;
     private Artifact $artifact;
 
     protected function setUp(): void

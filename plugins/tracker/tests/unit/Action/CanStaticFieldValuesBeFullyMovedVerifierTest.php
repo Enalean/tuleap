@@ -38,8 +38,8 @@ use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 {
     private Artifact $artifact;
-    private Stub & Tracker_FormElement_Field_List $destination_list_field;
-    private MockObject & Tracker_FormElement_Field_List $source_list_field;
+    private Stub&Tracker_FormElement_Field_List $destination_list_field;
+    private MockObject&Tracker_FormElement_Field_List $source_list_field;
 
     protected function setUp(): void
     {

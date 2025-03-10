@@ -28,7 +28,7 @@ use Tuleap\Cryptography\ConcealedString;
 final class ConfigSet implements ConfigUpdater
 {
     public function __construct(
-        private readonly KeyMetadataProvider & KeysThatCanBeModifiedProvider $config_keys,
+        private readonly KeyMetadataProvider&KeysThatCanBeModifiedProvider $config_keys,
         private readonly ConfigDao $config_dao,
     ) {
     }

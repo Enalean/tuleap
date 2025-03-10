@@ -45,7 +45,7 @@ class WholeInstanceKeysAggregator implements IProvideKey
         $this->iterator->next();
     }
 
-    public function key(): string|int|bool|null|float
+    public function key(): string|int|bool|float|null
     {
         return $this->iterator->key();
     }

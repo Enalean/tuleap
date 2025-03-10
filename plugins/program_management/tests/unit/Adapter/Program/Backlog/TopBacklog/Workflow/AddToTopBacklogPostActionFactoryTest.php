@@ -40,7 +40,7 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
     private const TRANSITION_ID = 923;
     private const PROJECT_ID    = 101;
     private Transition $transition;
-    private \Workflow & MockObject $workflow;
+    private \Workflow&MockObject $workflow;
     private SearchByTransitionIdStub $search_transition;
     private SearchByWorkflowStub $search_by_workflow;
     private \Project $project;

@@ -37,7 +37,7 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    private \Project & \PHPUnit\Framework\MockObject\Stub $project;
+    private \Project&\PHPUnit\Framework\MockObject\Stub $project;
     private EventDispatcherStub $event_dispatcher;
     private \PFUser $user;
 
