@@ -28,7 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Date\DatePeriodWithWeekEnd;
 use UserManager;
 
-class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
+class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * build burndown chart properties
@@ -41,7 +41,10 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         $effort_field         = $form_element_factory->getFormElementById($this->chart->getFieldId());
-        $type                 = $form_element_factory->getType($effort_field);
+        $type                 = '';
+        if ($effort_field) {
+            $type = $form_element_factory->getType($effort_field);
+        }
 
         if ($this->isValidEffortField($effort_field, $type) && $this->isValidType($type)) {
             $date_period  = new DatePeriodWithWeekEnd($this->chart->getStartDate(), $this->chart->getDuration());
@@ -74,12 +77,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
         return $effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser());
     }
 
-    /**
-     * Autorized types for effort field type
-     *
-     * @param array $type
-     */
-    protected function isValidType($type)
+    protected function isValidType(string $type): bool
     {
         return in_array($type, ['int', 'float']);
     }
