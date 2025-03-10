@@ -105,6 +105,12 @@ id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 ignoreUntil = 2025-04-12
 
+## paste
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0436"
+reason = "Repository archive notification. see https://github.com/bytecodealliance/wasmtime/issues/10356"
+ignoreUntil = 2025-04-10
+
 # ESBuild
 [[IgnoredVulns]]
 id = "GHSA-67mh-4wv8-2f99"
