@@ -81,6 +81,9 @@ msgid ""
 msgstr ""
 "Il y a déjà une section existante avec le même artéfact dans le document."
 
+msgid "This document does not contain any sections."
+msgstr "Ce document ne contient pas de sections."
+
 msgid "This file is already being uploaded."
 msgstr "Ce fichier est déjà en cours de téléversement."
 
@@ -100,6 +103,11 @@ msgstr ""
 "Impossible de rajouter la nouvelle section à la position demandée. La "
 "section référente n'existe pas, peut-être a-t-elle été supprimée par "
 "quelqu'un d'autre pendant que vous éditiez le document ?"
+
+msgid "You cannot move a parent section within its child sections."
+msgstr ""
+"Vous ne pouvez pas déplacer une section parente à l'intérieur de ses "
+"sections enfants."
 
 msgid "You don't have permission to write the document."
 msgstr "Vous n'avez pas la permission de mettre à jour le document."

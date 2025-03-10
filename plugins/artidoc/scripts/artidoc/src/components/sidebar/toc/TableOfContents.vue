@@ -27,13 +27,16 @@
             data-test="section-in-toc"
             v-for="(section, index) in sections_collection.sections.value"
             v-bind:key="section.value.id"
-            v-bind:draggable="section_being_moved === null"
+            v-bind:draggable="sections_being_moved.length === 0"
             v-bind:data-internal-id="section.value.internal_id"
             v-bind:class="{
-                'section-moved-with-success':
-                    just_moved_section?.internal_id === section.value.internal_id,
-                'section-being-moved':
-                    section_being_moved?.internal_id === section.value.internal_id,
+                'section-moved-with-success': just_moved_sections.some(
+                    (just_moved_section) => just_moved_section === section.value,
+                ),
+                'section-being-moved': sections_being_moved.some(
+                    (section_being_moved) => section_being_moved === section.value,
+                ),
+                'parent-selected': isSectionParentHovered(section.value),
             }"
         >
             <span
@@ -41,6 +44,8 @@
                 data-test="dragndrop-grip"
                 v-if="is_reorder_allowed"
                 v-bind:class="{ 'dragndrop-grip-when-sections-loading': is_loading_sections }"
+                v-on:mouseover="section_being_hovered = section.value"
+                v-on:mouseout="section_being_hovered = null"
             >
                 <dragndrop-grip-illustration />
             </span>
@@ -69,12 +74,15 @@
                 v-if="is_reorder_allowed"
                 v-bind:class="{ 'reorder-arrows-when-sections-loading': is_loading_sections }"
                 data-not-drag-handle="true"
+                v-on:mouseover="section_being_hovered = section.value"
+                v-on:mouseout="section_being_hovered = null"
             >
                 <reorder-arrows
                     v-bind:is_first="index === 0"
-                    v-bind:is_last="index === sections_collection.sections.value.length - 1"
+                    v-bind:is_last="isLastSectionOrBlock(section.value, index)"
                     v-bind:section="section"
                     v-bind:sections_reorderer="sections_reorderer"
+                    v-bind:sections_structurer="sections_structurer"
                     v-on:moved-section-up-or-down="showJustSavedTemporaryFeedback"
                     v-on:moving-section-up-or-down="showSectionBeingMovedTemporaryFeedback"
                     v-on:moved-section-up-or-down-fault="handleReorderingFault"
@@ -109,6 +117,7 @@ import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { isCannotReorderSectionsFault } from "@/sections/reorder/CannotReorderSectionsFault";
 import { buildSectionsReorderer } from "@/sections/reorder/SectionsReorderer";
+import { getSectionsStructurer } from "@/sections/reorder/SectionsStructurer";
 
 const { $gettext } = useGettext();
 
@@ -120,6 +129,7 @@ const document_id = strictInject(DOCUMENT_ID);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 
 const sections_reorderer = buildSectionsReorderer(sections_collection);
+const sections_structurer = getSectionsStructurer(sections_collection);
 
 const is_reorder_allowed = can_user_edit_document;
 
@@ -127,24 +137,49 @@ const list = ref<HTMLElement>();
 
 let drek: Drekkenov | undefined = undefined;
 
-const just_moved_section: Ref<null | InternalArtidocSectionId> = ref(null);
-const section_being_moved: Ref<null | InternalArtidocSectionId> = ref(null);
+const just_moved_sections: Ref<InternalArtidocSectionId[]> = ref([]);
+const sections_being_moved: Ref<InternalArtidocSectionId[]> = ref([]);
+const section_being_hovered: Ref<null | InternalArtidocSectionId> = ref(null);
 
-const showJustSavedTemporaryFeedback = (moved_section: InternalArtidocSectionId): void => {
-    just_moved_section.value = moved_section;
-    section_being_moved.value = null;
+const isLastSectionOrBlock = (
+    section: InternalArtidocSectionId,
+    section_index: number,
+): boolean => {
+    const section_children = sections_structurer.getSectionChildren(section);
+    const end_of_block_index = section_index + section_children.length;
+    return end_of_block_index === sections_collection.sections.value.length - 1;
+};
+
+const isSectionParentHovered = (section: InternalArtidocSectionId): boolean => {
+    if (!section_being_hovered.value) {
+        return false;
+    }
+
+    const children_of_current_hovered_section = sections_structurer.getSectionChildren(
+        section_being_hovered.value,
+    );
+    return children_of_current_hovered_section.some((section_child) => {
+        return section_child.value === section;
+    });
+};
+
+const showJustSavedTemporaryFeedback = (moved_sections: InternalArtidocSectionId[]): void => {
+    just_moved_sections.value = moved_sections;
+    sections_being_moved.value = [];
 
     setTimeout(() => {
-        just_moved_section.value = null;
+        just_moved_sections.value = [];
     }, TEMPORARY_FLAG_DURATION_IN_MS);
 };
 
-const showSectionBeingMovedTemporaryFeedback = (moved_section: InternalArtidocSectionId): void => {
-    section_being_moved.value = moved_section;
+const showSectionBeingMovedTemporaryFeedback = (
+    moved_sections: InternalArtidocSectionId[],
+): void => {
+    sections_being_moved.value = moved_sections;
 };
 
 const handleReorderingFault = (fault: Fault): void => {
-    section_being_moved.value = null;
+    sections_being_moved.value = [];
 
     const details = isCannotReorderSectionsFault(fault)
         ? $gettext("An error occurred")
@@ -181,11 +216,16 @@ onMounted(() => {
                 internal_id: context.dropped_element.dataset.internalId,
             };
 
-            showSectionBeingMovedTemporaryFeedback(moved_section);
+            const children_of_moved_section = sections_structurer
+                .getSectionChildren(moved_section)
+                .map((child) => child.value);
+            const moved_sections = [moved_section, ...children_of_moved_section];
+
+            showSectionBeingMovedTemporaryFeedback(moved_sections);
 
             if (context.next_sibling === null) {
                 sections_reorderer.moveSectionAtTheEnd(document_id, moved_section).match(() => {
-                    showJustSavedTemporaryFeedback(moved_section);
+                    showJustSavedTemporaryFeedback(moved_sections);
                 }, handleReorderingFault);
                 return;
             }
@@ -200,7 +240,7 @@ onMounted(() => {
                 internal_id: context.next_sibling.dataset.internalId,
             };
             sections_reorderer.moveSectionBefore(document_id, moved_section, sibling).match(() => {
-                showJustSavedTemporaryFeedback(moved_section);
+                showJustSavedTemporaryFeedback(moved_sections);
             }, handleReorderingFault);
         },
         cleanupAfterDragCallback: noop,
@@ -283,6 +323,11 @@ li {
     &:not(:hover, :focus-within) > .reorder-arrows:not(:focus-within) {
         opacity: 0;
     }
+}
+
+.parent-selected {
+    transition: background ease-in-out 250ms;
+    background: var(--tlp-main-color-lighter-90);
 }
 
 .section-moved-with-success {

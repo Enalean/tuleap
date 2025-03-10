@@ -46,12 +46,16 @@ use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\TooManyRequiredFieldsFault;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
+use Tuleap\Artidoc\Domain\Document\EmptyDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\CannotMoveSectionRelativelyToItselfFault;
 use Tuleap\Artidoc\Domain\Document\Order\ChangeSectionOrder;
+use Tuleap\Artidoc\Domain\Document\Order\CompareToIsNotAChildSectionChecker;
+use Tuleap\Artidoc\Domain\Document\Order\CompareToSectionIsAChildSectionFault;
 use Tuleap\Artidoc\Domain\Document\Order\Direction;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidComparedToFault;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidDirectionFault;
 use Tuleap\Artidoc\Domain\Document\Order\InvalidIdsFault;
+use Tuleap\Artidoc\Domain\Document\Order\SectionChildrenBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrder;
 use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
@@ -275,6 +279,14 @@ final class ArtidocResource extends AuthenticatedResource
                             400,
                             dgettext('tuleap-artidoc', 'The section being moved does not belong to the document.'),
                         ),
+                        $fault instanceof CompareToSectionIsAChildSectionFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'You cannot move a parent section within its child sections.'),
+                        ),
+                        $fault instanceof EmptyDocumentFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'This document does not contain any sections.'),
+                        ),
                         default => new RestException(404, (string) $fault),
                     };
                 }
@@ -360,6 +372,13 @@ final class ArtidocResource extends AuthenticatedResource
         return new ChangeSectionOrder(
             $this->getArtidocWithContextRetriever($user),
             new ReorderSectionsDao(),
+            new SectionChildrenBuilder(
+                new RetrieveArtidocSectionDao(
+                    $this->getSectionIdentifierFactory(),
+                    $this->getFreetextIdentifierFactory()
+                )
+            ),
+            new CompareToIsNotAChildSectionChecker()
         );
     }
 

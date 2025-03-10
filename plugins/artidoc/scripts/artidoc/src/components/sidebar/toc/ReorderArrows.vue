@@ -52,12 +52,14 @@ import type {
 } from "@/sections/SectionsCollection";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { SectionsReorderer } from "@/sections/reorder/SectionsReorderer";
+import type { SectionsStructurer } from "@/sections/reorder/SectionsStructurer";
 
 const props = defineProps<{
     is_first: boolean;
     is_last: boolean;
     section: ReactiveStoredArtidocSection;
     sections_reorderer: SectionsReorderer;
+    sections_structurer: SectionsStructurer;
 }>();
 
 const { $gettext } = useGettext();
@@ -68,17 +70,23 @@ const title_down = $gettext("Move down");
 const document_id = strictInject(DOCUMENT_ID);
 
 const emit = defineEmits<{
-    (event: "moved-section-up-or-down", section: InternalArtidocSectionId): void;
-    (event: "moving-section-up-or-down", section: InternalArtidocSectionId): void;
+    (event: "moved-section-up-or-down", sections: InternalArtidocSectionId[]): void;
+    (event: "moving-section-up-or-down", sections: InternalArtidocSectionId[]): void;
     (event: "moved-section-up-or-down-fault", fault: Fault): void;
 }>();
 
 const dispatchMovedSection = (): void => {
-    emit("moved-section-up-or-down", props.section.value);
+    const children_ids = props.sections_structurer
+        .getSectionChildren(props.section.value)
+        .map((child) => child.value);
+    emit("moved-section-up-or-down", [props.section.value, ...children_ids]);
 };
 
 const dispatchMovingSection = (): void => {
-    emit("moving-section-up-or-down", props.section.value);
+    const children_ids = props.sections_structurer
+        .getSectionChildren(props.section.value)
+        .map((child) => child.value);
+    emit("moving-section-up-or-down", [props.section.value, ...children_ids]);
 };
 
 const dispatchFault = (fault: Fault): void => {
@@ -118,6 +126,7 @@ function down(event: Event): void {
 $button-size: 16px;
 
 button {
+    z-index: 1;
     width: $button-size;
     height: $button-size;
     padding: 0;
