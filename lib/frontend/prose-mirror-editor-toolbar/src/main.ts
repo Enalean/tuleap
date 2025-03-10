@@ -32,6 +32,8 @@ export type {
     ScriptElements,
     StyleElements,
     TextElements,
+    AdditionalElementPosition,
+    ItemGroupName,
 } from "./elements/toolbar-element";
 
 export {

@@ -102,8 +102,10 @@ export type StyleElements = {
     preformatted: boolean;
 };
 
+export type AdditionalElementPosition = "before" | "after" | "at_the_start" | "at_the_end";
+
 export type AdditionalElement = {
-    position: "before" | "after" | "at_the_start" | "at_the_end";
+    position: AdditionalElementPosition;
     target_name: ItemGroupName;
     item_element: HTMLElement;
 };
