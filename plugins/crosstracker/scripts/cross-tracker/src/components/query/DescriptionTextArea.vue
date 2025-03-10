@@ -24,6 +24,7 @@
         </label>
         <textarea
             id="create-query-description"
+            data-test="create-query-description"
             class="tlp-textarea"
             v-bind:placeholder="$gettext('Write your description')"
             v-on:input="handleDescription"

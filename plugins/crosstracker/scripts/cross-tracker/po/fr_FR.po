@@ -13,6 +13,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.5\n"
 
+msgid "\"%{title}\" query preview"
+msgstr "Aperçu de la requête \"%{title}\""
+
 msgid "%{from} – %{to} of %{total}"
 msgstr "%{from} – %{to} sur %{total}"
 
@@ -83,6 +86,12 @@ msgid ""
 msgstr ""
 "Si vous cliquez sur l'une des requêtes suggérées, votre contenu sera remplacé"
 
+msgid ""
+"If you validate, this query will replace your content. You can't undo it."
+msgstr ""
+"Si vous validez, cette requête remplacera votre contenu. Vous ne pouvez pas "
+"revenir en arrière."
+
 msgid "Last"
 msgstr "Dernier"
 
@@ -106,6 +115,9 @@ msgstr "Les artéfacts ouverts qui me sont assignés"
 
 msgid "Open artifacts assigned to me in my projects"
 msgstr "Les artéfacts ouverts qui me sont assignés dans mes projets"
+
+msgid "Overwrite current query"
+msgstr "Remplacer la requête actuelle"
 
 msgid "Please create a new query."
 msgstr "Veuillez créer une nouvelle requête."
@@ -171,7 +183,7 @@ msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
 
 msgid "Write your description"
-msgstr "Ecrire votre description"
+msgstr "Écrire votre description"
 
 msgid ""
 "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT "
@@ -180,4 +192,4 @@ msgid ""
 msgstr ""
 "Vous pouvez utiliser : AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, "
 "WITHOUT CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), "
-"MY_PROJECTS(), parenthèses. Ctrl + Espace active l’auto-complétion."
+"MY_PROJECTS(), parenthèses. Ctrl + Espace active l'auto-complétion."

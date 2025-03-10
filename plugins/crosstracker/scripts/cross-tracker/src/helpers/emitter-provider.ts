@@ -20,6 +20,7 @@
 import type { Emitter } from "mitt";
 import type { Query } from "../type";
 import type { Fault } from "@tuleap/fault";
+import type { QuerySuggestion } from "../domain/SuggestedQueriesGetter";
 
 export type EmitterProvider = Pick<Emitter<Events>, "off" | "on" | "emit">;
 
@@ -31,6 +32,7 @@ export const NEW_QUERY_CREATED_EVENT = "new-query-created";
 export const NOTIFY_FAULT_EVENT = "notify-fault";
 export const NOTIFY_SUCCESS_EVENT = "notify-success";
 export const CLEAR_FEEDBACK_EVENT = "clear-feedback";
+export const DISPLAY_QUERY_PREVIEW_EVENT = "display_query_preview";
 
 export type Events = {
     [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
@@ -41,6 +43,7 @@ export type Events = {
     [NOTIFY_FAULT_EVENT]: NotifyFaultEvent;
     [NOTIFY_SUCCESS_EVENT]: NotifySuccessEvent;
     [CLEAR_FEEDBACK_EVENT]: void;
+    [DISPLAY_QUERY_PREVIEW_EVENT]: DisplayQueryPreviewEvent;
 };
 
 export type CreatedQueryEvent = {
@@ -62,4 +65,8 @@ export type NotifyFaultEvent = {
 
 export type NotifySuccessEvent = {
     readonly message: string;
+};
+
+export type DisplayQueryPreviewEvent = {
+    readonly query: QuerySuggestion;
 };

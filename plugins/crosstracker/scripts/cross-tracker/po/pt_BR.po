@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.4.4\n"
 
+msgid "\"%{title}\" query preview"
+msgstr ""
+
 msgid "%{from} – %{to} of %{total}"
 msgstr ""
 
@@ -78,6 +81,10 @@ msgid ""
 "If you click on one of the suggested query, your content will be replaced."
 msgstr ""
 
+msgid ""
+"If you validate, this query will replace your content. You can't undo it."
+msgstr ""
+
 msgid "Last"
 msgstr ""
 
@@ -100,6 +107,9 @@ msgid "Open artifacts assigned to me"
 msgstr ""
 
 msgid "Open artifacts assigned to me in my projects"
+msgstr ""
+
+msgid "Overwrite current query"
 msgstr ""
 
 msgid "Please create a new query."
