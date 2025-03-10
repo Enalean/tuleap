@@ -44,7 +44,7 @@ import type {
     TextFieldIdentifier,
     TextFormat,
 } from "@tuleap/plugin-tracker-constants";
-import type { TrackerResponseWithColor } from "./trackers";
+import type { TrackerWithProjectAndColor } from "./trackers";
 import type { UserWithEmailAndStatus } from "./users";
 
 type RedGreenBlueColor = {
@@ -227,7 +227,7 @@ export interface ArtifactResponseNoInstance {
     readonly id: number;
     readonly title: string | null;
     readonly xref: string;
-    readonly tracker: TrackerResponseWithColor;
+    readonly tracker: TrackerWithProjectAndColor;
     readonly html_url: string;
     readonly status: string;
     readonly is_open: boolean;

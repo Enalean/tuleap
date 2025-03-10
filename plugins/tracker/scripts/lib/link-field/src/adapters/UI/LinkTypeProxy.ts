@@ -18,7 +18,7 @@
  */
 
 import type { LinkType } from "../../domain/links/LinkType";
-import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/links/LinkType";
+import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "@tuleap/plugin-tracker-constants";
 
 export const LinkTypeProxy = {
     fromChangeEvent: (event: Event): LinkType | null => {

@@ -18,8 +18,8 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
-import { FORWARD_DIRECTION, LinkType } from "./LinkType";
+import { FORWARD_DIRECTION, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { LinkType } from "./LinkType";
 import { LinkTypeStub } from "../../../tests/stubs/links/LinkTypeStub";
 
 describe(`LinkType`, () => {

@@ -28,9 +28,13 @@ import type { VerifyLinkIsMarkedForRemoval } from "../../../domain/links/VerifyL
 import { RetrieveNewLinksStub } from "../../../../tests/stubs/links/RetrieveNewLinksStub";
 import type { RetrieveLinkedArtifactsSync } from "../../../domain/links/RetrieveLinkedArtifactsSync";
 import type { RetrieveNewLinks } from "../../../domain/links/RetrieveNewLinks";
-import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import {
+    FORWARD_DIRECTION,
+    IS_CHILD_LINK_TYPE,
+    REVERSE_DIRECTION,
+    UNTYPED_LINK,
+} from "@tuleap/plugin-tracker-constants";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
-import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../../domain/links/LinkType";
 
 const FIELD_ID = 1060;
 const FIRST_LINKED_ARTIFACT_ID = 666;

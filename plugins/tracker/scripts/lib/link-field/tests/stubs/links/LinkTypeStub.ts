@@ -17,8 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LinkType, FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../../src/domain/links/LinkType";
-import { IS_CHILD_LINK_TYPE, MIRRORED_MILESTONE_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import { LinkType } from "../../../src/domain/links/LinkType";
+import {
+    FORWARD_DIRECTION,
+    IS_CHILD_LINK_TYPE,
+    MIRRORED_MILESTONE_LINK_TYPE,
+    REVERSE_DIRECTION,
+} from "@tuleap/plugin-tracker-constants";
 
 const CUSTOM_TYPE = "custom";
 export const LinkTypeStub = {
@@ -35,12 +40,12 @@ export const LinkTypeStub = {
     }),
     buildMirrors: (): LinkType => ({
         shortname: MIRRORED_MILESTONE_LINK_TYPE,
-        direction: "forward",
+        direction: FORWARD_DIRECTION,
         label: "Mirrors",
     }),
     buildMirroredBy: (): LinkType => ({
         shortname: MIRRORED_MILESTONE_LINK_TYPE,
-        direction: "reverse",
+        direction: REVERSE_DIRECTION,
         label: "Mirrored by",
     }),
     buildForwardCustom: (): LinkType => ({

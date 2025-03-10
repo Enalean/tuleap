@@ -26,7 +26,11 @@ import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
 import { Option } from "@tuleap/option";
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
-import { ARTIFACT_TYPE, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import {
+    ARTIFACT_TYPE,
+    FORWARD_DIRECTION,
+    IS_CHILD_LINK_TYPE,
+} from "@tuleap/plugin-tracker-constants";
 import {
     CurrentArtifactIdentifier,
     CurrentTrackerIdentifier,
@@ -37,7 +41,6 @@ import type { LinkedArtifactCollection } from "./LinkFieldAPIClient";
 import { LinkFieldAPIClient } from "./LinkFieldAPIClient";
 import { LinkableNumberStub } from "../../../tests/stubs/links/LinkableNumberStub";
 import type { LinkType } from "../../domain/links/LinkType";
-import { FORWARD_DIRECTION } from "../../domain/links/LinkType";
 import { LinkTypeStub } from "../../../tests/stubs/links/LinkTypeStub";
 import type { LinkedArtifact } from "../../domain/links/LinkedArtifact";
 import { ProjectStub } from "../../../tests/stubs/ProjectStub";

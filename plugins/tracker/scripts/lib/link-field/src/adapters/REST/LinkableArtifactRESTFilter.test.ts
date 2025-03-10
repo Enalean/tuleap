@@ -68,7 +68,7 @@ function buildSearchResultEntryStub(
     per_type_id: number,
     type: "kanban" | "artifact",
 ): SearchResultEntry {
-    const project = { id: 102, label: "Cloth Decide", icon: "" };
+    const project = { id: 102, label: "Cloth Decide" };
     return {
         per_type_id,
         type,

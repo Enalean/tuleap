@@ -20,6 +20,7 @@
 import type { Preview } from "@storybook/web-components";
 import type { HTMLTemplateResult } from "lit";
 import { html } from "lit";
+import { initialize } from "msw-storybook-addon";
 import "@tuleap/tlp/src/scss/_reset.scss";
 import "@tuleap/tlp-styles/components/typography.scss";
 import "@tuleap/tlp/src/scss/tlp.scss";
@@ -57,6 +58,8 @@ const getTheme = (color_name: string): string => {
             throw Error("Unknown theme color");
     }
 };
+
+initialize();
 
 const preview: Preview = {
     parameters: {

@@ -21,7 +21,12 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { Fault } from "@tuleap/fault";
 import { okAsync } from "neverthrow";
 import { Option } from "@tuleap/option";
-import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import {
+    FORWARD_DIRECTION,
+    IS_CHILD_LINK_TYPE,
+    REVERSE_DIRECTION,
+    UNTYPED_LINK,
+} from "@tuleap/plugin-tracker-constants";
 import {
     CurrentProjectIdentifier,
     CurrentTrackerIdentifier,
@@ -49,7 +54,6 @@ import type { RetrieveNewLinks } from "./links/RetrieveNewLinks";
 import { DeleteNewLinkStub } from "../../tests/stubs/links/DeleteNewLinkStub";
 import { NewLinkStub } from "../../tests/stubs/links/NewLinkStub";
 import type { LinkType } from "./links/LinkType";
-import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "./links/LinkType";
 import { RetrievePossibleParentsStub } from "../../tests/stubs/RetrievePossibleParentsStub";
 import type { RetrievePossibleParents } from "./RetrievePossibleParents";
 import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";

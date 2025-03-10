@@ -30,8 +30,11 @@ export type ProjectReference = {
  * ⚠️ The label already contains the icon of the project as a prefix:
  * `label = icon + " " + label`
  */
-export type ProjectResponse = ProjectReference & {
+export type ProjectResponse = {
+    readonly id: number;
+    readonly label: string;
     readonly shortname: string;
+    readonly uri: string;
 };
 
 export type ProjectArchiveReference = {
@@ -70,7 +73,7 @@ export type UserHistoryEntry = {
     readonly type: UserHistoryEntryType;
     readonly per_type_id: number;
     readonly icon_name: string;
-    readonly project: ProjectReference;
+    readonly project: ProjectResponse;
     readonly quick_links: ReadonlyArray<QuickLink>;
     readonly badges: ReadonlyArray<Badge>;
 };

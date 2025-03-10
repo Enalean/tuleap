@@ -68,7 +68,12 @@ describe(`LinkableArtifactProxy`, () => {
             type: ARTIFACT_TYPE,
             per_type_id: ARTIFACT_ID,
             title: TITLE,
-            project: { id: PROJECT_ID, label: PROJECT_LABEL, icon: "", uri: "uri/to/project" },
+            project: {
+                id: PROJECT_ID,
+                label: PROJECT_LABEL,
+                uri: "uri/to/project",
+                shortname: "guinea-pig",
+            },
             xref: CROSS_REFERENCE,
             color_name: COLOR,
             html_url: HTML_URI,

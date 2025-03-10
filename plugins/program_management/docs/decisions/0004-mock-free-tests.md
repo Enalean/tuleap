@@ -193,4 +193,4 @@ final class SomeClassUsingOurStubTest extends \Tuleap\Test\PHPUnit\TestCase
 [3]: 0002-hexagonal-architecture.md
 [4]: <../glossary.md>
 [5]: 0003-static-factory-method.md
-[6]: https://www.jamesshore.com/v2/blog/2018/testing-without-mocks
+[6]: https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks
