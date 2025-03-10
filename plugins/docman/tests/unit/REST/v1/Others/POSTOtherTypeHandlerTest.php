@@ -48,9 +48,9 @@ final class POSTOtherTypeHandlerTest extends TestCase
     private const PASTED_ITEM_ID  = 103;
     private const CREATED_ITEM_ID = 104;
 
-    private DocmanItemsEventAdder & MockObject $event_adder;
-    private Docman_ItemFactory & MockObject $item_factory;
-    private \Docman_PermissionsManager & MockObject $permissions_manager;
+    private DocmanItemsEventAdder&MockObject $event_adder;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private \Docman_PermissionsManager&MockObject $permissions_manager;
     private \PFUser $user;
     private \Project $project;
 

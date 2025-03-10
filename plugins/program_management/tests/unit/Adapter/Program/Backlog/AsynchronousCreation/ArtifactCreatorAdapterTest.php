@@ -68,7 +68,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const END_DATE_VALUE              = 1604665266; // 2020-11-06T13:21:06+01:00
     private const ARTIFACT_LINK_ID            = 842;
 
-    private TrackerArtifactCreator & MockObject $creator;
+    private TrackerArtifactCreator&MockObject $creator;
     private MirroredTimeboxFirstChangeset $changeset;
 
     protected function setUp(): void

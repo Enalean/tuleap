@@ -34,7 +34,7 @@ final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
     private const ITEM_ID    = 12;
 
     private \PFUser $user;
-    private \Docman_PermissionsManager & MockObject $permissions_manager;
+    private \Docman_PermissionsManager&MockObject $permissions_manager;
 
     protected function setUp(): void
     {

@@ -39,8 +39,8 @@ final class ArtidocBreadcrumbsProviderTest extends TestCase
 
     private \PFUser $user;
     private \Project $project;
-    private \Docman_PermissionsManager & MockObject $permissions_manager;
-    private \Docman_ItemFactory & MockObject $item_factory;
+    private \Docman_PermissionsManager&MockObject $permissions_manager;
+    private \Docman_ItemFactory&MockObject $item_factory;
 
     protected function setUp(): void
     {

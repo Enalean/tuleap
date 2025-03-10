@@ -46,7 +46,7 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
     private const SOURCE_PROJECT_ID         = 250;
     private const DESTINATION_PROJECT_ID    = 254;
 
-    private ArtifactLinker & MockObject $artifact_linker;
+    private ArtifactLinker&MockObject $artifact_linker;
     private Artifact $first_parent;
     private Artifact $second_parent;
     private RetrieveArtifactStub $retrieve_artifact;

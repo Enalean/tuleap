@@ -32,8 +32,8 @@ use Tuleap\Tus\CannotWriteFileException;
 final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ResponseFactoryInterface $response_factory;
-    private TusDataStore & \PHPUnit\Framework\MockObject\MockObject $data_store;
-    private TusFileInformationProvider & \PHPUnit\Framework\MockObject\MockObject $file_information_provider;
+    private TusDataStore&\PHPUnit\Framework\MockObject\MockObject $data_store;
+    private TusFileInformationProvider&\PHPUnit\Framework\MockObject\MockObject $file_information_provider;
 
     protected function setUp(): void
     {

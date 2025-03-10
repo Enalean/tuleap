@@ -34,11 +34,11 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \TrackerFactory & MockObject $tracker_factory;
-    private SemanticTimeframeDuplicator & MockObject $semantic_timeframe_duplicator;
-    private \Tracker_HierarchyFactory & MockObject $hierarchy_factory;
-    private \Tracker_Workflow_Trigger_RulesManager & MockObject $trigger_rules_manager;
-    private \Tracker_FormElementFactory & MockObject $formelement_factory;
+    private \TrackerFactory&MockObject $tracker_factory;
+    private SemanticTimeframeDuplicator&MockObject $semantic_timeframe_duplicator;
+    private \Tracker_HierarchyFactory&MockObject $hierarchy_factory;
+    private \Tracker_Workflow_Trigger_RulesManager&MockObject $trigger_rules_manager;
+    private \Tracker_FormElementFactory&MockObject $formelement_factory;
 
     protected function setUp(): void
     {

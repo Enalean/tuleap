@@ -35,7 +35,7 @@ final class TransformRetrievedSectionsToRepresentationStub implements TransformR
     /**
      * @param Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault> $result
      */
-    private function __construct(private null|Ok|Err $result)
+    private function __construct(private Ok|Err|null $result)
     {
     }
 

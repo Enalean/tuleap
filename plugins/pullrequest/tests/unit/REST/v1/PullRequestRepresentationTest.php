@@ -58,7 +58,7 @@ final class PullRequestRepresentationTest extends TestCase
     private const GIT_REFERENCE_ID        = 11;
     private const NUMBER_OF_CHANGED_FILES = 6;
     private const PULL_REQUEST_STATUS     = 'merge';
-    private GitoliteAccessURLGenerator & Stub $url_generator;
+    private GitoliteAccessURLGenerator&Stub $url_generator;
     private PullRequest $pull_request;
     private MinimalUserRepresentation $pull_request_creator;
 

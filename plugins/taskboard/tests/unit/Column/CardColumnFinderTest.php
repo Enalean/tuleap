@@ -56,7 +56,7 @@ final class CardColumnFinderTest extends TestCase
     private const DONE_BIND_VALUE_ID      = 1758;
     private const CANCELLED_BIND_VALUE_ID = 3116;
     private const MAPPED_FIELD_ID         = 1311;
-    private ColumnFactory & Stub $column_factory;
+    private ColumnFactory&Stub $column_factory;
     private \PFUser $user;
     private \Tracker_FormElement_Field_Selectbox $mapped_list_field;
     private \Tracker_FormElement_Field_List_Bind_Static $list_bind;

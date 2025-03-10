@@ -52,7 +52,7 @@ final class MasschangeUpdaterTest extends TestCase
     use GlobalResponseMock;
 
     private const USER_ID = 963;
-    private Tracker_ArtifactDao & MockObject $artifact_dao;
+    private Tracker_ArtifactDao&MockObject $artifact_dao;
     private RetrieveUsedListField $form_element_factory;
     private RetrieveArtifact $artifact_factory;
     private CreateNewChangesetStub $changeset_creator;

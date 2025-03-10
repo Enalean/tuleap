@@ -48,9 +48,9 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID = 101;
     private \PFUser $user;
-    private \Tracker_ArtifactFactory & MockObject $artifact_factory;
-    private TopBacklogStore & MockObject $dao;
-    private ArtifactLinkUpdater & MockObject $artifact_link_updater;
+    private \Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private TopBacklogStore&MockObject $dao;
+    private ArtifactLinkUpdater&MockObject $artifact_link_updater;
     private SearchProgramIncrementLinkedToFeature $program_increment_dao;
     private OrderFeatureRankStub $feature_orderer;
     private UserIdentifierStub $user_identifier;

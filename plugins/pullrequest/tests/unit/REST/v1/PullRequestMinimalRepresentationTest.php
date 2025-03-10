@@ -49,7 +49,7 @@ final class PullRequestMinimalRepresentationTest extends TestCase
     private const FIRST_REVIEWER_USER_ID  = 126;
     private const SECOND_REVIEWER_USER_ID = 187;
 
-    private GitoliteAccessURLGenerator & Stub $url_generator;
+    private GitoliteAccessURLGenerator&Stub $url_generator;
     private PullRequest $pull_request;
     private MinimalUserRepresentation $pull_request_creator;
 

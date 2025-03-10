@@ -36,7 +36,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser $user;
-    private \Tracker_FormElementFactory & MockObject $form_element_factory;
+    private \Tracker_FormElementFactory&MockObject $form_element_factory;
     private RemainingEffortValueRetriever $remaining_effort_retriever;
     private Artifact $artifact;
     private \Tracker $tracker;

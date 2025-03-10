@@ -45,8 +45,8 @@ final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCas
     private const USER_ID = 666;
     private UserStoryInOneMirrorPlanner $planner;
     private CreateNewChangesetStub $create_new_changeset;
-    private Artifact & MockObject $artifact;
-    private \Tracker_FormElementFactory & Stub $form_element_factory;
+    private Artifact&MockObject $artifact;
+    private \Tracker_FormElementFactory&Stub $form_element_factory;
 
     protected function setUp(): void
     {

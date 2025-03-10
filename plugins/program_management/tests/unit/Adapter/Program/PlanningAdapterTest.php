@@ -41,7 +41,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROJECT_ID           = 101;
     private const MILESTONE_TRACKER_ID = 40;
     private PlanningAdapter $adapter;
-    private \PlanningFactory & Stub $planning_factory;
+    private \PlanningFactory&Stub $planning_factory;
     private UserIdentifierStub $user_identifier;
     private ConfigurationErrorsCollector $error_collector;
 

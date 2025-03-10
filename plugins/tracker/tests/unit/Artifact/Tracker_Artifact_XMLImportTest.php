@@ -93,7 +93,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     private TrackerXmlImportConfig $tracker_xml_config;
     private Tracker $tracker;
     private Tracker_Artifact_XMLImport $importer;
-    private TrackerArtifactCreator & MockObject $artifact_creator;
+    private TrackerArtifactCreator&MockObject $artifact_creator;
     private NewChangesetCreator&MockObject $new_changeset_creator;
     private Tracker_FormElementFactory&MockObject $formelement_factory;
     private UserManager&MockObject $user_manager;

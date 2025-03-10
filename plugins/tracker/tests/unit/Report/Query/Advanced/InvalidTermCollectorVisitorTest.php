@@ -102,13 +102,13 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     private const FIELD_NAME             = 'lackwittedly';
     private const STRING_FIELD_NAME      = 'string';
     private const TRACKER_ID             = 101;
-    private \Tracker_FormElementFactory & MockObject $formelement_factory;
+    private \Tracker_FormElementFactory&MockObject $formelement_factory;
     private \PFUser $user;
     private \Tracker $tracker;
     private InvalidSearchablesCollection $invalid_searchable_collection;
     private Comparison $comparison;
     private ?Logical $parsed_query;
-    private \UserManager & Stub $user_manager;
+    private \UserManager&Stub $user_manager;
 
     protected function setUp(): void
     {

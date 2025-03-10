@@ -1008,7 +1008,6 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
         )->associateWithLDAPAccount($account_created);
     }
 
-
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function gerritCanMigrateEvent(GerritCanMigrateEvent $event): void
     {
