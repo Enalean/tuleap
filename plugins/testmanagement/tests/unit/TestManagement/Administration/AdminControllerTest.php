@@ -80,7 +80,8 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_usage_detector,
             $this->tracker_checker,
             new Valid_UInt(),
-            $this->createMock(AdminTrackersRetriever::class)
+            $this->createMock(AdminTrackersRetriever::class),
+            $this->createMock(\ProjectHistoryDao::class)
         );
     }
 
