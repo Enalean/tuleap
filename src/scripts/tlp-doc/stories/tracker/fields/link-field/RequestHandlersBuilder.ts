@@ -24,7 +24,13 @@ import {
     IS_CHILD_LINK_TYPE,
     UNTYPED_LINK,
 } from "@tuleap/plugin-tracker-constants";
-import type { LinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    JustCreatedArtifactResponse,
+    LinkTypeRepresentation,
+    SemanticsRepresentation,
+    TrackerResponseNoInstance,
+    TrackerResponseWithCannotCreateReason,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import { LinkTypeRepresentationBuilder } from "./LinkTypeRepresentationBuilder";
 import type { ArtifactResponse } from "./ArtifactRespresentationBuilder";
 import { ArtifactRespresentationBuilder } from "./ArtifactRespresentationBuilder";
@@ -32,7 +38,12 @@ import { TrackerRepresentationBuilder } from "./TrackerRepresentationBuilder";
 import { ProjectRepresentationBuilder } from "./ProjectRepresentationBuilder";
 import { ProjectResponseBuilder } from "./ProjectResponseBuilder";
 import { SearchResultEntryBuilder } from "./SearchResultEntryBuilder";
-import type { SearchResultEntry, UserHistoryEntry } from "@tuleap/core-rest-api-types";
+import type {
+    ProjectResponse,
+    SearchResultEntry,
+    UserHistoryEntry,
+} from "@tuleap/core-rest-api-types";
+import { Option } from "@tuleap/option";
 
 function isGettingUntypedLinks(url: URL): boolean {
     return (
@@ -55,6 +66,7 @@ interface RequestHandlersBuilder {
 export const RequestHandlersBuilder = (
     current_project_id: number,
     current_artifact_id: number,
+    current_tracker_id: number,
     current_tracker_shortname: string,
 ): RequestHandlersBuilder => {
     const current_project = ProjectRepresentationBuilder.aProject(current_project_id)
@@ -64,26 +76,45 @@ export const RequestHandlersBuilder = (
     const current_project_response = ProjectResponseBuilder.aProject(current_project_id)
         .withLabel("🛤️ Hidden Railroad")
         .build();
-    const other_project = ProjectRepresentationBuilder.aProject(102)
+    const OTHER_PROJECT_ID = 102;
+    const other_project = ProjectRepresentationBuilder.aProject(OTHER_PROJECT_ID)
         .withLabel("Pointless Rhinestone")
         .withIcon("🐼")
         .build();
 
+    const current_tracker = TrackerRepresentationBuilder.aTracker(current_tracker_id)
+        .withLabel("User Stories")
+        .withShortName(current_tracker_shortname)
+        .withColor("plum-crazy")
+        .inProject(current_project)
+        .build();
     const requests_tracker = TrackerRepresentationBuilder.aTracker(62)
+        .withLabel("Requests")
+        .withShortName("request")
         .withColor("teddy-brown")
         .inProject(other_project)
-        .withShortName("request")
         .build();
     const tasks_tracker = TrackerRepresentationBuilder.aTracker(629)
+        .withLabel("Tasks")
+        .withShortName("task")
         .withColor("lake-placid-blue")
         .inProject(current_project)
-        .withShortName("task")
         .build();
     const epics_tracker = TrackerRepresentationBuilder.aTracker(489)
+        .withLabel("Epics")
+        .withShortName("epic")
         .withColor("deep-blue")
         .inProject(current_project)
-        .withShortName("epic")
         .build();
+
+    let last_created_artifact_id = 932;
+    let last_created_artifact_title: Option<string> = Option.nothing();
+    let chosen_tracker_id: Option<number> = Option.nothing();
+    const known_trackers = new Map([
+        [current_tracker_id, current_tracker],
+        [epics_tracker.id, epics_tracker],
+        [requests_tracker.id, requests_tracker],
+    ]);
 
     interface ExistingLinksResponse {
         readonly natures: LinkTypeRepresentation[];
@@ -162,7 +193,7 @@ export const RequestHandlersBuilder = (
     );
 
     interface GetArtifactByIDPathParams {
-        id: string;
+        readonly id: string;
     }
 
     const matching_artifact_by_id_handler = http.get<
@@ -174,6 +205,20 @@ export const RequestHandlersBuilder = (
         if (Number.isNaN(artifact_id)) {
             return new HttpResponse(null, { status: 400, statusText: "Bad Request" });
         }
+        if (artifact_id === last_created_artifact_id) {
+            const tracker = chosen_tracker_id.andThen((tracker_id) =>
+                Option.fromNullable(known_trackers.get(tracker_id)),
+            );
+
+            return HttpResponse.json(
+                ArtifactRespresentationBuilder.anArtifact(last_created_artifact_id)
+                    .withTitle(last_created_artifact_title.unwrapOr("Title"))
+                    .withStatus({ value: "Ongoing", color: "clockwork-orange" }, true)
+                    .ofTracker(tracker.unwrapOr(current_tracker))
+                    .build(),
+            );
+        }
+
         return HttpResponse.json(
             ArtifactRespresentationBuilder.anArtifact(artifact_id)
                 .withTitle("Searched artifact by ID")
@@ -191,7 +236,7 @@ export const RequestHandlersBuilder = (
         .build();
 
     interface FullTextSearchPayload {
-        keywords: string;
+        readonly keywords: string;
     }
 
     const full_text_search_handler = http.post<never, FullTextSearchPayload, SearchResultEntry[]>(
@@ -213,7 +258,7 @@ export const RequestHandlersBuilder = (
     );
 
     interface UserHistoryResponse {
-        entries: UserHistoryEntry[];
+        readonly entries: UserHistoryEntry[];
     }
 
     const history_handler = http.get<never, never, UserHistoryResponse>(
@@ -234,6 +279,97 @@ export const RequestHandlersBuilder = (
         },
     );
 
+    const projects_handler = http.get<never, never, ProjectResponse[]>("/api/projects", () => {
+        return HttpResponse.json(
+            [
+                current_project_response,
+                ProjectResponseBuilder.aProject(OTHER_PROJECT_ID)
+                    .withLabel("🐼 Pointless Rhinestone")
+                    .build(),
+            ],
+            { headers: { "X-PAGINATION-SIZE": "2" } },
+        );
+    });
+
+    interface GetTrackersOfProjectPathParams {
+        readonly id: string;
+    }
+
+    const trackers_handler = http.get<
+        GetTrackersOfProjectPathParams,
+        never,
+        TrackerResponseWithCannotCreateReason[]
+    >("/api/projects/:id/trackers", ({ params }) => {
+        const project_id = Number.parseInt(params.id, 10);
+        if (Number.isNaN(project_id)) {
+            return new HttpResponse(null, { status: 400, statusText: "Bad Request" });
+        }
+        if (project_id === current_project_id) {
+            return HttpResponse.json(
+                [
+                    { ...current_tracker, cannot_create_reasons: [] },
+                    { ...epics_tracker, cannot_create_reasons: [] },
+                    {
+                        ...tasks_tracker,
+                        cannot_create_reasons: ["Other field than 'Title' is required"],
+                    },
+                ],
+                { headers: { "X-PAGINATION-SIZE": "3" } },
+            );
+        }
+
+        return HttpResponse.json([{ ...requests_tracker, cannot_create_reasons: [] }], {
+            headers: { "X-PAGINATION-SIZE": "1" },
+        });
+    });
+
+    interface GetTrackerStructurePathParams {
+        readonly id: string;
+    }
+
+    interface TrackerWithTitleSemanticResponse extends Pick<TrackerResponseNoInstance, "id"> {
+        readonly semantics: Pick<SemanticsRepresentation, "title">;
+    }
+
+    const tracker_structure_handler = http.get<
+        GetTrackerStructurePathParams,
+        never,
+        TrackerWithTitleSemanticResponse
+    >("/api/trackers/:id", ({ params }) => {
+        const tracker_id = Number.parseInt(params.id, 10);
+        if (Number.isNaN(tracker_id)) {
+            return new HttpResponse(null, { status: 400, statusText: "Bad Request" });
+        }
+        chosen_tracker_id = Option.fromValue(tracker_id);
+        return HttpResponse.json({
+            id: tracker_id,
+            semantics: { title: { field_id: 4885 } },
+        });
+    });
+
+    interface ArtifactCreationRequest {
+        readonly tracker: {
+            readonly id: number;
+        };
+        readonly values: ReadonlyArray<{
+            readonly field_id: number;
+            readonly value: string;
+        }>;
+    }
+
+    const create_new_artifact_handler = http.post<
+        never,
+        ArtifactCreationRequest,
+        JustCreatedArtifactResponse
+    >("/api/v1/artifacts", async ({ request }) => {
+        const body: ArtifactCreationRequest = await request.json();
+
+        last_created_artifact_title = Option.fromNullable(body.values[0]?.value);
+        last_created_artifact_id++;
+
+        return HttpResponse.json({ id: last_created_artifact_id });
+    });
+
     return {
         build(): HttpHandler[] {
             return [
@@ -243,6 +379,10 @@ export const RequestHandlersBuilder = (
                 matching_artifact_by_id_handler,
                 full_text_search_handler,
                 history_handler,
+                projects_handler,
+                trackers_handler,
+                tracker_structure_handler,
+                create_new_artifact_handler,
             ];
         },
     };
