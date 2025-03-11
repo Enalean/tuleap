@@ -38,7 +38,7 @@
     "moment": "^2.29.4",
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
-    "prismjs": "^1.29.0",
+    "prismjs": "^1.30.0",
     "sprintf-js": "^1.1.2",
     "turndown": "^7.0.0"
   },
