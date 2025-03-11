@@ -95,7 +95,8 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager = $this->createMock(UserManager::class);
         $password_verifier  = new PasswordVerifier(
             new class implements \PasswordHandler {
-                public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool
+                public function verifyHashPassword(ConcealedString $plain_password, #[\SensitiveParameter]
+                string $hash_password,): bool
                 {
                     return true;
                 }
@@ -105,7 +106,8 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
                     return 'hash';
                 }
 
-                public function isPasswordNeedRehash(string $hash_password): bool
+                public function isPasswordNeedRehash(#[\SensitiveParameter]
+                string $hash_password,): bool
                 {
                     return false;
                 }

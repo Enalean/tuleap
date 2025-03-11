@@ -23,24 +23,35 @@ declare(strict_types=1);
 
 use Tuleap\Cryptography\ConcealedString;
 
-class StandardPasswordHandler implements PasswordHandler
+/**
+ * @psalm-immutable
+ */
+final readonly class StandardPasswordHandler implements PasswordHandler
 {
-    public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool
-    {
-        return password_verify($plain_password->getString(), $hash_password);
+    private const ALGO          = PASSWORD_ARGON2ID;
+    private const ALGO_SETTINGS = ['memory_cost' => 65536, 'time_cost' => 10, 'threads' => 1];
+
+    public function verifyHashPassword(
+        ConcealedString $plain_password,
+        #[\SensitiveParameter]
+        string $hash_password,
+    ): bool {
+        return \password_verify($plain_password->getString(), $hash_password);
     }
 
     public function computeHashPassword(ConcealedString $plain_password): string
     {
-        $password_hash = \password_hash($plain_password->getString(), PASSWORD_BCRYPT, ['cost' => 13]);
+        $password_hash = \password_hash($plain_password->getString(), self::ALGO, self::ALGO_SETTINGS);
         if (! $password_hash) {
             throw new LogicException('Could not compute password hash');
         }
         return $password_hash;
     }
 
-    public function isPasswordNeedRehash(string $hash_password): bool
-    {
-        return \password_needs_rehash($hash_password, PASSWORD_BCRYPT, ['cost' => 13]);
+    public function isPasswordNeedRehash(
+        #[\SensitiveParameter]
+        string $hash_password,
+    ): bool {
+        return \password_needs_rehash($hash_password, self::ALGO, self::ALGO_SETTINGS);
     }
 }
