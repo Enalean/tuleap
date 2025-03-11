@@ -45,7 +45,7 @@ export class LinkFieldController {
         );
     }
 }
-````
+```
 
 ```typescript
 // We can write this:
@@ -124,7 +124,7 @@ export const LinkType = {
     }
     ```
 
-    The class above minifies to (see [on bundlejs][7]):
+    The class above minifies to the following (see [on bundlejs][7]):
 
     ```javascript
     var r=class{constructor(o,a,n){this.shortname=o;this.direction=a;this.label=n}};export{r as LinkType};
@@ -144,7 +144,7 @@ export const LinkType = {
     ): LinkType => ({ shortname, direction, label });
     ```
 
-    The class-like above minifies to (see [on bundlejs][8]):
+    The class-like above minifies to the following (see [on bundlejs][8]):
 
     ```javascript
     var o=(r,e,n)=>({shortname:r,direction:e,label:n});export{o as LinkType};
