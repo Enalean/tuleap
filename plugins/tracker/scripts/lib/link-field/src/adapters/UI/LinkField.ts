@@ -78,7 +78,7 @@ type InternalLinkField = LinkField & {
 };
 export type HostElement = InternalLinkField & HTMLElement;
 
-export const TAG = "tuleap-artifact-modal-link-field";
+export const TAG = "tuleap-tracker-link-field";
 
 export const getEmptyStateIfNeeded = (host: InternalLinkField): UpdateFunction<LinkField> => {
     if (
@@ -214,7 +214,7 @@ export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<TypeChange
 
 const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> => {
     if (host.is_artifact_creator_shown) {
-        return html`<tuleap-artifact-modal-link-artifact-creator
+        return html`<tuleap-tracker-link-artifact-creator
             controller="${host.creatorController}"
             current_link_type="${host.current_link_type}"
             current_artifact_reference="${host.current_artifact_reference}"
@@ -223,16 +223,16 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
             oncancel="${onCancel}"
             ontype-changed="${onLinkTypeChanged}"
             onartifact-created="${onArtifactCreated}"
-        ></tuleap-artifact-modal-link-artifact-creator>`;
+        ></tuleap-tracker-link-artifact-creator>`;
     }
     return html`<div class="link-field-add-link-row">
         <span class="link-field-row-type">
-            <tuleap-artifact-modal-link-type-selector
+            <tuleap-tracker-link-type-selector
                 value="${host.current_link_type}"
                 current_artifact_reference="${host.current_artifact_reference}"
                 available_types="${host.allowed_link_types}"
                 ontype-changed="${onLinkTypeChanged}"
-            ></tuleap-artifact-modal-link-type-selector>
+            ></tuleap-tracker-link-type-selector>
         </span>
         <div class="link-field-add-link-input">${host.link_selector}</div>
     </div>`;

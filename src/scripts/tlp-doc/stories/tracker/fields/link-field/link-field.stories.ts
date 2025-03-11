@@ -129,12 +129,12 @@ function renderLinkField(args: LinkFieldProps): TemplateResult {
     const autocompleter = link_field_creator.createLinkSelectorAutoCompleter();
     const creator_controller = link_field_creator.createArtifactCreatorController();
 
-    return html`<tuleap-artifact-modal-link-field
+    return html`<tuleap-tracker-link-field
         .controller="${controller}"
         .autocompleter="${autocompleter}"
         .creatorController="${creator_controller}"
         @change="${args.onChange}"
-    ></tuleap-artifact-modal-link-field>`;
+    ></tuleap-tracker-link-field>`;
 }
 
 const meta: Meta<LinkFieldProps> = {

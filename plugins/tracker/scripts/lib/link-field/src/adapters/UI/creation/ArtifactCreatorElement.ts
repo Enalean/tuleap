@@ -71,7 +71,7 @@ type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
 };
 export type HostElement = InternalArtifactCreator & HTMLElement;
 
-export const TAG = "tuleap-artifact-modal-link-artifact-creator";
+export const TAG = "tuleap-tracker-link-artifact-creator";
 
 export type ArtifactCreatedEvent = { readonly artifact: LinkableArtifact };
 
@@ -249,12 +249,12 @@ export const renderArtifactCreatorElement = (
     html`${getErrorTemplate(host)}
         <form class="link-field-artifact-creator-main" onsubmit="${onSubmit}">
             <span class="link-field-row-type"
-                ><tuleap-artifact-modal-link-type-selector
+                ><tuleap-tracker-link-type-selector
                     value="${host.current_link_type}"
                     current_artifact_reference="${host.current_artifact_reference}"
                     available_types="${host.available_types}"
                     disabled="${host.is_loading}"
-                ></tuleap-artifact-modal-link-type-selector
+                ></tuleap-tracker-link-type-selector
             ></span>
             <div class="link-field-artifact-creator-form" data-form>
                 <div class="link-field-artifact-creator-inputs">
