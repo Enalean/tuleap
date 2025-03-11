@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+  ~ Copyright (c) Enalean, 2025-Present. All Rights Reserved.
   ~
   ~ This file is a part of Tuleap.
   ~
@@ -23,6 +23,13 @@
     <username>ProjectAdministrator</username>
     <realname><![CDATA[ProjectAdministrator]]></realname>
     <email><![CDATA[ProjectAdministrator@example.com]]></email>
+    <ldapid></ldapid>
+  </user>
+  <user>
+    <id>102</id>
+    <username>ProjectMember</username>
+    <realname>ProjectMember</realname>
+    <email>ProjectMember@example.com</email>
     <ldapid></ldapid>
   </user>
 </users>
