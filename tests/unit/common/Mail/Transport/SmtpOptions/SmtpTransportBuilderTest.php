@@ -37,7 +37,7 @@ final class SmtpTransportBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('email_relayhost_smtp_use_tls', '0');
+        \ForgeConfig::set('email_relayhost_smtp_use_implicit_tls', '0');
     }
 
     public function testItBuildsSmtpOptionsWithHostAndPortFromConfig(): void
@@ -74,7 +74,7 @@ final class SmtpTransportBuilderTest extends TestCase
     {
         \ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
 
-        \ForgeConfig::set('email_relayhost_smtp_use_tls', '1');
+        \ForgeConfig::set('email_relayhost_smtp_use_implicit_tls', '1');
         \ForgeConfig::set('email_relayhost_smtp_auth_type', 'login');
         \ForgeConfig::set('email_relayhost_smtp_username', 'username');
         \ForgeConfig::set('email_relayhost_smtp_password', \ForgeConfig::encryptValue(new ConcealedString('password')));
