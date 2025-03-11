@@ -19,7 +19,7 @@
 -->
 
 <template>
-    <div v-if="section_state.is_section_editable.value" class="section-footer">
+    <div v-if="section_state.is_section_in_edit_mode.value" class="section-footer">
         <not-found-error v-if="is_not_found" />
         <generic-error
             v-else-if="is_in_error"
@@ -76,6 +76,6 @@ const { error_message, is_outdated, is_in_error, is_not_found } = props.section_
     */
     width: calc(100% + 2 * var(--tlp-shadow-focus-width));
     margin: 0 0 0 calc(-1 * var(--tlp-shadow-focus-width));
-    padding: var(--tlp-medium-spacing) 0;
+    padding: var(--tlp-medium-spacing) 0 0;
 }
 </style>

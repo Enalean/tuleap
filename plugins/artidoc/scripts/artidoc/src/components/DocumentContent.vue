@@ -119,10 +119,6 @@ li {
     }
 
     &:first-child {
-        > .artidoc-section-container {
-            padding-top: var(--tlp-large-spacing);
-        }
-
         > .artidoc-display-level-for-edition {
             &.level-1 {
                 top: calc(
@@ -139,26 +135,6 @@ li {
             &.level-3 {
                 top: calc(
                     #{size.$header-level-3-top-offset-for-edition} + var(--tlp-small-spacing)
-                );
-            }
-        }
-
-        > .artidoc-display-level-for-readonly {
-            &.level-1 {
-                top: calc(
-                    #{size.$header-level-1-top-offset-for-readonly} + var(--tlp-small-spacing)
-                );
-            }
-
-            &.level-2 {
-                top: calc(
-                    #{size.$header-level-2-top-offset-for-readonly} + var(--tlp-small-spacing)
-                );
-            }
-
-            &.level-3 {
-                top: calc(
-                    #{size.$header-level-3-top-offset-for-readonly} + var(--tlp-small-spacing)
                 );
             }
         }

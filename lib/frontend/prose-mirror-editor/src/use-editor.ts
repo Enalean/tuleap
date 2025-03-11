@@ -108,9 +108,6 @@ export async function useEditor(
     const state: EditorState = getState(initial_content);
     const editor: EditorView = new EditorView(editor_element, {
         state,
-        attributes: {
-            class: "ProseMirror-focused",
-        },
     });
 
     async function resetContent(initial_content: HTMLElement): Promise<void> {

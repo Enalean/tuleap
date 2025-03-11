@@ -23,9 +23,6 @@
 .editor {
     position: relative;
     z-index: 2;
-
-    /* Add a little bit of margin so that the focus of .ProseMirror is visible */
-    margin: 0 0 var(--tlp-shadow-focus-width);
     border-radius: var(--tlp-form-element-border-radius);
     background-color: var(--tlp-white-color);
 
