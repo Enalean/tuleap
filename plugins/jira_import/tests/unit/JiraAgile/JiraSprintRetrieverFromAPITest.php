@@ -35,7 +35,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoSprints(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -56,7 +56,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasOneSprint(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -99,7 +99,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasSprintsOnSeveralPages(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             private int $call_count = 0;
 
@@ -160,7 +160,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasOneSprintWithUnSupportedState(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {

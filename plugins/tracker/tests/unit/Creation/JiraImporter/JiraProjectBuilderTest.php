@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraServerClientStub;
 use function PHPUnit\Framework\assertEquals;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

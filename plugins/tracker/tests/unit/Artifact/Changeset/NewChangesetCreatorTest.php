@@ -38,10 +38,10 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\ProcessChangesetPostCreationStub;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\ValidateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\ProcessChangesetPostCreationStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\ValidateNewChangesetStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase

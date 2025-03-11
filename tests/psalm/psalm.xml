@@ -1171,10 +1171,10 @@
             <file name="plugins/tracker/tests/unit/Service/CheckPromotedTrackerConfigurationTest.php"/>
             <file name="plugins/tracker/tests/unit/Service/ServiceActivatorTest.php"/>
             <file name="plugins/tracker/tests/unit/Service/SidebarPromotedTrackerRetrieverTest.php"/>
-            <file name="plugins/tracker/tests/unit/Test/Tracker/Action/BuildArtifactLinksMappingForDuckTypedMoveStub.php"/>
-            <file name="plugins/tracker/tests/unit/Test/Tracker/Creation/JiraImporter/Import/JiraClientMonoTrackerStub.php"/>
-            <file name="plugins/tracker/tests/unit/Test/Tracker/Creation/JiraImporter/Stub/JiraCloudClientStub.php"/>
-            <file name="plugins/tracker/tests/unit/Test/Tracker/Creation/JiraImporter/Stub/JiraServerClientStub.php"/>
+            <file name="plugins/tracker/tests/unit/Test/Stub/Action/BuildArtifactLinksMappingForDuckTypedMoveStub.php"/>
+            <file name="plugins/tracker/tests/unit/Test/Stub/Creation/JiraImporter/Import/JiraClientMonoTrackerStub.php"/>
+            <file name="plugins/tracker/tests/unit/Test/Stub/Creation/JiraImporter/JiraCloudClientStub.php"/>
+            <file name="plugins/tracker/tests/unit/Test/Stub/Creation/JiraImporter/JiraServerClientStub.php"/>
             <file name="plugins/tracker/tests/unit/TrackerBlockingErrorTest.php"/>
             <file name="plugins/tracker/tests/unit/TrackerColorTest.php"/>
             <file name="plugins/tracker/tests/unit/TrackerFactoryDuplicationTest.php"/>

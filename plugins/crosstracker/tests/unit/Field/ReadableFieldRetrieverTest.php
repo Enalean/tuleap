@@ -28,8 +28,8 @@ use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReadableFieldRetrieverTest extends TestCase

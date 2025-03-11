@@ -31,12 +31,11 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\DisplayTrackerLayoutStub;
+use Tuleap\Tracker\Test\Stub\DisplayTrackerLayoutStub;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\GlobalResponseMock;
 

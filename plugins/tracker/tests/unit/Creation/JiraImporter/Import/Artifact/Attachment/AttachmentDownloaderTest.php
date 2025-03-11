@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase

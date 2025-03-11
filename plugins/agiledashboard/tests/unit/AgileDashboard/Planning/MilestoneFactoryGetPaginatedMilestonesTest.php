@@ -35,9 +35,9 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
+use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\Request\FilteringQuery;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
@@ -54,8 +54,8 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\BuildSemanticTimeframeStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase

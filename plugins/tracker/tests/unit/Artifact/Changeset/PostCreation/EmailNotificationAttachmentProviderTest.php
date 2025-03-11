@@ -28,11 +28,11 @@ use Tracker_Artifact_Changeset;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDatesStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDescriptionStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventOrganizerStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummaryStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDatesStub;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDescriptionStub;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventOrganizerStub;
+use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummaryStub;
+use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EmailNotificationAttachmentProviderTest extends TestCase

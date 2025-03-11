@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraServerClientStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JiraServerChangelogEntriesBuilderTest extends TestCase

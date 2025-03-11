@@ -36,7 +36,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
+use Tuleap\Tracker\Test\Stub\Service\PromotedTrackerConfigurationCheckerStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase

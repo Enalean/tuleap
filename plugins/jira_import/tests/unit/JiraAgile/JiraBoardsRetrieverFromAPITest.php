@@ -35,7 +35,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNotExpectedContent(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -52,7 +52,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasNoBoard(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -75,7 +75,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasOneBoard(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -106,7 +106,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesBoardByIdInProject(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -135,7 +135,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesBoardByIdInProjectThrowsAnExceptionIfBoardIsNotInProject(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -162,7 +162,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesBoardByIdInProjectWithoutLocationKey(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -185,7 +185,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesBoardByIdInProjectWithoutLocationKeyThrowsAnExceptionIfBoardIsNotInProject(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -206,7 +206,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesBoardByIdInProjectThrowsAnExceptionIfBoardIsNotScrum(): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {

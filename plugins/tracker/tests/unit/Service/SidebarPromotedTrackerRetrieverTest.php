@@ -28,7 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
+use Tuleap\Tracker\Test\Stub\Service\PromotedTrackerConfigurationCheckerStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SidebarPromotedTrackerRetrieverTest extends TestCase

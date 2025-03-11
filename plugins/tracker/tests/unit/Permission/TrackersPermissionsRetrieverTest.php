@@ -38,9 +38,9 @@ use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Permission\SearchUserGroupsPermissionOnArtifactsStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Permission\SearchUserGroupsPermissionOnFieldsStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Permission\SearchUserGroupsPermissionOnTrackersStub;
+use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnArtifactsStub;
+use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnFieldsStub;
+use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnTrackersStub;
 use Tuleap\User\TuleapFunctionsUser;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

@@ -36,12 +36,12 @@ use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Action\BuildArtifactLinksMappingForDuckTypedMoveStub;
 use Tuleap\Tracker\Test\Stub\AddPostMoveArtifactFeedbackStub;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
 use Tuleap\Tracker\Test\Stub\MoveArtifactByDuckTypingStub;
 use Tuleap\Tracker\Test\Stub\RetrieveAnArtifactLinkFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
-use Tuleap\Tracker\Test\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMoveStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RestArtifactMoverTest extends TestCase
