@@ -12,7 +12,7 @@
     "socket.io": "^4.6.2"
   },
   "devDependencies": {
-    "esbuild": "^0.19.8"
+    "esbuild": "^0.25.1"
   },
   "scripts": {
     "build": "esbuild src/server.js --platform=node --bundle --minify --outfile=dist/tuleap-realtime.js",
