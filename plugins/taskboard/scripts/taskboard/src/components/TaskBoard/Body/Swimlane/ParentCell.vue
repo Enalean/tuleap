@@ -32,41 +32,32 @@
     </swimlane-header>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Swimlane } from "../../../../type";
 import NoMappingMessage from "./Header/NoMappingMessage.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 
-@Component({
-    components: {
-        CardWithRemainingEffort,
-        NoMappingMessage,
-        SwimlaneHeader,
-    },
-})
-export default class ParentCell extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const props = defineProps<{
+    swimlane: Swimlane;
+}>();
 
-    get should_no_mapping_message_be_displayed(): boolean {
-        return !this.swimlane.card.has_children;
+const should_no_mapping_message_be_displayed = computed((): boolean => {
+    return !props.swimlane.card.has_children;
+});
+
+const edit_mode_class = computed((): string[] => {
+    const classes = [];
+
+    if (should_no_mapping_message_be_displayed.value) {
+        classes.push("taskboard-cell-parent-card-no-mapping");
     }
 
-    get edit_mode_class(): string[] {
-        const classes = [];
-
-        if (this.should_no_mapping_message_be_displayed) {
-            classes.push("taskboard-cell-parent-card-no-mapping");
-        }
-
-        if (this.swimlane.card.is_in_edit_mode) {
-            classes.push("taskboard-cell-parent-card-edit-mode");
-        }
-
-        return classes;
+    if (props.swimlane.card.is_in_edit_mode) {
+        classes.push("taskboard-cell-parent-card-edit-mode");
     }
-}
+
+    return classes;
+});
 </script>
