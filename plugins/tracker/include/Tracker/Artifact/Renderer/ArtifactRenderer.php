@@ -151,11 +151,12 @@ abstract class Tracker_Artifact_ArtifactRenderer
         return $html;
     }
 
-    public function fetchArtifactForm($html)
+    public function fetchArtifactForm($html): string
     {
+        $csrf_token = new CSRFSynchronizerToken($this->tracker->getUri());
         return '
         <form action="' . $this->redirect->toUrl() . '" method="POST" enctype="multipart/form-data" class="artifact-form">
-            ' . $html . '
+            ' . $csrf_token->fetchHTMLInput() . $html . '
         </form>';
     }
 

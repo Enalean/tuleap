@@ -27,6 +27,7 @@ namespace Tuleap\Tracker\Artifact;
 
 use Codendi_HTMLPurifier;
 use Codendi_Request;
+use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
 use ForgeConfig;
@@ -837,7 +838,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * Process the artifact functions
      *
      * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
-     * @param Codendi_Request $request The data from the user
+     * @param \HTTPRequest $request The data from the user
      * @param PFUser $current_user The current user
      *
      * @return void
@@ -850,6 +851,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $GLOBALS['Response']->sendJSON($children);
                 exit;
             case 'update-comment':
+                $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 if ((int) $request->get('changeset_id') && $request->exist('content')) {
                     if ($changeset = $this->getChangeset((int) $request->get('changeset_id'))) {
                         $comment_format = $this->validateCommentFormat($request, 'comment_format');
@@ -893,6 +895,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $GLOBALS['Response']->redirect('?aid=' . $this->id);
                 break;
             case 'artifact-update':
+                $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 $action = new Tracker_Action_UpdateArtifact(
                     $this,
                     $this->getFormElementFactory(),
@@ -935,6 +938,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $renderer->display($this->getUserManager()->getCurrentUserWithLoggedInInformation(), $request);
                 break;
             case 'update-in-place':
+                $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 $renderer = $this->getTrackerArtifactRendererEditInPlaceRenderer();
                 $renderer->updateArtifact($request, $current_user);
                 break;
@@ -1008,6 +1012,15 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 }
                 break;
         }
+    }
+
+    private function checkIsAnAcceptableRequestForTrackerViewArtifactManipulation(\HTTPRequest $request): void
+    {
+        if (! $request->isPost()) {
+            $GLOBALS['Response']->redirect($this->getUri());
+        }
+        $csrf_token = new CSRFSynchronizerToken($this->getTracker()->getUri());
+        $csrf_token->check($this->getUri());
     }
 
     private function getTypeIsChildLinkRetriever()

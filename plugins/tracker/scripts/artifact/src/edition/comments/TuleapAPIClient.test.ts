@@ -23,7 +23,19 @@ import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 describe(`TuleapAPIClient`, () => {
     describe(`postComment()`, () => {
         it(`will POST to the current artifact URL with params and will return the response text`, async () => {
-            const doc = { URL: "https://example.com/plugins/tracker/?aid=806" } as Document;
+            const csrf_token_value = "some_csrf_token_value";
+            const form = document.createElement("form");
+            form.className = "artifact-form";
+            const challenge_input = document.createElement("input");
+            challenge_input.name = "challenge";
+            challenge_input.value = csrf_token_value;
+            form.appendChild(challenge_input);
+            document.body.appendChild(form);
+
+            const doc = {
+                URL: "https://example.com/plugins/tracker/?aid=806",
+                body: document.body,
+            } as Document;
             const comment_body = "politically puncticular";
             const expected_comment_html = `<div><p>${comment_body}</p></div>`;
             const fetchStub = (): Promise<Response> =>
@@ -41,14 +53,18 @@ describe(`TuleapAPIClient`, () => {
             expect(fetch).toHaveBeenCalled();
             const url = fetch.mock.calls[0][0];
             const request_init = fetch.mock.calls[0][1];
-            expect(url.toString()).toBe(
-                "https://example.com/plugins/tracker/?aid=806&func=update-comment&changeset_id=" +
+            expect(url.toString()).toBe("https://example.com/plugins/tracker/?aid=806");
+            expect(request_init?.method).toBe("POST");
+            expect(request_init?.body?.toString()).toStrictEqual(
+                "func=update-comment&changeset_id=" +
                     changeset_id +
                     "&content=politically+puncticular" +
                     "&comment_format=" +
-                    comment_format,
+                    comment_format +
+                    "&challenge=" +
+                    csrf_token_value,
             );
-            expect(request_init?.method).toBe("POST");
+            //console.log(request_init?.body)
             expect(result).toBe(expected_comment_html);
         });
     });

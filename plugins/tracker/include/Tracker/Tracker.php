@@ -827,6 +827,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 }
                 break;
             case 'submit-artifact':
+                $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 header('X-Frame-Options: SAMEORIGIN');
                 $action = new Tracker_Action_CreateArtifact(
                     $this,
@@ -837,6 +838,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-copy-artifact':
+                $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 if (! $this->isCopyAllowed()) {
                     $GLOBALS['Response']->addFeedback(
                         'error',
@@ -878,6 +880,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-artifact-in-place':
+                $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getArtifactCreator(), $this->getTrackerArtifactFactory());
                 $action->process($current_user);
                 break;
@@ -991,6 +994,15 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 break;
         }
         return;
+    }
+
+    private function checkIsAnAcceptableRequestForTrackerViewArtifactManipulation(HTTPRequest $request): void
+    {
+        if (! $request->isPost()) {
+            $GLOBALS['Response']->redirect($this->getUri());
+        }
+        $csrf_token = new CSRFSynchronizerToken($this->getUri());
+        $csrf_token->check();
     }
 
     /**

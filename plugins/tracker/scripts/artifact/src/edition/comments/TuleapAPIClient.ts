@@ -29,11 +29,32 @@ export interface TuleapAPIClient {
 
 export const TuleapAPIClient = (doc: Document, fetcher: FetchInterface): TuleapAPIClient => ({
     postComment(changeset_id, body, format): Promise<string> {
-        const url = new URL(doc.URL);
-        url.searchParams.append("func", "update-comment");
-        url.searchParams.append("changeset_id", changeset_id);
-        url.searchParams.append("content", body);
-        url.searchParams.append("comment_format", format);
-        return fetcher.fetch(url, { method: "POST" }).then((response) => response.text());
+        // The whole retrieval of the CSRF token is quite ugly
+        // The proper solution would be to have a REST endpoint to update these comments
+        let csrf_token = "not_csrf_token_found_in_page";
+        const artifact_forms = doc.body.getElementsByClassName("artifact-form");
+        for (const artifact_form of artifact_forms) {
+            if (!(artifact_form instanceof HTMLFormElement)) {
+                continue;
+            }
+            const form_challenge = new FormData(artifact_form).get("challenge");
+            if (form_challenge !== null) {
+                csrf_token = form_challenge.toString();
+                break;
+            }
+        }
+
+        const url_search_params = new URLSearchParams();
+        url_search_params.append("func", "update-comment");
+        url_search_params.append("changeset_id", changeset_id);
+        url_search_params.append("content", body);
+        url_search_params.append("comment_format", format);
+        url_search_params.append("challenge", csrf_token);
+        return fetcher
+            .fetch(doc.URL, {
+                body: url_search_params,
+                method: "POST",
+            })
+            .then((response) => response.text());
     },
 });

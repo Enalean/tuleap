@@ -33,6 +33,7 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
 
     /** @var bool */
     private $render_with_javascript;
+    public readonly CSRFSynchronizerToken $csrf_token;
 
     public function __construct(Tracker $tracker, $artifact_to_link, $form_elements, $render_with_javascript)
     {
@@ -40,6 +41,7 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
         $this->artifact_to_link       = $artifact_to_link;
         $this->form_elements          = $form_elements;
         $this->render_with_javascript = $render_with_javascript;
+        $this->csrf_token             = new CSRFSynchronizerToken($tracker->getUri());
     }
 
     public function tracker_title()
