@@ -95,4 +95,51 @@ describe("SectionsInserter", () => {
         expectSectionStateToHaveBeenCreated(1);
         expectSectionStateToHaveBeenCreated(2);
     });
+
+    describe("initial empty state", () => {
+        it("should remove the first empty pending section", () => {
+            sections_collection.replaceAll([]);
+            inserter.insertSection(PendingArtifactSectionFactory.create(), AT_THE_END);
+            inserter.insertSection(new_section, AT_THE_END);
+
+            expect(sections_collection.sections.value).toHaveLength(1);
+            expect(sections_collection.sections.value[0].value.id).toStrictEqual(new_section.id);
+
+            expectSectionStateToHaveBeenCreated(0);
+        });
+
+        it("should NOT remove the first pending section if its title changed", () => {
+            sections_collection.replaceAll([]);
+            const pending = PendingArtifactSectionFactory.create();
+            inserter.insertSection(pending, AT_THE_END);
+            states_collection.getSectionState(
+                sections_collection.sections.value[0].value,
+            ).edited_title.value = "Start to fill something";
+
+            inserter.insertSection(new_section, AT_THE_END);
+
+            expect(sections_collection.sections.value).toHaveLength(2);
+            expect(sections_collection.sections.value[0].value.id).toStrictEqual(pending.id);
+            expect(sections_collection.sections.value[1].value.id).toStrictEqual(new_section.id);
+
+            expectSectionStateToHaveBeenCreated(0);
+        });
+
+        it("should NOT remove the first pending section if its description changed", () => {
+            sections_collection.replaceAll([]);
+            const pending = PendingArtifactSectionFactory.create();
+            inserter.insertSection(pending, AT_THE_END);
+            states_collection.getSectionState(
+                sections_collection.sections.value[0].value,
+            ).edited_description.value = "Start to fill something";
+
+            inserter.insertSection(new_section, AT_THE_END);
+
+            expect(sections_collection.sections.value).toHaveLength(2);
+            expect(sections_collection.sections.value[0].value.id).toStrictEqual(pending.id);
+            expect(sections_collection.sections.value[1].value.id).toStrictEqual(new_section.id);
+
+            expectSectionStateToHaveBeenCreated(0);
+        });
+    });
 });
