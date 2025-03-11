@@ -20,31 +20,28 @@
 
 <template>
     <span class="taskboard-header-count" v-bind:class="classes">
-        {{ nb_cards_in_column(column) }}
+        {{ NbCardsInColumn }}
     </span>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { ColumnDefinition } from "../../../../type";
-import { namespace } from "vuex-class";
+import { useNamespacedGetters } from "vuex-composition-helpers";
 
-const swimlane = namespace("swimlane");
+const props = defineProps<{
+    column: ColumnDefinition;
+}>();
+const { is_loading_cards, nb_cards_in_column } = useNamespacedGetters("swimlane", [
+    "is_loading_cards",
+    "nb_cards_in_column",
+]);
 
-@Component
-export default class CardsInColumnCount extends Vue {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const classes = computed((): string => {
+    return is_loading_cards.value ? "taskboard-header-count-loading" : "";
+});
 
-    @swimlane.Getter
-    readonly is_loading_cards!: boolean;
-
-    @swimlane.Getter
-    readonly nb_cards_in_column!: (column: ColumnDefinition) => boolean;
-
-    get classes(): string {
-        return this.is_loading_cards ? "taskboard-header-count-loading" : "";
-    }
-}
+const NbCardsInColumn = computed((): string => {
+    return nb_cards_in_column.value(props.column);
+});
 </script>
