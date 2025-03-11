@@ -83,10 +83,12 @@ function getAllowedLinkTypes(args: LinkFieldProps): ReadonlyArray<AllowedLinkTyp
 
 const CURRENT_TRACKER_SHORTNAME = "story";
 const CURRENT_ARTIFACT_ID = 647;
+const CURRENT_TRACKER_ID = 36;
 const CURRENT_PROJECT_ID = 125;
 const handlers_builder = RequestHandlersBuilder(
     CURRENT_PROJECT_ID,
     CURRENT_ARTIFACT_ID,
+    CURRENT_TRACKER_ID,
     CURRENT_TRACKER_SHORTNAME,
 );
 
@@ -113,7 +115,7 @@ function renderLinkField(args: LinkFieldProps): TemplateResult {
             "plum-crazy",
         ),
         CurrentProjectIdentifier.fromId(CURRENT_PROJECT_ID),
-        CurrentTrackerIdentifier.fromId(36),
+        CurrentTrackerIdentifier.fromId(CURRENT_TRACKER_ID),
         parent_artifact,
         parent_tracker,
         UserIdentifier.fromId(154),
