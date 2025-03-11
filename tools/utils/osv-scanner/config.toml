@@ -111,12 +111,6 @@ id = "RUSTSEC-2024-0436"
 reason = "Repository archive notification. see https://github.com/bytecodealliance/wasmtime/issues/10356"
 ignoreUntil = 2025-04-10
 
-# ESBuild
-[[IgnoredVulns]]
-id = "GHSA-67mh-4wv8-2f99"
-reason = "No direct impact, the development server is not being used"
-ignoreUntil = 2025-03-11
-
 # PrismJS
 [[IgnoredVulns]]
 id = "GHSA-x7hr-w5r2-h6wg"
