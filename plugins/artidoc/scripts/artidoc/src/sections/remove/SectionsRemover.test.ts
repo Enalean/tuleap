@@ -19,22 +19,25 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { okAsync } from "neverthrow";
-import * as rest from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
+import * as rest from "@/helpers/rest-querier";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { getSectionsRemover } from "@/sections/remove/SectionsRemover";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
-import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
-const section1 = ArtifactSectionFactory.create();
-const section2 = PendingArtifactSectionFactory.create();
-const section3 = ArtifactSectionFactory.create();
-const section4 = PendingArtifactSectionFactory.create();
+const section1 = ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create());
+const section2 = ReactiveStoredArtidocSectionStub.fromSection(
+    PendingArtifactSectionFactory.create(),
+);
+const section3 = ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create());
+const section4 = ReactiveStoredArtidocSectionStub.fromSection(
+    PendingArtifactSectionFactory.create(),
+);
 
 describe("SectionsRemover", () => {
     let sections_collection: SectionsCollection, states_collection: SectionsStatesCollection;
@@ -42,14 +45,7 @@ describe("SectionsRemover", () => {
     beforeEach(() => {
         states_collection = SectionsStatesCollectionStub.build();
         sections_collection = buildSectionsCollection(states_collection);
-        sections_collection.replaceAll(
-            ReactiveStoredArtidocSectionStub.fromCollection([
-                section1,
-                section2,
-                section3,
-                section4,
-            ]),
-        );
+        sections_collection.replaceAll([section1, section2, section3, section4]);
     });
 
     it("should remove the section and delete its state", async () => {
@@ -57,20 +53,17 @@ describe("SectionsRemover", () => {
 
         const sections_remover = getSectionsRemover(sections_collection, states_collection);
 
-        const stored_section2 = CreateStoredSections.fromArtidocSection(section2);
-        const stored_section3 = CreateStoredSections.fromArtidocSection(section3);
-
-        sections_remover.removeSection(stored_section2);
-        sections_remover.removeSection(stored_section3);
+        sections_remover.removeSection(section2);
+        sections_remover.removeSection(section3);
         await flushPromises();
 
         expect(sections_collection.sections.value).not.toBeUndefined();
         expect(sections_collection.sections.value).toHaveLength(2);
-        expect(sections_collection.sections.value[0].value.id).toBe(section1.id);
-        expect(sections_collection.sections.value[1].value.id).toBe(section4.id);
+        expect(sections_collection.sections.value[0].value.id).toBe(section1.value.id);
+        expect(sections_collection.sections.value[1].value.id).toBe(section4.value.id);
 
-        expect(() => states_collection.getSectionState(stored_section2)).toThrow();
-        expect(() => states_collection.getSectionState(stored_section3)).toThrow();
+        expect(() => states_collection.getSectionState(section2.value)).toThrow();
+        expect(() => states_collection.getSectionState(section3.value)).toThrow();
     });
 
     it("should do nothing when there is no sections", async () => {
@@ -79,7 +72,7 @@ describe("SectionsRemover", () => {
         const sections_remover = getSectionsRemover(sections_collection, states_collection);
 
         sections_remover.removeSection(
-            CreateStoredSections.fromArtidocSection(ArtifactSectionFactory.create()),
+            ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create()),
         );
         await flushPromises();
 
@@ -90,14 +83,14 @@ describe("SectionsRemover", () => {
         const sections_remover = getSectionsRemover(sections_collection, states_collection);
 
         sections_remover.removeSection(
-            CreateStoredSections.fromArtidocSection(ArtifactSectionFactory.create()),
+            ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create()),
         );
         await flushPromises();
 
         expect(sections_collection.sections.value).toHaveLength(4);
-        expect(sections_collection.sections.value[0].value.id).toBe(section1.id);
-        expect(sections_collection.sections.value[1].value.id).toBe(section2.id);
-        expect(sections_collection.sections.value[2].value.id).toBe(section3.id);
-        expect(sections_collection.sections.value[3].value.id).toBe(section4.id);
+        expect(sections_collection.sections.value[0].value.id).toBe(section1.value.id);
+        expect(sections_collection.sections.value[1].value.id).toBe(section2.value.id);
+        expect(sections_collection.sections.value[2].value.id).toBe(section3.value.id);
+        expect(sections_collection.sections.value[3].value.id).toBe(section4.value.id);
     });
 });

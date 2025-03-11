@@ -20,20 +20,20 @@
 import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { RemoveSections } from "@/sections/remove/SectionsRemover";
 
 export type RemoveSectionsStub = RemoveSections & {
-    getLastRemovedSection(): ArtidocSection | null;
+    getLastRemovedSection(): ReactiveStoredArtidocSection | null;
 };
 
 export const SectionsRemoverStub = {
     withExpectedCall(): RemoveSectionsStub {
-        let last_removed_section: ArtidocSection | null = null;
+        let last_removed_section: ReactiveStoredArtidocSection | null = null;
 
         return {
             getLastRemovedSection: () => last_removed_section,
-            removeSection(section: ArtidocSection): ResultAsync<boolean, Fault> {
+            removeSection(section): ResultAsync<boolean, Fault> {
                 last_removed_section = section;
 
                 return okAsync(true);

@@ -27,7 +27,7 @@
         <div class="artidoc-dropdown-container">
             <section-dropdown
                 v-bind:delete_section="delete_section"
-                v-bind:section="section.value"
+                v-bind:section="section"
                 v-bind:section_state="section_state"
                 v-if="!is_loading_sections"
             />
@@ -183,7 +183,7 @@ const save_section = getSectionSaver(
 );
 
 const delete_section = getSectionDeletor(
-    props.section.value,
+    props.section,
     section_state,
     error_state_manager,
     sections_remover,

@@ -20,7 +20,7 @@
 import type { Fault } from "@tuleap/fault";
 import type { RemoveSections } from "@/sections/remove/SectionsRemover";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { ManageErrorState } from "@/sections/states/SectionErrorManager";
 
 export type DeleteSection = {
@@ -28,7 +28,7 @@ export type DeleteSection = {
 };
 
 export const getSectionDeletor = (
-    section: StoredArtidocSection,
+    section: ReactiveStoredArtidocSection,
     section_state: SectionState,
     manage_error_state: ManageErrorState,
     remove_sections: RemoveSections,
