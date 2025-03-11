@@ -51,7 +51,7 @@ export const getSectionEditorCloser = (
             file_uploads_collection.cancelSectionUploads(section.value.id);
 
             if (isPendingSection(section.value)) {
-                remove_sections.removeSection(section.value);
+                remove_sections.removeSection(section);
             }
         },
     };

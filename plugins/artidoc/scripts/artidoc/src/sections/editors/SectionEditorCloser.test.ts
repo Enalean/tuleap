@@ -124,7 +124,7 @@ describe("SectionEditorCloser", () => {
                 expectStatesToHaveBeenReset();
 
                 expect(removeSection).toHaveBeenCalledOnce();
-                expect(removeSection).toHaveBeenCalledWith(section.value);
+                expect(removeSection).toHaveBeenCalledWith(section);
             },
         );
     });

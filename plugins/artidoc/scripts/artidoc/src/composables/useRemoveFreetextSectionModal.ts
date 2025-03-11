@@ -19,13 +19,13 @@
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import { noop } from "@/helpers/noop";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
-type RemoveFreetextSectionModalHandler = (section: StoredArtidocSection) => void;
+type RemoveFreetextSectionModalHandler = (section: ReactiveStoredArtidocSection) => void;
 
 export interface UseRemoveFreetextSectionModal {
     readonly registerHandler: (new_handler: RemoveFreetextSectionModalHandler) => void;
-    readonly openModal: (section: StoredArtidocSection) => void;
+    readonly openModal: (section: ReactiveStoredArtidocSection) => void;
 }
 
 export const REMOVE_FREETEXT_SECTION_MODAL: StrictInjectionKey<UseRemoveFreetextSectionModal> =
@@ -38,7 +38,7 @@ export function useRemoveFreetextSectionModal(): UseRemoveFreetextSectionModal {
         registerHandler: (new_handler: RemoveFreetextSectionModalHandler): void => {
             handler = new_handler;
         },
-        openModal: (section: StoredArtidocSection): void => {
+        openModal: (section: ReactiveStoredArtidocSection): void => {
             handler(section);
         },
     };

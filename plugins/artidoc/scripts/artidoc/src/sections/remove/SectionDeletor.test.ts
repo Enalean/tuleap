@@ -20,20 +20,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SectionsRemoverStub } from "@/sections/stubs/SectionsRemoverStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { SectionErrorManagerStub } from "@/sections/stubs/SectionErrorManagerStub";
-import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import { getSectionDeletor } from "@/sections/remove/SectionDeletor";
 import { noop } from "@/helpers/noop";
 
 describe("SectionDeletor", () => {
-    let section_to_delete: StoredArtidocSection;
+    let section_to_delete: ReactiveStoredArtidocSection;
 
     beforeEach(() => {
-        section_to_delete = CreateStoredSections.fromArtidocSection(
+        section_to_delete = ReactiveStoredArtidocSectionStub.fromSection(
             FreetextSectionFactory.create(),
         );
     });

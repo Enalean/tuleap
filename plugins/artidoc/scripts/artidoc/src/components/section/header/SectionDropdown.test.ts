@@ -30,9 +30,9 @@ import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSe
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { injectInternalId } from "@/helpers/inject-internal-id";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { SectionDeletorStub } from "@/sections/stubs/SectionDeletorStub";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 vi.mock("@tuleap/tlp-dropdown");
 vi.mock("@/helpers/move-dropdownmenu-in-document-body");
@@ -48,7 +48,7 @@ describe("SectionDropdown", () => {
     function getWrapper(section: ArtidocSection, section_state: SectionState): VueWrapper {
         return shallowMount(SectionDropdown, {
             propsData: {
-                section: injectInternalId(section),
+                section: ReactiveStoredArtidocSectionStub.fromSection(section),
                 section_state,
                 delete_section,
             },
