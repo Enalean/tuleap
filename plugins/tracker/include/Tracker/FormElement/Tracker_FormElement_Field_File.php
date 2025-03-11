@@ -261,10 +261,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         $html .= '<p>' . dgettext('tuleap-tracker', 'Add a new file:') . '</p>';
         $html .= '<div class="tracker_artifact_add_attachment">';
         $html .= '<p>';
-        $html .= '<input type="file" id="tracker_field_' . $this->id . '" name="artifact[' . $this->id . '][][file]" data-upload-is-enabled/>';
+        $html .= '<input type="file" data-test="file-field-file-input" id="tracker_field_' . $this->id . '" name="artifact[' . $this->id . '][][file]" data-upload-is-enabled/>';
         $html .= '<label>' . dgettext('tuleap-tracker', 'Description:');
         $html .= '</label>';
-        $html .= ' <input type="text" id="tracker_field_' . $this->id . '" name="artifact[' . $this->id . '][][description]" />';
+        $html .= ' <input type="text" data-test="file-field-description-input" id="tracker_field_' . $this->id . '" name="artifact[' . $this->id . '][][description]" />';
         $html .= '</p>';
         $html .= '</div>';
         $html .= '</div>';
