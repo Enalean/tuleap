@@ -22,44 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery;
+use ColinODell\PsrTestLogger\TestLogger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AsyncJiraSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class AsyncJiraSchedulerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testScheduleCreationStoreJiraInformationWithEncryptedToken()
+    public function testScheduleCreationStoreJiraInformationWithEncryptedToken(): void
     {
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
-            str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-        );
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
-        $key_factory = Mockery::mock(KeyFactory::class);
-        $key_factory->shouldReceive('getEncryptionKey')->andReturn($encryption_key);
+        $key_factory = $this->createMock(KeyFactory::class);
+        $key_factory->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $pending_jira_import_dao = Mockery::mock(PendingJiraImportDao::class);
-        $pending_jira_import_dao
-            ->shouldReceive('create')
+        $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
+        $pending_jira_import_dao->expects(self::once())->method('create')
             ->with(
-                42,
+                142,
                 101,
                 'https://jira.example.com',
                 'user@example.com',
-                \Mockery::on(
-                    static function (string $encrypted_jira_token) use ($encryption_key) {
-                        return SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret';
-                    }
+                self::callback(
+                    static fn(string $encrypted_jira_token) => SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret'
                 ),
                 'jira project id',
                 'jira issue type name',
@@ -69,22 +65,17 @@ class AsyncJiraSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'inca-silver',
                 'All bugs'
             )
-            ->once()
-            ->andReturn(1001);
+            ->willReturn(1001);
 
-        $jira_runner = Mockery::mock(JiraRunner::class);
-        $jira_runner
-            ->shouldReceive('queueJiraImportEvent')
-            ->with(1001)
-            ->once();
+        $jira_runner = $this->createMock(JiraRunner::class);
+        $jira_runner->expects(self::once())->method('queueJiraImportEvent')->with(1001);
 
-        $logger = Mockery::mock(LoggerInterface::class);
-        $logger->shouldReceive('error')->never();
+        $logger = new TestLogger();
 
         $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
         $scheduler->scheduleCreation(
-            Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock(),
-            Mockery::mock(\PFUser::class)->shouldReceive(['getId' => 101])->getMock(),
+            ProjectTestBuilder::aProject()->withId(142)->build(),
+            UserTestBuilder::buildWithId(101),
             'https://jira.example.com',
             'user@example.com',
             new ConcealedString('very_secret'),
@@ -96,30 +87,25 @@ class AsyncJiraSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
             'inca-silver',
             'All bugs'
         );
+        self::assertFalse($logger->hasErrorRecords());
     }
 
-    public function testItThrowsExceptionIfCreationFailed()
+    public function testItThrowsExceptionIfCreationFailed(): void
     {
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
-            str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-        );
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
-        $key_factory = Mockery::mock(KeyFactory::class);
-        $key_factory->shouldReceive('getEncryptionKey')->andReturn($encryption_key);
+        $key_factory = $this->createMock(KeyFactory::class);
+        $key_factory->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $pending_jira_import_dao = Mockery::mock(PendingJiraImportDao::class);
-        $pending_jira_import_dao
-            ->shouldReceive('create')
+        $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
+        $pending_jira_import_dao->expects(self::once())->method('create')
             ->with(
-                42,
+                142,
                 101,
                 'https://jira.example.com',
                 'user@example.com',
-                \Mockery::on(
-                    static function (string $encrypted_jira_token) use ($encryption_key) {
-                        return SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret';
-                    }
+                self::callback(
+                    static fn(string $encrypted_jira_token) => SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'very_secret'
                 ),
                 'jira project id',
                 'jira issue type name',
@@ -129,24 +115,18 @@ class AsyncJiraSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'inca-silver',
                 'All bugs'
             )
-            ->once()
-            ->andReturn(false);
+            ->willReturn(0);
 
-        $jira_runner = Mockery::mock(JiraRunner::class);
-        $jira_runner
-            ->shouldReceive('queueJiraImportEvent')
-            ->never();
+        $jira_runner = $this->createMock(JiraRunner::class);
+        $jira_runner->expects(self::never())->method('queueJiraImportEvent');
 
-        $logger = Mockery::mock(LoggerInterface::class);
-        $logger
-            ->shouldReceive('error')
-            ->with('Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.');
+        $logger = new TestLogger();
 
         $this->expectException(TrackerCreationHasFailedException::class);
         $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
         $scheduler->scheduleCreation(
-            Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock(),
-            Mockery::mock(\PFUser::class)->shouldReceive(['getId' => 101])->getMock(),
+            ProjectTestBuilder::aProject()->withId(142)->build(),
+            UserTestBuilder::buildWithId(101),
             'https://jira.example.com',
             'user@example.com',
             new ConcealedString('very_secret'),
@@ -158,35 +138,27 @@ class AsyncJiraSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
             'inca-silver',
             'All bugs'
         );
+        self::assertTrue($logger->hasErrorThatContains('Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.'));
     }
 
-    public function testItThrowsExceptionIfTokenCannotBeEncrypted()
+    public function testItThrowsExceptionIfTokenCannotBeEncrypted(): void
     {
-        $key_factory = Mockery::mock(KeyFactory::class);
-        $key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->andThrow(new CannotPerformIOOperationException('Cannot read encryption key'));
+        $key_factory = $this->createMock(KeyFactory::class);
+        $key_factory->method('getEncryptionKey')->willThrowException(new CannotPerformIOOperationException('Cannot read encryption key'));
 
-        $pending_jira_import_dao = Mockery::mock(PendingJiraImportDao::class);
-        $pending_jira_import_dao
-            ->shouldReceive('create')
-            ->never();
+        $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
+        $pending_jira_import_dao->expects(self::never())->method('create');
 
-        $jira_runner = Mockery::mock(JiraRunner::class);
-        $jira_runner
-            ->shouldReceive('queueJiraImportEvent')
-            ->never();
+        $jira_runner = $this->createMock(JiraRunner::class);
+        $jira_runner->expects(self::never())->method('queueJiraImportEvent');
 
-        $logger = Mockery::mock(LoggerInterface::class);
-        $logger
-            ->shouldReceive('error')
-            ->with('Unable to schedule the import of Jira: Cannot read encryption key');
+        $logger = new TestLogger();
 
         $this->expectException(TrackerCreationHasFailedException::class);
         $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
         $scheduler->scheduleCreation(
-            Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock(),
-            Mockery::mock(\PFUser::class)->shouldReceive(['getId' => 101])->getMock(),
+            ProjectTestBuilder::aProject()->withId(142)->build(),
+            UserTestBuilder::buildWithId(101),
             'https://jira.example.com',
             'user@example.com',
             new ConcealedString('very_secret'),
@@ -198,5 +170,6 @@ class AsyncJiraSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
             'inca-silver',
             'All bugs'
         );
+        self::assertTrue($logger->hasErrorThatContains('Unable to schedule the import of Jira: Cannot read encryption key'));
     }
 }
