@@ -283,13 +283,17 @@ export const renderToolbar = (
             ${buildToolbarItems(
                 default_item_groups_collection,
                 host.additional_elements ? host.additional_elements : [],
-            ).map(
-                (items) => html`
+            ).map((items) => {
+                if (items.elements.length === 0) {
+                    return html``;
+                }
+
+                return html`
                     <span class="prose-mirror-button-group">
                         ${items.elements.map((item) => html` ${item} `)}
                     </span>
-                `,
-            )}
+                `;
+            })}
         </div>
     `.style(scss_styles);
 };
