@@ -18,104 +18,113 @@
  */
 
 type CypressWrapper = Cypress.Chainable<JQuery<HTMLElement>>;
-function getFieldWithLabel(label: string, form_element_selector: string): CypressWrapper {
-    return cy.getContains(form_element_selector, label);
+function getFieldWithLabel(label: string): CypressWrapper {
+    return cy
+        .get("[data-test=artifact-form-element] [data-test=field-label]")
+        .contains(label)
+        .parents("[data-test=artifact-form-element]");
 }
 
 function checkBoxWithLabel(label: string): void {
     cy.get("[data-test=checkbox-field-value]")
         .contains(label)
-        .within(() => {
-            cy.get("[data-test=checkbox-field-input]").check();
-        });
+        .find("[data-test=checkbox-field-input]")
+        .check();
 }
 
 function checkRadioButtonWithLabel(label: string): void {
     cy.get("[data-test=radiobutton-field-value]")
         .contains(label)
-        .within(() => {
-            cy.get("[data-test=radiobutton-field-input]").check();
-        });
+        .find("[data-test=radiobutton-field-input]")
+        .check();
 }
 
 describe(`Tracker Report`, () => {
-    it(`All fields can be used by user`, function () {
+    it(`Can submit an artifact with all fields`, function () {
         cy.projectMemberSession();
         cy.visitProjectService("tracker-report", "Trackers");
         cy.get("[data-test=tracker-link]").click();
         cy.get('[data-test="new-artifact"]').click();
 
         cy.log("Create an artifact with all fields");
-        cy.get("[data-test=title]").type("Title A");
-        cy.get("[data-test-cypress=text-area]").first().type("Description A");
-        cy.get("[data-test=string]").type("String A");
-        cy.get("[data-test-cypress=text-area]").last().type("Text A");
-        cy.get("[data-test=integer]").type("12");
-        cy.get("[data-test=float]").type("5.12");
-        cy.get("[data-test=date-time-date]").type("2025-02-01");
-        cy.get("[data-test=date-time-datetime]").type("2025-02-01 02:23");
-        cy.get("[data-test=computed]").type("13.5");
-        cy.get("[data-test=file-field-file-input]").selectFile("cypress/fixtures/attachment.json");
-        cy.get("[data-test=file-field-description-input]").type("My JSON attachment");
-        cy.get("[data-test=artifact-permission-enable-checkbox]").check();
-        cy.get("[data-test=artifact-permissions-selectbox]").select([
-            "Project members",
-            "Integrators",
-        ]);
+        getFieldWithLabel("Title").find("[data-test-field-input]").type("Title A");
+        getFieldWithLabel("Description")
+            .find("[data-test-cypress=text-area]")
+            .type("Description A");
+        getFieldWithLabel("String").find("[data-test-field-input]").type("String A");
+        getFieldWithLabel("Text").find("[data-test-cypress=text-area]").type("Description A");
+        getFieldWithLabel("Integer").find("[data-test-field-input]").type("12");
+        getFieldWithLabel("Float").find("[data-test-field-input]").type("5.12");
+        getFieldWithLabel("Date").find("[data-test=date-time-date]").clear().type("2025-02-01");
+        getFieldWithLabel("Datetime")
+            .find("[data-test=date-time-datetime]")
+            .clear()
+            .type("2025-02-01 02:23");
+        getFieldWithLabel("Computed").find("[data-test-field-input]").type("13.5");
 
-        getFieldWithLabel("Selectbox static", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("Attachments").then(($field) => {
+            cy.wrap($field)
+                .find("[data-test=file-field-file-input]")
+                .selectFile("cypress/fixtures/attachment.json");
+            cy.wrap($field)
+                .find("[data-test=file-field-description-input]")
+                .type("My JSON attachment");
+        });
+
+        getFieldWithLabel("Permissions").then(($field) => {
+            cy.wrap($field).find("[data-test=artifact-permission-enable-checkbox]").check();
+            cy.wrap($field)
+                .find("[data-test=artifact-permissions-selectbox]")
+                .select(["Project members", "Integrators"]);
+        });
+
+        getFieldWithLabel("Selectbox static").within(() => {
             cy.searchItemInListPickerDropdown("Dos").click();
         });
 
-        getFieldWithLabel("Selectbox users (members)", "[data-test=artifact-form-element]").within(
-            () => {
-                cy.searchItemInListPickerDropdown("Site Admin").click();
-            },
-        );
+        getFieldWithLabel("Selectbox users (members)").within(() => {
+            cy.searchItemInListPickerDropdown("ProjectMember").click();
+        });
 
-        getFieldWithLabel("Selectbox ugroups", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("Selectbox ugroups").within(() => {
             cy.searchItemInListPickerDropdown("Integrators").click();
         });
 
-        getFieldWithLabel("Radio static", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("Radio static").within(() => {
             checkRadioButtonWithLabel("二");
         });
 
-        getFieldWithLabel("Radio users (members)", "[data-test=artifact-form-element]").within(
-            () => {
-                checkRadioButtonWithLabel("Site Admin");
-            },
-        );
+        getFieldWithLabel("Radio users (members)").within(() => {
+            checkRadioButtonWithLabel("ProjectMember");
+        });
 
-        getFieldWithLabel("Radio ugroups", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("Radio ugroups").within(() => {
             checkRadioButtonWithLabel("Integrators");
         });
 
-        getFieldWithLabel("MSB static", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("MSB static").within(() => {
             cy.searchItemInListPickerDropdown("Deux").click();
             cy.searchItemInListPickerDropdown("Trois").click();
         });
 
-        getFieldWithLabel("MSB users (members)", "[data-test=artifact-form-element]").within(() => {
-            cy.searchItemInListPickerDropdown("Site Admin").click();
+        getFieldWithLabel("MSB users (members)").within(() => {
+            cy.searchItemInListPickerDropdown("ProjectMember").click();
         });
 
-        getFieldWithLabel("MSB ugroups", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("MSB ugroups").within(() => {
             cy.searchItemInListPickerDropdown("Integrators").click();
         });
 
-        getFieldWithLabel("Checkbox static", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("Checkbox static").within(() => {
             checkBoxWithLabel("One");
             checkBoxWithLabel("Three");
         });
 
-        getFieldWithLabel("Checkbox users (members)", "[data-test=artifact-form-element]").within(
-            () => {
-                checkBoxWithLabel("Site Admin");
-            },
-        );
+        getFieldWithLabel("Checkbox users (members)").within(() => {
+            checkBoxWithLabel("ProjectMember");
+        });
 
-        getFieldWithLabel("Checkbox ugroups", "[data-test=artifact-form-element]").within(() => {
+        getFieldWithLabel("Checkbox ugroups").within(() => {
             checkBoxWithLabel("Project administrators");
             checkBoxWithLabel("Contributors");
         });

@@ -199,6 +199,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text"
+                         data-test-field-input
                          data-test="' . $hp->purify($this->getName()) . '"
                          size="' . $this->getProperty('size') . '"
                          ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
