@@ -98,6 +98,7 @@
   "packageManager": "pnpm@8.15.9",
   "pnpm": {
     "overrides": {
+      "esbuild": "^0.25.1",
       "abab": "npm:@nolyfill/abab@latest",
       "array-includes": "npm:@nolyfill/array-includes@latest",
       "array.prototype.findlastindex": "npm:@nolyfill/array.prototype.findlastindex@latest",
