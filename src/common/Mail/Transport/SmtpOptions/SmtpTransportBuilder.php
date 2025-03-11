@@ -42,9 +42,9 @@ class SmtpTransportBuilder
             $port = (int) $url_parts[1];
         }
 
-        $tls = \ForgeConfig::getStringAsBool(MailTransportBuilder::RELAYHOST_SMTP_USE_TLS);
+        $implicit_tls = \ForgeConfig::getStringAsBool(MailTransportBuilder::RELAYHOST_SMTP_USE_IMPLICIT_TLS);
 
-        $transport = new EsmtpTransport($host, $port, $tls);
+        $transport = new EsmtpTransport($host, $port, $implicit_tls);
 
         $auth_username = (string) \ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_USERNAME);
         if ($auth_username !== '' && \ForgeConfig::exists(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)) {
