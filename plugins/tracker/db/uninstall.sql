@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS tracker_field_date;
 DROP TABLE IF EXISTS tracker_field_list;
 DROP TABLE IF EXISTS tracker_field_computed;
 DROP TABLE IF EXISTS tracker_field_openlist;
+DROP TABLE IF EXISTS tracker_field_artifact_link;
 DROP TABLE IF EXISTS tracker_field_openlist_value;
 DROP TABLE IF EXISTS tracker_field_list_bind_users;
 DROP TABLE IF EXISTS tracker_field_list_bind_static;

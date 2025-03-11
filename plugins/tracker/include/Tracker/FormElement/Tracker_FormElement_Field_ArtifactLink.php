@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\DisplayArtifactLinkEvent;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\EditorWithReverseLinksBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer;
@@ -46,6 +47,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
@@ -879,15 +881,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param array $submitted_values The value already submitted by the user
      */
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
     ): string {
+        $specific_property_dao  = new ArtifactLinkFieldSpecificPropertiesDAO();
+        $properties             = $specific_property_dao->searchByFieldId($this->getId());
+        $can_edit_reverse_links = $properties['can_edit_reverse_links'] ?? false;
+
+        if ($can_edit_reverse_links) {
+            $template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../FormElement/Field/ArtifactLink');
+            $presenter         = (new EditorWithReverseLinksBuilder())->build($artifact);
+            return $template_renderer->renderToString('editor-with-reverse-links', $presenter);
+        }
+
         $links_tab         = $this->fetchLinks($artifact, $this->getArtifactLinksToRenderFromChangesetValue($value), $submitted_values);
         $reverse_links_tab = $this->fetchReverseLinks($artifact);
 
