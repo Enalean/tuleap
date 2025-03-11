@@ -8,11 +8,11 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/list-picker.css",
       "import": "./dist/list-picker.js",
       "require": "./dist/list-picker.umd.cjs"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/list-picker.css"
   },
   "dependencies": {
     "@tuleap/gettext": "workspace:*",

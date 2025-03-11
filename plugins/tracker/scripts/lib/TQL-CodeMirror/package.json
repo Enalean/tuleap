@@ -8,7 +8,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/plugin-tracker-tql-codemirror.css",
       "import": "./dist/plugin-tracker-tql-codemirror.js",
       "require": "./dist/plugin-tracker-tql-codemirror.umd.cjs"
     }

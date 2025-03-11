@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "types": "./dist/main.d.ts",
-      "sass": "./dist/style.css",
+      "sass": "./dist/tlp-date-picker.css",
       "import": "./dist/en_US.js",
       "require": "./dist/en_US.cjs"
     },

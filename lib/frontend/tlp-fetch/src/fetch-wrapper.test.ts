@@ -21,6 +21,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { MockInstance } from "vitest";
 import * as wrapper from "./fetch-wrapper";
 import { mockFetchSuccess } from "../mocks/tlp-fetch-mock-helper";
+import { FetchWrapperError } from "./fetch-wrapper";
 
 describe(`fetch-wrapper`, () => {
     let globalFetch: MockInstance;
@@ -363,11 +364,10 @@ describe(`fetch-wrapper`, () => {
             const expected_response = {
                 ok: false,
                 statusText: "Not found",
-            };
+            } as Response;
             globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            const expected_error = new Error("Not found");
-            Object.assign(expected_error, { response: expected_response });
+            const expected_error = new FetchWrapperError("Not found", expected_response);
             await expect(methodUnderTest(url)).rejects.toEqual(expected_error);
         },
     );

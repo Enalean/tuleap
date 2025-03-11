@@ -44,7 +44,7 @@ my-plugin/
                      |-- index.d.ts                     # Typescript declarations, it is referenced in "types" exports in package.json
                      |-- my-lib-name.umd.cjs            # Javascript UMD bundle, it is referenced in "require" exports in package.json
                      |-- my-lib-name.js                 # Javascript ES module bundle, it is referenced in "import" exports in package.json
-                     |-- style.css                      # CSS bundle, it is referenced in "sass" exports in package.json
+                     |-- my-lib-name.css                # CSS bundle, it is referenced in "sass" exports in package.json
                 |-- po/                                 # Localization strings
                      |-- fr_FR.po                       # Localized strings for French
                 |-- src/                                # The lib source code
@@ -134,7 +134,7 @@ Once you have a Vite config, you will need a `package.json` in `my-lib-name/`.
     ".": {
       // Order matters here, declare TypeScript first, then Sass
       "types": "./dist/index.d.ts",           // Generated TypeScript declarations
-      "sass": "./dist/style.css",             // The CSS bundle of your lib.
+      "sass": "./dist/my-lib-name.css",       // The CSS bundle of your lib.
       "import": "./dist/my-lib-name.js",      // The Javascript ES Module bundle of your lib
       "require": "./dist/my-lib-name.umd.cjs" // The Javascript UMD bundle of your lib
     }
@@ -200,7 +200,7 @@ declare module "*.po" {
 }
 ```
 
-In your stylesheet, you can reference images. They will be inlined (converted to a base64 string) and included in `dist/style.css`.
+In your stylesheet, you can reference images. They will be inlined (converted to a base64 string) and included in `dist/my-lib-name.css`.
 
 ```scss
 // tuleap/plugins/my-plugin/scripts/lib/themes/style.scss
@@ -214,7 +214,7 @@ Finally, your `main.ts` file (the lib entrypoint) should export types that calle
 
 ```typescript
 // tuleap/plugins/my-plugin/scripts/lib/my-lib-name/src/index.ts
-import "../themes/style.scss"; // Import the styles to bundle them in dist/style.css
+import "../themes/style.scss"; // Import the styles to bundle them in dist/my-lib-name.css
 import type { MyType, MyOtherType } from "./types";
 
 export type { MyType, MyOtherType }; // Re-export the types, so that TypeScript callers can import them

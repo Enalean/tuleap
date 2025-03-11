@@ -8,7 +8,7 @@
   "types": "./src/mention.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/mention.css",
       "import": "./dist/mention.js",
       "require": "./dist/mention.umd.cjs"
     }

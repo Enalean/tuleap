@@ -7,7 +7,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/plugin-cardwall-card-fields.css",
       "import": "./dist/plugin-cardwall-card-fields.js",
       "require": "./dist/plugin-cardwall-card-fields.umd.cjs"
     }

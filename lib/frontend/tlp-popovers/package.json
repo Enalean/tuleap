@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "sass": "./dist/style.css",
+      "sass": "./dist/tlp-popovers.css",
       "import": "./dist/tlp-popovers.js",
       "require": "./dist/tlp-popovers.umd.cjs"
     }

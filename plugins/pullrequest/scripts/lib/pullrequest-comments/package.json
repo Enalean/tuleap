@@ -8,7 +8,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/plugin-pullrequest-comments.css",
       "import": "./dist/plugin-pullrequest-comments.js",
       "require": "./dist/plugin-pullrequest-comments.umd.cjs"
     }

@@ -7,7 +7,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/plugin-tracker-color-picker.css",
       "import": "./dist/plugin-tracker-color-picker.js",
       "require": "./dist/plugin-tracker-color-picker.umd.cjs"
     }

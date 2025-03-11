@@ -8,7 +8,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/plugin-tracker-rich-text-editor.css",
       "import": "./dist/plugin-tracker-rich-text-editor.js",
       "require": "./dist/plugin-tracker-rich-text-editor.umd.cjs"
     }

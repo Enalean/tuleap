@@ -7,6 +7,9 @@
   "exports": {
     ".": "./themes/main.scss"
   },
+  "files": [
+    "themes"
+  ],
   "dependencies": {
     "@tuleap/tlp-swatch-colors": "workspace:*"
   }

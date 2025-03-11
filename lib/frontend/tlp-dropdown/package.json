@@ -8,7 +8,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/tlp-dropdown.css",
       "import": "./dist/tlp-dropdown.js",
       "require": "./dist/tlp-dropdown.umd.cjs"
     }

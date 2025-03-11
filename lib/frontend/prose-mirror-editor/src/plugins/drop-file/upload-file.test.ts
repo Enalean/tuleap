@@ -125,7 +125,7 @@ describe("uploadFile", () => {
                     uploader,
                 );
                 expect(options.onErrorCallback).toHaveBeenCalledWith(
-                    new MaxSizeUploadExceededError(max_size_upload, gettext_provider),
+                    new MaxSizeUploadExceededError(1, gettext_provider),
                     file.name,
                 );
                 expect(uploader.createOngoingUpload).not.toHaveBeenCalled();
