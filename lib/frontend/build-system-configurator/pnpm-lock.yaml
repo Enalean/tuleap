@@ -7,13 +7,13 @@ settings:
 dependencies:
   autoprefixer:
     specifier: ^10.4.18
-    version: 10.4.18(postcss@8.5.1)
+    version: 10.4.18(postcss@8.5.3)
   browserslist:
     specifier: ^4.23.1
     version: 4.23.1
   postcss:
-    specifier: ^8.5.1
-    version: 8.5.1
+    specifier: ^8.5.3
+    version: 8.5.3
 
 devDependencies:
   '@types/webpack':
@@ -231,7 +231,7 @@ packages:
       uri-js: 4.4.1
     dev: true
 
-  /autoprefixer@10.4.18(postcss@8.5.1):
+  /autoprefixer@10.4.18(postcss@8.5.3):
     resolution: {integrity: sha512-1DKbDfsr6KUElM6wg+0zRNkB/Q7WcKYAaK+pzXn+Xqmszm/5Xa9coeNdtP88Vi+dPzZnMjhge8GIV49ZQkDa+g==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
@@ -243,7 +243,7 @@ packages:
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
-      postcss: 8.5.1
+      postcss: 8.5.3
       postcss-value-parser: 4.2.0
     dev: false
 
@@ -418,8 +418,8 @@ packages:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
     dev: false
 
-  /postcss@8.5.1:
-    resolution: {integrity: sha512-6oz2beyjc5VMn/KV1pPw8fliQkhBXrVn1Z3TVyqZxU8kZpzEKhBdmCFqI6ZbmGtamQvQGuU1sgPTk8ZrXDD7jQ==}
+  /postcss@8.5.3:
+    resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.8

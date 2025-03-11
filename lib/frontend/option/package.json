@@ -16,7 +16,8 @@
     }
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*"
+    "@tuleap/build-system-configurator": "workspace:*",
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

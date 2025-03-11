@@ -8,7 +8,7 @@
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/lazybox-users-autocomplete.css",
       "import": "./dist/lazybox-users-autocomplete.js",
       "require": "./dist/lazybox-users-autocomplete.umd.cjs"
     }

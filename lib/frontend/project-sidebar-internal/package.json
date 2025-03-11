@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "module": "dist/project-sidebar-internal.js",
   "main": "dist/project-sidebar-internal.umd.cjs",
-  "style": "dist/style.css",
+  "style": "dist/project-sidebar-internal.css",
   "files": [
     "dist/",
     "src/"

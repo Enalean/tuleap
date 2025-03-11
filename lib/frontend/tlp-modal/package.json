@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "sass": "./dist/style.css",
+      "sass": "./dist/tlp-modal.css",
       "import": "./dist/tlp-modal.js",
       "require": "./dist/tlp-modal.umd.cjs"
     }

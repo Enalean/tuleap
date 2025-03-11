@@ -19,6 +19,9 @@ devDependencies:
   '@types/node-gettext':
     specifier: ^3.0.1
     version: 3.0.3
+  typescript:
+    specifier: ^5.3.3
+    version: 5.8.2
 
 packages:
 
@@ -35,3 +38,9 @@ packages:
     dependencies:
       lodash.get: 4.4.2
     dev: false
+
+  /typescript@5.8.2:
+    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true

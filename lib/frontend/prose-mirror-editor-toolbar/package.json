@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "sass": "./dist/style.css",
+      "sass": "./dist/prose-mirror-editor-toolbar.css",
       "import": "./dist/prose-mirror-editor-toolbar.js",
       "require": "./dist/prose-mirror-editor-toolbar.umd.cjs"
     }

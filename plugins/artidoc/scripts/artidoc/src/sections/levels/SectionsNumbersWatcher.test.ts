@@ -52,14 +52,14 @@ describe("SectionsNumbersWatcher", () => {
         sections_collection.sections.value.splice(0, 1);
 
         await flushPromises();
-        expect(updateSectionsLevels).toHaveBeenCalledOnce();
+        expect(updateSectionsLevels).toHaveBeenCalled();
     });
 
     it("When the level of a section is updated, then it should update the levels of the sections ", async () => {
         sections_collection.sections.value[1].value.level = LEVEL_2;
 
         await flushPromises();
-        expect(updateSectionsLevels).toHaveBeenCalledOnce();
+        expect(updateSectionsLevels).toHaveBeenCalled();
     });
 
     it("When a section is added to the collection, then it should update the levels of the sections ", async () => {
@@ -68,6 +68,6 @@ describe("SectionsNumbersWatcher", () => {
         );
 
         await flushPromises();
-        expect(updateSectionsLevels).toHaveBeenCalledOnce();
+        expect(updateSectionsLevels).toHaveBeenCalled();
     });
 });

@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "sass": "./dist/style.css",
+      "sass": "./dist/plugin-tracker-link-field.css",
       "import": "./dist/plugin-tracker-link-field.js",
       "require": "./dist/plugin-tracker-link-field.umd.cjs"
     }

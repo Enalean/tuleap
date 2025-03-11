@@ -15,7 +15,7 @@ Depends on `jquery`. Provide it as `externals` in webpack configuration:
     //...
 }
 ```
-This lib also provides a CSS file at `dist/style.css`, make sure to include it:
+This lib also provides a CSS file at `dist/mention.css`, make sure to include it:
 
 ```scss
 @use "pkg:@tuleap/mention";

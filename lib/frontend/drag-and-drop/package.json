@@ -8,7 +8,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/drag-and-drop.css",
       "import": "./dist/drag-and-drop.js",
       "require": "./dist/drag-and-drop.umd.cjs"
     }

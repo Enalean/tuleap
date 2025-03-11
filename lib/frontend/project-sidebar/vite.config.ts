@@ -28,6 +28,7 @@ export default vite.defineLibConfig({
         lib: {
             entry: path.resolve(__dirname, "src/main.ts"),
             name: "TuleapProjectSidebar",
+            cssFileName: "style",
         },
     },
     plugins: [viteDtsPlugin()],

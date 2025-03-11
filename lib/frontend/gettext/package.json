@@ -21,7 +21,8 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/node-gettext": "^3.0.1"
+    "@types/node-gettext": "^3.0.1",
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

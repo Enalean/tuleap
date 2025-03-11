@@ -7,7 +7,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "sass": "./dist/style.css",
+      "sass": "./dist/plugin-agiledashboard-scrum-milestone-header.css",
       "import": "./dist/plugin-agiledashboard-scrum-milestone-header.js",
       "require": "./dist/plugin-agiledashboard-scrum-milestone-header.umd.cjs"
     }
