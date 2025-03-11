@@ -444,7 +444,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         if ($this->hasDefaultValue()) {
             $content = $this->getProperty('default_value');
         }
-        $html .= '<textarea rows="' . $this->getProperty('rows') . '" cols="' . $this->getProperty('cols') . '" autocomplete="off">';
+        $html .= '<textarea data-test="text-field-admin-value" rows="' . $this->getProperty('rows') . '" cols="' . $this->getProperty('cols') . '" autocomplete="off">';
         $html .=  $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;

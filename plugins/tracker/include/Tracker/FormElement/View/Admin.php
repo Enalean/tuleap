@@ -245,28 +245,30 @@ class Tracker_FormElement_View_Admin
         $html     = '';
         switch ($property['type']) {
             case 'string':
-                $html .= '<label for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
+                $html .= '<label data-test="string-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
                 $html .= '<input type="text"
+                             data-test="string-specific-properties-input"
                              size="' . $purifier->purify($property['size']) . '"
                              name="formElement_data[specific_properties][' . $purifier->purify($key) . ']"
                              id="formElement_properties_' . $purifier->purify($key) . '"
                              value="' . $purifier->purify($property['value']) . '" />';
                 break;
             case 'date':
-                $html .= '<label for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
+                $html .= '<label data-test="date-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
                 $value = $purifier->purify($property['value'] ? $this->formElement->formatDate($property['value']) : '');
                 $html .= $GLOBALS['HTML']->getDatePicker('formElement_properties_' . $key, "formElement_data[specific_properties][$key]", $value);
                 break;
             case 'text':
-                $html .= '<label for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
+                $html .= '<label data-test="text-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
                 $html .= '<textarea
+                           data-test="text-field-specific-properties"
                            cols="50" rows="10"
                            name="formElement_data[specific_properties][' . $purifier->purify($key) . ']"
                            id="formElement_properties_' . $key . '">' .
                            $purifier->purify($property['value']) . '</textarea>';
                 break;
             case 'rich_text':
-                $html .= '<label for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
+                $html .= '<label data-test="rich-text-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
                 $html .= '<textarea
                            class="tracker-field-richtext"
                            cols="50" rows="10"
@@ -275,13 +277,14 @@ class Tracker_FormElement_View_Admin
                            $purifier->purify($property['value'], CODENDI_PURIFIER_FULL) . '</textarea>';
                 break;
             case 'radio':
-                $html .= '<label for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
+                $html .= '<label data-test="radio-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
                 foreach ($property['choices'] as $key_choice => $choice) {
                     $checked = '';
                     if ($this->formElement->getProperty($key) == $choice['radio_value']) {
                         $checked = 'checked="checked"';
                     }
                     $html .= '<div class="form-inline"><input type="radio"
+                                 data-test="input-type-radio"
                                  name="formElement_data[specific_properties][' . $purifier->purify($key) . ']"
                                  value="' . $purifier->purify($choice['radio_value']) . '"
                                  id="formElement_properties_' . $purifier->purify($key_choice) . '"
@@ -292,7 +295,7 @@ class Tracker_FormElement_View_Admin
                 break;
             case 'checkbox':
                 $checked = $property['value'] ? 'checked="checked"' : '';
-                $html   .= '<label class="checkbox">
+                $html   .= '<label class="checkbox" data-test="checkbox-specific-properties">
                         <input  type="hidden"
                                 name="formElement_data[specific_properties][' . $purifier->purify($key) . ']"
                                 value="0"/>

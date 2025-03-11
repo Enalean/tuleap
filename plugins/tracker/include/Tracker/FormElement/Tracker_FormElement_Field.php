@@ -849,7 +849,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
         $html .= '</div>';
 
-        $html .= '<label title="' . $hp->purify($this->description) . '" class="tracker_formelement_label">' .
+        $html .= '<label title="' . $hp->purify($this->description) . '" class="tracker_formelement_label" data-test="administration-field-label">' .
             $hp->purify($this->getLabel()) . $required . '</label>';
         $html .= $this->fetchAdminFormElement();
         $html .= '</div>';

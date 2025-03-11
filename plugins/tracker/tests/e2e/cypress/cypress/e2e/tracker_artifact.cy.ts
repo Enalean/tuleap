@@ -35,6 +35,42 @@ function editSimpleField(label: string): Cypress.Chainable<JQuery<HTMLElement>> 
         .find("[data-test-field-input]");
 }
 
+function selectFormElementWithName(form_element_name: string): void {
+    cy.get("[data-test=create-form-element-block]")
+        .contains(form_element_name)
+        .parent()
+        .find("[data-test=create-form-element]")
+        .click();
+}
+
+function updateSpecificPropertyField(field_name: string, field_value: string): void {
+    cy.get("[data-test=string-specific-properties]")
+        .contains(field_name)
+        .parent()
+        .find("[data-test=string-specific-properties-input]")
+        .clear()
+        .type(field_value);
+}
+
+function assertFieldDefaultValue(field_name: string, default_value: string): void {
+    cy.get("[data-test=administration-field-label]")
+        .contains(field_name)
+        .parent()
+        .find("[data-test=field-default-value]")
+        .should("have.value", default_value);
+}
+
+function assertListHaveBeenCreatedWithSubElements(
+    field_name: string,
+    number_of_elements: number,
+): void {
+    cy.get("[data-test=administration-field-label]")
+        .contains(field_name)
+        .parent()
+        .find("[data-test=field-list-value]")
+        .should("have.length", number_of_elements);
+}
+
 describe("Tracker artifacts", function () {
     const TITLE_FIELD_NAME = "title";
 
@@ -87,7 +123,7 @@ describe("Tracker artifacts", function () {
                 cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
             });
 
-            it("must be able to create tracker from empty", function () {
+            it("must be able to create tracker from empty and configure it", function () {
                 cy.projectAdministratorSession();
                 cy.visit(`/plugins/tracker/${encodeURIComponent(project_name)}/new`);
                 cy.get("[data-test=selected-option-tracker_empty]").click({ force: true });
@@ -98,6 +134,109 @@ describe("Tracker artifacts", function () {
                 );
                 cy.get("[data-test=button-create-my-tracker]").click();
                 cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
+
+                cy.log("Configure tracker fields");
+                cy.get("[data-test=continue-tracker-configuration]").click();
+
+                cy.log("Add computed field and check default value is stored");
+                selectFormElementWithName("Computed value");
+                cy.get("[data-test=formElement_label]").type("Computed");
+                updateSpecificPropertyField("Default value", "22");
+                cy.get("[data-test=formElement-submit]").click();
+                assertFieldDefaultValue("Computed", "22");
+
+                cy.log("Add float field and check default value is stored");
+                selectFormElementWithName("Float");
+                cy.get("[data-test=formElement_label]").type("Float");
+                updateSpecificPropertyField("Max", "123");
+                updateSpecificPropertyField("Size", "456");
+                updateSpecificPropertyField("Default value", "789");
+                cy.get("[data-test=formElement-submit]").click();
+                assertFieldDefaultValue("Float", "789");
+
+                cy.log("Add int field and check default value is stored");
+                selectFormElementWithName("Integer");
+                cy.get("[data-test=formElement_label]").type("Int");
+                updateSpecificPropertyField("Max", "12");
+                updateSpecificPropertyField("Size", "34");
+                updateSpecificPropertyField("Default value", "56");
+                cy.get("[data-test=formElement-submit]").click();
+                assertFieldDefaultValue("Int", "56");
+
+                cy.log("Add list field and check default value is stored");
+                selectFormElementWithName("Selectbox");
+                cy.get("[data-test=formElement_label]").type("Selectbox");
+                cy.get("[data-test=list-static-bind-values]").type(
+                    "Alpha{Enter}Beta{Enter}Gamma{Enter}",
+                );
+                cy.get("[data-test=formElement-submit]").click();
+                assertListHaveBeenCreatedWithSubElements("Selectbox", 4);
+                cy.get("[data-test=form-element-field-list] option")
+                    .should("contain", "None")
+                    .and("contain", "Alpha")
+                    .and("contain", "Beta")
+                    .and("contain", "Gamma");
+
+                cy.log("Add multiselectbox field and check default value is stored");
+                selectFormElementWithName("Multi Select Box");
+                cy.get("[data-test=formElement_label]").type("MultiSelectbox");
+                cy.get("[data-test=list-static-bind-values]").type(
+                    "Delta{Enter}Epsilon{Enter}Zeta{Enter}Eta{Enter}",
+                );
+                cy.get("[data-test=formElement-submit]").click();
+                assertListHaveBeenCreatedWithSubElements("Selectbox", 5);
+                cy.get("[data-test=form-element-field-list] option")
+                    .should("contain", "None")
+                    .and("contain", "Delta")
+                    .and("contain", "Epsilon")
+                    .and("contain", "Zeta")
+                    .and("contain", "Eta");
+
+                cy.log("Add open list field and check default value is stored");
+                selectFormElementWithName("Open List");
+                cy.get("[data-test=formElement_label]").type("Open");
+                cy.get("[data-test=list-static-bind-values]").type("Theta{Enter}Iota{Enter}");
+                cy.get("[data-test=formElement-submit]").click();
+
+                cy.log("Add rich text field and check default value is stored");
+                selectFormElementWithName("Static Text");
+                cy.get("[data-test=formElement_label]").type("Static");
+                cy.window().then((win): void => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    win.CKEDITOR.instances.formElement_properties_static_value.setData(
+                        "My custom text",
+                    );
+                });
+                cy.get("[data-test=formElement-submit]").click();
+                cy.get("[data-test=rich-text-value]").should("contain.text", "My custom text");
+
+                cy.log("Add string field and check default value is stored");
+                selectFormElementWithName("String");
+                cy.get("[data-test=formElement_label]").type("String");
+                updateSpecificPropertyField("Default value", "Default string");
+                cy.get("[data-test=formElement-submit]").click();
+                assertFieldDefaultValue("String", "Default string");
+
+                cy.log("Add text field and check default value is stored");
+                selectFormElementWithName("Text");
+                cy.get("[data-test=formElement_label]").type("Text");
+                updateSpecificPropertyField("Row", "20");
+                updateSpecificPropertyField("Columns", "30");
+                cy.get("[data-test=text-field-specific-properties]").type("Text default value");
+                cy.get("[data-test=formElement-submit]").click();
+                cy.get("[data-test=text-field-admin-value]").should(
+                    "contain.text",
+                    "Text default value",
+                );
+
+                cy.log("Add date field and check default value is stored");
+                selectFormElementWithName("Date");
+                cy.get("[data-test=formElement_label]").type("Date");
+                cy.get("[data-test=input-type-radio]").last().check();
+                cy.get("[data-test=date-picker]").type("2021-01-01");
+                cy.get("[data-test=formElement-submit]").click();
+                cy.get("[data-test=date-time-date]").invoke("val").should("equal", "2021-01-01");
             });
 
             it("must be able to create tracker from an other project", function () {
@@ -354,7 +493,7 @@ describe("Tracker artifacts", function () {
                 cy.getContains("[data-test=tracker-link]", "Issues").click();
                 // eslint-disable-next-line cypress/no-force -- Link is in a dropdown
                 cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
-                cy.get('[data-test="create-formElement[perm]"]').click();
+                selectFormElementWithName("Permissions");
                 cy.get("[data-test=formElement_label]").type("Artifact permissions");
                 cy.get("[data-test='formElement-submit']").click();
 

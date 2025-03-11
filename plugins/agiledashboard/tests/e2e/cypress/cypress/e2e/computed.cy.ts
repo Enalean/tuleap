@@ -61,7 +61,11 @@ describe(`Computed fields`, function () {
         cy.get("[data-test=direct-link-to-artifact]").click();
         cy.get("[data-test=artifact-copy-button]").click({ force: true });
         cy.get("[data-test=edit-field-computed]").click();
-        cy.get("[data-test=computed]").type("0");
+        cy.get("[data-test=field-label]")
+            .contains("Computed")
+            .parent()
+            .find("[data-test=field-default-value]")
+            .type("0");
 
         cy.get("[data-test=copy-children-button]").click({ force: true });
         cy.get("[data-test=tracker-artifact-value-links]").contains("Sprint 1");
@@ -85,7 +89,11 @@ describe(`Computed fields`, function () {
         cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
 
         cy.get("[data-test=release_number]").type("R0");
-        cy.get("[data-test=computed]").type("0");
+        cy.get("[data-test=field-label]")
+            .contains("Computed")
+            .parent()
+            .find("[data-test=field-default-value]")
+            .type("0");
         cy.get("[data-test=submit-and-continue]").click();
         cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
     });

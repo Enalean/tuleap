@@ -994,7 +994,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $required = 'required ';
         }
 
-        $html .= "<select $id $name $multiple $size $bind_type $required";
+        $html .= "<select $id $name $multiple $size $bind_type $required data-test='form-element-field-list'>'";
         if ($data_target_fields_ids !== '') {
             $html .= $data_target_fields_ids;
         }
@@ -1013,7 +1013,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         $styles       = $list_bind->getSelectOptionStyles($value_id);
         $selected     = $is_selected ? 'selected="selected"' : '';
-        $option_start = '<option value="'
+        $option_start = '<option data-test="field-list-value" value="'
                         . $value_id
                         . '" '
                         . $selected
