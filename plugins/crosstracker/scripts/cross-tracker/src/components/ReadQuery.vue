@@ -73,6 +73,7 @@ import { ReportRetrievalFault } from "../domain/ReportRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
 import type { CreatedQueryEvent, SwitchQueryEvent } from "../helpers/emitter-provider";
 import {
+    UPDATE_WIDGET_TITLE_EVENT,
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_SUCCESS_EVENT,
     NOTIFY_FAULT_EVENT,
@@ -143,7 +144,13 @@ function loadBackendReport(): void {
                     return;
                 }
 
-                emitter.emit(SWITCH_QUERY_EVENT, { query: reports[0] });
+                backend_query.value = reports[0];
+                initQueries();
+                if (is_multiple_query_supported) {
+                    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, {
+                        new_title: backend_query.value.title,
+                    });
+                }
                 has_error.value = false;
             },
             (fault) => {

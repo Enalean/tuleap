@@ -40,8 +40,10 @@ import type {
     NotifyFaultEvent,
     NotifySuccessEvent,
     SwitchQueryEvent,
+    UpdateWidgetTitleEvent,
 } from "../helpers/emitter-provider";
 import {
+    UPDATE_WIDGET_TITLE_EVENT,
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
@@ -58,6 +60,7 @@ describe("ReadQuery", () => {
     let dispatched_clear_feedback_events: true[];
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_success_events: NotifySuccessEvent[];
+    let dispatched_updated_title_events: UpdateWidgetTitleEvent[];
     let emitter: EmitterProvider;
 
     beforeEach(() => {
@@ -66,6 +69,7 @@ describe("ReadQuery", () => {
         dispatched_clear_feedback_events = [];
         dispatched_fault_events = [];
         dispatched_success_events = [];
+        dispatched_updated_title_events = [];
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, (event) => {
             dispatched_switch_query_events.push(event);
@@ -78,6 +82,9 @@ describe("ReadQuery", () => {
         });
         emitter.on(NOTIFY_SUCCESS_EVENT, (event) => {
             dispatched_success_events.push(event);
+        });
+        emitter.on(UPDATE_WIDGET_TITLE_EVENT, (event) => {
+            dispatched_updated_title_events.push(event);
         });
 
         vi.spyOn(rest_querier, "getQueries").mockReturnValue(
@@ -118,7 +125,7 @@ describe("ReadQuery", () => {
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
             expect(wrapper.vm.report_state).toBe("edit-query");
-            expect(dispatched_clear_feedback_events).toHaveLength(2);
+            expect(dispatched_clear_feedback_events).toHaveLength(1);
         });
 
         it(`Given I am not admin,
@@ -147,7 +154,7 @@ describe("ReadQuery", () => {
             wrapper.findComponent(WritingMode).vm.$emit("cancel-query-edition");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(dispatched_clear_feedback_events).toHaveLength(3);
+            expect(dispatched_clear_feedback_events).toHaveLength(2);
         });
     });
 
@@ -170,7 +177,7 @@ describe("ReadQuery", () => {
             });
 
             expect(wrapper.vm.report_state).toBe("result-preview");
-            expect(dispatched_clear_feedback_events).toHaveLength(3);
+            expect(dispatched_clear_feedback_events).toHaveLength(2);
         });
     });
 
@@ -224,7 +231,7 @@ describe("ReadQuery", () => {
             wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-report");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(dispatched_clear_feedback_events).toHaveLength(4);
+            expect(dispatched_clear_feedback_events).toHaveLength(3);
         });
     });
 
@@ -267,7 +274,7 @@ describe("ReadQuery", () => {
             expect(dispatched_switch_query_events.length).toBe(0);
         });
 
-        it("Does emit a SWITCH_QUERY_EVENT with the first query as parameter once done loading", async () => {
+        it("Does emit a UPDATE_WIDGET_TITLE_EVENT with the first query as parameter once done loading", async () => {
             const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
             const uuid1 = "0194dfd6-a489-703b-aabd-9d473212d908";
             const uuid2 = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
@@ -279,7 +286,7 @@ describe("ReadQuery", () => {
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(dispatched_switch_query_events[0].query).toStrictEqual(queries[0]);
+            expect(dispatched_updated_title_events[0].new_title).toStrictEqual(queries[0].title);
         });
     });
 
@@ -326,7 +333,7 @@ describe("ReadQuery", () => {
         });
 
         it(`when user is admin and there are no invalid trackers,
-            it allows CSV export`, () => {
+            it allows xlsx export`, () => {
             const wrapper = getWrapper();
 
             expect(wrapper.vm.is_export_allowed).toBe(true);

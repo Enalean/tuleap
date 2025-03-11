@@ -90,6 +90,7 @@ class CrossTrackerSearchWidget extends Widget
                     ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
                     $row['dashboard_type'],
                     $this->getTitleAttributeValue(),
+                    $this->getTitle(),
                 )),
             ]
         );

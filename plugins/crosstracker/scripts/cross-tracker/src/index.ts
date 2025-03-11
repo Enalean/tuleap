@@ -36,6 +36,8 @@ import {
     RETRIEVE_ARTIFACTS_TABLE,
     DASHBOARD_TYPE,
     NEW_QUERY_CREATOR,
+    UPDATE_WIDGET_TITLE,
+    DEFAULT_WIDGET_TITLE,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -75,13 +77,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const widget_data: WidgetData = JSON.parse(widget_json_data);
         const emitter = mitt<Events>();
 
-        if (widget_data.is_multiple_query_supported) {
-            const title_element = selectOrThrow(
-                document,
-                `[data-widget-title="${widget_data.title_attribute}"]`,
-            );
-            WidgetTitleUpdater(emitter, title_element).listenToSwitchQuery();
-        }
+        const title_element = selectOrThrow(
+            document,
+            `[data-widget-title="${widget_data.title_attribute}"]`,
+        );
+        const widget_title_updater = WidgetTitleUpdater(emitter, title_element);
 
         const new_query_creator = NewQueryCreator();
 
@@ -105,6 +105,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(GET_SUGGESTED_QUERIES, SuggestedQueries({ $gettext: gettext_plugin.$gettext }))
             .provide(DASHBOARD_TYPE, widget_data.dashboard_type)
             .provide(NEW_QUERY_CREATOR, new_query_creator)
+            .provide(UPDATE_WIDGET_TITLE, widget_title_updater)
+            .provide(DEFAULT_WIDGET_TITLE, widget_data.default_title)
             .mount(vue_mount_point);
     }
 });
