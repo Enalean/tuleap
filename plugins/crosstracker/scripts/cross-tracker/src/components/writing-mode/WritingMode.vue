@@ -80,6 +80,7 @@ function search(): void {
             tql_query: editor.value.tql_query,
             title: props.writing_query.title,
             description: props.writing_query.description,
+            is_default: props.writing_query.is_default,
         };
         emit("preview-result", query);
         emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });

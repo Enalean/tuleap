@@ -62,12 +62,14 @@ describe("ReadingMode", () => {
             tql_query: "",
             title: "",
             description: "a great backend query",
+            is_default: false,
         };
         reading_query = {
             id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
             tql_query: "",
             title: "",
             description: "a great reading query",
+            is_default: false,
         };
         is_user_admin = true;
         has_error = false;
@@ -136,6 +138,7 @@ describe("ReadingMode", () => {
                 tql_query: expert_query,
                 title: reading_query.title,
                 description: reading_query.description,
+                is_default: false,
             };
 
             const updateQuery = vi

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,32 +19,30 @@
  */
 
 declare(strict_types=1);
+namespace Tuleap\CrossTracker\Tests\Stub\Report\Query;
 
-namespace Tuleap\CrossTracker\REST\v1\Representation;
+use Tuleap\CrossTracker\Report\Query\ResetIsDefaultColumn;
 
-/**
- * @psalm-immutable
- */
-final class CrossTrackerQueryPostRepresentation
+final class ResetIsDefaultColumnStub implements ResetIsDefaultColumn
 {
-    /**
-     * @var int ID of the widget {@required true}
-     */
-    public int $widget_id;
-    /**
-     * @var string The TQL query {@required true}
-     */
-    public string $tql_query;
-    /**
-     * @var string The query title {@required true}
-     */
-    public string $title;
-    /**
-     * @var string The query description {@required false}
-     */
-    public string $description;
-    /**
-     * @var bool The query is displayed by default or not {@required false}
-     */
-    public bool $is_default = false;
+    private int $call_count = 0;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function resetIsDefaultColumnByWidgetId(int $widget_id): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
 }

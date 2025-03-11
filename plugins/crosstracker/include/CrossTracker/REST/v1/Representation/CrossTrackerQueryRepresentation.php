@@ -34,6 +34,7 @@ final readonly class CrossTrackerQueryRepresentation
         public string $tql_query,
         public string $title,
         public string $description,
+        public bool $is_default,
     ) {
     }
 
@@ -45,6 +46,7 @@ final readonly class CrossTrackerQueryRepresentation
             $query->getQuery(),
             $query->getTitle(),
             $query->getDescription(),
+            $query->isDefault(),
         );
     }
 }

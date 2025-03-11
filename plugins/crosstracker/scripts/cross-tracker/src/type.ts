@@ -24,6 +24,7 @@ export type Query = {
     readonly tql_query: string;
     readonly title: string;
     readonly description: string;
+    readonly is_default: boolean;
 };
 
 export type Artifact = {

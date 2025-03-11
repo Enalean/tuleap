@@ -62,6 +62,7 @@ describe("rest-querier", () => {
                 tql_query,
                 title: " My TQL query",
                 description: "My description",
+                is_default: false,
             };
             const putJSON = vi.spyOn(fetch_result, "putJSON").mockReturnValue(okAsync(query));
 
@@ -88,6 +89,7 @@ describe("rest-querier", () => {
                 tql_query,
                 title: " My TQL query",
                 description: "My description",
+                is_default: false,
             };
             const query_id = "0194d59b-f37b-73e1-a553-cf143a3c1203";
             const postJSON = vi.spyOn(fetch_result, "postJSON").mockReturnValue(

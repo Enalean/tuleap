@@ -31,13 +31,15 @@ export type QueryRepresentation = {
     readonly tql_query: string;
     readonly title: string;
     readonly description: string;
+    readonly is_default: boolean;
 };
 
 export type PostQueryRepresentation = {
     widget_id: number;
     tql_query: string;
     title: string;
-    description?: string;
+    description: string;
+    is_default: boolean;
 };
 
 export const DATE_SELECTABLE_TYPE = "date";

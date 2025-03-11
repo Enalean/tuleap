@@ -38,13 +38,15 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilde
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryDao;
 use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryFactory;
+use Tuleap\CrossTracker\Report\Query\QueryCreator;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerGetContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPostRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPutRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryRepresentation;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
-use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\InvalidJsonException;
 use Tuleap\REST\Header;
@@ -131,7 +133,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
                 fn() => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingReport(
-                    CrossTrackerQuery::fromTqlQueryAndWidgetId($query->tql_query, $query->widget_id),
+                    CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($query->tql_query, $query->widget_id),
                     $current_user,
                     $limit,
                     $offset,
@@ -267,6 +269,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
                 $query_representation->title,
                 $query_representation->description,
                 $previous_query->getWidgetId(),
+                false,
             );
 
             $trackers = $this->factory_builder->getReportTrackersRetriever()->getReportTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
@@ -346,26 +349,19 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $current_user = $this->current_user_provider->getCurrentUser();
             $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToUpdateWidget($current_user, $query_representation->widget_id);
 
-            $uuid_factory = new DatabaseUUIDV7Factory();
-            $new_query    = new CrossTrackerQuery(
-                $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()),
-                $query_representation->tql_query,
-                $query_representation->title,
-                $query_representation->description,
-                $query_representation->widget_id,
-            );
-            $trackers     = $this->factory_builder->getReportTrackersRetriever()->getReportTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
+            $new_query = CrossTrackerQueryFactory::fromQueryPostRepresentation($query_representation);
+            $trackers  = $this->factory_builder->getReportTrackersRetriever()->getReportTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
             $this->checkQueryIsValid($trackers, $new_query->getQuery(), $current_user, $new_query->getWidgetId());
 
-            $uuid = $this->getQueryDao()->create($new_query->getQuery(), $new_query->getTitle(), $new_query->getDescription(), $query_representation->widget_id);
+            $query_dao     = $this->getQueryDao();
+            $created_query = (new QueryCreator(
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                $query_dao,
+                $query_dao
+            ))
+                ->createNewQuery($new_query);
 
-            return CrossTrackerQueryRepresentation::fromQuery(new CrossTrackerQuery(
-                $uuid,
-                $new_query->getQuery(),
-                $new_query->getTitle(),
-                $new_query->getDescription(),
-                $query_representation->widget_id,
-            ));
+            return CrossTrackerQueryRepresentation::fromQuery($created_query);
         } catch (CrossTrackerWidgetNotFoundException) {
             throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $query_representation->widget_id));
         } catch (FromIsInvalidException $exception) {

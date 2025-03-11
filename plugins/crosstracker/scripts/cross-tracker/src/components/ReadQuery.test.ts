@@ -97,6 +97,7 @@ describe("ReadQuery", () => {
                     tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
                     title: "My title",
                     description: "",
+                    is_default: false,
                 },
             ]),
         );
@@ -181,6 +182,7 @@ describe("ReadQuery", () => {
                 tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
                 title: "My title",
                 description: "",
+                is_default: false,
             });
 
             expect(wrapper.vm.report_state).toBe("result-preview");
@@ -210,6 +212,7 @@ describe("ReadQuery", () => {
                 tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
                 title: "My title",
                 description: "",
+                is_default: false,
             });
 
             expect(wrapper.vm.report_state).toBe("report-saved");
@@ -235,6 +238,7 @@ describe("ReadQuery", () => {
                 tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
                 title: "My title",
                 description: "",
+                is_default: false,
             });
             await nextTick();
             wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-report");
@@ -250,7 +254,13 @@ describe("ReadQuery", () => {
             const uuid = "0194dfd6-a489-703b-aabd-9d473212d908";
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(
                 okAsync([
-                    { tql_query: query, title: " TQL query title", description: "", id: uuid },
+                    {
+                        tql_query: query,
+                        title: " TQL query title",
+                        description: "",
+                        id: uuid,
+                        is_default: false,
+                    },
                 ]),
             );
             getWrapper();
@@ -288,8 +298,20 @@ describe("ReadQuery", () => {
             const uuid1 = "0194dfd6-a489-703b-aabd-9d473212d908";
             const uuid2 = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
             const queries: ReadonlyArray<Query> = [
-                { tql_query: query, title: "TQL query title 1", description: "", id: uuid1 },
-                { tql_query: query, title: "TQL query title 2", description: "", id: uuid2 },
+                {
+                    tql_query: query,
+                    title: "TQL query title 1",
+                    description: "",
+                    id: uuid1,
+                    is_default: false,
+                },
+                {
+                    tql_query: query,
+                    title: "TQL query title 2",
+                    description: "",
+                    id: uuid2,
+                    is_default: false,
+                },
             ];
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync(queries));
             getWrapper();

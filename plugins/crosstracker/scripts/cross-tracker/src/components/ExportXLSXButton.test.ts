@@ -86,6 +86,7 @@ describe("ExportXLSXButton", () => {
                     tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
                     title: "The title of my query",
                     description: "",
+                    is_default: false,
                 },
             },
         });

@@ -42,6 +42,7 @@ import QuerySelectableTable from "../QuerySelectableTable.vue";
 import { PostNewQueryStub } from "../../../../tests/stubs/PostNewQueryStub";
 import type { PostNewQuery } from "../../../domain/PostNewQuery";
 import mitt from "mitt";
+import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
 
 vi.useFakeTimers();
 
@@ -230,12 +231,23 @@ describe("CreateNewQuery", () => {
     });
     describe("Saving a new query", () => {
         it("saves a new query result when the save button is clicked", async () => {
-            const wrapper = getWrapper(PostNewQueryStub.withDefaultContent());
-
+            const title = "Some title";
+            const description = "";
+            const is_default = true;
+            const tql_query = "SELECT @id FROM @project = 'self' WHERE @id > 1 ";
+            const wrapper = getWrapper(
+                PostNewQueryStub.withCallback((query_to_post) => {
+                    expect(query_to_post.title).toStrictEqual(title);
+                    expect(query_to_post.description).toStrictEqual(description);
+                    expect(query_to_post.is_default).toStrictEqual(is_default);
+                    expect(query_to_post.tql_query).toStrictEqual(tql_query);
+                }),
+            );
+            wrapper.findComponent(QueryEditorForCreation).vm.$emit("update:tql_query", tql_query);
+            wrapper.findComponent(TitleInput).vm.$emit("update:title", title);
             wrapper
-                .findComponent(QueryEditorForCreation)
-                .vm.$emit("update:tql_query", "SELECT @id FROM @project = 'self' WHERE @id > 1 ");
-            wrapper.findComponent(TitleInput).vm.$emit("update:title", "Some title");
+                .findComponent(QueryDisplayedByDefaultSwitch)
+                .vm.$emit("update:is_default_query", is_default);
 
             await vi.runOnlyPendingTimersAsync();
 

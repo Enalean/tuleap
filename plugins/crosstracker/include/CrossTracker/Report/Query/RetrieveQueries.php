@@ -22,13 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-use Tuleap\DB\UUID;
-
+/**
+ * @psalm-import-type CrossTrackerQueryRow from CrossTrackerQueryDao
+ */
 interface RetrieveQueries
 {
-    /** @return array{id: UUID, query: string, title: string, description: string, widget_id: int}|null */
+    /** @psalm-return CrossTrackerQueryRow|null */
     public function searchQueryByUuid(string $uuid_hex): ?array;
 
-    /** @return list<array{id: UUID, query: string, title: string, description: string, widget_id: int}> */
+    /** @psalm-return list<CrossTrackerQueryRow> */
     public function searchQueriesByWidgetId(int $widget_id): array;
 }

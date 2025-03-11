@@ -79,6 +79,7 @@ describe(`SelectableTable`, () => {
             tql_query: `SELECT start_date WHERE start_date != ''`,
             title: "",
             description: "",
+            is_default: false,
         };
 
         emitter = mitt<Events>();

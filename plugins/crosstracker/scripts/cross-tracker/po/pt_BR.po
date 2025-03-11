@@ -94,6 +94,9 @@ msgstr ""
 msgid "Last update date"
 msgstr ""
 
+msgid "Make this query displayed by default"
+msgstr ""
+
 msgid "Name your query"
 msgstr ""
 

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker;
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
 
 final readonly class CrossTrackerQuery
@@ -33,13 +32,8 @@ final readonly class CrossTrackerQuery
         private string $title,
         private string $description,
         private int $widget_id,
+        private bool $is_default,
     ) {
-    }
-
-    public static function fromTqlQueryAndWidgetId(string $tql_query, int $widget_id): self
-    {
-        $uuid_factory = new DatabaseUUIDV7Factory();
-        return new self($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $tql_query, '', '', $widget_id);
     }
 
     public function getUUID(): UUID
@@ -65,5 +59,10 @@ final readonly class CrossTrackerQuery
     public function getWidgetId(): int
     {
         return $this->widget_id;
+    }
+
+    public function isDefault(): bool
+    {
+        return $this->is_default;
     }
 }

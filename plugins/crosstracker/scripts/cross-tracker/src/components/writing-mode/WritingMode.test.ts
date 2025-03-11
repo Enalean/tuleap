@@ -38,6 +38,7 @@ describe("WritingMode", () => {
             tql_query: "",
             title: "",
             description: "",
+            is_default: false,
         };
     });
 
@@ -58,7 +59,13 @@ describe("WritingMode", () => {
 
     describe("cancel()", () => {
         it("when I hit cancel, then an event will be emitted to cancel the query edition and switch the widget back to reading mode", () => {
-            const wrapper = getWrapper({ id: "", tql_query: "", title: "", description: "" });
+            const wrapper = getWrapper({
+                id: "",
+                tql_query: "",
+                title: "",
+                description: "",
+                is_default: false,
+            });
 
             wrapper.find("[data-test=writing-mode-cancel-button]").trigger("click");
             const emitted = wrapper.emitted("cancel-query-edition");
@@ -73,7 +80,13 @@ describe("WritingMode", () => {
 
     describe("search()", () => {
         it("when I hit search, then an event will be emitted to preview the results and switch the widget to reading mode", () => {
-            const wrapper = getWrapper({ id: "", tql_query: "", title: "", description: "" });
+            const wrapper = getWrapper({
+                id: "",
+                tql_query: "",
+                title: "",
+                description: "",
+                is_default: false,
+            });
 
             wrapper.find("[data-test=search-report-button]").trigger("click");
             const emitted = wrapper.emitted("preview-result");
