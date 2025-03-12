@@ -223,6 +223,10 @@ ol:has(> .artidoc-section-with-add-button:last-child:hover) + .artidoc-add-new-s
         }
     }
 }
+
+li:first-child > .artidoc-add-new-section-container {
+    padding-top: var(--tlp-small-spacing);
+}
 </style>
 
 <style scoped lang="scss">

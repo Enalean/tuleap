@@ -64,4 +64,9 @@ h1 {
     padding-bottom: var(--tlp-small-spacing);
     color: var(--tlp-dark-color);
 }
+
+h2,
+h3 {
+    margin: 0;
+}
 </style>

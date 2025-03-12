@@ -140,11 +140,26 @@ artidoc-section {
 
 artidoc-section-title {
     display: block;
-    margin: 0 0 var(--tlp-large-spacing);
-    padding: 0 0 var(--tlp-small-spacing);
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
+/* stylelint-disable selector-class-pattern */
+.document-section-has-empty-description:not(:has(.document-section-cancel-save-buttons))
+    > .editor
+    > .ProseMirror:not(.ProseMirror-focused)
+    > artidoc-section {
+    > artidoc-section-title {
+        margin: 0;
+    }
+
+    > artidoc-section-description {
+        display: none;
+    }
+}
+/* stylelint-enable selector-class-pattern */
+
 .artidoc-section-level-1 artidoc-section-title {
+    padding: 0 0 var(--tlp-small-spacing);
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
     color: var(--tlp-dark-color);
     font-size: 36px;

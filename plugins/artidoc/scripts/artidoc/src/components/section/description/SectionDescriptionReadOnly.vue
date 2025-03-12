@@ -39,3 +39,9 @@ onMounted(() => {
     }
 });
 </script>
+
+<style lang="scss">
+.section-description pre {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+</style>

@@ -42,6 +42,7 @@
                     section_state.is_just_refreshed.value === true,
                 'document-section-is-in-error': is_in_error,
                 'document-section-is-outdated': is_outdated,
+                'document-section-has-empty-description': has_empty_description,
             }"
         >
             <section-header
@@ -69,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from "vue";
+import { watch, computed } from "vue";
 import type { Ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -167,6 +168,11 @@ const section_refresher = getSectionRefresher(
     sections_updater,
     section_editor_closer,
 );
+const has_empty_description = computed(
+    () =>
+        section_state.edited_description.value === "" ||
+        section_state.edited_description.value === "<p></p>",
+);
 
 const { $gettext } = useGettext();
 
@@ -242,6 +248,10 @@ section {
 .section-header {
     margin-bottom: var(--tlp-medium-spacing);
     background: var(--tuleap-artidoc-section-background);
+}
+
+.document-section-has-empty-description > .section-header {
+    margin: 0;
 }
 
 .section-header-with-border {

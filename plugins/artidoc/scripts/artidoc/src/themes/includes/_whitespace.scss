@@ -20,7 +20,7 @@
 $section-horizontal-padding: var(--tlp-jumbo-spacing);
 $section-left-padding: calc(#{$section-horizontal-padding} + var(--tlp-large-spacing));
 $section-right-padding: #{$section-horizontal-padding};
-$add-section-button-container-vertical-padding: var(--tlp-small-spacing);
+$add-section-button-container-vertical-padding: #{0}px;
 
 // Unfortunately we cannot use var() here because this variable will be used to compute the viewport breaking point
 // and @media queries do not work when there is a CSS variable. So condensed mode will have to live with a 8px instead
