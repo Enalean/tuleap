@@ -20,7 +20,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import App from "./components/App.vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import type {
     CSRFToken,
@@ -42,10 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettext(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "tracker-creation-po" */ "../po/" + getPOFileFromLocale(locale)
-            ),
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const AppComponent = Vue.extend(App);

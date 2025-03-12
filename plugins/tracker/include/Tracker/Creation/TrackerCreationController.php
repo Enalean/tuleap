@@ -27,9 +27,9 @@ use HTTPRequest;
 use Project;
 use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\HeaderConfigurationBuilder;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -97,15 +97,16 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
 
         $this->permission_checker->checkANewTrackerCanBeCreated($project, $user);
 
-        $layout->addBreadcrumbs(
-            $this->breadcrumbs_builder->build($project, $user)
-        );
-
-        $assets = new IncludeAssets(
+        $assets = new IncludeViteAssets(
             __DIR__ . '/../../../scripts/tracker-creation/frontend-assets',
             '/assets/trackers/tracker-creation'
         );
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'tracker-creation-style'));
+        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'src/index.ts'));
+        $layout->addCssAsset(CssViteAsset::fromFileName($assets, 'themes/main.scss'));
+
+        $layout->addBreadcrumbs(
+            $this->breadcrumbs_builder->build($project, $user)
+        );
 
         $layout->header(
             HeaderConfigurationBuilder::get(dgettext('tuleap-tracker', 'New tracker'))
@@ -125,7 +126,6 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
                 )
             );
 
-        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-creation.js'));
         $layout->footer([]);
     }
 
