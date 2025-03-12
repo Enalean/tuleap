@@ -22,7 +22,7 @@
 use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Option\Option;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -1029,13 +1029,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
             $html .= '</div>';
 
             if ($request->get('should-display-created-tracker-modal')) {
-                $assets = new IncludeAssets(
+                $assets = new \Tuleap\Layout\IncludeViteAssets(
                     __DIR__ . '/../../../scripts/tracker-creation/frontend-assets',
                     '/assets/trackers/tracker-creation'
                 );
 
-                $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'tracker-creation-success.js'));
-                $GLOBALS['Response']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'tracker-creation-success-style'));
+                $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'src/success-modal/success-modal.ts'));
+                $GLOBALS['Response']->addCssAsset(CssViteAsset::fromFileName($assets, 'themes/success-modal.scss'));
 
                 $renderer = TemplateRendererFactory::build()->getRenderer(
                     TRACKER_TEMPLATE_DIR  . '/tracker-creation/'

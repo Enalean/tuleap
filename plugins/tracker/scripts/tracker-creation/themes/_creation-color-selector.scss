@@ -109,7 +109,7 @@ body[data-user-has-accessibility-mode="1"] {
             &.#{$color-name} {
                 &::before {
                     background: map.get($colors, "primary");
-                    mask-image: url("#{map-get($colors, 'pattern')}");
+                    mask-image: url("#{map.get($colors, 'pattern')}");
                 }
             }
         }
