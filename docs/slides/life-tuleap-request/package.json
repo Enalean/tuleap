@@ -12,5 +12,10 @@
   "devDependencies": {
     "@slidev/cli": "^51.4.0",
     "@slidev/theme-default": "^0.25.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/helpers": "^7.26.10"
+    }
   }
 }
