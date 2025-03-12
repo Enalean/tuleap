@@ -3,6 +3,9 @@
 <div class="tuleap-modal">
     <div class="tuleap-modal-main-panel">
         <form enctype="multipart/form-data">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <div class="tuleap-modal-title modal-header">
                 <a role="button" class="tuleap-modal-close close" data-dismiss="modal">
                     <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>

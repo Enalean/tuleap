@@ -42,6 +42,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     /** @var HiddenFieldsetsDetector */
     private $hidden_fieldsets_detector;
+    public readonly CSRFSynchronizerToken $csrf_token;
 
     public function __construct(
         $follow_ups,
@@ -60,6 +61,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
         $this->last_changeset_id         = $artifact->getLastChangeset()->getId();
         $this->form_elements             = $form_elements;
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
+        $this->csrf_token                = new CSRFSynchronizerToken($artifact->getTracker()->getUri());
     }
 
     public function artifact_links_title()
