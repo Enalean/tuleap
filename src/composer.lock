@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "abe44bf104c336ad13bcc7105868472f",
+    "content-hash": "068721a1849647d69cc0cc2fcff06dcc",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -2798,12 +2798,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/mustache.php.git",
-                "reference": "261e4271ea868893fc9c44c7aede5009c581f68f"
+                "reference": "b3f5aaa2a9c468f3f000165d904032d3b0398bdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/261e4271ea868893fc9c44c7aede5009c581f68f",
-                "reference": "261e4271ea868893fc9c44c7aede5009c581f68f",
+                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/b3f5aaa2a9c468f3f000165d904032d3b0398bdb",
+                "reference": "b3f5aaa2a9c468f3f000165d904032d3b0398bdb",
                 "shasum": ""
             },
             "require": {
@@ -2837,9 +2837,9 @@
                 "templating"
             ],
             "support": {
-                "source": "https://github.com/Enalean/mustache.php/tree/main-tuleap-20221202"
+                "source": "https://github.com/Enalean/mustache.php/tree/main-tuleap-20250312"
             },
-            "time": "2022-12-02T10:37:59+00:00"
+            "time": "2025-03-12T11:06:02+00:00"
         },
         {
             "name": "nette/schema",
