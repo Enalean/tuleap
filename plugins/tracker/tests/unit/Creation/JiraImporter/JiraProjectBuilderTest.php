@@ -23,45 +23,41 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraServerClientStub;
-use function PHPUnit\Framework\assertEquals;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class JiraProjectBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsRecursivelyProjects(): void
     {
-        $wrapper = new class extends JiraCloudClientStub {
-            public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
-                    'isLast'     => false,
-                    'maxResults' => 2,
-                    'startAt'    => 0,
-                    'values'     => [
-                        [
-                            'key'  => 'TO',
-                            'name' => 'toto',
-                        ],
+        $wrapper = JiraCloudClientStub::aJiraCloudClient([
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
+                'isLast'     => false,
+                'maxResults' => 2,
+                'startAt'    => 0,
+                'values'     => [
+                    [
+                        'key'  => 'TO',
+                        'name' => 'toto',
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => [
-                    'isLast'     => true,
-                    'maxResults' => 2,
-                    'startAt'    => 1,
-                    'values'     => [
-                        [
-                            'key'  => 'TU',
-                            'name' => 'tutu',
-                        ],
+            ],
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => [
+                'isLast'     => true,
+                'maxResults' => 2,
+                'startAt'    => 1,
+                'values'     => [
+                    [
+                        'key'  => 'TU',
+                        'name' => 'tutu',
                     ],
                 ],
-            ];
-        };
+            ],
+        ]);
 
         $expected_collection = new JiraProjectCollection();
         $expected_collection->addProject(
@@ -85,22 +81,20 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAndExceptionIfRecursiveCallGoesWrong(): void
     {
-        $wrapper = new class extends JiraCloudClientStub {
-            public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
-                    'isLast'     => false,
-                    'maxResults' => 2,
-                    'startAt'    => 0,
-                    'values'     => [
-                        [
-                            'key'  => 'TO',
-                            'name' => 'toto',
-                        ],
+        $wrapper = JiraCloudClientStub::aJiraCloudClient([
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
+                'isLast'     => false,
+                'maxResults' => 2,
+                'startAt'    => 0,
+                'values'     => [
+                    [
+                        'key'  => 'TO',
+                        'name' => 'toto',
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => null,
-            ];
-        };
+            ],
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => null,
+        ]);
 
         $this->expectException(UnexpectedFormatException::class);
 
@@ -110,22 +104,20 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsALogicExceptionIfJiraAPIHaveChanged(): void
     {
-        $wrapper = new class extends JiraCloudClientStub {
-            public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
-                    'isLast'     => false,
-                    'maxResults' => 2,
-                    'startAt'    => 0,
-                    'values'     => [
-                        [
-                            'key'  => 'TO',
-                            'dsdsdsds' => 'toto',
-                        ],
+        $wrapper = JiraCloudClientStub::aJiraCloudClient([
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0' => [
+                'isLast'     => false,
+                'maxResults' => 2,
+                'startAt'    => 0,
+                'values'     => [
+                    [
+                        'key'      => 'TO',
+                        'dsdsdsds' => 'toto',
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => null,
-            ];
-        };
+            ],
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=1' => null,
+        ]);
 
         $this->expectException(UnexpectedFormatException::class);
 
@@ -135,24 +127,18 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIteratesOverJiraServerPayload(): void
     {
-        $jira_client = new class extends JiraServerClientStub
-        {
-            public function getUrl(string $url): ?array
-            {
-                assertEquals('/rest/api/2/project', $url);
-
-                return [
-                    [
-                        'key'  => 'MPN',
-                        'name' => 'My project name',
-                    ],
-                    [
-                        'key' => 'SP',
-                        'name' => 'Scrum Project',
-                    ],
-                ];
-            }
-        };
+        $jira_client = JiraServerClientStub::aJiraServerClient([
+            '/rest/api/2/project' => [
+                [
+                    'key'  => 'MPN',
+                    'name' => 'My project name',
+                ],
+                [
+                    'key'  => 'SP',
+                    'name' => 'Scrum Project',
+                ],
+            ],
+        ]);
 
         $builder = new JiraProjectBuilder();
         $result  = $builder->build($jira_client, new NullLogger());
@@ -168,19 +154,13 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCatchesMissingMandatoryInfoInJiraServerPayload(): void
     {
-        $jira_client = new class extends JiraServerClientStub
-        {
-            public function getUrl(string $url): ?array
-            {
-                assertEquals('/rest/api/2/project', $url);
-
-                return [
-                    [
-                        'name' => 'My project name',
-                    ],
-                ];
-            }
-        };
+        $jira_client = JiraServerClientStub::aJiraServerClient([
+            '/rest/api/2/project' => [
+                [
+                    'name' => 'My project name',
+                ],
+            ],
+        ]);
 
         $this->expectException(UnexpectedFormatException::class);
 
