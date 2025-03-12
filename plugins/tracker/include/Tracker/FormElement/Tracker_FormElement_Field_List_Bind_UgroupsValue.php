@@ -77,11 +77,6 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return $this->getUGroupName();
     }
 
-    public function getXMLExportLabel()
-    {
-        return $this->getUGroupName();
-    }
-
     public function getProject()
     {
         return $this->ugroup->getProject();

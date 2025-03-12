@@ -52,11 +52,6 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
         return $this->getLabel();
     }
 
-    public function getXMLExportLabel()
-    {
-        return $this->label;
-    }
-
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
         if (! $field instanceof Tracker_FormElement_Field_OpenList) {
