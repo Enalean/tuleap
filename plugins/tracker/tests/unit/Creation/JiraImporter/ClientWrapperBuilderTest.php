@@ -24,44 +24,36 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
-use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
-use function PHPUnit\Framework\assertEquals;
+use stdClass;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraClientStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ClientWrapperBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private ClientWrapperBuilder $wrapper_builder;
 
     protected function setUp(): void
     {
-        $this->wrapper_builder = new ClientWrapperBuilder(fn () => new class extends JiraCloudClientStub {
-        });
+        $this->wrapper_builder = new ClientWrapperBuilder(static fn() => JiraClientStub::aJiraClient());
     }
 
     public function testItThrowsAnExceptionWhenCredentialKeyIsNotProvided(): void
     {
-        $body    = new \stdClass();
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
-
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage('credentials key is mandatory');
 
-        $this->wrapper_builder->buildFromRequest($request, new NullLogger());
+        $this->wrapper_builder->buildFromRequest(new HTTPRequest(), new NullLogger());
     }
 
     public function testItThrowsAnExceptionWhenCredentialValuesAreMissing(): void
     {
-        $body              = new \stdClass();
+        $body              = new stdClass();
         $body->credentials = '';
-        $request           = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
+        $request           = $this->createMock(HTTPRequest::class);
+        $request->method('getJsonDecodedBody')->willReturn($body);
 
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage('server, email or token empty');
@@ -71,14 +63,14 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenUrlIsInvalid(): void
     {
-        $body                          = new \stdClass();
-        $body->credentials             = new \stdClass();
+        $body                          = new stdClass();
+        $body->credentials             = new stdClass();
         $body->credentials->server_url = 'invalid-example.com';
         $body->credentials->user_email = 'user-email@example.com';
         $body->credentials->token      = 'azerty1234';
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getJsonDecodedBody')->willReturn($body);
 
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage('server url is invalid');
@@ -88,26 +80,21 @@ final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAClientWrapper(): void
     {
-        $body                          = new \stdClass();
-        $body->credentials             = new \stdClass();
+        $body                          = new stdClass();
+        $body->credentials             = new stdClass();
         $body->credentials->server_url = 'https://example.com';
         $body->credentials->user_email = 'user-email@example.com';
         $body->credentials->token      = 'azerty1234';
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getJsonDecodedBody')->andReturn($body);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getJsonDecodedBody')->willReturn($body);
 
-        $wrapper_builder = new ClientWrapperBuilder(
-            fn (JiraCredentials $jira_credentials, LoggerInterface $logger) => new class ($jira_credentials) extends JiraCloudClientStub {
-                public function __construct(public JiraCredentials $jira_credentials)
-                {
-                }
-            }
-        );
-        $client          = $wrapper_builder->buildFromRequest($request, new NullLogger());
-
-        assertEquals('https://example.com', $client->jira_credentials->getJiraUrl());
-        assertEquals('user-email@example.com', $client->jira_credentials->getJiraUsername());
-        assertEquals('azerty1234', $client->jira_credentials->getJiraToken());
+        $wrapper_builder = new ClientWrapperBuilder(static function (JiraCredentials $jira_credentials) {
+            self::assertEquals('https://example.com', $jira_credentials->getJiraUrl());
+            self::assertEquals('user-email@example.com', $jira_credentials->getJiraUsername());
+            self::assertEquals('azerty1234', $jira_credentials->getJiraToken());
+            return JiraClientStub::aJiraClient();
+        });
+        $wrapper_builder->buildFromRequest($request, new NullLogger());
     }
 }
