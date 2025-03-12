@@ -25,7 +25,7 @@ import ExpandButton from "./ExpandButton.vue";
 import type { ColumnDefinition } from "../../../../type";
 import type { RootState } from "../../../../store/type";
 
-async function getWrapper(column: ColumnDefinition): Promise<Wrapper<ExpandButton>> {
+async function getWrapper(column: ColumnDefinition): Promise<Wrapper<Vue>> {
     return shallowMount(ExpandButton, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
