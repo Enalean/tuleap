@@ -55,4 +55,5 @@ export type WidgetData = {
     readonly is_multiple_query_supported: boolean;
     readonly dashboard_type: string;
     readonly title_attribute: string;
+    readonly default_title: string;
 };

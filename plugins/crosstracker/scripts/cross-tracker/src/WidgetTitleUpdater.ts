@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EmitterProvider, SwitchQueryEvent } from "./helpers/emitter-provider";
-import { SWITCH_QUERY_EVENT } from "./helpers/emitter-provider";
+import type { EmitterProvider, UpdateWidgetTitleEvent } from "./helpers/emitter-provider";
+import { UPDATE_WIDGET_TITLE_EVENT } from "./helpers/emitter-provider";
 
 export type WidgetTitleUpdater = {
-    listenToSwitchQuery(): void;
+    listenToUpdateTitle(): void;
+    removeListener(): void;
 };
 
 export const WidgetTitleUpdater = (
@@ -29,10 +30,13 @@ export const WidgetTitleUpdater = (
     title_element: HTMLElement,
 ): WidgetTitleUpdater => {
     return {
-        listenToSwitchQuery(): void {
-            emitter.on(SWITCH_QUERY_EVENT, (event: SwitchQueryEvent): void => {
-                title_element.textContent = event.query.title;
+        listenToUpdateTitle(): void {
+            emitter.on(UPDATE_WIDGET_TITLE_EVENT, (event: UpdateWidgetTitleEvent): void => {
+                title_element.textContent = event.new_title;
             });
+        },
+        removeListener(): void {
+            emitter.off(UPDATE_WIDGET_TITLE_EVENT);
         },
     };
 };

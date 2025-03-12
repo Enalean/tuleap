@@ -21,27 +21,44 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import { EMITTER, IS_MULTIPLE_QUERY_SUPPORTED, IS_USER_ADMIN } from "./injection-symbols";
-import { EmitterStub } from "../tests/stubs/EmitterStub";
+import {
+    DEFAULT_WIDGET_TITLE,
+    EMITTER,
+    IS_MULTIPLE_QUERY_SUPPORTED,
+    IS_USER_ADMIN,
+    UPDATE_WIDGET_TITLE,
+} from "./injection-symbols";
 import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
 import ReadQuery from "./components/ReadQuery.vue";
+import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
+import mitt from "mitt";
+import type { Events } from "./helpers/emitter-provider";
 
 vi.useFakeTimers();
 
 describe("CrossTrackerWidget", () => {
     let is_user_admin: boolean;
+    let widget_title_element: HTMLSpanElement;
 
     beforeEach(() => {
+        widget_title_element = document.createElement("span");
+        widget_title_element.textContent = "Cross trackers search";
         is_user_admin = true;
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
+        const emitter = mitt<Events>();
         return shallowMount(CrossTrackerWidget, {
             global: {
                 provide: {
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
-                    [EMITTER.valueOf()]: EmitterStub(),
+                    [EMITTER.valueOf()]: emitter,
                     [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
+                    [UPDATE_WIDGET_TITLE.valueOf()]: WidgetTitleUpdater(
+                        emitter,
+                        widget_title_element,
+                    ),
+                    [DEFAULT_WIDGET_TITLE.valueOf()]: "Cross Tracker Search",
                 },
             },
         });

@@ -19,10 +19,9 @@
 
 import { beforeEach, describe, expect, it } from "vitest";
 import type { EmitterProvider, Events } from "./helpers/emitter-provider";
-import { SWITCH_QUERY_EVENT } from "./helpers/emitter-provider";
+import { UPDATE_WIDGET_TITLE_EVENT } from "./helpers/emitter-provider";
 import mitt from "mitt";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
-import type { Query } from "./type";
 
 describe("WidgetTitleUpdater", () => {
     let emitter: EmitterProvider;
@@ -36,24 +35,19 @@ describe("WidgetTitleUpdater", () => {
 
     const getWidgetTitleUpdater = (): WidgetTitleUpdater => {
         const widget_title_updater = WidgetTitleUpdater(emitter, widget_title_element);
-        widget_title_updater.listenToSwitchQuery();
+        widget_title_updater.listenToUpdateTitle();
 
         return widget_title_updater;
     };
 
-    it("Changes the widget title according to the SWITCH_QUERY_EVENT", () => {
-        const switched_query: Query = {
-            tql_query: 'SELECT @title FROM @project.name="COUCOUHIBOU" WHERE @title != ""',
-            title: "Switched Query",
-            description: "",
-            id: "01952813-7ae7-7a27-bcc0-4a9c660dccb4",
-        };
+    it("Changes the widget title according to the UPDATE_WIDGET_TITLE_EVENT", () => {
+        const new_title = "Switched Query";
 
         getWidgetTitleUpdater();
 
         expect(widget_title_element.textContent).toBe("Cross trackers search");
 
-        emitter.emit(SWITCH_QUERY_EVENT, { query: switched_query });
+        emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title });
         expect(widget_title_element.textContent).toBe("Switched Query");
     });
 });
