@@ -1,6 +1,6 @@
 # @tuleap/plugin-tracker-link-field
 
-This library provides a custom element to display and change artifact links from/to an artifact. The custom element's tag name is `tuleap-artifact-modal-link-field`. It also defines other custom elements, but they are not meant to be used outside this library.
+This library provides a custom element to display and change artifact links from/to an artifact. The custom element's tag name is `tuleap-tracker-link-field`. It also defines other custom elements, but they are not meant to be used outside this library.
 
 The link field element has three dependencies that must be passed as properties:
 1. `controller`: a `LinkFieldController`. Use `LinkFieldCreator.createLinkFieldController()` to create it.

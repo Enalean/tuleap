@@ -65,13 +65,13 @@ export const getTypeTemplate = (
         );
     };
 
-    return html`<tuleap-artifact-modal-link-type-selector
+    return html`<tuleap-tracker-link-type-selector
         value="${artifact.link_type}"
         current_artifact_reference="${host.current_artifact_reference}"
         available_types="${host.allowed_link_types}"
         ontype-changed="${onTypeChanged}"
         data-test="type-selector"
-    ></tuleap-artifact-modal-link-type-selector>`;
+    ></tuleap-tracker-link-type-selector>`;
 };
 
 export const getActionButton = (

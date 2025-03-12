@@ -48,7 +48,7 @@ type InternalLinkTypeSelector = LinkTypeSelectorElement & {
 };
 export type HostElement = InternalLinkTypeSelector & HTMLElement;
 
-export const TAG = "tuleap-artifact-modal-link-type-selector";
+export const TAG = "tuleap-tracker-link-type-selector";
 
 export type TypeChangedEvent = { readonly new_link_type: LinkType };
 

@@ -136,14 +136,15 @@
 </script>
 
 <script type="text/ng-template" id="field-art_link.tpl.html">
-<tuleap-artifact-modal-link-field
+<tuleap-tracker-link-field
     controller="modal.getLinkFieldController(field)"
     autocompleter="modal.getLinkFieldAutoCompleter()"
     creator-controller="modal.getArtifactCreatorController()"
     on-change="modal.linkFieldChanged()"
     ce-one-way
-></tuleap-artifact-modal-link-field>
+></tuleap-tracker-link-field>
 </script>
+
 <script type="text/ng-template" id="field-burndown.tpl.html">
 <tuleap-artifact-modal-burndown-field
     field="field"

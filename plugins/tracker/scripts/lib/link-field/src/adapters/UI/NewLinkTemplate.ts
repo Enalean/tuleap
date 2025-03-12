@@ -61,12 +61,12 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
 
     return html`<div class="link-field-row link-field-new-row" data-test="link-row">
         <span class="link-field-row-type"
-            ><tuleap-artifact-modal-link-type-selector
+            ><tuleap-tracker-link-type-selector
                 value="${link.link_type}"
                 current_artifact_reference="${host.current_artifact_reference}"
                 available_types="${host.allowed_link_types}"
                 ontype-changed="${onTypeChanged}"
-            ></tuleap-artifact-modal-link-type-selector></span
+            ></tuleap-tracker-link-type-selector></span
         ><span class="link-field-row-xref"
             ><a
                 href="${link.uri}"
