@@ -26,9 +26,22 @@ namespace Tuleap\Tracker\Test\Stub\Creation\JiraImporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
-abstract class JiraServerClientStub implements JiraClient
+class JiraServerClientStub implements JiraClient
 {
-    public array $urls = [];
+    /**
+     * @param array<string, ?array> $urls
+     */
+    public function __construct(public array $urls = [])
+    {
+    }
+
+    /**
+     * @param array<string, ?array> $urls
+     */
+    public static function aJiraServerClient(array $urls): self
+    {
+        return new self($urls);
+    }
 
     public function isJiraCloud(): bool
     {

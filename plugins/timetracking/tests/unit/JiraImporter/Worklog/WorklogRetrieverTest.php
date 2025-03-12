@@ -55,41 +55,39 @@ final class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'it builds worklogs from Jira Cloud API Response' => [
-                'jira_client' => new class extends JiraCloudClientStub {
-                    public array $urls = [
-                        '/rest/api/2/issue/ISSUE-1/worklog?startAt=0' => [
-                            'maxResults' => 1048576,
-                            'startAt'    => 0,
-                            'total'      => 2,
-                            'worklogs'   => [
-                                [
-                                    'id'               => 10010,
-                                    'issueId'          => 10092,
-                                    'self'             => 'https://example.com/rest/api/2/issue/1/worklog/10010',
-                                    'timeSpentSeconds' => 144000,
-                                    'started'          => '2021-02-08T19:06:41.386+0100',
-                                    'author' => [
-                                        'accountId'    => 'whatever123',
-                                        'emailAddress' => 'whatever@example.com',
-                                        'displayName'  => 'What Ever',
-                                    ],
+                'jira_client' => JiraCloudClientStub::aJiraCloudClient([
+                    '/rest/api/2/issue/ISSUE-1/worklog?startAt=0' => [
+                        'maxResults' => 1048576,
+                        'startAt'    => 0,
+                        'total'      => 2,
+                        'worklogs'   => [
+                            [
+                                'id'               => 10010,
+                                'issueId'          => 10092,
+                                'self'             => 'https://example.com/rest/api/2/issue/1/worklog/10010',
+                                'timeSpentSeconds' => 144000,
+                                'started'          => '2021-02-08T19:06:41.386+0100',
+                                'author' => [
+                                    'accountId'    => 'whatever123',
+                                    'emailAddress' => 'whatever@example.com',
+                                    'displayName'  => 'What Ever',
                                 ],
-                                [
-                                    'id'               => 10011,
-                                    'issueId'          => 10092,
-                                    'self'             => 'https://example.com/rest/api/2/issue/1/worklog/10011',
-                                    'timeSpentSeconds' => 18000,
-                                    'started'          => '2021-02-10T06:09:32.083+0100',
-                                    'author' => [
-                                        'accountId'    => 'whatever123',
-                                        'emailAddress' => 'whatever@example.com',
-                                        'displayName'  => 'What Ever',
-                                    ],
+                            ],
+                            [
+                                'id'               => 10011,
+                                'issueId'          => 10092,
+                                'self'             => 'https://example.com/rest/api/2/issue/1/worklog/10011',
+                                'timeSpentSeconds' => 18000,
+                                'started'          => '2021-02-10T06:09:32.083+0100',
+                                'author' => [
+                                    'accountId'    => 'whatever123',
+                                    'emailAddress' => 'whatever@example.com',
+                                    'displayName'  => 'What Ever',
                                 ],
                             ],
                         ],
-                    ];
-                },
+                    ],
+                ]),
                 'tests' => function (array $worklogs) {
                     self::assertCount(2, $worklogs);
 
@@ -107,58 +105,56 @@ final class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 },
             ],
             'it builds worklogs from Jira Server API Response' => [
-                'jira_client' => new class extends JiraServerClientStub {
-                    public array $urls = [
-                        '/rest/api/2/issue/ISSUE-1/worklog?startAt=0' => [
-                            'startAt'    => 0,
-                            'maxResults' => 1,
-                            'total'      => 1,
-                            'worklogs'   => [
-                                [
-                                    'self'             => 'https://jira.example.com/rest/api/2/issue/1/worklog/12609',
-                                    'author'           => [
-                                        'self'         => 'https://jira.example.com/rest/api/2/user?username=john.doe',
-                                        'name'         => 'john.doe',
-                                        'key'          => 'john.doe',
-                                        'emailAddress' => 'john.doe@example.com',
-                                        'avatarUrls'   => [
-                                            '48x48' => 'https://jira.example.com/secure/useravatar?avatarId=10341',
-                                            '24x24' => 'https://jira.example.com/secure/useravatar?size=small&avatarId=10341',
-                                            '16x16' => 'https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10341',
-                                            '32x32' => 'https://jira.example.com/secure/useravatar?size=medium&avatarId=10341',
-                                        ],
-                                        'displayName'  => 'John Doe',
-                                        'active'       => true,
-                                        'timeZone'     => 'Europe/Paris',
+                'jira_client' => JiraServerClientStub::aJiraServerClient([
+                    '/rest/api/2/issue/ISSUE-1/worklog?startAt=0' => [
+                        'startAt'    => 0,
+                        'maxResults' => 1,
+                        'total'      => 1,
+                        'worklogs'   => [
+                            [
+                                'self'             => 'https://jira.example.com/rest/api/2/issue/1/worklog/12609',
+                                'author'           => [
+                                    'self'         => 'https://jira.example.com/rest/api/2/user?username=john.doe',
+                                    'name'         => 'john.doe',
+                                    'key'          => 'john.doe',
+                                    'emailAddress' => 'john.doe@example.com',
+                                    'avatarUrls'   => [
+                                        '48x48' => 'https://jira.example.com/secure/useravatar?avatarId=10341',
+                                        '24x24' => 'https://jira.example.com/secure/useravatar?size=small&avatarId=10341',
+                                        '16x16' => 'https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10341',
+                                        '32x32' => 'https://jira.example.com/secure/useravatar?size=medium&avatarId=10341',
                                     ],
-                                    'updateAuthor'     => [
-                                        'self'         => 'https://jira.example.com/rest/api/2/user?username=john.doe',
-                                        'name'         => 'john.doe',
-                                        'key'          => 'john.doe',
-                                        'emailAddress' => 'john.doe@example.com',
-                                        'avatarUrls'   => [
-                                            '48x48' => 'https://jira.example.com/secure/useravatar?avatarId=10341',
-                                            '24x24' => 'https://jira.example.com/secure/useravatar?size=small&avatarId=10341',
-                                            '16x16' => 'https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10341',
-                                            '32x32' => 'https://jira.example.com/secure/useravatar?size=medium&avatarId=10341',
-                                        ],
-                                        'displayName'  => 'John Doe',
-                                        'active'       => true,
-                                        'timeZone'     => 'Europe/Paris',
-                                    ],
-                                    'comment'          => 'DHCP Issue',
-                                    'created'          => '2022-03-18T09:29:14.392+0100',
-                                    'updated'          => '2022-03-18T09:29:14.392+0100',
-                                    'started'          => '2022-03-18T09:27:00.000+0100',
-                                    'timeSpent'        => '30m',
-                                    'timeSpentSeconds' => 1800,
-                                    'id'               => '12609',
-                                    'issueId'          => '1',
+                                    'displayName'  => 'John Doe',
+                                    'active'       => true,
+                                    'timeZone'     => 'Europe/Paris',
                                 ],
+                                'updateAuthor'     => [
+                                    'self'         => 'https://jira.example.com/rest/api/2/user?username=john.doe',
+                                    'name'         => 'john.doe',
+                                    'key'          => 'john.doe',
+                                    'emailAddress' => 'john.doe@example.com',
+                                    'avatarUrls'   => [
+                                        '48x48' => 'https://jira.example.com/secure/useravatar?avatarId=10341',
+                                        '24x24' => 'https://jira.example.com/secure/useravatar?size=small&avatarId=10341',
+                                        '16x16' => 'https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10341',
+                                        '32x32' => 'https://jira.example.com/secure/useravatar?size=medium&avatarId=10341',
+                                    ],
+                                    'displayName'  => 'John Doe',
+                                    'active'       => true,
+                                    'timeZone'     => 'Europe/Paris',
+                                ],
+                                'comment'          => 'DHCP Issue',
+                                'created'          => '2022-03-18T09:29:14.392+0100',
+                                'updated'          => '2022-03-18T09:29:14.392+0100',
+                                'started'          => '2022-03-18T09:27:00.000+0100',
+                                'timeSpent'        => '30m',
+                                'timeSpentSeconds' => 1800,
+                                'id'               => '12609',
+                                'issueId'          => '1',
                             ],
                         ],
-                    ];
-                },
+                    ],
+                ]),
                 'tests' => function (array $worklogs) {
                     self::assertCount(1, $worklogs);
 

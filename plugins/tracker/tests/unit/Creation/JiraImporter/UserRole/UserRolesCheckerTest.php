@@ -157,23 +157,21 @@ final class UserRolesCheckerTest extends TestCase
     public function testItDetectsProjectAdministratorWithJiraServer(): void
     {
         $checker = new UserRolesChecker();
-        $client  = new class extends JiraServerClientStub {
-            public array $urls = [
-                '/rest/api/2/mypermissions?projectKey=proj01' => [
-                    'permissions' => [
-                        'PROJECT_ADMIN' => [
-                            'id'             => '23',
-                            'key'            => 'PROJECT_ADMIN',
-                            'name'           => 'Manage projects',
-                            'type'           => 'PROJECT',
-                            'description'    => 'Ability to manage Jira projects.',
-                            'havePermission' => true,
-                            'deprecatedKey'  => true,
-                        ],
+        $client  = JiraServerClientStub::aJiraServerClient([
+            '/rest/api/2/mypermissions?projectKey=proj01' => [
+                'permissions' => [
+                    'PROJECT_ADMIN' => [
+                        'id'             => '23',
+                        'key'            => 'PROJECT_ADMIN',
+                        'name'           => 'Manage projects',
+                        'type'           => 'PROJECT',
+                        'description'    => 'Ability to manage Jira projects.',
+                        'havePermission' => true,
+                        'deprecatedKey'  => true,
                     ],
                 ],
-            ];
-        };
+            ],
+        ]);
 
         $this->expectNotToPerformAssertions();
 
@@ -187,22 +185,20 @@ final class UserRolesCheckerTest extends TestCase
     public function testItDetectsAdministratorsOfAllProjectsWithJiraServer(): void
     {
         $checker = new UserRolesChecker();
-        $client  = new class extends JiraServerClientStub {
-            public array $urls = [
-                '/rest/api/2/mypermissions?projectKey=proj01' => [
-                    'permissions' => [
-                        'ADMINISTER_PROJECTS' => [
-                            'id'             => '23',
-                            'key'            => 'ADMINISTER_PROJECTS',
-                            'name'           => 'Manage projects',
-                            'type'           => 'PROJECT',
-                            'description'    => 'Ability to manage Jira projects.',
-                            'havePermission' => true,
-                        ],
+        $client  = JiraServerClientStub::aJiraServerClient([
+            '/rest/api/2/mypermissions?projectKey=proj01' => [
+                'permissions' => [
+                    'ADMINISTER_PROJECTS' => [
+                        'id'             => '23',
+                        'key'            => 'ADMINISTER_PROJECTS',
+                        'name'           => 'Manage projects',
+                        'type'           => 'PROJECT',
+                        'description'    => 'Ability to manage Jira projects.',
+                        'havePermission' => true,
                     ],
                 ],
-            ];
-        };
+            ],
+        ]);
 
         $this->expectNotToPerformAssertions();
 
@@ -216,22 +212,20 @@ final class UserRolesCheckerTest extends TestCase
     public function testItDetectsLackOfAdministrationPermissionWithJiraServer(): void
     {
         $checker = new UserRolesChecker();
-        $client  = new class extends JiraServerClientStub {
-            public array $urls = [
-                '/rest/api/2/mypermissions?projectKey=proj01' => [
-                    'permissions' => [
-                        'SCHEDULE_ISSUES' => [
-                            'id'             => '28',
-                            'key'            => 'SCHEDULE_ISSUES',
-                            'name'           => 'Plan tickets',
-                            'type'           => 'PROJECT',
-                            'description'    => '...',
-                            'havePermission' => true,
-                        ],
+        $client  = JiraServerClientStub::aJiraServerClient([
+            '/rest/api/2/mypermissions?projectKey=proj01' => [
+                'permissions' => [
+                    'SCHEDULE_ISSUES' => [
+                        'id'             => '28',
+                        'key'            => 'SCHEDULE_ISSUES',
+                        'name'           => 'Plan tickets',
+                        'type'           => 'PROJECT',
+                        'description'    => '...',
+                        'havePermission' => true,
                     ],
                 ],
-            ];
-        };
+            ],
+        ]);
 
         $this->expectException(UserIsNotProjectAdminException::class);
 

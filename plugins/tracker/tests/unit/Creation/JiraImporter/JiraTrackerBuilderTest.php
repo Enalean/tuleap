@@ -33,16 +33,14 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAListOfTracker(): void
     {
-        $wrapper = new class extends JiraCloudClientStub {
-            public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/IE' => [
-                    'issueTypes' => [
-                        ['id' => 'epic', 'name' => 'Epics', 'subtask' => false],
-                        ['id' => 'issue', 'name' => 'Issues', 'subtask' => false],
-                    ],
+        $wrapper = JiraCloudClientStub::aJiraCloudClient([
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/IE' => [
+                'issueTypes' => [
+                    ['id' => 'epic', 'name' => 'Epics', 'subtask' => false],
+                    ['id' => 'issue', 'name' => 'Issues', 'subtask' => false],
                 ],
-            ];
-        };
+            ],
+        ]);
 
         $builder = new JiraTrackerBuilder();
         $result  = $builder->buildFromProjectKey($wrapper, 'IE');
@@ -60,16 +58,14 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfJiraRepresentationHasChanged(): void
     {
-        $wrapper = new class extends JiraCloudClientStub {
-            public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/project/IE' => [
-                    'issueTypes' => [
-                        ['id' => 'epic', 'ezezezez' => 'Epics'],
-                        ['id' => 'issue', 'name' => 'Issues'],
-                    ],
+        $wrapper = JiraCloudClientStub::aJiraCloudClient([
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/IE' => [
+                'issueTypes' => [
+                    ['id' => 'epic', 'ezezezez' => 'Epics'],
+                    ['id' => 'issue', 'name' => 'Issues'],
                 ],
-            ];
-        };
+            ],
+        ]);
 
         $this->expectException(\LogicException::class);
 
@@ -79,20 +75,18 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildOneIssueType(): void
     {
-        $wrapper = new class extends JiraCloudClientStub {
-            public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => [
-                    'self' => 'https://jira.example.com/rest/api/3/issuetype/10015',
-                    'id' => '10015',
-                    'description' => '',
-                    'iconUrl' => 'https:/jira.example.com/secure/viewavatar?size=medium&avatarId=10300&avatarType=issuetype',
-                    'name' => 'Activities-from-Jira',
-                    'untranslatedName' => 'Activities-from-Jira',
-                    'subtask' => false,
-                    'avatarId' => 10300,
-                ],
-            ];
-        };
+        $wrapper = JiraCloudClientStub::aJiraCloudClient([
+            ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => [
+                'self'             => 'https://jira.example.com/rest/api/3/issuetype/10015',
+                'id'               => '10015',
+                'description'      => '',
+                'iconUrl'          => 'https:/jira.example.com/secure/viewavatar?size=medium&avatarId=10300&avatarType=issuetype',
+                'name'             => 'Activities-from-Jira',
+                'untranslatedName' => 'Activities-from-Jira',
+                'subtask'          => false,
+                'avatarId'         => 10300,
+            ],
+        ]);
 
         $builder    = new JiraTrackerBuilder();
         $issue_type = $builder->buildFromIssueTypeId($wrapper, '10015');
@@ -104,11 +98,9 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenClientDoesntHaveResponse(): void
     {
-        $wrapper = new class extends JiraCloudClientStub {
-            public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => null,
-            ];
-        };
+        $wrapper = JiraCloudClientStub::aJiraCloudClient([
+            ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => null,
+        ]);
 
         $builder = new JiraTrackerBuilder();
         assertNull($builder->buildFromIssueTypeId($wrapper, '10015'));
