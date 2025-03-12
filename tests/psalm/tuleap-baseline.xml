@@ -15496,7 +15496,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$newName]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$operation_type]]></code>
       <code><![CDATA[$order_by]]></code>
@@ -15518,7 +15517,6 @@
       <code><![CDATA[$remote_server_id]]></code>
       <code><![CDATA[$remote_server_id]]></code>
       <code><![CDATA[$repository]]></code>
-      <code><![CDATA[$repository]]></code>
       <code><![CDATA[$repositoryId]]></code>
       <code><![CDATA[$repositoryPath]]></code>
       <code><![CDATA[$repository_id]]></code>
@@ -15532,7 +15530,6 @@
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[disconnectFromGerrit]]></code>
       <code><![CDATA[exists]]></code>
       <code><![CDATA[getActiveRepositoryPathsWithRemoteServersForAllProjects]]></code>
@@ -15547,11 +15544,8 @@
       <code><![CDATA[getProjectRepositoryById]]></code>
       <code><![CDATA[getProjectRepositoryByName]]></code>
       <code><![CDATA[getUGroupsByRepositoryPermissions]]></code>
-      <code><![CDATA[hasChild]]></code>
       <code><![CDATA[hydrateRepositoryObject]]></code>
-      <code><![CDATA[initialize]]></code>
       <code><![CDATA[isRepositoryExisting]]></code>
-      <code><![CDATA[renameProject]]></code>
       <code><![CDATA[save]]></code>
       <code><![CDATA[searchAllGerritRepositoriesOfProject]]></code>
       <code><![CDATA[searchDeletedRepositoryById]]></code>
@@ -16712,7 +16706,6 @@
       <code><![CDATA[getRootPath]]></code>
       <code><![CDATA[load]]></code>
       <code><![CDATA[load]]></code>
-      <code><![CDATA[load]]></code>
     </DeprecatedMethod>
     <ImpureMethodCall>
       <code><![CDATA[getName]]></code>
@@ -16800,7 +16793,6 @@
       <code><![CDATA[getPostReceiveMailManager]]></code>
       <code><![CDATA[getProjectId]]></code>
       <code><![CDATA[getRemoteServerId]]></code>
-      <code><![CDATA[hasChild]]></code>
       <code><![CDATA[isMigratedToGerrit]]></code>
       <code><![CDATA[isPrivate]]></code>
       <code><![CDATA[isPublic]]></code>
@@ -33185,7 +33177,6 @@
       <code><![CDATA[forceFetchAllChangesets]]></code>
       <code><![CDATA[getArtifactlinkDao]]></code>
       <code><![CDATA[getAuthorizedUGroups]]></code>
-      <code><![CDATA[getCachedTitle]]></code>
       <code><![CDATA[getCurrentUser]]></code>
       <code><![CDATA[getDao]]></code>
       <code><![CDATA[getEmailDomain]]></code>
@@ -33233,7 +33224,6 @@
     </PossiblyNullArgument>
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$this->getUserManager()->getUserById($this->submitted_by)]]></code>
-      <code><![CDATA[null]]></code>
     </PossiblyNullPropertyAssignmentValue>
     <PossiblyNullReference>
       <code><![CDATA[getValue]]></code>
@@ -33254,7 +33244,6 @@
       <code><![CDATA[isset($this->authorized_ugroups)]]></code>
       <code><![CDATA[isset($this->status)]]></code>
       <code><![CDATA[isset($this->submitted_by_user)]]></code>
-      <code><![CDATA[isset($this->title)]]></code>
       <code><![CDATA[isset($this->tracker)]]></code>
     </RedundantPropertyInitializationCheck>
     <RiskyTruthyFalsyComparison>
@@ -34095,7 +34084,6 @@
       <code><![CDATA[displayFooter]]></code>
       <code><![CDATA[displayHeader]]></code>
       <code><![CDATA[enhanceRedirect]]></code>
-      <code><![CDATA[fetchArtifactForm]]></code>
       <code><![CDATA[fetchFieldsForCopy]]></code>
       <code><![CDATA[fetchFormContent]]></code>
       <code><![CDATA[fetchRulesAsJavascript]]></code>
@@ -36960,8 +36948,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Computed/ComputedFieldDao.php">
     <DeprecatedMethod>
-      <code><![CDATA[escapeFloat]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
@@ -36986,8 +36972,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -37021,8 +37005,6 @@
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
       <code><![CDATA[$stop_on_manual_value]]></code>
       <code><![CDATA[$timestamp]]></code>
       <code><![CDATA[$timestamp]]></code>
@@ -37037,7 +37019,6 @@
       <code><![CDATA[getBurndownManualValueAtGivenTimestamp]]></code>
       <code><![CDATA[getCachedDays]]></code>
       <code><![CDATA[getCachedFieldValueAtTimestamp]]></code>
-      <code><![CDATA[save]]></code>
       <code><![CDATA[saveCachedFieldValueAtTimestamp]]></code>
       <code><![CDATA[searchCachedDays]]></code>
     </MissingReturnType>
@@ -37069,23 +37050,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[getCSVDateFormat]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Date/DateFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Date/DateValueDao.php">
@@ -37463,22 +37427,6 @@
       <code><![CDATA[$new_value]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/FloatingPointNumber/FloatFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/FloatingPointNumber/FloatValueDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
@@ -37508,23 +37456,6 @@
     <MissingParamType>
       <code><![CDATA[$new_value]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Integer/IntegerFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Integer/IntegerValueDao.php">
     <DeprecatedMethod>
@@ -37911,21 +37842,6 @@
       <code><![CDATA[$data_attribute_name]]></code>
     </InvalidOperand>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/ListFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$bind_type]]></code>
-      <code><![CDATA[$field_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/ListValueDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
@@ -37950,21 +37866,6 @@
       <code><![CDATA[create]]></code>
       <code><![CDATA[createNoneValue]]></code>
       <code><![CDATA[keep]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/MultiSelectboxFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/OpenListChangesetValueDao.php">
@@ -37997,11 +37898,8 @@
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$bindtable_from]]></code>
@@ -38010,11 +37908,8 @@
       <code><![CDATA[$bindtable_select_nb]]></code>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[save]]></code>
       <code><![CDATA[searchChangesetValues]]></code>
     </MissingReturnType>
   </file>
@@ -38135,48 +38030,6 @@
       <code><![CDATA[propagateLabelAndDescription]]></code>
       <code><![CDATA[propagateNameIfPossible]]></code>
       <code><![CDATA[propagateProperties]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/StaticField/RichText/RichTextFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/StringField/StringFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/TextFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/TextValueDao.php">
@@ -38308,9 +38161,6 @@
     <DeprecatedMethod>
       <code><![CDATA[groupAddHistory]]></code>
     </DeprecatedMethod>
-    <InvalidNullableReturnType>
-      <code><![CDATA[DataAccessObject]]></code>
-    </InvalidNullableReturnType>
     <MissingParamType>
       <code><![CDATA[$date]]></code>
       <code><![CDATA[$force_absolute_ranking]]></code>
@@ -38352,9 +38202,6 @@
       <code><![CDATA[setFormElementFactory]]></code>
       <code><![CDATA[setTracker]]></code>
     </MissingReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[null]]></code>
-    </NullableReturnStatement>
     <PossiblyInvalidArgument>
       <code><![CDATA[$this->getTracker()->getProject()->getId()]]></code>
     </PossiblyInvalidArgument>
@@ -38371,7 +38218,6 @@
     </PossiblyNullReference>
     <UndefinedMethod>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[save]]></code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElementFactory.php">
@@ -39626,7 +39472,6 @@
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.php">
     <MissingReturnType>
       <code><![CDATA[getJsonId]]></code>
-      <code><![CDATA[getXMLExportLabel]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Null.php">
@@ -39876,7 +39721,6 @@
       <code><![CDATA[getRESTId]]></code>
       <code><![CDATA[getUGroupName]]></code>
       <code><![CDATA[getUgroup]]></code>
-      <code><![CDATA[getXMLExportLabel]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Users.php">
@@ -40006,7 +39850,6 @@
       <code><![CDATA[getUserManager]]></code>
       <code><![CDATA[getUserUrl]]></code>
       <code><![CDATA[getUsername]]></code>
-      <code><![CDATA[getXMLExportLabel]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$user]]></code>
@@ -40024,7 +39867,6 @@
       <code><![CDATA[getFullRESTValue]]></code>
       <code><![CDATA[getJsonId]]></code>
       <code><![CDATA[getUsername]]></code>
-      <code><![CDATA[getXMLExportLabel]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_UnsavedValue.php">
@@ -54436,13 +54278,11 @@
       <code><![CDATA[$cid]]></code>
       <code><![CDATA[$comma_separeted_addresses]]></code>
       <code><![CDATA[$data]]></code>
-      <code><![CDATA[$data]]></code>
       <code><![CDATA[$email]]></code>
       <code><![CDATA[$email]]></code>
       <code><![CDATA[$email]]></code>
       <code><![CDATA[$email]]></code>
       <code><![CDATA[$message_id]]></code>
-      <code><![CDATA[$mime_type]]></code>
       <code><![CDATA[$mime_type]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
@@ -54453,15 +54293,10 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[addAdditionalHeader]]></code>
       <code><![CDATA[addBcc]]></code>
       <code><![CDATA[addCc]]></code>
-      <code><![CDATA[addInlineAttachment]]></code>
       <code><![CDATA[addTo]]></code>
       <code><![CDATA[clearFrom]]></code>
-      <code><![CDATA[clearRecipients]]></code>
-      <code><![CDATA[getBodyPart]]></code>
-      <code><![CDATA[getMimePartAttachment]]></code>
       <code><![CDATA[getSubject]]></code>
       <code><![CDATA[setBcc]]></code>
       <code><![CDATA[setBody]]></code>
@@ -54475,10 +54310,6 @@
     <PossiblyFalseArgument>
       <code><![CDATA[preg_split('/[;,]/D', $comma_separeted_addresses)]]></code>
     </PossiblyFalseArgument>
-    <UndefinedMethod>
-      <code><![CDATA[getAddressList]]></code>
-      <code><![CDATA[getAddressList]]></code>
-    </UndefinedMethod>
   </file>
   <file src="src/common/Mail/Codendi_Mail_Interface.php">
     <MissingParamType>
@@ -66301,6 +66132,7 @@
       <code><![CDATA[current]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[extractIds]]></code>
+      <code><![CDATA[getErrorMessage]]></code>
       <code><![CDATA[getErrorMessage]]></code>
       <code><![CDATA[getErrorMessage]]></code>
       <code><![CDATA[getRow]]></code>

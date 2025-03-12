@@ -25,7 +25,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 /**
  * @deprecated See \Tuleap\DB\DataAccessObject
  */
-class DataAccessObject
+class DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * Private
@@ -215,6 +215,7 @@ class DataAccessObject
             if ($this->throw_exception_on_errors) {
                 throw new DataAccessQueryException($this->getErrorMessage($dar, $sql));
             } else {
+                BackendLogger::getDefaultLogger()->error(self::class, ['exception' => new DataAccessQueryException($this->getErrorMessage($dar, $sql))]);
                 trigger_error($this->getErrorMessage($dar, $sql));
                 return false;
             }
