@@ -25,8 +25,8 @@ namespace Tuleap\Cardwall\OnTop\Config;
 use Cardwall_Column;
 use Cardwall_OnTop_Config_TrackerMappingStatus;
 use Cardwall_OnTop_Config_ValueMapping;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -40,10 +40,10 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TestCase // p
 
     protected function setUp(): void
     {
-        $value_none       = new Tracker_FormElement_Field_List_Bind_StaticValue(100, 'None', '', 0, 0);
-        $value_todo       = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'Todo', '', 0, 0);
-        $value_inprogress = new Tracker_FormElement_Field_List_Bind_StaticValue(102, 'In Progress', '', 0, 0);
-        $value_done       = new Tracker_FormElement_Field_List_Bind_StaticValue(103, 'Done', '', 0, 0);
+        $value_none       = ListStaticValueBuilder::noneStaticValue()->build();
+        $value_todo       = ListStaticValueBuilder::aStaticValue('Todo')->withId(101)->build();
+        $value_inprogress = ListStaticValueBuilder::aStaticValue('In Progress')->withId(102)->build();
+        $value_done       = ListStaticValueBuilder::aStaticValue('Done')->withId(103)->build();
 
         $mapping_none    = new Cardwall_OnTop_Config_ValueMapping($value_none, 10);
         $mapping_todo    = new Cardwall_OnTop_Config_ValueMapping($value_todo, 10);

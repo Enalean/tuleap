@@ -24,9 +24,9 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use BaseLanguage;
 use Mockery;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -61,8 +61,8 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportBindWithoutNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'Value A', 'description', 1, false),
-            new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'Value B', 'description', 1, true),
+            ListStaticValueBuilder::aStaticValue('Value A')->withId(1)->build(),
+            ListStaticValueBuilder::aStaticValue('Value B')->withId(2)->build(),
         ];
         $decorators = [
             new Tracker_FormElement_Field_List_BindDecorator(123, 1, null, null, null, 'inca-silver'),
@@ -95,7 +95,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportBindWithTLPNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, 'None', 'description', 1, false),
+            ListStaticValueBuilder::aStaticValue('None')->withId(\Tracker_FormElement_Field_List::NONE_VALUE)->build(),
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
@@ -118,7 +118,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportBindWithLegacyNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, 'None', 'description', 1, false),
+            ListStaticValueBuilder::noneStaticValue()->build(),
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, '123', '456', '789', null)];
 

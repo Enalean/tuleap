@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -55,7 +56,7 @@ final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadPostActionsReturnsASinglePostAction(): void
     {
-        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
+        $transition = new \Transition(null, null, null, ListStaticValueBuilder::aStaticValue('field')->build());
 
         $expected_post_action = new HiddenFieldsets($transition, 0, []);
 
@@ -70,7 +71,7 @@ final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadPostActionsReturnsEmptyArray(): void
     {
-        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
+        $transition = new \Transition(null, null, null, ListStaticValueBuilder::aStaticValue('field')->build());
         $this->hidden_fieldsets_retriever
             ->shouldReceive('getHiddenFieldsets')
             ->with($transition)

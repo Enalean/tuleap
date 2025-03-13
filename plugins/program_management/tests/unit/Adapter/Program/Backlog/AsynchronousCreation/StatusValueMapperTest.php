@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -57,26 +58,26 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             'It matches value by label'                                           => [
                 '2',
                 self::SECOND_BIND_VALUE_ID,
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, '1', 'Irrelevant', 0, false),
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, '2', 'Irrelevant', 1, false),
+                ListStaticValueBuilder::aStaticValue('1')->withId(self::FIRST_BIND_VALUE_ID)->isHidden(false)->build(),
+                ListStaticValueBuilder::aStaticValue('2')->withId(self::SECOND_BIND_VALUE_ID)->isHidden(false)->build(),
             ],
             'It matches value label with different cases'                         => [
                 'a',
                 self::FIRST_BIND_VALUE_ID,
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, 'A', 'Irrelevant', 0, false),
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, 'b', 'Irrelevant', 1, false),
+                ListStaticValueBuilder::aStaticValue('A')->withId(self::FIRST_BIND_VALUE_ID)->isHidden(false)->build(),
+                ListStaticValueBuilder::aStaticValue('b')->withId(self::SECOND_BIND_VALUE_ID)->isHidden(false)->build(),
             ],
             'It matches value even if it is hidden'                               => [
                 '2',
                 self::SECOND_BIND_VALUE_ID,
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, '1', 'Irrelevant', 0, false),
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, '2', 'Irrelevant', 1, true),
+                ListStaticValueBuilder::aStaticValue('1')->withId(self::FIRST_BIND_VALUE_ID)->isHidden(false)->build(),
+                ListStaticValueBuilder::aStaticValue('2')->withId(self::SECOND_BIND_VALUE_ID)->isHidden(true)->build(),
             ],
             'It matches first value if multiple values have the same label'       => [
                 '1',
                 self::FIRST_BIND_VALUE_ID,
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, '1', 'Irrelevant', 0, false),
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, '1', 'Irrelevant', 1, false),
+                ListStaticValueBuilder::aStaticValue('1')->withId(self::FIRST_BIND_VALUE_ID)->isHidden(false)->build(),
+                ListStaticValueBuilder::aStaticValue('1')->withId(self::FIRST_BIND_VALUE_ID)->isHidden(false)->build(),
             ],
             'It matches user bind values by display name'                         => [
                 'Celia Apollo',
@@ -185,27 +186,9 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         string $second_label,
         string $third_label,
     ): \Tracker_FormElement_Field_List {
-        $first_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(
-            self::FIRST_BIND_VALUE_ID,
-            $first_label,
-            'Irrelevant',
-            0,
-            false
-        );
-        $second_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(
-            self::SECOND_BIND_VALUE_ID,
-            $second_label,
-            'Irrelevant',
-            0,
-            false
-        );
-        $third_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(
-            self::THIRD_BIND_VALUE_ID,
-            $third_label,
-            'Irrelevant',
-            0,
-            false
-        );
+        $first_value  = ListStaticValueBuilder::aStaticValue($first_label)->withId(self::FIRST_BIND_VALUE_ID)->build();
+        $second_value = ListStaticValueBuilder::aStaticValue($second_label)->withId(self::SECOND_BIND_VALUE_ID)->build();
+        $third_value  = ListStaticValueBuilder::aStaticValue($third_label)->withId(self::THIRD_BIND_VALUE_ID)->build();
 
         $static_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind_Static::class);
         $static_bind->method('getAllValues')->willReturn([$first_value, $second_value, $third_value]);

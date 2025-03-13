@@ -25,12 +25,12 @@ namespace Tuleap\TestManagement\Campaign;
 use CSRFSynchronizerToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -81,7 +81,7 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('getFirstOpenValueUserCanRead')
             ->willReturn(
-                new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'open', '', 1, false)
+                ListStaticValueBuilder::aStaticValue('open')->withId(1)->build()
             );
 
         $artifact_campaign
@@ -136,7 +136,7 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('getFirstClosedValueUserCanRead')
             ->willReturn(
-                new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'closed', '', 2, false)
+                ListStaticValueBuilder::aStaticValue('closed')->withId(2)->build()
             );
 
         $artifact_campaign

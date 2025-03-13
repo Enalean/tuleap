@@ -23,11 +23,11 @@ declare(strict_types=1);
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Cardwall\Test\Builders\ColumnTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Artifact&\PHPUnit\Framework\MockObject\MockObject
@@ -43,10 +43,10 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $value_none       = new Tracker_FormElement_Field_List_Bind_StaticValue(100, 'None', '', 0, 0);
-        $value_todo       = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'Todo', '', 0, 0);
-        $value_inprogress = new Tracker_FormElement_Field_List_Bind_StaticValue(102, 'In Progress', '', 0, 0);
-        $value_done       = new Tracker_FormElement_Field_List_Bind_StaticValue(103, 'Done', '', 0, 0);
+        $value_none       = ListStaticValueBuilder::noneStaticValue()->build();
+        $value_todo       = ListStaticValueBuilder::aStaticValue('Todo')->withId(101)->build();
+        $value_inprogress = ListStaticValueBuilder::aStaticValue('In Progress')->withId(102)->build();
+        $value_done       = ListStaticValueBuilder::aStaticValue('Done')->withId(103)->build();
 
         $mapping_none    = new Cardwall_OnTop_Config_ValueMapping($value_none, 10);
         $mapping_todo    = new Cardwall_OnTop_Config_ValueMapping($value_todo, 10);

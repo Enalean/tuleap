@@ -22,10 +22,10 @@
 namespace Tuleap\Tracker\Semantic\Status\Open;
 
 use CSRFSynchronizerToken;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -105,11 +105,11 @@ final class AdminPresenterBuilderTest extends TestCase
         $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
         $status_field->method('getId')->willReturn(2);
         $status_field->method('getLabel')->willReturn('field B');
-        $open_value = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'open', '', 1, false);
+        $open_value = ListStaticValueBuilder::aStaticValue('open')->withId(1)->build();
         $status_field->method('getAllVisibleValues')->willReturn(
             [
                 $open_value,
-                new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'closed', '', 1, false),
+                ListStaticValueBuilder::aStaticValue('closed')->withId(2)->build(),
             ]
         );
         $field_A = $this->getFieldWithIdAndLabel(1, 'field A');

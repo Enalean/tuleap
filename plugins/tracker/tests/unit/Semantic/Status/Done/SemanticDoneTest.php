@@ -24,6 +24,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -39,9 +40,9 @@ final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->to_do_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'todo', '', 1, false);
-        $this->on_going_value = new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'on-going', '', 2, false);
-        $this->done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(3, 'done', '', 3, false);
+        $this->to_do_value    = ListStaticValueBuilder::aStaticValue('todo')->withId(1)->build();
+        $this->on_going_value = ListStaticValueBuilder::aStaticValue('on-going')->withId(2)->build();
+        $this->done_value     =            ListStaticValueBuilder::aStaticValue('done')->withId(3)->build();
 
         $this->tracker         = TrackerTestBuilder::aTracker()->build();
         $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);

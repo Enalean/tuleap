@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 use Tuleap\ProgramManagement\Tests\Stub\CreatePostActionStub;
 use Tuleap\ProgramManagement\Tests\Stub\DeletePostActionStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\Update\PostAction;
@@ -55,7 +56,7 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     {
         $actions = new PostActionCollection(new AddToTopBacklogPostActionValue(), self::buildOtherPostAction());
 
-        $this->updater->updateByTransition($actions, new \Transition(14, 321, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)));
+        $this->updater->updateByTransition($actions, new \Transition(14, 321, null, ListStaticValueBuilder::aStaticValue('field')->build()));
         self::assertEquals(1, $this->delete_post_action->getCallCount());
         self::assertEquals(1, $this->create_post_action->getCallCount());
     }
@@ -64,7 +65,7 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     {
         $actions = new PostActionCollection(self::buildOtherPostAction());
 
-        $this->updater->updateByTransition($actions, new \Transition(15, 321, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)));
+        $this->updater->updateByTransition($actions, new \Transition(15, 321, null, ListStaticValueBuilder::aStaticValue('field')->build()));
 
         self::assertEquals(1, $this->delete_post_action->getCallCount());
         self::assertEquals(0, $this->create_post_action->getCallCount());

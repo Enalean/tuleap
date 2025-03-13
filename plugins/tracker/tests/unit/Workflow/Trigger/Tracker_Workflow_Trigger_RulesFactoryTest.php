@@ -20,9 +20,10 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -108,13 +109,13 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $this->json_input          = json_decode(file_get_contents(__DIR__ . '/_fixtures/add_rule.json'));
 
         $this->target_value_id    = 250;
-        $this->target_field_value = new Tracker_FormElement_Field_List_Bind_StaticValue($this->target_value_id, 'label', 'desc', 0, false);
+        $this->target_field_value = ListStaticValueBuilder::aStaticValue('label')->withId($this->target_value_id)->build();
         $this->target_field       = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
         $this->target_field->shouldReceive('getAllValues')->andReturns([
-            new Tracker_FormElement_Field_List_Bind_StaticValue(9998, 'label', 'desc', 0, false),
+            ListStaticValueBuilder::aStaticValue('label')->withId(9998)->build(),
             $this->target_field_value,
-            new Tracker_FormElement_Field_List_Bind_StaticValue(9999, 'label', 'desc', 0, false),
+            ListStaticValueBuilder::aStaticValue('label')->withId(9999)->build(),
         ]);
     }
 
@@ -183,7 +184,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $this->tracker         = Mockery::spy(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
         $this->target_value_id    = 250;
-        $this->target_field_value = new Tracker_FormElement_Field_List_Bind_StaticValue($this->target_value_id, 'label', 'desc', 0, false);
+        $this->target_field_value = ListStaticValueBuilder::aStaticValue('label')->withId($this->target_value_id)->build();
 
         $this->target_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getId')->andReturn($this->target_field_id);
@@ -202,7 +203,8 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
 
         $this->trigger_field_id    = 369;
         $this->trigger_value_id    = 852;
-        $this->trigger_field_value = new Tracker_FormElement_Field_List_Bind_StaticValue($this->trigger_value_id, 'label', 'desc', 0, false);
+        $this->trigger_field_value = ListStaticValueBuilder::aStaticValue('label')->withId($this->trigger_value_id)->build();
+
 
         $this->trigger_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field->shouldReceive('getTracker')->andReturn($child_tracker);
@@ -248,7 +250,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $this->trigger_field_id_1 = 369;
         $this->trigger_value_id_1 = 852;
 
-        $this->trigger_field_value_1 = new Tracker_FormElement_Field_List_Bind_StaticValue($this->trigger_value_id_1, 'label', 'desc', 0, false);
+        $this->trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('label')->withId($this->trigger_value_id_1)->build();
 
         $this->trigger_field_1 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field_1->shouldReceive('getId')->andReturn($this->trigger_field_id_1);
@@ -264,7 +266,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $trigger_field_id_2 = 874;
         $trigger_value_id_2 = 147;
 
-        $this->trigger_field_value_2 = new Tracker_FormElement_Field_List_Bind_StaticValue($trigger_value_id_2, 'label', 'desc', 0, false);
+        $this->trigger_field_value_2 = ListStaticValueBuilder::aStaticValue('label')->withId($trigger_value_id_2)->build();
 
         $this->trigger_field_2 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field_2->shouldReceive('getId')->andReturn($trigger_field_id_2);
@@ -310,7 +312,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
 
         $this->target_field_id = 30;
         $this->target_value_id = 250;
-        $target_field_value    = new Tracker_FormElement_Field_List_Bind_StaticValue($this->target_value_id, 'Target Value Label', 'desc', 0, false);
+        $target_field_value    = ListStaticValueBuilder::aStaticValue('Target Value Label')->withId($this->target_value_id)->build();
 
         $target_bind_static   = new Tracker_FormElement_Field_List_Bind_Static(
             null,
@@ -332,7 +334,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
 
         // field 1
         $this->trigger_field_id_1    = 369;
-        $this->trigger_field_value_1 = new Tracker_FormElement_Field_List_Bind_StaticValue(852, 'Triggering Value Label 1', 'desc', 0, false);
+        $this->trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('Triggering Value Label 1')->withId(852)->build();
         $trigger_bind_static         = new Tracker_FormElement_Field_List_Bind_Static(
             null,
             null,

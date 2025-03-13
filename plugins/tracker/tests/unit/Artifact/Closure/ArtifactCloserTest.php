@@ -36,6 +36,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BadSemanticCommentInCommonMarkFormatStub;
 use Tuleap\Test\Stubs\ReferenceStringStub;
@@ -322,6 +323,6 @@ final class ArtifactCloserTest extends TestCase
 
     private function getDoneValue(): Tracker_FormElement_Field_List_Bind_StaticValue
     {
-        return new Tracker_FormElement_Field_List_Bind_StaticValue(14, self::DONE_LABEL, '', 1, false);
+        return ListStaticValueBuilder::aStaticValue(self::DONE_LABEL)->withId(14)->build();
     }
 }

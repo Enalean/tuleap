@@ -21,6 +21,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -92,7 +94,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
             $this->transition_id,
             $workflow_id,
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
+            ListStaticValueBuilder::aStaticValue('field')->build()
         );
         $this->transition->setWorkflow($this->workflow);
 

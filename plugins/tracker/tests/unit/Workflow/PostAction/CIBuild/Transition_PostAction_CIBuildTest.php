@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -102,7 +103,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
         $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->field     = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $field_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(1, $value_triggering_build, '', '', false);
+        $field_value     = ListStaticValueBuilder::aStaticValue($value_triggering_build)->build();
 
         $this->changeset->shouldReceive('getSubmittedBy')->andReturns($build_user);
 

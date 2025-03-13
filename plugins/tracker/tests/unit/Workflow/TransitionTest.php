@@ -21,6 +21,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -37,21 +39,8 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
 
     protected function setUp(): void
     {
-        $this->from = new Tracker_FormElement_Field_List_Bind_StaticValue(
-            123,
-            null,
-            null,
-            null,
-            null
-        );
-
-        $this->to = new Tracker_FormElement_Field_List_Bind_StaticValue(
-            456,
-            null,
-            null,
-            null,
-            null
-        );
+        $this->from = ListStaticValueBuilder::aStaticValue('value')->withId(123)->build();
+        $this->to   = ListStaticValueBuilder::aStaticValue('value')->withId(456)->build();
         PermissionsManager::setInstance(\Mockery::spy(\PermissionsManager::class));
 
         $this->transition       = new Transition($this->id, $this->workflow_id, $this->from, $this->to);

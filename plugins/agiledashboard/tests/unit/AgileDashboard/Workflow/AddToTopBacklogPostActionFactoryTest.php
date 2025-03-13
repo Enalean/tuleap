@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Workflow;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Workflow;
 
@@ -68,7 +68,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
             (string) $this->transition_id,
             (string) $workflow_id,
             null,
-            new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
+            ListStaticValueBuilder::aStaticValue('field')->build()
         );
         $this->transition->setWorkflow($this->workflow);
     }

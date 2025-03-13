@@ -31,6 +31,7 @@ use Tracker_FormElement_Field_List_Bind_Static;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use UserXMLExporter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -48,21 +49,8 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
     {
         parent::setUp();
 
-        $first_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
-            431,
-            '10',
-            'int value',
-            1,
-            0
-        );
-
-        $second_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
-            432,
-            '123abc',
-            'string value',
-            2,
-            0
-        );
+        $first_value  = ListStaticValueBuilder::aStaticValue('10')->withId(431)->withDescription('int value')->build();
+        $second_value = ListStaticValueBuilder::aStaticValue('123abc')->withId(432)->withDescription('string value')->build();
 
         $field         = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
         $is_rank_alpha = 0;

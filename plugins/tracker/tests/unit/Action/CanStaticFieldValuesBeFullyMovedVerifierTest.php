@@ -27,11 +27,11 @@ use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -54,13 +54,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 
     public function testFieldIsPartiallyMovedWhenValueDoesNotExistsInDestinationTracker(): void
     {
-        $last_changeset_value_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(
-            1,
-            'A value',
-            'A static bind value',
-            1,
-            false,
-        );
+        $last_changeset_value_value = ListStaticValueBuilder::aStaticValue('A value')->build();
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $last_changeset_value->method('getListValues')->willReturn([$last_changeset_value_value]);
 
@@ -76,7 +70,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
         $last_changeset_value->method('getListValues')->willReturn([$last_changeset_value_value]);
 
         $this->source_list_field->expects(self::once())->method('getLastChangesetValue')->with($this->artifact)->willReturn($last_changeset_value);
-        $bind     = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'my value', '', 1, false);
+        $bind     = ListStaticValueBuilder::aStaticValue('my value')->build();
         $verifier = new CanStaticFieldValuesBeFullyMovedVerifier(RetrieveMatchingBindValueByDuckTypingStub::withMatchingBindValue($bind));
 
         $this->assertTrue($verifier->canAllStaticFieldValuesBeMoved($this->source_list_field, $this->destination_list_field, $this->artifact, new NullLogger()));
