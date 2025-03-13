@@ -33,26 +33,18 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { namespace, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import SwitchToFullscreen from "./SwitchToFullscreen.vue";
 import OpenClosedSwitcher from "./OpenClosedSwitcher.vue";
 
-const fullscreen = namespace("fullscreen");
+import { useNamespacedGetters, useNamespacedState, useState } from "vuex-composition-helpers";
+import type { FullscreenState } from "../../../store/fullscreen/type";
 
-@Component({
-    components: { SwitchToFullscreen, OpenClosedSwitcher },
-})
-export default class TaskboardButtonBar extends Vue {
-    @State
-    readonly milestone_title!: string;
+const { milestone_title } = useState(["milestone_title"]);
 
-    @fullscreen.State
-    readonly is_taskboard_in_fullscreen_mode!: boolean;
+const { is_taskboard_in_fullscreen_mode } = useNamespacedState<
+    Pick<FullscreenState, "is_taskboard_in_fullscreen_mode">
+>("fullscreen", ["is_taskboard_in_fullscreen_mode"]);
 
-    @fullscreen.Getter
-    readonly fullscreen_class!: string;
-}
+const { fullscreen_class } = useNamespacedGetters("fullscreen", ["fullscreen_class"]);
 </script>
