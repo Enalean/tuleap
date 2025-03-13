@@ -34,6 +34,7 @@ export type SectionState = {
     is_section_editable: ComputedRef<boolean>;
     is_save_allowed: ComputedRef<boolean>;
     is_section_in_edit_mode: Ref<boolean>;
+    has_title_level_been_changed: Ref<boolean>;
     is_just_refreshed: Ref<boolean>;
     is_being_saved: Ref<boolean>;
     is_just_saved: Ref<boolean>;
@@ -94,6 +95,7 @@ export const getSectionStateBuilder = (
             edited_description: ref(section.value.description),
             initial_level: ref(section.value.level),
             is_editor_reset_needed: ref(false),
+            has_title_level_been_changed: ref(false),
         }),
     };
 };

@@ -62,11 +62,23 @@ describe("SectionEditorSaveCancelButtons", () => {
         });
     });
 
-    describe("when the edit mode is on", () => {
-        it("should display buttons", () => {
+    describe("Buttons should be displayed", () => {
+        it("When the section's content has been edited", () => {
             expect(
                 getWrapper(
                     SectionStateStub.inEditMode(),
+                    SaveSectionStub.withNoExpectedCall(),
+                    SectionEditorCloserStub.withNoExpectedCall(),
+                )
+                    .find("button")
+                    .exists(),
+            ).toBe(true);
+        });
+
+        it("when the title level has been changed", () => {
+            expect(
+                getWrapper(
+                    SectionStateStub.withChangedTitleLevel(),
                     SaveSectionStub.withNoExpectedCall(),
                     SectionEditorCloserStub.withNoExpectedCall(),
                 )

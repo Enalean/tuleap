@@ -17,60 +17,75 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import type { GetText } from "@tuleap/gettext";
 import type { HostElement } from "@/toolbar/HeadingsButton";
-import { renderHeadingsButton } from "@/toolbar/HeadingsButton";
-import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { isUpdateSectionLevelEvent, renderHeadingsButton } from "@/toolbar/HeadingsButton";
+import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import { LEVEL_1, LEVEL_2, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { LEVEL_3 } from "@/sections/levels/SectionsNumberer";
-import { createHeadingButton } from "@/toolbar/create-heading-button";
-
-const gettext_provider = {
-    gettext: (english: string) => english,
-} as GetText;
-
-const freetext_section = ReactiveStoredArtidocSectionStub.fromSection(
-    FreetextSectionFactory.override({
-        level: LEVEL_3,
-    }),
-);
+import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 
 describe("HeadingsButton", () => {
-    const headings_button_element = createHeadingButton(freetext_section);
-    if (headings_button_element === null) {
-        throw new Error("Unable to find headings button element");
-    }
+    let doc: Document;
 
-    const items: NodeListOf<HTMLSpanElement> =
-        headings_button_element.dropdown_menu.querySelectorAll<HTMLSpanElement>("[role=menuitem]");
+    beforeEach(() => {
+        doc = document.implementation.createHTMLDocument();
+    });
+
+    const getHost = (section: StoredArtidocSection | undefined): HostElement =>
+        Object.assign(doc.createElement("div"), { section } as HostElement);
+
+    const renderButton = (host: HostElement): ShadowRoot => {
+        const target = doc.createElement("div") as unknown as ShadowRoot;
+        const render = renderHeadingsButton(host, {
+            gettext: (message: string) => message,
+        } as GetText);
+
+        render(host, target);
+
+        return target;
+    };
 
     it("should apply correct classes to dropdown items based on section level", () => {
+        const section = CreateStoredSections.fromArtidocSection(
+            FreetextSectionFactory.override({
+                level: LEVEL_3,
+            }),
+        );
+
+        const host = getHost(section);
+        const items: NodeListOf<HTMLSpanElement> =
+            renderButton(host).querySelectorAll<HTMLSpanElement>("[role=menuitem]");
+
         expect(items[0].classList.value).not.contains("artidoc-selected-level");
         expect(items[1].classList.value).not.contains("artidoc-selected-level");
         expect(items[2].classList.value).contains("artidoc-selected-level");
     });
 
-    describe("renderHeadingsButton", () => {
-        const doc = document.implementation.createHTMLDocument();
-
-        const getHost = (): HostElement =>
-            Object.assign(doc.createElement("button"), {
-                section: freetext_section.value,
-                is_disabled: false,
-            }) as unknown as HostElement;
-
-        it("should dispatch event when click on a different Headings", () => {
-            const host = getHost();
+    it.each([
+        ["change-section-level-1", LEVEL_1],
+        ["change-section-level-2", LEVEL_2],
+        ["change-section-level-3", LEVEL_3],
+    ])(
+        "When the user click the %s item in the dropdown, then it should dispatch an update-section-level event with the correct heading level",
+        (item_name, expected_level) => {
+            const section = CreateStoredSections.fromArtidocSection(
+                FreetextSectionFactory.create(),
+            );
+            const host = getHost(section);
+            const button = renderButton(host);
             const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
-            host.dispatchEvent(new Event("update-section-level"));
-            renderHeadingsButton(host, gettext_provider);
+            button.querySelector<HTMLElement>(`[data-test=${item_name}]`)?.click();
 
             const event = dispatchEvent.mock.calls[0][0];
+            if (!isUpdateSectionLevelEvent(event)) {
+                throw new Error("Expected an update-section-level event.");
+            }
 
-            expect(event.type).toBe("update-section-level");
+            expect(event.detail.level).toBe(expected_level);
             expect(dispatchEvent).toHaveBeenCalledOnce();
-        });
-    });
+        },
+    );
 });

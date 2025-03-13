@@ -45,6 +45,7 @@ export const getSectionEditorStateManager = (
         section_state.edited_description.value = section.value.description;
         section.value.level = section_state.initial_level.value;
         section_state.is_section_in_edit_mode.value = false;
+        section_state.has_title_level_been_changed.value = false;
     },
     markEditorAsReset(): void {
         section_state.is_editor_reset_needed.value = false;

@@ -19,7 +19,13 @@
 -->
 
 <template>
-    <div v-if="section_state.is_section_in_edit_mode.value" class="section-footer">
+    <div
+        v-if="
+            section_state.is_section_in_edit_mode.value ||
+            section_state.has_title_level_been_changed.value
+        "
+        class="section-footer"
+    >
         <not-found-error v-if="is_not_found" />
         <generic-error
             v-else-if="is_in_error"
@@ -45,14 +51,14 @@ import SectionEditorSaveCancelButtons from "./SectionEditorSaveCancelButtons.vue
 import NotFoundError from "./NotFoundError.vue";
 import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import GenericError from "./GenericError.vue";
-import type { StoredArtidocSection } from "@/sections/SectionsCollection";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
 import type { RefreshSection } from "@/sections/update/SectionRefresher";
 import type { SaveSection } from "@/sections/save/SectionSaver";
 
 const props = defineProps<{
-    section: StoredArtidocSection;
+    section: ReactiveStoredArtidocSection;
     section_state: SectionState;
     close_section_editor: CloseSectionEditor;
     refresh_section: RefreshSection;

@@ -30,24 +30,21 @@ describe("getHeadingsButtonState", () => {
         headings_button_state = getHeadingsButtonState();
     });
 
-    it("should initialize with disabled button and undefined section", () => {
-        expect(headings_button_state.is_button_active.value).toBeFalsy();
+    it("should have no section by default", () => {
         expect(headings_button_state.active_section.value).toBeUndefined();
     });
 
-    it("should activate button and set the section when activeButtonForSection is called", () => {
+    it("should store the active section when activeButtonForSection is called", () => {
         const artidoc_section = ReactiveStoredArtidocSectionStub.fromSection(
             ArtifactSectionFactory.create(),
         );
 
         headings_button_state.activateButtonForSection(artidoc_section);
-        expect(headings_button_state.is_button_active.value).toBeTruthy();
         expect(headings_button_state.active_section.value).toStrictEqual(artidoc_section);
     });
 
-    it("should deactivate button and reset the section to undefined when deactivateButton is called", () => {
+    it("should reset the active section when deactivateButton is called", () => {
         headings_button_state.deactivateButton();
-        expect(headings_button_state.is_button_active.value).toBeFalsy();
         expect(headings_button_state.active_section.value).toBeUndefined();
     });
 });

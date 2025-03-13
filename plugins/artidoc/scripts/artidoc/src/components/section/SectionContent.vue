@@ -20,7 +20,10 @@
 <template>
     <section
         v-bind:data-test="
-            section_state.is_section_in_edit_mode.value ? 'section-edition' : undefined
+            section_state.is_section_in_edit_mode.value ||
+            section_state.has_title_level_been_changed.value
+                ? 'section-edition'
+                : undefined
         "
         v-bind:class="`artidoc-section-level-${section.value.level}`"
     >
@@ -59,7 +62,7 @@
                 v-bind:manage_section_attachment_files="section_attachments_manager"
             />
             <section-footer
-                v-bind:section="section.value"
+                v-bind:section="section"
                 v-bind:section_state="section_state"
                 v-bind:close_section_editor="section_editor_closer"
                 v-bind:refresh_section="section_refresher"
@@ -181,7 +184,7 @@ const save_section = getSectionSaver(
     props.section,
     section_state,
     error_state_manager,
-    getPendingSectionsReplacer(sections_collection, states_collection),
+    getPendingSectionsReplacer(sections_collection),
     sections_updater,
     getSectionsPositionsForSaveRetriever(sections_collection),
     section_attachments_manager,

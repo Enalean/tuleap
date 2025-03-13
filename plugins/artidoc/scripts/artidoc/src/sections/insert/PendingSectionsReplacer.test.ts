@@ -40,7 +40,7 @@ describe("PendingSectionsReplacer", () => {
     it("should do nothing if the pending sections cannot be found", () => {
         const section = PendingArtifactSectionFactory.create();
         const sections = getSectionsCollection([section]);
-        const replacer = getPendingSectionsReplacer(sections, SectionsStatesCollectionStub.build());
+        const replacer = getPendingSectionsReplacer(sections);
 
         replacer.replacePendingSection(
             PendingArtifactSectionFactory.create(),
@@ -61,7 +61,7 @@ describe("PendingSectionsReplacer", () => {
         const newone = ArtifactSectionFactory.create();
 
         const sections = getSectionsCollection([section0, section1, section2, section3]);
-        const replacer = getPendingSectionsReplacer(sections, SectionsStatesCollectionStub.build());
+        const replacer = getPendingSectionsReplacer(sections);
 
         replacer.replacePendingSection(section2, newone);
 
@@ -80,7 +80,7 @@ describe("PendingSectionsReplacer", () => {
         const newone = FreetextSectionFactory.create();
 
         const sections = getSectionsCollection([section0, section1, section2, section3]);
-        const replacer = getPendingSectionsReplacer(sections, SectionsStatesCollectionStub.build());
+        const replacer = getPendingSectionsReplacer(sections);
 
         if (!isPendingFreetextSection(section1)) {
             throw new Error("Expected a pending freetext section");

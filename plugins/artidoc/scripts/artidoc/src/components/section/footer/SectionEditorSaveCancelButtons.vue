@@ -18,7 +18,10 @@
 -
 -->
 <template>
-    <div v-if="is_section_in_edit_mode" class="document-section-cancel-save-buttons">
+    <div
+        v-if="is_section_in_edit_mode || has_title_level_been_changed"
+        class="document-section-cancel-save-buttons"
+    >
         <button
             v-on:click="close_section_editor.closeAndCancelEditor"
             type="button"
@@ -54,7 +57,8 @@ const props = defineProps<{
 }>();
 
 const { $gettext } = useGettext();
-const { is_section_in_edit_mode, is_save_allowed } = props.section_state;
+const { is_section_in_edit_mode, has_title_level_been_changed, is_save_allowed } =
+    props.section_state;
 </script>
 
 <style lang="scss" scoped>
