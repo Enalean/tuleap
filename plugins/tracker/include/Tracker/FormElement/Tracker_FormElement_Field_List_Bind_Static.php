@@ -778,19 +778,19 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $value_dao->propagateCreation($field, $original_value_id);
     }
 
-    public function exportToXml(
+    public function exportBindToXml(
         SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter,
-    ) {
+    ): void {
         $root->addAttribute('is_rank_alpha', $this->is_rank_alpha ? '1' : '0');
         if (! $this->getAllValues()) {
             return;
         }
 
         $exporter = new BindStaticXmlExporter(new XML_SimpleXMLCDATAFactory());
-        $exporter->exportToXml(
+        $exporter->exportStaticBindToXml(
             $root,
             $this->getAllValues(),
             $this->decorators,

@@ -26,16 +26,10 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
 use XML_SimpleXMLCDATAFactory;
 
-class BindStaticXmlExporter
+final readonly class BindStaticXmlExporter
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_section_factory;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $cdata_section_factory)
+    public function __construct(private XML_SimpleXMLCDATAFactory $cdata_section_factory)
     {
-        $this->cdata_section_factory = $cdata_section_factory;
     }
 
     /**
@@ -43,7 +37,7 @@ class BindStaticXmlExporter
      * @param Tracker_FormElement_Field_List_BindDecorator[]|null $decorators
      * @param array|null $default_values
      */
-    public function exportToXml(
+    public function exportStaticBindToXml(
         \SimpleXMLElement $root,
         array $values,
         ?array $decorators,

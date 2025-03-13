@@ -728,12 +728,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Transforms Bind into a SimpleXMLElement
      */
-    public function exportToXml(
+    public function exportBindToXml(
         SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter,
-    ) {
+    ): void {
         if ($this->value_function) {
             $child = $root->addChild('items');
             foreach ($this->value_function as $vf) {

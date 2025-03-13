@@ -33,9 +33,8 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use UserXMLExporter;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
 
@@ -234,8 +233,8 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $user_xml_exporter      = Mockery::mock(UserXMLExporter::class);
         $root                   = new SimpleXMLElement('<bind type="static"/>');
         $xml_mapping            = [1, 2, 3];
-        $project_export_context = 'false';
-        $this->bind_without_values->exportToXml(
+        $project_export_context = false;
+        $this->bind_without_values->exportBindToXml(
             $root,
             $xml_mapping,
             $project_export_context,
@@ -263,8 +262,8 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $user_xml_exporter      = Mockery::mock(UserXMLExporter::class);
         $root                   = new SimpleXMLElement('<bind type="static"/>');
         $xml_mapping            = [1, 2, 3];
-        $project_export_context = 'false';
-        $this->bind->exportToXml(
+        $project_export_context = false;
+        $this->bind->exportBindToXml(
             $root,
             $xml_mapping,
             $project_export_context,

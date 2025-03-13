@@ -530,12 +530,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * Transforms Bind into a SimpleXMLElement
      */
-    public function exportToXml(
+    public function exportBindToXml(
         SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter,
-    ) {
+    ): void {
         $items = $root->addChild('items');
         foreach ($this->values as $value) {
             $item = $items->addChild('item');
