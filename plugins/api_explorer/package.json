@@ -5,12 +5,12 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "react": "^18.2.0",
-    "swagger-ui": "^5.17.14"
+    "react": "^18.3.1",
+    "swagger-ui": "^5.20.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/react": "^18.2.67"
+    "@types/react": "^18.3.18"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -21,6 +21,7 @@
     "overrides": {
       "@babel/runtime": "^7.26.10",
       "@babel/runtime-corejs3": "^7.26.10",
+      "prismjs": "^1.30.0",
       "cookie": "^0.7.2",
       "dompurify": "^3.2.4",
       "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@latest",

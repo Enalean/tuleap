@@ -110,9 +110,3 @@ ignoreUntil = 2025-04-12
 id = "RUSTSEC-2024-0436"
 reason = "Repository archive notification. see https://github.com/bytecodealliance/wasmtime/issues/10356"
 ignoreUntil = 2025-04-10
-
-# PrismJS
-[[IgnoredVulns]]
-id = "GHSA-x7hr-w5r2-h6wg"
-reason = "No direct impact, prism-autoloader is not being used"
-ignoreUntil = 2025-04-04
