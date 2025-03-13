@@ -70,7 +70,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $xml_mapping = [];
-        $this->exporter->exportToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
+        $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
         $this->assertNotNull($items_node);
@@ -100,7 +100,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
         $xml_mapping = [];
-        $this->exporter->exportToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
+        $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
         $this->assertNotNull($items_node);
@@ -123,7 +123,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, '123', '456', '789', null)];
 
         $xml_mapping = [];
-        $this->exporter->exportToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
+        $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
         $this->assertNotNull($items_node);

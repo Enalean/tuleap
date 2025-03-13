@@ -1175,7 +1175,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $child = $node->addChild('bind');
             $bf    = new Tracker_FormElement_Field_List_BindFactory();
             $child->addAttribute('type', $bf->getType($this->getBind()));
-            $this->getBind()->exportToXML($child, $xmlMapping, $project_export_context, $user_xml_exporter);
+            $this->getBind()->exportBindToXml($child, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
         return $node;
     }

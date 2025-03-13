@@ -515,12 +515,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
     /**
      * Transforms Bind into a SimpleXMLElement
      */
-    abstract public function exportToXml(
+    abstract public function exportBindToXml(
         SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter,
-    );
+    ): void;
 
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.

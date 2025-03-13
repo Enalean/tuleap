@@ -133,7 +133,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
 
         $root = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $this->assertCount(0, $root->items->children());
     }
 
@@ -147,39 +147,42 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertEquals('Integrators', $items[0]['label']);
     }
 
-    public function testItExportsHiddenValues()
+    public function testItExportsHiddenValues(): void
     {
+        $xml_mapping = [];
         $values      = [
             $this->hidden_ugroup_value,
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertTrue((bool) $items[0]['is_hidden']);
     }
 
     public function testItExportsOneDynamicUgroup(): void
     {
+        $xml_mapping = [];
         $values      = [
             $this->project_members_ugroup_value,
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertEquals('ugroup_project_members_name_key', $items[0]['label']);
     }
 
     public function testItExportsTwoUgroups(): void
     {
+        $xml_mapping = [];
         $values      = [
             $this->integrators_ugroup_value,
             $this->customers_ugroup_value,
@@ -187,7 +190,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertEquals('Integrators', $items[0]['label']);
         $this->assertEquals('Customers', $items[1]['label']);
@@ -195,6 +198,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
 
     public function testItExportsDefaultValues(): void
     {
+        $xml_mapping    = [];
         $values         = [
             $this->integrators_ugroup_value,
             $this->customers_ugroup_value,
@@ -205,7 +209,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $bind_ugroup    = $this->buildBindUgroups($values, $default_values);
         $root           = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->default_values->children();
         $this->assertEquals('V687', (string) $items->value['REF']);
     }
