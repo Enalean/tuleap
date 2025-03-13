@@ -168,6 +168,41 @@ describe("CrossTracker search", function () {
         cy.get("[data-test=query-creation-save-button]").click();
         cy.get("[data-test=cross-tracker-report-success]");
     });
+
+    it("User can display query details", function () {
+        cy.projectMemberSession();
+        cy.visit("/my/");
+
+        cy.get("[data-test=dashboard-add-button]").click();
+        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+        cy.get("[data-test=dashboard-add-button-submit]").click();
+
+        cy.get("[data-test=dashboard-configuration-button]").click();
+        cy.get("[data-test=dashboard-add-widget-button]").click();
+        cy.get("[data-test=crosstrackersearch]").click();
+        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
+
+        cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
+
+        cy.log("Create a query with a description");
+        cy.get("[data-test=create-query-title]").type("A first query");
+        cy.get("[data-test=create-query-description]").type("A great description for my query");
+        updateSearchQuery(
+            `SELECT @pretty_title FROM @project.name = '${project_name}' WHERE @id >= 1`,
+        );
+
+        cy.wait("@getQueryContent", { timeout: 5000 });
+
+        cy.log("Display query details");
+        cy.get("[data-test=query-creation-save-button]").click();
+        cy.get("[data-test=toggle-query-details-button]").click();
+
+        cy.get("[data-test=query-description]").should(
+            "have.text",
+            "A great description for my query",
+        );
+        cy.get("[data-test=export-xlsx-button]");
+    });
 });
 
 function updateSearchQuery(search_query: string): void {

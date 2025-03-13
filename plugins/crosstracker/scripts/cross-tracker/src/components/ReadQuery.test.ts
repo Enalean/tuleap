@@ -48,6 +48,7 @@ import {
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
     SWITCH_QUERY_EVENT,
+    TOGGLE_QUERY_DETAILS_EVENT,
 } from "../helpers/emitter-provider";
 import type { Query } from "../type";
 import mitt from "mitt";
@@ -62,6 +63,7 @@ describe("ReadQuery", () => {
     let dispatched_success_events: NotifySuccessEvent[];
     let dispatched_updated_title_events: UpdateWidgetTitleEvent[];
     let emitter: EmitterProvider;
+    let is_multiple_query_supported: boolean;
 
     beforeEach(() => {
         is_user_admin = true;
@@ -70,6 +72,7 @@ describe("ReadQuery", () => {
         dispatched_fault_events = [];
         dispatched_success_events = [];
         dispatched_updated_title_events = [];
+        is_multiple_query_supported = true;
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, (event) => {
             dispatched_switch_query_events.push(event);
@@ -107,7 +110,7 @@ describe("ReadQuery", () => {
                     [WIDGET_ID.valueOf()]: 96,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
-                    [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
+                    [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: is_multiple_query_supported,
                 },
             },
         });
@@ -120,6 +123,7 @@ describe("ReadQuery", () => {
             and the writing report will be updated
             and it will clear the feedback messages`, async () => {
             const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -132,6 +136,7 @@ describe("ReadQuery", () => {
             when I try to switch to writing mode, then nothing will happen`, async () => {
             is_user_admin = false;
             const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -147,6 +152,7 @@ describe("ReadQuery", () => {
             and the reading report will be reset
             and it will clear the feedback messages`, async () => {
             const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -165,6 +171,7 @@ describe("ReadQuery", () => {
             and the reading report will be updated
             and it will clear the feedback messages`, async () => {
             const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -186,6 +193,7 @@ describe("ReadQuery", () => {
             then the reports will be updated
             and it will set a success message`, async () => {
             const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -217,6 +225,7 @@ describe("ReadQuery", () => {
             then it will restore the reading and writing reports
             and will clear the feedback messages`, async () => {
             const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -293,6 +302,7 @@ describe("ReadQuery", () => {
     describe(`isXLSXExportAllowed`, () => {
         it(`when the report state is not "report-saved", it does not allow CSV export`, async () => {
             const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -337,6 +347,33 @@ describe("ReadQuery", () => {
             const wrapper = getWrapper();
 
             expect(wrapper.vm.is_export_allowed).toBe(true);
+        });
+    });
+
+    describe("areQueryDetailsShown()", () => {
+        it("should always display query details if multiple queries are not enabled", async () => {
+            is_multiple_query_supported = false;
+            const wrapper = getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ReadingMode).exists()).toBe(true);
+        });
+
+        it("should not display query details if multiple queries are enabled but details are not toggled", async () => {
+            is_multiple_query_supported = true;
+            const wrapper = getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ReadingMode).exists()).toBe(false);
+        });
+
+        it("should display query details if multiple queries are enabled and details are toggled", async () => {
+            is_multiple_query_supported = true;
+            const wrapper = getWrapper();
+            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ReadingMode).exists()).toBe(true);
         });
     });
 });

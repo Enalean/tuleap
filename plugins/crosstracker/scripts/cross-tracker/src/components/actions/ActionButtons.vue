@@ -19,14 +19,17 @@
 
 <template>
     <choose-query-button v-bind:backend_query="backend_query" v-bind:queries="queries" />
+    <query-details-button v-bind:are_query_details_toggled="are_query_details_toggled" />
 </template>
 
 <script setup lang="ts">
 import ChooseQueryButton from "./ChooseQueryButton.vue";
 import type { Query } from "../../type";
+import QueryDetailsButton from "./QueryDetailsButton.vue";
 
 defineProps<{
     backend_query: Query;
     queries: ReadonlyArray<Query>;
+    are_query_details_toggled: boolean;
 }>();
 </script>

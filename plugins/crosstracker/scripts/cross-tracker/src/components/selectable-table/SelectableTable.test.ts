@@ -318,40 +318,4 @@ describe(`SelectableTable`, () => {
             expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
         });
     });
-    describe(`render XLSX button`, () => {
-        let table_retriever: RetrieveArtifactsTable;
-        beforeEach(() => {
-            const table = new ArtifactsTableBuilder()
-                .withColumn(NUMERIC_COLUMN_NAME)
-                .withArtifactRow(
-                    new ArtifactRowBuilder()
-                        .addCell(NUMERIC_COLUMN_NAME, {
-                            type: NUMERIC_CELL,
-                            value: Option.fromValue(74),
-                        })
-                        .build(),
-                )
-                .build();
-
-            const table_result = {
-                table,
-                total: 1,
-            };
-            table_retriever = RetrieveArtifactsTableStub.withContent(table_result, table_result, [
-                table_result.table,
-            ]);
-        });
-        it(`does not show the XLSX export button when told not to`, () => {
-            is_xslx_export_allowed = false;
-
-            const wrapper = getWrapper(table_retriever);
-            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
-        });
-
-        it(`shows the XLSX export button otherwise`, async () => {
-            const wrapper = getWrapper(table_retriever);
-            await vi.runOnlyPendingTimersAsync();
-            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(true);
-        });
-    });
 });

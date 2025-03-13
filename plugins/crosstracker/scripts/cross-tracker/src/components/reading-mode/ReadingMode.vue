@@ -24,11 +24,26 @@
         v-on:click="switchToWritingMode"
         data-test="cross-tracker-reading-mode"
     >
-        <tlp-syntax-highlighting v-if="!isExpertQueryEmpty()" data-test="tql-reading-mode-query">
+        <label
+            v-if="is_description_displayed"
+            class="tlp-label"
+            v-bind:for="syntax_highlighted_query_id"
+            data-test="query-description"
+        >
+            {{ props.reading_query.description }}
+        </label>
+        <tlp-syntax-highlighting
+            v-bind:id="syntax_highlighted_query_id"
+            v-if="!isExpertQueryEmpty()"
+            data-test="tql-reading-mode-query"
+        >
             <code class="language-tql cross-tracker-reading-mode-query">{{
                 props.reading_query.tql_query
             }}</code>
         </tlp-syntax-highlighting>
+    </div>
+    <div v-if="is_xslx_export_allowed" class="export-button">
+        <export-x-l-s-x-button v-bind:current_query="reading_query" />
     </div>
     <div class="actions" v-if="report_state === 'result-preview'">
         <button
@@ -64,14 +79,24 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { updateQuery, createQuery } from "../../api/rest-querier";
 import type { Query } from "../../type";
-import { EMITTER, IS_USER_ADMIN, REPORT_STATE, WIDGET_ID } from "../../injection-symbols";
+import {
+    EMITTER,
+    IS_EXPORT_ALLOWED,
+    IS_MULTIPLE_QUERY_SUPPORTED,
+    IS_USER_ADMIN,
+    REPORT_STATE,
+    WIDGET_ID,
+} from "../../injection-symbols";
 import { SaveReportFault } from "../../domain/SaveReportFault";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import ExportXLSXButton from "../ExportXLSXButton.vue";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
+const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
+const is_xslx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 
 const props = defineProps<{
     has_error: boolean;
@@ -88,7 +113,12 @@ const emitter = strictInject(EMITTER);
 
 const is_loading = ref(false);
 
+const is_description_displayed = computed<boolean>(
+    () => is_multiple_query_supported && props.reading_query.description !== "",
+);
 const is_save_disabled = computed(() => is_loading.value === true || props.has_error);
+
+const syntax_highlighted_query_id = "syntax-highlighted-query-" + widget_id;
 
 function isExpertQueryEmpty(): boolean {
     return props.reading_query.tql_query === "";
@@ -154,7 +184,7 @@ function cancelReport(): void {
 .report {
     display: flex;
     flex-direction: column;
-    margin: calc(-1 * var(--tlp-small-spacing));
+    margin: var(--tlp-medium-spacing) 0;
     padding: var(--tlp-small-spacing);
     border-radius: var(--tlp-small-radius);
     color: var(--tlp-main-color);

@@ -22,15 +22,16 @@
         class="tlp-pane-section"
         v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
     >
-        <div
-            class="action-buttons"
-            v-if="is_multiple_query_supported && report_state !== 'edit-query'"
-        >
-            <action-buttons v-bind:backend_query="backend_query" v-bind:queries="queries" />
+        <div v-if="is_multiple_query_supported && report_state !== 'edit-query'">
+            <action-buttons
+                v-bind:backend_query="backend_query"
+                v-bind:queries="queries"
+                v-bind:are_query_details_toggled="are_query_details_toggled"
+            />
         </div>
         <div class="cross-tracker-loader" v-if="is_loading"></div>
         <reading-mode
-            v-if="is_reading_mode_shown"
+            v-if="is_reading_mode_shown && are_query_details_shown"
             v-bind:backend_query="backend_query"
             v-bind:reading_query="reading_query"
             v-bind:has_error="has_error"
@@ -39,7 +40,7 @@
             v-on:discard-unsaved-report="unsavedReportDiscarded"
         />
         <writing-mode
-            v-if="report_state === 'edit-query'"
+            v-if="report_state === 'edit-query' && are_query_details_shown"
             v-bind:writing_query="writing_query"
             v-bind:backend_query="backend_query"
             v-on:preview-result="handlePreviewResult"
@@ -71,9 +72,14 @@ import {
 } from "../injection-symbols";
 import { ReportRetrievalFault } from "../domain/ReportRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
-import type { CreatedQueryEvent, SwitchQueryEvent } from "../helpers/emitter-provider";
+import type {
+    CreatedQueryEvent,
+    SwitchQueryEvent,
+    ToggleQueryDetailsEvent,
+} from "../helpers/emitter-provider";
 import {
     UPDATE_WIDGET_TITLE_EVENT,
+    TOGGLE_QUERY_DETAILS_EVENT,
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_SUCCESS_EVENT,
     NOTIFY_FAULT_EVENT,
@@ -102,7 +108,12 @@ provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
 const queries = ref<ReadonlyArray<Query>>([]);
 
-const is_reading_mode_shown = computed(
+const are_query_details_toggled = ref<boolean>(false);
+
+const are_query_details_shown = computed<boolean>(() =>
+    is_multiple_query_supported ? are_query_details_toggled.value : true,
+);
+const is_reading_mode_shown = computed<boolean>(
     () =>
         (report_state.value === "report-saved" || report_state.value === "result-preview") &&
         !is_loading.value,
@@ -166,13 +177,19 @@ function loadBackendReport(): void {
 onMounted(() => {
     emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
     emitter.on(NEW_QUERY_CREATED_EVENT, handleAddQuery);
+    emitter.on(TOGGLE_QUERY_DETAILS_EVENT, handleToggleQueryDetails);
     loadBackendReport();
 });
 
 onBeforeUnmount(() => {
     emitter.off(SWITCH_QUERY_EVENT);
     emitter.off(NEW_QUERY_CREATED_EVENT);
+    emitter.off(TOGGLE_QUERY_DETAILS_EVENT);
 });
+
+function handleToggleQueryDetails(toggle: ToggleQueryDetailsEvent): void {
+    are_query_details_toggled.value = toggle.display_query_details;
+}
 
 function handleAddQuery(new_query: CreatedQueryEvent): void {
     queries.value = queries.value.concat([new_query.created_query]);
@@ -233,9 +250,5 @@ defineExpose({
 <style scoped lang="scss">
 .reading-mode-shown {
     border: 0;
-}
-
-.action-buttons {
-    margin: 0 0 var(--tlp-medium-spacing);
 }
 </style>
