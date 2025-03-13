@@ -22,8 +22,8 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 

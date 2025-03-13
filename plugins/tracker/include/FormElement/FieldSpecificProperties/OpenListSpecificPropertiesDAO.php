@@ -20,38 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class MultiSelectboxFieldSpecificPropertiesDAO extends DataAccessObject implements DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
+final class OpenListSpecificPropertiesDAO extends DataAccessObject implements DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
     public function deleteFieldProperties(int $field_id): void
     {
-        $this->getDB()->delete('tracker_field_msb', ['field_id' => $field_id]);
-    }
-
-    /**
-     * @return array{field_id: int, size: int}
-     */
-    public function searchByFieldId(int $field_id): ?array
-    {
-        $sql = 'SELECT *
-                FROM tracker_field_msb
-                WHERE field_id = ? ';
-
-        return $this->getDB()->row($sql, $field_id);
+        $this->getDB()->delete('tracker_field_openlist', ['field_id' => $field_id]);
     }
 
     public function saveSpecificProperties(int $field_id, array $row): void
     {
-        $size = 7;
-        if (isset($row['size']) && (int) $row['size']) {
-            $size = $row['size'];
-        }
+        $hint = $row['hint'] ?? '';
 
-        $sql = 'REPLACE INTO tracker_field_msb (field_id, size)
+        $sql = 'REPLACE INTO tracker_field_openlist (field_id, hint)
                 VALUES (?, ?)';
-        $this->getDB()->run($sql, $field_id, $size);
+        $this->getDB()->run($sql, $field_id, $hint);
+    }
+
+    /**
+     * @return array{field_id: int, hint: string}
+     */
+    public function searchByFieldId(int $field_id): ?array
+    {
+        $sql = 'SELECT *
+                FROM tracker_field_openlist
+                WHERE field_id = ? ';
+
+        return $this->getDB()->row($sql, $field_id);
     }
 }

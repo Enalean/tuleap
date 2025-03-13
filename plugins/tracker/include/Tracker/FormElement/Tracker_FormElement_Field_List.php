@@ -21,9 +21,6 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
@@ -31,6 +28,9 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset\ItemsDatasetBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\ListFormElementTypeUpdater;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\Report\Criteria\CriteriaListValueDAO;

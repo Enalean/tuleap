@@ -20,31 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class FloatFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
+final class StringFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
-        $sql = 'REPLACE INTO tracker_field_float (field_id, maxchars, size, default_value)
-                SELECT ?, maxchars, size, default_value FROM tracker_field_float WHERE field_id = ?';
+        $sql = 'REPLACE INTO tracker_field_string (field_id, maxchars, size, default_value)
+                SELECT ?, maxchars, size, default_value FROM tracker_field_string WHERE field_id = ?';
         $this->getDB()->run($sql, $to_field_id, $from_field_id);
     }
 
     public function deleteFieldProperties(int $field_id): void
     {
-        $this->getDB()->delete('tracker_field_float', ['field_id' => $field_id]);
+        $this->getDB()->delete('tracker_field_string', ['field_id' => $field_id]);
     }
 
     /**
-     * @return array{field_id: int, maxchars: int, size: int, default_value: float | null}
+     * @return array{field_id: int, maxchars: int, size: int, default_value: string}
      */
     public function searchByFieldId(int $field_id): ?array
     {
         $sql = 'SELECT *
-                FROM tracker_field_float
+                FROM tracker_field_string
                 WHERE field_id = ? ';
 
         return $this->getDB()->row($sql, $field_id);
@@ -62,13 +62,9 @@ final class FloatFieldSpecificPropertiesDAO extends DataAccessObject implements 
             $size = $row['size'];
         }
 
-        if (isset($row['default_value']) && trim($row['default_value']) !== '') {
-            $default_value = (float) $row['default_value'];
-        } else {
-            $default_value = null;
-        }
+        $default_value = $row['default_value'] ?? '';
 
-        $sql = 'REPLACE INTO tracker_field_float (field_id, maxchars, size, default_value)
+        $sql = 'REPLACE INTO tracker_field_string (field_id, maxchars, size, default_value)
                 VALUES (?, ?, ?, ?)';
         $this->getDB()->run($sql, $field_id, $maxchars, $size, $default_value);
     }

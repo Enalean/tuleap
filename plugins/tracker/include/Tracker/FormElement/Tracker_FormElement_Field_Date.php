@@ -22,12 +22,12 @@
 use Tuleap\Date\DateHelper;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Report\Criteria\CriteriaDateValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
