@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
-use ProjectUGroup;
-use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -44,11 +42,7 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $this->dao  = new RichTextFieldSpecificPropertiesDAO();
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
-        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
-        $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
-
-        $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
-        $tracker_builder->setViewPermissionOnTracker($tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker    = $tracker_builder->buildTracker($project_id, 'MyTracker');
 
         $this->rich_text_field_id = $tracker_builder->buildStaticRichTextField($tracker->getId(), 'rich_text_name');
     }

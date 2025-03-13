@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
-use ProjectUGroup;
-use Tracker;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -41,15 +39,11 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
+        $this->dao       = new IntegerFieldSpecificPropertiesDAO();
 
-        $this->dao  = new IntegerFieldSpecificPropertiesDAO();
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
-        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
-        $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
-
-        $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
-        $tracker_builder->setViewPermissionOnTracker($tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker    = $tracker_builder->buildTracker($project_id, 'MyTracker');
 
         $this->int_field_id       = $tracker_builder->buildIntField($tracker->getId(), 'int_name');
         $this->duplicate_field_id = $tracker_builder->buildIntField($tracker->getId(), 'int_name');
