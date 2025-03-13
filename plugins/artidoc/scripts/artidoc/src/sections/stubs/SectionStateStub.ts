@@ -37,6 +37,7 @@ const initial_state = {
     edited_description: ref(""),
     initial_level: ref(LEVEL_1),
     is_editor_reset_needed: ref(false),
+    has_title_level_been_changed: ref(false),
 };
 
 export const SectionStateStub = {
@@ -45,17 +46,20 @@ export const SectionStateStub = {
         ...initial_state,
         is_section_in_edit_mode: ref(true),
         initial_level: ref(LEVEL_1),
+        has_title_level_been_changed: ref(false),
     }),
     notEditable: (): SectionState => ({
         ...initial_state,
         is_section_editable: computed(() => false),
         initial_level: ref(LEVEL_1),
+        has_title_level_been_changed: ref(false),
     }),
     withDisallowedSave: (): SectionState => ({
         ...initial_state,
         is_section_in_edit_mode: ref(true),
         is_save_allowed: computed(() => false),
         initial_level: ref(LEVEL_1),
+        has_title_level_been_changed: ref(false),
     }),
     withEditedContent: (
         new_title = "new title",
@@ -67,5 +71,10 @@ export const SectionStateStub = {
         initial_level: ref(LEVEL_3),
         is_section_in_edit_mode: ref(true),
         is_editor_reset_needed: ref(true),
+        has_title_level_been_changed: ref(false),
+    }),
+    withChangedTitleLevel: (): SectionState => ({
+        ...initial_state,
+        has_title_level_been_changed: ref(true),
     }),
 };

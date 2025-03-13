@@ -19,24 +19,31 @@
 
 import type { MockInstance } from "vitest";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { onClickActivateOrDeactivateToolbar } from "@/helpers/toolbar-activator";
+import { ref } from "vue";
+import type { DeactivateToolbarOnClickOutside } from "@/helpers/OnClickOutsideToolbarDeactivator";
+import { getOnClickOutsideToolbarDeactivator } from "@/helpers/OnClickOutsideToolbarDeactivator";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { HeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
+import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 
-describe("toolbar-activator", () => {
-    let doc: Document;
-    let toolbar_element: HTMLElement;
-    let toolbar_bus: ToolbarBus;
-
-    let disableToolbar: MockInstance;
+describe("OnClickOutsideToolbarDeactivator", () => {
+    let doc: Document,
+        toolbar_element: HTMLElement,
+        toolbar_bus: ToolbarBus,
+        toolbar_deactivator: DeactivateToolbarOnClickOutside,
+        headings_button_state: HeadingsButtonState,
+        disableToolbar: MockInstance,
+        deactivateButton: MockInstance;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         toolbar_element = doc.createElement("div");
         toolbar_bus = buildToolbarBus();
+        headings_button_state = getHeadingsButtonState();
 
         disableToolbar = vi.spyOn(toolbar_bus, "disableToolbar");
+        deactivateButton = vi.spyOn(headings_button_state, "deactivateButton");
 
         doc.body.insertAdjacentHTML(
             "afterbegin",
@@ -53,12 +60,14 @@ describe("toolbar-activator", () => {
         );
         doc.body.insertAdjacentElement("afterbegin", toolbar_element);
 
-        onClickActivateOrDeactivateToolbar(
+        toolbar_deactivator = getOnClickOutsideToolbarDeactivator(
             doc,
-            toolbar_element,
+            ref(toolbar_element),
             toolbar_bus,
-            getHeadingsButtonState(),
+            headings_button_state,
         );
+
+        toolbar_deactivator.startListening();
     });
 
     const clickOnElement = (element: Element | null): void => {
@@ -88,6 +97,7 @@ describe("toolbar-activator", () => {
         clickOnElement(table_of_contents);
 
         expect(disableToolbar).toHaveBeenCalledOnce();
+        expect(deactivateButton).toHaveBeenCalledOnce();
     });
 
     it("When you click in an editor and then click in the toolbar, then the toolbar should not be disabled", () => {
@@ -95,6 +105,7 @@ describe("toolbar-activator", () => {
         clickOnElement(toolbar_element);
 
         expect(disableToolbar).not.toHaveBeenCalled();
+        expect(deactivateButton).not.toHaveBeenCalled();
     });
 
     it("When you click in an editor and then click in a toolbar popover, then the toolbar should not be disabled", () => {
@@ -104,5 +115,18 @@ describe("toolbar-activator", () => {
         clickOnElement(popover);
 
         expect(disableToolbar).not.toHaveBeenCalled();
+        expect(deactivateButton).not.toHaveBeenCalled();
+    });
+
+    it("should do nothing after the stopListening() function has been called", () => {
+        const table_of_contents = doc.querySelector(".table-of-contents");
+
+        toolbar_deactivator.stopListening();
+
+        clickOnEditor();
+        clickOnElement(table_of_contents);
+
+        expect(disableToolbar).not.toHaveBeenCalled();
+        expect(deactivateButton).not.toHaveBeenCalled();
     });
 });

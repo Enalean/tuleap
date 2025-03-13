@@ -251,10 +251,6 @@ describe("Artidoc", () => {
             "2.3. Security Requirement",
         ]);
 
-        // FIXME: we cannot update the level of a section if we don't reload the page.
-        // This should not happen and this reload should be deleted.
-        cy.reload();
-
         cy.log("Change level of Requirements section");
         setNthSectionLevel(1, 3);
 

@@ -53,22 +53,22 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { computed } from "vue";
 
 const props = defineProps<{
     error_message: string;
-    section: ArtidocSection;
+    section: ReactiveStoredArtidocSection;
 }>();
 
 const { $gettext } = useGettext();
 
-const is_artifact = computed(() => isArtifactSection(props.section));
+const is_artifact = computed(() => isArtifactSection(props.section.value));
 
 const href = computed(() =>
-    isArtifactSection(props.section)
-        ? "/plugins/tracker/?aid=" + encodeURIComponent(props.section.artifact.id)
+    isArtifactSection(props.section.value)
+        ? "/plugins/tracker/?aid=" + encodeURIComponent(props.section.value.artifact.id)
         : "",
 );
 </script>

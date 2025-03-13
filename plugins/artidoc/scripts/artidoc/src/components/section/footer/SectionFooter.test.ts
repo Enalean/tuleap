@@ -24,7 +24,7 @@ import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import SectionFooter from "./SectionFooter.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { SectionEditorCloserStub } from "@/sections/stubs/SectionEditorCloserStub";
@@ -35,7 +35,9 @@ describe("SectionFooter", () => {
     function getWrapper(section_state: SectionState): VueWrapper<ComponentPublicInstance> {
         return shallowMount(SectionFooter, {
             propsData: {
-                section: CreateStoredSections.fromArtidocSection(ArtifactSectionFactory.create()),
+                section: ReactiveStoredArtidocSectionStub.fromSection(
+                    ArtifactSectionFactory.create(),
+                ),
                 section_state,
                 close_section_editor: SectionEditorCloserStub.withExpectedCall(),
                 refresh_section: SectionRefresherStub.withNoExpectedCall(),
@@ -47,15 +49,15 @@ describe("SectionFooter", () => {
         });
     }
 
-    describe("when the section is not editable", () => {
-        it("should hide the footer", () => {
-            expect(getWrapper(SectionStateStub.notEditable()).find("div").exists()).toBe(false);
-        });
-    });
-
-    describe("when the section is editable", () => {
-        it("should display the footer", () => {
+    describe("The footer should be displayed when", () => {
+        it("The section is in edit mode", () => {
             expect(getWrapper(SectionStateStub.inEditMode()).find("div").exists()).toBe(true);
+        });
+
+        it("The level of the section title has been changed", () => {
+            expect(getWrapper(SectionStateStub.withChangedTitleLevel()).find("div").exists()).toBe(
+                true,
+            );
         });
     });
 });

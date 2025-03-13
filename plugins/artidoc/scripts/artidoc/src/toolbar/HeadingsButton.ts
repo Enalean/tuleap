@@ -31,13 +31,13 @@ export const TAG = "tuleap-prose-mirror-toolbar-headings-button";
 
 export type HeadingsButton = {
     section: StoredArtidocSection | undefined;
-    is_disabled: boolean;
-    dropdown_menu: HTMLElement;
 };
 
 export type InternalHeadingsButton = Readonly<HeadingsButton> & {
     after_render_once: unknown;
+    is_button_disabled: boolean;
     dropdown_trigger: HTMLButtonElement;
+    dropdown_menu: HTMLElement;
     render(): HTMLElement;
 };
 
@@ -78,7 +78,7 @@ export const renderHeadingsButton = (
     return html`
         <button
             class="prose-mirror-button tlp-button-secondary tlp-button-outline"
-            disabled="${host.is_disabled}"
+            disabled="${host.is_button_disabled}"
             title="${gettext_provider.gettext("Change section heading level")}"
             data-test="change-section-level"
         >
@@ -137,7 +137,7 @@ initGettext(
 ).then((gettext_provider) => {
     define<InternalHeadingsButton>({
         tag: TAG,
-        is_disabled: true,
+        is_button_disabled: (host: HeadingsButton) => !host.section,
         section: undefined,
         after_render_once: after_render_once_descriptor,
         dropdown_trigger: {

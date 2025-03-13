@@ -20,8 +20,9 @@ import type { HeadingsButton } from "@/toolbar/HeadingsButton";
 import { TAG } from "@/toolbar/HeadingsButton";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
-const isHeadingsButtonElement = (element: HTMLElement): element is HeadingsButton & HTMLElement =>
-    element.tagName === TAG.toUpperCase();
+export const isHeadingsButtonElement = (
+    element: HTMLElement,
+): element is HeadingsButton & HTMLElement => element.tagName === TAG.toUpperCase();
 
 export const createHeadingButton = (
     section: ReactiveStoredArtidocSection | undefined,
