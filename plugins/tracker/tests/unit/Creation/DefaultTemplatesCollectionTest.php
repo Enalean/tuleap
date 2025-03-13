@@ -22,59 +22,55 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class DefaultTemplatesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class DefaultTemplatesCollectionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testEmptyCollection(): void
     {
         $collection = new DefaultTemplatesCollection();
 
-        $this->assertFalse($collection->has('whatever'));
-        $this->assertEmpty($collection->getSortedDefaultTemplatesRepresentations());
+        self::assertFalse($collection->has('whatever'));
+        self::assertEmpty($collection->getSortedDefaultTemplatesRepresentations());
     }
 
     public function testItHasATemplate(): void
     {
         $collection = new DefaultTemplatesCollection();
-        $collection->add('my-template', Mockery::mock(DefaultTemplate::class));
+        $collection->add('my-template', $this->createStub(DefaultTemplate::class));
 
-        $this->assertTrue($collection->has('my-template'));
-        $this->assertFalse($collection->has('another-template'));
+        self::assertTrue($collection->has('my-template'));
+        self::assertFalse($collection->has('another-template'));
     }
 
     public function testItAddsTemplate(): void
     {
         $collection = new DefaultTemplatesCollection();
 
-        $this->assertFalse($collection->has('my-template'));
-        $collection->add('my-template', Mockery::mock(DefaultTemplate::class));
-        $this->assertTrue($collection->has('my-template'));
+        self::assertFalse($collection->has('my-template'));
+        $collection->add('my-template', $this->createStub(DefaultTemplate::class));
+        self::assertTrue($collection->has('my-template'));
     }
 
     public function testItReturnsTheXMLFileOfATemplate(): void
     {
         $collection = new DefaultTemplatesCollection();
-        $collection->add(
-            'my-template',
-            Mockery::mock(DefaultTemplate::class)
-                ->shouldReceive(['getXmlFile' => '/path'])
-                ->getMock()
-        );
+        $template   = $this->createMock(DefaultTemplate::class);
+        $template->method('getXmlFile')->willReturn('/path');
+        $collection->add('my-template', $template);
 
-        $this->assertEquals('/path', $collection->getXmlFile('my-template'));
+        self::assertEquals('/path', $collection->getXmlFile('my-template'));
     }
 
     public function testItThrowsExceptionIfTemplateIsNotFound(): void
     {
         $collection = new DefaultTemplatesCollection();
-        $collection->add('my-template', Mockery::mock(DefaultTemplate::class));
+        $collection->add('my-template', $this->createStub(DefaultTemplate::class));
 
-        $this->expectException(\OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
         $collection->getXmlFile('another-template');
     }
 
@@ -96,7 +92,7 @@ class DefaultTemplatesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
                 new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange'),
