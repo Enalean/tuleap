@@ -4,7 +4,7 @@ pkgs.buildGoModule {
   name = "pre-receive-tuleap-git-repo-validation";
   src = ./src;
 
-  vendorHash = "sha256-4x1Glfwjm5XK+nDyp87Dhq44Sd1gdnGqlyUOXmYWd+g=";
+  vendorHash = "sha256-0hwx2tddf2CE6cQJVIo0kWi8DffxiBmvTYAdAyNn81I=";
 
   preBuild = ''
     export GOARCH="wasm"
