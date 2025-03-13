@@ -76,50 +76,26 @@ describe("DropContainerCell", () => {
         expect(wrapper.find(".my-slot-content").exists()).toBe(false);
     });
 
-    it(`informs the pointerenter when the column is collapsed`, () => {
+    it(`informs the pointerenter`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column, false);
 
         wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "column/pointerEntersColumnWithCheck",
+            column,
+        );
     });
 
-    it(`does not inform the pointerenter when the column is expanded`, () => {
-        const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column, false);
-
-        wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
-    });
-
-    it(`informs the pointerleave when the column is collapsed`, () => {
+    it(`informs the pointerleave`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column, false);
 
         wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", column);
-    });
-
-    it(`does not inform the pointerleave when the column is expanded`, () => {
-        const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column, false);
-
-        wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
-    });
-
-    it(`when the column is collapsed and a card is being dragged,
-        it won't inform the pointerleave
-        because too many events are triggered and we want to keep the collapsed column styling`, () => {
-        const column = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column, false);
-        wrapper.vm.$store.state.card_being_dragged = {
-            tracker_id: 12,
-            card_id: 15,
-        };
-
-        wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "column/pointerLeavesColumnWithCheck",
+            { column, card_being_dragged: null },
+        );
     });
 
     it(`expands the column when user clicks on the collapsed column cell`, () => {

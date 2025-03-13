@@ -22,8 +22,8 @@
     <div
         class="taskboard-cell"
         v-bind:class="drop_classes"
-        v-on:pointerenter="pointerEntersCollapsedColumn"
-        v-on:pointerleave="pointerLeavesCollapsedColumn"
+        v-on:pointerenter="pointerEntersColumnWithCheck(column)"
+        v-on:pointerleave="pointerLeavesColumnWithCheck({ column, card_being_dragged })"
         v-on:click="expandColumn(column)"
         data-is-container="true"
         v-bind:data-swimlane-id="swimlane.card.id"
@@ -43,13 +43,15 @@
 </template>
 
 <script lang="ts">
-import { Getter, namespace } from "vuex-class";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
+import { Getter, namespace, State } from "vuex-class";
+import { Component, Prop } from "vue-property-decorator";
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
 import { useClassesForCollapsedColumn } from "./classes-for-collapsed-column-composable";
+import type { DraggedCard } from "../../../../../store/type";
+import type { PointerLeavesColumnPayload } from "../../../../../store/column/type";
+import Vue from "vue";
 
 const column_store = namespace("column");
 const swimlane = namespace("swimlane");
@@ -57,12 +59,21 @@ const swimlane = namespace("swimlane");
 @Component({
     components: { AddCard, CellDisallowsDropOverlay },
 })
-export default class DropContainerCell extends Mixins(HoveringStateForCollapsedColumnMixin) {
+export default class DropContainerCell extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
     @Prop({ required: true })
-    override readonly column!: ColumnDefinition;
+    readonly column!: ColumnDefinition;
+
+    @State
+    readonly card_being_dragged!: DraggedCard | null;
+
+    @column_store.Mutation
+    readonly pointerEntersColumnWithCheck!: (column: ColumnDefinition) => void;
+
+    @column_store.Mutation
+    readonly pointerLeavesColumnWithCheck!: (payload: PointerLeavesColumnPayload) => void;
 
     @column_store.Action
     readonly expandColumn!: (column: ColumnDefinition) => void;
