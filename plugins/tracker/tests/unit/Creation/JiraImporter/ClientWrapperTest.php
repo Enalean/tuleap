@@ -23,66 +23,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ClientWrapperTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ClientWrapper
-     */
-    private $wrapper;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RequestFactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ClientInterface
-     */
-    private $client;
+    private ClientWrapper $wrapper;
+    private RequestFactoryInterface&MockObject $factory;
+    private ClientInterface&MockObject $client;
 
     protected function setUp(): void
     {
-        $this->client  = \Mockery::mock(ClientInterface::class);
-        $this->factory = \Mockery::mock(RequestFactoryInterface::class);
+        $this->client  = $this->createMock(ClientInterface::class);
+        $this->factory = $this->createMock(RequestFactoryInterface::class);
         $this->wrapper = new JiraCloudClient($this->client, $this->factory, 'https://example.com');
     }
 
     public function testItBuildsAnUrlFromLatestAPIAndReturnContent(): void
     {
-        $response      = \Mockery::mock(ResponseInterface::class);
-        $response_body = \Mockery::mock(StreamInterface::class);
-
-        $response_body->shouldReceive('getContents')->andReturn('')->once();
-
-        $response->shouldReceive('getBody')->andReturn($response_body)->once();
-        $response->shouldReceive('getStatusCode')->andReturn(200)->once();
-        $this->factory->shouldReceive('createRequest')
-            ->withArgs(['GET', 'https://example.com/rest/api/3/project'])->once();
-        $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
+        $this->factory->expects(self::once())->method('createRequest')->with('GET', 'https://example.com/rest/api/3/project');
+        $this->client->expects(self::once())->method('sendRequest')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
         $this->wrapper->getUrl('/rest/api/3/project');
     }
 
     public function testItThrowsAnExceptionIfStatusCodeIsNot200(): void
     {
-        $response = \Mockery::mock(ResponseInterface::class);
-
-        $response->shouldReceive('getStatusCode')->andReturn(403);
-        $response->shouldReceive('getBody')->andReturn(HTTPFactoryBuilder::streamFactory()->createStream());
-        $response->shouldReceive('getReasonPhrase')->andReturn('Forbidden');
-        $this->factory->shouldReceive('createRequest')
-            ->withArgs(['GET', 'https://example.com/rest/api/3/project'])->once()->andReturn(\Mockery::spy(RequestInterface::class));
-        $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
+        $this->factory->expects(self::once())->method('createRequest')->with('GET', 'https://example.com/rest/api/3/project')
+            ->willReturn(HTTPFactoryBuilder::requestFactory()->createRequest('GET', 'https://example.com/rest/api/3/project'));
+        $this->client->expects(self::once())->method('sendRequest')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(403));
 
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionCode(403);

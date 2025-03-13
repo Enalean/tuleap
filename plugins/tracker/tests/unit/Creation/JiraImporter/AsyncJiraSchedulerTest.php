@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
@@ -38,8 +37,6 @@ use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 #[DisableReturnValueGenerationForTestDoubles]
 final class AsyncJiraSchedulerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testScheduleCreationStoreJiraInformationWithEncryptedToken(): void
     {
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
