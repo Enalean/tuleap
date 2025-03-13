@@ -30,26 +30,23 @@
     </button>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { ColumnDefinition } from "../../../../type";
-import { namespace } from "vuex-class";
+import { useNamespacedActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const column_store = namespace("column");
+const { $gettext, interpolate } = useGettext();
 
-@Component
-export default class ExpandButton extends Vue {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const props = defineProps<{
+    column: ColumnDefinition;
+}>();
 
-    @column_store.Action
-    readonly expandColumn!: (column: ColumnDefinition) => void;
+const { expandColumn } = useNamespacedActions("column", ["expandColumn"]);
 
-    get title(): string {
-        return this.$gettextInterpolate(this.$gettext('Expand "%{ label }" column'), {
-            label: this.column.label,
-        });
-    }
-}
+const title = computed((): string => {
+    return interpolate($gettext('Expand "%{ label }" column'), {
+        label: props.column.label,
+    });
+});
 </script>
