@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
-interface SearchSpecificProperties
+interface DeleteSpecificProperties
 {
-    public function searchByFieldId(int $field_id): ?array;
+    public function deleteFieldProperties(int $field_id): void;
 }

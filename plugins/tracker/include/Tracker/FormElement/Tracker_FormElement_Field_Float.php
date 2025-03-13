@@ -21,13 +21,13 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\FloatFieldSpecificPropertiesDAO;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\FloatFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;

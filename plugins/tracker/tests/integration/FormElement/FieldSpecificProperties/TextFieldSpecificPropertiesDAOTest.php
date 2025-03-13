@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use ProjectUGroup;
 use Tracker;
@@ -30,10 +30,11 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
+final class TextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
-    private RichTextFieldSpecificPropertiesDAO $dao;
-    private int $rich_text_field_id;
+    private TextFieldSpecificPropertiesDAO $dao;
+    private int $text_field_id;
+    private int $duplicate_field_id;
 
     protected function setUp(): void
     {
@@ -41,7 +42,7 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao  = new RichTextFieldSpecificPropertiesDAO();
+        $this->dao  = new TextFieldSpecificPropertiesDAO();
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
         $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
@@ -50,32 +51,37 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
         $tracker_builder->setViewPermissionOnTracker($tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->rich_text_field_id = $tracker_builder->buildStaticRichTextField($tracker->getId(), 'rich_text_name');
+        $this->text_field_id      = $tracker_builder->buildTextField($tracker->getId(), 'text_name');
+        $this->duplicate_field_id = $tracker_builder->buildTextField($tracker->getId(), 'text_name');
     }
 
     public function testDefaultProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
-        self::assertNull($properties);
+        $properties = $this->dao->searchByFieldId($this->text_field_id);
+        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 0, 'cols' => 0, 'default_value' => null], $properties);
 
-        $this->dao->saveSpecificProperties($this->rich_text_field_id, []);
-        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
+        $this->dao->saveSpecificProperties($this->text_field_id, []);
+        $properties = $this->dao->searchByFieldId($this->text_field_id);
 
+        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 10, 'cols' => 50, 'default_value' => ''], $properties);
+
+        $this->dao->deleteFieldProperties($this->text_field_id);
+
+        $properties = $this->dao->searchByFieldId($this->text_field_id);
         self::assertNull($properties);
     }
 
     public function testManualProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
-        self::assertNull($properties);
+        $properties = $this->dao->searchByFieldId($this->text_field_id);
+        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 0, 'cols' => 0, 'default_value' => null], $properties);
 
-        $this->dao->saveSpecificProperties($this->rich_text_field_id, ['static_value' => 'My value']);
-        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
-        self::assertEquals(['field_id' => $this->rich_text_field_id, 'static_value' => 'My value'], $properties);
+        $this->dao->saveSpecificProperties($this->text_field_id, ['rows' => 20, 'cols' => 30, 'default_value' => 'My value']);
+        $properties = $this->dao->searchByFieldId($this->text_field_id);
+        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 20, 'cols' => 30, 'default_value' => 'My value'], $properties);
 
-        $this->dao->deleteFieldProperties($this->rich_text_field_id);
-
-        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
-        self::assertNull($properties);
+        $this->dao->duplicate($this->text_field_id, $this->duplicate_field_id);
+        $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
+        self::assertEquals(['field_id' => $this->duplicate_field_id, 'rows' => 20, 'cols' => 30, 'default_value' => 'My value'], $properties);
     }
 }

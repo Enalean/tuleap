@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use ProjectUGroup;
 use Tracker;
@@ -30,10 +30,10 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
+final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
-    private MultiSelectboxFieldSpecificPropertiesDAO $dao;
-    private int $list_field_id;
+    private RichTextFieldSpecificPropertiesDAO $dao;
+    private int $rich_text_field_id;
 
     protected function setUp(): void
     {
@@ -41,7 +41,7 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao  = new MultiSelectboxFieldSpecificPropertiesDAO();
+        $this->dao  = new RichTextFieldSpecificPropertiesDAO();
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
         $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
@@ -50,32 +50,32 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
         $tracker_builder->setViewPermissionOnTracker($tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->list_field_id = $tracker_builder->buildStaticListField($tracker->getId(), 'list_name', 'msb');
+        $this->rich_text_field_id = $tracker_builder->buildStaticRichTextField($tracker->getId(), 'rich_text_name');
     }
 
     public function testDefaultProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->list_field_id);
+        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
         self::assertNull($properties);
 
-        $this->dao->saveSpecificProperties($this->list_field_id, []);
-        $properties = $this->dao->searchByFieldId($this->list_field_id);
+        $this->dao->saveSpecificProperties($this->rich_text_field_id, []);
+        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
 
-        self::assertEquals(['field_id' => $this->list_field_id, 'size' => 7], $properties);
-
-        $this->dao->deleteFieldProperties($this->list_field_id);
-
-        $properties = $this->dao->searchByFieldId($this->list_field_id);
         self::assertNull($properties);
     }
 
     public function testManualProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->list_field_id);
+        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
         self::assertNull($properties);
 
-        $this->dao->saveSpecificProperties($this->list_field_id, ['size' => 12]);
-        $properties = $this->dao->searchByFieldId($this->list_field_id);
-        self::assertEquals(['field_id' => $this->list_field_id, 'size' => 12], $properties);
+        $this->dao->saveSpecificProperties($this->rich_text_field_id, ['static_value' => 'My value']);
+        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
+        self::assertEquals(['field_id' => $this->rich_text_field_id, 'static_value' => 'My value'], $properties);
+
+        $this->dao->deleteFieldProperties($this->rich_text_field_id);
+
+        $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
+        self::assertNull($properties);
     }
 }

@@ -20,9 +20,10 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\MultiSelectboxFieldSpecificPropertiesDAO;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SearchSpecificProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\MultiSelectboxFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 
 class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -44,7 +45,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }
 
-    protected function getSaveSpecificPropertiesDao(): \Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties
+    protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }

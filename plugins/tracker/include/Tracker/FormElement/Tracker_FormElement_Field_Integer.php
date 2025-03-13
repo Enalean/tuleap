@@ -21,9 +21,9 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties\IntegerFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\IntegerFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;

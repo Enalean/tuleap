@@ -20,33 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
+final class ComputedFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
-        $sql = 'REPLACE INTO tracker_staticfield_richtext (field_id, static_value)
-                SELECT ?, static_value
-                FROM tracker_staticfield_richtext
-                WHERE field_id = ?';
+        $sql = 'REPLACE INTO tracker_field_computed (field_id, target_field_name)
+                SELECT ?, target_field_name FROM tracker_field_computed WHERE field_id = ?';
+
         $this->getDB()->run($sql, $to_field_id, $from_field_id);
     }
 
     public function deleteFieldProperties(int $field_id): void
     {
-        $this->getDB()->delete('tracker_staticfield_richtext', ['field_id' => $field_id]);
+        $this->getDB()->delete('tracker_field_computed', ['field_id' => $field_id]);
     }
 
     /**
-     * @return array{field_id: int, static_value: string}
+     * @return array{field_id: int, target_field_name: string, default_value: int | null}
      */
     public function searchByFieldId(int $field_id): ?array
     {
         $sql = 'SELECT *
-                FROM tracker_staticfield_richtext
+                FROM tracker_field_computed
                 WHERE field_id = ? ';
 
         return $this->getDB()->row($sql, $field_id);
@@ -54,12 +53,21 @@ final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implemen
 
     public function saveSpecificProperties(int $field_id, array $row): void
     {
-        if (! isset($row['static_value'])) {
-            return;
-        }
+        $target_field_name = $row['target_field_name'] ?? '';
+        $default_value     = $this->computeDefaultValue($row);
 
-        $sql = 'REPLACE INTO tracker_staticfield_richtext (field_id, static_value)
-                VALUES (?, ?)';
-        $this->getDB()->run($sql, $field_id, $row['static_value']);
+        $sql = 'REPLACE INTO tracker_field_computed (field_id, default_value, target_field_name)
+            VALUES (?, ?, ?)';
+
+        $this->getDB()->run($sql, $field_id, $default_value, $target_field_name);
+    }
+
+    private function computeDefaultValue(array $row): mixed
+    {
+        $default_value = $row['default_value'] ?? '';
+        if ($default_value === '') {
+            return null;
+        }
+        return $default_value;
     }
 }

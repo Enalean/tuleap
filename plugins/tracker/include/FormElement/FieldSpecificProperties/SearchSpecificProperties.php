@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
-interface DuplicateSpecificProperties
+interface SearchSpecificProperties
 {
-    public function duplicate(int $from_field_id, int $to_field_id): void;
+    public function searchByFieldId(int $field_id): ?array;
 }

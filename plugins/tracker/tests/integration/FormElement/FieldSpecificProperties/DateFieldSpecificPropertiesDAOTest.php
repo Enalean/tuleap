@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use ProjectUGroup;
 use Tracker;
@@ -30,10 +30,10 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
+final class DateFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
-    private ComputedFieldSpecificPropertiesDAO $dao;
-    private int $computed_field_id;
+    private DateFieldSpecificPropertiesDAO $dao;
+    private int $date_field_id;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -42,7 +42,7 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao  = new ComputedFieldSpecificPropertiesDAO();
+        $this->dao  = new DateFieldSpecificPropertiesDAO();
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
         $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
@@ -51,36 +51,36 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
         $tracker_builder->setViewPermissionOnTracker($tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->computed_field_id  = $tracker_builder->buildComputedField($tracker->getId(), 'computed_name');
-        $this->duplicate_field_id = $tracker_builder->buildComputedField($tracker->getId(), 'computed_name');
+        $this->date_field_id      = $tracker_builder->buildDateField($tracker->getId(), 'date_name', true);
+        $this->duplicate_field_id = $tracker_builder->buildDateField($tracker->getId(), 'date_name', true);
     }
 
     public function testDefaultProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
+        $properties = $this->dao->searchByFieldId($this->date_field_id);
+        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => null, 'display_time' => 1], $properties);
 
-        $this->dao->saveSpecificProperties($this->computed_field_id, []);
-        $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'target_field_name' => '', 'default_value' => 0.0], $properties);
+        $this->dao->saveSpecificProperties($this->date_field_id, []);
+        $properties = $this->dao->searchByFieldId($this->date_field_id);
+        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => 0, 'display_time' => 0], $properties);
 
-        $this->dao->deleteFieldProperties($this->computed_field_id);
+        $this->dao->deleteFieldProperties($this->date_field_id);
 
-        $properties = $this->dao->searchByFieldId($this->computed_field_id);
+        $properties = $this->dao->searchByFieldId($this->date_field_id);
         self::assertNull($properties);
     }
 
     public function testManualProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
+        $properties = $this->dao->searchByFieldId($this->date_field_id);
+        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => null, 'display_time' => 1], $properties);
 
-        $this->dao->saveSpecificProperties($this->computed_field_id, ['target_field_name' => 'target_name', 'default_value' => 22]);
-        $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'target_field_name' => 'target_name', 'default_value' => 22.0], $properties);
+        $this->dao->saveSpecificProperties($this->date_field_id, ['default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0]);
+        $properties = $this->dao->searchByFieldId($this->date_field_id);
+        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0], $properties);
 
-        $this->dao->duplicate($this->computed_field_id, $this->duplicate_field_id);
+        $this->dao->duplicate($this->date_field_id, $this->duplicate_field_id);
         $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
-        self::assertEquals(['field_id' => $this->duplicate_field_id, 'target_field_name' => 'target_name', 'default_value' => null], $properties);
+        self::assertEquals(['field_id' => $this->duplicate_field_id, 'default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0], $properties);
     }
 }

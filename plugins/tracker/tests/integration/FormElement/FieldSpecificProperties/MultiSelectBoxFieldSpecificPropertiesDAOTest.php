@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use ProjectUGroup;
 use Tracker;
@@ -30,11 +30,10 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
+final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
-    private ListFieldSpecificPropertiesDAO $dao;
+    private MultiSelectboxFieldSpecificPropertiesDAO $dao;
     private int $list_field_id;
-    private int $duplicate_field_id;
 
     protected function setUp(): void
     {
@@ -42,7 +41,7 @@ final class ListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao  = new ListFieldSpecificPropertiesDAO();
+        $this->dao  = new MultiSelectboxFieldSpecificPropertiesDAO();
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
         $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
@@ -51,25 +50,32 @@ final class ListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
         $tracker_builder->setViewPermissionOnTracker($tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->list_field_id      = $tracker_builder->buildStaticListField($tracker->getId(), 'multi_name', 'msb');
-        $this->duplicate_field_id = $tracker_builder->buildStaticListField($tracker->getId(), 'multi_name', 'msb');
+        $this->list_field_id = $tracker_builder->buildStaticListField($tracker->getId(), 'list_name', 'msb');
     }
 
     public function testDefaultProperties(): void
     {
-        $properties = $this->dao->searchBindByFieldId($this->list_field_id)->unwrapOr(null);
-        self::assertSame('static', $properties);
+        $properties = $this->dao->searchByFieldId($this->list_field_id);
+        self::assertNull($properties);
 
-        $this->dao->saveBindForFieldId($this->list_field_id, 'users');
-        $properties = $this->dao->searchBindByFieldId($this->list_field_id)->unwrapOr(null);
-        self::assertSame('users', $properties);
+        $this->dao->saveSpecificProperties($this->list_field_id, []);
+        $properties = $this->dao->searchByFieldId($this->list_field_id);
 
-        $this->dao->duplicate($this->list_field_id, $this->duplicate_field_id);
-        $properties = $this->dao->searchBindByFieldId($this->duplicate_field_id)->unwrapOr(null);
-        self::assertSame('users', $properties);
+        self::assertEquals(['field_id' => $this->list_field_id, 'size' => 7], $properties);
 
         $this->dao->deleteFieldProperties($this->list_field_id);
 
-        self::assertTrue($this->dao->searchBindByFieldId($this->list_field_id)->isNothing());
+        $properties = $this->dao->searchByFieldId($this->list_field_id);
+        self::assertNull($properties);
+    }
+
+    public function testManualProperties(): void
+    {
+        $properties = $this->dao->searchByFieldId($this->list_field_id);
+        self::assertNull($properties);
+
+        $this->dao->saveSpecificProperties($this->list_field_id, ['size' => 12]);
+        $properties = $this->dao->searchByFieldId($this->list_field_id);
+        self::assertEquals(['field_id' => $this->list_field_id, 'size' => 12], $properties);
     }
 }

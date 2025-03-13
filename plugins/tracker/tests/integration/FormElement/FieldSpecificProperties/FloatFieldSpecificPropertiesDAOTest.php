@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\FormElement\FieldSpecificProperties;
+namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use ProjectUGroup;
 use Tracker;
@@ -30,10 +30,10 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
+final class FloatFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
-    private IntegerFieldSpecificPropertiesDAO $dao;
-    private int $int_field_id;
+    private FloatFieldSpecificPropertiesDAO $dao;
+    private int $float_field_id;
     private int $duplicate_field_id;
 
     protected function setUp(): void
@@ -42,7 +42,7 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $this->dao  = new IntegerFieldSpecificPropertiesDAO();
+        $this->dao  = new FloatFieldSpecificPropertiesDAO();
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
         $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
@@ -51,36 +51,36 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
         $tracker = $tracker_builder->buildTracker($project_id, 'MyTracker');
         $tracker_builder->setViewPermissionOnTracker($tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->int_field_id       = $tracker_builder->buildIntField($tracker->getId(), 'int_name');
-        $this->duplicate_field_id = $tracker_builder->buildIntField($tracker->getId(), 'int_name');
+        $this->float_field_id     = $tracker_builder->buildFloatField($tracker->getId(), 'float_name');
+        $this->duplicate_field_id = $tracker_builder->buildFloatField($tracker->getId(), 'float_name');
     }
 
     public function testDefaultProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
+        $properties = $this->dao->searchByFieldId($this->float_field_id);
+        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
 
-        $this->dao->saveSpecificProperties($this->int_field_id, []);
-        $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 30, 'default_value' => null], $properties);
+        $this->dao->saveSpecificProperties($this->float_field_id, []);
+        $properties = $this->dao->searchByFieldId($this->float_field_id);
+        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 30, 'default_value' => null], $properties);
 
-        $this->dao->deleteFieldProperties($this->int_field_id);
+        $this->dao->deleteFieldProperties($this->float_field_id);
 
-        $properties = $this->dao->searchByFieldId($this->int_field_id);
+        $properties = $this->dao->searchByFieldId($this->float_field_id);
         self::assertNull($properties);
     }
 
     public function testManualProperties(): void
     {
-        $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
+        $properties = $this->dao->searchByFieldId($this->float_field_id);
+        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
 
-        $this->dao->saveSpecificProperties($this->int_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45']);
-        $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45], $properties);
+        $this->dao->saveSpecificProperties($this->float_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45.01']);
+        $properties = $this->dao->searchByFieldId($this->float_field_id);
+        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45.01], $properties);
 
-        $this->dao->duplicate($this->int_field_id, $this->duplicate_field_id);
+        $this->dao->duplicate($this->float_field_id, $this->duplicate_field_id);
         $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
-        self::assertEquals(['field_id' => $this->duplicate_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45], $properties);
+        self::assertEquals(['field_id' => $this->duplicate_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45.01], $properties);
     }
 }
