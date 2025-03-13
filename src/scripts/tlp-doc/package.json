@@ -47,6 +47,7 @@
   },
   "pnpm": {
     "overrides": {
+      "@babel/runtime": "^7.26.10",
       "is-typed-array": "npm:@nolyfill/is-typed-array@^1",
       "which-typed-array": "npm:@nolyfill/which-typed-array@^1"
     }

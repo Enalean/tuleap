@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/preset-env": "^7.23.2",
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
     "@jest/globals": "^29.7.0",
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",
