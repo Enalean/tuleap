@@ -338,6 +338,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             $value = $this->getDefaultValue();
         }
         $html .= '<input type="text"
+                         data-test="field-default-value"
                          size="' . $this->getProperty('size') . '"
                          ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
                          value="' .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  . '" autocomplete="off" />';

@@ -545,6 +545,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     {
         $hp = Codendi_HTMLPurifier::instance();
         return '<span style="white-space:nowrap;"><input type="text"
+                       data-test="date-picker"
                        class="highlight-days-67 format-y-m-d divider-dash no-transparency"
                        id="' .  $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML)  . '"
                        name="' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '"

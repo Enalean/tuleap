@@ -478,7 +478,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $h->setId('is_rank_alpha');
         $html .= '<p>' . $h->render() . '</p>';
         $html .= '<p>';
-        $html .= '<textarea name="formElement_data[bind][add]" rows="5" cols="30"></textarea><br />';
+        $html .= '<textarea name="formElement_data[bind][add]" rows="5" cols="30" data-test="list-static-bind-values"></textarea><br />';
         $html .= '<span style="color:#999; font-size:0.8em;">' . dgettext('tuleap-tracker', 'Add one value per row') . '</span>';
         $html .= '</p>';
         return $html;

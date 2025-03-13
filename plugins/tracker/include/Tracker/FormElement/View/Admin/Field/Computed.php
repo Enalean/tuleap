@@ -60,6 +60,7 @@ class Computed extends Tracker_FormElement_View_Admin_Field
             case 'string':
                 if ($key === self::DEFAULT_VALUE_KEY) {
                     $html .= parent::fetchAdminSpecificProperty($key, $property);
+                    break;
                 }
 
                 if ($this->isMigrated()) {
