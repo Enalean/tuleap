@@ -22,55 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraClientStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class XmlReportAllIssuesExporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var XmlReportAllIssuesExporter
-     */
-    private $report_export;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $reports_node;
-
-    /**
-     * @var FieldMapping
-     */
-    private $summary_field_mapping;
-
-    /**
-     * @var FieldMapping
-     */
-    private $description_field_mapping;
-
-    /**
-     * @var FieldMapping
-     */
-    private $status_field_mapping;
-
-    /**
-     * @var FieldMapping
-     */
-    private $priority_field_mapping;
-
-    /**
-     * @var FieldMapping
-     */
-    private $jira_issue_url_field_mapping;
+    private XmlReportAllIssuesExporter $report_export;
+    private SimpleXMLElement $reports_node;
+    private FieldMapping $summary_field_mapping;
+    private FieldMapping $description_field_mapping;
+    private FieldMapping $status_field_mapping;
+    private FieldMapping $priority_field_mapping;
+    private FieldMapping $jira_issue_url_field_mapping;
 
     protected function setUp(): void
     {
@@ -99,7 +72,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
 
@@ -110,7 +83,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
 
@@ -136,7 +109,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->report_export->exportJiraLikeReport(
             $this->reports_node,
-            new StatusValuesCollection(\Mockery::mock(ClientWrapper::class), new NullLogger()),
+            new StatusValuesCollection(JiraClientStub::aJiraClient(), new NullLogger()),
             $this->summary_field_mapping,
             $this->description_field_mapping,
             $this->status_field_mapping,
