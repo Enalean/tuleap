@@ -28,22 +28,20 @@
         />
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
 import ParentCell from "./ParentCell.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
 import InvalidMappingCell from "./Cell/InvalidMappingCell.vue";
+import { useStore } from "vuex-composition-helpers";
+import { computed } from "vue";
 
-const column = namespace("column");
+defineProps<{
+    swimlane: Swimlane;
+}>();
 
-@Component({ components: { InvalidMappingCell, ParentCell } })
-export default class InvalidMappingSwimlane extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const store = useStore();
 
-    @column.State
-    readonly columns!: Array<ColumnDefinition>;
-}
+const columns = computed((): ColumnDefinition[] => {
+    return store.state.column.columns;
+});
 </script>

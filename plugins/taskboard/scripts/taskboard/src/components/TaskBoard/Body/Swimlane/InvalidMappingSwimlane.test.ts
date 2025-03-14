@@ -30,7 +30,7 @@ import InvalidMappingCell from "./Cell/InvalidMappingCell.vue";
 async function createWrapper(
     columns: ColumnDefinition[],
     swimlane: Swimlane,
-): Promise<Wrapper<InvalidMappingSwimlane>> {
+): Promise<Wrapper<Vue>> {
     return shallowMount(InvalidMappingSwimlane, {
         localVue: await createTaskboardLocalVue(),
         mocks: { $store: createStoreMock({ state: { column: { columns } } as RootState }) },
