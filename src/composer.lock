@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "31f384a8868742850acfcd18352ac9c4",
+    "content-hash": "31400a8db1efe4bb7692063ccb9bd3bf",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -2470,12 +2470,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/Restler.git",
-                "reference": "20221209"
+                "reference": "20250314"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/Restler/zipball/20221209",
-                "reference": "20221209",
+                "url": "https://api.github.com/repos/Enalean/Restler/zipball/20250314",
+                "reference": "20250314",
                 "shasum": ""
             },
             "require": {
@@ -2531,9 +2531,9 @@
                 "server"
             ],
             "support": {
-                "source": "https://github.com/Enalean/Restler/tree/20221209"
+                "source": "https://github.com/Enalean/Restler/tree/20250314"
             },
-            "time": "2022-12-09T09:46:44+00:00"
+            "time": "2025-03-14T08:50:23+00:00"
         },
         {
             "name": "meyfa/php-svg",

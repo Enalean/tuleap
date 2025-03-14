@@ -57,7 +57,7 @@
     "lasserafn/php-initial-avatar-generator": "^4.1",
     "lcobucci/jwt": "^5.2",
     "league/commonmark": "^2.0",
-    "luracast/restler": "dev-master-tuleap#20221209",
+    "luracast/restler": "dev-master-tuleap#20250314",
     "monolog/monolog": "^3.3",
     "mustache/mustache": "dev-main-tuleap#main-tuleap-20250312",
     "nikic/fast-route": "^1.2",
