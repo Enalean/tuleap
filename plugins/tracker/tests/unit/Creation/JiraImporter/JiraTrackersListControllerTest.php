@@ -24,52 +24,38 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use HTTPRequest;
-use Mockery;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraClientStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class JiraTrackersListControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class JiraTrackersListControllerTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapperBuilder
-     */
-    private $wrapper_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraTrackerBuilder
-     */
-    private $project_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
-     */
-    private $layout;
-    /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $request;
-    /**
-     * @var Mockery\Mock|JiraTrackersListController
-     */
-    private $controller;
+    private ClientWrapperBuilder&MockObject $wrapper_builder;
+    private JiraTrackerBuilder&MockObject $project_builder;
+    private BaseLayout&MockObject $layout;
+    private HTTPRequest $request;
+    private JiraTrackersListController $controller;
 
     protected function setUp(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
-        $project = Mockery::mock(\Project::class);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $project_manager = Mockery::mock(ProjectManager::instance());
-        $project_manager->shouldReceive('getValidProjectByShortNameOrId')->andReturn($project)->once();
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->expects(self::once())->method('getValidProjectByShortNameOrId')->willReturn($project);
 
-        $permission_checker = Mockery::mock(TrackerCreationPermissionChecker::class);
-        $permission_checker->shouldReceive('checkANewTrackerCanBeCreated')->withArgs([$project, $user])->once();
+        $permission_checker = $this->createMock(TrackerCreationPermissionChecker::class);
+        $permission_checker->expects(self::once())->method('checkANewTrackerCanBeCreated')->with($project, $user);
 
-        $this->project_builder = Mockery::mock(JiraTrackerBuilder::class);
-        $this->wrapper_builder = Mockery::mock(ClientWrapperBuilder::class);
+        $this->project_builder = $this->createMock(JiraTrackerBuilder::class);
+        $this->wrapper_builder = $this->createMock(ClientWrapperBuilder::class);
 
         $this->controller = new JiraTrackersListController(
             $project_manager,
@@ -78,24 +64,20 @@ final class JiraTrackersListControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->wrapper_builder
         );
 
-        $this->request = Mockery::mock(HTTPRequest::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->request = new HTTPRequest();
+        $this->request->setCurrentUser($user);
 
-        $this->layout = Mockery::mock(BaseLayout::class);
+        $this->layout = $this->createMock(BaseLayout::class);
     }
 
     public function testItReturnsATrackerList(): void
     {
-        $body = new \stdClass();
-        $this->request->shouldReceive('getJsonDecodedBody')->andReturn($body);
+        $wrapper = JiraClientStub::aJiraClient();
 
-        $wrapper = Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->andReturn([]);
+        $this->project_builder->method('buildFromProjectKey')->willReturn([]);
+        $this->wrapper_builder->method('buildFromRequest')->willReturn($wrapper);
 
-        $this->project_builder->shouldReceive('buildFromProjectKey')->andReturn([]);
-        $this->wrapper_builder->shouldReceive('buildFromRequest')->andReturn($wrapper);
-
-        $this->layout->shouldReceive('sendJSON')->with([]);
+        $this->layout->method('sendJSON')->with([]);
         $this->controller->process(
             $this->request,
             $this->layout,

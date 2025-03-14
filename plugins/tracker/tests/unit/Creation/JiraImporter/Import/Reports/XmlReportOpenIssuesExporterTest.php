@@ -22,68 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
-use Mockery;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
+use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
-use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\Test\Stub\XML\IDGeneratorStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class XmlReportOpenIssuesExporterTest extends TestCase
 {
-    /**
-     * @var SimpleXMLElement
-     */
-    private $reports_node;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusValuesCollection
-     */
-    private $status_values_collection;
-
-    /**
-     * @var XmlReportDefaultCriteriaExporter
-     */
-    private $default_criteria_exporter;
-
-    /**
-     * @var XmlReportTableExporter
-     */
-    private $report_table_exporter;
-
-    /**
-     * @var FieldMapping
-     */
-    private $summary_field_mapping;
-
-    /**
-     * @var FieldMapping
-     */
-    private $description_field_mapping;
-
-    /**
-     * @var FieldMapping
-     */
-    private $status_field_mapping;
-
-    /**
-     * @var FieldMapping
-     */
-    private $priority_field_mapping;
-
-    /**
-     * @var \XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_factory;
-
-    /**
-     * @var FieldMapping
-     */
-    private $jira_issue_url_field_mapping;
+    private SimpleXMLElement $reports_node;
+    private StatusValuesCollection&MockObject $status_values_collection;
+    private XmlReportDefaultCriteriaExporter $default_criteria_exporter;
+    private XmlReportTableExporter $report_table_exporter;
+    private FieldMapping $summary_field_mapping;
+    private FieldMapping $description_field_mapping;
+    private FieldMapping $status_field_mapping;
+    private FieldMapping $priority_field_mapping;
+    private FieldMapping $jira_issue_url_field_mapping;
 
     protected function setUp(): void
     {
@@ -112,7 +75,7 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
 
@@ -123,7 +86,7 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
 
@@ -136,18 +99,12 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
         );
 
-        $tracker_node       = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
+        $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
         $this->reports_node = $tracker_node->addChild('reports');
 
-        $this->cdata_factory             = new \XML_SimpleXMLCDATAFactory();
-        $this->status_values_collection  = Mockery::mock(StatusValuesCollection::class);
+        $this->status_values_collection  = $this->createMock(StatusValuesCollection::class);
         $this->default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
         $this->report_table_exporter     = new XmlReportTableExporter();
-    }
-
-    protected function tearDown(): void
-    {
-        Mockery::close();
     }
 
     public function testItDoesNothingWhenNoStatusField(): void
@@ -176,9 +133,9 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItExportReports(): void
     {
-        $this->status_values_collection->shouldReceive('getOpenValues')->andReturn([
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(123, $this->getPreWiredIDGenerator(303)),
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(124, $this->getPreWiredIDGenerator(304)),
+        $this->status_values_collection->method('getOpenValues')->willReturn([
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(123, IDGeneratorStub::withId(303)),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(124, IDGeneratorStub::withId(304)),
         ]);
 
         $report_export = new XmlReportOpenIssuesExporter(
@@ -262,20 +219,5 @@ final class XmlReportOpenIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertEquals('Fpriority', (string) $field_04['REF']);
 
         self::assertEquals('Results', (string) $renderer_name);
-    }
-
-    private function getPreWiredIDGenerator(int $pre_wired_value): IDGenerator
-    {
-        $id_generator     = new class implements IDGenerator {
-            /** @var int */
-            public $id;
-
-            public function getNextId(): int
-            {
-                return $this->id;
-            }
-        };
-        $id_generator->id = $pre_wired_value;
-        return $id_generator;
     }
 }
