@@ -27,7 +27,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskOutOfDateDetectorTest extends TestCase
@@ -430,13 +430,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
                 $this->status_field,
                 $has_changed,
                 [
-                    new Tracker_FormElement_Field_List_Bind_StaticValue(
-                        $status_field_value_id,
-                        '',
-                        '',
-                        '',
-                        false
-                    ),
+                    ListStaticValueBuilder::aStaticValue('label')->withId($status_field_value_id)->build(),
                 ]
             )
         );

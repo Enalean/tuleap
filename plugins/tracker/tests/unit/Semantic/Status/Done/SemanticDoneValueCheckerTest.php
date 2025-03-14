@@ -24,6 +24,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_Semantic_Status;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -44,15 +45,15 @@ final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->to_do_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'todo', '', 1, false);
-        $this->on_going_value = new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'on-going', '', 2, false);
-        $this->done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(3, 'done', '', 3, false);
-        $this->hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue(4, 'hidden', '', 4, true);
+        $this->to_do_value    = ListStaticValueBuilder::aStaticValue('todo')->withId(1)->isHidden(false)->build();
+        $this->on_going_value = ListStaticValueBuilder::aStaticValue('on-going')->withId(2)->isHidden(false)->build();
+        $this->done_value     = ListStaticValueBuilder::aStaticValue('done')->withId(3)->isHidden(false)->build();
+        $this->hidden_value   = ListStaticValueBuilder::aStaticValue('hidden')->withId(4)->isHidden(true)->build();
 
-        $this->xml_to_do_value    = new Tracker_FormElement_Field_List_Bind_StaticValue('F1', 'todo', '', 1, false);
-        $this->xml_on_going_value = new Tracker_FormElement_Field_List_Bind_StaticValue('F2', 'on-going', '', 2, false);
-        $this->xml_done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue('F3', 'done', '', 3, false);
-        $this->xml_hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue('F4', 'hidden', '', 4, true);
+        $this->xml_to_do_value    = ListStaticValueBuilder::aStaticValue('todo')->withXMLId('F1')->isHidden(false)->build();
+        $this->xml_on_going_value = ListStaticValueBuilder::aStaticValue('on-going')->withXMLId('F2')->isHidden(false)->build();
+        $this->xml_done_value     = ListStaticValueBuilder::aStaticValue('done')->withXMLId('F3')->isHidden(false)->build();
+        $this->xml_hidden_value   = ListStaticValueBuilder::aStaticValue('hidden')->withXMLId('F4')->isHidden(true)->build();
 
         $this->semantic_status = $this->createMock(Tracker_Semantic_Status::class);
         $this->semantic_status->method('getOpenValues')->willReturn([

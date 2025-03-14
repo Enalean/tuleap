@@ -27,7 +27,6 @@ use Tracker;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use Tracker_FormElement_Field_List_Bind_Users;
@@ -42,6 +41,7 @@ use Tracker_Report_Criteria;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportCriteriaJsonBuilderTest extends TestCase
@@ -311,8 +311,8 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $static_bind
             ->method('getValue')
             ->willReturnMap([
-                ['299', new Tracker_FormElement_Field_List_Bind_StaticValue(299, 'Static value 01', '', 1, false)],
-                ['300', new Tracker_FormElement_Field_List_Bind_StaticValue(300, 'Static value 02', '', 2, false)],
+                ['299', ListStaticValueBuilder::aStaticValue('Static value 01')->withId(299)->build()],
+                ['300', ListStaticValueBuilder::aStaticValue('Static value 02')->withId(300)->build()],
             ]);
 
         $list_static_field
@@ -356,20 +356,8 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->method('extractCriteriaValue')
             ->with('b14,b15,!abc')
             ->willReturn([
-                new Tracker_FormElement_Field_List_Bind_StaticValue(
-                    14,
-                    'a',
-                    '',
-                    1,
-                    false
-                ),
-                new Tracker_FormElement_Field_List_Bind_StaticValue(
-                    15,
-                    'b',
-                    '',
-                    2,
-                    false
-                ),
+                ListStaticValueBuilder::aStaticValue('a')->withId(14)->build(),
+                ListStaticValueBuilder::aStaticValue('b')->withId(15)->build(),
                 new Tracker_FormElement_Field_List_UnsavedValue(
                     'abc'
                 ),

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -62,7 +63,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->changeset = new \Tracker_Artifact_Changeset($changset_id, $this->artifact, $this->user->getId(), 1669714644, 'example@email.com');
         $this->field     = $this->createMock(\Tracker_FormElement_Field_List::class);
         $this->field->method('getId')->willReturn(4);
-        $this->bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(1233, 'My bind value', '', 1, 0);
+        $this->bind_value =  ListStaticValueBuilder::aStaticValue('My bind value')->build();
     }
 
     public function testNoColorIsDefinedWhenStatusFieldIsNotDefined(): void

@@ -20,13 +20,13 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -279,7 +279,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
 
     private function buildStaticValue(int $id): Tracker_FormElement_Field_List_Bind_StaticValue
     {
-        return new Tracker_FormElement_Field_List_Bind_StaticValue($id, 'label', 'description', 0, false);
+        return ListStaticValueBuilder::aStaticValue('label')->withId($id)->build();
     }
 
     private function buildSelectBoxField(int $id): Tracker_FormElement_Field_Selectbox

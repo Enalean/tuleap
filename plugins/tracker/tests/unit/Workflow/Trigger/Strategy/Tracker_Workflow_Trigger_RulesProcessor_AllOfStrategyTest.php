@@ -21,12 +21,12 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -66,10 +66,10 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         $target_field_id = 569;
         $target_field    = $this->buildSelectBoxField($target_field_id, $story_tracker);
         $target_value_id = 7;
-        $target_value    = new Tracker_FormElement_Field_List_Bind_StaticValue($target_value_id, 'label', 'description', 0, false);
+        $target_value    = ListStaticValueBuilder::aStaticValue('label')->withId($target_value_id)->build();
 
         $this->trigger_field = $this->buildSelectBoxField(965, $this->task_tracker);
-        $this->trigger_value = new Tracker_FormElement_Field_List_Bind_StaticValue(14, 'label', 'description', 0, false);
+        $this->trigger_value = ListStaticValueBuilder::aStaticValue('label')->withId(14)->build();
 
         $rule = new Tracker_Workflow_Trigger_TriggerRule(
             1,
@@ -96,7 +96,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         $this->bug_tracker = $this->buildTracker(901);
 
         $trigger_field_2       = $this->buildSelectBoxField(236, $this->bug_tracker);
-        $this->trigger_value_2 = new Tracker_FormElement_Field_List_Bind_StaticValue(28, 'label', 'description', 0, false);
+        $this->trigger_value_2 = ListStaticValueBuilder::aStaticValue('label')->withId(28)->build();
 
         $complex_rule = new Tracker_Workflow_Trigger_TriggerRule(
             1,
@@ -211,7 +211,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_2->shouldReceive('getId')->andReturns(113);
         $sibling_2->shouldReceive('getTracker')->andReturns($this->task_tracker);
-        $bind_static_value = new Tracker_FormElement_Field_List_Bind_StaticValue(74, 'label', 'description', 0, false);
+        $bind_static_value = ListStaticValueBuilder::aStaticValue('label')->withId(74)->build();
         $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
             new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
         );
@@ -254,7 +254,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_2->shouldReceive('getId')->andReturns(113);
         $sibling_2->shouldReceive('getTracker')->andReturns($this->bug_tracker);
-        $bind_static_value = new Tracker_FormElement_Field_List_Bind_StaticValue(74, 'label', 'description', 0, false);
+        $bind_static_value = ListStaticValueBuilder::aStaticValue('label')->withId(74)->build();
         $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
             new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
         );

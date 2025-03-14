@@ -44,6 +44,7 @@ use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
@@ -462,13 +463,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     private function mockDoneValueIsFound(): void
     {
         $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturn(
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(
-                self::DONE_BIND_VALUE_ID,
-                'Done',
-                'irrelevant',
-                3,
-                false
-            )
+            ListStaticValueBuilder::aStaticValue('Done')->withId(self::DONE_BIND_VALUE_ID)->build()
         );
     }
 

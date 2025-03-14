@@ -49,6 +49,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
@@ -109,7 +110,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $last_changeset = ChangesetTestBuilder::aChangeset(934)->build();
         ChangesetValueListTestBuilder::aListOfValue(34460, $last_changeset, $this->mapped_list_field)
-            ->withValues([new \Tracker_FormElement_Field_List_Bind_StaticValue(256, 'To do', '', 1, false)])
+            ->withValues([ListStaticValueBuilder::aStaticValue('To Do')->build()])
             ->build();
 
         $this->tasks_tracker     = TrackerTestBuilder::aTracker()->withId(90)->withName('Tasks')->build();
@@ -328,7 +329,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $last_changeset = ChangesetTestBuilder::aChangeset(360)->build();
         ChangesetValueListTestBuilder::aListOfValue(59544, $last_changeset, $this->mapped_list_field)
-            ->withValues([new \Tracker_FormElement_Field_List_Bind_StaticValue(self::DONE_BIND_VALUE_ID, 'Done', '', 2, false)])
+            ->withValues([ListStaticValueBuilder::aStaticValue('Done')->withId(self::DONE_BIND_VALUE_ID)->build()])
             ->build();
 
         $this->artifact_to_add = ArtifactTestBuilder::anArtifact(700)

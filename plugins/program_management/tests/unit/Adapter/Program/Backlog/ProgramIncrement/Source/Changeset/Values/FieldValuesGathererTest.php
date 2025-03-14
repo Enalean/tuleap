@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldReferencesBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\DurationFieldReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\EndDateFieldReferenceStub;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -222,8 +223,8 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsStatusValuesWithStaticBind(): void
     {
-        $first_bind_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(557, 'Planned', '', 0, false);
-        $second_bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(698, 'Current', '', 1, false);
+        $first_bind_value  = ListStaticValueBuilder::aStaticValue('Planned')->withId(557)->build();
+        $second_bind_value = ListStaticValueBuilder::aStaticValue('Current')->withId(698)->build();
         $changeset_value   = new \Tracker_Artifact_ChangesetValue_List(
             9331,
             $this->changeset,

@@ -22,18 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindValueLabelProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromStaticBindValue(): void
     {
-        $bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(
-            3860,
-            'Planned',
-            'A Planned Progam Increment',
-            0,
-            false
-        );
+        $bind_value = ListStaticValueBuilder::aStaticValue('Planned')->withId(3860)->build();
         $label      = BindValueLabelProxy::fromListBindValue($bind_value);
         self::assertSame('Planned', $label->getLabel());
     }

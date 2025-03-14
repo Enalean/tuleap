@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -59,7 +60,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             null,
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
+            ListStaticValueBuilder::aStaticValue('field')->build()
         );
         $expected_post_action = new FrozenFields($transition, 0, []);
         $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->with($transition)->andReturn(
@@ -78,7 +79,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             null,
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
+            ListStaticValueBuilder::aStaticValue('field')->build()
         );
 
         $result = $this->frozen_fields_factory->loadPostActions($transition);

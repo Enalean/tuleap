@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -107,9 +107,9 @@ class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->workflow->shouldReceive('getId')->andReturn(25);
         $this->workflow->shouldReceive('isAdvanced')->andReturn(true);
 
-        $open_value      = new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'open', '', 1, false);
-        $closed_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(2, 'closed', '', 2, false);
-        $cancelled_value = new Tracker_FormElement_Field_List_Bind_StaticValue(3, 'cancelled', '', 3, false);
+        $open_value      = ListStaticValueBuilder::aStaticValue('open')->withId(1)->build();
+        $closed_value    = ListStaticValueBuilder::aStaticValue('closed')->withId(2)->build();
+        $cancelled_value = ListStaticValueBuilder::aStaticValue('cancelled')->withId(3)->build();
 
         $transition_new_open         = new Transition(1, 25, null, $open_value);
         $transition_new_closed       = new Transition(2, 25, null, $closed_value);

@@ -27,7 +27,6 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Computed;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -120,7 +120,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
             381 => '10',
         ])->build()->getField();
         $value                = ChangesetValueListTestBuilder::aListOfValue(1, $this->last_changeset, $initial_effort_field)
-            ->withValues([new Tracker_FormElement_Field_List_Bind_StaticValue(381, '10', '', 0, false)])
+            ->withValues([ListStaticValueBuilder::aStaticValue('10')->withId(381)->build()])
             ->build();
         $this->last_changeset->setFieldValue($initial_effort_field, $value);
 

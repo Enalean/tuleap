@@ -28,6 +28,7 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use XMLImportHelper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -127,43 +128,43 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'It retrieves matching value by label'                          => [
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '2', 'Irrelevant', 0, 0),
+                ListStaticValueBuilder::aStaticValue('2')->withId(101)->build(),
                 [
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 0),
+                    ListStaticValueBuilder::aStaticValue('1')->withId(200)->build(),
+                    ListStaticValueBuilder::aStaticValue('2')->withId(201)->build(),
                 ],
                 201,
             ],
             'It matches value label with different cases'                   => [
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, 'a', 'Irrelevant', 0, 0),
+                ListStaticValueBuilder::aStaticValue('a')->withId(101)->build(),
                 [
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, 'A', 'Irrelevant', 0, 0),
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, 'b', 'Irrelevant', 1, 0),
+                    ListStaticValueBuilder::aStaticValue('A')->withId(200)->build(),
+                    ListStaticValueBuilder::aStaticValue('b')->withId(201)->build(),
                 ],
                 200,
             ],
             'It matches value even if it is hidden'                         => [
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '2', 'Irrelevant', 0, 0),
+                ListStaticValueBuilder::aStaticValue('2')->withId(101)->build(),
                 [
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 1),
+                    ListStaticValueBuilder::aStaticValue('1')->withId(200)->build(),
+                    ListStaticValueBuilder::aStaticValue('2')->withId(201)->build(),
                 ],
                 201,
             ],
             'It matches first value if multiple values have the same label' => [
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '1', 'Irrelevant', 0, 0),
+                ListStaticValueBuilder::aStaticValue('1')->withId(101)->build(),
                 [
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '1', 'Irrelevant', 1, 0),
+                    ListStaticValueBuilder::aStaticValue('1')->withId(200)->build(),
+                    ListStaticValueBuilder::aStaticValue('1')->withId(201)->build(),
                 ],
                 200,
             ],
             'It returns null if no matching value'                          => [
-                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '3', 'Irrelevant', 0, 0),
+                ListStaticValueBuilder::aStaticValue('3')->withId(101)->build(),
                 [
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 0),
-                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '0', 'Irrelevant', 1, 0),
+                    ListStaticValueBuilder::aStaticValue('1')->withId(200)->build(),
+                    ListStaticValueBuilder::aStaticValue('2')->withId(201)->build(),
+                    ListStaticValueBuilder::aStaticValue('0')->withId(202)->build(),
                 ],
                 null,
             ],

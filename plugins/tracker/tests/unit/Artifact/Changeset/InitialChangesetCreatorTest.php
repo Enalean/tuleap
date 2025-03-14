@@ -30,7 +30,6 @@ use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_Changeset_Null;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_Exception_CannotCreateNewChangeset;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
@@ -43,6 +42,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
@@ -175,7 +175,7 @@ final class InitialChangesetCreatorTest extends TestCase
             1,
             $this->workflow->getId(),
             null,
-            new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
+            ListStaticValueBuilder::aStaticValue('field')->build()
         );
 
         $this->workflow->method('validate')->willThrowException(

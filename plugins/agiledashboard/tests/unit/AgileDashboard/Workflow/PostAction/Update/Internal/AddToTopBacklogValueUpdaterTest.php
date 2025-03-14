@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -46,7 +46,7 @@ final class AddToTopBacklogValueUpdaterTest extends TestCase
             1,
             1,
             null,
-            new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'label', '', 1, false),
+            ListStaticValueBuilder::aStaticValue('label')->build()
         );
     }
 

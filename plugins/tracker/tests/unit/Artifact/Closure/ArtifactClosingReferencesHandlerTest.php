@@ -37,6 +37,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
@@ -267,7 +268,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances($reference_instances, []);
         $this->artifact_retriever  = RetrieveArtifactStub::withArtifacts(...$artifacts);
 
-        $done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(7682, 'Closed', 'Irrelevant', 1, false);
+        $done_value = ListStaticValueBuilder::aStaticValue('Closed')->build();
 
         $status_field           = $this->getStatusField(718, $done_value);
         $this->status_retriever = RetrieveStatusFieldStub::withField($status_field);
@@ -381,9 +382,8 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     private function mockDoneValuesAreFound(): void
     {
-        $first_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(402, 'Closed', 'Irrelevant', 1, false);
-
-        $second_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(940, 'Done', 'Irrelevant', 1, false);
+        $first_done_value  = ListStaticValueBuilder::aStaticValue('Closed')->build();
+        $second_done_value = ListStaticValueBuilder::aStaticValue('Done')->build();
 
         $this->status_retriever = RetrieveStatusFieldStub::withSuccessiveFields(
             $this->getStatusField(564, $first_done_value),

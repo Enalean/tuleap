@@ -26,9 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Transition;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -54,13 +54,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             1,
             2,
             null,
-            new Tracker_FormElement_Field_List_Bind_StaticValue(
-                59,
-                'on going',
-                '',
-                1,
-                false
-            )
+            ListStaticValueBuilder::aStaticValue('on going')->withId(59)->build()
         );
 
         $fields_data = [
@@ -102,13 +96,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             1,
             2,
             null,
-            new Tracker_FormElement_Field_List_Bind_StaticValue(
-                59,
-                'on going',
-                '',
-                1,
-                false
-            )
+            ListStaticValueBuilder::aStaticValue('on going')->withId(59)->build()
         );
 
         $fields_data = [
@@ -151,20 +139,8 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $transition = new Transition(
             1,
             2,
-            new Tracker_FormElement_Field_List_Bind_StaticValue(
-                58,
-                'todo',
-                '',
-                1,
-                false
-            ),
-            new Tracker_FormElement_Field_List_Bind_StaticValue(
-                59,
-                'on going',
-                '',
-                2,
-                false
-            )
+            ListStaticValueBuilder::aStaticValue('to do')->withId(58)->build(),
+            ListStaticValueBuilder::aStaticValue('on going')->withId(59)->build()
         );
 
         $fields_data = [
