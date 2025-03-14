@@ -274,6 +274,56 @@ describe("Artidoc", () => {
         ]);
     });
 
+    it("Handles tricky scenarios about level for sections", () => {
+        cy.intercept("POST", "/api/v1/artidoc_sections").as("addSection");
+        createDocument("Tricky scenarios about level");
+
+        cy.log("Change level of pending default section");
+
+        getSectionTitle().type(requirements[0].title);
+        getSectionDescription().type(requirements[0].description);
+        getSectionTitle().type("{end}");
+        cy.get("[data-test=change-section-level]").click();
+        cy.get(`[data-test=change-section-level-2]`).click();
+
+        assertTocContains(["1.1. Functional Requirement"]);
+
+        cy.log(
+            "Make sure that section is switched to edit mode if we change its level after being saved",
+        );
+
+        cy.get("[data-test=section-edition]").contains("button", "Save").click();
+        cy.wait("@addSection");
+        waitSectionToBeSaved();
+        getSectionTitle().type("{end}");
+        cy.get("[data-test=change-section-level]").click();
+        cy.get(`[data-test=change-section-level-1]`).click();
+
+        cy.get(`[data-test=section-edition]`).should("exist");
+        cy.get("[data-test=section-edition]").contains("button", "Cancel").click();
+        cy.get(`[data-test=section-edition]`).should("not.exist");
+
+        cy.log(
+            "If we change both description and level, and bring back level to its original value, then section should still be in edit mode",
+        );
+
+        const added_word = "supercalifragilisticexpialidocious";
+        getSectionDescription().type(`{end}${added_word}`);
+        getSectionTitle().type("{end}");
+        cy.get(`[data-test=change-section-level-2]`).should("have.class", "artidoc-selected-level");
+        cy.get("[data-test=change-section-level]").click();
+        cy.get(`[data-test=change-section-level-1]`).click();
+        assertTocContains(["1. Functional Requirement"]);
+        cy.get("[data-test=change-section-level]").click();
+        cy.get(`[data-test=change-section-level-2]`).click();
+        assertTocContains(["1.1. Functional Requirement"]);
+
+        cy.get(`[data-test=section-edition]`).should("exist");
+        cy.get("[data-test=section-edition]").contains("button", "Cancel").click();
+        assertTocContains(["1.1. Functional Requirement"]);
+        getSectionDescription().should("not.contain.text", added_word);
+    });
+
     function createDocument(name: string): Cypress.Chainable<string> {
         cy.log("Create document");
         cy.projectMemberSession();
