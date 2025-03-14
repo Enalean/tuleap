@@ -28,6 +28,7 @@ use Tracker;
 use TrackerDao;
 use TrackerFactory;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
+use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerCreationDataChecker
@@ -40,10 +41,7 @@ class TrackerCreationDataChecker
      * @var TrackerDao
      */
     private $tracker_dao;
-    /**
-     * @var \TrackerFactory
-     */
-    private $tracker_factory;
+    private RetrieveTracker $tracker_factory;
     /**
      * @var PendingJiraImportDao
      */
@@ -53,7 +51,7 @@ class TrackerCreationDataChecker
         \ReferenceManager $reference_manager,
         TrackerDao $tracker_dao,
         PendingJiraImportDao $pending_jira_import_dao,
-        \TrackerFactory $tracker_factory,
+        RetrieveTracker $tracker_factory,
     ) {
         $this->reference_manager       = $reference_manager;
         $this->tracker_dao             = $tracker_dao;

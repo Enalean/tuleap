@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery;
-use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Project;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -32,55 +31,40 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerCreationBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerCreationBreadCrumbsBuilderTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
-    /**
-     * @var TrackerCreationBreadCrumbsBuilder
-     */
-    private $builder;
+    private Project $project;
+    private TrackerCreationBreadCrumbsBuilder $builder;
 
     protected function setUp(): void
     {
         $this->builder = new TrackerCreationBreadCrumbsBuilder();
-
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getId')->andReturn('101');
-        $this->project->shouldReceive('getUnixNameLowerCase')->andReturn('my-project');
-
-        $this->user = Mockery::mock(PFUser::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('my-project')->build();
     }
 
     public function testRegularUserDoesNotHaveADirectLinkToAdministration(): void
     {
-        $this->user->shouldReceive('isAdmin')->andReturn(false);
+        $user = UserTestBuilder::anActiveUser()->build();
 
-        $breadcrumbs = $this->builder->build($this->project, $this->user);
+        $breadcrumbs = $this->builder->build($this->project, $user);
 
         $expected_breadcrumbs = new BreadCrumbCollection();
         $expected_breadcrumbs->addBreadCrumb($this->getTrackerBreadcrumb());
         $expected_breadcrumbs->addBreadCrumb($this->getNewTrackerBreadcrumb());
 
-        $this->assertEquals($expected_breadcrumbs, $breadcrumbs);
+        self::assertEquals($expected_breadcrumbs, $breadcrumbs);
     }
 
     public function testAdminUserHaveAAllInclusiveBreadcrumb(): void
     {
-        $this->user->shouldReceive('isAdmin')->andReturn(true);
+        $user = UserTestBuilder::anActiveUser()->withAdministratorOf($this->project)->build();
 
-        $breadcrumbs = $this->builder->build($this->project, $this->user);
+        $breadcrumbs = $this->builder->build($this->project, $user);
 
         $expected_breadcrumbs = new BreadCrumbCollection();
         $tracker_breadcrumb   = $this->getTrackerBreadcrumb();
@@ -89,7 +73,7 @@ class TrackerCreationBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $tracker_breadcrumb->setSubItems($this->getAdministrationBreadcrumb());
 
-        $this->assertEquals($expected_breadcrumbs, $breadcrumbs);
+        self::assertEquals($expected_breadcrumbs, $breadcrumbs);
     }
 
     private function getTrackerBreadcrumb(): BreadCrumb

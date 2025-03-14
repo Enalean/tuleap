@@ -40,6 +40,7 @@ final class ProjectTestBuilder
 
     private ?array $used_service_short_names = null;
     private ?array $used_services            = null;
+    private bool $is_error                   = false;
 
     public function __construct()
     {
@@ -58,6 +59,10 @@ final class ProjectTestBuilder
             $project->addUsedServices(...$this->used_service_short_names);
         } elseif ($this->used_services !== null) {
             $project->addUsedServices(...$this->used_services);
+        }
+
+        if ($this->is_error) {
+            $project->setError('Error message');
         }
 
         return $project;
@@ -183,6 +188,12 @@ final class ProjectTestBuilder
     public function withTruncatedEmails(bool $truncated): self
     {
         $this->data['truncated_emails'] = $truncated;
+        return $this;
+    }
+
+    public function withError(): self
+    {
+        $this->is_error = true;
         return $this;
     }
 }
