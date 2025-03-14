@@ -41,7 +41,7 @@ final class DateFieldSpecificPropertiesDAO extends DataAccessObject implements D
     }
 
     /**
-     * @return null | array{field_id: int, default_value_type: int, default_value: int, display_time: int}
+     * @return null | array{field_id: int, default_value_type: ?int, default_value: ?int, display_time: 0|1}
      */
     public function searchByFieldId(int $field_id): ?array
     {

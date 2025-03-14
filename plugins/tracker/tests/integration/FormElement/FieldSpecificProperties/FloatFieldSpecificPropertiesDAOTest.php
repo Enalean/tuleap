@@ -52,11 +52,11 @@ final class FloatFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testDefaultProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->float_field_id);
-        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->float_field_id, 'default_value' => null, 'maxchars' => 0, 'size' => 0], $properties);
 
         $this->dao->saveSpecificProperties($this->float_field_id, []);
         $properties = $this->dao->searchByFieldId($this->float_field_id);
-        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 30, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->float_field_id, 'default_value' => null, 'maxchars' => 0, 'size' => 30], $properties);
 
         $this->dao->deleteFieldProperties($this->float_field_id);
 
@@ -67,14 +67,14 @@ final class FloatFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testManualProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->float_field_id);
-        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->float_field_id, 'default_value' => null, 'maxchars' => 0, 'size' => 0], $properties);
 
         $this->dao->saveSpecificProperties($this->float_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45.01']);
         $properties = $this->dao->searchByFieldId($this->float_field_id);
-        self::assertEquals(['field_id' => $this->float_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45.01], $properties);
+        self::assertSame(['field_id' => $this->float_field_id, 'default_value' => 45.01, 'maxchars' => 34, 'size' => 12], $properties);
 
         $this->dao->duplicate($this->float_field_id, $this->duplicate_field_id);
         $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
-        self::assertEquals(['field_id' => $this->duplicate_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45.01], $properties);
+        self::assertSame(['field_id' => $this->duplicate_field_id, 'default_value' => 45.01, 'maxchars' => 34, 'size' => 12], $properties);
     }
 }

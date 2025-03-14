@@ -52,11 +52,11 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
     public function testDefaultProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
+        self::assertSame(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
 
         $this->dao->saveSpecificProperties($this->computed_field_id, []);
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'target_field_name' => '', 'default_value' => 0.0], $properties);
+        self::assertSame(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => ''], $properties);
 
         $this->dao->deleteFieldProperties($this->computed_field_id);
 
@@ -67,14 +67,14 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
     public function testManualProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
+        self::assertSame(['field_id' => $this->computed_field_id, 'default_value' => null, 'target_field_name' => null], $properties);
 
         $this->dao->saveSpecificProperties($this->computed_field_id, ['target_field_name' => 'target_name', 'default_value' => 22]);
         $properties = $this->dao->searchByFieldId($this->computed_field_id);
-        self::assertEquals(['field_id' => $this->computed_field_id, 'target_field_name' => 'target_name', 'default_value' => 22.0], $properties);
+        self::assertSame(['field_id' => $this->computed_field_id, 'default_value' => 22.0, 'target_field_name' => 'target_name'], $properties);
 
         $this->dao->duplicate($this->computed_field_id, $this->duplicate_field_id);
         $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
-        self::assertEquals(['field_id' => $this->duplicate_field_id, 'target_field_name' => 'target_name', 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->duplicate_field_id, 'default_value' => null, 'target_field_name' => 'target_name'], $properties);
     }
 }

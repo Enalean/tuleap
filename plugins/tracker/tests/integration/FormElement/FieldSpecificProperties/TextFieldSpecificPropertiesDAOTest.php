@@ -52,12 +52,12 @@ final class TextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testDefaultProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->text_field_id);
-        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 0, 'cols' => 0, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->text_field_id, 'default_value' => null, 'rows' => 0, 'cols' => 0], $properties);
 
         $this->dao->saveSpecificProperties($this->text_field_id, []);
         $properties = $this->dao->searchByFieldId($this->text_field_id);
 
-        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 10, 'cols' => 50, 'default_value' => ''], $properties);
+        self::assertSame(['field_id' => $this->text_field_id, 'default_value' => '', 'rows' => 10, 'cols' => 50], $properties);
 
         $this->dao->deleteFieldProperties($this->text_field_id);
 
@@ -68,14 +68,14 @@ final class TextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testManualProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->text_field_id);
-        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 0, 'cols' => 0, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->text_field_id, 'default_value' => null, 'rows' => 0, 'cols' => 0], $properties);
 
         $this->dao->saveSpecificProperties($this->text_field_id, ['rows' => 20, 'cols' => 30, 'default_value' => 'My value']);
         $properties = $this->dao->searchByFieldId($this->text_field_id);
-        self::assertEquals(['field_id' => $this->text_field_id, 'rows' => 20, 'cols' => 30, 'default_value' => 'My value'], $properties);
+        self::assertSame(['field_id' => $this->text_field_id, 'default_value' => 'My value', 'rows' => 20, 'cols' => 30], $properties);
 
         $this->dao->duplicate($this->text_field_id, $this->duplicate_field_id);
         $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
-        self::assertEquals(['field_id' => $this->duplicate_field_id, 'rows' => 20, 'cols' => 30, 'default_value' => 'My value'], $properties);
+        self::assertSame(['field_id' => $this->duplicate_field_id, 'default_value' => 'My value', 'rows' => 20, 'cols' => 30], $properties);
     }
 }

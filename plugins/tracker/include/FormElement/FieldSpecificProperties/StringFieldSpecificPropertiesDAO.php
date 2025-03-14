@@ -39,7 +39,7 @@ final class StringFieldSpecificPropertiesDAO extends DataAccessObject implements
     }
 
     /**
-     * @return null | array{field_id: int, maxchars: int, size: int, default_value: string}
+     * @return null | array{field_id: int, maxchars: int, size: int, default_value: ?string}
      */
     public function searchByFieldId(int $field_id): ?array
     {

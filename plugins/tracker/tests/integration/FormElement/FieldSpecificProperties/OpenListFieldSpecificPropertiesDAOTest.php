@@ -55,7 +55,7 @@ final class OpenListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
         $this->dao->saveSpecificProperties($this->list_field_id, []);
         $properties = $this->dao->searchByFieldId($this->list_field_id);
 
-        self::assertEquals(['field_id' => $this->list_field_id, 'hint' => ''], $properties);
+        self::assertSame(['field_id' => $this->list_field_id, 'hint' => ''], $properties);
 
         $this->dao->deleteFieldProperties($this->list_field_id);
 
@@ -70,6 +70,6 @@ final class OpenListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
 
         $this->dao->saveSpecificProperties($this->list_field_id, ['hint' => 'My hint']);
         $properties = $this->dao->searchByFieldId($this->list_field_id);
-        self::assertEquals(['field_id' => $this->list_field_id, 'hint' => 'My hint'], $properties);
+        self::assertSame(['field_id' => $this->list_field_id, 'hint' => 'My hint'], $properties);
     }
 }

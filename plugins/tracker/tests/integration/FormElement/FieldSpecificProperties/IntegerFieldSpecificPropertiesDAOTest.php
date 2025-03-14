@@ -28,7 +28,7 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
+final class IntegerFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private IntegerFieldSpecificPropertiesDAO $dao;
     private int $int_field_id;
@@ -52,11 +52,11 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testDefaultProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->int_field_id, 'default_value' => null, 'maxchars' => 0, 'size' => 0], $properties);
 
         $this->dao->saveSpecificProperties($this->int_field_id, []);
         $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 30, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->int_field_id, 'default_value' => null, 'maxchars' => 0, 'size' => 30], $properties);
 
         $this->dao->deleteFieldProperties($this->int_field_id);
 
@@ -67,14 +67,14 @@ final class IntFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testManualProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 0, 'size' => 0, 'default_value' => null], $properties);
+        self::assertSame(['field_id' => $this->int_field_id, 'default_value' => null, 'maxchars' => 0, 'size' => 0], $properties);
 
         $this->dao->saveSpecificProperties($this->int_field_id, ['maxchars' => 34, 'size' => 12, 'default_value' => '45']);
         $properties = $this->dao->searchByFieldId($this->int_field_id);
-        self::assertEquals(['field_id' => $this->int_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45], $properties);
+        self::assertSame(['field_id' => $this->int_field_id, 'default_value' => 45, 'maxchars' => 34, 'size' => 12], $properties);
 
         $this->dao->duplicate($this->int_field_id, $this->duplicate_field_id);
         $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
-        self::assertEquals(['field_id' => $this->duplicate_field_id, 'maxchars' => 34, 'size' => 12, 'default_value' => 45], $properties);
+        self::assertSame(['field_id' => $this->duplicate_field_id, 'default_value' => 45, 'maxchars' => 34, 'size' => 12], $properties);
     }
 }
