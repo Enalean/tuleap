@@ -65,7 +65,7 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
 
         $this->dao->saveSpecificProperties($this->rich_text_field_id, ['static_value' => 'My value']);
         $properties = $this->dao->searchByFieldId($this->rich_text_field_id);
-        self::assertEquals(['field_id' => $this->rich_text_field_id, 'static_value' => 'My value'], $properties);
+        self::assertSame(['field_id' => $this->rich_text_field_id, 'static_value' => 'My value'], $properties);
 
         $this->dao->deleteFieldProperties($this->rich_text_field_id);
 

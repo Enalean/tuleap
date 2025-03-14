@@ -55,7 +55,7 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
         $this->dao->saveSpecificProperties($this->list_field_id, []);
         $properties = $this->dao->searchByFieldId($this->list_field_id);
 
-        self::assertEquals(['field_id' => $this->list_field_id, 'size' => 7], $properties);
+        self::assertSame(['field_id' => $this->list_field_id, 'size' => 7], $properties);
 
         $this->dao->deleteFieldProperties($this->list_field_id);
 
@@ -70,6 +70,6 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
 
         $this->dao->saveSpecificProperties($this->list_field_id, ['size' => 12]);
         $properties = $this->dao->searchByFieldId($this->list_field_id);
-        self::assertEquals(['field_id' => $this->list_field_id, 'size' => 12], $properties);
+        self::assertSame(['field_id' => $this->list_field_id, 'size' => 12], $properties);
     }
 }

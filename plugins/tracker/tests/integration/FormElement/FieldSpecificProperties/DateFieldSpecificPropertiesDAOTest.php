@@ -52,11 +52,11 @@ final class DateFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testDefaultProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->date_field_id);
-        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => null, 'display_time' => 1], $properties);
+        self::assertSame(['field_id' => $this->date_field_id, 'default_value' => null, 'default_value_type' => null, 'display_time' => 1], $properties);
 
         $this->dao->saveSpecificProperties($this->date_field_id, []);
         $properties = $this->dao->searchByFieldId($this->date_field_id);
-        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => 0, 'display_time' => 0], $properties);
+        self::assertSame(['field_id' => $this->date_field_id, 'default_value' => 0, 'default_value_type' => 0, 'display_time' => 0], $properties);
 
         $this->dao->deleteFieldProperties($this->date_field_id);
 
@@ -67,14 +67,14 @@ final class DateFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     public function testManualProperties(): void
     {
         $properties = $this->dao->searchByFieldId($this->date_field_id);
-        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 0, 'default_value' => null, 'display_time' => 1], $properties);
+        self::assertSame(['field_id' => $this->date_field_id, 'default_value' => null, 'default_value_type' => null, 'display_time' => 1], $properties);
 
         $this->dao->saveSpecificProperties($this->date_field_id, ['default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0]);
         $properties = $this->dao->searchByFieldId($this->date_field_id);
-        self::assertEquals(['field_id' => $this->date_field_id, 'default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0], $properties);
+        self::assertSame(['field_id' => $this->date_field_id, 'default_value' => 1740403363, 'default_value_type' => 1, 'display_time' => 0], $properties);
 
         $this->dao->duplicate($this->date_field_id, $this->duplicate_field_id);
         $properties = $this->dao->searchByFieldId($this->duplicate_field_id);
-        self::assertEquals(['field_id' => $this->duplicate_field_id, 'default_value_type' => 1, 'default_value' => 1740403363, 'display_time' => 0], $properties);
+        self::assertSame(['field_id' => $this->duplicate_field_id, 'default_value' => 1740403363, 'default_value_type' => 1, 'display_time' => 0], $properties);
     }
 }
