@@ -39,7 +39,7 @@ final class FloatFieldSpecificPropertiesDAO extends DataAccessObject implements 
     }
 
     /**
-     * @return array{field_id: int, maxchars: int, size: int, default_value: float | null}
+     * @return null | array{field_id: int, maxchars: int, size: int, default_value: float | null}
      */
     public function searchByFieldId(int $field_id): ?array
     {

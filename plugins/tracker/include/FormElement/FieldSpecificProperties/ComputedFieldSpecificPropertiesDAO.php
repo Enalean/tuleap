@@ -40,7 +40,7 @@ final class ComputedFieldSpecificPropertiesDAO extends DataAccessObject implemen
     }
 
     /**
-     * @return array{field_id: int, target_field_name: string, default_value: int | null}
+     * @return null | array{field_id: int, target_field_name: string, default_value: int | null}
      */
     public function searchByFieldId(int $field_id): ?array
     {

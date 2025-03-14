@@ -39,7 +39,7 @@ final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements D
     }
 
     /**
-     * @return array{field_id: int, rows: int, cols: int, default_value: string}
+     * @return null | array{field_id: int, rows: int, cols: int, default_value: string}
      */
     public function searchByFieldId(int $field_id): ?array
     {
