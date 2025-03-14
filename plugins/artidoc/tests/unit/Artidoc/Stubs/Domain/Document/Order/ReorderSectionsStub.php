@@ -32,7 +32,8 @@ use Tuleap\NeverThrow\Result;
 
 final class ReorderSectionsStub implements ReorderSections
 {
-    private bool $called = false;
+    private bool $called      = false;
+    private int $called_count = 0;
 
     private function __construct(private readonly Ok|Err|null $result)
     {
@@ -56,6 +57,7 @@ final class ReorderSectionsStub implements ReorderSections
     public function reorder(ArtidocWithContext $artidoc, SectionOrder $order): Ok|Err
     {
         $this->called = true;
+        $this->called_count++;
 
         if ($this->result === null) {
             throw new \Exception('Unexpected call to reorder');
@@ -67,5 +69,10 @@ final class ReorderSectionsStub implements ReorderSections
     public function isCalled(): bool
     {
         return $this->called;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->called_count;
     }
 }

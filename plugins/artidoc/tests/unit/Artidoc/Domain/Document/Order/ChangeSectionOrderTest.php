@@ -25,8 +25,12 @@ namespace Tuleap\Artidoc\Domain\Document\Order;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\Level;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
+use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Order\ReorderSectionsStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
+use Tuleap\Artidoc\Stubs\Domain\Document\Section\SearchAllSectionsStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -60,6 +64,18 @@ final class ChangeSectionOrderTest extends TestCase
         $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
             $reorder,
+            new SectionChildrenBuilder(SearchAllSectionsStub::withSections([
+                RetrievedSection::fromArtifact(
+                    [
+                        'id'          => SectionIdentifierStub::create(),
+                        'level'       => Level::One->value,
+                        'item_id'     => 1,
+                        'artifact_id' => 207,
+                        'rank'        => 7,
+                    ]
+                ),
+            ])),
+            new CompareToIsNotAChildSectionChecker(),
         );
 
         $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
@@ -69,6 +85,114 @@ final class ChangeSectionOrderTest extends TestCase
         self::assertTrue($reorder->isCalled());
     }
 
+    public function testHappyPathWithChildren(): void
+    {
+        $PARENT_SECTION_ID = SectionIdentifierStub::create();
+        $CHILD_SECTION_ID  = SectionIdentifierStub::create();
+
+        $reorder = ReorderSectionsStub::withSuccessfulReorder();
+
+        $handler = new ChangeSectionOrder(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
+            $reorder,
+            new SectionChildrenBuilder(SearchAllSectionsStub::withSections([
+                RetrievedSection::fromArtifact(
+                    [
+                        'id'          => $PARENT_SECTION_ID,
+                        'level'       => Level::One->value,
+                        'item_id'     => 1,
+                        'artifact_id' => 207,
+                        'rank'        => 7,
+                    ]
+                ),
+                RetrievedSection::fromArtifact(
+                    [
+                        'id'          => $CHILD_SECTION_ID,
+                        'level'       => Level::Two->value,
+                        'item_id'     => 1,
+                        'artifact_id' => 207,
+                        'rank'        => 8,
+                    ]
+                ),
+            ])),
+            new CompareToIsNotAChildSectionChecker(),
+        );
+
+        $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
+            ->andThen(static fn (SectionOrder $order) => $handler->reorder(1, $order));
+
+        self::assertTrue(Result::isOk($result));
+        self::assertTrue($reorder->getCallCount() === 2);
+    }
+
+    public function testFaultWhenGetSectionChildrenReturnsAFault(): void
+    {
+        $reorder = ReorderSectionsStub::withSuccessfulReorder();
+
+        $handler = new ChangeSectionOrder(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
+            $reorder,
+            new SectionChildrenBuilder(SearchAllSectionsStub::withoutSections()),
+            new CompareToIsNotAChildSectionChecker(),
+        );
+
+        $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
+            ->andThen(static fn (SectionOrder $order) => $handler->reorder(1, $order));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertFalse($reorder->isCalled());
+    }
+
+    public function testFaultWhenCompareToIsAChild(): void
+    {
+        $PARENT_SECTION_ID = SectionIdentifierStub::create();
+        $CHILD_SECTION_ID  = SectionIdentifierStub::create();
+        $CHILD2_SECTION_ID = SectionIdentifierStub::create();
+
+        $reorder = ReorderSectionsStub::withSuccessfulReorder();
+
+        $handler = new ChangeSectionOrder(
+            RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
+            $reorder,
+            new SectionChildrenBuilder(SearchAllSectionsStub::withSections([
+                RetrievedSection::fromArtifact(
+                    [
+                        'id'          => $PARENT_SECTION_ID,
+                        'level'       => Level::One->value,
+                        'item_id'     => 1,
+                        'artifact_id' => 207,
+                        'rank'        => 7,
+                    ]
+                ),
+                RetrievedSection::fromArtifact(
+                    [
+                        'id'          => $CHILD_SECTION_ID,
+                        'level'       => Level::Two->value,
+                        'item_id'     => 1,
+                        'artifact_id' => 207,
+                        'rank'        => 8,
+                    ]
+                ),
+                RetrievedSection::fromArtifact(
+                    [
+                        'id'          => $CHILD2_SECTION_ID,
+                        'level'       => Level::Two->value,
+                        'item_id'     => 1,
+                        'artifact_id' => 207,
+                        'rank'        => 9,
+                    ]
+                ),
+            ])),
+            new CompareToIsNotAChildSectionChecker(),
+        );
+
+        $result = $this->order_builder->build([$PARENT_SECTION_ID->toString()], 'after', $CHILD_SECTION_ID->toString())
+            ->andThen(static fn (SectionOrder $order) => $handler->reorder(1, $order));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertFalse($reorder->isCalled());
+    }
+
     public function testFaultWhenReorderFails(): void
     {
         $reorder = ReorderSectionsStub::withFailedReorder();
@@ -76,6 +200,18 @@ final class ChangeSectionOrderTest extends TestCase
         $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withDocumentUserCanWrite($this->document),
             $reorder,
+            new SectionChildrenBuilder(SearchAllSectionsStub::withSections([
+                RetrievedSection::fromArtifact(
+                    [
+                        'id'          => SectionIdentifierStub::create(),
+                        'level'       => Level::One->value,
+                        'item_id'     => 1,
+                        'artifact_id' => 207,
+                        'rank'        => 7,
+                    ]
+                ),
+            ])),
+            new CompareToIsNotAChildSectionChecker(),
         );
 
         $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
@@ -92,6 +228,8 @@ final class ChangeSectionOrderTest extends TestCase
         $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withoutDocument(),
             $reorder,
+            new SectionChildrenBuilder(SearchAllSectionsStub::withoutSections()),
+            new CompareToIsNotAChildSectionChecker(),
         );
 
         $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)
@@ -108,6 +246,8 @@ final class ChangeSectionOrderTest extends TestCase
         $handler = new ChangeSectionOrder(
             RetrieveArtidocWithContextStub::withDocumentUserCanRead($this->document),
             $reorder,
+            new SectionChildrenBuilder(SearchAllSectionsStub::withoutSections()),
+            new CompareToIsNotAChildSectionChecker(),
         );
 
         $result = $this->order_builder->build([self::SECTION_TO_MOVE_ID], 'after', self::SECTION_REFERENCE_ID)

@@ -40,6 +40,8 @@ describe("SectionsReorderer", () => {
     let stored_section0: ReactiveStoredArtidocSection;
     let stored_section1: ReactiveStoredArtidocSection;
     let stored_section2: ReactiveStoredArtidocSection;
+    let stored_section2_2: ReactiveStoredArtidocSection;
+    let stored_section2_2_2: ReactiveStoredArtidocSection;
     let stored_section3: ReactiveStoredArtidocSection;
     let stored_section4: ReactiveStoredArtidocSection;
     let reorder: MockInstance;
@@ -53,6 +55,12 @@ describe("SectionsReorderer", () => {
         );
         stored_section2 = ReactiveStoredArtidocSectionStub.fromSection(
             ArtifactSectionFactory.override({ title: "C" }),
+        );
+        stored_section2_2 = ReactiveStoredArtidocSectionStub.fromSection(
+            ArtifactSectionFactory.override({ title: "CC", level: 2 }),
+        );
+        stored_section2_2_2 = ReactiveStoredArtidocSectionStub.fromSection(
+            ArtifactSectionFactory.override({ title: "CCC", level: 3 }),
         );
         stored_section3 = ReactiveStoredArtidocSectionStub.fromSection(
             ArtifactSectionFactory.override({ title: "D" }),
@@ -69,6 +77,8 @@ describe("SectionsReorderer", () => {
             stored_section0,
             stored_section1,
             stored_section2,
+            stored_section2_2,
+            stored_section2_2_2,
             stored_section3,
             stored_section4,
         ]);
@@ -81,7 +91,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -90,7 +100,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["B", "A", "C", "D", "E"]);
+            ).toStrictEqual(["B", "A", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -99,16 +109,16 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "E", "D"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "E", "D"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
-        it("should move an artifact section up", async () => {
+        it("should move an artifact section up with its children", async () => {
             await reorderer.moveSectionUp(101, stored_section2);
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "C", "B", "D", "E"]);
+            ).toStrictEqual(["A", "C", "CC", "CCC", "B", "D", "E"]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
                 stored_section2.value.id,
@@ -117,13 +127,13 @@ describe("SectionsReorderer", () => {
             );
         });
 
-        it("should move an artifact section up and call reorder if it is above an artifact section", async () => {
+        it("should move an artifact section up with its children and call reorder if it is above an artifact section", async () => {
             await reorderer.moveSectionUp(101, stored_section2);
             await reorderer.moveSectionUp(101, stored_section2);
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["C", "A", "B", "D", "E"]);
+            ).toStrictEqual(["C", "CC", "CCC", "A", "B", "D", "E"]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
                 stored_section2.value.id,
@@ -144,7 +154,7 @@ describe("SectionsReorderer", () => {
             expect(result.error).toBe(fault);
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
         });
     });
 
@@ -154,7 +164,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -163,7 +173,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "C", "B", "D", "E"]);
+            ).toStrictEqual(["A", "C", "B", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -173,7 +183,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -182,7 +192,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["B", "A", "C", "D", "E"]);
+            ).toStrictEqual(["B", "A", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -192,7 +202,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["B", "C", "A", "D", "E"]);
+            ).toStrictEqual(["B", "C", "A", "CC", "CCC", "D", "E"]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
                 stored_section0.value.id,
@@ -213,7 +223,7 @@ describe("SectionsReorderer", () => {
             expect(result.error).toBe(fault);
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
         });
     });
 
@@ -223,16 +233,16 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
-        it("should move a section before a pending artifact section", async () => {
+        it("should move a section with its children before a pending artifact section", async () => {
             await reorderer.moveSectionBefore(101, stored_section2.value, stored_section1.value);
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "C", "B", "D", "E"]);
+            ).toStrictEqual(["A", "C", "CC", "CCC", "B", "D", "E"]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
                 stored_section2.value.id,
@@ -246,7 +256,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "D", "C", "E"]);
+            ).toStrictEqual(["A", "B", "D", "C", "CC", "CCC", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -255,7 +265,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["C", "A", "B", "D", "E"]);
+            ).toStrictEqual(["C", "CC", "CCC", "A", "B", "D", "E"]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
                 stored_section2.value.id,
@@ -264,12 +274,30 @@ describe("SectionsReorderer", () => {
             );
         });
 
+        it("should not move, when a section is move into its children", async () => {
+            await reorderer.moveSectionBefore(
+                101,
+                stored_section2.value,
+                stored_section2_2_2.value,
+            );
+
+            expect(
+                sections_collection.sections.value.map((section) => section.value.title),
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
+            expect(reorder).toHaveBeenCalledWith(
+                101,
+                stored_section2.value.id,
+                "before",
+                stored_section2_2_2.value.id,
+            );
+        });
+
         it("A before C should move ABCD to BACD", async () => {
             await reorderer.moveSectionBefore(101, stored_section0.value, stored_section2.value);
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["B", "A", "C", "D", "E"]);
+            ).toStrictEqual(["B", "A", "C", "CC", "CCC", "D", "E"]);
 
             expect(reorder).toHaveBeenCalledOnce();
             expect(reorder).toHaveBeenCalledWith(
@@ -296,7 +324,7 @@ describe("SectionsReorderer", () => {
             expect(result.error).toBe(fault);
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
         });
     });
 
@@ -306,7 +334,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -315,7 +343,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "C", "D", "E", "B"]);
+            ).toStrictEqual(["A", "C", "CC", "CCC", "D", "E", "B"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -325,7 +353,7 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
             expect(reorder).not.toHaveBeenCalled();
         });
 
@@ -334,10 +362,24 @@ describe("SectionsReorderer", () => {
 
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["B", "C", "D", "E", "A"]);
+            ).toStrictEqual(["B", "C", "CC", "CCC", "D", "E", "A"]);
             expect(reorder).toHaveBeenCalledWith(
                 101,
                 stored_section0.value.id,
+                "after",
+                stored_section3.value.id,
+            );
+        });
+
+        it("should move an artifact section with its children at the end", async () => {
+            await reorderer.moveSectionAtTheEnd(101, stored_section2.value);
+
+            expect(
+                sections_collection.sections.value.map((section) => section.value.title),
+            ).toStrictEqual(["A", "B", "D", "E", "C", "CC", "CCC"]);
+            expect(reorder).toHaveBeenCalledWith(
+                101,
+                stored_section2.value.id,
                 "after",
                 stored_section3.value.id,
             );
@@ -355,7 +397,7 @@ describe("SectionsReorderer", () => {
             expect(result.error).toBe(fault);
             expect(
                 sections_collection.sections.value.map((section) => section.value.title),
-            ).toStrictEqual(["A", "B", "C", "D", "E"]);
+            ).toStrictEqual(["A", "B", "C", "CC", "CCC", "D", "E"]);
         });
     });
 });

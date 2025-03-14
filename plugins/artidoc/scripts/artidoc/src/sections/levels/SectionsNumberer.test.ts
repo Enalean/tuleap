@@ -63,12 +63,21 @@ const sections_collection = SectionsCollectionStub.fromReactiveStoredArtifactSec
     section_random,
 ]);
 const reorderer = buildSectionsReorderer(sections_collection);
+
 describe("SectionsNumberer", () => {
     let inserter: InsertSections,
         states_collection: SectionsStatesCollection,
         sections_numberer: NumberSections;
 
     beforeEach(() => {
+        sections_collection.sections.value = [
+            section_requirements,
+            section_radiation,
+            section_advanced,
+            section_life,
+            section_random,
+        ];
+
         sections_numberer = getSectionsNumberer(sections_collection);
         states_collection = SectionsStatesCollectionStub.build();
         vi.spyOn(rest, "reorderSections").mockReturnValue(okAsync({} as Response));
@@ -127,7 +136,11 @@ describe("SectionsNumberer", () => {
         });
 
         it("should adjust section numbers when a level 1 section is moved to top", async () => {
-            await reorderer.moveSectionBefore(101, section_radiation.value, section_life.value);
+            await reorderer.moveSectionBefore(
+                101,
+                section_radiation.value,
+                section_requirements.value,
+            );
             sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
@@ -136,9 +149,9 @@ describe("SectionsNumberer", () => {
                 ]),
             ).toStrictEqual([
                 ["1. ", "Radiation"],
+                ["1.1. ", "Advanced spacecraft"],
                 ["1.1.1. ", "Life support"],
                 ["2. ", "Requirements"],
-                ["2.1. ", "Advanced spacecraft"],
                 ["3. ", "Random stuff"],
             ]);
         });
@@ -152,11 +165,11 @@ describe("SectionsNumberer", () => {
                     section.value.title,
                 ]),
             ).toStrictEqual([
-                ["1. ", "Radiation"],
-                ["2. ", "Requirements"],
-                ["2.1.1. ", "Life support"],
-                ["2.2. ", "Advanced spacecraft"],
+                ["1. ", "Requirements"],
+                ["2. ", "Radiation"],
+                ["2.1. ", "Advanced spacecraft"],
                 ["3. ", "Random stuff"],
+                ["3.1.1. ", "Life support"],
             ]);
         });
 
@@ -169,16 +182,20 @@ describe("SectionsNumberer", () => {
                     section.value.title,
                 ]),
             ).toStrictEqual([
-                ["1. ", "Radiation"],
-                ["2. ", "Requirements"],
-                ["2.1.1. ", "Life support"],
+                ["1. ", "Requirements"],
+                ["2. ", "Radiation"],
                 ["3. ", "Random stuff"],
                 ["3.1. ", "Advanced spacecraft"],
+                ["3.1.1. ", "Life support"],
             ]);
         });
 
         it("should adjust section numbers when a level 2 section is moved to top", async () => {
-            await reorderer.moveSectionBefore(101, section_advanced.value, section_radiation.value);
+            await reorderer.moveSectionBefore(
+                101,
+                section_advanced.value,
+                section_requirements.value,
+            );
             sections_numberer.updateSectionsLevels();
             expect(
                 sections_collection.sections.value.map((section) => [
@@ -187,9 +204,9 @@ describe("SectionsNumberer", () => {
                 ]),
             ).toStrictEqual([
                 ["1.1. ", "Advanced spacecraft"],
-                ["2. ", "Radiation"],
-                ["3. ", "Requirements"],
-                ["3.1.1. ", "Life support"],
+                ["1.1.1. ", "Life support"],
+                ["2. ", "Requirements"],
+                ["3. ", "Radiation"],
                 ["4. ", "Random stuff"],
             ]);
         });
@@ -201,15 +218,6 @@ describe("SectionsNumberer", () => {
             title: "Technologies section",
         });
 
-        beforeEach(() => {
-            sections_collection.sections.value = [
-                section_requirements,
-                section_radiation,
-                section_advanced,
-                section_life,
-                section_random,
-            ];
-        });
         it("should create a section with level 1 when section is inserted at the beginning", () => {
             inserter.insertSection(new_freetext_section, { before: section_requirements.value.id });
 
@@ -303,16 +311,6 @@ describe("SectionsNumberer", () => {
 
     describe("Create a new artifact section", () => {
         const new_artidoc_section = PendingArtifactSectionFactory.create();
-
-        beforeEach(() => {
-            sections_collection.sections.value = [
-                section_requirements,
-                section_radiation,
-                section_advanced,
-                section_life,
-                section_random,
-            ];
-        });
 
         it("should create a section with level 1 when section is inserted at the beginning", () => {
             inserter.insertSection(new_artidoc_section, { before: section_requirements.value.id });

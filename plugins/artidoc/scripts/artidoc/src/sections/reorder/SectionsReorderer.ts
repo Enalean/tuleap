@@ -31,6 +31,7 @@ import type {
     ReactiveStoredArtidocSection,
 } from "@/sections/SectionsCollection";
 import { CannotReorderSectionsFault } from "@/sections/reorder/CannotReorderSectionsFault";
+import { getSectionsStructurer } from "@/sections/reorder/SectionsStructurer";
 
 export type SectionsReorderer = {
     moveSectionUp(
@@ -55,6 +56,8 @@ export type SectionsReorderer = {
 export const buildSectionsReorderer = (
     sections_collection: SectionsCollection,
 ): SectionsReorderer => {
+    const sections_structurer = getSectionsStructurer(sections_collection);
+
     function getNextArtifactOrFreetextSection(start: number): Option<ArtidocSection> {
         for (let i = start; i < sections_collection.sections.value.length; i++) {
             const next_section = sections_collection.sections.value[i];
@@ -124,11 +127,14 @@ export const buildSectionsReorderer = (
 
                 const sections_before_move = [...sections_collection.sections.value];
 
-                sections_collection.sections.value.splice(index, 1);
-                sections_collection.sections.value.splice(index - 1, 0, section);
+                const children = sections_structurer.getSectionChildren(section.value);
+                const total_sections_to_move = [section, ...children];
+
+                sections_collection.sections.value.splice(index, total_sections_to_move.length);
+                sections_collection.sections.value.splice(index - 1, 0, ...total_sections_to_move);
 
                 return moveArtifactOrFreetextSectionBeforeSibling(
-                    index,
+                    index + children.length,
                     document_id,
                     section.value,
                 ).mapErr((fault) => {
@@ -153,8 +159,11 @@ export const buildSectionsReorderer = (
 
                 const sections_before_move = [...sections_collection.sections.value];
 
-                sections_collection.sections.value.splice(index, 1);
-                sections_collection.sections.value.splice(index + 1, 0, section);
+                const children = sections_structurer.getSectionChildren(section.value);
+                const total_sections_to_move = [section, ...children];
+
+                sections_collection.sections.value.splice(index, total_sections_to_move.length);
+                sections_collection.sections.value.splice(index + 1, 0, ...total_sections_to_move);
 
                 return moveArtifactOrFreetextSectionAfterSibling(
                     index,
@@ -193,17 +202,42 @@ export const buildSectionsReorderer = (
                         }
 
                         const section = sections_collection.sections.value[index_section];
+                        const children = sections_structurer.getSectionChildren(section.value);
+
+                        if (
+                            children.some(
+                                (child) => child.value.internal_id === next_sibling.internal_id,
+                            )
+                        ) {
+                            return reorderSections(
+                                document_id,
+                                section.value.id,
+                                "before",
+                                sections_collection.sections.value[index_sibling].value.id,
+                            );
+                        }
+
+                        const total_sections_to_move = [section, ...children];
 
                         const sections_before_move = [...sections_collection.sections.value];
 
                         const new_section_index =
-                            index_section > index_sibling ? index_sibling : index_sibling - 1;
+                            index_section > index_sibling
+                                ? index_sibling
+                                : index_sibling - total_sections_to_move.length;
 
-                        sections_collection.sections.value.splice(index_section, 1);
-                        sections_collection.sections.value.splice(new_section_index, 0, section);
+                        sections_collection.sections.value.splice(
+                            index_section,
+                            total_sections_to_move.length,
+                        );
+                        sections_collection.sections.value.splice(
+                            new_section_index,
+                            0,
+                            ...total_sections_to_move,
+                        );
 
                         return moveArtifactOrFreetextSectionBeforeSibling(
-                            new_section_index + 1,
+                            new_section_index + children.length + 1,
                             document_id,
                             section.value,
                         ).mapErr((fault) => {
@@ -236,11 +270,17 @@ export const buildSectionsReorderer = (
 
                 const sections_before_move = [...sections_collection.sections.value];
                 const section = sections_collection.sections.value[index_section];
+                const children = sections_structurer.getSectionChildren(section.value);
+                const total_sections_to_move = [section, ...children];
 
-                sections_collection.sections.value.splice(index_section, 1);
-                sections_collection.sections.value.push(section);
+                sections_collection.sections.value.splice(
+                    index_section,
+                    total_sections_to_move.length,
+                );
+                sections_collection.sections.value.push(...total_sections_to_move);
 
-                const penultimate_index = sections_collection.sections.value.length - 2;
+                const penultimate_index =
+                    sections_collection.sections.value.length - total_sections_to_move.length - 1;
                 return moveArtifactOrFreetextSectionAfterSibling(
                     penultimate_index,
                     document_id,

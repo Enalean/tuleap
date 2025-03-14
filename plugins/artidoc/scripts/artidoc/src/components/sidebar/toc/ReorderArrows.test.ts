@@ -29,13 +29,21 @@ import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { SectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 import { SectionsReordererStub } from "@/sections/stubs/SectionsReordererStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import type { SectionsStructurer } from "@/sections/reorder/SectionsStructurer";
+import { getSectionsStructurer } from "@/sections/reorder/SectionsStructurer";
+import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 
 describe("ReorderArrows", () => {
-    let section: ReactiveStoredArtidocSection, sections_reorderer: SectionsReorderer;
+    let section: ReactiveStoredArtidocSection,
+        sections_reorderer: SectionsReorderer,
+        sections_structurer: SectionsStructurer;
 
     beforeEach(() => {
         section = ReactiveStoredArtidocSectionStub.fromSection(ArtifactSectionFactory.create());
         sections_reorderer = SectionsReordererStub.withGreatSuccess();
+        sections_structurer = getSectionsStructurer(
+            SectionsCollectionStub.fromReactiveStoredArtifactSections([section]),
+        );
     });
 
     function getWrapper({
@@ -51,6 +59,7 @@ describe("ReorderArrows", () => {
                 is_last,
                 section,
                 sections_reorderer,
+                sections_structurer,
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -105,7 +114,7 @@ describe("ReorderArrows", () => {
                     throw new Error("Expected a moving-section-up-or-down event");
                 }
 
-                expect(event[0]).toStrictEqual([section.value]);
+                expect(event[0][0]).toStrictEqual([section.value]);
             },
         );
 
@@ -121,7 +130,7 @@ describe("ReorderArrows", () => {
                     throw new Error("Expected a moved-section-up-or-down event");
                 }
 
-                expect(event[0]).toStrictEqual([section.value]);
+                expect(event[0][0]).toStrictEqual([section.value]);
             },
         );
 

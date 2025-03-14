@@ -33,16 +33,32 @@ final readonly class ChangeSectionOrder
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
         private ReorderSections $reorder_sections,
+        private SectionChildrenBuilder $section_children_builder,
+        private CompareToIsNotAChildSectionChecker $compare_to_checker,
     ) {
     }
 
     /**
-     * @return Ok<null>|Err<Fault>
+     * @return Ok<void>|Err<Fault>
      */
     public function reorder(int $id, SectionOrder $order): Ok|Err
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanWrite($id)
-            ->andThen(fn (ArtidocWithContext $artidoc) => $this->reorder_sections->reorder($artidoc, $order));
+            ->andThen(function (ArtidocWithContext $artidoc) use ($order) {
+                return $this->section_children_builder->getSectionChildren($order->identifier, $artidoc)
+                    ->andThen(fn (array $children) => $this->compare_to_checker->checkCompareToIsNotAChildSection($children, $order->compared_to))
+                    ->andThen(function (array $children) use ($artidoc, $order) {
+                        $previous_section = $order->identifier;
+                        return $this->reorder_sections->reorder($artidoc, $order)
+                            ->map(function () use ($previous_section, $children, $artidoc) {
+                                foreach ($children as $child_section_id) {
+                                    $child_order      = SectionOrder::build($child_section_id, Direction::After, $previous_section);
+                                    $previous_section = $child_section_id;
+                                    $this->reorder_sections->reorder($artidoc, $child_order);
+                                }
+                            });
+                    });
+            });
     }
 }
