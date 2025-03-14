@@ -1,0 +1,21 @@
+{
+  "name": "prosemirror-architecture",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open"
+  },
+  "dependencies": {
+    "@fontsource/open-sans": "^5.0.29",
+    "@slidev/theme-default": "^0.25.0"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^51.4.0",
+    "@slidev/theme-default": "^0.25.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/helpers": "^7.26.10"
+    }
+  }
+}
