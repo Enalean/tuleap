@@ -41,7 +41,6 @@ import {
     useOpenAddExistingSectionModalBus,
 } from "@/composables/useOpenAddExistingSectionModalBus";
 import { SectionsInserterStub } from "@/sections/stubs/SectionsInserterStub";
-import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -68,7 +67,6 @@ describe("AddNewSectionButton", () => {
                     [CONFIGURATION_STORE.valueOf()]: configuration_store,
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: configuration_bus,
                     [OPEN_ADD_EXISTING_SECTION_MODAL_BUS.valueOf()]: add_existing_section_bus,
-                    [IS_FREETEXT_ALLOWED.valueOf()]: true,
                 },
             },
         });

@@ -39,7 +39,6 @@
                 class="tlp-dropdown-menu-item"
                 v-on:click="addNewFreetextSection"
                 data-test="add-freetext-section"
-                v-if="is_freetext_allowed"
             >
                 {{ $gettext("Add freetext") }}
             </button>
@@ -77,7 +76,6 @@ import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import type { InsertSections } from "@/sections/insert/SectionsInserter";
-import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
 
 const props = defineProps<{
     position: PositionForSection;
@@ -87,8 +85,6 @@ const props = defineProps<{
 const configuration_store = strictInject(CONFIGURATION_STORE);
 
 const { $gettext, interpolate } = useGettext();
-
-const is_freetext_allowed = strictInject(IS_FREETEXT_ALLOWED);
 
 const add_new_section_label = $gettext("Add new section");
 const add_new_requirement_label = computed(() =>
