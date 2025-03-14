@@ -62,14 +62,12 @@ import type { SectionsCollection } from "@/sections/SectionsCollection";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import { createHeadingButton } from "@/toolbar/create-heading-button";
 import { HEADINGS_BUTTON_STATE } from "@/headings-button-state-injection-key";
-import { IS_FREETEXT_ALLOWED } from "@/is-freetext-allowed";
 import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 import { getUpdateSectionLevelEventHandler } from "@/sections/levels/UpdateSectionLevelEventHandler";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 const headings_button_state = strictInject(HEADINGS_BUTTON_STATE);
 const controller = buildToolbarController(toolbar_bus);
-const is_freetext_allowed = strictInject(IS_FREETEXT_ALLOWED);
 
 const toolbar = ref<HTMLElement | undefined>();
 
@@ -78,28 +76,23 @@ const props = defineProps<{
     states_collection: SectionsStatesCollection;
 }>();
 
-const headings_button = is_freetext_allowed
-    ? createHeadingButton(headings_button_state.active_section.value)
-    : undefined;
+const headings_button = createHeadingButton(headings_button_state.active_section.value);
 
-if (headings_button) {
-    const level_update_handler = getUpdateSectionLevelEventHandler(
-        headings_button,
-        headings_button_state,
-        props.states_collection,
-        getSectionsNumberer(props.sections),
-    );
+const level_update_handler = getUpdateSectionLevelEventHandler(
+    headings_button,
+    headings_button_state,
+    props.states_collection,
+    getSectionsNumberer(props.sections),
+);
 
-    headings_button.addEventListener("update-section-level", level_update_handler.handle);
+headings_button.addEventListener("update-section-level", level_update_handler.handle);
 
-    watch(
-        () => headings_button_state.active_section.value,
-        (active_section) => {
-            headings_button.section =
-                active_section !== undefined ? active_section.value : undefined;
-        },
-    );
-}
+watch(
+    () => headings_button_state.active_section.value,
+    (active_section) => {
+        headings_button.section = active_section !== undefined ? active_section.value : undefined;
+    },
+);
 
 const toolbar_deactivator = getOnClickOutsideToolbarDeactivator(
     document,
