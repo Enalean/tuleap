@@ -62,42 +62,21 @@ describe(`InvalidMappingCell`, () => {
         const column = wrapper.vm.$store.state.column.columns[0];
 
         wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "column/pointerEntersColumnWithCheck",
+            column,
+        );
     });
 
-    it(`does not inform the pointerenter when the column is expanded`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
-
-        wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
-    });
-
-    it(`informs the pointerleave when the column is collapsed`, () => {
+    it(`informs the pointerleave`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true);
         const column = wrapper.vm.$store.state.column.columns[0];
 
         wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", column);
-    });
-
-    it(`does not inform the pointerleave when the column is expanded`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
-
-        wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
-    });
-
-    it(`when the column is collapsed and a card is being dragged,
-        it won't inform the pointerleave
-        because too many events are triggered and we want to keep the collapsed column styling`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
-        wrapper.vm.$store.state.card_being_dragged = {
-            tracker_id: 12,
-            card_id: 15,
-        };
-
-        wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "column/pointerLeavesColumnWithCheck",
+            { column, card_being_dragged: null },
+        );
     });
 
     it(`expands the column when user clicks on the collapsed column cell`, () => {
