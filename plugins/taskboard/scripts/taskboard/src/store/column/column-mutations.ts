@@ -26,23 +26,14 @@ export function collapseColumn(state: ColumnState, column: ColumnDefinition): vo
 export function expandColumn(state: ColumnState, column: ColumnDefinition): void {
     findColumn(state, column).is_collapsed = false;
 }
-export function pointerEntersColumn(state: ColumnState, column: ColumnDefinition): void {
-    findColumn(state, column).has_hover = true;
-}
-export function pointerLeavesColumn(state: ColumnState, column: ColumnDefinition): void {
-    findColumn(state, column).has_hover = false;
-}
 
-export function pointerEntersColumnWithCheck(state: ColumnState, column: ColumnDefinition): void {
+export function pointerEntersColumn(state: ColumnState, column: ColumnDefinition): void {
     if (!column.is_collapsed) {
         return;
     }
     findColumn(state, column).has_hover = true;
 }
-export function pointerLeavesColumnWithCheck(
-    state: ColumnState,
-    payload: PointerLeavesColumnPayload,
-): void {
+export function pointerLeavesColumn(state: ColumnState, payload: PointerLeavesColumnPayload): void {
     if (!payload.column.is_collapsed) {
         return;
     }

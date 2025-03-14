@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Getter, Mutation, namespace } from "vuex-class";
+import { Getter, Mutation, namespace, State } from "vuex-class";
 import type {
     DragCallbackParameter,
     DragDropCallbackParameter,
@@ -54,6 +54,8 @@ import TaskBoardBody from "./Body/TaskBoardBody.vue";
 import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
 import ErrorModal from "../GlobalError/ErrorModal.vue";
 import { KeyboardShortcuts } from "../../keyboard-navigation/keyboard-navigation";
+import type { DraggedCard } from "../../store/type";
+import type { PointerLeavesColumnPayload } from "../../store/column/type";
 
 const error = namespace("error");
 const column = namespace("column");
@@ -66,11 +68,14 @@ export default class TaskBoard extends Vue {
     @error.State
     readonly has_modal_error!: boolean;
 
+    @State
+    readonly card_being_dragged!: DraggedCard | null;
+
     @column.Mutation
     readonly pointerEntersColumn!: (column: ColumnDefinition) => void;
 
     @column.Mutation
-    readonly pointerLeavesColumn!: (column: ColumnDefinition) => void;
+    readonly pointerLeavesColumn!: (payload: PointerLeavesColumnPayload) => void;
 
     @swimlane.Getter
     readonly cards_in_cell!: (
@@ -129,20 +134,11 @@ export default class TaskBoard extends Vue {
                 if (!column) {
                     return;
                 }
-                if (column.is_collapsed) {
-                    this.pointerEntersColumn(column);
-                }
+                this.pointerEntersColumn(column);
             },
             onDragLeave: (context: DragDropCallbackParameter): void => {
                 const { target_dropzone } = context;
                 delete target_dropzone.dataset.drekOver;
-                const column = this.column_of_cell(target_dropzone);
-                if (!column) {
-                    return;
-                }
-                if (column.is_collapsed) {
-                    this.pointerLeavesColumn(column);
-                }
             },
             onDrop: this.onDropHandler,
             cleanupAfterDragCallback: this.cleanupAfterDragCallback,

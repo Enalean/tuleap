@@ -62,10 +62,7 @@ describe(`InvalidMappingCell`, () => {
         const column = wrapper.vm.$store.state.column.columns[0];
 
         wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "column/pointerEntersColumnWithCheck",
-            column,
-        );
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
     });
 
     it(`informs the pointerleave`, () => {
@@ -73,10 +70,10 @@ describe(`InvalidMappingCell`, () => {
         const column = wrapper.vm.$store.state.column.columns[0];
 
         wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "column/pointerLeavesColumnWithCheck",
-            { column, card_being_dragged: null },
-        );
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", {
+            column,
+            card_being_dragged: null,
+        });
     });
 
     it(`expands the column when user clicks on the collapsed column cell`, () => {

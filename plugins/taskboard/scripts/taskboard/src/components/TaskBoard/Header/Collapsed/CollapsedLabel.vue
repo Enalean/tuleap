@@ -1,8 +1,8 @@
 <template>
     <div
         class="taskboard-header-collapsed-label"
-        v-on:pointerenter="pointerEntersColumnWithCheck(column)"
-        v-on:pointerleave="pointerLeavesColumnWithCheck({ column, card_being_dragged })"
+        v-on:pointerenter="pointerEntersColumn(column)"
+        v-on:pointerleave="pointerLeavesColumn({ column, card_being_dragged })"
         v-on:click="expandColumn(column)"
     >
         <cards-in-column-count v-bind:column="column" />
@@ -31,10 +31,10 @@ export default class CollapsedLabel extends Vue {
     readonly card_being_dragged!: DraggedCard | null;
 
     @column_store.Mutation
-    readonly pointerEntersColumnWithCheck!: (column: ColumnDefinition) => void;
+    readonly pointerEntersColumn!: (column: ColumnDefinition) => void;
 
     @column_store.Mutation
-    readonly pointerLeavesColumnWithCheck!: (payload: PointerLeavesColumnPayload) => void;
+    readonly pointerLeavesColumn!: (payload: PointerLeavesColumnPayload) => void;
 
     @Prop({ required: true })
     readonly column!: ColumnDefinition;

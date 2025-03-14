@@ -137,8 +137,7 @@ describe("TaskBoard", () => {
                 expect(target_dropzone.dataset.drekOver).toBe("1");
             });
 
-            it(`when the column of the dropzone is collapsed,
-                it will inform the pointerenter`, () => {
+            it(`will inform the pointerenter`, () => {
                 const column = { is_collapsed: true } as ColumnDefinition;
                 wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
 
@@ -148,16 +147,6 @@ describe("TaskBoard", () => {
                     "column/pointerEntersColumn",
                     column,
                 );
-            });
-
-            it(`when the column of the dropzone is expanded,
-                it won't inform the pointerenter`, () => {
-                const column = { is_collapsed: false } as ColumnDefinition;
-                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
-
-                dragEnterCallback(payload);
-
-                expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
             });
         });
 
@@ -178,29 +167,6 @@ describe("TaskBoard", () => {
                 dragLeaveCallback(payload);
 
                 expect(target_dropzone.dataset.drekOver).toBeUndefined();
-            });
-
-            it(`when the column of the dropzone is collapsed,
-                it will inform the pointerleave`, () => {
-                const column = { is_collapsed: true } as ColumnDefinition;
-                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
-
-                dragLeaveCallback(payload);
-
-                expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                    "column/pointerLeavesColumn",
-                    column,
-                );
-            });
-
-            it(`when the column of the dropzone is expanded,
-                it won't inform the pointerleave`, () => {
-                const column = { is_collapsed: false } as ColumnDefinition;
-                wrapper.vm.$store.getters.column_of_cell = (): ColumnDefinition => column;
-
-                dragLeaveCallback(payload);
-
-                expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
             });
         });
     });
