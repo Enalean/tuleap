@@ -41,7 +41,7 @@ final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implemen
     }
 
     /**
-     * @return array{field_id: int, static_value: string}
+     * @return null | array{field_id: int, static_value: string}
      */
     public function searchByFieldId(int $field_id): ?array
     {

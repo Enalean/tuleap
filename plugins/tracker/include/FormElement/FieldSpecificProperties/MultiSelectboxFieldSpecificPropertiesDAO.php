@@ -32,7 +32,7 @@ final class MultiSelectboxFieldSpecificPropertiesDAO extends DataAccessObject im
     }
 
     /**
-     * @return array{field_id: int, size: int}
+     * @return null | array{field_id: int, size: int}
      */
     public function searchByFieldId(int $field_id): ?array
     {

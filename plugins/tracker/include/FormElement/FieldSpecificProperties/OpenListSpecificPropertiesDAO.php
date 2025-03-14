@@ -41,7 +41,7 @@ final class OpenListSpecificPropertiesDAO extends DataAccessObject implements De
     }
 
     /**
-     * @return array{field_id: int, hint: string}
+     * @return null | array{field_id: int, hint: string}
      */
     public function searchByFieldId(int $field_id): ?array
     {
