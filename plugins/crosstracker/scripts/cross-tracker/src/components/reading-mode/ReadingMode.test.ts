@@ -44,6 +44,7 @@ import type {
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import mitt from "mitt";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
+import DeleteQueryButton from "./DeleteQueryButton.vue";
 
 describe("ReadingMode", () => {
     let backend_query: Query,
@@ -220,6 +221,20 @@ describe("ReadingMode", () => {
 
             expect(element.exists()).toBe(true);
             expect(element.text()).toBe("a great reading query");
+        });
+    });
+
+    describe("render delete button", () => {
+        it("does not show the delete button if user not admin", () => {
+            is_user_admin = false;
+            const wrapper = instantiateComponent();
+            expect(wrapper.findComponent(DeleteQueryButton).exists()).toBe(false);
+        });
+
+        it("shows the delete button if user is admin", () => {
+            is_user_admin = true;
+            const wrapper = instantiateComponent();
+            expect(wrapper.findComponent(DeleteQueryButton).exists()).toBe(true);
         });
     });
 });

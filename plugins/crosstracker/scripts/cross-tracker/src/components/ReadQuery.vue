@@ -74,10 +74,13 @@ import { ReportRetrievalFault } from "../domain/ReportRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
 import type {
     CreatedQueryEvent,
+    DeletedQueryEvent,
     SwitchQueryEvent,
     ToggleQueryDetailsEvent,
 } from "../helpers/emitter-provider";
 import {
+    REFRESH_ARTIFACTS_EVENT,
+    QUERY_DELETED_EVENT,
     UPDATE_WIDGET_TITLE_EVENT,
     TOGGLE_QUERY_DETAILS_EVENT,
     CLEAR_FEEDBACK_EVENT,
@@ -178,6 +181,7 @@ function loadBackendReport(): void {
 onMounted(() => {
     emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
     emitter.on(NEW_QUERY_CREATED_EVENT, handleAddQuery);
+    emitter.on(QUERY_DELETED_EVENT, handleDeleteQuery);
     emitter.on(TOGGLE_QUERY_DETAILS_EVENT, handleToggleQueryDetails);
     loadBackendReport();
 });
@@ -186,6 +190,7 @@ onBeforeUnmount(() => {
     emitter.off(SWITCH_QUERY_EVENT);
     emitter.off(NEW_QUERY_CREATED_EVENT);
     emitter.off(TOGGLE_QUERY_DETAILS_EVENT);
+    emitter.off(QUERY_DELETED_EVENT);
 });
 
 function handleToggleQueryDetails(toggle: ToggleQueryDetailsEvent): void {
@@ -194,6 +199,21 @@ function handleToggleQueryDetails(toggle: ToggleQueryDetailsEvent): void {
 
 function handleAddQuery(new_query: CreatedQueryEvent): void {
     queries.value = queries.value.concat([new_query.created_query]);
+}
+
+function handleDeleteQuery(event: DeletedQueryEvent): void {
+    queries.value = queries.value.filter((query) => query.id !== event.deleted_query.id);
+    if (queries.value.length === 0) {
+        report_state.value = "edit-query";
+        if (is_multiple_query_supported) {
+            emit("switch-to-create-query-pane");
+        }
+    } else {
+        const query = queries.value[0];
+        emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
+        emitter.emit(SWITCH_QUERY_EVENT, { query });
+        emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: query.title });
+    }
 }
 
 function handleSwitchWriting(): void {

@@ -42,8 +42,9 @@
             }}</code>
         </tlp-syntax-highlighting>
     </div>
-    <div v-if="is_xslx_export_allowed" class="export-button">
-        <export-x-l-s-x-button v-bind:current_query="reading_query" />
+    <div>
+        <delete-query-button v-if="is_user_admin" v-bind:current_query="reading_query" />
+        <export-x-l-s-x-button v-if="is_xslx_export_allowed" v-bind:current_query="reading_query" />
     </div>
     <div class="actions" v-if="report_state === 'result-preview'">
         <button
@@ -90,6 +91,7 @@ import {
 import { SaveReportFault } from "../../domain/SaveReportFault";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
+import DeleteQueryButton from "./DeleteQueryButton.vue";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);

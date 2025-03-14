@@ -20,7 +20,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
-import { createQuery, getQueries, updateQuery } from "./rest-querier";
+import { createQuery, deleteQuery, getQueries, updateQuery } from "./rest-querier";
 
 describe("rest-querier", () => {
     describe("getQueries()", () => {
@@ -112,6 +112,29 @@ describe("rest-querier", () => {
             }
             expect(result.value.id).toBe(query_id);
             expect(result.value.tql_query).toBe(query.tql_query);
+        });
+    });
+
+    describe("deleteQuery()", () => {
+        it(`will query the REST API and will return nothing`, async () => {
+            const query = {
+                id: "0194d59b-f37b-73e1-a553-cf143a3c1203",
+                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
+                title: "My query",
+                description: "My description",
+                is_default: false,
+            };
+            const del = vi.spyOn(fetch_result, "del").mockReturnValue(okAsync({} as Response));
+
+            const result = await deleteQuery(query);
+
+            expect(del).toHaveBeenCalledWith(
+                fetch_result.uri`/api/v1/crosstracker_query/${query.id}`,
+            );
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toBe(null);
         });
     });
 });

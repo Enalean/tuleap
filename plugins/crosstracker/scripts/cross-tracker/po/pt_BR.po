@@ -27,6 +27,9 @@ msgstr ""
 msgid "An error occurred: %{error}"
 msgstr ""
 
+msgid "Are you sure you want to permanently delete it?"
+msgstr ""
+
 msgid "Artifact"
 msgstr ""
 
@@ -45,10 +48,19 @@ msgstr ""
 msgid "Create new query"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
+msgid "Delete the query"
+msgstr ""
+
 msgid "Description"
 msgstr "Descrição"
 
 msgid "Edit"
+msgstr ""
+
+msgid "Error while deleting the query: %{error}"
 msgstr ""
 
 msgid "Error while exporting the report as .xlsx: %{error}"
@@ -172,6 +184,13 @@ msgstr ""
 msgid "There is no artifact matching the query."
 msgstr ""
 
+msgid ""
+"This action cannot be undone, and you will no longer have a default query."
+msgstr ""
+
+msgid "This action cannot be undone."
+msgstr ""
+
 msgid "Title"
 msgstr "Título"
 
@@ -180,6 +199,9 @@ msgstr ""
 
 msgid "User avatar"
 msgstr "Avatar do Usuário"
+
+msgid "Warning: This query is set as the default."
+msgstr ""
 
 msgid "Write your description"
 msgstr ""

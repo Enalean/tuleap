@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, postJSON, putJSON, uri } from "@tuleap/fetch-result";
+import { del, getJSON, postJSON, putJSON, uri } from "@tuleap/fetch-result";
 import { type ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { Query } from "../type";
@@ -71,4 +71,8 @@ export function createQuery(query: Query, widget_id: number): ResultAsync<Query,
             is_default: query.is_default,
         };
     });
+}
+
+export function deleteQuery(query: Query): ResultAsync<null, Fault> {
+    return del(uri`/api/v1/crosstracker_query/${query.id}`).map(() => null);
 }
