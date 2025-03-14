@@ -32,6 +32,7 @@ import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBusStore,
 } from "@/stores/useOpenConfigurationModalBusStore";
+import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 
 describe("ConfigurationModal", () => {
     function getWrapper(
@@ -44,6 +45,7 @@ describe("ConfigurationModal", () => {
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]: store,
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
+                    [ARE_FIELDS_ENABLED.valueOf()]: true,
                 },
             },
         });
