@@ -36,37 +36,50 @@ const isCurrentPositionInsideAnAncestorNodeWithType = (
     }
     return false;
 };
+
 export const EnableOrDisableToolbarPlugin = (
     toolbar_bus: ToolbarBus,
     headings_button_state: HeadingsButtonState,
     section: ReactiveStoredArtidocSection,
-): Plugin =>
-    new Plugin({
+): Plugin => {
+    const enableOrDisableToolbarButtons = (view: EditorView): void => {
+        const { selection, schema } = view.state;
+        const is_cursor_in_description = isCurrentPositionInsideAnAncestorNodeWithType(
+            selection.$from,
+            schema.nodes.artidoc_section_description,
+        );
+
+        if (is_cursor_in_description) {
+            toolbar_bus.enableToolbar();
+            headings_button_state.deactivateButton();
+            return;
+        }
+
+        toolbar_bus.disableToolbar();
+        headings_button_state.activateButtonForSection(section);
+    };
+
+    return new Plugin({
         key: new PluginKey("enable-or-disable-toolbar"),
+        props: {
+            handleDOMEvents: {
+                focus: (view): void => {
+                    enableOrDisableToolbarButtons(view);
+                },
+            },
+        },
         view(): PluginView {
             return {
-                update: (view: EditorView): void => {
+                update: (view): void => {
                     if (!view.hasFocus()) {
                         toolbar_bus.disableToolbar();
                         headings_button_state.deactivateButton();
                         return;
                     }
 
-                    const { selection, schema } = view.state;
-                    const is_cursor_in_description = isCurrentPositionInsideAnAncestorNodeWithType(
-                        selection.$from,
-                        schema.nodes.artidoc_section_description,
-                    );
-
-                    if (is_cursor_in_description) {
-                        toolbar_bus.enableToolbar();
-                        headings_button_state.deactivateButton();
-                        return;
-                    }
-
-                    toolbar_bus.disableToolbar();
-                    headings_button_state.activateButtonForSection(section);
+                    enableOrDisableToolbarButtons(view);
                 },
             };
         },
     });
+};
