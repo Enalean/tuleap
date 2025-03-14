@@ -23,44 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReferenceManager;
+use Tracker;
+use TrackerDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
+use Tuleap\Tracker\RetrieveTracker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerIsInvalidException;
-use function PHPUnit\Framework\assertEquals;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerCreationDataCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TrackerDao
-     */
-    private $tracker_dao;
-    /**
-     * @var TrackerCreationDataChecker
-     */
-    private $checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
-     */
-    private $pending_jira_dao;
+    private RetrieveTracker&MockObject $tracker_factory;
+    private TrackerDao&MockObject $tracker_dao;
+    private TrackerCreationDataChecker $checker;
+    private ReferenceManager&MockObject $reference_manager;
+    private PendingJiraImportDao&MockObject $pending_jira_dao;
 
     protected function setUp(): void
     {
-        $this->reference_manager = \Mockery::mock(\ReferenceManager::class);
-        $this->tracker_dao       = \Mockery::mock(\TrackerDao::class);
-        $this->pending_jira_dao  = \Mockery::mock(PendingJiraImportDao::class);
-        $this->tracker_factory   = \Mockery::mock(\TrackerFactory::class);
+        $this->reference_manager = $this->createMock(ReferenceManager::class);
+        $this->tracker_dao       = $this->createMock(TrackerDao::class);
+        $this->pending_jira_dao  = $this->createMock(PendingJiraImportDao::class);
+        $this->tracker_factory   = $this->createMock(RetrieveTracker::class);
         $this->checker           = new TrackerCreationDataChecker(
             $this->reference_manager,
             $this->tracker_dao,
@@ -75,11 +69,11 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'Bugs';
         $shortname   = 'bugs_with_a_very_very_long_shortname';
 
-        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
-        $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(false);
+        $this->tracker_dao->method('isShortNameExists')->willReturn(false);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerNameExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerShortNameExist')->willReturn(false);
+        $this->reference_manager->method('_isKeywordExists')->willReturn(false);
 
         $this->checker->checkAtProjectCreation(
             $project_id,
@@ -94,7 +88,7 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $shortname   = 'bugs_with_a_very_very_long_shortname';
         $template_id = '25';
-        $user        = \Mockery::mock(\PFUser::class);
+        $user        = UserTestBuilder::buildWithDefaults();
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Tracker shortname length must be inferior to 25 characters.');
@@ -109,9 +103,9 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $shortname   = 'bugs';
         $template_id = '12';
-        $user        = \Mockery::mock(\PFUser::class);
+        $user        = UserTestBuilder::buildWithDefaults();
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The template id 12 used for tracker creation was not found.');
@@ -126,14 +120,13 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $shortname   = 'bugs';
         $template_id = '12';
-        $user        = \Mockery::mock(\PFUser::class);
+        $user        = UserTestBuilder::buildWithDefaults();
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('isTemplate')->andReturnFalse();
-        $tracker->shouldReceive('userIsAdmin')->andReturnFalse();
-        $tracker->shouldReceive('getProject')->andReturn($project);
+        $tracker = $this->createMock(Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $project = ProjectTestBuilder::aProject()->build();
+        $tracker->method('userIsAdmin')->willReturn(false);
+        $tracker->method('getProject')->willReturn($project);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The template id 12 used for tracker creation was not found.');
@@ -148,14 +141,13 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $shortname   = 'bugs';
         $template_id = '12';
-        $user        = \Mockery::mock(\PFUser::class);
+        $user        = UserTestBuilder::buildWithDefaults();
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('isTemplate')->andReturnTrue();
-        $tracker->shouldReceive('userIsAdmin')->never();
-        $tracker->shouldReceive('getProject')->andReturn($project);
+        $tracker = $this->createMock(Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $project = ProjectTestBuilder::aProject()->withTypeTemplate()->build();
+        $tracker->expects(self::never())->method('userIsAdmin');
+        $tracker->method('getProject')->willReturn($project);
 
         $this->checker->checkAtTrackerDuplication(
             $shortname,
@@ -170,12 +162,12 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = 'new_bugs';
 
-        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
+        $this->tracker_dao->method('isShortNameExists')->willReturn(false);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerNameExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerShortNameExist')->willReturn(false);
 
-        $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(false);
+        $this->reference_manager->method('_isKeywordExists')->willReturn(false);
         $this->checker->checkAtProjectCreation(
             $project_id,
             $public_name,
@@ -219,7 +211,7 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = 'bugs';
 
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(true);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker name New bugs is already used. Please use another one.');
 
@@ -236,7 +228,6 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = '+++bugs+++';
 
-        $this->tracker_dao->shouldReceive('isNameExists')->andReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage(
             'Invalid short name: +++bugs+++. Please use only alphanumerical characters or an unreserved reference.'
@@ -255,10 +246,10 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = 'new_bugs';
 
-        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(true);
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
+        $this->tracker_dao->method('isShortNameExists')->willReturn(true);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerNameExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerShortNameExist')->willReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker short name new_bugs is already used. Please use another one.');
 
@@ -275,10 +266,10 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = 'new_bugs';
 
-        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(true);
+        $this->tracker_dao->method('isShortNameExists')->willReturn(false);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerNameExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerShortNameExist')->willReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker short name new_bugs is already used. Please use another one.');
 
@@ -295,10 +286,10 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = 'new_bugs';
 
-        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(true);
-        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
+        $this->tracker_dao->method('isShortNameExists')->willReturn(false);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(true);
+        $this->pending_jira_dao->method('doesTrackerNameExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerShortNameExist')->willReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker name New bugs is already used. Please use another one.');
 
@@ -315,10 +306,10 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = 'new_bugs';
 
-        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(true);
-        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
+        $this->tracker_dao->method('isShortNameExists')->willReturn(false);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerNameExist')->willReturn(true);
+        $this->pending_jira_dao->method('doesTrackerShortNameExist')->willReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker name New bugs is already used. Please use another one.');
 
@@ -335,12 +326,12 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $public_name = 'New bugs';
         $shortname   = 'new_bugs';
 
-        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
-        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
-        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
+        $this->tracker_dao->method('isShortNameExists')->willReturn(false);
+        $this->tracker_dao->method('doesTrackerNameAlreadyExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerNameExist')->willReturn(false);
+        $this->pending_jira_dao->method('doesTrackerShortNameExist')->willReturn(false);
 
-        $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(true);
+        $this->reference_manager->method('_isKeywordExists')->willReturn(true);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker short name new_bugs is already used. Please use another one.');
 
@@ -355,7 +346,7 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $template_id = 101;
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Invalid tracker template.');
@@ -369,12 +360,10 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $template_id = 101;
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $project = Mockery::mock(\Project::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $project->shouldReceive('isError')->andReturnTrue();
+        $project = ProjectTestBuilder::aProject()->withError()->build();
+        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Invalid project template.');
@@ -384,10 +373,10 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('getShortNamesAndCorrespondingConversions')]
+    #[DataProvider('getShortNamesAndCorrespondingConversions')]
     public function testItConvertsGivenStringToValidShortName(string $expected, string $wished): void
     {
-        assertEquals($expected, TrackerCreationDataChecker::getShortNameWithValidFormat($wished));
+        self::assertEquals($expected, TrackerCreationDataChecker::getShortNameWithValidFormat($wished));
     }
 
     public static function getShortNamesAndCorrespondingConversions(): array
