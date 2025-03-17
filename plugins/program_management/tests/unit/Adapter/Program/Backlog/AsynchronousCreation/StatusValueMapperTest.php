@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -82,20 +83,20 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             'It matches user bind values by display name'                         => [
                 'Celia Apollo',
                 self::SECOND_BIND_VALUE_ID,
-                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::FIRST_BIND_VALUE_ID, 'Irrelevant', 'Mildred Favorito'),
-                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::SECOND_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
+                ListUserValueBuilder::aUserWithId(self::FIRST_BIND_VALUE_ID)->withDisplayedName('Mildred Favorito')->build(),
+                ListUserValueBuilder::aUserWithId(self::SECOND_BIND_VALUE_ID)->withDisplayedName('Celia Apollo')->build(),
             ],
             'It matches username with different case'                             => [
                 'CELIA APOLLO',
                 self::FIRST_BIND_VALUE_ID,
-                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::FIRST_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
-                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::SECOND_BIND_VALUE_ID, 'Irrelevant', 'Mildred Favorito'),
+                ListUserValueBuilder::aUserWithId(self::SECOND_BIND_VALUE_ID)->withDisplayedName('Mildred Favorito')->build(),
+                ListUserValueBuilder::aUserWithId(self::FIRST_BIND_VALUE_ID)->withDisplayedName('Celia Apollo')->build(),
             ],
             'It matches first value if multiple users have the same display name' => [
                 'Celia Apollo',
                 self::FIRST_BIND_VALUE_ID,
-                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::FIRST_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
-                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::SECOND_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
+                ListUserValueBuilder::aUserWithId(self::FIRST_BIND_VALUE_ID)->withDisplayedName('Celia Apollo')->build(),
+                ListUserValueBuilder::aUserWithId(self::SECOND_BIND_VALUE_ID)->withDisplayedName('Celia Apollo')->build(),
             ],
             'It matches dynamic user group name'                                  => [
                 'project_members',

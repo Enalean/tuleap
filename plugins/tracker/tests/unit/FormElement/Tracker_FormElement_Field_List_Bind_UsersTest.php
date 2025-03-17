@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Import\Spotter;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -34,10 +35,8 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
 
     public function testGetFieldData(): void
     {
-        $bv1 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $bv1->shouldReceive('getUsername')->andReturn('john.smith');
-        $bv2 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $bv2->shouldReceive('getUsername')->andReturn('sam.anderson');
+        $bv1 = ListUserValueBuilder::aUserWithId(138)->withUserName('john.smith')->build();
+        $bv2 = ListUserValueBuilder::aUserWithId(138)->withUserName('sam.anderson')->build();
 
         $values = [108 => $bv1, 110 => $bv2];
         $f      = $this->getBindUsersField($values);
@@ -47,14 +46,10 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
 
     public function testGetFieldDataMultiple(): void
     {
-        $bv1 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $bv1->shouldReceive('getUsername')->andReturn('john.smith');
-        $bv2 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $bv2->shouldReceive('getUsername')->andReturn('sam.anderson');
-        $bv3 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $bv3->shouldReceive('getUsername')->andReturn('tom.brown');
-        $bv4 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $bv4->shouldReceive('getUsername')->andReturn('patty.smith');
+        $bv1    = ListUserValueBuilder::aUserWithId(138)->withUserName('john.smith')->build();
+        $bv2    = ListUserValueBuilder::aUserWithId(138)->withUserName('sam.anderson')->build();
+        $bv3    = ListUserValueBuilder::aUserWithId(138)->withUserName('tom.brown')->build();
+        $bv4    = ListUserValueBuilder::aUserWithId(138)->withUserName('patty.smith')->build();
         $values = [108 => $bv1, 110 => $bv2, 113 => $bv3, 115 => $bv4];
         $f      = $this->getBindUsersField($values);
         $f->shouldReceive('getAllValues')->andReturn($values);
@@ -67,15 +62,10 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
         $changeset_value->shouldReceive('getListValues')->andReturn(
             [
-                $u1 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class),
-                $u2 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class),
+                ListUserValueBuilder::aUserWithId(138)->withUserName('u1')->build(),
+                ListUserValueBuilder::aUserWithId(831)->withUserName('u2')->build(),
             ]
         );
-
-        $u1->shouldReceive('getUsername')->andReturn('u1');
-        $u1->shouldReceive('getId')->andReturn(1);
-        $u2->shouldReceive('getUsername')->andReturn('u2');
-        $u2->shouldReceive('getId')->andReturn(1);
 
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('getId')->andReturn(123);
@@ -88,22 +78,13 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
 
     public function testFormatChangesetValueNoneValue(): void
     {
-        $value  = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $value2 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
-        $value3 = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class);
+        $value  = ListUserValueBuilder::noneUser()->build();
+        $value2 = ListUserValueBuilder::aUserWithId(1)->build();
+        $value3 = ListUserValueBuilder::aUserWithId(103)->build();
 
         $field  = $this->getBindUsersField([$value]);
         $field2 = $this->getBindUsersField([$value2]);
         $field3 = $this->getBindUsersField([$value3]);
-
-        $value->shouldReceive('getId')->andReturn(100);
-        $value->shouldReceive('fetchFormatted')->never();
-        $value2->shouldReceive('getId')->andReturn(0);
-        $value2->shouldReceive('fetchFormatted')->once()->andReturn('SuperSuperAdmin');
-        $value3->shouldReceive('getId')->andReturn(123);
-        $value3->shouldReceive('fetchFormatted')->once()->andReturn('Bob.Johns');
-        $value->shouldReceive('fetchFormatted');
-        $value2->shouldReceive('fetchFormatted');
 
         $this->assertEquals('', $field->formatChangesetValue($value));
         $this->assertNotEquals('', $field2->formatChangesetValue($value2));
@@ -113,8 +94,8 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
     public function testItVerifiesAValueExist(): void
     {
         $user_manager = Mockery::mock(UserManager::class);
-        $user_manager->shouldReceive('getUserById')->withArgs([101])->andReturn(Mockery::mock(PFUser::class));
-        $user_manager->shouldReceive('getUserById')->withArgs([102])->andReturn(Mockery::mock(PFUser::class));
+        $user_manager->shouldReceive('getUserById')->withArgs([101])->andReturn(\Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build());
+        $user_manager->shouldReceive('getUserById')->withArgs([102])->andReturn(\Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build());
         $bind_users = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $bind_users->shouldReceive('getAllValues')->andReturn([101 => 'user1']);
         $bind_users->shouldReceive('getUserManager')->andReturn($user_manager);

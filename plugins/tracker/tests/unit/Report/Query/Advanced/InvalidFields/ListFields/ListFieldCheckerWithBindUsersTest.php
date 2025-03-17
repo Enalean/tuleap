@@ -38,6 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FieldIsNotSupportedForCom
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListFieldCheckerWithBindUsersTest extends TestCase
@@ -83,8 +84,8 @@ final class ListFieldCheckerWithBindUsersTest extends TestCase
         );
         $field->setBind($user_bind);
         $user_bind->method('getAllValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UsersValue(117, self::USER_NAME),
-            new \Tracker_FormElement_Field_List_Bind_UsersValue(107, 'Wai Lei'),
+            ListUserValueBuilder::aUserWithId(117)->withUserName(self::USER_NAME)->build(),
+            ListUserValueBuilder::aUserWithId(107)->withUserName('Wai Lei')->build(),
         ]);
         $checker->checkFieldIsValidForComparison($this->comparison, $field);
     }

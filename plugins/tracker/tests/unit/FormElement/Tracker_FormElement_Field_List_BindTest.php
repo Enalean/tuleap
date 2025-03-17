@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -137,9 +138,9 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
         $decorator = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
 
         $user_list = [
-            103 => new Tracker_FormElement_Field_List_Bind_UsersValue(103),
-            111 => new Tracker_FormElement_Field_List_Bind_UsersValue(111),
-            117 => new Tracker_FormElement_Field_List_Bind_UsersValue(117),
+            103 => ListUserValueBuilder::aUserWithId(103)->build(),
+            111 => ListUserValueBuilder::aUserWithId(111)->build(),
+            117 => ListUserValueBuilder::aUserWithId(117)->build(),
         ];
 
         $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [$field, [], [], $decorator])
@@ -170,9 +171,9 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
                        ->makePartial();
 
         $user_list = [
-            103 => new Tracker_FormElement_Field_List_Bind_UsersValue(103),
-            111 => new Tracker_FormElement_Field_List_Bind_UsersValue(111),
-            117 => new Tracker_FormElement_Field_List_Bind_UsersValue(117),
+            103 => ListUserValueBuilder::aUserWithId(103)->build(),
+            111 => ListUserValueBuilder::aUserWithId(111)->build(),
+            117 => ListUserValueBuilder::aUserWithId(117)->build(),
         ];
 
         $bind->shouldReceive('getAllValues')->andReturn($user_list);

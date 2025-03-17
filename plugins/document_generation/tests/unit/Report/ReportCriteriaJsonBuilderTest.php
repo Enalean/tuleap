@@ -30,7 +30,6 @@ use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use Tracker_FormElement_Field_List_Bind_Users;
-use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tracker_FormElement_Field_List_UnsavedValue;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_String;
@@ -42,6 +41,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportCriteriaJsonBuilderTest extends TestCase
@@ -233,8 +233,8 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $user_bind
             ->method('getValue')
             ->willReturnMap([
-                ['101', new Tracker_FormElement_Field_List_Bind_UsersValue(101, 'User01', 'User Name 01')],
-                ['102', new Tracker_FormElement_Field_List_Bind_UsersValue(102, 'User02', 'User Name 02')],
+                ['101', ListUserValueBuilder::aUserWithId(101)->withDisplayedName('User Name 01')->build()],
+                ['102', ListUserValueBuilder::aUserWithId(102)->withDisplayedName('User Name 02')->build()],
             ]);
 
         $list_user_field

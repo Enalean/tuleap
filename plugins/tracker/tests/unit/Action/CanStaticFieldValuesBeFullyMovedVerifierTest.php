@@ -27,11 +27,11 @@ use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -65,7 +65,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 
     public function testFieldCanBeFullyMovedWhenValueIsFoundInDestinationTracker(): void
     {
-        $last_changeset_value_value = $this->createStub(Tracker_FormElement_Field_List_Bind_UsersValue::class);
+        $last_changeset_value_value = ListUserValueBuilder::aUserWithId(138)->build();
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $last_changeset_value->method('getListValues')->willReturn([$last_changeset_value_value]);
 
