@@ -204,6 +204,12 @@ CREATE TABLE tracker_field_computed (
     target_field_name VARCHAR(255) NULL
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_field_artifact_link;
+CREATE TABLE tracker_field_artifact_link (
+    field_id INT(11) NOT NULL PRIMARY KEY,
+    can_edit_reverse_links BOOL NOT NULL DEFAULT FALSE
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_field_openlist_value;
 CREATE TABLE tracker_field_openlist_value(
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
