@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $exporter;
 
@@ -59,9 +59,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
     {
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Users::class);
         $bind->method('getType')->willReturn('users');
-        $open_value = $this->createMock(Tracker_FormElement_Field_List_OpenValue::class);
-        $open_value->method('getLabel')->willReturn('email@tuleap.org');
-
+        $open_value = OpenListStaticValueBuilder::aStaticValue('email@tuleap.org')->build();
 
         $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
         $this->field->method('getBind')->willReturn($bind);
@@ -100,8 +98,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
     {
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Ugroups::class);
         $bind->method('getType')->willReturn('ugroups');
-        $open_value = $this->createMock(Tracker_FormElement_Field_List_OpenValue::class);
-        $open_value->method('getLabel')->willReturn('new_ugroup');
+        $open_value = OpenListStaticValueBuilder::aStaticValue('new_ugroup')->build();
 
         $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
         $this->field->method('getBind')->willReturn($bind);
@@ -137,8 +134,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
     {
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
         $bind->method('getType')->willReturn('static');
-        $open_value = $this->createMock(Tracker_FormElement_Field_List_OpenValue::class);
-        $open_value->method('getLabel')->willReturn('keyword01');
+        $open_value = OpenListStaticValueBuilder::aStaticValue('keyword01')->build();
 
         $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
         $this->field->method('getBind')->willReturn($bind);
