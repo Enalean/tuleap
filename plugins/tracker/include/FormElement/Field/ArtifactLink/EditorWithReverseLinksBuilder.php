@@ -22,12 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use PFUser;
+use Tracker;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 
 final readonly class EditorWithReverseLinksBuilder
 {
-    public function build(Artifact $current_artifact): EditorWithReverseLinksPresenter
-    {
-        return new EditorWithReverseLinksPresenter($current_artifact->getId());
+    public function __construct(
+        private ParentInHierarchyRetriever $parent_tracker_retriever,
+        private RetrieveUserPermissionOnTrackers $tracker_permissions_retriever,
+    ) {
+    }
+
+    public function build(
+        Tracker_FormElement_Field_ArtifactLink $link_field,
+        Artifact $current_artifact,
+        PFUser $user,
+    ): EditorWithReverseLinksPresenter {
+        $current_tracker = $current_artifact->getTracker();
+        $parent_tracker  = $this->parent_tracker_retriever->getParentTracker($current_tracker)
+            ->andThen(function (\Tracker $parent) use ($user) {
+                $permissions               = $this->tracker_permissions_retriever->retrieveUserPermissionOnTrackers(
+                    $user,
+                    [$parent],
+                    TrackerPermissionType::PERMISSION_VIEW
+                );
+                $parent_tracker_is_allowed = array_search($parent, $permissions->allowed, true);
+                if ($parent_tracker_is_allowed !== false) {
+                    return Option::fromValue($parent);
+                }
+                return Option::nothing(Tracker::class);
+            })
+            ->unwrapOr(null);
+        return new EditorWithReverseLinksPresenter(
+            $link_field,
+            $current_artifact,
+            $current_tracker,
+            $parent_tracker,
+        );
     }
 }

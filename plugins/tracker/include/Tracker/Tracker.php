@@ -407,6 +407,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     /**
      * getItemName - get this Tracker item name (short name).
      *
+     * @psalm-mutation-free
      * @return string the tracker item name (shortname)
      */
     public function getItemName()

@@ -1,1 +1,11 @@
-<div data-current-artifact-id="{{ current_artifact_id }}">Link field will be here</div>
+<div
+    data-link-field-id="{{ link_field_id }}"
+    data-link-field-label="{{ link_field_label }}"
+    data-current-artifact-id="{{ current_artifact_id }}"
+    data-current-tracker-id="{{ current_tracker_id }}"
+    data-current-tracker-color="{{ current_tracker_color }}"
+    data-current-tracker-short-name="{{ current_tracker_short_name }}"
+    data-current-project-id="{{ current_project_id }}"
+    data-allowed-link-types="{{ allowed_link_types }}"
+    {{# parent_tracker_id }}data-parent-tracker-id="{{ . }}"{{/ parent_tracker_id }}
+>Link field will be here</div>

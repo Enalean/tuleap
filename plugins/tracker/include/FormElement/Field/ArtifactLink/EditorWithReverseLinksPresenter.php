@@ -22,13 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use Tracker;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * @psalm-immutable
  */
 final readonly class EditorWithReverseLinksPresenter
 {
+    public int $link_field_id;
+    public string $link_field_label;
+    public int $current_artifact_id;
+    public int $current_tracker_id;
+    public string $current_tracker_color;
+    public string $current_tracker_short_name;
+    public int $current_project_id;
+    public ?int $parent_tracker_id;
+    public int $user_id;
+    public string $allowed_link_types;
+
     public function __construct(
-        public int $current_artifact_id,
+        Tracker_FormElement_Field_ArtifactLink $link_field,
+        Artifact $current_artifact,
+        Tracker $current_tracker,
+        ?Tracker $parent_tracker,
     ) {
+        $this->link_field_id              = $link_field->getId();
+        $this->link_field_label           = $link_field->getLabel();
+        $this->current_artifact_id        = $current_artifact->getId();
+        $this->current_tracker_id         = $current_tracker->getId();
+        $this->current_tracker_color      = $current_tracker->getColor()->getName();
+        $this->current_tracker_short_name = $current_tracker->getItemName();
+        $this->current_project_id         = (int) $current_tracker->getGroupId();
+        $this->parent_tracker_id          = $parent_tracker?->getId();
+        $this->allowed_link_types         = '';
     }
 }
