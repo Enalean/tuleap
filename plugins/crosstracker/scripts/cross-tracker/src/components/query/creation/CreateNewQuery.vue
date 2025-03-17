@@ -31,6 +31,7 @@
                 ref="query_editor"
             />
         </div>
+        <query-displayed-by-default-switch v-model:is_default_query="is_default_query" />
         <div class="query-creation-action-buttons">
             <button
                 type="button"
@@ -111,6 +112,7 @@ import {
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
 import { useGettext } from "vue3-gettext";
+import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
 
 const { $gettext } = useGettext();
 
@@ -127,6 +129,7 @@ const new_query_creator = strictInject(NEW_QUERY_CREATOR);
 const title = ref("");
 const description = ref("");
 const tql_query = ref("");
+const is_default_query = ref(false);
 
 const searched_tql_query = ref("");
 
@@ -164,6 +167,7 @@ function handleSaveButton(): void {
         description: description.value,
         title: title.value,
         widget_id,
+        is_default: is_default_query.value,
     };
     new_query_creator
         .postNewQuery(new_query)

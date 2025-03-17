@@ -50,18 +50,21 @@ describe("ChooseQueryButton", () => {
             tql_query: "SELECT @id FROM @project = 'self' WHERE @id>1",
             title: FIRST_FILTERED_TITLE,
             description: "",
+            is_default: false,
         },
         {
             id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
             tql_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id>1",
             title: "Beautiful titles project artifacts",
             description: "",
+            is_default: false,
         },
         {
             id: "00000000-1770-7214-b3ed-b92974949193",
             tql_query: "SELECT @id FROM @project.name = 'Talbot' WHERE @id>1",
             title: SECOND_FILTERED_TITLE,
             description: "",
+            is_default: false,
         },
     ];
     const widget_id = 15;
@@ -83,7 +86,7 @@ describe("ChooseQueryButton", () => {
     };
     beforeEach(() => {
         emitter = EmitterStub();
-        backend_query = { id: "", tql_query: "", title: "", description: "" };
+        backend_query = { id: "", tql_query: "", title: "", description: "", is_default: false };
     });
 
     it("should send events which updates the TQL query displayed and the artifact result", async () => {

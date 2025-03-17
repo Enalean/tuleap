@@ -57,6 +57,7 @@ final class CrossTrackerQueryFactoryTest extends TestCase
             'title'       => '',
             'description' => '',
             'widget_id'   => 1,
+            'is_default'   => false,
         ]);
         $factory          = new CrossTrackerQueryFactory($report_retriever);
         return $factory->getById($query_id);
@@ -70,6 +71,7 @@ final class CrossTrackerQueryFactoryTest extends TestCase
             'title'       => '',
             'description' => '',
             'widget_id'   => 1,
+            'is_default'   => false,
         ]);
         $factory          = new CrossTrackerQueryFactory($report_retriever);
         return $factory->getByWidgetId($id);
@@ -89,6 +91,7 @@ final class CrossTrackerQueryFactoryTest extends TestCase
             '',
             '',
             1,
+            false,
         );
 
         $result = $this->getById(self::QUERY_ID);
@@ -110,6 +113,7 @@ final class CrossTrackerQueryFactoryTest extends TestCase
             '',
             '',
             1,
+            false
         );
 
         $result = $this->getByWidgetId(1);

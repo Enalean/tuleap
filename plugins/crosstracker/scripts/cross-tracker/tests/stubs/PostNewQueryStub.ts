@@ -18,8 +18,13 @@
  */
 
 import type { PostNewQuery } from "../../src/domain/PostNewQuery";
+import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import type {
+    PostQueryRepresentation,
+    QueryRepresentation,
+} from "../../src/api/cross-tracker-rest-api-types";
 
 export const PostNewQueryStub = {
     withDefaultContent(): PostNewQuery {
@@ -30,7 +35,18 @@ export const PostNewQueryStub = {
                     title: "My new query",
                     description: "description",
                     tql_query: "SELECT @id FROM @project = 'self' WHERE @id > 1",
+                    is_default: false,
                 }),
+        };
+    },
+    withCallback(callback: (query_to_post: PostQueryRepresentation) => void): PostNewQuery {
+        return {
+            postNewQuery(
+                query_to_post: PostQueryRepresentation,
+            ): ResultAsync<QueryRepresentation, Fault> {
+                callback(query_to_post);
+                return okAsync({ ...query_to_post, id: "51151" });
+            },
         };
     },
     withFault(fault: Fault): PostNewQuery {

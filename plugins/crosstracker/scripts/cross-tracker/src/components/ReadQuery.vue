@@ -98,7 +98,7 @@ const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
 
 const gettext_provider = useGettext();
 
-const empty_query: Query = { id: "", tql_query: "", title: "", description: "" };
+const empty_query: Query = { id: "", tql_query: "", title: "", description: "", is_default: false };
 const backend_query = ref<Query>(empty_query);
 const reading_query = ref<Query>(empty_query);
 const writing_query = ref<Query>(empty_query);
@@ -156,12 +156,13 @@ function loadBackendReport(): void {
                 }
 
                 backend_query.value = reports[0];
-                initQueries();
                 if (is_multiple_query_supported) {
+                    backend_query.value = reports.find((query) => query.is_default) ?? reports[0];
                     emitter.emit(UPDATE_WIDGET_TITLE_EVENT, {
                         new_title: backend_query.value.title,
                     });
                 }
+                initQueries();
                 has_error.value = false;
             },
             (fault) => {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,32 +19,29 @@
  */
 
 declare(strict_types=1);
+namespace Tuleap\CrossTracker\Tests\Stub\Report\Query;
 
-namespace Tuleap\CrossTracker\REST\v1\Representation;
+use Tuleap\CrossTracker\Report\Query\InsertNewQuery;
+use Tuleap\DB\UUID;
 
-/**
- * @psalm-immutable
- */
-final class CrossTrackerQueryPostRepresentation
+final readonly class InsertNewQueryStub implements InsertNewQuery
 {
-    /**
-     * @var int ID of the widget {@required true}
-     */
-    public int $widget_id;
-    /**
-     * @var string The TQL query {@required true}
-     */
-    public string $tql_query;
-    /**
-     * @var string The query title {@required true}
-     */
-    public string $title;
-    /**
-     * @var string The query description {@required false}
-     */
-    public string $description;
-    /**
-     * @var bool The query is displayed by default or not {@required false}
-     */
-    public bool $is_default = false;
+    private function __construct(private UUID $uuid)
+    {
+    }
+
+    public function create(
+        string $query,
+        string $title,
+        string $description,
+        int $widget_id,
+        bool $is_default,
+    ): UUID {
+        return $this->uuid;
+    }
+
+    public static function withUUID(UUID $uuid): self
+    {
+        return new self($uuid);
+    }
 }

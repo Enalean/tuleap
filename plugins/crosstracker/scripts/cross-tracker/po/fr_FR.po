@@ -101,6 +101,9 @@ msgstr "Mis à jour par"
 msgid "Last update date"
 msgstr "Mis à jour le"
 
+msgid "Make this query displayed by default"
+msgstr "Afficher cette requête par défaut"
+
 msgid "Name your query"
 msgstr "Nommer votre requête"
 

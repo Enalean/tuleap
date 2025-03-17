@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub\Report;
 
-use Tuleap\DB\UUID;
+use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryDao;
 
+/**
+ * @psalm-import-type CrossTrackerQueryRow from CrossTrackerQueryDao
+ */
 final readonly class RetrieveQueriesStub implements \Tuleap\CrossTracker\Report\Query\RetrieveQueries
 {
     /**
-     * @param list<array{id: UUID, query: string, title: string, description: string, widget_id: int}> $reports
+     * @param list<CrossTrackerQueryRow> $reports
      */
     private function __construct(private array $reports)
     {
@@ -55,8 +58,8 @@ final readonly class RetrieveQueriesStub implements \Tuleap\CrossTracker\Report\
     }
 
     /**
-     * @param array{id: UUID, query: string, title: string, description: string, widget_id: int} $first_report
-     * @param array{id: UUID, query: string, title: string, description: string, widget_id: int} ...$other_reports
+     * @psalm-param CrossTrackerQueryRow $first_report
+     * @psalm-param  CrossTrackerQueryRow ...$other_reports
      * @no-named-arguments
      */
     public static function withReports(array $first_report, array ...$other_reports): self

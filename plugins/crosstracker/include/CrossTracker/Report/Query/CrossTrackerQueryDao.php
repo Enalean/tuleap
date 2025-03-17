@@ -25,7 +25,11 @@ namespace Tuleap\CrossTracker\Report\Query;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\UUID;
 
-final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQueries
+/**
+ * @psalm-type CrossTrackerQueryRow = array{id: UUID, query: string, title: string, description: string, widget_id: int, is_default: bool}
+ * @psalm-type CrossTrackerQueryRawRow = array{id: string, query: string, title: string, description: string, widget_id: int, is_default: int}
+ */
+final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQueries, InsertNewQuery, ResetIsDefaultColumn
 {
     public function searchQueryByUuid(string $uuid_hex): ?array
     {
@@ -35,7 +39,8 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
                 if ($row === null) {
                     return null;
                 }
-                $row['id'] = $uuid;
+                $row['id']                                    = $uuid;
+                $row['is_default'] === 1 ? $row['is_default'] = true : $row['is_default'] = false;
                 return $row;
             },
             null,
@@ -51,12 +56,13 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
     }
 
     /**
-     * @param array{id: string, query: string, title: string, description: string, widget_id: int} $row
-     * @return array{id: UUID, query: string, title: string, description: string, widget_id: int}
+     * @psalm-param CrossTrackerQueryRawRow $row
+     * @psalm-return CrossTrackerQueryRow
      */
     private function transformQueryRow(array $row): array
     {
-        $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+        $row['id']                                    = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+        $row['is_default'] === 1 ? $row['is_default'] = true : $row['is_default'] = false;
         return $row;
     }
 
@@ -76,7 +82,14 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
         $this->getDB()->delete('plugin_crosstracker_query', ['id' => $id->getBytes()]);
     }
 
-    public function create(string $query, string $title, string $description, int $widget_id): UUID
+    public function resetIsDefaultColumnByWidgetId(int $widget_id): void
+    {
+        $this->getDB()->update('plugin_crosstracker_query', [
+            'is_default' => false,
+        ], ['widget_id' => $widget_id, 'is_default' => true]);
+    }
+
+    public function create(string $query, string $title, string $description, int $widget_id, bool $is_default): UUID
     {
         $uuid = $this->uuid_factory->buildUUIDBytes();
         $this->getDB()->insert('plugin_crosstracker_query', [
@@ -85,6 +98,7 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
             'query'       => $query,
             'title'       => $title,
             'description' => $description,
+            'is_default' => $is_default,
         ]);
 
         return $this->uuid_factory->buildUUIDFromBytesData($uuid);

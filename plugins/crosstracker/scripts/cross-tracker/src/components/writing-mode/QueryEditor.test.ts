@@ -77,6 +77,7 @@ describe("QueryEditor", () => {
             tql_query: "@title = 'foo'",
             title: "",
             description: "",
+            is_default: false,
         });
 
         expect(wrapper.vm.tql_query).toBe("@title = 'bar'");
@@ -92,6 +93,7 @@ describe("QueryEditor", () => {
             tql_query: "@title = 'foo'",
             title: "",
             description: "",
+            is_default: false,
         });
 
         expect(wrapper.vm.tql_query).toBe("@title = 'bar'");

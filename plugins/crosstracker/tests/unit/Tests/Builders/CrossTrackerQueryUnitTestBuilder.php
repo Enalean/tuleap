@@ -19,13 +19,13 @@
  */
 
 declare(strict_types=1);
-namespace Tuleap\CrossTracker\Tests;
+namespace Tuleap\CrossTracker\Tests\Builders;
 
 use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
 
-final class CrossTrackerQueryTestBuilder
+final class CrossTrackerQueryUnitTestBuilder
 {
     private UUID $uuid;
     private string $query       = '';
@@ -45,21 +45,15 @@ final class CrossTrackerQueryTestBuilder
         return new self();
     }
 
-    public function withTqlQuery(string $query): self
-    {
-        $this->query = $query;
-        return $this;
-    }
-
     public function withUUID(UUID $uuid): self
     {
         $this->uuid = $uuid;
         return $this;
     }
 
-    public function inWidget(int $widget_id): self
+    public function isDefault(): self
     {
-        $this->widget_id = $widget_id;
+        $this->is_default = true;
         return $this;
     }
 

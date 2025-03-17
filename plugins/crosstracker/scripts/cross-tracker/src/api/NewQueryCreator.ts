@@ -33,6 +33,7 @@ export const NewQueryCreator = (): PostNewQuery => {
                 tql_query: query_to_post.tql_query,
                 title: query_to_post.title,
                 description: query_to_post.description,
+                is_default: query_to_post.is_default,
             });
         },
     };
