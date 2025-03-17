@@ -126,7 +126,6 @@ function down(event: Event): void {
 $button-size: 16px;
 
 button {
-    z-index: 1;
     width: $button-size;
     height: $button-size;
     padding: 0;

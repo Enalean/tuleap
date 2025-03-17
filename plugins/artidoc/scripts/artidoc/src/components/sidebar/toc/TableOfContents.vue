@@ -393,6 +393,7 @@ $arrows-overflow: calc(var(--tlp-small-spacing) / 2);
 .reorder-arrows {
     display: flex;
     position: absolute;
+    z-index: 1;
     top: calc(-1 * $arrows-overflow);
     right: calc(var(--tlp-medium-spacing) / 2);
     flex-direction: column;
@@ -407,6 +408,7 @@ $arrows-overflow: calc(var(--tlp-small-spacing) / 2);
 
     &:focus-within,
     &:hover {
+        z-index: 2;
         opacity: 1;
         color: var(--tlp-main-color);
     }
