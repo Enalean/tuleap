@@ -26,10 +26,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -114,10 +114,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
 
     public function testBuildPresenterWithCustomValue(): void
     {
-        $value = \Mockery::mock(Tracker_FormElement_Field_List_OpenValue::class);
-        $value->shouldReceive('getId')->andReturn(100);
-        $value->shouldReceive('getLabel')->andReturn('label');
-        $value->shouldReceive('isHidden')->andReturn(false);
+        $value = OpenListStaticValueBuilder::aStaticValue('label')->withId(123)->build();
 
         $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
 
