@@ -65,23 +65,51 @@ describe("enable-or-disable-toolbar", () => {
         deactivateHeadingButton = vi.spyOn(headings_button, "deactivateButton");
     });
 
-    it("should disable the toolbar and deactivate the headings button when the view is not focused", () => {
-        setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
-        expect(disableToolbar).toHaveBeenCalledOnce();
-        expect(deactivateHeadingButton).toHaveBeenCalledOnce();
+    describe("When the editor gets the focus", () => {
+        it("should enable the toolbar and deactivate the headings button, when the current selection is in the description", () => {
+            setCursorPosition(SOMEWHERE_IN_THE_DESCRIPTION_POSITION);
+            vi.resetAllMocks();
+
+            view.focus();
+
+            expect(enableToolbar).toHaveBeenCalledOnce();
+            expect(deactivateHeadingButton).toHaveBeenCalledOnce();
+        });
+
+        it("should disable the toolbar and activate the headings button, when the current selection is in the title", () => {
+            setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
+            vi.resetAllMocks();
+
+            view.focus();
+
+            expect(disableToolbar).toHaveBeenCalledOnce();
+            expect(activateHeadingButtonForSection).toHaveBeenCalledOnce();
+        });
     });
 
-    it("should enable the toolbar and deactivate the headings button, when the current selection is in the description", () => {
-        view.focus();
-        setCursorPosition(SOMEWHERE_IN_THE_DESCRIPTION_POSITION);
-        expect(enableToolbar).toHaveBeenCalledOnce();
-        expect(deactivateHeadingButton).toHaveBeenCalledOnce();
-    });
+    describe("When the view is updated", () => {
+        beforeEach(() => {
+            view.hasFocus = (): boolean => true;
+        });
 
-    it("should disable the toolbar and active the headings button, when the current selection is in the title", () => {
-        view.focus();
-        setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
-        expect(disableToolbar).toHaveBeenCalledOnce();
-        expect(activateHeadingButtonForSection).toHaveBeenCalledOnce();
+        it("should disable the toolbar and deactivate the headings button when the view is not focused", () => {
+            view.hasFocus = (): boolean => false;
+
+            setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
+            expect(disableToolbar).toHaveBeenCalledOnce();
+            expect(deactivateHeadingButton).toHaveBeenCalledOnce();
+        });
+
+        it("should enable the toolbar and deactivate the headings button, when the current selection is in the description", () => {
+            setCursorPosition(SOMEWHERE_IN_THE_DESCRIPTION_POSITION);
+            expect(enableToolbar).toHaveBeenCalledOnce();
+            expect(deactivateHeadingButton).toHaveBeenCalledOnce();
+        });
+
+        it("should disable the toolbar and activate the headings button, when the current selection is in the title", () => {
+            setCursorPosition(SOMEWHERE_IN_THE_TITLE_POSITION);
+            expect(disableToolbar).toHaveBeenCalledOnce();
+            expect(activateHeadingButtonForSection).toHaveBeenCalledOnce();
+        });
     });
 });
