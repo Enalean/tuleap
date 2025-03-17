@@ -26,6 +26,9 @@ dependencies:
   '@tuleap/gettext':
     specifier: workspace:^
     version: link:../../../../lib/frontend/gettext
+  '@tuleap/keyboard-shortcuts':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/keyboard-shortcuts
   '@tuleap/lazybox':
     specifier: workspace:^
     version: link:../../../../lib/frontend/lazybox
@@ -80,6 +83,9 @@ dependencies:
   prosemirror-state:
     specifier: ^1.4.3
     version: 1.4.3
+  screenfull:
+    specifier: ^6.0.2
+    version: 6.0.2
   scroll-into-view-if-needed:
     specifier: ^3.1.0
     version: 3.1.0
@@ -853,6 +859,11 @@ packages:
   /resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
+    dev: false
+
+  /screenfull@6.0.2:
+    resolution: {integrity: sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==}
+    engines: {node: ^14.13.1 || >=16.0.0}
     dev: false
 
   /scroll-into-view-if-needed@3.1.0:
