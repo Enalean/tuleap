@@ -124,6 +124,9 @@ msgstr "Exporter le document en PDF"
 msgid "Export error"
 msgstr "Erreur d'export"
 
+msgid "Fields selection"
+msgstr "Sélection des champs"
+
 msgid "Force save"
 msgstr "Forcer la sauvegarde"
 
@@ -273,6 +276,9 @@ msgstr "Titre..."
 
 msgid "Tracker"
 msgstr "Tracker"
+
+msgid "Tracker selection"
+msgstr "Sélection du tracker"
 
 msgid "Unable to reorder the sections"
 msgstr "Impossible de réorganiser les sections"

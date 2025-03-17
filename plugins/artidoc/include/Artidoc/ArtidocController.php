@@ -31,6 +31,8 @@ use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\Document\RecentlyVisited\RecordVisit;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
@@ -47,6 +49,15 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
+    #[FeatureFlagConfigKey(<<<'EOF'
+    Feature flag to allow display of fields in artidoc documents.
+    0 to deactivate (default)
+    1 to activate
+    EOF
+    )]
+    #[ConfigKeyString('0')]
+    public const FIELDS_FEATURE_FLAG = 'enable_artidoc_fields';
+
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
         private ConfiguredTrackerRetriever $configured_tracker_retriever,
@@ -126,6 +137,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     ),
                     $allowed_max_size,
                     $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent($user))->getTemplates(),
+                    \ForgeConfig::getFeatureFlag(self::FIELDS_FEATURE_FLAG) === '1',
                 )
             );
         $service->displayFooter();

@@ -66,6 +66,7 @@ import { HEADINGS_BUTTON_STATE } from "@/headings-button-state-injection-key";
 import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 import { watchUpdateSectionsLevels } from "@/sections/levels/SectionsNumbersWatcher";
 import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
+import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -134,6 +135,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(
         UPLOAD_MAX_SIZE,
         Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-upload-max-size"), 10),
+    );
+    app.provide(
+        ARE_FIELDS_ENABLED,
+        Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-are-fields-enabled"), 10),
     );
     app.provide(CONFIGURATION_STORE, configuration_store);
     app.provide(

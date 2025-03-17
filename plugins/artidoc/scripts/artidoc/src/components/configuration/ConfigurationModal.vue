@@ -21,11 +21,19 @@
 <template>
     <form
         class="tlp-modal"
+        v-bind:class="{ 'artidoc-config-modal-with-fields': are_fields_enabled }"
         aria-labelledby="artidoc-configuration-modal-title"
         ref="modal_element"
         v-on:submit="onSubmit"
     >
         <configuration-modal-header v-bind:close_modal="closeModal" />
+
+        <nav class="tlp-tabs" v-if="are_fields_enabled">
+            <span class="tlp-tab tlp-tab-active">{{ $gettext("Tracker selection") }}</span>
+            <span class="tlp-tab tlp-tab-disabled" title="Not implemented yet">{{
+                $gettext("Fields selection")
+            }}</span>
+        </nav>
 
         <div class="tlp-modal-body">
             <introductory-text v-bind:configuration_helper="configuration_helper" />
@@ -92,6 +100,9 @@ import { useConfigurationScreenHelper } from "@/composables/useConfigurationScre
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
+
+const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 
 const { $gettext } = useGettext();
 
@@ -145,5 +156,9 @@ function onSubmit(event: Event): void {
     display: flex;
     justify-content: flex-end;
     margin: var(--tlp-medium-spacing) 0 0;
+}
+
+.artidoc-config-modal-with-fields > .tlp-modal-header {
+    border-bottom: 0;
 }
 </style>
