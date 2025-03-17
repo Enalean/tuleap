@@ -31,24 +31,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
-import { namespace } from "vuex-class";
 import ParentCell from "./ParentCell.vue";
 import ChildrenCell from "./Cell/ChildrenCell.vue";
+import { useStore } from "vuex-composition-helpers";
 
-const column = namespace("column");
+defineProps<{
+    swimlane: Swimlane;
+}>();
 
-@Component({
-    components: { ChildrenCell, ParentCell },
-})
-export default class ChildrenSwimlane extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const store = useStore();
 
-    @column.State
-    readonly columns!: Array<ColumnDefinition>;
-}
+const columns = computed((): ColumnDefinition[] => {
+    return store.state.column.columns;
+});
 </script>

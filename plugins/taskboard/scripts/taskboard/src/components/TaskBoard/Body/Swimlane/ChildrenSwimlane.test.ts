@@ -24,7 +24,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Card, ColumnDefinition, Swimlane } from "../../../../type";
 import type { RootState } from "../../../../store/type";
 
-function createWrapper(swimlane: Swimlane): Wrapper<ChildrenSwimlane> {
+function createWrapper(swimlane: Swimlane): Wrapper<Vue> {
     return shallowMount(ChildrenSwimlane, {
         mocks: {
             $store: createStoreMock({
