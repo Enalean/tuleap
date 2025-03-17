@@ -19,6 +19,7 @@
 
 import { define, html, dispatch } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import type { Level } from "@/sections/levels/SectionsNumberer";
@@ -34,10 +35,10 @@ export type HeadingsButton = {
 };
 
 export type InternalHeadingsButton = Readonly<HeadingsButton> & {
-    after_render_once: unknown;
     is_button_disabled: boolean;
     dropdown_trigger: HTMLButtonElement;
     dropdown_menu: HTMLElement;
+    dropdown_instance: Dropdown | undefined;
     render(): HTMLElement;
 };
 
@@ -63,71 +64,72 @@ export const renderHeadingsButton = (
     host: HostElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalHeadingsButton> => {
+    const isLevelDisabled = (level: Level): boolean => host.section?.level === level;
     const getDropdownItemClasses = (heading_level: Level): Record<string, boolean> => {
         return {
             "artidoc-menuitem-level": true,
             "tlp-dropdown-menu-item": true,
-            "artidoc-selected-level": host.section?.level === heading_level,
+            "artidoc-selected-level": isLevelDisabled(heading_level),
         };
     };
 
     const dispatchUpdateSectionLevel = (level: Level): void => {
         dispatch(host, "update-section-level", { detail: { level } });
+
+        host.dropdown_instance?.hide();
     };
 
     return html`
-        <button
-            class="prose-mirror-button tlp-button-secondary tlp-button-outline"
-            disabled="${host.is_button_disabled}"
-            title="${gettext_provider.gettext("Change section heading level")}"
-            data-test="change-section-level"
-        >
-            <i class="fa-solid fa-heading" aria-hidden="true"></i>
-            <span id="dropdown-menu-level" class="tlp-dropdown-menu" role="menu">
-                <span
-                    class="${getDropdownItemClasses(LEVEL_1)}"
+        <div class="tlp-dropdown">
+            <button
+                class="prose-mirror-button tlp-button-secondary tlp-button-outline"
+                disabled="${host.is_button_disabled}"
+                title="${gettext_provider.gettext("Change section heading level")}"
+                data-test="change-section-level"
+                type="button"
+            >
+                <i class="fa-solid fa-heading" aria-hidden="true"></i>
+            </button>
+            <div class="tlp-dropdown-menu" role="menu">
+                <button
                     role="menuitem"
+                    type="button"
+                    class="${getDropdownItemClasses(LEVEL_1)}"
+                    tabindex="${isLevelDisabled(LEVEL_1) ? "-1" : "0"}"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_1)}"
                     title="${gettext_provider.gettext("Change to heading 1")}"
                     data-test="change-section-level-1"
                 >
                     <span class="artidoc-heading-icon">H1</span>
                     ${gettext_provider.gettext("Heading 1")}
-                </span>
-                <span
-                    class="${getDropdownItemClasses(LEVEL_2)}"
+                </button>
+                <button
                     role="menuitem"
+                    type="button"
+                    class="${getDropdownItemClasses(LEVEL_2)}"
+                    tabindex="${isLevelDisabled(LEVEL_2) ? "-1" : "0"}"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_2)}"
                     title="${gettext_provider.gettext("Change to heading 2")}"
                     data-test="change-section-level-2"
                 >
                     <span class="artidoc-heading-icon">H2</span>
                     ${gettext_provider.gettext("Heading 2")}
-                </span>
-                <span
-                    class="${getDropdownItemClasses(LEVEL_3)}"
+                </button>
+                <button
                     role="menuitem"
+                    type="button"
+                    class="${getDropdownItemClasses(LEVEL_3)}"
+                    tabindex="${isLevelDisabled(LEVEL_3) ? "-1" : "0"}"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_3)}"
                     title="${gettext_provider.gettext("Change to heading 3")}"
                     data-test="change-section-level-3"
                 >
                     <span class="artidoc-heading-icon">H3</span>
                     ${gettext_provider.gettext("Heading 3")}
-                </span>
-            </span>
-        </button>
+                </button>
+            </div>
+        </div>
     `;
-};
-
-const after_render_once_descriptor = {
-    value: (host: InternalHeadingsButton): unknown => host.render(),
-    observe(host: HostElement): void {
-        createDropdown(host.dropdown_trigger, {
-            dropdown_menu: host.dropdown_menu,
-            trigger: "click",
-            keyboard: true,
-        });
-    },
 };
 
 initGettext(
@@ -139,7 +141,6 @@ initGettext(
         tag: TAG,
         is_button_disabled: (host: HeadingsButton) => !host.section,
         section: undefined,
-        after_render_once: after_render_once_descriptor,
         dropdown_trigger: {
             value: (host: HostElement): HTMLButtonElement => {
                 const button = host.render().querySelector("button");
@@ -156,6 +157,19 @@ initGettext(
                     throw new Error("Unable to find the dropdown menu in the headings button");
                 }
                 return menu;
+            },
+        },
+        dropdown_instance: {
+            value: undefined,
+            connect(host): () => void {
+                const dropdown_instance = createDropdown(host.dropdown_trigger, {
+                    dropdown_menu: host.dropdown_menu,
+                    trigger: "click",
+                    keyboard: true,
+                });
+                host.dropdown_instance = dropdown_instance;
+
+                return dropdown_instance.destroy;
             },
         },
         render: (host) => renderHeadingsButton(host, gettext_provider),

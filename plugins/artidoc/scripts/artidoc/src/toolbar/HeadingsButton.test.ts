@@ -19,6 +19,7 @@
 
 import { describe, beforeEach, it, expect, vi } from "vitest";
 import type { GetText } from "@tuleap/gettext";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 import type { HostElement } from "@/toolbar/HeadingsButton";
 import { isUpdateSectionLevelEvent, renderHeadingsButton } from "@/toolbar/HeadingsButton";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
@@ -34,7 +35,12 @@ describe("HeadingsButton", () => {
     });
 
     const getHost = (section: StoredArtidocSection | undefined): HostElement =>
-        Object.assign(doc.createElement("div"), { section } as HostElement);
+        Object.assign(doc.createElement("div"), {
+            section,
+            dropdown_instance: {
+                hide: vi.fn(),
+            } as unknown as Dropdown,
+        } as HostElement);
 
     const renderButton = (host: HostElement): ShadowRoot => {
         const target = doc.createElement("div") as unknown as ShadowRoot;
@@ -47,7 +53,7 @@ describe("HeadingsButton", () => {
         return target;
     };
 
-    it("should apply correct classes to dropdown items based on section level", () => {
+    it("should apply correct classes and tabindex to dropdown items based on the current section level", () => {
         const section = CreateStoredSections.fromArtidocSection(
             FreetextSectionFactory.override({
                 level: LEVEL_3,
@@ -58,9 +64,14 @@ describe("HeadingsButton", () => {
         const items: NodeListOf<HTMLSpanElement> =
             renderButton(host).querySelectorAll<HTMLSpanElement>("[role=menuitem]");
 
-        expect(items[0].classList.value).not.contains("artidoc-selected-level");
-        expect(items[1].classList.value).not.contains("artidoc-selected-level");
-        expect(items[2].classList.value).contains("artidoc-selected-level");
+        const [item_1, item_2, item_3] = items;
+
+        expect(item_1.classList.value).not.contains("artidoc-selected-level");
+        expect(item_1.getAttribute("tabindex")).toBe("0");
+        expect(item_2.classList.value).not.contains("artidoc-selected-level");
+        expect(item_2.getAttribute("tabindex")).toBe("0");
+        expect(item_3.classList.value).contains("artidoc-selected-level");
+        expect(item_3.getAttribute("tabindex")).toBe("-1");
     });
 
     it.each([
@@ -68,7 +79,7 @@ describe("HeadingsButton", () => {
         ["change-section-level-2", LEVEL_2],
         ["change-section-level-3", LEVEL_3],
     ])(
-        "When the user click the %s item in the dropdown, then it should dispatch an update-section-level event with the correct heading level",
+        "When the user click the %s item in the dropdown, then it should dispatch an update-section-level event with the correct heading level and hide the dropdown",
         (item_name, expected_level) => {
             const section = CreateStoredSections.fromArtidocSection(
                 FreetextSectionFactory.create(),
@@ -86,6 +97,7 @@ describe("HeadingsButton", () => {
 
             expect(event.detail.level).toBe(expected_level);
             expect(dispatchEvent).toHaveBeenCalledOnce();
+            expect(host.dropdown_instance?.hide).toHaveBeenCalledOnce();
         },
     );
 });
