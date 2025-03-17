@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Creation;
 
 use ForgeConfig;
 use Project;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class TrackerCreationPresenter
 {
@@ -80,7 +81,7 @@ class TrackerCreationPresenter
         array $trackers_from_other_projects,
         array $tracker_colors,
         Project $current_project,
-        \CSRFSynchronizerToken $csrf,
+        CSRFSynchronizerTokenInterface $csrf,
         bool $are_there_tv3,
     ) {
         $this->default_templates            = json_encode($default_templates, JSON_THROW_ON_ERROR);

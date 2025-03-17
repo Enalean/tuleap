@@ -27,6 +27,7 @@ use Project;
 use ProjectManager;
 use TrackerDao;
 use TrackerFactory;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerColor;
 
@@ -68,7 +69,7 @@ class TrackerCreationPresenterBuilder
         $this->pending_jira_import_dao              = $pending_jira_import_dao;
     }
 
-    public function build(\Project $current_project, \CSRFSynchronizerToken $csrf, \PFUser $user): TrackerCreationPresenter
+    public function build(\Project $current_project, CSRFSynchronizerTokenInterface $csrf, \PFUser $user): TrackerCreationPresenter
     {
         $project_templates = [];
 

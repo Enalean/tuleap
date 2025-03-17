@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,8 +40,6 @@ use Tuleap\Tracker\TrackerIsInvalidException;
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerCreationDataCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private RetrieveTracker&MockObject $tracker_factory;
     private TrackerDao&MockObject $tracker_dao;
     private TrackerCreationDataChecker $checker;

@@ -22,56 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerCreationPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerCreationPermissionCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var m\LegacyMockInterface|m\MockInterface|GlobalAdminPermissionsChecker
-     */
-    private $permissions_checker;
+    private GlobalAdminPermissionsChecker&MockObject $permissions_checker;
 
     protected function setUp(): void
     {
-        $this->permissions_checker = m::mock(GlobalAdminPermissionsChecker::class);
+        $this->permissions_checker = $this->createMock(GlobalAdminPermissionsChecker::class);
     }
 
     public function testItThrowsANotFoundExceptionWhenTrackerServiceIsNotActivatedInGivenProject(): void
     {
-        $project = m::mock(\Project::class);
-        $project->shouldReceive('usesService')
-            ->with('plugin_tracker')
-            ->andReturn(false)
-            ->once();
+        $project = ProjectTestBuilder::aProject()->withoutServices()->build();
 
         $this->expectException(NotFoundException::class);
 
         $checker = new TrackerCreationPermissionChecker($this->permissions_checker);
-        $checker->checkANewTrackerCanBeCreated($project, m::mock(\PFUser::class));
+        $checker->checkANewTrackerCanBeCreated($project, UserTestBuilder::buildWithDefaults());
     }
 
     public function testItThrowsAForbiddenExceptionWhenUserCantCreateTrackers(): void
     {
-        $project = m::mock(\Project::class);
-        $project->shouldReceive('usesService')
-            ->with('plugin_tracker')
-            ->andReturn(true)
-            ->once();
+        $project = ProjectTestBuilder::aProject()->withUsedService('plugin_tracker')->build();
+        $user    = UserTestBuilder::buildWithDefaults();
 
-        $user = m::mock(\PFUser::class);
-
-        $this->permissions_checker
-            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
-            ->with($project, $user)
-            ->andReturn(false)
-            ->once();
+        $this->permissions_checker->expects(self::once())->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($project, $user)->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 

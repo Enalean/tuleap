@@ -23,66 +23,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use ProjectManager;
+use Tracker;
 use TrackerDao;
+use TrackerFactory;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerColor;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerCreationPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TrackerCreationPresenterBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerDao
-     */
-    private $tracker_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var \Project|\Mockery\MockInterface|\Project
-     */
-    private $current_project;
-
-    /**
-     * @var \CSRFSynchronizerToken|\Mockery\MockInterface|\CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
-    /**
-     * @var \TrackerFactory|\Mockery\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var \PFUser|\Mockery\MockInterface|\PFUser
-     */
-    private $current_user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DefaultTemplatesCollection
-     */
-    private $default_templates_collection_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PendingJiraImportDao
-     */
-    private $pending_jira_dao;
+    private TrackerCreationPresenterBuilder $builder;
+    private TrackerDao&MockObject $tracker_dao;
+    private ProjectManager&MockObject $project_manager;
+    private Project $current_project;
+    private CSRFSynchronizerTokenInterface $csrf_token;
+    private TrackerFactory&MockObject $tracker_factory;
+    private PFUser&MockObject $current_user;
+    private DefaultTemplatesCollectionBuilder&MockObject $default_templates_collection_builder;
+    private PendingJiraImportDao&MockObject $pending_jira_dao;
 
     protected function setUp(): void
     {
-        $this->default_templates_collection_builder = \Mockery::mock(DefaultTemplatesCollectionBuilder::class);
+        $this->default_templates_collection_builder = $this->createMock(DefaultTemplatesCollectionBuilder::class);
 
-        $this->project_manager  = \Mockery::mock(ProjectManager::class);
-        $this->tracker_dao      = \Mockery::mock(TrackerDao::class);
-        $this->pending_jira_dao = \Mockery::mock(PendingJiraImportDao::class);
-        $this->tracker_factory  = \Mockery::mock(\TrackerFactory::class);
+        $this->project_manager  = $this->createMock(ProjectManager::class);
+        $this->tracker_dao      = $this->createMock(TrackerDao::class);
+        $this->pending_jira_dao = $this->createMock(PendingJiraImportDao::class);
+        $this->tracker_factory  = $this->createMock(TrackerFactory::class);
 
         $this->builder = new TrackerCreationPresenterBuilder(
             $this->project_manager,
@@ -92,31 +68,19 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->default_templates_collection_builder,
         );
 
-        $this->current_project = \Mockery::mock(\Project::class);
-        $this->current_user    = \Mockery::mock(\PFUser::class);
-
-        $this->current_project->shouldReceive('getUnixNameLowerCase')->andReturn('my-project-name');
-        $this->current_project->shouldReceive('getID')->andReturn(104);
-        $this->current_project->shouldReceive('usesService')->with('tracker')->andReturn(false);
-
-        $this->csrf_token = \Mockery::mock(\CSRFSynchronizerToken::class);
-
-        $this->csrf_token->shouldReceive('getTokenName')->andReturn('challenge');
-        $this->csrf_token->shouldReceive('getToken')->andReturn('12345abcdef');
+        $this->current_project = ProjectTestBuilder::aProject()->withId(104)->withUnixName('my-project-name')->withoutServices()->build();
+        $this->current_user    = $this->createMock(PFUser::class);
+        $this->csrf_token      = CSRFSynchronizerTokenStub::buildSelf();
     }
 
     public function testItReturnsAnEmptyArrayWhenPlatformHasNoProjectTemplates(): void
     {
-        $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([]);
-        $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn(false);
-        $this->current_user->shouldReceive('getProjects')->andReturn([]);
+        $this->project_manager->method('getSiteTemplates')->willReturn([]);
+        $this->tracker_dao->method('searchByGroupId')->willReturn(false);
+        $this->current_user->method('getProjects')->willReturn([]);
 
-        $this->default_templates_collection_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(
-                new DefaultTemplatesCollection([])
-            );
+        $this->default_templates_collection_builder->expects(self::once())->method('build')
+            ->willReturn(new DefaultTemplatesCollection());
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
@@ -131,23 +95,17 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->csrf_token,
             false
         );
-        $this->assertEquals($expected_template, $presenter);
+        self::assertEquals($expected_template, $presenter);
     }
 
     public function testItDoesNotAddProjectsWhenRequestFails(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-        $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
-        $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn(false);
-        $this->current_user->shouldReceive('getProjects')->andReturn([]);
+        $this->project_manager->method('getSiteTemplates')->willReturn([ProjectTestBuilder::aProject()->withId(101)->build()]);
+        $this->tracker_dao->method('searchByGroupId')->willReturn(false);
+        $this->current_user->method('getProjects')->willReturn([]);
 
-        $this->default_templates_collection_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(
-                new DefaultTemplatesCollection([])
-            );
+        $this->default_templates_collection_builder->expects(self::once())->method('build')
+            ->willReturn(new DefaultTemplatesCollection());
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
@@ -162,24 +120,18 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->csrf_token,
             false
         );
-        $this->assertEquals($expected_template, $presenter);
+        self::assertEquals($expected_template, $presenter);
     }
 
     public function testItDoesNotAddProjectsWithoutTrackers(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-        $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
-        $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn([]);
-        $this->pending_jira_dao->shouldReceive('searchByProjectId')->andReturn([]);
-        $this->current_user->shouldReceive('getProjects')->andReturn([]);
+        $this->project_manager->method('getSiteTemplates')->willReturn([ProjectTestBuilder::aProject()->withId(101)->build()]);
+        $this->tracker_dao->method('searchByGroupId')->willReturn([]);
+        $this->pending_jira_dao->method('searchByProjectId')->willReturn([]);
+        $this->current_user->method('getProjects')->willReturn([]);
 
-        $this->default_templates_collection_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(
-                new DefaultTemplatesCollection([])
-            );
+        $this->default_templates_collection_builder->expects(self::once())->method('build')
+            ->willReturn(new DefaultTemplatesCollection());
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
@@ -194,17 +146,15 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->csrf_token,
             false
         );
-        $this->assertEquals($expected_template, $presenter);
+        self::assertEquals($expected_template, $presenter);
     }
 
     public function testItBuildAListOfDefaultTemplates(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-        $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
-        $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn([]);
-        $this->pending_jira_dao->shouldReceive('searchByProjectId')->andReturn([]);
-        $this->current_user->shouldReceive('getProjects')->andReturn([]);
+        $this->project_manager->method('getSiteTemplates')->willReturn([ProjectTestBuilder::aProject()->withId(101)->build()]);
+        $this->tracker_dao->method('searchByGroupId')->willReturn([]);
+        $this->pending_jira_dao->method('searchByProjectId')->willReturn([]);
+        $this->current_user->method('getProjects')->willReturn([]);
 
         $collection = new DefaultTemplatesCollection();
         $collection->add(
@@ -221,12 +171,7 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                 '/path/to/xml'
             )
         );
-        $this->default_templates_collection_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(
-                $collection
-            );
+        $this->default_templates_collection_builder->expects(self::once())->method('build')->willReturn($collection);
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
@@ -244,17 +189,43 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->csrf_token,
             false
         );
-        $this->assertEquals($expected_template, $presenter);
+        self::assertEquals($expected_template, $presenter);
     }
 
     public function testItBuildsAListOfTrackersBuildByProject(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-        $project->shouldReceive('getPublicName')->andReturn('My project name');
-        $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
-        $this->tracker_dao->shouldReceive('searchByGroupId')->with(101)->andReturn(
-            [
+        $project = ProjectTestBuilder::aProject()->withId(101)->withPublicName('My project name')->build();
+        $this->project_manager->method('getSiteTemplates')->willReturn([$project]);
+
+        $this->default_templates_collection_builder->expects(self::once())->method('build')
+            ->willReturn(new DefaultTemplatesCollection());
+
+        $tracker_user_not_admin = $this->createMock(Tracker::class);
+        $tracker_user_not_admin->method('userIsAdmin')->willReturn(false);
+
+        $tracker_user_admin = $this->createMock(Tracker::class);
+        $tracker_user_admin->method('userIsAdmin')->willReturn(true);
+        $tracker_user_admin->method('getId')->willReturn(4);
+        $tracker_user_admin->method('getName')->willReturn('MyAwesomeTracker');
+        $tracker_user_admin->method('getDescription')->willReturn('Description');
+        $tracker_user_admin->method('getColor')->willReturn(TrackerColor::fromName('red-wine'));
+
+        $this->project_manager->method('getProject')->with('101')->willReturn($project);
+
+        $this->current_user->method('getProjects')->willReturn(['101']);
+        $this->tracker_factory->method('getTrackersByProjectIdUserCanView')->with('101', $this->current_user)
+            ->willReturn([$tracker_user_not_admin, $tracker_user_admin]);
+
+        $tracker_bugs  = new TrackerTemplatesRepresentation('1', 'request', 'Description', 'peggy-pink');
+        $tracker_epics = new TrackerTemplatesRepresentation('2', 'stories', 'Description', 'sherwood-green');
+
+        $project_template[] = new ProjectTemplatesRepresentation(
+            $project,
+            [$tracker_bugs, $tracker_epics]
+        );
+
+        $this->tracker_dao->method('searchByGroupId')->willReturnCallback(static fn(int|string $id) => match ((int) $id) {
+            101 => [
                 [
                     'id'          => '1',
                     'name'        => 'request',
@@ -267,47 +238,8 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                     'description' => 'Description',
                     'color'       => 'sherwood-green',
                 ],
-            ]
-        );
-        $this->pending_jira_dao->shouldReceive('searchByProjectId')->with(101)->andReturn([]);
-
-        $this->default_templates_collection_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(
-                new DefaultTemplatesCollection([])
-            );
-
-        $tracker_user_not_admin = \Mockery::mock(\Tracker::class);
-        $tracker_user_not_admin->shouldReceive('userIsAdmin')->andReturn(false);
-
-        $tracker_user_admin = \Mockery::mock(\Tracker::class);
-        $tracker_user_admin->shouldReceive('userIsAdmin')->andReturn(true);
-        $tracker_user_admin->shouldReceive('getId')->andReturn('4');
-        $tracker_user_admin->shouldReceive('getName')->andReturn('MyAwesomeTracker');
-        $tracker_user_admin->shouldReceive('getDescription')->andReturn('Description');
-        $tracker_user_admin->shouldReceive('getColor')->andReturn(TrackerColor::fromName('red-wine'));
-
-        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
-
-        $this->current_user->shouldReceive('getProjects')->andReturn(['101']);
-        $this->tracker_factory->shouldReceive('getTrackersByProjectIdUserCanView')
-            ->with('101', $this->current_user)
-            ->andReturn([
-                $tracker_user_not_admin,
-                $tracker_user_admin,
-            ]);
-
-        $tracker_bugs  = new TrackerTemplatesRepresentation('1', 'request', 'Description', 'peggy-pink');
-        $tracker_epics = new TrackerTemplatesRepresentation('2', 'stories', 'Description', 'sherwood-green');
-
-        $project_template[] = new ProjectTemplatesRepresentation(
-            $project,
-            [$tracker_bugs, $tracker_epics]
-        );
-
-        $this->tracker_dao->shouldReceive('searchByGroupId')->with(104)->andReturn(
-            [
+            ],
+            104 => [
                 [
                     'id'          => '1',
                     'name'        => 'Bugs',
@@ -320,16 +252,17 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                     'description' => 'Description',
                     'item_name'   => 'epico',
                 ],
-            ]
-        );
-        $this->pending_jira_dao->shouldReceive('searchByProjectId')->with(104)->andReturn(
-            [
+            ],
+        });
+        $this->pending_jira_dao->method('searchByProjectId')->willReturnCallback(static fn(int $id) => match ($id) {
+            101 => [],
+            104 => [
                 [
                     'tracker_name'      => 'Pending tracker from Jira',
                     'tracker_shortname' => 'from_jira',
                 ],
-            ]
-        );
+            ],
+        });
 
         $expected_list_of_existing_trackers = [
             'names'      => ['bugs', 'epics', 'pending tracker from jira'],
@@ -338,14 +271,14 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $trackers_from_other_projects = [
             [
-                'id' => '101',
-                'name' => 'My project name',
+                'id'       => '101',
+                'name'     => 'My project name',
                 'trackers' => [
                     [
-                        'id' => 4,
-                        'name' => 'MyAwesomeTracker',
+                        'id'          => 4,
+                        'name'        => 'MyAwesomeTracker',
                         'description' => 'Description',
-                        'tlp_color' => 'red-wine',
+                        'tlp_color'   => 'red-wine',
                     ],
                 ],
             ],
@@ -364,13 +297,13 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
-        $this->assertEquals($expected_template, $presenter);
+        self::assertEquals($expected_template, $presenter);
     }
 
     private function getTrackerColors(): array
     {
         return [
-            'colors_names' => TrackerColor::COLOR_NAMES,
+            'colors_names'  => TrackerColor::COLOR_NAMES,
             'default_color' => TrackerColor::default()->getName(),
         ];
     }
