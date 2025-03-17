@@ -64,6 +64,22 @@ final class LinkedArtifactsTest extends TrackerBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertArtifactLinks($response_with_read_only_user, $artifact_id_1, $artifact_id_2);
+
+        $response_flat = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward&output_format=flat')
+        );
+        $this->assertSame(
+            [['status' => ['To be done']], ['status' => ['To be done']]],
+            \Psl\Json\decode($response_flat->getBody()->getContents())
+        );
+
+        $response_really_flat = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward&output_format=flat_with_semicolon_string_array')
+        );
+        $this->assertSame(
+            [['status' => 'To be done'], ['status' => 'To be done']],
+            \Psl\Json\decode($response_really_flat->getBody()->getContents())
+        );
     }
 
     public function testPUTReverseArtifacts(): void

@@ -59,6 +59,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\REST\RESTCollectionTransformer;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\AreListFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\AreTherePermissionsToMigrateVerifier;
@@ -136,6 +137,8 @@ use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
+use Tuleap\Tracker\REST\Artifact\ArtifactCollectionFormat;
+use Tuleap\Tracker\REST\Artifact\ArtifactCollectionFormatter;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
@@ -148,6 +151,9 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChan
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
+use Tuleap\Tracker\REST\Artifact\FlatArtifactListValueLabelArrayTransformer;
+use Tuleap\Tracker\REST\Artifact\FlatArtifactListValueLabelFlatStringTransformer;
+use Tuleap\Tracker\REST\Artifact\FlatArtifactRepresentationTransformer;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
@@ -193,6 +199,9 @@ use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
 
+/**
+ * @psalm-import-type FlatRepresentation from RESTCollectionTransformer
+ */
 class ArtifactsResource extends AuthenticatedResource
 {
     public const MAX_LIMIT          = 50;
@@ -566,21 +575,23 @@ class ArtifactsResource extends AuthenticatedResource
      * @param int $id Id of the artifact
      * @param string $direction The artifact link direction {@from query} {@choice forward,reverse}
      * @param string $nature The artifact link type to filter {@from query}
+     * @param string $output_format Format of the response: nested (default) or a simplified and incomplete flat format {@from query}{@choice nested,flat,flat_with_semicolon_string_array}
+     * @psalm-param 'nested'|'flat'|'flat_with_semicolon_string_array' $output_format
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return array
-     * @psalm-return array{collection:list<\Tuleap\Tracker\REST\Artifact\ArtifactRepresentation>}
+     * @psalm-return array{collection:list<\Tuleap\Tracker\REST\Artifact\ArtifactRepresentation>}|list<FlatRepresentation>
      *
      * @throws RestException 403
      */
     public function getLinkedArtifacts(
-        $id,
-        $direction,
-        $nature = self::EMPTY_TYPE,
-        $limit = 10,
-        $offset = self::DEFAULT_OFFSET,
-    ) {
+        int $id,
+        string $direction,
+        string $nature = self::EMPTY_TYPE,
+        string $output_format = 'nested',
+        int $limit = 10,
+        int $offset = self::DEFAULT_OFFSET,
+    ): array {
         $this->checkAccess();
 
         $user     = $this->user_manager->getCurrentUser();
@@ -615,9 +626,15 @@ class ArtifactsResource extends AuthenticatedResource
             );
         }
 
-        return [
-            self::VALUES_FORMAT_COLLECTION => $artifact_representations,
-        ];
+        return (new ArtifactCollectionFormatter(
+            new FlatArtifactRepresentationTransformer($this->formelement_factory, \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelArrayTransformer()),
+            new FlatArtifactRepresentationTransformer($this->formelement_factory, \Codendi_HTMLPurifier::instance(), new FlatArtifactListValueLabelFlatStringTransformer())
+        ))->format(
+            ArtifactCollectionFormat::from($output_format),
+            $artifact_representations,
+            /** @psalm-return array{collection:list<\Tuleap\Tracker\REST\Artifact\ArtifactRepresentation>} */
+            fn($artifact_representations): array => [self::VALUES_FORMAT_COLLECTION => $artifact_representations]
+        );
     }
 
     /**
