@@ -51,6 +51,15 @@ describe("ConfigurationModal", () => {
         });
     }
 
+    it("should display fields tab as disabled if the tracker is not configured", () => {
+        const wrapper = getWrapper(
+            ConfigurationStoreStub.withSelectedTracker(null),
+            useOpenConfigurationModalBusStore(),
+        );
+
+        expect(wrapper.find("[data-test=tab-fields]").classes()).toContain("tlp-tab-disabled");
+    });
+
     it("should display success feedback", () => {
         const wrapper = getWrapper(
             ConfigurationStoreStub.withSuccessfulSave(),

@@ -30,9 +30,15 @@
 
         <nav class="tlp-tabs" v-if="are_fields_enabled">
             <span class="tlp-tab tlp-tab-active">{{ $gettext("Tracker selection") }}</span>
-            <span class="tlp-tab tlp-tab-disabled" title="Not implemented yet">{{
-                $gettext("Fields selection")
-            }}</span>
+            <span
+                class="tlp-tab tlp-tab-disabled tlp-tooltip tlp-tooltip-right"
+                v-bind:data-tlp-tooltip="fields_title"
+                data-test="tab-fields"
+            >
+                <span class="artidoc-configuration-tab-label">{{
+                    $gettext("Fields selection")
+                }}</span>
+            </span>
         </nav>
 
         <div class="tlp-modal-body">
@@ -88,7 +94,7 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import { ref, toRaw } from "vue";
+import { computed, ref, toRaw } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import IntroductoryText from "@/components/configuration/IntroductoryText.vue";
@@ -106,7 +112,15 @@ const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 
 const { $gettext } = useGettext();
 
-const configuration_helper = useConfigurationScreenHelper(strictInject(CONFIGURATION_STORE));
+const configuration_store = strictInject(CONFIGURATION_STORE);
+
+const fields_title = computed(() =>
+    configuration_store.selected_tracker.value
+        ? "Not implemented yet"
+        : $gettext("Please select a tracker first"),
+);
+
+const configuration_helper = useConfigurationScreenHelper(configuration_store);
 
 const { is_submit_button_disabled, submit_button_icon, is_success, is_error, error_message } =
     configuration_helper;
@@ -160,5 +174,17 @@ function onSubmit(event: Event): void {
 
 .artidoc-config-modal-with-fields > .tlp-modal-header {
     border-bottom: 0;
+}
+
+.tlp-tab.tlp-tab-disabled {
+    opacity: 1;
+
+    > .artidoc-configuration-tab-label {
+        opacity: 0.5;
+    }
+}
+
+.tlp-tooltip::before {
+    text-transform: none;
 }
 </style>
