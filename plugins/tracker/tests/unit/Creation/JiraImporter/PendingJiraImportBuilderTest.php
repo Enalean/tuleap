@@ -22,66 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Project;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class PendingJiraImportBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var PendingJiraImportBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private UserManager&MockObject $user_manager;
+    private ProjectManager&MockObject $project_manager;
+    private PendingJiraImportBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->project = Mockery::mock(Project::class);
-        $this->user    = Mockery::mock(PFUser::class);
-
-        $this->user_manager    = Mockery::mock(UserManager::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->user_manager    = $this->createMock(UserManager::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $this->builder = new PendingJiraImportBuilder($this->project_manager, $this->user_manager);
     }
 
     public function testItRaisesExceptionIfProjectIsNotValid(): void
     {
-        $this->project->shouldReceive(
-            [
-                'isError'  => true,
-                'isActive' => true,
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => true,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->withError()->build());
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::anActiveUser()->build());
 
         $this->expectException(UnableToBuildPendingJiraImportException::class);
         $this->builder->buildFromRow($this->aPendingImportRow());
@@ -89,20 +57,8 @@ class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesExceptionIfProjectIsNotActive(): void
     {
-        $this->project->shouldReceive(
-            [
-                'isError'  => false,
-                'isActive' => false,
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => true,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->withStatusSuspended()->build());
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::anActiveUser()->build());
 
         $this->expectException(UnableToBuildPendingJiraImportException::class);
         $this->builder->buildFromRow($this->aPendingImportRow());
@@ -110,20 +66,8 @@ class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesExceptionIfUserIsNotAlive(): void
     {
-        $this->project->shouldReceive(
-            [
-                'isError'  => false,
-                'isActive' => true,
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => false,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()->withStatus(PFUser::STATUS_SUSPENDED)->build());
 
         $this->expectException(UnableToBuildPendingJiraImportException::class);
         $this->builder->buildFromRow($this->aPendingImportRow());
@@ -131,23 +75,11 @@ class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAPendingJiraImport(): void
     {
-        $this->project->shouldReceive(
-            [
-                'isError'  => false,
-                'isActive' => true,
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => true,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::anActiveUser()->build());
 
         $pending_import = $this->builder->buildFromRow($this->aPendingImportRow());
-        $this->assertEquals(12, $pending_import->getId());
+        self::assertEquals(12, $pending_import->getId());
     }
 
     private function aPendingImportRow(): array
