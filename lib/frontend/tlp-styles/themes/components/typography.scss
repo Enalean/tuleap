@@ -218,6 +218,7 @@ code {
 pre {
     @extend %-tlp-code;
 
+    margin: 0 0 var(--tlp-medium-spacing);
     padding: 5px 3px 5px calc(var(--tlp-medium-spacing) / 2);
     overflow: auto;
     border-left: 5px solid var(--tlp-main-color-transparent-50);
