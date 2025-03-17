@@ -87,7 +87,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $this->getAggregatesDao()->deleteByRendererId($this->id);
     }
 
-    protected $_sort;
+    protected $_sort; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      * @param array $sort
      */
@@ -98,9 +98,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     /**
      * Get field ids used to (multi)sort results
-     * @return array [{'field_id' => 12, 'is_desc' => 0, 'rank' => 2}, [...]]
+     *
+     * @return array<int, array{renderer_id: int|mixed, field_id: int, is_desc: string, rank: string, field: Tracker_FormElement_Field}>
      */
-    public function getSort($store_in_session = true)
+    public function getSort($store_in_session = true): array
     {
         $sort = null;
         if ($store_in_session) {
@@ -167,7 +168,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
     }
 
-    protected $_columns;
+    protected $_columns; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      * @param array $cols
      */
@@ -244,7 +245,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $this->_columns;
     }
 
-    protected $_aggregates;
+    protected $_aggregates; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      * @param array $aggs
      */
@@ -1907,7 +1908,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 if (! $this->multisort) {
                                     //Drop existing sort
                                     foreach ($sort_fields as $id => $sort_field) {
-                                        $this->report_session->remove("{$this->id}.sort", $id);
+                                        $this->report_session->remove("{$this->id}.sort", (string) $id);
                                     }
                                 }
                                 //Add new sort
@@ -1997,7 +1998,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
                             if ($request->isAjax()) {
                                 $matching_ids     = $this->report->getMatchingIds();
-                                $offset           = (int) $request->get('offset');
                                 $extracolumn      = self::NO_EXTRACOLUMN;
                                 $total_rows       = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
                                 $link_artifact_id = (int) $request->get('link-artifact-id');
@@ -2005,9 +2005,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 echo $this->fetchTHead($extracolumn, $key, ! $link_artifact_id);
                                 $use_data_from_db = false;
                                 $aggregates       = false;
-                                $store_in_session = true;
 
                                 $columns = $this->getTableColumns($key, $use_data_from_db);
+                                $columns = $this->addColumnsRequiredForSorting($columns);
                                 $queries = $this->buildOrderedQuery(
                                     $matching_ids,
                                     $columns,
@@ -2117,6 +2117,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $this->exportToCSV($only_columns);
             }
         }
+    }
+
+    private function addColumnsRequiredForSorting(array $columns): array
+    {
+        $sort = $this->getSort();
+        foreach ($sort as $field_id => $sort_properties) {
+            $columns = array_merge($columns, $this->getTableColumns($field_id, false));
+        }
+        return $columns;
     }
 
     private function getFieldWhenUsingTypes(SimpleXMLElement $node, array $field_info, $xmlMapping)
