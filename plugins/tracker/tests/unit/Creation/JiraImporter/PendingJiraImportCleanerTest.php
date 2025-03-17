@@ -23,45 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\CancellationOfJiraImportNotifier;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PendingJiraImportCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class PendingJiraImportCleanerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CancellationOfJiraImportNotifier
-     */
-    private $notifier;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
-     */
-    private $dao;
-    /**
-     * @var PendingJiraImportCleaner
-     */
-    private $cleaner;
+    private PendingJiraImportBuilder&MockObject $builder;
+    private CancellationOfJiraImportNotifier&MockObject $notifier;
+    private PendingJiraImportDao&MockObject $dao;
+    private PendingJiraImportCleaner $cleaner;
 
     protected function setUp(): void
     {
-        $logger = Mockery::mock(LoggerInterface::class);
-        $logger->shouldReceive('info');
-
-        $this->notifier = Mockery::mock(CancellationOfJiraImportNotifier::class);
-        $this->dao      = Mockery::mock(PendingJiraImportDao::class);
-        $this->builder  = Mockery::mock(PendingJiraImportBuilder::class);
+        $this->notifier = $this->createMock(CancellationOfJiraImportNotifier::class);
+        $this->dao      = $this->createMock(PendingJiraImportDao::class);
+        $this->builder  = $this->createMock(PendingJiraImportBuilder::class);
 
         $this->cleaner = new PendingJiraImportCleaner(
-            $logger,
+            new NullLogger(),
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->builder,
@@ -76,37 +60,21 @@ class PendingJiraImportCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $jira_import_row_1 = $this->anExpiredImportRow('jira 1');
         $jira_import_row_2 = $this->anExpiredImportRow('jira 2');
-        $this->dao->shouldReceive('searchExpiredImports')
+        $this->dao->expects(self::once())->method('searchExpiredImports')
             ->with($expected_timestamp)
-            ->once()
-            ->andReturn([
-                $jira_import_row_1,
-                $jira_import_row_2,
-            ]);
+            ->willReturn([$jira_import_row_1, $jira_import_row_2]);
 
-        $jira_import_1 = Mockery::mock(PendingJiraImport::class);
-        $jira_import_2 = Mockery::mock(PendingJiraImport::class);
-        $this->builder
-            ->shouldReceive('buildFromRow')
-            ->with($jira_import_row_1)
-            ->andReturn($jira_import_1);
-        $this->builder
-            ->shouldReceive('buildFromRow')
-            ->with($jira_import_row_2)
-            ->andReturn($jira_import_2);
+        $jira_import_1 = $this->createStub(PendingJiraImport::class);
+        $jira_import_2 = $this->createStub(PendingJiraImport::class);
+        $this->builder->method('buildFromRow')->willReturnCallback(static fn(array $row) => match ($row) {
+            $jira_import_row_1 => $jira_import_1,
+            $jira_import_row_2 => $jira_import_2,
+        });
 
-        $this->dao->shouldReceive('deleteExpiredImports')
-            ->with($expected_timestamp)
-            ->once();
+        $this->dao->expects(self::once())->method('deleteExpiredImports')->with($expected_timestamp);
 
-        $this->notifier
-            ->shouldReceive('warnUserAboutDeletion')
-            ->with($jira_import_1)
-            ->once();
-        $this->notifier
-            ->shouldReceive('warnUserAboutDeletion')
-            ->with($jira_import_2)
-            ->once();
+        $this->notifier->expects(self::exactly(2))->method('warnUserAboutDeletion')
+            ->with(self::callback(static fn(PendingJiraImport $import) => in_array($import, [$jira_import_1, $jira_import_2])));
 
         $this->cleaner->deleteDanglingPendingJiraImports($current_time);
     }
@@ -117,26 +85,15 @@ class PendingJiraImportCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_timestamp = (new DateTimeImmutable('2020-05-12'))->getTimestamp();
 
         $jira_import_row = $this->anExpiredImportRow();
-        $this->dao->shouldReceive('searchExpiredImports')
-            ->with($expected_timestamp)
-            ->once()
-            ->andReturn([
-                $jira_import_row,
-            ]);
+        $this->dao->expects(self::once())->method('searchExpiredImports')
+            ->with($expected_timestamp)->willReturn([$jira_import_row]);
 
-        $jira_import = Mockery::mock(PendingJiraImport::class);
-        $this->builder
-            ->shouldReceive('buildFromRow')
-            ->with($jira_import_row)
-            ->andThrow(UnableToBuildPendingJiraImportException::class);
+        $this->builder->method('buildFromRow')->with($jira_import_row)
+            ->willThrowException(new UnableToBuildPendingJiraImportException());
 
-        $this->dao->shouldReceive('deleteExpiredImports')
-            ->with($expected_timestamp)
-            ->once();
+        $this->dao->expects(self::once())->method('deleteExpiredImports')->with($expected_timestamp);
 
-        $this->notifier
-            ->shouldReceive('warnUserAboutDeletion')
-            ->never();
+        $this->notifier->expects(self::never())->method('warnUserAboutDeletion');
 
         $this->cleaner->deleteDanglingPendingJiraImports($current_time);
     }
