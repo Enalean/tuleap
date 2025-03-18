@@ -28,6 +28,9 @@ msgstr "Tous les artéfacts ouverts"
 msgid "An error occurred: %{error}"
 msgstr "Une erreur s'est produite : %{error}"
 
+msgid "Are you sure you want to permanently delete it?"
+msgstr "Êtes-vous de vouloir la supprimer définitivement ?"
+
 msgid "Artifact"
 msgstr "Artéfact"
 
@@ -46,11 +49,20 @@ msgstr "Choisir une autre requête"
 msgid "Create new query"
 msgstr "Créer une nouvelle requête"
 
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete the query"
+msgstr "Supprimer la requête"
+
 msgid "Description"
 msgstr "Description"
 
 msgid "Edit"
 msgstr "Éditer"
+
+msgid "Error while deleting the query: %{error}"
+msgstr "Erreur pendant la suppression de la requête : %{error}"
 
 msgid "Error while exporting the report as .xlsx: %{error}"
 msgstr "Erreur pendant l'export du rapport au format .xlsx: %{error}"
@@ -179,6 +191,15 @@ msgstr "Date de soumission"
 msgid "There is no artifact matching the query."
 msgstr "Aucun artéfact ne correspond à la requête."
 
+msgid ""
+"This action cannot be undone, and you will no longer have a default query."
+msgstr ""
+"Cette action ne peut être annulée, et vous n'aurez plus de requête par "
+"défaut."
+
+msgid "This action cannot be undone."
+msgstr "Cette action ne peut être annulée."
+
 msgid "Title"
 msgstr "Titre"
 
@@ -187,6 +208,9 @@ msgstr "Outil de suivi"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
+
+msgid "Warning: This query is set as the default."
+msgstr "Attention : Cette requête est celle par défaut."
 
 msgid "Write your description"
 msgstr "Écrire votre description"

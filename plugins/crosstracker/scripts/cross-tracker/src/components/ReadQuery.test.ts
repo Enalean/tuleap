@@ -39,16 +39,19 @@ import type {
     Events,
     NotifyFaultEvent,
     NotifySuccessEvent,
+    RefreshArtifactsEvent,
     SwitchQueryEvent,
     UpdateWidgetTitleEvent,
 } from "../helpers/emitter-provider";
 import {
-    UPDATE_WIDGET_TITLE_EVENT,
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
+    QUERY_DELETED_EVENT,
+    REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
     TOGGLE_QUERY_DETAILS_EVENT,
+    UPDATE_WIDGET_TITLE_EVENT,
 } from "../helpers/emitter-provider";
 import type { Query } from "../type";
 import mitt from "mitt";
@@ -62,6 +65,7 @@ describe("ReadQuery", () => {
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_success_events: NotifySuccessEvent[];
     let dispatched_updated_title_events: UpdateWidgetTitleEvent[];
+    let dispatched_refresh_events: RefreshArtifactsEvent[];
     let emitter: EmitterProvider;
     let is_multiple_query_supported: boolean;
 
@@ -72,6 +76,7 @@ describe("ReadQuery", () => {
         dispatched_fault_events = [];
         dispatched_success_events = [];
         dispatched_updated_title_events = [];
+        dispatched_refresh_events = [];
         is_multiple_query_supported = true;
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, (event) => {
@@ -88,6 +93,9 @@ describe("ReadQuery", () => {
         });
         emitter.on(UPDATE_WIDGET_TITLE_EVENT, (event) => {
             dispatched_updated_title_events.push(event);
+        });
+        emitter.on(REFRESH_ARTIFACTS_EVENT, (event) => {
+            dispatched_refresh_events.push(event);
         });
 
         vi.spyOn(rest_querier, "getQueries").mockReturnValue(
@@ -396,6 +404,57 @@ describe("ReadQuery", () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.findComponent(ReadingMode).exists()).toBe(true);
+        });
+    });
+
+    describe("handleDeleteQuery", () => {
+        it("delete the event query and then display the other one", async () => {
+            const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
+            const query_1 = {
+                tql_query: query,
+                title: "TQL query title 1",
+                description: "",
+                id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                is_default: false,
+            };
+            const query_2 = {
+                tql_query: query,
+                title: "TQL query title 2",
+                description: "",
+                id: "01952813-7ae7-7a27-bcc0-4a9c660dccb4",
+                is_default: false,
+            };
+            const queries: ReadonlyArray<Query> = [query_1, query_2];
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync(queries));
+            getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+            emitter.emit(QUERY_DELETED_EVENT, { deleted_query: query_1 });
+
+            expect(dispatched_switch_query_events).toHaveLength(1);
+            expect(dispatched_switch_query_events[0]).toStrictEqual({ query: query_2 });
+            expect(dispatched_updated_title_events).toHaveLength(2); // First one is in loadBackendReport
+            expect(dispatched_updated_title_events[1]).toStrictEqual({ new_title: query_2.title });
+            expect(dispatched_refresh_events).toHaveLength(1);
+            expect(dispatched_refresh_events[0]).toStrictEqual({ query: query_2 });
+        });
+
+        it("delete the event query and then display the creation pane", async () => {
+            is_multiple_query_supported = true;
+            const query = {
+                tql_query: 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""',
+                title: "TQL query title 1",
+                description: "",
+                id: "0194dfd6-a489-703b-aabd-9d473212d908",
+                is_default: false,
+            };
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync([query]));
+            const wrapper = getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+            emitter.emit(QUERY_DELETED_EVENT, { deleted_query: query });
+
+            expect(wrapper.vm.report_state).toBe("edit-query");
+            expect(wrapper.emitted("switch-to-create-query-pane")).toBeDefined();
+            expect(dispatched_switch_query_events).toHaveLength(0);
         });
     });
 });

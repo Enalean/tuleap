@@ -29,10 +29,11 @@ export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";
 export const SEARCH_ARTIFACTS_EVENT = "search-artifact";
 export const CREATE_NEW_QUERY_EVENT = "create-new-query";
 export const NEW_QUERY_CREATED_EVENT = "new-query-created";
+export const QUERY_DELETED_EVENT = "query-deleted";
 export const NOTIFY_FAULT_EVENT = "notify-fault";
 export const NOTIFY_SUCCESS_EVENT = "notify-success";
 export const CLEAR_FEEDBACK_EVENT = "clear-feedback";
-export const DISPLAY_QUERY_PREVIEW_EVENT = "display_query_preview";
+export const DISPLAY_QUERY_PREVIEW_EVENT = "display-query-preview";
 export const UPDATE_WIDGET_TITLE_EVENT = "update-widget-title";
 export const TOGGLE_QUERY_DETAILS_EVENT = "toggle-query-details";
 
@@ -42,6 +43,7 @@ export type Events = {
     [SEARCH_ARTIFACTS_EVENT]: void;
     [CREATE_NEW_QUERY_EVENT]: void;
     [NEW_QUERY_CREATED_EVENT]: CreatedQueryEvent;
+    [QUERY_DELETED_EVENT]: DeletedQueryEvent;
     [NOTIFY_FAULT_EVENT]: NotifyFaultEvent;
     [NOTIFY_SUCCESS_EVENT]: NotifySuccessEvent;
     [CLEAR_FEEDBACK_EVENT]: void;
@@ -57,8 +59,13 @@ export type UpdateWidgetTitleEvent = {
 export type ToggleQueryDetailsEvent = {
     readonly display_query_details: boolean;
 };
+
 export type CreatedQueryEvent = {
     readonly created_query: Query;
+};
+
+export type DeletedQueryEvent = {
+    readonly deleted_query: Query;
 };
 
 export type SwitchQueryEvent = {

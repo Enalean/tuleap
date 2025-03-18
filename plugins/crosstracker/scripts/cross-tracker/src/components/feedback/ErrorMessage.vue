@@ -68,6 +68,13 @@ const error_message = computed<Option<string>>(() =>
                 true,
             );
         }
+        if ("isQueryDeletion" in fault && fault.isQueryDeletion() === true) {
+            return $gettext(
+                "Error while deleting the query: %{error}",
+                { error: String(fault) },
+                true,
+            );
+        }
         return $gettext("An error occurred: %{error}", { error: String(fault) }, true);
     }),
 );
