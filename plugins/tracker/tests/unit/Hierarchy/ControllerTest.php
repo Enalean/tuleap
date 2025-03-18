@@ -25,9 +25,11 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\HierarchyPresenter;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -153,11 +155,12 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->trigger_rules_dao,
             $this->artifact_links_usage_dao,
             $this->event_manager,
-            $this->project_history_dao
+            $this->project_history_dao,
+            CSRFSynchronizerTokenStub::buildSelf()
         );
     }
 
-    private function buildPresenter(Codendi_Request $request): Tracker_Hierarchy_Presenter
+    private function buildPresenter(Codendi_Request $request): HierarchyPresenter
     {
         return $this->buildController($request)->buildPresenter();
     }

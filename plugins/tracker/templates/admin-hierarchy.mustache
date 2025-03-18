@@ -1,6 +1,6 @@
-<h2 class="almost-tlp-title">{{ hierarchy_title }}</h2>
+<h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker | Hierarchy {{/ dgettext }}</h2>
 <div id="tracker-admin-current-full-hierarchy">
-    <h3>{{ current_full_hierarchy_title }}</h3>
+    <h3>{{# dgettext }} tuleap-tracker | Current Full Hierarchy {{/ dgettext }}</h3>
     {{# hierarchy }}
         <ul class="tracker-hierarchy tracker-hierarchy-admin">{{> tracker-node}}</ul>
     {{/ hierarchy }}
@@ -16,14 +16,17 @@
             {{ tracker_used_in_trigger_rules_nb }} |
             {{ . }}
         {{/ dngettext }}
-        <a href="{{ getTrackerUrl }}/?tracker={{ getTrackerId }}&func=admin-workflow-triggers">
+        <a href="/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-workflow-triggers">
         {{# dgettext }} tuleap-tracker | Go to the administration of the cross-tracker triggers. {{/ dgettext }}
         </a>
     </div>
     {{/ tracker_used_in_trigger_rules_names }}
 
     <form method="post"
-          action="{{ getTrackerUrl }}/?tracker={{ getTrackerId }}&func=admin-hierarchy-update">
+          action="/plugins/tracker/?tracker={{ getTrackerId }}&func=admin-hierarchy-update">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <select
                 class="tracker-admin-hierarchy-edit-children"
                 name="children[]"

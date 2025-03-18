@@ -984,7 +984,6 @@
             <file name="plugins/tracker/tests/unit/Hierarchy/HierarchyControllerTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/HierarchyFactoryTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/HierarchyTest.php"/>
-            <file name="plugins/tracker/tests/unit/Hierarchy/PresenterTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/TrackerHierarchyFactoryGetAllAncestorsTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/TrackerHierarchyFactoryGetParentArtifactTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/TrackerHierarchyFactoryGetParentTest.php"/>

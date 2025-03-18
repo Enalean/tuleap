@@ -1753,7 +1753,7 @@ msgstr ""
 msgid "Manage field dependencies"
 msgstr ""
 
-msgid "Manage hierarchy of tracker"
+msgid "Manage hierarchy of tracker %1$s"
 msgstr ""
 
 msgid "Manage tooltip"

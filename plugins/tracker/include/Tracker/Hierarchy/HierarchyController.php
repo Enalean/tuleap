@@ -29,13 +29,14 @@ use TemplateRendererFactory;
 use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
-use Tracker_Hierarchy_Presenter;
 use Tracker_Workflow_Trigger_RulesDao;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Valid_UInt;
 
-class HierarchyController
+final readonly class HierarchyController
 {
+    final public const HIERARCHY_VIEW = 'admin-hierarchy';
     private TemplateRenderer $renderer;
 
     public function __construct(
@@ -47,22 +48,24 @@ class HierarchyController
         private ArtifactLinksUsageDao $artifact_links_usage_dao,
         private EventDispatcherInterface $event_dispatcher,
         private \ProjectHistoryDao $project_history_dao,
+        private CSRFSynchronizerTokenInterface $csrf_token,
     ) {
         $this->renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
     }
 
     public function edit(): void
     {
-        $this->render('admin-hierarchy', $this->buildPresenter());
+        $this->renderer->renderToPage('admin-hierarchy', $this->buildPresenter());
     }
 
-    public function buildPresenter(): Tracker_Hierarchy_Presenter
+    public function buildPresenter(): HierarchyPresenter
     {
-        return new Tracker_Hierarchy_Presenter(
+        return new HierarchyPresenter(
             $this->tracker,
             $this->factory->getPossibleChildren($this->tracker),
             $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
-            $this->getChildrenUsedInTriggerRules()
+            $this->getChildrenUsedInTriggerRules(),
+            $this->csrf_token,
         );
     }
 
@@ -94,6 +97,8 @@ class HierarchyController
 
     public function update(): void
     {
+        $this->csrf_token->check();
+
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
 
@@ -173,22 +178,17 @@ class HierarchyController
         $redirect = http_build_query(
             [
                 'tracker' => $this->tracker->getId(),
-                'func'    => 'admin-hierarchy',
+                'func'    => self::HIERARCHY_VIEW,
             ]
         );
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . $redirect);
-    }
-
-    private function render($template_name, $presenter)
-    {
-        $this->renderer->renderToPage($template_name, $presenter);
     }
 
     /**
      *
      * @param array $mapping the id of tracker's children
      */
-    public function updateFromXmlProjectImportProcess(array $mapping)
+    public function updateFromXmlProjectImportProcess(array $mapping): void
     {
         $this->dao->updateChildren($this->tracker->getId(), $mapping);
     }
