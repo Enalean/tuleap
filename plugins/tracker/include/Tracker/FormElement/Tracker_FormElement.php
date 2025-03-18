@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
 use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
+use Tuleap\Tracker\FormElement\ProvideFactoryButtonInformation;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementImpl;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -39,7 +40,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
  */
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation, Tracker_IProvideJsonFormatOfMyself
+abstract class Tracker_FormElement extends ProvideFactoryButtonInformation implements Tracker_FormElement_Interface, Tracker_IProvideJsonFormatOfMyself
 {
     public const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
     public const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
@@ -301,11 +302,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             default:
                 break;
         }
-    }
-
-    final public function getCSRFTokenForElementUpdate(): CSRFSynchronizerToken
-    {
-        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(['func' => 'admin-formElements', 'tracker' => $this->tracker_id]));
     }
 
     /**

@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\ProvideFactoryButtonInformation;
 
-class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryButtonInformation
+class Tracker_FormElement_Shared extends ProvideFactoryButtonInformation
 {
     /**
      * @var Tracker
@@ -72,10 +73,9 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryB
         $visitor->visit($this);
     }
 
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank)
+    public function __construct($id, private int $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank)
     {
         $this->id            = $id;
-        $this->tracker_id    = $tracker_id;
         $this->parent_id     = $parent_id;
         $this->name          = $name;
         $this->label         = $label;
@@ -85,5 +85,10 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryB
         $this->required      = $required;
         $this->notifications = $notifications;
         $this->rank          = $rank;
+    }
+
+    public function getTrackerId(): int
+    {
+        return $this->tracker_id;
     }
 }

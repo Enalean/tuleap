@@ -134,15 +134,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public const GET_CLASSNAMES = 'tracker_formelement_get_classnames';
 
     /**
-     * Get the visitor responsible of the display of create interface for the element
-     *
-     * Params:
-     *  - all_used_elements => Tracker_FormElement[]
-     *  - visitor           => (output) Tracker_FormElement_View_Admin_CreateVisitor
-     */
-    public const VIEW_ADMIN_CREATE_VISITOR = 'tracker_formelement_factory_view_admin_create_visitor';
-
-    /**
      * A protected constructor; prevents direct creation of object
      */
     protected function __construct()
@@ -1552,13 +1543,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
                 $visitor = new Tracker_FormElement_View_Admin_CreateSharedVisitor($allUsedElements);
             } else {
                 $visitor = new Tracker_FormElement_View_Admin_CreateVisitor($allUsedElements);
-                $this->getEventManager()->processEvent(
-                    self::VIEW_ADMIN_CREATE_VISITOR,
-                    [
-                        'all_used_elements' => $allUsedElements,
-                        'visitor'           => &$visitor,
-                    ]
-                );
             }
 
             $visitor->setType($type);
