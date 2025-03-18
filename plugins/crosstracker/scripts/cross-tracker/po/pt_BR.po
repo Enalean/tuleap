@@ -48,6 +48,9 @@ msgstr ""
 msgid "Create new query"
 msgstr ""
 
+msgid "Default"
+msgstr ""
+
 msgid "Delete"
 msgstr ""
 

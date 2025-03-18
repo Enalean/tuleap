@@ -55,12 +55,15 @@
                 v-bind:key="query.id"
                 v-bind:title="query.description"
                 v-bind:class="{ 'current-query': query.id === backend_query.id }"
-                class="tlp-dropdown-menu-item"
+                class="tlp-dropdown-menu-item dropdown-item"
                 role="menuitem"
                 v-on:click.prevent="updateSelectedQuery(query)"
                 data-test="query"
             >
                 {{ query.title }}
+                <span v-if="query.is_default" class="tlp-text-muted">{{
+                    $gettext("Default")
+                }}</span>
             </div>
         </div>
     </div>
@@ -145,6 +148,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+.dropdown-item {
+    display: flex;
+    justify-content: space-between;
+}
+
 .current-query {
     opacity: 0.5;
     background-color: var(--tlp-main-color-hover-background);

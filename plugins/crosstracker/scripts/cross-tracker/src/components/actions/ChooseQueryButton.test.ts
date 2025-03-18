@@ -136,7 +136,9 @@ describe("ChooseQueryButton", () => {
                 if (query_element.element.textContent === null) {
                     throw new Error("The title should not be null");
                 }
-                expect(expected_query_title.includes(query_element.element.textContent)).toBe(true);
+                expect(
+                    expected_query_title.includes(query_element.element.textContent.trim()),
+                ).toBe(true);
             });
         },
     );

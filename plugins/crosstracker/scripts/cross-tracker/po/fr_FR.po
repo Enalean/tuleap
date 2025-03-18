@@ -49,6 +49,9 @@ msgstr "Choisir une autre requête"
 msgid "Create new query"
 msgstr "Créer une nouvelle requête"
 
+msgid "Default"
+msgstr "Défaut"
+
 msgid "Delete"
 msgstr "Supprimer"
 
