@@ -22,45 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
+use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class AsynchronousJiraRunnerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraRunner
-     */
-    private $jira_runner;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportBuilder
-     */
-    private $builder;
-    /**
-     * @var AsynchronousJiraRunner
-     */
-    private $async_runner;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
+    private JiraRunner&MockObject $jira_runner;
+    private PendingJiraImportDao&MockObject $dao;
+    private PendingJiraImportBuilder&MockObject $builder;
+    private AsynchronousJiraRunner $async_runner;
+    private TestLogger $logger;
 
     protected function setUp(): void
     {
-        $this->jira_runner = Mockery::mock(JiraRunner::class);
-        $this->dao         = Mockery::mock(PendingJiraImportDao::class);
-        $this->builder     = Mockery::mock(PendingJiraImportBuilder::class);
+        $this->jira_runner = $this->createMock(JiraRunner::class);
+        $this->dao         = $this->createMock(PendingJiraImportDao::class);
+        $this->builder     = $this->createMock(PendingJiraImportBuilder::class);
 
-        $this->logger = Mockery::mock(LoggerInterface::class);
+        $this->logger = new TestLogger();
 
         $this->async_runner = new AsynchronousJiraRunner($this->jira_runner, $this->dao, $this->builder);
     }
@@ -75,16 +59,9 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->logger
-            ->shouldReceive('error')
-            ->with('The payload for tuleap.tracker.creation.jira seems to be malformed')
-            ->once();
-        $this->logger
-            ->shouldReceive('debug')
-            ->with("Malformed payload for tuleap.tracker.creation.jira: array (\n)")
-            ->once();
-
         $this->async_runner->process($event);
+        self::assertTrue($this->logger->hasErrorThatContains('The payload for tuleap.tracker.creation.jira seems to be malformed'));
+        self::assertTrue($this->logger->hasDebugThatContains("Malformed payload for tuleap.tracker.creation.jira: array (\n)"));
     }
 
     public function testItDoesNotProcessAnythingIfPendingJiraImportCannotBeFound(): void
@@ -97,20 +74,10 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->dao
-            ->shouldReceive('searchById')
-            ->with(123)
-            ->once()
-            ->andReturn(false);
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with(
-                'Not able to process an event tuleap.tracker.creation.jira, the pending jira import #123 can not be found.'
-            )
-            ->once();
+        $this->dao->expects(self::once())->method('searchById')->with(123)->willReturn(false);
 
         $this->async_runner->process($event);
+        self::assertTrue($this->logger->hasErrorThatContains('Not able to process an event tuleap.tracker.creation.jira, the pending jira import #123 can not be found.'));
     }
 
     public function testItDoesNotProcessAnythingIfPendingJiraImportCannotBeBuilt(): void
@@ -123,26 +90,13 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->dao
-            ->shouldReceive('searchById')
-            ->with(123)
-            ->once()
-            ->andReturn(['data_from_db']);
+        $this->dao->expects(self::once())->method('searchById')->with(123)->willReturn(['data_from_db']);
 
-        $this->builder
-            ->shouldReceive('buildFromRow')
-            ->with(['data_from_db'])
-            ->once()
-            ->andThrow(new UnableToBuildPendingJiraImportException('Project is not active'));
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with(
-                'Not able to process an event tuleap.tracker.creation.jira, the pending jira import #123 can not be built: Project is not active'
-            )
-            ->once();
+        $this->builder->expects(self::once())->method('buildFromRow')->with(['data_from_db'])
+            ->willThrowException(new UnableToBuildPendingJiraImportException('Project is not active'));
 
         $this->async_runner->process($event);
+        self::assertTrue($this->logger->hasErrorThatContains('Not able to process an event tuleap.tracker.creation.jira, the pending jira import #123 can not be built: Project is not active'));
     }
 
     public function testItAsksToTheRunnerToProcessTheImport(): void
@@ -155,23 +109,12 @@ class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->dao
-            ->shouldReceive('searchById')
-            ->with(123)
-            ->once()
-            ->andReturn(['data_from_db']);
+        $this->dao->expects(self::once())->method('searchById')->with(123)->willReturn(['data_from_db']);
 
-        $import = Mockery::mock(PendingJiraImport::class);
-        $this->builder
-            ->shouldReceive('buildFromRow')
-            ->with(['data_from_db'])
-            ->once()
-            ->andReturn($import);
+        $import = $this->createStub(PendingJiraImport::class);
+        $this->builder->expects(self::once())->method('buildFromRow')->with(['data_from_db'])->willReturn($import);
 
-        $this->jira_runner
-            ->shouldReceive('processAsyncJiraImport')
-            ->with($import)
-            ->once();
+        $this->jira_runner->expects(self::once())->method('processAsyncJiraImport')->with($import);
 
         $this->async_runner->process($event);
     }
