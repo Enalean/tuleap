@@ -169,7 +169,9 @@ initGettext(
                 });
                 host.dropdown_instance = dropdown_instance;
 
-                return dropdown_instance.destroy;
+                return () => {
+                    dropdown_instance.destroy();
+                };
             },
         },
         render: (host) => renderHeadingsButton(host, gettext_provider),
