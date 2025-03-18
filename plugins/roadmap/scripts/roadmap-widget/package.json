@@ -24,6 +24,7 @@
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@types/luxon": "^3.4.2",
+    "@vitejs/plugin-vue2": "^2.3.3",
     "@vue/test-utils": "^1.3",
     "jest-environment-jsdom": "^29.7.0",
     "vue-class-component": "^7.2.6",
@@ -31,8 +32,8 @@
     "vuex-class": "^0.3.2"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
     "test": "jest",
     "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && vite serve",
     "typecheck": "vue-tsc --noEmit"
