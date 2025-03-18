@@ -132,6 +132,7 @@ document.observe("dom:loaded", function () {
                 } else {
                     let values = [];
                     const field_id = dragged.readAttribute("data-column-field-id");
+                    parameters["challenge"] = dragged.readAttribute("data-csrf-token-update");
                     parameters["artifact[field_id]"] = field_id;
                     let columns = document.getElementsByClassName(
                         "cardwall_column_mapping_" + value_id + "_" + field_id,

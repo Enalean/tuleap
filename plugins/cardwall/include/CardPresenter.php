@@ -61,6 +61,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
      * @var bool
      */
     public $user_has_accessibility_mode;
+    public readonly string $csrf_token_challenge_update;
 
     public function __construct(
         PFUser $user,
@@ -83,6 +84,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
         $this->swimline_id                 = $swimline_id;
         $this->background_color            = $background_color;
         $this->user_has_accessibility_mode = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $this->csrf_token_challenge_update = $artifact->getCSRFTokenForTrackerViewArtifactManipulation()->getToken();
     }
 
     /**

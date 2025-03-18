@@ -902,6 +902,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $data_field_type            = '';
         $data_field_is_autocomputed = '';
         $data_field_old_value       = '';
+        $data_csrf_token_update     = '';
         $is_autocomputed            = $this->isArtifactValueAutocomputed($artifact);
         $purifier                   = Codendi_HTMLPurifier::instance();
 
@@ -911,6 +912,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $data_field_type            = 'data-field-type="' . $purifier->purify($this->getFormElementFactory()->getType($this)) . '"';
             $data_field_is_autocomputed = 'data-field-is-autocomputed="' . $is_autocomputed . '"';
             $data_field_old_value       = 'data-field-old-value="' . $value . '"';
+            $data_csrf_token_update     = 'data-csrf-token-challenge-update="' . $purifier->purify($this->getId()) . '"';
         }
 
         $html = '<tr>
@@ -927,6 +929,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
                         $data_field_type .
                         $data_field_is_autocomputed .
                         $data_field_old_value .
+                        $data_csrf_token_update .
                     '>' .
                         $value .
                     '</td>

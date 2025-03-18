@@ -768,16 +768,18 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchCard(Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences)
     {
-        $value           = $this->fetchCardValue($artifact, $display_preferences);
-        $data_field_id   = '';
-        $data_field_type = '';
+        $value                  = $this->fetchCardValue($artifact, $display_preferences);
+        $data_field_id          = '';
+        $data_field_type        = '';
+        $data_csrf_token_update = '';
 
         $purifier = Codendi_HTMLPurifier::instance();
 
         $is_field_frozen = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if ($this->userCanUpdate() && ! $is_field_frozen) {
-            $data_field_id   = 'data-field-id="' . $purifier->purify($this->getId()) . '"';
-            $data_field_type = 'data-field-type="' . $purifier->purify($this->getFormElementFactory()->getType($this)) . '"';
+            $data_field_id          = 'data-field-id="' . $purifier->purify($this->getId()) . '"';
+            $data_field_type        = 'data-field-type="' . $purifier->purify($this->getFormElementFactory()->getType($this)) . '"';
+            $data_csrf_token_update = 'data-csrf-token-challenge-update="' . $purifier->purify($this->getId()) . '"';
         }
 
         $html = '<tr>
@@ -786,6 +788,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                     <td class="valueOf_' . $purifier->purify($this->getName()) . '"' .
                         $data_field_id .
                         $data_field_type .
+                        $data_csrf_token_update .
                         '>' .
                         $value .
                     '</td>

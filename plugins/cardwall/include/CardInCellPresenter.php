@@ -20,20 +20,20 @@
 class Cardwall_CardInCellPresenter
 {
     private $swimline_id;
-    private $swimline_field_values;
     private $card_field_id;
+    public readonly string $csrf_token_challenge_update;
 
     /**
      * @var Tracker_CardPresenter
      */
     private $card_presenter;
 
-    public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, array $swimline_field_values = [])
+    public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, private array $swimline_field_values = [])
     {
-        $this->swimline_id           = $swimline_id;
-        $this->swimline_field_values = $swimline_field_values;
-        $this->card_field_id         = $card_field_id;
-        $this->card_presenter        = $presenter;
+        $this->swimline_id                 = $swimline_id;
+        $this->card_field_id               = $card_field_id;
+        $this->card_presenter              = $presenter;
+        $this->csrf_token_challenge_update = $presenter->getArtifact()->getCSRFTokenForTrackerViewArtifactManipulation()->getToken();
     }
 
     public function getDropIntoClasses()
