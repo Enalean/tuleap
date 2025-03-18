@@ -52,11 +52,6 @@
     cursor: pointer;
 }
 
-.ProseMirror pre,
-.ProseMirror p {
-    margin-bottom: var(--tlp-small-spacing);
-}
-
 /* stylelint-disable-next-line selector-no-qualifying-type */
 .ProseMirror-focused img.ProseMirror-selectednode {
     outline: 1px solid var(--tlp-main-color);
