@@ -75,10 +75,7 @@ describe("OpenClosedSwitcher", () => {
             },
         });
         wrapper.get("#button-bar-show-closed").setChecked();
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "displayClosedItems",
-            expect.anything(),
-        );
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("displayClosedItems");
     });
 
     it("Mutates the store when user decides to hide closed items", async () => {
@@ -95,9 +92,6 @@ describe("OpenClosedSwitcher", () => {
         const hide_button = wrapper.get("#button-bar-hide-closed");
         hide_button.setChecked();
         hide_button.trigger("change");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "hideClosedItems",
-            expect.anything(),
-        );
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("hideClosedItems");
     });
 });

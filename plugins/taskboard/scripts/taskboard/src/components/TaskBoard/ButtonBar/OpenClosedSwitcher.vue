@@ -27,13 +27,13 @@
                 name="button-bar-open-closed-switcher"
                 class="tlp-button-bar-checkbox"
                 v-bind:checked="are_closed_items_displayed"
-                v-on:change="displayClosedItems"
+                v-on:change="displayClosedItems()"
                 data-shortcut="toggle-closed-items"
             />
             <label
                 for="button-bar-show-closed"
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
-                v-bind:title="view_closed_items_title"
+                v-bind:title="$gettext('Hide closed items')"
                 data-test="show-closed-items"
             >
                 <i class="fa-solid fa-eye tlp-button-icon" aria-hidden="true"></i>
@@ -46,13 +46,13 @@
                 name="button-bar-open-closed-switcher"
                 class="tlp-button-bar-checkbox"
                 v-bind:checked="!are_closed_items_displayed"
-                v-on:change="hideClosedItems"
+                v-on:change="hideClosedItems()"
                 data-shortcut="toggle-closed-items"
             />
             <label
                 for="button-bar-hide-closed"
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
-                v-bind:title="hide_closed_items_title"
+                v-bind:title="$gettext('View closed items')"
                 data-test="hide-closed-items"
             >
                 <i class="fa-solid fa-eye-slash tlp-button-icon" aria-hidden="true"></i>
@@ -61,28 +61,12 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { Action, State } from "vuex-class";
+<script setup lang="ts">
+import { useActions, useState } from "vuex-composition-helpers";
 
-@Component
-export default class OpenClosedSwitcher extends Vue {
-    @State
-    readonly are_closed_items_displayed!: boolean;
-
-    @Action
-    readonly displayClosedItems!: () => Promise<void>;
-
-    @Action
-    readonly hideClosedItems!: () => Promise<void>;
-
-    get view_closed_items_title(): string {
-        return this.$gettext("View closed items");
-    }
-
-    get hide_closed_items_title(): string {
-        return this.$gettext("Hide closed items");
-    }
-}
+const { are_closed_items_displayed } = useState(["are_closed_items_displayed"]);
+const { displayClosedItems, hideClosedItems } = useActions([
+    "displayClosedItems",
+    "hideClosedItems",
+]);
 </script>
