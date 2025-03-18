@@ -23,59 +23,50 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
-use Mockery;
-use PFUser;
+use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_Users;
+use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
-use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\FieldSnapshot;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypesStub;
+use Tuleap\Tracker\Test\Stub\XML\IDGeneratorStub;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
-use UserManager;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\FieldSnapshot;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
+use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
-use function PHPUnit\Framework\assertFalse;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FieldChangeXMLExporterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-
+    private UserManager&MockObject $user_manager;
     private GetExistingArtifactLinkTypes $type_converter;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->user_manager   = Mockery::mock(UserManager::class);
-        $this->type_converter = new class implements GetExistingArtifactLinkTypes {
-            public ?TypePresenter $type = null;
-
-            public function getExistingArtifactLinkTypes(array $json_representation): ?TypePresenter
-            {
-                return $this->type;
-            }
-        };
+        $this->user_manager   = $this->createMock(UserManager::class);
+        $this->type_converter = GetExistingArtifactLinkTypesStub::build(null);
     }
 
     private function getExporter(): FieldChangeXMLExporter
@@ -125,8 +116,8 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
@@ -141,7 +132,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $changeset_node,
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             <<<EOX
             <field_change type="text" field_name="description"><value format="html"><![CDATA[<h1><a name="Coin"></a>Coin</h1>
 
@@ -164,8 +155,8 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
@@ -180,7 +171,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $changeset_node,
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             <<<EOX
             <field_change type="text" field_name="description"><value format="text"><![CDATA[h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.]]></value></field_change>
             EOX,
@@ -201,8 +192,8 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
@@ -217,7 +208,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $changeset_node,
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             <<<EOX
             <field_change type="text" field_name="description"><value format="text"><![CDATA[]]></value></field_change>
             EOX,
@@ -237,27 +228,27 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fsb',
             'sb',
             'sb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id,
-                    $this->getPreWiredIDGenerator($generated_tuleap_id)
+                    IDGeneratorStub::withId($generated_tuleap_id)
                 ),
             ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     [
-                        'self' => 'URL/rest/api/2/priority/3',
+                        'self'    => 'URL/rest/api/2/priority/3',
                         'iconUrl' => 'URL/images/icons/priorities/medium.svg',
-                        'name' => 'Medium',
-                        'id' => (string) $jira_value_id,
+                        'name'    => 'Medium',
+                        'id'      => (string) $jira_value_id,
                     ],
                     null
                 ),
@@ -271,7 +262,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $field_change_node = $changeset_node->field_change;
         self::assertSame('list', (string) $field_change_node['type']);
-        $this->assertCount(1, $field_change_node->value);
+        self::assertCount(1, $field_change_node->value);
         self::assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
 
@@ -286,22 +277,22 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fsb',
             'sb',
             'sb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     [
-                        'self' => 'URL/rest/api/2/priority/3',
+                        'self'    => 'URL/rest/api/2/priority/3',
                         'iconUrl' => 'URL/images/icons/priorities/medium.svg',
-                        'name' => 'Medium',
-                        'id' => (string) $jira_value_id,
+                        'name'    => 'Medium',
+                        'id'      => (string) $jira_value_id,
                     ],
                     null
                 ),
@@ -313,7 +304,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $changeset_node
         );
 
-        assertFalse(isset($changeset_node->field_change));
+        self::assertFalse(isset($changeset_node->field_change));
     }
 
     public function testItExportsTheSelectedValueInARadioButtonField(): void
@@ -328,26 +319,26 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Frb',
             'rb',
             'rb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id,
-                    $this->getPreWiredIDGenerator($generated_tuleap_id)
+                    IDGeneratorStub::withId($generated_tuleap_id)
                 ),
             ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     [
-                        'self' => 'URL/rest/api/2/customFieldOption/10005',
+                        'self'  => 'URL/rest/api/2/customFieldOption/10005',
                         'value' => 'test',
-                        'id' => (string) $jira_value_id,
+                        'id'    => (string) $jira_value_id,
                     ],
                     null
                 ),
@@ -362,7 +353,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $field_change_node = $changeset_node->field_change;
         self::assertSame('list', (string) $field_change_node['type']);
-        $this->assertCount(1, $field_change_node->value);
+        self::assertCount(1, $field_change_node->value);
         self::assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
 
@@ -380,36 +371,36 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fmsb',
             'msb',
             'msb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id_1,
-                    $this->getPreWiredIDGenerator($generated_tuleap_id_1)
+                    IDGeneratorStub::withId($generated_tuleap_id_1)
                 ),
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id_2,
-                    $this->getPreWiredIDGenerator($generated_tuleap_id_2)
+                    IDGeneratorStub::withId($generated_tuleap_id_2)
                 ),
             ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     [
                         [
-                            'self' => 'URL/rest/api/2/customFieldOption/10009',
+                            'self'  => 'URL/rest/api/2/customFieldOption/10009',
                             'value' => 'multi1',
-                            'id' => (string) $jira_value_id_1,
+                            'id'    => (string) $jira_value_id_1,
                         ],
                         [
-                            'self' => 'URL/rest/api/2/customFieldOption/10010',
+                            'self'  => 'URL/rest/api/2/customFieldOption/10010',
                             'value' => 'multi2',
-                            'id' => (string) $jira_value_id_2,
+                            'id'    => (string) $jira_value_id_2,
                         ],
 
                     ],
@@ -425,7 +416,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $field_change_node = $changeset_node->field_change;
         self::assertSame('list', (string) $field_change_node['type']);
-        $this->assertCount(2, $field_change_node->value);
+        self::assertCount(2, $field_change_node->value);
         self::assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
         self::assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
     }
@@ -444,36 +435,36 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fcb',
             'cb',
             'cb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id_1,
-                    $this->getPreWiredIDGenerator($generated_tuleap_id_1)
+                    IDGeneratorStub::withId($generated_tuleap_id_1)
                 ),
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id_2,
-                    $this->getPreWiredIDGenerator($generated_tuleap_id_2)
+                    IDGeneratorStub::withId($generated_tuleap_id_2)
                 ),
             ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     [
                         [
-                            'self' => 'URL/rest/api/2/customFieldOption/10009',
+                            'self'  => 'URL/rest/api/2/customFieldOption/10009',
                             'value' => 'multi1',
-                            'id' => (string) $jira_value_id_1,
+                            'id'    => (string) $jira_value_id_1,
                         ],
                         [
-                            'self' => 'URL/rest/api/2/customFieldOption/10010',
+                            'self'  => 'URL/rest/api/2/customFieldOption/10010',
                             'value' => 'multi2',
-                            'id' => (string) $jira_value_id_2,
+                            'id'    => (string) $jira_value_id_2,
                         ],
 
                     ],
@@ -489,7 +480,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $field_change_node = $changeset_node->field_change;
         self::assertSame('list', (string) $field_change_node['type']);
-        $this->assertCount(2, $field_change_node->value);
+        self::assertCount(2, $field_change_node->value);
         self::assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
         self::assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
     }
@@ -506,35 +497,35 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fstatus',
             'status',
             'sb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id,
-                    $this->getPreWiredIDGenerator($generated_tuleap_id)
+                    IDGeneratorStub::withId($generated_tuleap_id)
                 ),
             ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     [
-                        'self' => 'URL/rest/api/2/status/10001',
-                        'description' =>  '',
-                        'iconUrl' => 'URL',
-                        'name' => 'Done',
-                        'id' => (string) $jira_value_id,
+                        'self'           => 'URL/rest/api/2/status/10001',
+                        'description'    => '',
+                        'iconUrl'        => 'URL',
+                        'name'           => 'Done',
+                        'id'             => (string) $jira_value_id,
                         'statusCategory' =>
                             [
-                                'self' => 'URL/rest/api/2/statuscategory/3',
-                                'id' => 3,
-                                'key' => 'done',
+                                'self'      => 'URL/rest/api/2/statuscategory/3',
+                                'id'        => 3,
+                                'key'       => 'done',
                                 'colorName' => 'green',
-                                'name' => 'Done',
+                                'name'      => 'Done',
                             ],
                     ],
                     null
@@ -549,7 +540,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $field_change_node = $changeset_node->field_change;
         self::assertSame('list', (string) $field_change_node['type']);
-        $this->assertCount(1, $field_change_node->value);
+        self::assertCount(1, $field_change_node->value);
         self::assertSame((string) $generated_tuleap_id, (string) $field_change_node->value);
     }
 
@@ -562,14 +553,14 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fassignee',
             'assignee',
             'sb',
-            \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+            Tracker_FormElement_Field_List_Bind_Users::TYPE,
             [],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
@@ -582,10 +573,8 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $john_doe = Mockery::mock(PFUser::class);
-        $john_doe->shouldReceive('getLdapId')->andReturn(105);
-        $john_doe->shouldReceive('getId')->andReturn(105);
-        $this->user_manager->shouldReceive('getUserById')->andReturn($john_doe);
+        $john_doe = UserTestBuilder::aUser()->withId(105)->withLdapId('105')->build();
+        $this->user_manager->method('getUserById')->willReturn($john_doe);
         $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
@@ -593,7 +582,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $field_change_node = $changeset_node->field_change;
         self::assertSame('list', (string) $field_change_node['type']);
-        $this->assertCount(1, $field_change_node->value);
+        self::assertCount(1, $field_change_node->value);
         self::assertSame('105', (string) $field_change_node->value);
     }
 
@@ -606,14 +595,14 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fhomies',
             'homies',
             'msb',
-            \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+            Tracker_FormElement_Field_List_Bind_Users::TYPE,
             [],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
@@ -628,16 +617,12 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $john_doe = Mockery::mock(PFUser::class);
-        $john_doe->shouldReceive('getLdapId')->andReturn(105);
-        $john_doe->shouldReceive('getId')->andReturn(105);
-
-        $mysterio = Mockery::mock(PFUser::class);
-        $mysterio->shouldReceive('getLdapId')->andReturn(106);
-        $mysterio->shouldReceive('getId')->andReturn(106);
-
-        $this->user_manager->shouldReceive('getUserById')->with(105)->andReturn($john_doe);
-        $this->user_manager->shouldReceive('getUserById')->with(106)->andReturn($mysterio);
+        $john_doe = UserTestBuilder::aUser()->withId(105)->withLdapId('105')->build();
+        $mysterio = UserTestBuilder::aUser()->withId(106)->withLdapId('106')->build();
+        $this->user_manager->method('getUserById')->willReturnCallback(static fn(int|string $id) => match ((int) $id) {
+            105 => $john_doe,
+            106 => $mysterio,
+        });
         $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
@@ -645,14 +630,14 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $field_change_node = $changeset_node->field_change;
         self::assertSame('list', (string) $field_change_node['type']);
-        $this->assertCount(2, $field_change_node->value);
+        self::assertCount(2, $field_change_node->value);
         self::assertSame('105', (string) $field_change_node->value[0]);
         self::assertSame('106', (string) $field_change_node->value[1]);
     }
 
     public function testItExportsTheLinkedIssues(): void
     {
-        $this->type_converter->type = new TypePresenter('Relates', 'relates to', 'relates to', true);
+        $this->type_converter = GetExistingArtifactLinkTypesStub::build(new TypePresenter('Relates', 'relates to', 'relates to', true));
 
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
@@ -660,32 +645,32 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             '?',
             '?',
-            \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+            Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     new ArtifactLinkValue(
                         [
                             [
-                                'id' => '10030',
-                                'self' => '...',
-                                'type' => [
-                                    'id'   => '10003',
-                                    'name' => 'Relates',
-                                    'inward' => 'relates to',
+                                'id'           => '10030',
+                                'self'         => '...',
+                                'type'         => [
+                                    'id'      => '10003',
+                                    'name'    => 'Relates',
+                                    'inward'  => 'relates to',
                                     'outward' => 'relates to',
-                                    'self' => '...',
+                                    'self'    => '...',
                                 ],
                                 'outwardIssue' => [
-                                    'id' => '10089',
-                                    'key' => 'JUS-1',
-                                    'self' => '...',
+                                    'id'     => '10089',
+                                    'key'    => 'JUS-1',
+                                    'self'   => '...',
                                     'fields' => [],
 
                                 ],
@@ -704,7 +689,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
+        self::assertSame(Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
         self::assertCount(1, $field_change_node->value);
         self::assertSame('10089', (string) $field_change_node->value[0]);
         self::assertSame('Relates', (string) $field_change_node->value[0]['nature']);
@@ -712,7 +697,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsTheLinkedIssuesWithTransformedLinkType(): void
     {
-        $this->type_converter->type = new TypePresenter('Problem_Incident', 'causes', 'is caused by', true);
+        $this->type_converter = GetExistingArtifactLinkTypesStub::build(new TypePresenter('Problem_Incident', 'causes', 'is caused by', true));
 
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
@@ -720,32 +705,32 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             '?',
             '?',
-            \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+            Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     new ArtifactLinkValue(
                         [
                             [
-                                'id' => '10030',
-                                'self' => '...',
-                                'type' => [
-                                    'id'   => '10003',
-                                    'name' => 'Problem/Incident',
-                                    'inward' => 'causes',
+                                'id'           => '10030',
+                                'self'         => '...',
+                                'type'         => [
+                                    'id'      => '10003',
+                                    'name'    => 'Problem/Incident',
+                                    'inward'  => 'causes',
                                     'outward' => 'is caused by',
-                                    'self' => '...',
+                                    'self'    => '...',
                                 ],
                                 'outwardIssue' => [
-                                    'id' => '10089',
-                                    'key' => 'JUS-1',
-                                    'self' => '...',
+                                    'id'     => '10089',
+                                    'key'    => 'JUS-1',
+                                    'self'   => '...',
                                     'fields' => [],
 
                                 ],
@@ -764,7 +749,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
+        self::assertSame(Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
         self::assertCount(1, $field_change_node->value);
         self::assertSame('10089', (string) $field_change_node->value[0]);
         self::assertSame('Problem_Incident', (string) $field_change_node->value[0]['nature']);
@@ -778,13 +763,13 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             '?',
             '?',
-            \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+            Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
@@ -792,15 +777,15 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                         [],
                         [
                             [
-                                'id' => '10131',
-                                'key' => 'SP-31',
-                                'self' => '...',
+                                'id'     => '10131',
+                                'key'    => 'SP-31',
+                                'self'   => '...',
                                 'fields' => [],
                             ],
                             [
-                                'id' => '10132',
-                                'key' => 'SP-32',
-                                'self' => '...',
+                                'id'     => '10132',
+                                'key'    => 'SP-32',
+                                'self'   => '...',
                                 'fields' => [],
                             ],
                         ],
@@ -816,10 +801,10 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
+        self::assertSame(Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
         self::assertCount(2, $field_change_node->value);
         self::assertSame('10131', (string) $field_change_node->value[0]);
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, (string) $field_change_node->value[0]['nature']);
+        self::assertSame(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, (string) $field_change_node->value[0]['nature']);
         self::assertSame('10132', (string) $field_change_node->value[1]);
     }
 
@@ -831,32 +816,32 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             '?',
             '?',
-            \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+            Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
-            Mockery::mock(PFUser::class),
-            new \DateTimeImmutable(),
+            UserTestBuilder::buildWithDefaults(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
                     new ArtifactLinkValue(
                         [
                             [
-                                'id' => '10030',
-                                'self' => '...',
-                                'type' => [
-                                    'id'   => '10003',
-                                    'name' => 'Relates',
-                                    'inward' => 'relates to',
+                                'id'           => '10030',
+                                'self'         => '...',
+                                'type'         => [
+                                    'id'      => '10003',
+                                    'name'    => 'Relates',
+                                    'inward'  => 'relates to',
                                     'outward' => 'relates to',
-                                    'self' => '...',
+                                    'self'    => '...',
                                 ],
                                 'outwardIssue' => [
-                                    'id' => '10089',
-                                    'key' => 'JUS-1',
-                                    'self' => '...',
+                                    'id'     => '10089',
+                                    'key'    => 'JUS-1',
+                                    'self'   => '...',
                                     'fields' => [],
 
                                 ],
@@ -875,25 +860,10 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $field_change_node = $changeset_node->field_change;
-        self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
+        self::assertSame(Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
         self::assertCount(1, $field_change_node->value);
         self::assertSame('10089', (string) $field_change_node->value[0]);
         self::assertSame('', (string) $field_change_node->value[0]['nature']);
-    }
-
-    private function getPreWiredIDGenerator(int $pre_defined_id): IDGenerator
-    {
-        $id_generator     = new class implements IDGenerator {
-            /** @var int */
-            public $id;
-
-            public function getNextId(): int
-            {
-                return $this->id;
-            }
-        };
-        $id_generator->id = $pre_defined_id;
-        return $id_generator;
     }
 
     public function testItExportsOpenListFieldWithValueAsArray(): void
@@ -905,7 +875,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Flabels',
             'labels',
             'tbl',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,
@@ -921,7 +891,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
             UserTestBuilder::aUser()->build(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
@@ -953,7 +923,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Flabels',
             'labels',
             'tbl',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,
@@ -969,7 +939,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $snapshot       = new Snapshot(
             UserTestBuilder::aUser()->build(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             [
                 new FieldSnapshot(
                     $mapping,
