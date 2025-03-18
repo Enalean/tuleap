@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -225,10 +226,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         string $user_group_name,
         bool $is_hidden,
     ): \Tracker_FormElement_Field_List_Bind_UgroupsValue {
-        return new \Tracker_FormElement_Field_List_Bind_UgroupsValue(
-            $bind_value_id,
-            new \ProjectUGroup(['ugroup_id' => $user_group_id, 'name' => $user_group_name]),
-            $is_hidden
-        );
+        $project_ugroup = new \ProjectUGroup(['ugroup_id' => $user_group_id, 'name' => $user_group_name]);
+        return ListUserGroupValueBuilder::aUserGroupValue($project_ugroup)->withId($bind_value_id)->isHidden($is_hidden)->build();
     }
 }

@@ -19,29 +19,17 @@
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue
-     */
-    private $customers_ugroup_value;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue
-     */
-    private $project_members_ugroup_value;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue
-     */
-    private $hidden_ugroup_value;
-
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue
-     */
-    private $integrators_ugroup_value;
+    private Tracker_FormElement_Field_List_Bind_UgroupsValue $customers_ugroup_value;
+    private Tracker_FormElement_Field_List_Bind_UgroupsValue $project_members_ugroup_value;
+    private Tracker_FormElement_Field_List_Bind_UgroupsValue $hidden_ugroup_value;
+    private Tracker_FormElement_Field_List_Bind_UgroupsValue $integrators_ugroup_value;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BindDefaultValueDao
      */
@@ -71,42 +59,27 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $integrators_ugroup             = new ProjectUGroup(
             ['ugroup_id' => $integrators_ugroup_id, 'name' => $integrators_ugroup_name]
         );
-        $this->integrators_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(
-            345,
-            $integrators_ugroup,
-            false
-        );
+        $this->integrators_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($integrators_ugroup)->withId(345)->build();
 
         $customers_ugroup_id          = 104;
         $customers_ugroup_name        = 'Customers';
         $customers_ugroup             = new ProjectUGroup(
             ['ugroup_id' => $customers_ugroup_id, 'name' => $customers_ugroup_name]
         );
-        $this->customers_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(
-            687,
-            $customers_ugroup,
-            false
-        );
+        $this->customers_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($customers_ugroup)->withId(687)->build();
 
         $project_members_ugroup_name        = 'ugroup_project_members_name_key';
         $project_members_ugroup             = new ProjectUGroup(
             ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => $project_members_ugroup_name]
         );
-        $this->project_members_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(
-            4545,
-            $project_members_ugroup,
-            false
-        );
-        $hidden_ugroup_id                   = 105;
-        $hidden_ugroup_name                 = 'Unused ProjectUGroup';
-        $hidden_ugroup                      = new ProjectUGroup(
+        $this->project_members_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($project_members_ugroup)->withId(4545)->build();
+
+        $hidden_ugroup_id          = 105;
+        $hidden_ugroup_name        = 'Unused ProjectUGroup';
+        $hidden_ugroup             = new ProjectUGroup(
             ['ugroup_id' => $hidden_ugroup_id, 'name' => $hidden_ugroup_name]
         );
-        $this->hidden_ugroup_value          = new Tracker_FormElement_Field_List_Bind_UgroupsValue(
-            666,
-            $hidden_ugroup,
-            true
-        );
+        $this->hidden_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($hidden_ugroup)->withId(666)->isHidden(true)->build();
     }
 
     private function buildBindUgroups(

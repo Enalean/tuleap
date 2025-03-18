@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindValueIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -48,7 +49,7 @@ final class BindValueIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
             'ugroup_id' => \ProjectUGroup::PROJECT_MEMBERS,
             'name'      => \ProjectUGroup::NORMALIZED_NAMES[\ProjectUGroup::PROJECT_MEMBERS],
         ]);
-        $bind_value = new \Tracker_FormElement_Field_List_Bind_UgroupsValue(492, $ugroup, false);
+        $bind_value = ListUserGroupValueBuilder::aUserGroupValue($ugroup)->withId(492)->build();
         $identifier = BindValueIdentifierProxy::fromListBindValue($bind_value);
         self::assertSame(492, $identifier->getId());
     }
