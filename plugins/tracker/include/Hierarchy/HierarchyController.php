@@ -30,6 +30,9 @@ use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Workflow_Trigger_RulesDao;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Valid_UInt;
@@ -48,9 +51,23 @@ final readonly class HierarchyController
         private ArtifactLinksUsageDao $artifact_links_usage_dao,
         private EventDispatcherInterface $event_dispatcher,
         private \ProjectHistoryDao $project_history_dao,
+        private BaseLayout $layout,
         private CSRFSynchronizerTokenInterface $csrf_token,
     ) {
-        $this->renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(__DIR__);
+    }
+
+    public function includeHeaderAssets(): void
+    {
+        $this->layout->addCssAsset(
+            new CssAssetWithoutVariantDeclinaisons(
+                new IncludeAssets(
+                    __DIR__ . '/../../scripts/tracker-admin/frontend-assets',
+                    '/assets/trackers/tracker-admin'
+                ),
+                'hierarchy'
+            )
+        );
     }
 
     public function edit(): void
@@ -103,7 +120,7 @@ final readonly class HierarchyController
         $vChildren->required();
 
         if (! $this->request->validArray($vChildren) && $this->request->exist('children')) {
-            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Your request contains invalid data, cowardly doing nothing (children parameter)'));
+            $this->layout->addFeedback('error', dgettext('tuleap-tracker', 'Your request contains invalid data, cowardly doing nothing (children parameter)'));
             $this->redirectToAdminHierarchy();
             return;
         }
@@ -123,7 +140,7 @@ final readonly class HierarchyController
         );
 
         if (! $event->canHierarchyBeUpdated()) {
-            $GLOBALS['Response']->addFeedback(
+            $this->layout->addFeedback(
                 'error',
                 $event->getErrorMessage(),
             );
@@ -155,8 +172,8 @@ final readonly class HierarchyController
             $current_hierarchy[] = $child->getId();
         }
 
-        $children          = implode(',', array_values($children));
-        $current_hierarchy = implode(',', $current_hierarchy);
+        $children_string          = implode(',', array_values($children));
+        $current_hierarchy_string = implode(',', $current_hierarchy);
 
         $this->project_history_dao->addHistory(
             $this->tracker->getProject(),
@@ -166,8 +183,8 @@ final readonly class HierarchyController
             '',
             [
                 $this->tracker->getId(),
-                $children,
-                $current_hierarchy,
+                $children_string,
+                $current_hierarchy_string,
             ]
         );
         $this->redirectToAdminHierarchy();
@@ -181,7 +198,7 @@ final readonly class HierarchyController
                 'func'    => self::HIERARCHY_VIEW,
             ]
         );
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . $redirect);
+        $this->layout->redirect('/plugins/tracker/?' . $redirect);
     }
 
     /**
