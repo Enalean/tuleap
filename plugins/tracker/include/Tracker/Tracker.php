@@ -884,7 +884,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getArtifactCreator(), $this->getTrackerArtifactFactory());
                 $action->process($current_user);
                 break;
-            case 'admin-hierarchy':
+            case HierarchyController::HIERARCHY_VIEW:
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdminHeader($layout, 'hierarchy', dgettext('tuleap-tracker', 'Hierarchy'));
                     $this->getHierarchyController($request)->edit();
@@ -1032,7 +1032,8 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
             new Tracker_Workflow_Trigger_RulesDao(),
             new ArtifactLinksUsageDao(),
             EventManager::instance(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new CSRFSynchronizerToken('/plugins/tracker/?' . http_build_query(['tracker' => $this->getId(), 'func' => HierarchyController::HIERARCHY_VIEW]))
         );
 
         return $controller;

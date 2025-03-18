@@ -18,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Hierarchy;
+
+use Tracker_Hierarchy_HierarchicalTracker;
+use TreeNode;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Hierarchy_PresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HierarchyPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetPossibleChildrenReturnsAttributesForSelect(): void
     {
@@ -36,19 +42,20 @@ final class Tracker_Hierarchy_PresenterTest extends \Tuleap\Test\PHPUnit\TestCas
             [2 => $task],
         );
 
-        $presenter = new Tracker_Hierarchy_Presenter(
+        $presenter = new HierarchyPresenter(
             $tracker,
             $possible_children,
             new TreeNode(),
-            []
+            [],
+            CSRFSynchronizerTokenStub::buildSelf()
         );
 
         $attributes = $presenter->getPossibleChildren();
-        $this->assertEquals('Stories', $attributes[0]['name']);
-        $this->assertEquals(1, $attributes[0]['id']);
-        $this->assertEquals(null, $attributes[0]['selected']);
-        $this->assertEquals('Tasks', $attributes[1]['name']);
-        $this->assertEquals(2, $attributes[1]['id']);
-        $this->assertEquals('selected="selected"', $attributes[1]['selected']);
+        self::assertSame('Stories', $attributes[0]['name']);
+        self::assertSame(1, $attributes[0]['id']);
+        self::assertSame('', $attributes[0]['selected']);
+        self::assertSame('Tasks', $attributes[1]['name']);
+        self::assertSame(2, $attributes[1]['id']);
+        self::assertSame('selected="selected"', $attributes[1]['selected']);
     }
 }

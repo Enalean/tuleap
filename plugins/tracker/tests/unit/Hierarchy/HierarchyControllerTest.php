@@ -32,6 +32,7 @@ use Tracker_Workflow_Trigger_RulesDao;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -57,7 +58,8 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trigger_rules_dao,
             $artifact_links_usage_dao,
             $event_manager,
-            $history_dao
+            $history_dao,
+            CSRFSynchronizerTokenStub::buildSelf()
         );
 
         $project = $this->createMock(Project::class);
@@ -120,7 +122,8 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trigger_rules_dao,
             $artifact_links_usage_dao,
             $event_manager,
-            $history_dao
+            $history_dao,
+            CSRFSynchronizerTokenStub::buildSelf()
         );
 
         $project = $this->createMock(Project::class);
@@ -183,7 +186,8 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trigger_rules_dao,
             $artifact_links_usage_dao,
             $event_manager,
-            $history_dao
+            $history_dao,
+            CSRFSynchronizerTokenStub::buildSelf()
         );
 
         $request->method('validArray')->willReturn(true);
