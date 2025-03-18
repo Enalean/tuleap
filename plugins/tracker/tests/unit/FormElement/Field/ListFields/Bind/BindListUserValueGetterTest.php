@@ -29,7 +29,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -118,16 +118,8 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected = [
-            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                101,
-                'user 1',
-                'user 1 full name'
-            ),
-            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                102,
-                'user 2',
-                'user 2 full name'
-            ),
+            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
+            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
         ];
 
         $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
@@ -167,16 +159,8 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected = [
-            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                101,
-                'user 1',
-                'user 1 full name'
-            ),
-            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                102,
-                'user 2',
-                'user 2 full name'
-            ),
+            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
+            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
         ];
 
         $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
@@ -241,16 +225,8 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected = [
-            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                101,
-                'user 1',
-                'user 1 full name'
-            ),
-            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                102,
-                'user 2',
-                'user 2 full name'
-            ),
+            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
+            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
         ];
 
         $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
@@ -284,16 +260,8 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected = [
-            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                101,
-                'user 1',
-                'user 1 full name'
-            ),
-            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                102,
-                'user 2',
-                'user 2 full name'
-            ),
+            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
+            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
         ];
 
         $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
@@ -333,16 +301,8 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         )->once()->andReturn('sql fragement');
 
         $expected = [
-            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                101,
-                'user 1',
-                'user 1 full name'
-            ),
-            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                102,
-                'user 2',
-                'user 2 full name'
-            ),
+            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
+            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
         ];
 
         $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
@@ -381,16 +341,8 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         )->once()->andReturn('sql fragement');
 
         $expected = [
-            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                101,
-                'user 1',
-                'user 1 full name'
-            ),
-            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                102,
-                'user 2',
-                'user 2 full name'
-            ),
+            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
+            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
         ];
 
         $this->assertEquals(
@@ -430,16 +382,8 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getter->shouldReceive('getAllMembersOfStaticGroup')->never();
 
         $expected = [
-            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                101,
-                'user 1',
-                'user 1 full name'
-            ),
-            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
-                102,
-                'user 2',
-                'user 2 full name'
-            ),
+            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
+            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
         ];
 
         $this->assertEquals(

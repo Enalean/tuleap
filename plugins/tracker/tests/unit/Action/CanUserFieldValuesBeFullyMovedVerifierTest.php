@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_List;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -74,7 +75,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $retrieve_user = RetrieveUserByIdStub::withNoUser();
         $verifier      = new CanUserFieldValuesBeFullyMovedVerifier($retrieve_user);
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
+            ListUserValueBuilder::aUserWithId(138)->withDisplayedName('Mildred Favorito')->build(),
         ]);
 
         $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact, new NullLogger()));
@@ -86,7 +87,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $retrieve_user = RetrieveUserByIdStub::withUser(UserTestBuilder::anAnonymousUser()->build());
         $verifier      = new CanUserFieldValuesBeFullyMovedVerifier($retrieve_user);
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
+            ListUserValueBuilder::aUserWithId(138)->withDisplayedName('Mildred Favorito')->build(),
         ]);
 
         $this->assertFalse($verifier->canAllUserFieldValuesBeMoved($this->source_field, $this->destination_field, $this->artifact, new NullLogger()));
@@ -98,7 +99,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $retrieve_user = RetrieveUserByIdStub::withUser(UserTestBuilder::anActiveUser()->withId(234)->build());
         $verifier      = new CanUserFieldValuesBeFullyMovedVerifier($retrieve_user);
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UsersValue(1, 'Irrelevant', 'Mildred Favorito'),
+            ListUserValueBuilder::aUserWithId(138)->withDisplayedName('Mildred Favorito')->build(),
         ]);
         $this->destination_field->method('checkValueExists')->willReturn(false);
 
@@ -111,7 +112,7 @@ final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $retrieve_user = RetrieveUserByIdStub::withUser($this->user);
         $verifier      = new CanUserFieldValuesBeFullyMovedVerifier($retrieve_user);
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UsersValue(101, 'Irrelevant', 'Mildred Favorito'),
+            ListUserValueBuilder::aUserWithId(101)->withDisplayedName('Mildred Favorito')->build(),
         ]);
         $this->destination_field->method('checkValueExists')->willReturn(true);
 

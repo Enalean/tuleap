@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindValueLabelProxyTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +37,7 @@ final class BindValueLabelProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromUsersBindValue(): void
     {
-        $bind_value = new \Tracker_FormElement_Field_List_Bind_UsersValue(110, 'dmahomly', 'Darrick Mahomly');
+        $bind_value = ListUserValueBuilder::aUserWithId(110)->withDisplayedName('Darrick Mahomly')->build();
         $label      = BindValueLabelProxy::fromListBindValue($bind_value);
         self::assertSame('Darrick Mahomly', $label->getLabel());
     }
