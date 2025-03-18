@@ -18,30 +18,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_FormElement_IProvideFactoryButtonInformation
+namespace Tuleap\Tracker\FormElement;
+
+use CSRFSynchronizerToken;
+
+abstract class ProvideFactoryButtonInformation
 {
     /**
      * @return string the label of the formElement (mainly used in admin part)
      */
-    public static function getFactoryLabel();
+    abstract public static function getFactoryLabel();
 
     /**
      * @return string the description of the formElement (mainly used in admin part)
      */
-    public static function getFactoryDescription();
+    abstract public static function getFactoryDescription();
 
     /**
      * @return string the path to the icon to use an element
      */
-    public static function getFactoryIconUseIt();
+    abstract public static function getFactoryIconUseIt();
 
     /**
      * @return string the path to the icon to create an element
      */
-    public static function getFactoryIconCreate();
+    abstract public static function getFactoryIconCreate();
 
     /**
      * @return bool say if the element is a unique one
      */
-    public static function getFactoryUniqueField();
+    abstract public static function getFactoryUniqueField();
+
+    /**
+     * Return the tracker id of this formElement
+     *
+     * @return int
+     */
+    abstract public function getTrackerId();
+
+    final public function getCSRFTokenForElementUpdate(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(['func' => 'admin-formElements', 'tracker' => $this->getTrackerId()]));
+    }
 }
