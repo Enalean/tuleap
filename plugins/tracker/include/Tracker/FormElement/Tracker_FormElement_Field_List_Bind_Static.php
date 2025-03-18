@@ -715,13 +715,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     }
                     break;
                 case 'edit_custom':
-                    $values = $this->getOpenValueDao()->searchByFieldId($this->field->getId());
-                    foreach ($values as $row) {
-                        $new_is_hidden = ! isset($value[$row['id']]['is_hidden']);
+                    $existing_values = $this->getOpenValueDao()->searchByFieldId($this->field->getId());
+                    foreach ($existing_values as $row) {
+                        $existing_value_id = $row['id'];
+                        $new_is_hidden     = ! isset($value[$existing_value_id]['is_hidden']);
                         $this->getOpenValueDao()->updateOpenValue(
-                            (int) $row['id'],
+                            (int) $existing_value_id,
                             $new_is_hidden,
-                            $value[$row['id']]['label']
+                            trim($value[$existing_value_id]['label'])
                         );
                     }
                     break;
