@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,18 +22,16 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
 import * as TQLEditor from "@tuleap/plugin-tracker-tql-codemirror";
-import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
-import QueryEditorForCreation from "./QueryEditorForCreation.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
+import QueryEditor from "./QueryEditor.vue";
 
 const noop = (): void => {
     //Do nothing
 };
 
-describe("QueryEditorForCreation", () => {
-    function instantiateComponent(
-        tql_query: string,
-    ): VueWrapper<InstanceType<typeof QueryEditorForCreation>> {
-        return shallowMount(QueryEditorForCreation, {
+describe("QueryEditor", () => {
+    function instantiateComponent(tql_query: string): VueWrapper<InstanceType<typeof QueryEditor>> {
+        return shallowMount(QueryEditor, {
             props: {
                 tql_query,
             },

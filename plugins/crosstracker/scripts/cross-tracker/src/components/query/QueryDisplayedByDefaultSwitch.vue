@@ -26,6 +26,7 @@
                 class="tlp-switch-checkbox"
                 v-on:input="emit('update:is_default_query', !is_default_query)"
                 data-test="query-checkbox"
+                v-bind:checked="is_default_query"
             />
             <label v-bind:for="is_default_switch_id" class="tlp-switch-button"></label>
         </div>

@@ -79,6 +79,7 @@ import type {
     ToggleQueryDetailsEvent,
 } from "../helpers/emitter-provider";
 import {
+    EDIT_QUERY_EVENT,
     REFRESH_ARTIFACTS_EVENT,
     QUERY_DELETED_EVENT,
     UPDATE_WIDGET_TITLE_EVENT,
@@ -220,10 +221,13 @@ function handleSwitchWriting(): void {
     if (!is_user_admin) {
         return;
     }
-
+    emitter.emit(CLEAR_FEEDBACK_EVENT);
+    if (is_multiple_query_supported) {
+        emitter.emit(EDIT_QUERY_EVENT, { query_to_edit: backend_query.value });
+        return;
+    }
     writing_query.value = reading_query.value;
     report_state.value = "edit-query";
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
 }
 
 function handleSwitchQuery(event: SwitchQueryEvent): void {

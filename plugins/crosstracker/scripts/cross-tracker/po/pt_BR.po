@@ -160,6 +160,9 @@ msgstr ""
 msgid "Query title"
 msgstr ""
 
+msgid "Query updated with success!"
+msgstr ""
+
 msgid "Report has been successfully saved"
 msgstr ""
 

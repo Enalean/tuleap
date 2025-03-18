@@ -29,7 +29,6 @@ import type { Query } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import {
     EMITTER,
-    IS_EXPORT_ALLOWED,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     REPORT_STATE,
@@ -43,8 +42,6 @@ import type {
 } from "../../helpers/emitter-provider";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import mitt from "mitt";
-import ExportXLSXButton from "../ExportXLSXButton.vue";
-import DeleteQueryButton from "./DeleteQueryButton.vue";
 
 describe("ReadingMode", () => {
     let backend_query: Query,
@@ -52,8 +49,7 @@ describe("ReadingMode", () => {
         is_user_admin: boolean,
         has_error: boolean,
         emitter: EmitterProvider,
-        is_multiple_query_supported: boolean,
-        is_xslx_export_allowed: boolean;
+        is_multiple_query_supported: boolean;
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_refresh_events: RefreshArtifactsEvent[];
 
@@ -75,7 +71,6 @@ describe("ReadingMode", () => {
         is_user_admin = true;
         has_error = false;
         is_multiple_query_supported = false;
-        is_xslx_export_allowed = true;
         emitter = mitt<Events>();
         dispatched_fault_events = [];
         dispatched_refresh_events = [];
@@ -97,7 +92,6 @@ describe("ReadingMode", () => {
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
                     [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: is_multiple_query_supported,
-                    [IS_EXPORT_ALLOWED.valueOf()]: is_xslx_export_allowed,
                 },
             },
             props: {
@@ -192,19 +186,6 @@ describe("ReadingMode", () => {
         });
     });
 
-    describe(`render XLSX button`, () => {
-        it(`does not show the XLSX export button when told not to`, () => {
-            is_xslx_export_allowed = false;
-            const wrapper = instantiateComponent();
-            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
-        });
-
-        it(`shows the XLSX export button otherwise`, () => {
-            const wrapper = instantiateComponent();
-            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(true);
-        });
-    });
-
     describe("renders query description", () => {
         it("does not show query’s description if multiple query mode is not enabled", () => {
             is_multiple_query_supported = false;
@@ -221,20 +202,6 @@ describe("ReadingMode", () => {
 
             expect(element.exists()).toBe(true);
             expect(element.text()).toBe("a great reading query");
-        });
-    });
-
-    describe("render delete button", () => {
-        it("does not show the delete button if user not admin", () => {
-            is_user_admin = false;
-            const wrapper = instantiateComponent();
-            expect(wrapper.findComponent(DeleteQueryButton).exists()).toBe(false);
-        });
-
-        it("shows the delete button if user is admin", () => {
-            is_user_admin = true;
-            const wrapper = instantiateComponent();
-            expect(wrapper.findComponent(DeleteQueryButton).exists()).toBe(true);
         });
     });
 });

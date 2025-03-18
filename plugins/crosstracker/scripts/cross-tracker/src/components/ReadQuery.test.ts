@@ -131,6 +131,7 @@ describe("ReadQuery", () => {
             then the report will be in "edit-query" state
             and the writing report will be updated
             and it will clear the feedback messages`, async () => {
+            is_multiple_query_supported = false;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
@@ -160,6 +161,7 @@ describe("ReadQuery", () => {
             then the report will be back to its "report-saved" state
             and the reading report will be reset
             and it will clear the feedback messages`, async () => {
+            is_multiple_query_supported = false;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
@@ -179,6 +181,7 @@ describe("ReadQuery", () => {
             then the report will be in "result-preview" state
             and the reading report will be updated
             and it will clear the feedback messages`, async () => {
+            is_multiple_query_supported = false;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
@@ -202,6 +205,7 @@ describe("ReadQuery", () => {
         it(`when the report is saved,
             then the reports will be updated
             and it will set a success message`, async () => {
+            is_multiple_query_supported = false;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
@@ -235,6 +239,7 @@ describe("ReadQuery", () => {
             when its changes are discarded,
             then it will restore the reading and writing reports
             and will clear the feedback messages`, async () => {
+            is_multiple_query_supported = false;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
@@ -331,6 +336,7 @@ describe("ReadQuery", () => {
 
     describe(`isXLSXExportAllowed`, () => {
         it(`when the report state is not "report-saved", it does not allow CSV export`, async () => {
+            is_multiple_query_supported = false;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();

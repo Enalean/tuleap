@@ -18,4 +18,5 @@
  */
 
 export const QUERY_CREATION_PANE = "query-creation";
+export const QUERY_EDITION_PANE = "query-edition";
 export const QUERY_ACTIVE_PANE = "query-active";

@@ -42,10 +42,7 @@
             }}</code>
         </tlp-syntax-highlighting>
     </div>
-    <div>
-        <delete-query-button v-if="is_user_admin" v-bind:current_query="reading_query" />
-        <export-x-l-s-x-button v-if="is_xslx_export_allowed" v-bind:current_query="reading_query" />
-    </div>
+    <reading-mode-action-buttons v-bind:current_query="reading_query" />
     <div class="actions" v-if="report_state === 'result-preview'">
         <button
             type="button"
@@ -82,7 +79,6 @@ import { updateQuery, createQuery } from "../../api/rest-querier";
 import type { Query } from "../../type";
 import {
     EMITTER,
-    IS_EXPORT_ALLOWED,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     REPORT_STATE,
@@ -90,15 +86,13 @@ import {
 } from "../../injection-symbols";
 import { SaveReportFault } from "../../domain/SaveReportFault";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
-import ExportXLSXButton from "../ExportXLSXButton.vue";
-import DeleteQueryButton from "./DeleteQueryButton.vue";
+import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
-const is_xslx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 
 const props = defineProps<{
     has_error: boolean;

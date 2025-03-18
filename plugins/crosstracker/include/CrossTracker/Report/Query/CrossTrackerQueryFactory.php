@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query;
 use Tuleap\CrossTracker\CrossTrackerQuery;
 use Tuleap\CrossTracker\REST\v1\CrossTrackerQueryNotFoundException;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPostRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPutRepresentation;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
 
@@ -108,5 +109,29 @@ final readonly class CrossTrackerQueryFactory
     private static function fromRow(array $row): CrossTrackerQuery
     {
         return new CrossTrackerQuery($row['id'], $row['query'], $row['title'], $row['description'], $row['widget_id'], $row['is_default']);
+    }
+
+    public static function fromQueryToEdit(CrossTrackerQuery $query_to_edit, CrossTrackerQueryPutRepresentation $new_query): CrossTrackerQuery
+    {
+        return new CrossTrackerQuery(
+            $query_to_edit->getUUID(),
+            $new_query->tql_query,
+            $new_query->title,
+            $new_query->description,
+            $new_query->widget_id,
+            $new_query->is_default,
+        );
+    }
+
+    public static function fromUpdatedQuery(UUID $uuid, CrossTrackerQuery $new_query): CrossTrackerQuery
+    {
+        return new CrossTrackerQuery(
+            $uuid,
+            $new_query->getQuery(),
+            $new_query->getTitle(),
+            $new_query->getDescription(),
+            $new_query->getWidgetId(),
+            $new_query->isDefault(),
+        );
     }
 }

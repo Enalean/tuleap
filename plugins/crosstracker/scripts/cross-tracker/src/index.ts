@@ -38,6 +38,7 @@ import {
     NEW_QUERY_CREATOR,
     UPDATE_WIDGET_TITLE,
     DEFAULT_WIDGET_TITLE,
+    QUERY_UPDATER,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -50,6 +51,7 @@ import { SuggestedQueries } from "./domain/SuggestedQueriesGetter";
 import { NewQueryCreator } from "./api/NewQueryCreator";
 import type { WidgetData } from "./type";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
+import { QueryUpdater } from "./api/QueryUpdater";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -83,8 +85,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
         const widget_title_updater = WidgetTitleUpdater(emitter, title_element);
 
-        const new_query_creator = NewQueryCreator();
-
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
 
         createApp(CrossTrackerWidget)
@@ -104,7 +104,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(IS_MULTIPLE_QUERY_SUPPORTED, widget_data.is_multiple_query_supported)
             .provide(GET_SUGGESTED_QUERIES, SuggestedQueries({ $gettext: gettext_plugin.$gettext }))
             .provide(DASHBOARD_TYPE, widget_data.dashboard_type)
-            .provide(NEW_QUERY_CREATOR, new_query_creator)
+            .provide(NEW_QUERY_CREATOR, NewQueryCreator())
+            .provide(QUERY_UPDATER, QueryUpdater())
             .provide(UPDATE_WIDGET_TITLE, widget_title_updater)
             .provide(DEFAULT_WIDGET_TITLE, widget_data.default_title)
             .mount(vue_mount_point);
