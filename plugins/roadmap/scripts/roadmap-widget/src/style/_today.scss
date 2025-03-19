@@ -18,6 +18,7 @@
  */
 
 @use "roadmap-variables";
+@use "sass:math";
 
 .roadmap-gantt-today {
     position: absolute;
@@ -32,7 +33,10 @@
         display: block;
         position: absolute;
         top: 0;
-        left: (roadmap-variables.$today-pin-head-size - roadmap-variables.$today-pin-shaft-size) / 2;
+        left: math.div(
+            roadmap-variables.$today-pin-head-size - roadmap-variables.$today-pin-shaft-size,
+            2
+        );
         width: roadmap-variables.$today-pin-shaft-size;
         height: 100%;
         background: var(--tlp-main-color);

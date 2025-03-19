@@ -21,7 +21,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
 import App from "./components/App.vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
 import { createStore } from "./store";
 import type { RootState } from "./store/type";
@@ -29,6 +29,7 @@ import { toBCP47 } from "./helpers/locale-for-intl";
 import type { VueGettextProvider } from "./helpers/vue-gettext-provider";
 import type { TimeScale } from "./type";
 import { Settings } from "luxon";
+import "./style/widget-roadmap.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const timezone = document.body.dataset.userTimezone;
@@ -43,10 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettext(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "roadmap-widget-po-" */ "../po/" + getPOFileFromLocale(locale)
-            ),
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
     Vue.use(Vuex);
     // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together

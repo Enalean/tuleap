@@ -28,11 +28,7 @@ use TemplateRenderer;
 use TrackerFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Roadmap\Widget\PreferencePresenter;
@@ -356,21 +352,14 @@ final class RoadmapProjectWidget extends \Widget
     public function getJavascriptAssets(): array
     {
         return [
-            new JavascriptAsset($this->getWidgetAssets(), 'widget-script.js'),
+            new JavascriptViteAsset($this->getWidgetAssets(), 'src/index.ts'),
             new JavascriptViteAsset($this->getConfigureWidgetAssets(), 'src/index.ts'),
         ];
     }
 
-    public function getStylesheetDependencies(): CssAssetCollection
+    private function getWidgetAssets(): IncludeViteAssets
     {
-        return new CssAssetCollection([
-            new CssAssetWithoutVariantDeclinaisons($this->getWidgetAssets(), 'widget-style'),
-        ]);
-    }
-
-    private function getWidgetAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../../scripts/roadmap-widget/frontend-assets',
             '/assets/roadmap/roadmap-widget'
         );

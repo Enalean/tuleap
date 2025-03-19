@@ -54,7 +54,9 @@
 
 .roadmap-gantt-task-bar-container {
     display: flex;
-    top: math.floor((roadmap-variables.$task-height - roadmap-variables.$task-bar-height) / 2);
+    top: math.floor(
+        math.div(roadmap-variables.$task-height - roadmap-variables.$task-bar-height, 2)
+    );
     align-items: center;
     height: roadmap-variables.$task-bar-height;
 }
@@ -148,7 +150,7 @@
 .roadmap-gantt-task-bar-milestone-container {
     display: flex;
     top: math.round(
-        (roadmap-variables.$task-height - roadmap-variables.$task-milestone-height) / 2
+        math.div(roadmap-variables.$task-height - roadmap-variables.$task-milestone-height, 2)
     );
     align-items: center;
 }
