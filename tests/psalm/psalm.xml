@@ -978,10 +978,8 @@
             <file name="plugins/tracker/tests/unit/FormElement/XML/XMLFormElementImplTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElementListValueAdminViewPresenterBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/GetTrackersQueryCheckerTest.php"/>
-            <file name="plugins/tracker/tests/unit/Hierarchy/ControllerTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/HierarchicalTrackerFactoryTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/HierarchicalTrackerTest.php"/>
-            <file name="plugins/tracker/tests/unit/Hierarchy/HierarchyControllerTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/HierarchyFactoryTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/HierarchyTest.php"/>
             <file name="plugins/tracker/tests/unit/Hierarchy/TrackerHierarchyFactoryGetAllAncestorsTest.php"/>

@@ -29,8 +29,9 @@ module.exports = [
             "semantics-homepage": "./src/semantics/homepage.ts",
             "status-semantic": "./src/semantics/status/status-picker.ts",
             TrackerAdminFields: "./src/TrackerAdminFields.js",
-            colorpicker: "./themes/colorpicker.scss",
+            colorpicker: "./styles/colorpicker.scss",
             notifications: "./src/index.js",
+            hierarchy: "./styles/hierarchy.scss",
         },
         context: __dirname,
         output: webpack_configurator.configureOutput(
