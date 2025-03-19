@@ -167,6 +167,9 @@ msgstr "Requêtes suggérées"
 msgid "Query title"
 msgstr "Titre de la requête"
 
+msgid "Query updated with success!"
+msgstr "Requête mise à jour avec succès !"
+
 msgid "Report has been successfully saved"
 msgstr "Rapport enregistré avec succès"
 

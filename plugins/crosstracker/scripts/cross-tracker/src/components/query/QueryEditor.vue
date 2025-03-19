@@ -67,7 +67,7 @@ import { useGettext } from "vue3-gettext";
 import {
     TQL_cross_tracker_autocomplete_keywords,
     cross_tracker_allowed_keywords,
-} from "../../../helpers/tql-configuration";
+} from "../../helpers/tql-configuration";
 import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
 import {
     buildParserDefinition,
@@ -76,9 +76,10 @@ import {
 } from "@tuleap/plugin-tracker-tql-codemirror";
 import { Option } from "@tuleap/option";
 
-defineProps<{
+const props = defineProps<{
     tql_query: string;
 }>();
+
 const emit = defineEmits<{
     (e: "trigger-search", tql_query: string): void;
     (e: "update:tql_query", tql_query: string): void;
@@ -107,7 +108,7 @@ onMounted(() => {
         $gettext(
             `Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title = 'value'`,
         ),
-        "",
+        props.tql_query,
         submit_form_callback,
         update_callback,
     );

@@ -32,14 +32,16 @@ import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
 import ReadQuery from "./components/ReadQuery.vue";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 import mitt from "mitt";
-import type { Events } from "./helpers/emitter-provider";
+import type { EmitterProvider, Events } from "./helpers/emitter-provider";
+import EditQuery from "./components/query/edition/EditQuery.vue";
+import { EDIT_QUERY_EVENT } from "./helpers/emitter-provider";
 
 vi.useFakeTimers();
 
 describe("CrossTrackerWidget", () => {
     let is_user_admin: boolean;
     let widget_title_element: HTMLSpanElement;
-
+    let emitter: EmitterProvider;
     beforeEach(() => {
         widget_title_element = document.createElement("span");
         widget_title_element.textContent = "Cross trackers search";
@@ -47,7 +49,7 @@ describe("CrossTrackerWidget", () => {
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
-        const emitter = mitt<Events>();
+        emitter = mitt<Events>();
         return shallowMount(CrossTrackerWidget, {
             global: {
                 provide: {
@@ -69,6 +71,7 @@ describe("CrossTrackerWidget", () => {
             const wrapper = getWrapper();
             expect(wrapper.findComponent(ReadQuery).exists()).toBe(true);
             expect(wrapper.findComponent(CreateNewQuery).exists()).toBe(false);
+            expect(wrapper.findComponent(EditQuery).exists()).toBe(false);
         });
 
         it("Displays the creation query pane at create new query event", async () => {
@@ -79,6 +82,25 @@ describe("CrossTrackerWidget", () => {
 
             expect(wrapper.findComponent(ReadQuery).exists()).toBe(false);
             expect(wrapper.findComponent(CreateNewQuery).exists()).toBe(true);
+            expect(wrapper.findComponent(EditQuery).exists()).toBe(false);
+        });
+        it("Displays the edit query pane at create new query event", async () => {
+            const wrapper = getWrapper();
+
+            emitter.emit(EDIT_QUERY_EVENT, {
+                query_to_edit: {
+                    id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
+                    tql_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id > 15",
+                    title: "Some artifacts",
+                    description: "a query",
+                    is_default: false,
+                },
+            });
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ReadQuery).exists()).toBe(false);
+            expect(wrapper.findComponent(CreateNewQuery).exists()).toBe(false);
+            expect(wrapper.findComponent(EditQuery).exists()).toBe(true);
         });
     });
 });

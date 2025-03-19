@@ -43,4 +43,8 @@ final class CrossTrackerQueryPutRepresentation
      * @var int The id of the widget the query belongs to {@required true}
      */
     public int $widget_id;
+    /**
+     * @var bool The query is displayed by default or not {@required false}
+     */
+    public bool $is_default = false;
 }

@@ -20,7 +20,7 @@
 <template>
     <button
         type="button"
-        class="tlp-button-danger tlp-button-mini tlp-button-outline delete-query-button"
+        class="tlp-button-danger tlp-button-mini tlp-button-outline"
         v-on:click="modal?.show()"
         data-test="delete-query-button"
     >
@@ -126,9 +126,3 @@ function handleDeleteClick(): void {
     );
 }
 </script>
-
-<style scoped lang="scss">
-.delete-query-button {
-    margin-right: var(--tlp-medium-spacing);
-}
-</style>

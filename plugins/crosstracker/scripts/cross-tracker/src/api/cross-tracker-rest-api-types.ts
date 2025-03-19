@@ -42,6 +42,14 @@ export type PostQueryRepresentation = {
     is_default: boolean;
 };
 
+export type PutQueryRepresentation = {
+    widget_id: number;
+    tql_query: string;
+    title: string;
+    description: string;
+    is_default: boolean;
+};
+
 export const DATE_SELECTABLE_TYPE = "date";
 export const NUMERIC_SELECTABLE_TYPE = "numeric";
 export const TEXT_SELECTABLE_TYPE = "text";

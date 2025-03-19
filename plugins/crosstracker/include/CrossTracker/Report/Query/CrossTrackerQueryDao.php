@@ -29,7 +29,7 @@ use Tuleap\DB\UUID;
  * @psalm-type CrossTrackerQueryRow = array{id: UUID, query: string, title: string, description: string, widget_id: int, is_default: bool}
  * @psalm-type CrossTrackerQueryRawRow = array{id: string, query: string, title: string, description: string, widget_id: int, is_default: int}
  */
-final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQueries, InsertNewQuery, ResetIsDefaultColumn
+final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQueries, InsertNewQuery, ResetIsDefaultColumn, UpdateQuery
 {
     public function searchQueryByUuid(string $uuid_hex): ?array
     {
@@ -66,12 +66,13 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
         return $row;
     }
 
-    public function update(UUID $id, string $query, string $title, string $description): void
+    public function update(UUID $id, string $query, string $title, string $description, bool $is_default): void
     {
         $this->getDB()->update('plugin_crosstracker_query', [
             'query'       => $query,
             'title'       => $title,
             'description' => $description,
+            'is_default' => $is_default,
         ], [
             'id' => $id->getBytes(),
         ]);

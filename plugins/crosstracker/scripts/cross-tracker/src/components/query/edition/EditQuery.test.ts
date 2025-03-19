@@ -21,10 +21,9 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import CreateNewQuery from "./CreateNewQuery.vue";
 import QuerySuggested from "../QuerySuggested.vue";
 import TitleInput from "../TitleInput.vue";
-import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
+import { EMITTER, QUERY_UPDATER, WIDGET_ID } from "../../../injection-symbols";
 import { Fault } from "@tuleap/fault";
 import type {
     EmitterProvider,
@@ -39,19 +38,23 @@ import {
     SEARCH_ARTIFACTS_EVENT,
 } from "../../../helpers/emitter-provider";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
-import { PostNewQueryStub } from "../../../../tests/stubs/PostNewQueryStub";
-import type { PostNewQuery } from "../../../domain/PostNewQuery";
 import mitt from "mitt";
 import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
+import EditQuery from "./EditQuery.vue";
+import type { Query } from "../../../type";
+import type { UpdateQuery } from "../../../domain/UpdateQuery";
+import { UpdateQueryStub } from "../../../../tests/stubs/UpdateQueryStub";
+import DescriptionTextArea from "../DescriptionTextArea.vue";
 
 vi.useFakeTimers();
 
-describe("CreateNewQuery", () => {
+describe("EditQuery", () => {
     let dispatched_clear_feedback_events: true[];
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_success_events: NotifySuccessEvent[];
     let dispatched_search_events: true[];
     let emitter: EmitterProvider;
+    let query: Query;
 
     const QueryEditor = {
         name: "QueryEditor",
@@ -79,42 +82,42 @@ describe("CreateNewQuery", () => {
         emitter.on(SEARCH_ARTIFACTS_EVENT, () => {
             dispatched_search_events.push(true);
         });
+        query = {
+            id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
+            tql_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id > 15",
+            title: "Some artifacts",
+            description: "a query",
+            is_default: false,
+        };
     });
 
     function getWrapper(
-        new_query_creator: PostNewQuery = PostNewQueryStub.withDefaultContent(),
-    ): VueWrapper<InstanceType<typeof CreateNewQuery>> {
-        return shallowMount(CreateNewQuery, {
+        query_updater: UpdateQuery = UpdateQueryStub.withDefaultContent(),
+    ): VueWrapper<InstanceType<typeof EditQuery>> {
+        return shallowMount(EditQuery, {
             global: {
                 ...getGlobalTestOptions(),
                 stubs: { QueryEditor },
                 provide: {
                     [WIDGET_ID.valueOf()]: 96,
                     [EMITTER.valueOf()]: emitter,
-                    [NEW_QUERY_CREATOR.valueOf()]: true,
-                    [NEW_QUERY_CREATOR.valueOf()]: new_query_creator,
+                    [QUERY_UPDATER.valueOf()]: query_updater,
                 },
+            },
+            props: {
+                query,
             },
         });
     }
 
-    it("cancels the query creation by emitting an event and clearing the feedback", async () => {
+    it("cancels the query edition by emitting an event and clearing the feedback", async () => {
         const wrapper = getWrapper();
-        await wrapper.find("[data-test=query-creation-cancel-button]").trigger("click");
+        await wrapper.find("[data-test=query-edition-cancel-button]").trigger("click");
         expect(wrapper.emitted()).toHaveProperty("return-to-active-query-pane");
         expect(dispatched_clear_feedback_events).toHaveLength(1);
     });
 
     describe("'Save' and 'Search' buttons", () => {
-        it("Does not display the Save button and the 'Search' button is disabled by default", () => {
-            const wrapper = getWrapper();
-            expect(wrapper.find("[data-test=query-creation-save-button]").exists()).toBe(false);
-            expect(
-                wrapper
-                    .find("[data-test=query-creation-search-button]")
-                    .element.attributes.getNamedItem("disabled"),
-            ).not.toBeNull();
-        });
         it("Displays the disabled 'Save' button if the `Title` and `Query` fields are not empty, the 'Search' button is enabled", async () => {
             const wrapper = getWrapper();
             wrapper.findComponent(TitleInput).vm.$emit("update:title", "Some title");
@@ -123,11 +126,11 @@ describe("CreateNewQuery", () => {
                 .vm.$emit("update:tql_query", "SELECT @id FROM @project = 'self' WHERE @id > 1 ");
             await vi.runOnlyPendingTimersAsync();
 
-            const saved_button = wrapper.find("[data-test=query-creation-save-button]");
+            const saved_button = wrapper.find("[data-test=query-edition-save-button]");
             expect(saved_button.exists()).toBe(true);
             expect(saved_button.element.attributes.getNamedItem("disabled")).not.toBeNull();
 
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
+            const search_button = wrapper.find("[data-test=query-edition-search-button]");
             expect(search_button.element.attributes.getNamedItem("disabled")).toBeNull();
         });
         it("Displays an enabled 'Save' button when the user search for query result, the 'Search' button becomes disabled", async () => {
@@ -139,11 +142,11 @@ describe("CreateNewQuery", () => {
 
             await vi.runOnlyPendingTimersAsync();
 
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
+            const search_button = wrapper.find("[data-test=query-edition-search-button]");
             await search_button.trigger("click");
             expect(search_button.element.attributes.getNamedItem("disabled")).not.toBeNull();
 
-            const saved_button = wrapper.find("[data-test=query-creation-save-button]");
+            const saved_button = wrapper.find("[data-test=query-edition-save-button]");
             expect(saved_button.exists()).toBe(true);
             expect(saved_button.element.attributes.getNamedItem("disabled")).toBeNull();
         });
@@ -175,18 +178,16 @@ describe("CreateNewQuery", () => {
 
             await vi.runOnlyPendingTimersAsync();
 
-            await wrapper.find("[data-test=query-creation-search-button]").trigger("click");
+            await wrapper.find("[data-test=query-edition-search-button]").trigger("click");
 
             expect(dispatched_search_events).toHaveLength(1);
         });
-        it("Search a tql query result by emitting an event when the shortcut (ctrl+enter) is pressed", async () => {
+        it("Search a tql query result by emitting an event when the shortcut (ctrl+enter) is pressed", () => {
             const wrapper = getWrapper();
 
             wrapper
                 .findComponent(QueryEditor)
                 .vm.$emit("trigger-search", "SELECT @id FROM @project = 'self' WHERE @id > 1 ");
-
-            await wrapper.find("[data-test=query-creation-search-button]").trigger("click");
 
             expect(dispatched_search_events).toHaveLength(1);
         });
@@ -202,7 +203,7 @@ describe("CreateNewQuery", () => {
             await vi.runOnlyPendingTimersAsync();
 
             // Need to trigger the search before saving
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
+            const search_button = wrapper.find("[data-test=query-edition-search-button]");
             await search_button.trigger("click");
 
             const query_selectable_component = wrapper.findComponent(QuerySelectableTable);
@@ -210,22 +211,22 @@ describe("CreateNewQuery", () => {
 
             await vi.runOnlyPendingTimersAsync();
 
+            expect(wrapper.find("[data-test=query-edition-search-button-spin-icon]").exists()).toBe(
+                true,
+            );
             expect(
-                wrapper.find("[data-test=query-creation-search-button-spin-icon]").exists(),
-            ).toBe(true);
-            expect(
-                wrapper.find("[data-test=query-creation-search-button-search-icon]").exists(),
+                wrapper.find("[data-test=query-edition-search-button-search-icon]").exists(),
             ).toBe(false);
 
             query_selectable_component.vm.$emit("search-finished");
 
             await vi.runOnlyPendingTimersAsync();
 
+            expect(wrapper.find("[data-test=query-edition-search-button-spin-icon]").exists()).toBe(
+                false,
+            );
             expect(
-                wrapper.find("[data-test=query-creation-search-button-spin-icon]").exists(),
-            ).toBe(false);
-            expect(
-                wrapper.find("[data-test=query-creation-search-button-search-icon]").exists(),
+                wrapper.find("[data-test=query-edition-search-button-search-icon]").exists(),
             ).toBe(true);
         });
     });
@@ -236,14 +237,16 @@ describe("CreateNewQuery", () => {
             const is_default = true;
             const tql_query = "SELECT @id FROM @project = 'self' WHERE @id > 1 ";
             const wrapper = getWrapper(
-                PostNewQueryStub.withCallback((query_to_post) => {
-                    expect(query_to_post.title).toStrictEqual(title);
-                    expect(query_to_post.description).toStrictEqual(description);
-                    expect(query_to_post.is_default).toStrictEqual(is_default);
-                    expect(query_to_post.tql_query).toStrictEqual(tql_query);
+                UpdateQueryStub.withCallback((current_query, query_to_update) => {
+                    expect(query_to_update.title).toStrictEqual(title);
+                    expect(query_to_update.description).toStrictEqual(description);
+                    expect(query_to_update.is_default).toStrictEqual(is_default);
+                    expect(query_to_update.tql_query).toStrictEqual(tql_query);
+                    expect(current_query.id).toStrictEqual(query.id);
                 }),
             );
             wrapper.findComponent(QueryEditor).vm.$emit("update:tql_query", tql_query);
+            wrapper.findComponent(DescriptionTextArea).vm.$emit("update:description", description);
             wrapper.findComponent(TitleInput).vm.$emit("update:title", title);
             wrapper
                 .findComponent(QueryDisplayedByDefaultSwitch)
@@ -252,10 +255,10 @@ describe("CreateNewQuery", () => {
             await vi.runOnlyPendingTimersAsync();
 
             // Need to trigger the search before saving
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
+            const search_button = wrapper.find("[data-test=query-edition-search-button]");
             await search_button.trigger("click");
 
-            await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
+            await wrapper.find("[data-test=query-edition-save-button]").trigger("click");
 
             expect(dispatched_fault_events).toHaveLength(0);
             expect(dispatched_clear_feedback_events).toHaveLength(2);
@@ -263,7 +266,7 @@ describe("CreateNewQuery", () => {
             expect(wrapper.emitted()).toHaveProperty("return-to-active-query-pane");
         });
         it("show an error if the save failed", async () => {
-            const wrapper = getWrapper(PostNewQueryStub.withFault(Fault.fromMessage("Error")));
+            const wrapper = getWrapper(UpdateQueryStub.withFault(Fault.fromMessage("Error")));
 
             wrapper
                 .findComponent(QueryEditor)
@@ -273,10 +276,10 @@ describe("CreateNewQuery", () => {
             await vi.runOnlyPendingTimersAsync();
 
             // Need to trigger the search before saving
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
+            const search_button = wrapper.find("[data-test=query-edition-search-button]");
             await search_button.trigger("click");
 
-            await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
+            await wrapper.find("[data-test=query-edition-save-button]").trigger("click");
 
             expect(dispatched_fault_events).toHaveLength(1);
             expect(dispatched_clear_feedback_events).toHaveLength(2);

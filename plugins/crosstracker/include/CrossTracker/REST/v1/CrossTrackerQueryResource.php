@@ -39,6 +39,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor
 use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryDao;
 use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryFactory;
 use Tuleap\CrossTracker\Report\Query\QueryCreator;
+use Tuleap\CrossTracker\Report\Query\QueryUpdater;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerGetContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPostRepresentation;
@@ -263,19 +264,18 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             if ($previous_query->getWidgetId() !== $query_representation->widget_id) {
                 throw new I18NRestException(400, dgettext('tuleap-crosstracker', "Given 'widget_id' parameter is invalid"));
             }
-            $new_query = new CrossTrackerQuery(
-                $previous_query->getUUID(),
-                $query_representation->tql_query,
-                $query_representation->title,
-                $query_representation->description,
-                $previous_query->getWidgetId(),
-                false,
-            );
+            $new_query = CrossTrackerQueryFactory::fromQueryToEdit($previous_query, $query_representation);
 
             $trackers = $this->factory_builder->getReportTrackersRetriever()->getReportTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
             $this->checkQueryIsValid($trackers, $new_query->getQuery(), $current_user, $new_query->getWidgetId());
 
-            $this->getQueryDao()->update($new_query->getUUID(), $new_query->getQuery(), $new_query->getTitle(), $new_query->getDescription());
+            $query_dao = $this->getQueryDao();
+            (new QueryUpdater(
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                $query_dao,
+                $query_dao
+            ))
+                ->updateQuery($new_query);
 
             return CrossTrackerQueryRepresentation::fromQuery($new_query);
         } catch (CrossTrackerQueryNotFoundException) {

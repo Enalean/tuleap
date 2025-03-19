@@ -28,6 +28,7 @@ import type { SuggestedQueriesGetter } from "./domain/SuggestedQueriesGetter";
 import type { DashboardType } from "./domain/DashboardType";
 import type { PostNewQuery } from "./domain/PostNewQuery";
 import type { WidgetTitleUpdater } from "./WidgetTitleUpdater";
+import type { UpdateQuery } from "./domain/UpdateQuery";
 
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
@@ -43,5 +44,6 @@ export const IS_MULTIPLE_QUERY_SUPPORTED: StrictInjectionKey<boolean> = Symbol()
 export const GET_SUGGESTED_QUERIES: StrictInjectionKey<SuggestedQueriesGetter> = Symbol();
 export const DASHBOARD_TYPE: StrictInjectionKey<DashboardType> = Symbol();
 export const NEW_QUERY_CREATOR: StrictInjectionKey<PostNewQuery> = Symbol();
+export const QUERY_UPDATER: StrictInjectionKey<UpdateQuery> = Symbol();
 export const UPDATE_WIDGET_TITLE: StrictInjectionKey<WidgetTitleUpdater> = Symbol();
 export const DEFAULT_WIDGET_TITLE: StrictInjectionKey<string> = Symbol();

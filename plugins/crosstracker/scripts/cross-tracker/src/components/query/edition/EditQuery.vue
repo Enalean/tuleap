@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <section class="tlp-pane-section create-new-query-section">
+    <section class="tlp-pane-section edit-query-section">
         <query-suggested v-on:query-chosen="handleChosenQuery" />
-        <div class="create-new-query-title-description-container">
+        <div class="edit-query-title-description-container">
             <title-input v-model:title="title" />
             <description-text-area v-model:description="description" />
         </div>
@@ -32,12 +32,12 @@
             />
         </div>
         <query-displayed-by-default-switch v-model:is_default_query="is_default_query" />
-        <div class="query-creation-action-buttons">
+        <div class="query-edition-action-buttons">
             <button
                 type="button"
                 class="tlp-button-primary tlp-button-outline"
                 v-on:click="handleCancelButton"
-                data-test="query-creation-cancel-button"
+                data-test="query-edition-cancel-button"
             >
                 {{ $gettext("Cancel") }}
             </button>
@@ -46,19 +46,19 @@
                 class="tlp-button-primary"
                 v-on:click="handleSearchButton"
                 v-bind:disabled="is_search_button_disabled"
-                data-test="query-creation-search-button"
+                data-test="query-edition-search-button"
             >
                 <i
                     v-if="!is_search_loading"
                     aria-hidden="true"
                     class="fa-solid fa-search tlp-button-icon"
-                    data-test="query-creation-search-button-search-icon"
+                    data-test="query-edition-search-button-search-icon"
                 ></i>
                 <i
                     v-if="is_search_loading"
                     aria-hidden="true"
                     class="tlp-button-icon fas fa-spin fa-circle-notch"
-                    data-test="query-creation-search-button-spin-icon"
+                    data-test="query-edition-search-button-spin-icon"
                 ></i>
                 {{ $gettext("Search") }}
             </button>
@@ -68,7 +68,7 @@
                 class="tlp-button-primary"
                 v-on:click="handleSaveButton"
                 v-bind:disabled="is_save_button_disabled"
-                data-test="query-creation-save-button"
+                data-test="query-edition-save-button"
             >
                 <i
                     v-if="!is_save_loading"
@@ -101,7 +101,7 @@ import type { QuerySuggestion } from "../../../domain/SuggestedQueriesGetter";
 import QuerySuggested from "../QuerySuggested.vue";
 
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
+import { EMITTER, QUERY_UPDATER, WIDGET_ID } from "../../../injection-symbols";
 import {
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
@@ -109,12 +109,17 @@ import {
     SEARCH_ARTIFACTS_EVENT,
 } from "../../../helpers/emitter-provider";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
-import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
+import type { PutQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
 import { useGettext } from "vue3-gettext";
 import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
+import type { Query } from "../../../type";
 import QueryEditor from "../QueryEditor.vue";
 
 const { $gettext } = useGettext();
+
+const props = defineProps<{
+    query: Query;
+}>();
 
 const emit = defineEmits<{
     (e: "return-to-active-query-pane"): void;
@@ -124,12 +129,12 @@ const query_editor = ref<InstanceType<typeof QueryEditor>>();
 const emitter = strictInject(EMITTER);
 const widget_id = strictInject(WIDGET_ID);
 
-const new_query_creator = strictInject(NEW_QUERY_CREATOR);
+const query_updater = strictInject(QUERY_UPDATER);
 
-const title = ref("");
-const description = ref("");
-const tql_query = ref("");
-const is_default_query = ref(false);
+const title = ref(props.query.title);
+const description = ref(props.query.description);
+const tql_query = ref(props.query.tql_query);
+const is_default_query = ref(props.query.is_default);
 
 const searched_tql_query = ref("");
 
@@ -162,19 +167,19 @@ function handleSearch(tql_query: string): void {
 function handleSaveButton(): void {
     emitter.emit(CLEAR_FEEDBACK_EVENT);
     is_save_loading.value = true;
-    const new_query: PostQueryRepresentation = {
+    const updated_query: PutQueryRepresentation = {
         tql_query: searched_tql_query.value,
         description: description.value,
         title: title.value,
         widget_id,
         is_default: is_default_query.value,
     };
-    new_query_creator
-        .postNewQuery(new_query)
+    query_updater
+        .updateQuery(props.query, updated_query)
         .match(
             () => {
                 emitter.emit(NOTIFY_SUCCESS_EVENT, {
-                    message: $gettext("Query created with success!"),
+                    message: $gettext("Query updated with success!"),
                 });
                 emit("return-to-active-query-pane");
             },
@@ -207,18 +212,18 @@ function handleChosenQuery(query: QuerySuggestion): void {
 </script>
 
 <style scoped lang="scss">
-.create-new-query-title-description-container {
+.edit-query-title-description-container {
     display: flex;
     justify-content: space-between;
     gap: var(--tlp-medium-spacing);
     margin: 0 0 var(--tlp-small-spacing);
 }
 
-.create-new-query-section {
+.edit-query-section {
     border: 0;
 }
 
-.query-creation-action-buttons {
+.query-edition-action-buttons {
     display: flex;
     gap: var(--tlp-medium-spacing);
 }

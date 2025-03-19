@@ -49,7 +49,7 @@ final class CrossTrackerQueryDaoTest extends TestIntegrationTestCase
     public function testUpdate(): void
     {
         $uuid = $this->query_dao->create('SELECT @id FROM @project = "self" WHERE @id = 1', 'title', 'description', 1, false);
-        $this->query_dao->update($uuid, 'SELECT nothing', 'foo', 'bar');
+        $this->query_dao->update($uuid, 'SELECT nothing', 'foo', 'bar', true);
         $query = $this->query_dao->searchQueryByUuid($uuid->toString());
         self::assertNotNull($query);
         self::assertSame($uuid->toString(), $query['id']->toString());
@@ -57,6 +57,7 @@ final class CrossTrackerQueryDaoTest extends TestIntegrationTestCase
         self::assertSame('foo', $query['title']);
         self::assertSame('bar', $query['description']);
         self::assertSame(1, $query['widget_id']);
+        self::assertTrue($query['is_default']);
     }
 
     public function testResetIsDefaultColumn(): void
