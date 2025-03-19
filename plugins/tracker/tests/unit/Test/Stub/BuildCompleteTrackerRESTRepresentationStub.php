@@ -59,7 +59,8 @@ final class BuildCompleteTrackerRESTRepresentationStub implements BuildCompleteT
             $tracker,
             [],
             [],
-            []
+            [],
+            null
         );
     }
 }
