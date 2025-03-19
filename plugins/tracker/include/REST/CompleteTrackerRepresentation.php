@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tuleap\REST\JsonCast;
 use Tracker;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentation;
 use Tuleap\Tracker\REST\Tracker\TrackerNotificationRepresentation;
 
@@ -95,12 +95,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
      * @var PermissionsRepresentation | null
      */
     public $permissions_for_groups;
-
-    /**
-     * @var TrackerReference
-     */
-
-    public $parent;
+    public ?TrackerReference $parent;
 
     /**
      * @var array
@@ -115,7 +110,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
     private function __construct(
         Tracker $tracker,
         \Project $tracker_project,
-        ?Tracker $tracker_parent,
+        ?Tracker $parent_tracker,
         array $tracker_fields,
         array $structure,
         array $semantics,
@@ -144,18 +139,22 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         ];
         $this->color_name             = $tracker->getColor()->getName();
         $this->permissions_for_groups = $permissions;
-
-        if ($tracker_parent) {
-            $this->parent = TrackerReference::build($tracker_parent);
-        }
+        $this->parent                 = ($parent_tracker !== null) ? TrackerReference::build($parent_tracker) : null;
     }
 
-    public static function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null, ?PermissionsRepresentation $permissions = null): self
-    {
+    public static function build(
+        Tracker $tracker,
+        array $tracker_fields,
+        array $structure,
+        array $semantics,
+        ?Tracker $parent_tracker,
+        ?WorkflowRepresentation $workflow = null,
+        ?PermissionsRepresentation $permissions = null,
+    ): self {
         return new self(
             $tracker,
             $tracker->getProject(),
-            $tracker->getParent(),
+            $parent_tracker,
             $tracker_fields,
             $structure,
             $semantics,

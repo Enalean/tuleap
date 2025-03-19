@@ -26,7 +26,7 @@ use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 
-class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation
+class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(
         private Tracker_FormElementFactory $formelement_factory,
@@ -70,6 +70,7 @@ class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTReprese
             $rest_fields,
             $this->getStructureRepresentation($tracker),
             $semantic_manager->exportToREST($user),
+            $tracker->getParentUserCanView($user),
             $this->workflow_rest_builder->getWorkflowRepresentation($tracker->getWorkflow(), $user),
             $this->permissions_representation_builder->getPermissionsRepresentation($tracker, $user)
         );

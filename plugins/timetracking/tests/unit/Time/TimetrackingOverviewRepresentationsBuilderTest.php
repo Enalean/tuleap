@@ -137,7 +137,8 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
             $this->tracker,
             [],
             [],
-            []
+            [],
+            null
         );
 
         $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->with(
