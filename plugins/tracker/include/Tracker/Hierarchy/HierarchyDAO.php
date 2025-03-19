@@ -23,8 +23,9 @@ namespace Tuleap\Tracker\Hierarchy;
 use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 
-class HierarchyDAO extends DataAccessObject
+class HierarchyDAO extends DataAccessObject implements SearchParentTracker
 {
     public function updateChildren(int $parent_id, array $child_ids): void
     {
@@ -118,6 +119,15 @@ class HierarchyDAO extends DataAccessObject
     public function searchAncestorIds(int $tracker_id): array
     {
         return $this->getDB()->column('SELECT parent_id FROM tracker_hierarchy WHERE child_id = ?', [$tracker_id]);
+    }
+
+    public function searchParentId(int $child_tracker_id): Option
+    {
+        $row = $this->searchAncestorIds($child_tracker_id);
+        if ($row === []) {
+            return Option::nothing(\Psl\Type\int());
+        }
+        return Option::fromValue($row[0]);
     }
 
     private function deleteAllChildren($parent_id): void

@@ -57,6 +57,9 @@ use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Errors\QueryErrorsTranslator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
@@ -493,9 +496,14 @@ class TrackersResource extends AuthenticatedResource
             $tracker->getProject()
         );
 
-        $possible_parents_getr = new PossibleParentsRetriever($this->tracker_artifact_factory, \EventManager::instance());
-        $possible_parents      = $possible_parents_getr->getPossibleArtifactParents($tracker, $user, $limit, $offset, false);
-        $pagination            = $possible_parents->getPossibleParents();
+        $possible_parents_retriever = new PossibleParentsRetriever(
+            $this->tracker_artifact_factory,
+            \EventManager::instance(),
+            new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance()),
+            TrackersPermissionsRetriever::build(),
+        );
+        $possible_parents           = $possible_parents_retriever->getPossibleArtifactParents($tracker, $user, $limit, $offset, false);
+        $pagination                 = $possible_parents->getPossibleParents();
         if (! $pagination || ! $possible_parents->isSelectorDisplayed()) {
             Header::sendPaginationHeaders($limit, $offset, 0, self::MAX_LIMIT);
             return [];
@@ -870,24 +878,6 @@ class TrackersResource extends AuthenticatedResource
             ),
             new WorkflowRestBuilder()
         );
-    }
-
-    private function getParentTracker(\PFUser $user, Tracker $tracker)
-    {
-        $parent = $tracker->getParent();
-
-        if (! $parent) {
-            throw new RestException(404, 'This tracker has no parent tracker');
-        }
-
-        if ($parent->isDeleted()) {
-            throw new RestException(404, "This tracker's parent is deleted");
-        }
-
-        if (! $parent->userCanView($user)) {
-            throw new RestException(403);
-        }
-        return $parent;
     }
 
     private function sendAllowHeaderForTracker()

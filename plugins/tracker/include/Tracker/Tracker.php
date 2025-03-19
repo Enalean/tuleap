@@ -3091,13 +3091,16 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
 
     /**
      * Set parent
-     *
+     * @deprecated use \Tuleap\Tracker\Test\Builders\TrackerTestBuilder
      */
     public function setParent(?Tracker $tracker = null)
     {
         $this->parent = $tracker;
     }
 
+    /**
+     * @deprecated use \Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever and \Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers
+     */
     public function getParentUserCanView(PFUser $user): ?Tracker
     {
         $parent = $this->getParent();
@@ -3119,6 +3122,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
 
     /**
      * Return parent tracker of current tracker (if any)
+     * @deprecated use \Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever
      */
     public function getParent(): ?Tracker
     {

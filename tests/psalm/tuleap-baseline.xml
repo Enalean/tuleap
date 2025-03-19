@@ -73,6 +73,11 @@
       <code><![CDATA[$tracker_id]]></code>
     </PossiblyNullArgument>
   </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/NearestPlanningTrackerProvider.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Artifact/BurnupPointRepresentation.php">
     <MissingParamType>
       <code><![CDATA[$timestamp]]></code>
@@ -837,6 +842,8 @@
   </file>
   <file src="plugins/agiledashboard/include/Planning/ArtifactMilestone.php">
     <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+      <code><![CDATA[getParent]]></code>
       <code><![CDATA[linkArtifacts]]></code>
     </DeprecatedMethod>
     <InvalidReturnStatement>
@@ -32384,6 +32391,9 @@
     </InvalidDocblock>
   </file>
   <file src="plugins/tracker/include/REST/TrackerRestBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getParentUserCanView]]></code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[getStructureRepresentation]]></code>
     </MissingReturnType>
@@ -32697,7 +32707,6 @@
       <code><![CDATA[getArtifactsMatchingFromExpertQuery]]></code>
       <code><![CDATA[getJsonDecoder]]></code>
       <code><![CDATA[getParentArtifacts]]></code>
-      <code><![CDATA[getParentTracker]]></code>
       <code><![CDATA[getReports]]></code>
       <code><![CDATA[options]]></code>
       <code><![CDATA[optionsArtifacts]]></code>
@@ -32890,6 +32899,7 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Action/CreateArtifact.php">
     <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
       <code><![CDATA[linkArtifact]]></code>
       <code><![CDATA[userCanSubmitArtifact]]></code>
     </DeprecatedMethod>
@@ -34112,6 +34122,9 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/CreateInPlaceRenderer.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$artifact_link_id]]></code>
       <code><![CDATA[$render_with_javascript]]></code>
@@ -38660,6 +38673,8 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.php">
     <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+      <code><![CDATA[getParent]]></code>
       <code><![CDATA[validate]]></code>
     </DeprecatedMethod>
     <ImplicitToStringCast>
@@ -39327,7 +39342,6 @@
       <code><![CDATA[$default_values]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$new_value]]></code>
-      <code><![CDATA[$project_export_context]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -39340,14 +39354,12 @@
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$default_values]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[addValue]]></code>
-      <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[getBindValues]]></code>
       <code><![CDATA[getBindtableSqlFragment]]></code>
       <code><![CDATA[getDao]]></code>
@@ -39487,17 +39499,14 @@
     <MissingParamType>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$field]]></code>
-      <code><![CDATA[$project_export_context]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[fixOriginalValueIds]]></code>
       <code><![CDATA[getBindValues]]></code>
       <code><![CDATA[getBindtableSqlFragment]]></code>
@@ -39542,7 +39551,6 @@
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$is_rank_alpha]]></code>
       <code><![CDATA[$original_value_id]]></code>
-      <code><![CDATA[$project_export_context]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -39550,14 +39558,12 @@
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$values]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$is_rank_alpha]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[extractNumericValues]]></code>
       <code><![CDATA[fetchAdminEditFormNotModifiable]]></code>
       <code><![CDATA[fetchAdminEditRowNotModifiable]]></code>
@@ -39658,7 +39664,6 @@
       <code><![CDATA[$default_values]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field]]></code>
-      <code><![CDATA[$project_export_context]]></code>
       <code><![CDATA[$rest_data]]></code>
       <code><![CDATA[$select_name]]></code>
       <code><![CDATA[$ugroup_id]]></code>
@@ -39670,11 +39675,9 @@
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$values]]></code>
       <code><![CDATA[$values]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[fetchSelectUgroups]]></code>
       <code><![CDATA[fixOriginalValueIds]]></code>
       <code><![CDATA[getBindValues]]></code>
@@ -39757,7 +39760,6 @@
       <code><![CDATA[$default_values]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field]]></code>
-      <code><![CDATA[$project_export_context]]></code>
       <code><![CDATA[$select_name]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -39771,7 +39773,6 @@
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$value_id]]></code>
       <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$value_function]]></code>
@@ -39779,7 +39780,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[fetchSelectUsers]]></code>
       <code><![CDATA[fixOriginalValueIds]]></code>
       <code><![CDATA[getBindValues]]></code>
@@ -40293,7 +40293,6 @@
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$required]]></code>
       <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$use_it]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -40310,7 +40309,6 @@
       <code><![CDATA[$this->rank]]></code>
       <code><![CDATA[$this->required]]></code>
       <code><![CDATA[$this->scope]]></code>
-      <code><![CDATA[$this->tracker_id]]></code>
       <code><![CDATA[$this->use_it]]></code>
     </UndefinedThisPropertyAssignment>
   </file>
@@ -40678,16 +40676,6 @@
       <code><![CDATA[sortByLevel]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchyController.php">
-    <MissingParamType>
-      <code><![CDATA[$presenter]]></code>
-      <code><![CDATA[$template_name]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[render]]></code>
-      <code><![CDATA[updateFromXmlProjectImportProcess]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchyDAO.php">
     <MissingParamType>
       <code><![CDATA[$parent_id]]></code>
@@ -40716,16 +40704,6 @@
       <code><![CDATA[getParentTitle]]></code>
       <code><![CDATA[getParentsList]]></code>
       <code><![CDATA[setInstance]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Hierarchy/Presenter.php">
-    <MissingReturnType>
-      <code><![CDATA[getManageHierarchyTitle]]></code>
-      <code><![CDATA[getPossibleChildren]]></code>
-      <code><![CDATA[getSelectedAttribute]]></code>
-      <code><![CDATA[getSubmitLabel]]></code>
-      <code><![CDATA[getTrackerId]]></code>
-      <code><![CDATA[getTrackerUrl]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Import/Spotter.php">
@@ -45703,6 +45681,7 @@
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
       <code><![CDATA[createNewChangeset]]></code>
+      <code><![CDATA[getParent]]></code>
       <code><![CDATA[userCanSubmitArtifact]]></code>
       <code><![CDATA[userCanSubmitArtifact]]></code>
       <code><![CDATA[userCanSubmitArtifact]]></code>
@@ -47151,6 +47130,9 @@
     </UndefinedPropertyAssignment>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/XMLTracker.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+    </DeprecatedMethod>
     <PossiblyNullArgument>
       <code><![CDATA[$tracker_xml]]></code>
     </PossiblyNullArgument>
@@ -48696,6 +48678,9 @@
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field]]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$target_field_id]]></code>
       <code><![CDATA[$target_field_id]]></code>
@@ -49521,6 +49506,11 @@
   <file src="plugins/tracker/tests/unit/Test/Builders/Fields/TextFieldBuilder.php">
     <DeprecatedMethod>
       <code><![CDATA[setCacheSpecificProperties]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/tracker/tests/unit/Test/Builders/TrackerTestBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[setParent]]></code>
     </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/tests/unit/Test/Stub/BindValueIdCollectionStub.php">
@@ -78178,6 +78168,9 @@
     </PossiblyFalseIterator>
   </file>
   <file src="tests/integration/tests/TrackersV3ToV5/DefectTrackerTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$renderers]]></code>
     </InvalidArgument>
@@ -78202,6 +78195,9 @@
     </PossiblyNullReference>
   </file>
   <file src="tests/integration/tests/TrackersV3ToV5/TaskTrackerTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getParent]]></code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$renderers]]></code>
     </InvalidArgument>
