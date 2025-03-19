@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -73,11 +74,11 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $this->source_field->method('getLastChangesetValue')->willReturn($this->changeset_value);
         $verifier = new CanUserGroupValuesBeFullyMovedVerifier();
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gaulois')->build(), false),
+            ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gaulois')->build())->withId(1)->build(),
         ]);
         $this->destination_field->method('getAllValues')->willReturn(
             [
-                new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(987)->withName('perceval le gallois')->build(), false),
+                ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(987)->withName('perceval le gallois')->build())->withId(1)->build(),
             ]
         );
 
@@ -89,11 +90,11 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
         $this->source_field->method('getLastChangesetValue')->willReturn($this->changeset_value);
         $verifier = new CanUserGroupValuesBeFullyMovedVerifier();
         $this->changeset_value->method('getListValues')->willReturn([
-            new \Tracker_FormElement_Field_List_Bind_UgroupsValue(101, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gallois')->build(), false),
+            ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gaulois')->build())->withId(1)->build(),
         ]);
         $this->destination_field->method('getAllValues')->willReturn(
             [
-                new \Tracker_FormElement_Field_List_Bind_UgroupsValue(1, ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gallois')->build(), false),
+                ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(12345)->withName('perceval le gaulois')->build())->withId(1)->build(),
             ]
         );
 

@@ -21,7 +21,7 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue
+final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue
 {
     /**
      * @var ProjectUGroup
@@ -32,11 +32,6 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
     {
         parent::__construct($id, $is_hidden);
         $this->ugroup = $ugroup;
-    }
-
-    public static function fromUserGroup(ProjectUGroup $user_group): self
-    {
-        return new self($user_group->getId(), $user_group, false);
     }
 
     public function getLabel(): string

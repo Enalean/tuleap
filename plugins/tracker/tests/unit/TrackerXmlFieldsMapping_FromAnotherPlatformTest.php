@@ -20,6 +20,9 @@
 
 declare(strict_types=1);
 
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Test\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -117,13 +120,9 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
             ->shouldReceive('getId')->andReturns($bind_value_id)->getMock();
     }
 
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|null
-     */
-    protected function getBindForUGroupWithId(int $ugroup_id)
+    protected function getBindForUGroupWithId(int $ugroup_id): Tracker_FormElement_Field_List_Bind_UgroupsValue
     {
-        return \Mockery::spy(\Tracker_FormElement_Field_List_Bind_UgroupsValue::class)
-            ->shouldReceive('getId')->andReturns($ugroup_id)->getMock();
+        return ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(123)->build())->withId($ugroup_id)->build();
     }
 
     public function testItGetsNewValueIdForAUGroupList(): void

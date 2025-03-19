@@ -53,7 +53,7 @@ final class ListUserGroupBindBuilder
         $this->user_groups = $user_groups_list;
 
         foreach ($user_groups_list as $user_group) {
-            $bind_value = \Tracker_FormElement_Field_List_Bind_UgroupsValue::fromUserGroup($user_group);
+            $bind_value = ListUserGroupValueBuilder::aUserGroupValue($user_group)->build();
 
             $this->bind_values[] = $bind_value;
         }

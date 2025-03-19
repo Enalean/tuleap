@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -35,7 +37,8 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends \Tuleap
         $ugroup->shouldReceive('getTranslatedName')->andReturn($name);
         $ugroup->shouldReceive('getName')->andReturn($short_name);
 
-        $value = new Tracker_FormElement_Field_List_Bind_UgroupsValue($id, $ugroup, $is_hidden);
+        $value = ListUserGroupValueBuilder::aUserGroupValue($ugroup)->withId($id)->isHidden($is_hidden)->build();
+
         $value->setId($id);
         $this->assertEquals('{"id":123,"value":"b123","caption":"The smurfs","rest_value":"blueThings"}', json_encode($value->fetchForOpenListJson()));
     }

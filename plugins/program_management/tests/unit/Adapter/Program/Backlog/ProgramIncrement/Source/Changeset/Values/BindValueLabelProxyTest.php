@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -48,7 +49,7 @@ final class BindValueLabelProxyTest extends \Tuleap\Test\PHPUnit\TestCase
             'ugroup_id' => \ProjectUGroup::PROJECT_MEMBERS,
             'name'      => \ProjectUGroup::NORMALIZED_NAMES[\ProjectUGroup::PROJECT_MEMBERS],
         ]);
-        $bind_value = new \Tracker_FormElement_Field_List_Bind_UgroupsValue(492, $ugroup, false);
+        $bind_value = ListUserGroupValueBuilder::aUserGroupValue($ugroup)->withId(492)->build();
         $label      = BindValueLabelProxy::fromListBindValue($bind_value);
         self::assertSame('project_members', $label->getLabel());
     }
