@@ -27,56 +27,49 @@
         <i class="fa" v-bind:class="button_icon_class" aria-hidden="true"></i>
     </button>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
+import { useNamespacedState, useNamespacedMutations } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import fscreen from "fscreen";
+import type { FullscreenState } from "../../../store/fullscreen/type";
 
-const fullscreen = namespace("fullscreen");
+const { $gettext } = useGettext();
 
-@Component
-export default class SwitchToFullscreen extends Vue {
-    @fullscreen.State
-    readonly is_taskboard_in_fullscreen_mode!: boolean;
+const { is_taskboard_in_fullscreen_mode } = useNamespacedState<FullscreenState>("fullscreen", [
+    "is_taskboard_in_fullscreen_mode",
+]);
+const { setIsTaskboardInFullscreenMode } = useNamespacedMutations("fullscreen", [
+    "setIsTaskboardInFullscreenMode",
+]);
 
-    @fullscreen.Mutation
-    setIsTaskboardInFullscreenMode!: (is_in_fullscreen_mode: boolean) => void;
+const button_title = $gettext("Toggle fullscreen mode");
+const button_icon_class = computed((): string =>
+    is_taskboard_in_fullscreen_mode.value ? "fa-compress" : "fa-expand",
+);
+const is_fullscreen_enabled_in_browser = computed((): boolean => fscreen.fullscreenEnabled);
 
-    get button_title(): string {
-        return this.$gettext("Toggle fullscreen mode");
+onMounted(() => {
+    fscreen.addEventListener(
+        "fullscreenchange",
+        () => {
+            setIsTaskboardInFullscreenMode(fscreen.fullscreenElement !== null);
+        },
+        false,
+    );
+});
+
+function toggleFullscreenMode(): void {
+    const taskboard: HTMLElement | null = document.querySelector(".taskboard");
+
+    if (!taskboard) {
+        return;
     }
 
-    get button_icon_class(): string {
-        return this.is_taskboard_in_fullscreen_mode ? "fa-compress" : "fa-expand";
-    }
-
-    get is_fullscreen_enabled_in_browser(): boolean {
-        return fscreen.fullscreenEnabled;
-    }
-
-    mounted(): void {
-        fscreen.addEventListener(
-            "fullscreenchange",
-            () => {
-                this.setIsTaskboardInFullscreenMode(fscreen.fullscreenElement !== null);
-            },
-            false,
-        );
-    }
-
-    toggleFullscreenMode(): void {
-        const taskboard: HTMLElement | null = document.querySelector(".taskboard");
-
-        if (!taskboard) {
-            return;
-        }
-
-        if (fscreen.fullscreenElement !== null) {
-            fscreen.exitFullscreen();
-        } else {
-            fscreen.requestFullscreen(taskboard);
-        }
+    if (fscreen.fullscreenElement !== null) {
+        fscreen.exitFullscreen();
+    } else {
+        fscreen.requestFullscreen(taskboard);
     }
 }
 </script>
