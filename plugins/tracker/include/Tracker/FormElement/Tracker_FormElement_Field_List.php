@@ -69,19 +69,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         if (! $this->bind) {
             $dao          = new ListFieldSpecificPropertiesDAO();
-            $bind_factory = $this->getFormElementFieldListBindFactory();
+            $bind_factory = $this->getBindFactory();
             $this->bind   = $dao->searchBindByFieldId($this->id)
                 ->mapOr(fn (string $bind_type): ?Tracker_FormElement_Field_List_Bind => $bind_factory->getBind($this, $bind_type), null);
         }
         return $this->bind;
-    }
-
-    /**
-     * @return Tracker_FormElement_Field_List_BindFactory
-     */
-    protected function getFormElementFieldListBindFactory()
-    {
-        return new Tracker_FormElement_Field_List_BindFactory();
     }
 
     /**
@@ -106,7 +98,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $duplicator = new SpecificPropertiesWithMappingDuplicator(new ListFieldSpecificPropertiesDAO());
 
-        $bind_values_mapping = (new Tracker_FormElement_Field_List_BindFactory())->duplicate($from_field_id, $this->id);
+        $bind_values_mapping = $this->getBindFactory()->duplicate($from_field_id, $this->id);
         $duplicator->duplicateWithMapping($from_field_id, $this->id, $bind_values_mapping);
 
         return $duplicator;
@@ -1154,10 +1146,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $type      = isset($form_element_data['bind-type']) ? $form_element_data['bind-type'] : '';
         $bind_data = isset($form_element_data['bind']) ? $form_element_data['bind'] : [];
 
-        $bf = new Tracker_FormElement_Field_List_BindFactory();
-        if ($this->bind = $bf->createBind($this, $type, $bind_data)) {
+        if ($this->bind = $this->getBindFactory()->createBind($this, $type, $bind_data)) {
             $dao = new ListFieldSpecificPropertiesDAO();
-            $dao->saveBindForFieldId($this->getId(), $bf->getType($this->bind));
+            $dao->saveBindForFieldId($this->getId(), $this->getBindFactory()->getType($this->bind));
         }
     }
 
@@ -1173,8 +1164,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $node = parent::exportToXML($parent_node, $xmlMapping, $project_export_context, $user_xml_exporter);
         if ($this->getBind() && $this->shouldBeBindXML()) {
             $child = $node->addChild('bind');
-            $bf    = new Tracker_FormElement_Field_List_BindFactory();
-            $child->addAttribute('type', $bf->getType($this->getBind()));
+            $child->addAttribute('type', $this->getBindFactory()->getType($this->getBind()));
             $this->getBind()->exportBindToXml($child, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
         return $node;
@@ -1229,14 +1219,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return new ListFieldSpecificPropertiesDAO();
     }
 
-    /**
-     * Get an instance of Tracker_FormElement_Field_List_BindFactory
-     *
-     * @return Tracker_FormElement_Field_List_BindFactory
-     */
-    public function getBindFactory()
+    public function getBindFactory(): Tracker_FormElement_Field_List_BindFactory
     {
-        return new Tracker_FormElement_Field_List_BindFactory();
+        return new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
     }
 
     protected function saveValue(

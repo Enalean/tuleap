@@ -21,8 +21,9 @@
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 
-class BindStaticValueUnchanged extends Tracker_FormElement_Field_List_Bind_StaticValue
+final class BindStaticValueUnchanged extends Tracker_FormElement_Field_List_Bind_StaticValue
 {
     public const VALUE_ID      = -1;
     private const XML_VALUE_ID = '';
@@ -35,7 +36,8 @@ class BindStaticValueUnchanged extends Tracker_FormElement_Field_List_Bind_Stati
         $rank        = 0;
         $is_hidden   = false;
 
-        parent::__construct($id, $label, $description, $rank, $is_hidden);
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        parent::__construct($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $id, $label, $description, $rank, $is_hidden);
     }
 
     public function getXMLId(): string

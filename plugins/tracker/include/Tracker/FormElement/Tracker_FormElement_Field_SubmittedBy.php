@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -29,6 +30,14 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
+
+    /**
+     * protected for testing purpose
+     */
+    protected function getUUIdFactory(): DatabaseUUIDV7Factory
+    {
+        return new DatabaseUUIDV7Factory();
+    }
 
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
@@ -187,7 +196,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
-        $value              = new Tracker_FormElement_Field_List_Bind_UsersValue($changeset->getArtifact()->getSubmittedBy());
+        $value              = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $changeset->getArtifact()->getSubmittedBy());
         $submitted_by_value = $value->getFullRESTValue($this);
 
         $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
@@ -225,11 +234,11 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      */
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        $value    = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
-        $value    = $purifier->purify($value->getLabel());
-        $html    .= $value;
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $html       = '';
+        $bind_value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
+        $bind_value = $purifier->purify($bind_value->getLabel());
+        $html      .= $bind_value;
         return $html;
     }
 
@@ -258,7 +267,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     ): string {
         $output = '';
 
-        $bind_value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
+        $bind_value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
 
         switch ($format) {
             case 'html':
@@ -318,7 +327,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
-        $fake_value = new Tracker_FormElement_Field_List_Bind_UsersValue(UserManager::instance()->getCurrentUser()->getId());
+        $fake_value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), (int) UserManager::instance()->getCurrentUser()->getId());
         $html      .= $purifier->purify($fake_value->getLabel()) . '<br />';
         $html      .= '<span class="tracker-admin-form-element-help">';
         $html      .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission user');
@@ -333,7 +342,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         ?Tracker_Report $report = null,
         ?int $from_aid = null,
     ): string {
-        return $this->getBind()->formatChangesetValue(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
+        return $this->getBind()->formatChangesetValue(Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
     }
 
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
@@ -346,7 +355,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      */
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
-        $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
+        $value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
         return $value->fetchCard($display_preferences);
     }
 
@@ -356,7 +365,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      */
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
-        return $this->getBind()->formatChangesetValueForCSV(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
+        return $this->getBind()->formatChangesetValueForCSV(Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
     }
 
     /**

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 
 /**
@@ -26,7 +27,7 @@ use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 *
 * Base class to create, retrieve, update or delete rules
 */
-class Tracker_RuleFactory
+class Tracker_RuleFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      *
@@ -101,7 +102,7 @@ class Tracker_RuleFactory
     /**
     * @return Tracker_Rule
     */
-    public function &_buildRuleInstance($data)
+    public function &_buildRuleInstance($data)  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         //We create Rule
         switch ($data['rule_type']) {
@@ -234,15 +235,12 @@ class Tracker_RuleFactory
         return $rule_list;
     }
 
-    /**
-     *
-     * @return Tracker_Rule_List_Factory
-     */
-    public function getListFactory()
+    public function getListFactory(): Tracker_Rule_List_Factory
     {
         if (! $this->list_factory) {
             $listDao            = $this->getListDao();
-            $this->list_factory =  new Tracker_Rule_List_Factory($listDao);
+            $bind_factory       = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory());
+            $this->list_factory =  new Tracker_Rule_List_Factory($listDao, $bind_factory);
         }
 
         return $this->list_factory;

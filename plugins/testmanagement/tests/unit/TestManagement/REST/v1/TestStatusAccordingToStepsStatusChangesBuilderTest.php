@@ -22,9 +22,9 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_StaticValue as StaticValue;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
@@ -55,10 +55,10 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
         $this->status_field->method('getBind')->willReturn($bind);
 
         $values = [
-            new StaticValue(self::NOT_RUN_ID, 'notrun', '', 0, false),
-            new StaticValue(self::PASSED_ID, 'passed', '', 0, false),
-            new StaticValue(self::FAILED_ID, 'failed', '', 0, false),
-            new StaticValue(self::BLOCKED_ID, 'blocked', '', 0, false),
+            ListStaticValueBuilder::aStaticValue('notrun')->withId(self::NOT_RUN_ID)->build(),
+            ListStaticValueBuilder::aStaticValue('passed')->withId(self::PASSED_ID)->build(),
+            ListStaticValueBuilder::aStaticValue('failed')->withId(self::FAILED_ID)->build(),
+            ListStaticValueBuilder::aStaticValue('blocked')->withId(self::BLOCKED_ID)->build(),
         ];
         $bind->method('getAllValues')->willReturn($values);
     }

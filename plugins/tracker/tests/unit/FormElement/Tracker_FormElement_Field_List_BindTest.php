@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
@@ -48,7 +49,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
     {
         $decorator   = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
         $this->field = Mockery::mock(Tracker_FormElement_Field::class);
-        $this->bind  = Mockery::mock(Tracker_FormElement_Field_List_Bind::class, [$this->field, [], $decorator])
+        $this->bind  = Mockery::mock(Tracker_FormElement_Field_List_Bind::class, [new \Tuleap\DB\DatabaseUUIDV7Factory(), $this->field, [], $decorator])
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 
@@ -143,7 +144,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
             117 => ListUserValueBuilder::aUserWithId(117)->build(),
         ];
 
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [$field, [], [], $decorator])
+        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [new DatabaseUUIDV7Factory(), $field, [], [], $decorator])
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 
@@ -166,7 +167,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
 
     public function testItReturnOnlyValidDefaultValues(): void
     {
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [$this->field, [], [112 => true, 0 => 103, 111 => true], []])
+        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [new DatabaseUUIDV7Factory(), $this->field, [], [112 => true, 0 => 103, 111 => true], []])
                        ->shouldAllowMockingProtectedMethods()
                        ->makePartial();
 

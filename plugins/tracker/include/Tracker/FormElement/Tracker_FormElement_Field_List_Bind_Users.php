@@ -47,9 +47,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected $values;
 
 
-    public function __construct($field, $value_function, $default_values, $decorators)
+    public function __construct(public \Tuleap\DB\DatabaseUUIDV7Factory $uuid_factory, $field, $value_function, $default_values, $decorators)
     {
-        parent::__construct($field, $default_values, $decorators);
+        parent::__construct($uuid_factory, $field, $default_values, $decorators);
 
         if (! empty($value_function)) {
             $this->value_function = explode(',', $value_function);
@@ -153,7 +153,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $uh     = UserHelper::instance();
         $values = [];
         foreach ($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
-            $values[] =  new Tracker_FormElement_Field_List_Bind_UsersValue($row['id'], $row['user_name'], $row['full_name']);
+            $values[] =  new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $row['user_name'], $row['full_name']);
         }
         return $values;
     }
@@ -164,7 +164,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getValue($value_id)
     {
         if ($value_id == 100) {
-            $v = new Tracker_FormElement_Field_List_Bind_UsersValue(0);
+            $v = new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), 0);
         } else {
             $vs = $this->getAllValues();
             $v  = null;
@@ -263,7 +263,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected function getAllValuesByUGroupList($ugroups)
     {
         if ($this->values === null) {
-            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
+            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance(), $this->uuid_factory);
             $this->values = $value_getter->getSubsetOfUsersValueWithUserIds(
                 $ugroups,
                 [],
@@ -290,7 +290,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             return [];
         }
 
-        $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
+        $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance(), $this->uuid_factory);
         return $value_getter->getSubsetOfUsersValueWithUserIds(
             $this->value_function,
             $bindvalue_ids,
@@ -314,7 +314,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getAllValuesWithActiveUsersOnly(): array
     {
         if ($this->values === null) {
-            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
+            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance(), $this->uuid_factory);
             $this->values = $value_getter->getActiveUsersValue(
                 $this->value_function,
                 $this->field
@@ -339,7 +339,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         if (! isset($this->additionnal_values[$value_id])) {
             $this->additionnal_values[$value_id] = null;
             if ($user = $this->userManager->getUserById($value_id)) {
-                $this->additionnal_values[$value_id] = new Tracker_FormElement_Field_List_Bind_UsersValue($user->getId());
+                $this->additionnal_values[$value_id] = new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $user->getId());
             }
         }
         return $this->additionnal_values[$value_id];
@@ -987,10 +987,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     /**
      * @param int $bindvalue_id
-     * @return Tracker_FormElement_Field_List_BindValue
      */
-    public function getBindValueById($bindvalue_id)
+    public function getBindValueById($bindvalue_id): Tracker_FormElement_Field_List_BindValue
     {
-        return new Tracker_FormElement_Field_List_Bind_UsersValue($bindvalue_id);
+        return new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $bindvalue_id);
     }
 }

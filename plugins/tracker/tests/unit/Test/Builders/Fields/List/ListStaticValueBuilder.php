@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 
 final class ListStaticValueBuilder
 {
@@ -71,6 +72,7 @@ final class ListStaticValueBuilder
 
     public function build(): Tracker_FormElement_Field_List_Bind_StaticValue
     {
-        return new Tracker_FormElement_Field_List_Bind_StaticValue($this->id, $this->value, $this->description, 1, $this->is_hidden);
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        return new Tracker_FormElement_Field_List_Bind_StaticValue($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $this->id, $this->value, $this->description, 1, $this->is_hidden);
     }
 }

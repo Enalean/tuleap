@@ -26,9 +26,9 @@ final class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement
 
     protected $label;
 
-    public function __construct($id, $label, bool $is_hidden)
+    public function __construct(\Tuleap\DB\UUID $uuid, $id, $label, bool $is_hidden)
     {
-        parent::__construct($id, $is_hidden);
+        parent::__construct($uuid, $id, $is_hidden);
         $this->label = $label;
     }
 

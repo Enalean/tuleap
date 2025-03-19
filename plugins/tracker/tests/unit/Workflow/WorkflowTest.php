@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Workflow\Transition\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
@@ -291,7 +292,8 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
 
     private function buildFieldValue(int $id): \Tracker_FormElement_Field_List_Value
     {
-        return new class ($id) extends \Tracker_FormElement_Field_List_Value
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        return new class ($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $id) extends \Tracker_FormElement_Field_List_Value
         {
             public function getJsonId(): string
             {

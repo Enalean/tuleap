@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use ProjectUGroup;
 use Tracker_FormElement_Field_List_Bind_UgroupsValue;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 
 final class ListUserGroupValueBuilder
 {
@@ -54,6 +55,7 @@ final class ListUserGroupValueBuilder
 
     public function build(): Tracker_FormElement_Field_List_Bind_UgroupsValue
     {
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->id, $this->value, $this->is_hidden);
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        return new Tracker_FormElement_Field_List_Bind_UgroupsValue($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $this->id, $this->value, $this->is_hidden);
     }
 }

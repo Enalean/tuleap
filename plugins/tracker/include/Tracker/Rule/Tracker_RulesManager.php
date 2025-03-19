@@ -30,63 +30,25 @@ use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 * This is only a proxy to access the factory.
 * Maybe there is no need to have this intermediary?
 */
-class Tracker_RulesManager
+class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     *
-     * @var Tracker
-     */
-    protected $tracker;
-
-    /** @var Tracker_FormElementFactory */
-    protected $form_element_factory;
-
-     /** @var Tracker_Rule_Date_Factory */
-    protected $rule_date_factory;
-
-    /**
-     *
-     * @var Tracker_Rule_List_Factory
-     */
-    private $rule_list_factory;
-
-    /** @var FrozenFieldsDao */
-    private $frozen_fields_dao;
-
-    /**
-     * @var TrackerRulesListValidator
-     */
-    private $tracker_rules_list_validator;
-
-    /**
-     * @var TrackerRulesDateValidator
-     */
-    private $tracker_rules_date_validator;
-
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
     /**
      * @var array
      */
     private $rules_by_tracker_id = [];
 
     public function __construct(
-        Tracker $tracker,
-        Tracker_FormElementFactory $form_element_factory,
-        FrozenFieldsDao $frozen_fields_dao,
-        TrackerRulesListValidator $tracker_rules_list_validator,
-        TrackerRulesDateValidator $tracker_rules_date_validator,
-        TrackerFactory $tracker_factory,
+        private readonly Tracker $tracker,
+        private readonly Tracker_FormElementFactory $form_element_factory,
+        private readonly FrozenFieldsDao $frozen_fields_dao,
+        private readonly TrackerRulesListValidator $tracker_rules_list_validator,
+        private readonly TrackerRulesDateValidator $tracker_rules_date_validator,
+        private readonly TrackerFactory $tracker_factory,
         private readonly \Psr\Log\LoggerInterface $logger,
+        private readonly Tracker_Rule_List_Factory $rule_list_factory,
+        private readonly Tracker_Rule_Date_Factory $rule_date_factory,
+        private readonly Tracker_RuleFactory $rule_factory,
     ) {
-        $this->tracker                      = $tracker;
-        $this->form_element_factory         = $form_element_factory;
-        $this->frozen_fields_dao            = $frozen_fields_dao;
-        $this->tracker_rules_list_validator = $tracker_rules_list_validator;
-        $this->tracker_rules_date_validator = $tracker_rules_date_validator;
-        $this->tracker_factory              = $tracker_factory;
     }
 
     /**
@@ -97,7 +59,7 @@ class Tracker_RulesManager
     public function getAllListRulesByTrackerWithOrder($tracker_id)
     {
         if (! isset($this->rules_by_tracker_id[$tracker_id])) {
-            $this->rules_by_tracker_id[$tracker_id] = $this->getRuleFactory()
+            $this->rules_by_tracker_id[$tracker_id] = $this->rule_factory
                 ->getAllListRulesByTrackerWithOrder($tracker_id);
         }
         return $this->rules_by_tracker_id[$tracker_id];
@@ -110,77 +72,8 @@ class Tracker_RulesManager
      */
     public function getAllDateRulesByTrackerId($tracker_id)
     {
-        return $this->getTrackerRuleDateFactory()
+        return $this->rule_date_factory
             ->searchByTrackerId($tracker_id);
-    }
-
-    /**
-     *
-     * @return Tracker_Rule_Date_Factory
-     */
-    public function getTrackerRuleDateFactory()
-    {
-        if ($this->rule_date_factory ==  null) {
-            $this->rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $this->form_element_factory);
-        }
-
-        return $this->rule_date_factory;
-    }
-
-    /**
-     *
-     * @return \Tracker_RulesManager
-     */
-    public function setRuleDateFactory(Tracker_Rule_Date_Factory $factory)
-    {
-        $this->rule_date_factory = $factory;
-        return $this;
-    }
-
-    /**
-     *
-     * @return Tracker_Rule_List_Factory
-     */
-    public function getTrackerRuleListFactory()
-    {
-        if ($this->rule_list_factory ==  null) {
-            $this->rule_list_factory = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao());
-        }
-
-        return $this->rule_list_factory;
-    }
-
-    /**
-     *
-     * @return \Tracker_RulesManager
-     */
-    public function setRuleListFactory(Tracker_Rule_List_Factory $factory)
-    {
-        $this->rule_list_factory = $factory;
-        return $this;
-    }
-
-    /**
-     *
-     * @return Tracker_RuleFactory
-     */
-    public function getRuleFactory()
-    {
-        return Tracker_RuleFactory::instance();
-    }
-
-    public function setTrackerFormElementFactory(Tracker_FormElementFactory $factory)
-    {
-        $this->form_element_factory = $factory;
-    }
-
-    public function getTrackerFormElementFactory()
-    {
-        if ($this->form_element_factory === null) {
-            $this->form_element_factory = Tracker_FormElementFactory::instance();
-        }
-
-        return $this->form_element_factory;
     }
 
     /**
@@ -227,7 +120,7 @@ class Tracker_RulesManager
 
     public function checkIfRuleIsCyclic($tracker_id, $source_id, $target_id): bool
     {
-        $involved_fields_collection = $this->getRuleFactory()->getInvolvedFieldsByTrackerIdCollection((int) $tracker_id);
+        $involved_fields_collection = $this->rule_factory->getInvolvedFieldsByTrackerIdCollection((int) $tracker_id);
         return $this->isCyclic((int) $tracker_id, (int) $source_id, (int) $target_id, $involved_fields_collection);
     }
 
@@ -366,14 +259,12 @@ class Tracker_RulesManager
      */
     public function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id)
     {
-        $fact = $this->getRuleFactory();
-        return $fact->getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
+        return $this->rule_factory->getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
 
     public function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id)
     {
-        $fact = $this->getRuleFactory();
-        return $fact->deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
+        return $this->rule_factory->deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
 
     public function process($engine, $request, $current_user)
@@ -408,14 +299,11 @@ class Tracker_RulesManager
                 $field_target        = $this->form_element_factory->getFormElementById($request->get('target_field'));
                 $field_target_values = $field_target->getVisibleValuesPlusNoneIfAny();
 
-                $currMatrix = [];
-
                 foreach ($field_source_values as $field_source_value_id => $field_source_value) {
                     foreach ($field_target_values as $field_target_value_id => $field_target_value) {
                         $dependency = $field_source_value_id . '_' . $field_target_value_id;
                         if ($request->existAndNonEmpty($dependency)) {
-                            $currMatrix[] = [$field_source_value_id, $field_target_value_id];
-                            $this->getTrackerRuleListFactory()->create(
+                            $this->rule_list_factory->create(
                                 $field_source->getId(),
                                 $field_target->getId(),
                                 $this->tracker->id,
@@ -486,7 +374,7 @@ class Tracker_RulesManager
         echo '</form>';
 
         //Shortcut
-        $sources_targets = $this->getRuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);
+        $sources_targets = $this->rule_factory->getInvolvedFieldsByTrackerId($this->tracker->id);
         if (count($sources_targets)) {
             $dependencies = [];
             foreach ($sources_targets as $row) {
@@ -649,15 +537,15 @@ class Tracker_RulesManager
      */
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
     {
-        $this->getTrackerRuleDateFactory()->exportToXml(
+        $this->rule_date_factory->exportToXml(
             $root,
             $xmlMapping,
             $this->tracker->getId()
         );
-        $this->getTrackerRuleListFactory()->exportToXml(
+        $this->rule_list_factory->exportToXml(
             $root,
             $xmlMapping,
-            $this->getTrackerFormElementFactory(),
+            $this->form_element_factory,
             $this->tracker->getId()
         );
     }

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use PFUser;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 
 final class ListUserBindBuilder
 {
@@ -46,8 +47,9 @@ final class ListUserBindBuilder
      */
     public function withUsers(array $user_list): self
     {
+        $uuid_factory = new DatabaseUUIDV7Factory();
         foreach ($user_list as $user) {
-            $bind_value = \Tracker_FormElement_Field_List_Bind_UsersValue::fromUser($user, $user->getUserName());
+            $bind_value = \Tracker_FormElement_Field_List_Bind_UsersValue::fromUser($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $user, $user->getUserName());
 
             $this->bind_values[] = $bind_value;
         }
@@ -58,6 +60,7 @@ final class ListUserBindBuilder
     public function build(): \Tracker_FormElement_Field_List_Bind_Users
     {
         $bind = new \Tracker_FormElement_Field_List_Bind_Users(
+            new DatabaseUUIDV7Factory(),
             $this->field,
             '',
             [],

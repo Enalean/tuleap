@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -315,6 +316,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $target_field_value    = ListStaticValueBuilder::aStaticValue('Target Value Label')->withId($this->target_value_id)->build();
 
         $target_bind_static   = new Tracker_FormElement_Field_List_Bind_Static(
+            new DatabaseUUIDV7Factory(),
             null,
             null,
             [$target_field_value],
@@ -336,6 +338,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $this->trigger_field_id_1    = 369;
         $this->trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('Triggering Value Label 1')->withId(852)->build();
         $trigger_bind_static         = new Tracker_FormElement_Field_List_Bind_Static(
+            new DatabaseUUIDV7Factory(),
             null,
             null,
             [$this->trigger_field_value_1],

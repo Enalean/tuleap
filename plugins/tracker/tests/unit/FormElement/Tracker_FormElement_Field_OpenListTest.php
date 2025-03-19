@@ -20,6 +20,7 @@
  *
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -89,7 +90,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
             Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
         ];
 
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class, [new DatabaseUUIDV7Factory(), $this->aRequiredOpenListField(), true, [], $bind_values, []]);
         $bind->shouldReceive('getBindValuesForIds')
             ->withArgs([[0 => '1000', 1 => '1001', 2 => '1002']])
             ->andReturn(

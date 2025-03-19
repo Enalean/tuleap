@@ -64,7 +64,7 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         $this->rule_factory                 = $this->createMock(Tracker_RuleFactory::class);
 
         $this->tracker_rules_manager = $this->getMockBuilder(Tracker_RulesManager::class)
-            ->onlyMethods(['getRuleFactory'])
+            ->onlyMethods(['getAllDateRulesByTrackerId'])
             ->setConstructorArgs([$this->tracker,
                 $this->formelement_factory,
                 $this->frozen_fields_dao,
@@ -72,6 +72,9 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
                 $this->tracker_rules_date_validator,
                 $this->tracker_factory,
                 new NullLogger(),
+                $this->createMock(\Tracker_Rule_List_Factory::class),
+                $this->createMock(\Tracker_Rule_Date_Factory::class),
+                $this->rule_factory,
             ])->getMock();
 
         $this->frozen_fields_dao->method('isFieldUsedInPostAction')->willReturnMap([
@@ -93,8 +96,6 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
         $involved_fields_3 = new InvolvedFieldsInRule(4, 5);
 
         $this->rule_factory->method('getInvolvedFieldsByTrackerIdCollection')->willReturn([$involved_fields_1, $involved_fields_2, $involved_fields_3]);
-
-        $this->tracker_rules_manager->method('getRuleFactory')->willReturn($this->rule_factory);
     }
 
     #[DataProvider('forbiddenSourceProvider')]

@@ -154,7 +154,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $last_modified_by = $changeset->getArtifact()->getLastModifiedBy();
-        $value            = new Tracker_FormElement_Field_List_Bind_UsersValue($last_modified_by);
+        $value            = new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $last_modified_by);
         if ($changeset->getArtifact()->wasLastModifiedByAnonymous()) {
             $submitted_by_value = $value->getFullRESTValueForAnonymous($changeset);
         } else {
@@ -203,8 +203,8 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         if ($artifact->wasLastModifiedByAnonymous()) {
             $label = $purifier->purify($artifact->getLastModifiedBy());
         } else {
-            $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
-            $label = $purifier->purify($value->getLabel());
+            $bind_value = new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $artifact->getLastModifiedBy());
+            $label      = $purifier->purify($bind_value->getLabel());
         }
 
         return $label;
@@ -233,7 +233,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         ?Tracker_Artifact_ChangesetValue $value = null,
         string $format = 'text',
     ): string {
-        $bind_value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
+        $bind_value = new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $artifact->getLastModifiedBy());
 
         switch ($format) {
             case 'html':
@@ -269,7 +269,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
-        $fake_value = new Tracker_FormElement_Field_List_Bind_UsersValue(UserManager::instance()->getCurrentUser()->getId());
+        $fake_value = new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), UserManager::instance()->getCurrentUser()->getId());
         $html      .= $purifier->purify($fake_value->getLabel()) . '<br />';
         $html      .= '<span class="tracker-admin-form-element-help">';
         $html      .= dgettext('tuleap-tracker', 'The field is automatically set to the last person who modified the artifact');
@@ -297,7 +297,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
             return $changeset->getEmail();
         }
 
-        return $this->getBind()->formatChangesetValue(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
+        return $this->getBind()->formatChangesetValue(new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $value));
     }
 
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
@@ -310,7 +310,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      */
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
-        $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
+        $value = new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $artifact->getLastModifiedBy());
         return $value->fetchCard($display_preferences);
     }
 
@@ -321,7 +321,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      */
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
-        return $this->getBind()->formatChangesetValueForCSV(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
+        return $this->getBind()->formatChangesetValueForCSV(new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $value));
     }
 
     /**

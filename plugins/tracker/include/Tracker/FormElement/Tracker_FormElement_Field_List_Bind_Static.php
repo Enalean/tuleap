@@ -49,9 +49,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     private $value_dao = null;
 
-    public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators)
+    public function __construct(public \Tuleap\DB\DatabaseUUIDV7Factory $uuid_factory, $field, $is_rank_alpha, $values, $default_values, $decorators)
     {
-        parent::__construct($field, $default_values, $decorators);
+        parent::__construct($uuid_factory, $field, $default_values, $decorators);
 
         $this->is_rank_alpha = $is_rank_alpha;
         $this->values        = $values;
@@ -71,11 +71,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      *
      * @param array $row The row identifying the bindvalue
      *
-     * @return Tracker_FormElement_Field_List_Bind_StaticValue
      */
-    public function getValueFromRow($row)
+    public function getValueFromRow($row): Tracker_FormElement_Field_List_Bind_StaticValue
     {
         return new Tracker_FormElement_Field_List_Bind_StaticValue(
+            $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
             $row['id'],
             $row['label'],
             $row['description'],
@@ -556,6 +556,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         foreach ($user_row_values as $row_value) {
             $user_values[] = new Tracker_FormElement_Field_List_OpenValue(
+                $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
                 $row_value['id'],
                 $row_value['label'],
                 $row_value['is_hidden']

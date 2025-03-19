@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Tracker_Rule_List_Dao&MockObject $list_rule_dao;
     private Tracker_Rule_List_Factory $list_rule_factory;
@@ -32,7 +31,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->list_rule_dao     = $this->createMock(\Tracker_Rule_List_Dao::class);
-        $this->list_rule_factory = new Tracker_Rule_List_Factory($this->list_rule_dao);
+        $this->list_rule_factory = new Tracker_Rule_List_Factory($this->list_rule_dao, $this->createMock(Tracker_FormElement_Field_List_BindFactory::class));
     }
 
     public function testCreateRuleListGeneratesANewObjectThatContainsAllValuesPassed(): void
@@ -130,7 +129,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->method('searchByTrackerId')->willReturn([]);
         $dao->expects(self::never())->method('create');
 
-        $factory = new Tracker_Rule_List_Factory($dao);
+        $factory = new Tracker_Rule_List_Factory($dao, $this->createMock(Tracker_FormElement_Field_List_BindFactory::class));
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
@@ -200,7 +199,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $tracker_id === $to_tracker_id && $source_field_id === 9999 && $source_value_id === 9998 && $target_field_id === 9997 && $target_value_id === 9995 => true
         });
 
-        $factory = new Tracker_Rule_List_Factory($dao);
+        $factory = new Tracker_Rule_List_Factory($dao, $this->createMock(Tracker_FormElement_Field_List_BindFactory::class));
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
@@ -249,7 +248,17 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $r1 = new Tracker_Rule_List(1, 101, 103, 806, 102, 803);
         $r2 = new Tracker_Rule_List(1, 101, 103, 806, 102, 804);
 
-        $trm = $this->createPartialMock(\Tracker_Rule_List_Factory::class, ['searchByTrackerId']);
+        $bind_factory = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $bind_factory->method('getType')->willReturn(Tracker_FormElement_Field_List_BindFactory::STATIK);
+        $trm = $this->getMockBuilder(\Tracker_Rule_List_Factory::class)
+            ->setConstructorArgs([
+                $this->createMock(Tracker_Rule_List_Dao::class),
+                $bind_factory,
+            ])
+            ->onlyMethods([
+                'searchByTrackerId',
+            ])
+            ->getMock();
         $trm->method('searchByTrackerId')->willReturn([$r1, $r2]);
 
         $trm->exportToXML($root, $array_xml_mapping, $form_element_factory, 666);
