@@ -24,7 +24,7 @@ import type { Card, User } from "../../../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import BaseCard from "./BaseCard.vue";
 
-function getWrapper(card: Card, are_closed_items_displayed: boolean): Wrapper<ChildCard> {
+function getWrapper(card: Card, are_closed_items_displayed: boolean): Wrapper<Vue> {
     return shallowMount(ChildCard, {
         attachTo: document.body,
         propsData: {
