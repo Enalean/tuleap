@@ -2,6 +2,7 @@
 <div class="card{{ getCssClasses }}"
      {{# hasLegacyAccentColor }}style="background-color: {{ getAccentColor }}"{{/ hasLegacyAccentColor }}
      data-artifact-id="{{getId}}"
+     data-csrf-token-challenge-update="{{ csrf_token_challenge_update }}"
 >
     <div class="card-container">
         {{> card-actions}}

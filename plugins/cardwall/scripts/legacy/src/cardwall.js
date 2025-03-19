@@ -238,11 +238,16 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
             var self = this;
 
+            const csrf_token_challenge_update = self.element
+                .up(".card")
+                .readAttribute("data-csrf-token-challenge-update");
+
             var post_value = {
                 is_autocomputed: 1,
                 manual_value: "",
             };
             parameters[linked_field] = JSON.stringify(post_value);
+            parameters["challenge"] = csrf_token_challenge_update;
 
             new Ajax.Request(self.update_url, {
                 parameters: parameters,
@@ -280,6 +285,9 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
         ajaxCallback: function () {
             var field_id = this.field_id;
             var is_computed_field = this.is_computed_field;
+            const csrf_token_challenge_update = this.element
+                .up(".card")
+                .readAttribute("data-csrf-token-challenge-update");
 
             return function setRequestData(form, value) {
                 var parameters = {},
@@ -298,6 +306,8 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
                 } else {
                     parameters[linked_field] = value;
                 }
+
+                parameters["challenge"] = csrf_token_challenge_update;
 
                 return parameters;
             };
@@ -484,6 +494,10 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             var field_id = this.field_id,
                 is_multi_select = this.isMultipleSelect();
 
+            const csrf_token_challenge_update = this.element
+                .up(".card")
+                .readAttribute("data-csrf-token-challenge-update");
+
             return function setRequestData(form, value) {
                 var parameters = {};
                 var linked_field;
@@ -495,6 +509,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
                 value = value.length === 0 ? "" : value;
                 parameters[linked_field] = value;
+                parameters["challenge"] = csrf_token_challenge_update;
                 return parameters;
             };
         },

@@ -1019,8 +1019,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         if (! $request->isPost()) {
             $GLOBALS['Response']->redirect($this->getUri());
         }
-        $csrf_token = new CSRFSynchronizerToken($this->getTracker()->getUri());
-        $csrf_token->check($this->getUri());
+        $this->getCSRFTokenForTrackerViewArtifactManipulation()->check($this->getUri());
+    }
+
+    public function getCSRFTokenForTrackerViewArtifactManipulation(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken($this->getTracker()->getUri());
     }
 
     private function getTypeIsChildLinkRetriever()

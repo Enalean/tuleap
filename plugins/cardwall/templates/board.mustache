@@ -71,7 +71,7 @@
                                 <div class="cardwall-cell-container">
                                     <ul>
                                         {{#cardincell_presenters}}
-                                            <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
+                                            <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}" data-csrf-token-update="{{ csrf_token_challenge_update }}">
                                                 {{> card}}
                                             </li>
                                         {{/cardincell_presenters}}

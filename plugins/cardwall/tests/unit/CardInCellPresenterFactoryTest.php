@@ -58,6 +58,11 @@ final class CardInCellPresenterFactoryTest extends TestCase
         $this->field_provider->method('getField')->with($tracker)->willReturn($field);
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['_SESSION']);
+    }
+
     public function testItHasACardInCellPresenterWithASemanticStatusFieldId(): void
     {
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());

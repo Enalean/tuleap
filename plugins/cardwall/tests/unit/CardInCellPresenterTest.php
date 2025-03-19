@@ -50,6 +50,11 @@ final class CardInCellPresenterTest extends TestCase
         $this->presenter = new Cardwall_CardInCellPresenter($this->card_presenter, self::CARD_FIELD_ID, $swimline_id, $swimline_field_values);
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['_SESSION']);
+    }
+
     public function testItHasColumnDropInto(): void
     {
         $drop_into = 'drop-into-3-100 drop-into-3-221';
