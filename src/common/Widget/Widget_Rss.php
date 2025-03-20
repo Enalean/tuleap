@@ -66,9 +66,11 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
             fn (EntryInterface $a, EntryInterface $b): int => $b->getDateModified() <=> $a->getDateModified(),
         );
 
+        $uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_HTTPURI());
+
         foreach (\Psl\Dict\slice($feed_entries, 0, 10) as $entry) {
             $content .= '<tr><td>';
-            $content .= '<a href="' . $hp->purify($entry->getLink()) . '">' . $hp->purify($entry->getTitle(), CODENDI_PURIFIER_STRIP_HTML) . '</a>';
+            $content .= '<a href="' . $hp->purify($uri_sanitizer->sanitizeForHTMLAttribute($entry->getLink())) . '">' . $hp->purify($entry->getTitle(), CODENDI_PURIFIER_STRIP_HTML) . '</a>';
             $date     = $entry->getDateCreated();
             if ($date !== null) {
                 $content .= '<span style="color:#999;" title="' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $date->getTimestamp()) . '"> - ' . DateHelper::timeAgoInWords($date->getTimestamp()) . '</span>';
