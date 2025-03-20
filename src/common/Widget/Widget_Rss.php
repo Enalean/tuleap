@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Laminas\Feed\Reader\Entry\EntryInterface;
 use Tuleap\Date\DateHelper;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -47,7 +48,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         return $this->rss_title ?: 'RSS Reader';
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         if (! $this->rss_url) {
             return '';
@@ -60,8 +61,12 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
             return '<div class="tlp-alert-warning">' . _('An issue occurred while retrieving the RSS feed') . '</div>' .  $content . '</table>';
         }
 
-        $sliced_feed = new LimitIterator($feed, 0, 10);
-        foreach ($sliced_feed as $entry) {
+        $feed_entries = \Psl\Dict\sort(
+            $feed,
+            fn (EntryInterface $a, EntryInterface $b): int => $b->getDateModified() <=> $a->getDateModified(),
+        );
+
+        foreach (\Psl\Dict\slice($feed_entries, 0, 10) as $entry) {
             $content .= '<tr><td>';
             $content .= '<a href="' . $hp->purify($entry->getLink()) . '">' . $hp->purify($entry->getTitle(), CODENDI_PURIFIER_STRIP_HTML) . '</a>';
             $date     = $entry->getDateCreated();
