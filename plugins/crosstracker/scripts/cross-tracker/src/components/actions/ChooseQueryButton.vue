@@ -23,6 +23,7 @@
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-mini"
             ref="dropdown_trigger"
+            data-test="choose-query-button"
         >
             {{ $gettext("Choose another query") }}
             <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
