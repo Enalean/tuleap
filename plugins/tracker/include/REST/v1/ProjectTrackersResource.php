@@ -38,7 +38,10 @@ use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FaultMapper;
@@ -144,45 +147,32 @@ class ProjectTrackersResource extends AuthenticatedResource
 
         $frozen_fields_detector = new FrozenFieldDetector(
             $transition_retriever,
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                $form_element_factory
-            )
+            new FrozenFieldsRetriever(new FrozenFieldsDao(), $form_element_factory)
         );
 
-        $builder = new Tracker_REST_TrackerRestBuilder(
+        $tracker_factory = TrackerFactory::instance();
+        $ugroup_manager  = new \UGroupManager();
+        $builder         = new Tracker_REST_TrackerRestBuilder(
             $form_element_factory,
             new FormElementRepresentationsBuilder(
                 $form_element_factory,
-                new PermissionsExporter(
-                    $frozen_fields_detector
-                ),
+                new PermissionsExporter($frozen_fields_detector),
                 new HiddenFieldsetChecker(
                     new HiddenFieldsetsDetector(
                         $transition_retriever,
-                        new HiddenFieldsetsRetriever(
-                            new HiddenFieldsetsDao(),
-                            $form_element_factory
-                        ),
+                        new HiddenFieldsetsRetriever(new HiddenFieldsetsDao(), $form_element_factory),
                         $form_element_factory
                     ),
                     new FieldsExtractor()
                 ),
-                new PermissionsForGroupsBuilder(
-                    new \UGroupManager(),
-                    $frozen_fields_detector,
-                    $tracker_permission_wrapper
-                ),
-                new TypePresenterFactory(
-                    new TypeDao(),
-                    new ArtifactLinksUsageDao()
-                )
+                new PermissionsForGroupsBuilder($ugroup_manager, $frozen_fields_detector, $tracker_permission_wrapper),
+                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
             ),
-            new PermissionsRepresentationBuilder(
-                new \UGroupManager(),
-                $tracker_permission_wrapper
-            ),
-            new WorkflowRestBuilder()
+            new PermissionsRepresentationBuilder($ugroup_manager, $tracker_permission_wrapper),
+            new WorkflowRestBuilder(),
+            static fn(\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+            new ParentInHierarchyRetriever(new HierarchyDAO(), $tracker_factory),
+            TrackersPermissionsRetriever::build()
         );
 
         $cannot_create_reasons = new ArtifactCannotBeCreatedReasonsGetter(
@@ -199,8 +189,8 @@ class ProjectTrackersResource extends AuthenticatedResource
         if (empty($json_query) || isset($json_query['is_tracker_admin'])) {
             $representation_builder     = new TrackerRepresentationBuilder($builder, $cannot_create_reasons);
             $project_trackers_retriever = new ProjectTrackersRetriever(
-                TrackerFactory::instance(),
-                TrackerFactory::instance()
+                $tracker_factory,
+                $tracker_factory
             );
 
             $project_trackers = $project_trackers_retriever->getFilteredProjectTrackers(

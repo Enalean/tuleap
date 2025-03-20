@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\StructureElementRepresentation;
@@ -28,11 +32,17 @@ use Tuleap\Tracker\REST\WorkflowRestBuilder;
 
 class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    /**
+     * @psalm-param \Closure(Tracker): \Tracker_SemanticManager $semantic_manager_instantiator
+     */
     public function __construct(
         private Tracker_FormElementFactory $formelement_factory,
         private FormElementRepresentationsBuilder $form_element_representations_builder,
         private PermissionsRepresentationBuilder $permissions_representation_builder,
         private WorkflowRestBuilder $workflow_rest_builder,
+        private \Closure $semantic_manager_instantiator,
+        private ParentInHierarchyRetriever $parent_tracker_retriever,
+        private RetrieveUserPermissionOnTrackers $tracker_permissions_retriever,
     ) {
     }
 
@@ -64,32 +74,20 @@ class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTReprese
 
     private function buildTrackerRepresentation(PFUser $user, Tracker $tracker, array $rest_fields): CompleteTrackerRepresentation
     {
-        $semantic_manager = $this->getSemanticManager($tracker);
+        $parent_tracker   = $this->getParentTrackerUserCanRead($tracker, $user)->unwrapOr(null);
+        $semantic_manager = ($this->semantic_manager_instantiator)($tracker);
         return CompleteTrackerRepresentation::build(
             $tracker,
             $rest_fields,
             $this->getStructureRepresentation($tracker),
             $semantic_manager->exportToREST($user),
-            $tracker->getParentUserCanView($user),
+            $parent_tracker,
             $this->workflow_rest_builder->getWorkflowRepresentation($tracker->getWorkflow(), $user),
             $this->permissions_representation_builder->getPermissionsRepresentation($tracker, $user)
         );
     }
 
-    /**
-     * This is for tests
-     * I know it's crappy but there is no clean alternative as semantic manager
-     * requires a tracker as a parameter (I cannot pass it as constructor argument
-     * because the tracker is an argument of the method, not the class).
-     *
-     * @return Tracker_SemanticManager
-     */
-    protected function getSemanticManager(Tracker $tracker)
-    {
-        return new Tracker_SemanticManager($tracker);
-    }
-
-    private function getStructureRepresentation(Tracker $tracker)
+    private function getStructureRepresentation(Tracker $tracker): array
     {
         $structure_element_representations = [];
         $form_elements                     = $this->formelement_factory->getUsedFormElementForTracker($tracker);
@@ -104,5 +102,25 @@ class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTReprese
         }
 
         return $structure_element_representations;
+    }
+
+    /**
+     * @return Option<Tracker>
+     */
+    private function getParentTrackerUserCanRead(Tracker $child_tracker, PFUser $user): Option
+    {
+        return $this->parent_tracker_retriever->getParentTracker($child_tracker)
+            ->andThen(function (Tracker $parent_tracker) use ($user) {
+                $permissions               = $this->tracker_permissions_retriever->retrieveUserPermissionOnTrackers(
+                    $user,
+                    [$parent_tracker],
+                    TrackerPermissionType::PERMISSION_VIEW
+                );
+                $parent_tracker_is_allowed = array_search($parent_tracker, $permissions->allowed, true);
+                if ($parent_tracker_is_allowed !== false) {
+                    return Option::fromValue($parent_tracker);
+                }
+                return Option::nothing(Tracker::class);
+            });
     }
 }

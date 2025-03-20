@@ -3099,28 +3099,6 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     }
 
     /**
-     * @deprecated use \Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever and \Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers
-     */
-    public function getParentUserCanView(PFUser $user): ?Tracker
-    {
-        $parent = $this->getParent();
-
-        if (! $parent) {
-            return null;
-        }
-
-        if ($parent->isDeleted()) {
-            return null;
-        }
-
-        if (! $parent->userCanView($user)) {
-            return null;
-        }
-
-        return $parent;
-    }
-
-    /**
      * Return parent tracker of current tracker (if any)
      * @deprecated use \Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever
      */

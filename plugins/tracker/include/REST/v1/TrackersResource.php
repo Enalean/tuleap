@@ -499,7 +499,7 @@ class TrackersResource extends AuthenticatedResource
         $possible_parents_retriever = new PossibleParentsRetriever(
             $this->tracker_artifact_factory,
             \EventManager::instance(),
-            new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance()),
+            new ParentInHierarchyRetriever(new HierarchyDAO(), $this->tracker_factory),
             TrackersPermissionsRetriever::build(),
         );
         $possible_parents           = $possible_parents_retriever->getPossibleArtifactParents($tracker, $user, $limit, $offset, false);
@@ -838,45 +838,36 @@ class TrackersResource extends AuthenticatedResource
 
         $frozen_fields_detector = new FrozenFieldDetector(
             $transition_retriever,
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                Tracker_FormElementFactory::instance()
-            )
+            new FrozenFieldsRetriever(new FrozenFieldsDao(), $this->formelement_factory)
         );
 
+        $ugroup_manager                = new \UGroupManager();
+        $permissions_functions_wrapper = new PermissionsFunctionsWrapper();
         return new Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
             new FormElementRepresentationsBuilder(
                 $this->formelement_factory,
-                new PermissionsExporter(
-                    $frozen_fields_detector
-                ),
+                new PermissionsExporter($frozen_fields_detector),
                 new HiddenFieldsetChecker(
                     new HiddenFieldsetsDetector(
                         $transition_retriever,
-                        new HiddenFieldsetsRetriever(
-                            new HiddenFieldsetsDao(),
-                            $this->formelement_factory
-                        ),
-                        Tracker_FormElementFactory::instance()
+                        new HiddenFieldsetsRetriever(new HiddenFieldsetsDao(), $this->formelement_factory),
+                        $this->formelement_factory
                     ),
                     new FieldsExtractor()
                 ),
                 new PermissionsForGroupsBuilder(
-                    new \UGroupManager(),
+                    $ugroup_manager,
                     $frozen_fields_detector,
-                    new PermissionsFunctionsWrapper()
+                    $permissions_functions_wrapper
                 ),
-                new TypePresenterFactory(
-                    new TypeDao(),
-                    new ArtifactLinksUsageDao()
-                )
+                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
             ),
-            new PermissionsRepresentationBuilder(
-                new \UGroupManager(),
-                new PermissionsFunctionsWrapper()
-            ),
-            new WorkflowRestBuilder()
+            new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
+            new WorkflowRestBuilder(),
+            static fn(\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+            new ParentInHierarchyRetriever(new HierarchyDAO(), $this->tracker_factory),
+            TrackersPermissionsRetriever::build()
         );
     }
 
