@@ -81,7 +81,8 @@ const { error_message, is_outdated, is_in_error, is_not_found } = props.section_
     the editor when the latter has the focus and goes below the footer.
     */
     width: calc(100% + 2 * var(--tlp-shadow-focus-width));
-    margin: 0 0 0 calc(-1 * var(--tlp-shadow-focus-width));
-    padding: var(--tlp-medium-spacing) 0 0;
+    margin: var(--tlp-shadow-focus-width) 0 0 calc(-1 * var(--tlp-shadow-focus-width));
+    padding: var(--tlp-medium-spacing) 0;
+    background: var(--tuleap-artidoc-section-background);
 }
 </style>
