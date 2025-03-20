@@ -35,8 +35,10 @@
         <div class="tlp-modal-body">
             <h2 class="tlp-modal-subtitle">{{ $gettext("Query title") }}</h2>
             <p data-test="modal-query-title">{{ query.title }}</p>
-            <h2 class="tlp-modal-subtitle">{{ $gettext("Description") }}</h2>
-            <p data-test="modal-query-description">{{ query.description }}</p>
+            <template v-if="query.description !== ''">
+                <h2 class="tlp-modal-subtitle">{{ $gettext("Description") }}</h2>
+                <p data-test="modal-query-description">{{ query.description }}</p>
+            </template>
             <h2 class="tlp-modal-subtitle">{{ $gettext("Query") }}</h2>
             <tlp-syntax-highlighting>
                 <code data-test="modal-query-tql" class="language-tql query-code-block">{{
