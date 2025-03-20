@@ -24,7 +24,7 @@ import type { Schema } from "prosemirror-model";
 import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
 import { getHeadingCommand } from "./text-style/transform-text";
 import type { DetectSingleListInSelection } from "./list/SingleListInSelectionDetector";
-import type { BuildOpenImageMenuCommand } from "./image/OpenImageMenuCommandBuilder";
+import type { BuildLinkImageMenuCommand } from "./image/OpenLinkMenuCommandBuilder";
 import { NB_HEADING } from "./index";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
@@ -32,7 +32,7 @@ export function buildKeymap(
     schema: Schema,
     detect_ordered_list: DetectSingleListInSelection,
     detect_bullet_list: DetectSingleListInSelection,
-    open_image_command: BuildOpenImageMenuCommand,
+    open_link_menu_command: BuildLinkImageMenuCommand,
     are_headings_enabled: boolean,
     are_subtitles_enabled: boolean,
     map_keys?: { [key: string]: false | string },
@@ -63,7 +63,7 @@ export function buildKeymap(
 
     bind("Mod-,", toggleMark(schema.marks.subscript));
     bind("Mod-.", toggleMark(schema.marks.superscript));
-    bind("Mod-k", open_image_command.build());
+    bind("Mod-k", open_link_menu_command.build());
 
     const listCommand = chainCommands(exitCode, (state, dispatch) => {
         const node_type = schema.nodes.bullet_list;

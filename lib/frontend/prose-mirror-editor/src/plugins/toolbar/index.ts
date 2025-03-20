@@ -23,7 +23,7 @@ import type { Plugin } from "prosemirror-state";
 import type { Schema } from "prosemirror-model";
 import type { ToolbarBus } from "./helper/toolbar-bus";
 import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
-import { OpenImageMenuCommandBuilder } from "./image/OpenImageMenuCommandBuilder";
+import { OpenLinkMenuCommandBuilder } from "./image/OpenLinkMenuCommandBuilder";
 import { buildKeymap } from "./keymap";
 import { buildInputRules } from "./input-rules";
 import { setupMonoToolbar } from "./mono-toolbar";
@@ -48,7 +48,7 @@ export function setupToolbar(
                 schema,
                 SingleListInSelectionDetector(schema.nodes.ordered_list),
                 SingleListInSelectionDetector(schema.nodes.bullet_list),
-                OpenImageMenuCommandBuilder(toolbar_bus),
+                OpenLinkMenuCommandBuilder(toolbar_bus),
                 are_headings_enabled,
                 are_subtitles_enabled,
             ),
