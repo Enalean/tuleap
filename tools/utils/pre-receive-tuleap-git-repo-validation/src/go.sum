@@ -1,7 +1,7 @@
 dario.cat/mergo v1.0.1 h1:Ra4+bf83h2ztPIQYNP99R6m+Y7KfnARDfID+a+vLl4s=
 dario.cat/mergo v1.0.1/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
-github.com/Enalean/go-git/v5 v5.0.0-20250114132843-a6a0a592c141 h1:TKjYKWrEYAVSvJde2pep+31q+ZTtuZpOPh3CKYcefSU=
-github.com/Enalean/go-git/v5 v5.0.0-20250114132843-a6a0a592c141/go.mod h1:IjAJcvmwbTu6jBsS6pmGzMDTKu25V0zeoAJEFPFT8eM=
+github.com/Enalean/go-git/v5 v5.0.0-20250314161735-6ee7ea5ac8be h1:Rg6HjZNt7Jeo2eHojG6qNtuCrTEoxbizv9dNiXVJR8w=
+github.com/Enalean/go-git/v5 v5.0.0-20250314161735-6ee7ea5ac8be/go.mod h1:IjAJcvmwbTu6jBsS6pmGzMDTKu25V0zeoAJEFPFT8eM=
 github.com/Microsoft/go-winio v0.5.2/go.mod h1:WpS1mjBmmwHBEWmogvA2mj8546UReBk4v8QkMxJ6pZY=
 github.com/Microsoft/go-winio v0.6.2 h1:F2VQgta7ecxGYO8k3ZZz3RS8fVIXVxONVUPlNERoyfY=
 github.com/Microsoft/go-winio v0.6.2/go.mod h1:yd8OoFMLzJbo9gZq8j5qaps8bJ9aShtEA8Ipt1oGCvU=

@@ -41,6 +41,9 @@ use Tuleap\WebAssembly\WASMRuntimeLimits;
 
 final class PreReceiveAction
 {
+    private const MAX_EXEC_TIME_IN_MS      = 15000;
+    private const MAX_MEMORY_SIZE_IN_BYTES = 256 * 1024 * 1024;
+
     public function __construct(
         private readonly GitRepositoryFactory $git_repository_factory,
         private readonly WASMCaller $wasm_caller,
@@ -97,7 +100,13 @@ final class PreReceiveAction
                     }
                     $json_in          = json_encode($hook_result, JSON_THROW_ON_ERROR);
                     $mount_points     = [new WASMModuleMountPoint($repository_path, $guest_dir_path)];
-                    $runtime_settings = new WASMCallerRuntimeSettings($mount_points, WASMRuntimeLimits::getDefaultLimits());
+                    $runtime_settings = new WASMCallerRuntimeSettings(
+                        $mount_points,
+                        new WASMRuntimeLimits(
+                            self::MAX_EXEC_TIME_IN_MS,
+                            self::MAX_MEMORY_SIZE_IN_BYTES,
+                        )
+                    );
                     return $this->wasm_caller->call($wasm_path, $json_in, $runtime_settings)->mapOr(
                         $this->processResponse(...),
                         Result::ok(null)

@@ -33,16 +33,13 @@ func ValidateSignatures(hookData HookData, repo *git.Repository) (*string, error
 	var notSignedItems []string
 	for referenceName, referenceValues := range hookData.UpdatedReferences {
 		if strings.HasPrefix(referenceName, "refs/tags/") {
-			reference, err := repo.Reference(plumbing.ReferenceName(referenceName), false)
-			if err != nil {
-				return nil, err
-			}
+			tagHash := plumbing.NewHash(referenceValues.NewValue)
 
 			notSignedMessage, err := checkGitObjectSignature(
 				repo,
 				"annotated tag "+referenceName,
 				plumbing.TagObject,
-				reference.Hash(),
+				tagHash,
 				allowedSigningKeys,
 			)
 
@@ -58,18 +55,16 @@ func ValidateSignatures(hookData HookData, repo *git.Repository) (*string, error
 				continue
 			}
 
-			currentCommit, err := repo.CommitObject(plumbing.NewHash(referenceValues.NewValue))
-			if err != nil {
-				return nil, fmt.Errorf("could not get new rev: %w", err)
-			}
-			oldCommit, err := repo.CommitObject(plumbing.NewHash(referenceValues.OldValue))
-			if err != nil {
-				return nil, fmt.Errorf("could not get old rev: %w", err)
-			}
+			newValueHash := plumbing.NewHash(referenceValues.NewValue)
+			oldValueHash := plumbing.NewHash(referenceValues.OldValue)
 
-			commitsToVerify, err := findNewCommits(currentCommit, oldCommit)
+			commitsToVerify, err := findNewCommits(repo, newValueHash, oldValueHash)
 			if err != nil {
 				return nil, fmt.Errorf("could not identify commits to verify: %w", err)
+			}
+
+			if len(commitsToVerify) <= 0 {
+				return nil, fmt.Errorf("found no commits to verify, are you trying to rewind the history?")
 			}
 
 			commitsHashSignatureVerified := make(map[plumbing.Hash]bool)
@@ -87,10 +82,9 @@ func ValidateSignatures(hookData HookData, repo *git.Repository) (*string, error
 
 				if notSignedMessage == "" {
 					commitsHashSignatureVerified[commitToVerify.Hash] = true
-					commitToVerify.Parents().ForEach(func(commit *object.Commit) error {
-						commitsHashSignatureVerified[commit.Hash] = true
-						return nil
-					})
+					for _, parentHash := range commitToVerify.ParentHashes {
+						commitsHashSignatureVerified[parentHash] = true
+					}
 				}
 			}
 
@@ -110,33 +104,36 @@ func ValidateSignatures(hookData HookData, repo *git.Repository) (*string, error
 	return nil, nil
 }
 
-func findNewCommits(fromCommit *object.Commit, tailCommit *object.Commit) ([]*object.Commit, error) {
+func findNewCommits(repo *git.Repository, fromCommitHash plumbing.Hash, tailCommitHash plumbing.Hash) ([]*object.Commit, error) {
 	newCommits := []*object.Commit{}
-	if fromCommit.Hash == tailCommit.Hash {
+	if fromCommitHash == tailCommitHash {
 		return newCommits, nil
 	}
 
-	isAncestor, err := fromCommit.IsAncestor(tailCommit)
-	if err != nil || isAncestor {
-		return newCommits, err
+	fromCommit, err := repo.CommitObject(fromCommitHash)
+	// This is fine because the only accessible objects are the incoming ones
+	// which means that any object already present in the tree will not be found
+	if err == plumbing.ErrObjectNotFound {
+		return newCommits, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("could not get rev %s: %w", fromCommitHash, err)
 	}
 
 	newCommits = append(newCommits, fromCommit)
-	err = fromCommit.Parents().ForEach(func(commit *object.Commit) error {
-		additionalCommits, err := findNewCommits(commit, tailCommit)
+	for _, parentHash := range fromCommit.ParentHashes {
+		additionalCommits, err := findNewCommits(repo, parentHash, tailCommitHash)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		newCommits = append(
 			newCommits,
 			additionalCommits...,
 		)
-		return nil
-	})
+	}
 
 	return newCommits, err
-
 }
 
 func checkGitObjectSignature(repo *git.Repository, itemName string, objectType plumbing.ObjectType, hash plumbing.Hash, allowedSigningKeys []IntegratorSigningKey) (string, error) {
