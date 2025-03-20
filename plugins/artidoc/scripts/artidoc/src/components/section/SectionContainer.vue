@@ -79,7 +79,7 @@ const additional_class = computed(() => {
     --tuleap-artidoc-section-background: var(--tlp-white-color);
     --border-width: 4px;
 
-    padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing)
+    padding: var(--tlp-medium-spacing) 0 0
         calc(#{whitespace.$section-left-padding} - var(--border-width));
     transition: background-color 75ms ease-in-out;
     border-left: var(--border-width) solid var(--border-color);
