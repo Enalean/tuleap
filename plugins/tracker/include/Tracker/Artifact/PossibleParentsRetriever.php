@@ -18,18 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tracker_ArtifactFactory;
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 
-class PossibleParentsRetriever
+final readonly class PossibleParentsRetriever
 {
     public function __construct(
         private Tracker_ArtifactFactory $artifact_factory,
         private EventDispatcherInterface $event_dispatcher,
+        private ParentInHierarchyRetriever $parent_tracker_retriever,
+        private RetrieveUserPermissionOnTrackers $tracker_permissions_retriever,
     ) {
     }
 
@@ -40,20 +48,22 @@ class PossibleParentsRetriever
         int $offset,
         bool $can_create,
     ): PossibleParentSelector {
-        $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $tracker, $offset, $limit));
+        $possible_parents = $this->event_dispatcher->dispatch(
+            new PossibleParentSelector($user, $tracker, $offset, $limit)
+        );
 
         if (! $possible_parents->isSelectorDisplayed()) {
             return $possible_parents;
         }
 
-        $parent_tracker = $tracker->getParentUserCanView($user);
+        $parent_tracker = $this->getParentTrackerUserCanRead($tracker, $user);
 
-        if (! $parent_tracker && ! $possible_parents->getPossibleParents()) {
+        if ($parent_tracker->isNothing() && ! $possible_parents->getPossibleParents()) {
             $possible_parents->disableSelector();
             return $possible_parents;
         }
 
-        if ($parent_tracker) {
+        $parent_tracker->apply(function (\Tracker $parent_tracker) use ($possible_parents, $user, $limit, $offset) {
             $possible_parents->setParentLabel($parent_tracker->getItemName());
             $possible_parents->addPossibleParents(
                 $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
@@ -63,12 +73,32 @@ class PossibleParentsRetriever
                     $offset
                 )
             );
-        }
+        });
 
         if (! $can_create) {
             $possible_parents->disableCreate();
         }
 
         return $possible_parents;
+    }
+
+    /**
+     * @return Option<Tracker>
+     */
+    private function getParentTrackerUserCanRead(Tracker $child_tracker, PFUser $user): Option
+    {
+        return $this->parent_tracker_retriever->getParentTracker($child_tracker)
+            ->andThen(function (Tracker $parent_tracker) use ($user) {
+                $permissions               = $this->tracker_permissions_retriever->retrieveUserPermissionOnTrackers(
+                    $user,
+                    [$parent_tracker],
+                    TrackerPermissionType::PERMISSION_VIEW
+                );
+                $parent_tracker_is_allowed = array_search($parent_tracker, $permissions->allowed, true);
+                if ($parent_tracker_is_allowed !== false) {
+                    return Option::fromValue($parent_tracker);
+                }
+                return Option::nothing(Tracker::class);
+            });
     }
 }

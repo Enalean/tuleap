@@ -27,30 +27,35 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Hierarchy\SearchParentTrackerStub;
+use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnTrackersStub;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PossibleParentsRetrieverTest extends TestCase
 {
-    private \Tracker $tracker;
-    private \PFUser $user;
+    private const PARENT_TRACKER_ID         = 567;
+    private const PARENT_TRACKER_SHORT_NAME = 'epic';
     private int $limit;
     private int $offset;
     private bool $can_create;
     private EventDispatcherStub $event_dispatcher;
     private \Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private SearchParentTrackerStub $search_parent_tracker;
 
     protected function setUp(): void
     {
-        $this->tracker    = TrackerTestBuilder::aTracker()->build();
-        $this->user       = UserTestBuilder::aUser()->build();
         $this->limit      = 0;
         $this->offset     = 0;
         $this->can_create = true;
 
-        $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
-        $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->event_dispatcher      = EventDispatcherStub::withIdentityCallback();
+        $this->artifact_factory      = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->search_parent_tracker = SearchParentTrackerStub::withNoParent();
     }
 
     private function getParents(): PossibleParentSelector
@@ -58,11 +63,25 @@ final class PossibleParentsRetrieverTest extends TestCase
         $possible_parents_retriever = new PossibleParentsRetriever(
             $this->artifact_factory,
             $this->event_dispatcher,
+            new ParentInHierarchyRetriever(
+                $this->search_parent_tracker,
+                RetrieveTrackerStub::withTracker(
+                    TrackerTestBuilder::aTracker()
+                        ->withName('Epics')
+                        ->withShortName(self::PARENT_TRACKER_SHORT_NAME)
+                        ->withId(self::PARENT_TRACKER_ID)
+                        ->build()
+                )
+            ),
+            RetrieveUserPermissionOnTrackersStub::build()->withPermissionOn(
+                [self::PARENT_TRACKER_ID],
+                TrackerPermissionType::PERMISSION_VIEW
+            ),
         );
 
         return $possible_parents_retriever->getPossibleArtifactParents(
-            $this->tracker,
-            $this->user,
+            TrackerTestBuilder::aTracker()->build(),
+            UserTestBuilder::aUser()->build(),
             $this->limit,
             $this->offset,
             $this->can_create
@@ -108,7 +127,7 @@ final class PossibleParentsRetrieverTest extends TestCase
 
     public function testNoParentTrackerMeansNoNeedToDisplayTheSelector(): void
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->withParent(null)->build();
+        $this->search_parent_tracker = SearchParentTrackerStub::withNoParent();
 
         $possible_parent_selector = $this->getParents();
 
@@ -119,13 +138,8 @@ final class PossibleParentsRetrieverTest extends TestCase
     {
         $this->artifact_factory->method('getPaginatedPossibleParentArtifactsUserCanView')
             ->willReturn(new \Tracker_Artifact_PaginatedArtifacts([], 0));
-
-        $parent_tracker   = TrackerTestBuilder::aTracker()
-            ->withUserCanView(true)
-            ->withId(567)
-            ->build();
-        $this->tracker    = TrackerTestBuilder::aTracker()->withParent($parent_tracker)->build();
-        $this->can_create = false;
+        $this->search_parent_tracker = SearchParentTrackerStub::withParentTracker(self::PARENT_TRACKER_ID);
+        $this->can_create            = false;
 
         $possible_parent_selector = $this->getParents();
 
@@ -137,20 +151,13 @@ final class PossibleParentsRetrieverTest extends TestCase
         $artifact_from_hierarchy = ArtifactTestBuilder::anArtifact(123)->build();
         $this->artifact_factory->method('getPaginatedPossibleParentArtifactsUserCanView')
             ->willReturn(new \Tracker_Artifact_PaginatedArtifacts([$artifact_from_hierarchy], 1));
-
-        $parent_tracker = TrackerTestBuilder::aTracker()
-            ->withUserCanView(true)
-            ->withName('Epics')
-            ->withShortName('epic')
-            ->withId(567)
-            ->build();
-        $this->tracker  = TrackerTestBuilder::aTracker()->withParent($parent_tracker)->build();
+        $this->search_parent_tracker = SearchParentTrackerStub::withParentTracker(self::PARENT_TRACKER_ID);
 
         $possible_parent_selector = $this->getParents();
 
         self::assertTrue($possible_parent_selector->isSelectorDisplayed());
         self::assertSame([$artifact_from_hierarchy], $possible_parent_selector->getPossibleParents()->getArtifacts());
-        self::assertSame('epic', $possible_parent_selector->getParentLabel());
+        self::assertSame(self::PARENT_TRACKER_SHORT_NAME, $possible_parent_selector->getParentLabel());
     }
 
     public function testDisplayPossibleParentsFromEventAndHierarchy(): void
@@ -168,14 +175,7 @@ final class PossibleParentsRetrieverTest extends TestCase
         $artifact_from_hierarchy = ArtifactTestBuilder::anArtifact(123)->build();
         $this->artifact_factory->method('getPaginatedPossibleParentArtifactsUserCanView')
             ->willReturn(new \Tracker_Artifact_PaginatedArtifacts([$artifact_from_hierarchy], 1));
-
-        $parent_tracker = TrackerTestBuilder::aTracker()
-            ->withUserCanView(true)
-            ->withName('Epics')
-            ->withShortName('epic')
-            ->withId(567)
-            ->build();
-        $this->tracker  = TrackerTestBuilder::aTracker()->withParent($parent_tracker)->build();
+        $this->search_parent_tracker = SearchParentTrackerStub::withParentTracker(self::PARENT_TRACKER_ID);
 
         $possible_parent_selector = $this->getParents();
 
@@ -184,7 +184,7 @@ final class PossibleParentsRetrieverTest extends TestCase
             [$artifact_added_by_plugin, $artifact_from_hierarchy],
             $possible_parent_selector->getPossibleParents()->getArtifacts()
         );
-        self::assertSame('epic', $possible_parent_selector->getParentLabel());
+        self::assertSame(self::PARENT_TRACKER_SHORT_NAME, $possible_parent_selector->getParentLabel());
     }
 
     public function testDoesNotDisplaySelectorWhenPluginExplicitlyForbidIt(): void

@@ -32,6 +32,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeSelectorPresenter;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\CSVExport\CSVFieldUsageChecker;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
@@ -1140,7 +1143,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 if ($from_aid) {
                     $artifact = $artifact_factory->getArtifactById((int) $from_aid);
                     if ($artifact && $artifact->getParentWithoutPermissionChecking() === null) {
-                        $retriever = new PossibleParentsRetriever($artifact_factory, EventManager::instance());
+                        $retriever = new PossibleParentsRetriever(
+                            $artifact_factory,
+                            EventManager::instance(),
+                            new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance()),
+                            TrackersPermissionsRetriever::build(),
+                        );
 
                         $possible_parents_selector = $retriever->getPossibleArtifactParents(
                             $artifact->getTracker(),
