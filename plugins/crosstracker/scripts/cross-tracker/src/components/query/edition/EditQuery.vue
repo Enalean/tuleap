@@ -19,7 +19,10 @@
 
 <template>
     <section class="tlp-pane-section edit-query-section">
-        <query-suggested v-on:query-chosen="handleChosenQuery" />
+        <query-suggested
+            v-on:query-chosen="handleChosenQuery"
+            v-bind:is_modal_should_be_displayed="is_modal_should_be_displayed"
+        />
         <div class="edit-query-title-description-container">
             <title-input v-model:title="title" />
             <description-text-area v-model:description="description" />
@@ -135,6 +138,10 @@ const title = ref(props.query.title);
 const description = ref(props.query.description);
 const tql_query = ref(props.query.tql_query);
 const is_default_query = ref(props.query.is_default);
+
+const is_modal_should_be_displayed = computed((): boolean => {
+    return description.value !== "" || title.value !== "" || tql_query.value !== "";
+});
 
 const searched_tql_query = ref("");
 

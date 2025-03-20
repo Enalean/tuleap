@@ -52,6 +52,10 @@ import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
 import QuerySuggestedModal from "./QuerySuggestedModal.vue";
 import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/emitter-provider";
 
+const props = defineProps<{
+    is_modal_should_be_displayed: boolean;
+}>();
+
 const emit = defineEmits<{
     (e: "query-chosen", query: QuerySuggestion): void;
 }>();
@@ -61,7 +65,11 @@ const suggested_query_getter = strictInject(GET_SUGGESTED_QUERIES);
 const emitter = strictInject(EMITTER);
 
 function handleButtonClick(query: QuerySuggestion): void {
-    emitter.emit(DISPLAY_QUERY_PREVIEW_EVENT, { query });
+    if (props.is_modal_should_be_displayed) {
+        emitter.emit(DISPLAY_QUERY_PREVIEW_EVENT, { query });
+        return;
+    }
+    emit("query-chosen", query);
 }
 
 function getTranslatedQueries(): QuerySuggestion[] {
