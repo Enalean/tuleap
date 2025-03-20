@@ -21,12 +21,12 @@
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
-use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 
-class TrackerXmlExport
+class TrackerXmlExport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var UserXMLExporter

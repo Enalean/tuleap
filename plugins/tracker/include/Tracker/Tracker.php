@@ -78,6 +78,12 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChildrenXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_FilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_NullChildrenCollector;
+use Tuleap\Tracker\Artifact\XML\Exporter\TrackerStructureXMLExporter;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -132,7 +138,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
-use Tuleap\Tracker\XML\Exporter\TrackerStructureXMLExporter;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
 class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace

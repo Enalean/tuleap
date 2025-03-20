@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\XML;
 
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\FormElement\Field\XML\XMLChangesetValue;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
-use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 
 final class XMLArtifactLinkChangesetValue extends XMLChangesetValue
 {

@@ -20,6 +20,10 @@
 
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_NullChildrenCollector;
 
 class Tracker_Artifact_XMLExport
 {

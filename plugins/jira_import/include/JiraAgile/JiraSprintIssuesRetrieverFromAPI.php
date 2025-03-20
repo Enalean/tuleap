@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
-use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 
 final class JiraSprintIssuesRetrieverFromAPI implements JiraSprintIssuesRetriever
 {

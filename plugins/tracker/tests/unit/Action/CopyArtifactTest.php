@@ -25,6 +25,8 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChildrenXMLExporter;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;

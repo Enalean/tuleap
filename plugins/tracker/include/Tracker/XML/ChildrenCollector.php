@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_TooManyChildrenException;
+
 class Tracker_XML_ChildrenCollector
 {
     /*

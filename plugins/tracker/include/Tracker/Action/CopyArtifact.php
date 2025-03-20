@@ -21,11 +21,14 @@
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChildrenXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_TooManyChildrenException;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_Action_CopyArtifact
+class Tracker_Action_CopyArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_XML_Importer_ArtifactImportedMapping

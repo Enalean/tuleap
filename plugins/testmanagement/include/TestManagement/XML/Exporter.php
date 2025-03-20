@@ -22,9 +22,9 @@ namespace Tuleap\TestManagement\XML;
 
 use Project;
 use SimpleXMLElement;
-use Tracker_XML_Exporter_ChangesetXMLExporter;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChangesetXMLExporter;
 use XML_RNGValidator;
 
 class Exporter
