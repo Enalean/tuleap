@@ -19,7 +19,10 @@
 
 <template>
     <section class="tlp-pane-section create-new-query-section">
-        <query-suggested v-on:query-chosen="handleChosenQuery" />
+        <query-suggested
+            v-on:query-chosen="handleChosenQuery"
+            v-bind:is_modal_should_be_displayed="is_modal_should_be_displayed"
+        />
         <div class="create-new-query-title-description-container">
             <title-input v-model:title="title" />
             <description-text-area v-model:description="description" />
@@ -147,6 +150,10 @@ const is_save_button_displayed = computed((): boolean => {
 
 const is_save_button_disabled = computed((): boolean => {
     return tql_query.value !== searched_tql_query.value || is_save_loading.value;
+});
+
+const is_modal_should_be_displayed = computed((): boolean => {
+    return description.value !== "" || title.value !== "" || tql_query.value !== "";
 });
 
 function handleCancelButton(): void {

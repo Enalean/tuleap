@@ -287,4 +287,25 @@ describe("EditQuery", () => {
             expect(wrapper.emitted()).not.toHaveProperty("return-to-active-query-pane");
         });
     });
+    describe("is_modal_should_be_displayed", () => {
+        it("the modal should be displayed when a field is not empty", () => {
+            const wrapper = getWrapper();
+
+            expect(
+                wrapper.findComponent(QuerySuggested).vm.$props.is_modal_should_be_displayed,
+            ).toBe(true);
+        });
+        it("the modal should not display the modal when all field are empty", async () => {
+            const wrapper = getWrapper();
+
+            wrapper.findComponent(QueryEditor).vm.$emit("update:tql_query", "");
+            wrapper.findComponent(TitleInput).vm.$emit("update:title", "");
+            wrapper.findComponent(DescriptionTextArea).vm.$emit("update:description", "");
+
+            await vi.runOnlyPendingTimersAsync();
+            expect(
+                wrapper.findComponent(QuerySuggested).vm.$props.is_modal_should_be_displayed,
+            ).toBe(false);
+        });
+    });
 });

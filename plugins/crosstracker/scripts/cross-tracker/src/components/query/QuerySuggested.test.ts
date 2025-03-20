@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { expect, describe, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
@@ -26,11 +26,19 @@ import QuerySuggested from "./QuerySuggested.vue";
 import { PROJECT_DASHBOARD, USER_DASHBOARD } from "../../domain/DashboardType";
 import { SuggestedQueries } from "../../domain/SuggestedQueriesGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
-import { EmitterStub } from "../../../tests/stubs/EmitterStub";
+import mitt from "mitt";
+import type {
+    DisplayQueryPreviewEvent,
+    EmitterProvider,
+    Events,
+} from "../../helpers/emitter-provider";
+import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/emitter-provider";
 
 describe("QuerySuggested", () => {
     const suggest_queries = SuggestedQueries(createVueGettextProviderPassThrough());
-
+    let is_modal_should_be_displayed: boolean;
+    let emitter: EmitterProvider;
+    let dispatched_query_preview_event: DisplayQueryPreviewEvent[];
     const getWrapper = (
         dashboard_type: string,
     ): VueWrapper<InstanceType<typeof QuerySuggested>> => {
@@ -40,12 +48,22 @@ describe("QuerySuggested", () => {
                 provide: {
                     [DASHBOARD_TYPE.valueOf()]: dashboard_type,
                     [GET_SUGGESTED_QUERIES.valueOf()]: suggest_queries,
-                    [EMITTER.valueOf()]: EmitterStub(),
+                    [EMITTER.valueOf()]: emitter,
                 },
+            },
+            props: {
+                is_modal_should_be_displayed,
             },
         });
     };
-
+    beforeEach(() => {
+        is_modal_should_be_displayed = false;
+        dispatched_query_preview_event = [];
+        emitter = mitt<Events>();
+        emitter.on(DISPLAY_QUERY_PREVIEW_EVENT, (event) => {
+            dispatched_query_preview_event.push(event);
+        });
+    });
     it.each([
         ["personal", USER_DASHBOARD, suggest_queries.getTranslatedPersonalSuggestedQueries()],
         ["project", PROJECT_DASHBOARD, suggest_queries.getTranslatedProjectSuggestedQueries()],
@@ -67,4 +85,27 @@ describe("QuerySuggested", () => {
             });
         },
     );
+    it("should display the modal if one of the query field is filled", async () => {
+        is_modal_should_be_displayed = true;
+        const wrapper = getWrapper(USER_DASHBOARD);
+
+        await wrapper.find("[data-test=query-suggested-button]").trigger("click");
+
+        expect(dispatched_query_preview_event[0].query).toStrictEqual(
+            suggest_queries.getTranslatedPersonalSuggestedQueries()[0],
+        );
+        expect(wrapper.emitted()).not.toHaveProperty("query-chosen");
+    });
+    it("should does not display the modal if any of the query field is filled", async () => {
+        is_modal_should_be_displayed = false;
+        const wrapper = getWrapper(USER_DASHBOARD);
+
+        await wrapper.find("[data-test=query-suggested-button]").trigger("click");
+
+        expect(dispatched_query_preview_event.length).toBe(0);
+        expect(wrapper.emitted()).toHaveProperty("query-chosen");
+        expect(wrapper.emitted()["query-chosen"][0]).toStrictEqual(
+            suggest_queries.getTranslatedPersonalSuggestedQueries(),
+        );
+    });
 });
