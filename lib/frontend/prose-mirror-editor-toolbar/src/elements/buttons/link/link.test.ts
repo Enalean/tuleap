@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { Popover } from "@tuleap/tlp-popovers";
 import { connect } from "./link";
 import type { HostElement } from "./link";
 
@@ -43,6 +44,32 @@ describe("link", () => {
             expect(host.is_disabled).toBe(link_state.is_disabled);
             expect(host.link_href).toBe(link_state.link_href);
             expect(host.link_title).toBe(link_state.link_title);
+        });
+
+        it("when the toolbar view wants to open the link menu, then it should open it", () => {
+            const toolbar_bus = buildToolbarBus();
+            const host = {
+                toolbar_bus,
+                popover_instance: { show: vi.fn() } as unknown as Popover,
+            } as unknown as HostElement;
+
+            connect(host);
+            toolbar_bus.view.toggleToolbarMenu("link");
+
+            expect(host.popover_instance.show).toHaveBeenCalledOnce();
+        });
+
+        it("when the toolbar view wants to open another menu, then it should do nothing", () => {
+            const toolbar_bus = buildToolbarBus();
+            const host = {
+                toolbar_bus,
+                popover_instance: { show: vi.fn() } as unknown as Popover,
+            } as unknown as HostElement;
+
+            connect(host);
+            toolbar_bus.view.toggleToolbarMenu("starters");
+
+            expect(host.popover_instance.show).not.toHaveBeenCalled();
         });
     });
 });

@@ -51,13 +51,6 @@ export const connect = (host: InternalImageButton): void => {
             host.image_src = image_state.image_src;
             host.image_title = image_state.image_title;
         },
-        toggleToolbarMenu: (menu: string) => {
-            if (menu !== "image" || !host.popover_instance) {
-                return;
-            }
-
-            host.popover_instance.show();
-        },
     });
 };
 

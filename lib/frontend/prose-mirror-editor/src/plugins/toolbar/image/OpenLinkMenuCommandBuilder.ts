@@ -17,20 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
-import type { EditorState } from "prosemirror-state";
-import { buildToolbarBus } from "../helper/toolbar-bus";
-import { OpenImageMenuCommandBuilder } from "./OpenImageMenuCommandBuilder";
+import type { Command } from "prosemirror-state";
+import type { ToolbarBus } from "../helper/toolbar-bus";
 
-describe("OpenImageMenuCommandBuilder", () => {
-    it("should build a command that opens the image menu of the toolbar", () => {
-        const toolbar_bus = buildToolbarBus();
-        const toggleMenu = vi.spyOn(toolbar_bus, "toggleMenu");
-        const builder = OpenImageMenuCommandBuilder(toolbar_bus);
+export type BuildLinkImageMenuCommand = {
+    build(): Command;
+};
 
-        builder.build()({} as EditorState);
-
-        expect(toggleMenu).toHaveBeenCalledOnce();
-        expect(toggleMenu).toHaveBeenCalledWith("image");
-    });
+export const OpenLinkMenuCommandBuilder = (toolbar_bus: ToolbarBus): BuildLinkImageMenuCommand => ({
+    build: (): Command => (): boolean => {
+        toolbar_bus.toggleMenu("link");
+        return true;
+    },
 });

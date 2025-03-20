@@ -42,8 +42,8 @@ msgstr "Changer en sous-titre `Ctrl+Shift+1`"
 msgid "Create link"
 msgstr "Créer un lien"
 
-msgid "Create or edit link"
-msgstr "Créer ou éditer un lien"
+msgid "Create or edit link `Ctrl+k`"
+msgstr "Créer ou éditer un lien `Ctrl+k`"
 
 msgid "Edit link"
 msgstr "Éditer un lien"
@@ -54,8 +54,8 @@ msgstr "Source de l'image"
 msgid "Insert new image"
 msgstr "Insérer une nouvelle image"
 
-msgid "Insert or edit image `Ctrl+k`"
-msgstr "Insérer ou éditer une image `Ctrl+k`"
+msgid "Insert or edit image"
+msgstr "Insérer ou éditer une image"
 
 msgid "Large heading"
 msgstr "Grand titre"

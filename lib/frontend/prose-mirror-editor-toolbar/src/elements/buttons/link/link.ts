@@ -54,6 +54,13 @@ export const connect = (host: InternalLinkButtonElement): void => {
             host.link_title = link_state.link_title;
             host.is_disabled = link_state.is_disabled;
         },
+        toggleToolbarMenu: (menu: string) => {
+            if (menu !== "link" || !host.popover_instance) {
+                return;
+            }
+
+            host.popover_instance.show();
+        },
     });
 };
 

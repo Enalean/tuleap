@@ -34,7 +34,7 @@ export const renderLinkButtonElement = (
             class="${button_class}"
             data-role="popover-trigger"
             disabled="${host.is_disabled}"
-            title="${gettext_provider.gettext("Create or edit link")}"
+            title="${gettext_provider.gettext("Create or edit link `Ctrl+k`")}"
             data-test="button-link"
         >
             <i class="prose-mirror-toolbar-button-icon fa-solid fa-link"></i>
