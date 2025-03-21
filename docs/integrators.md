@@ -98,3 +98,8 @@ git config gpg.ssh.allowedSignersFile tools/utils/signing-keys/allowed-integrato
         -   Set the status to `Closed`
         -   Add artifact link to current release artifact id with nature
             `Fixed in`
+
+It should be noted that only integrators can push content into the [reference Git repository for Tuleap sources](https://tuleap.net/plugins/git/tuleap/tuleap/stable).
+This is ensured by:
+* The permissions set on the Tuleap repository (see [the corresponding Access Control on Git repositories in the Tuleap documentation](https://docs.tuleap.org/user-guide/code-versioning/git.html#access-control))
+* A [pre-receive Git hook ensuring all content is signed by a known integrator](../tools/utils/pre-receive-tuleap-git-repo-validation/)
