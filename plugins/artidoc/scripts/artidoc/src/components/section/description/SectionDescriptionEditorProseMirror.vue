@@ -179,7 +179,6 @@ artidoc-section-title {
     font-size: 20px;
     font-weight: 600;
     line-height: 24px;
-    text-transform: uppercase;
 }
 
 artidoc-section-description {
