@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ColinODell\PsrTestLogger\TestLogger;
+use DateTimeImmutable;
 use PFUser;
-use Psr\Log\LoggerInterface;
-use Tracker;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\KeyFactory;
@@ -36,84 +36,45 @@ use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
-use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraClientStub;
 use Tuleap\XML\ParseExceptionWithErrors;
 use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class JiraRunnerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|QueueFactory
-     */
-    private $queue_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
-     */
-    private $dao;
-    /**
-     * @var JiraRunner
-     */
-    private $runner;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|KeyFactory
-     */
-    private $key_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FromJiraTrackerCreator
-     */
-    private $creator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraSuccessImportNotifier
-     */
-    private $success_notifier;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraErrorImportNotifier
-     */
-    private $error_notifier;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var PFUser
-     */
-    private $anonymous_user;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserOnTuleapCache
-     */
-    private $jira_user_on_tuleap_cache;
-
-    private ClientWrapperBuilder $jira_client_builder;
+    private TestLogger $logger;
+    private QueueFactory&MockObject $queue_factory;
+    private PendingJiraImportDao&MockObject $dao;
+    private JiraRunner $runner;
+    private KeyFactory&MockObject $key_factory;
+    private FromJiraTrackerCreator&MockObject $creator;
+    private JiraSuccessImportNotifier&MockObject $success_notifier;
+    private JiraErrorImportNotifier&MockObject $error_notifier;
+    private UserManager&MockObject $user_manager;
+    private PFUser $anonymous_user;
+    private JiraUserOnTuleapCache $jira_user_on_tuleap_cache;
 
     protected function setUp(): void
     {
-        $this->logger                    = Mockery::mock(LoggerInterface::class);
-        $this->queue_factory             = Mockery::mock(QueueFactory::class);
-        $this->dao                       = Mockery::mock(PendingJiraImportDao::class);
-        $this->key_factory               = Mockery::mock(KeyFactory::class);
-        $this->creator                   = Mockery::mock(FromJiraTrackerCreator::class);
-        $this->success_notifier          = Mockery::mock(JiraSuccessImportNotifier::class);
-        $this->error_notifier            = Mockery::mock(JiraErrorImportNotifier::class);
-        $this->user_manager              = Mockery::mock(UserManager::class);
-        $this->jira_user_on_tuleap_cache = Mockery::mock(JiraUserOnTuleapCache::class);
-        $this->jira_client_builder       = new ClientWrapperBuilder(
-            fn () => new class extends JiraCloudClientStub{
-            }
-        );
+        $this->logger                    = new TestLogger();
+        $this->queue_factory             = $this->createMock(QueueFactory::class);
+        $this->dao                       = $this->createMock(PendingJiraImportDao::class);
+        $this->key_factory               = $this->createMock(KeyFactory::class);
+        $this->creator                   = $this->createMock(FromJiraTrackerCreator::class);
+        $this->success_notifier          = $this->createMock(JiraSuccessImportNotifier::class);
+        $this->error_notifier            = $this->createMock(JiraErrorImportNotifier::class);
+        $this->user_manager              = $this->createMock(UserManager::class);
+        $this->jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(new JiraTuleapUsersMapping(), UserTestBuilder::buildWithDefaults());
 
-        $this->anonymous_user = new PFUser(['user_id' => 0, 'language_id' => 'en_US']);
-        $this->user_manager->shouldReceive(['getUserAnonymous' => $this->anonymous_user]);
+        $this->anonymous_user = UserTestBuilder::anAnonymousUser()->build();
+        $this->user_manager->method('getUserAnonymous')->willReturn($this->anonymous_user);
 
         $this->runner = new JiraRunner(
             $this->logger,
@@ -125,114 +86,79 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->error_notifier,
             $this->user_manager,
             $this->jira_user_on_tuleap_cache,
-            $this->jira_client_builder,
+            new ClientWrapperBuilder(static fn() => JiraClientStub::aJiraClient()),
         );
     }
 
     public function testQueueJiraImportEvent(): void
     {
-        $persistent_queue = Mockery::mock(PersistentQueue::class);
-        $this->queue_factory
-            ->shouldReceive('getPersistentQueue')
-            ->with('app_user_events')
-            ->andReturn($persistent_queue)
-            ->atLeast()->once();
+        $persistent_queue = $this->createMock(PersistentQueue::class);
+        $this->queue_factory->expects(self::atLeastOnce())->method('getPersistentQueue')
+            ->with('app_user_events')->willReturn($persistent_queue);
 
-        $persistent_queue
-            ->shouldReceive('pushSinglePersistentMessage')
+        $persistent_queue->expects(self::atLeastOnce())->method('pushSinglePersistentMessage')
             ->with(
                 'tuleap.tracker.creation.jira',
                 [
                     'pending_jira_import_id' => 123,
                 ]
-            )
-            ->atLeast()->once();
+            );
 
         $this->runner->queueJiraImportEvent(123);
     }
 
     public function testItCreatesTheProjectWithGreatSuccess(): void
     {
-        $this->logger->shouldReceive('debug');
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+        $project        = ProjectTestBuilder::aProject()->build();
+        $user           = UserTestBuilder::anActiveUser()->withUserName('Whalter White')->build();
 
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
-            str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
+        $import = new PendingJiraImport(
+            123,
+            $project,
+            $user,
+            new DateTimeImmutable(),
+            'https://jira.example.com',
+            'user@example.com',
+            SymmetricCrypto::encrypt(new ConcealedString('secret'), $encryption_key),
+            'Jira project',
+            'Issues',
+            '10003',
+            'Bugs',
+            'bug',
+            'inca-silver',
+            'Imported issues from jira',
         );
 
-        $project = Mockery::mock(\Project::class);
+        $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($user);
+        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter White')->build();
-
-        $import          = Mockery::mock(PendingJiraImport::class);
-        $encrypted_token = SymmetricCrypto::encrypt(
-            new ConcealedString('secret'),
-            $encryption_key
-        );
-        $import->shouldReceive(
-            [
-                'getId'                 => 123,
-                'getUser'               => $user,
-                'getProject'            => $project,
-                'getTrackerName'        => 'Bugs',
-                'getTrackerShortname'   => 'bug',
-                'getTrackerDescription' => 'Imported issues from jira',
-                'getTrackerColor'       => 'inca-silver',
-                'getEncryptedJiraToken' => $encrypted_token,
-                'getJiraUser'           => 'user@example.com',
-                'getJiraServer'         => 'https://jira.example.com',
-                'getJiraProjectId'      => 'Jira project',
-                'getJiraIssueTypeId'    => '10003',
-            ]
-        );
-
-        $this->user_manager
-            ->shouldReceive('forceLogin')
-            ->with('Whalter White')
-            ->andReturn($user);
-
-        $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->once()
-            ->andReturn($encryption_key);
-
-        $tracker = Mockery::mock(Tracker::class);
-        $this->creator
-            ->shouldReceive('createFromJira')
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $this->creator->expects(self::once())->method('createFromJira')
             ->with(
                 $project,
                 'Bugs',
                 'bug',
                 'Imported issues from jira',
                 'inca-silver',
-                Mockery::on(
-                    function (JiraCredentials $credentials) {
-                        return $credentials->getJiraUrl() === 'https://jira.example.com' &&
-                            $credentials->getJiraUsername() === 'user@example.com' &&
-                            $credentials->getJiraToken()->getString() === 'secret';
-                    }
+                self::callback(
+                    static fn(JiraCredentials $credentials) => $credentials->getJiraUrl() === 'https://jira.example.com' &&
+                                                               $credentials->getJiraUsername() === 'user@example.com' &&
+                                                               $credentials->getJiraToken()->getString() === 'secret'
                 ),
-                Mockery::type(JiraClient::class),
+                self::isInstanceOf(JiraClient::class),
                 'Jira project',
                 '10003',
                 $user,
             )
-            ->once()
-            ->andReturn($tracker);
+            ->willReturn($tracker);
 
-        $this->success_notifier
-            ->shouldReceive('warnUserAboutSuccess')
-            ->with($import, $tracker, $this->jira_user_on_tuleap_cache)
-            ->once();
+        $this->success_notifier->expects(self::once())->method('warnUserAboutSuccess')
+            ->with($import, $tracker, $this->jira_user_on_tuleap_cache);
 
-        $this->dao
-            ->shouldReceive('deleteById')
-            ->with(123)
-            ->once();
+        $this->dao->expects(self::once())->method('deleteById')->with(123);
 
-        $this->user_manager
-            ->shouldReceive('setCurrentUser')
-            ->once();
+        $this->user_manager->expects(self::once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
     }
@@ -241,160 +167,88 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::aUser()->withUserName('Whalter White')->build();
 
-        $import = Mockery::mock(PendingJiraImport::class);
-        $import->shouldReceive(
-            [
-                'getId'   => 123,
-                'getUser' => $user,
-            ]
-        );
+        $import = $this->createMock(PendingJiraImport::class);
+        $import->method('getId')->willReturn(123);
+        $import->method('getUser')->willReturn($user);
 
-        $this->user_manager
-            ->shouldReceive('forceLogin')
-            ->with('Whalter White')
-            ->andReturn($this->anonymous_user);
+        $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($this->anonymous_user);
 
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Unable to log in as the user who originated the event')
-            ->once();
+        $this->dao->expects(self::once())->method('deleteById')->with(123);
 
-        $this->dao
-            ->shouldReceive('deleteById')
-            ->with(123)
-            ->once();
-
-        $this->user_manager
-            ->shouldReceive('setCurrentUser')
-            ->once();
+        $this->user_manager->expects(self::once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
+        self::assertTrue($this->logger->hasErrorThatContains('Unable to log in as the user who originated the event'));
     }
 
     public function testItCannotProcessIfItCannotRetrieveTheEncryptionKey(): void
     {
         $user = UserTestBuilder::anActiveUser()->withUserName('Whalter White')->build();
 
-        $import = Mockery::mock(PendingJiraImport::class);
-        $import->shouldReceive(
-            [
-                'getId'                 => 123,
-                'getUser'               => $user,
-                'getEncryptedJiraToken' => '0000000000101010',
-            ]
-        );
+        $import = $this->createMock(PendingJiraImport::class);
+        $import->method('getId')->willReturn(123);
+        $import->method('getUser')->willReturn($user);
+        $import->method('getEncryptedJiraToken')->willReturn('0000000000101010');
 
-        $this->user_manager
-            ->shouldReceive('forceLogin')
-            ->with('Whalter White')
-            ->andReturn($user);
+        $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($user);
 
-        $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->once()
-            ->andThrow(CannotPerformIOOperationException::class);
+        $this->key_factory->expects(self::once())->method('getEncryptionKey')
+            ->willThrowException(new CannotPerformIOOperationException(''));
 
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Unable to access to the token to do the import.')
-            ->once();
-        $this->error_notifier
-            ->shouldReceive('warnUserAboutError')
-            ->with($import, 'Unable to access to the token to do the import.')
-            ->once();
+        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+            ->with($import, 'Unable to access to the token to do the import.');
 
-        $this->dao
-            ->shouldReceive('deleteById')
-            ->with(123)
-            ->once();
+        $this->dao->expects(self::once())->method('deleteById')->with(123);
 
-        $this->user_manager
-            ->shouldReceive('setCurrentUser')
-            ->once();
+        $this->user_manager->expects(self::once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
+        self::assertTrue($this->logger->hasErrorThatContains('Unable to access to the token to do the import.'));
     }
 
     public function testItCannotProcessIfItCannotDecryptTheToken(): void
     {
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
-            str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-        );
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
         $user = UserTestBuilder::anActiveUser()->withUserName('Whalter White')->build();
 
-        $import          = Mockery::mock(PendingJiraImport::class);
+        $import          = $this->createMock(PendingJiraImport::class);
         $encrypted_token = SymmetricCrypto::encrypt(
             new ConcealedString('secret'),
             new EncryptionKey(new ConcealedString(str_repeat('b', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)))
         );
-        $import->shouldReceive(
-            [
-                'getId'                 => 123,
-                'getUser'               => $user,
-                'getEncryptedJiraToken' => $encrypted_token,
-            ]
-        );
+        $import->method('getId')->willReturn(123);
+        $import->method('getUser')->willReturn($user);
+        $import->method('getEncryptedJiraToken')->willReturn($encrypted_token);
 
-        $this->user_manager
-            ->shouldReceive('forceLogin')
-            ->with('Whalter White')
-            ->andReturn($user);
+        $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($user);
 
-        $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->once()
-            ->andReturn($encryption_key);
+        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $this->logger
-            ->shouldReceive('error')
-            ->with('The ciphertext cannot be decrypted')
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Unable to access to the token to do the import.')
-            ->once();
-        $this->error_notifier
-            ->shouldReceive('warnUserAboutError')
-            ->with($import, 'Unable to access to the token to do the import.')
-            ->once();
+        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+            ->with($import, 'Unable to access to the token to do the import.');
 
-        $this->dao
-            ->shouldReceive('deleteById')
-            ->with(123)
-            ->once();
+        $this->dao->expects(self::once())->method('deleteById')->with(123);
 
-        $this->user_manager
-            ->shouldReceive('setCurrentUser')
-            ->once();
+        $this->user_manager->expects(self::once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
+        self::assertTrue($this->logger->hasErrorThatContains('The ciphertext cannot be decrypted'));
+        self::assertTrue($this->logger->hasErrorThatContains('Unable to access to the token to do the import.'));
     }
 
     public function testItWarnsTheUserInCaseOfJiraConnectionException(): void
     {
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
-            str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-        );
-
-        $project = ProjectTestBuilder::aProject()->build();
-
-        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter_White')->build();
-
-        $encrypted_token = SymmetricCrypto::encrypt(
-            new ConcealedString('secret'),
-            $encryption_key
-        );
-        $import          = new PendingJiraImport(
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+        $user           = UserTestBuilder::anActiveUser()->withUserName('Whalter_White')->build();
+        $import         = new PendingJiraImport(
             123,
-            $project,
+            ProjectTestBuilder::aProject()->build(),
             $user,
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             'https://jira.example.com',
             'user@example.com',
-            $encrypted_token,
+            SymmetricCrypto::encrypt(new ConcealedString('secret'), $encryption_key),
             'JP',
             'Issues',
             '10003',
@@ -404,65 +258,36 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             'Imported issues from jira',
         );
 
-        $this->user_manager
-            ->shouldReceive('forceLogin')
-            ->with('Whalter_White')
-            ->andReturn($user);
+        $this->user_manager->method('forceLogin')->with('Whalter_White')->willReturn($user);
 
-        $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->once()
-            ->andReturn($encryption_key);
+        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $this->creator
-            ->shouldReceive('createFromJira')
-            ->once()
-            ->andThrow(JiraConnectionException::credentialsValuesAreInvalid());
+        $this->creator->expects(self::once())->method('createFromJira')
+            ->willThrowException(JiraConnectionException::credentialsValuesAreInvalid());
 
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Can not connect to Jira server, please check your Jira credentials.')
-            ->once();
-        $this->error_notifier
-            ->shouldReceive('warnUserAboutError')
-            ->with($import, 'Can not connect to Jira server, please check your Jira credentials.')
-            ->once();
+        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+            ->with($import, 'Can not connect to Jira server, please check your Jira credentials.');
 
-        $this->dao
-            ->shouldReceive('deleteById')
-            ->with(123)
-            ->once();
+        $this->dao->expects(self::once())->method('deleteById')->with(123);
 
-        $this->user_manager
-            ->shouldReceive('setCurrentUser')
-            ->once();
+        $this->user_manager->expects(self::once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
+        self::assertTrue($this->logger->hasErrorThatContains('Can not connect to Jira server, please check your Jira credentials.'));
     }
 
     public function testItWarnsTheUserInCaseOfXMLParseException(): void
     {
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
-            str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-        );
-
-        $project = ProjectTestBuilder::aProject()->build();
-
-        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter_White')->build();
-
-        $encrypted_token = SymmetricCrypto::encrypt(
-            new ConcealedString('secret'),
-            $encryption_key
-        );
-        $import          = new PendingJiraImport(
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+        $user           = UserTestBuilder::anActiveUser()->withUserName('Whalter_White')->build();
+        $import         = new PendingJiraImport(
             123,
-            $project,
+            ProjectTestBuilder::aProject()->build(),
             $user,
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             'https://jira.example.com',
             'user@example.com',
-            $encrypted_token,
+            SymmetricCrypto::encrypt(new ConcealedString('secret'), $encryption_key),
             'JP',
             'Issues',
             '10003',
@@ -472,39 +297,21 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             'Imported issues from jira',
         );
 
-        $this->user_manager
-            ->shouldReceive('forceLogin')
-            ->with('Whalter_White')
-            ->andReturn($user);
+        $this->user_manager->method('forceLogin')->with('Whalter_White')->willReturn($user);
 
-        $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->once()
-            ->andReturn($encryption_key);
+        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $this->creator
-            ->shouldReceive('createFromJira')
-            ->once()
-            ->andThrow(new ParseExceptionWithErrors('', [], []));
+        $this->creator->expects(self::once())->method('createFromJira')
+            ->willThrowException(new ParseExceptionWithErrors('', [], []));
 
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Unable to parse the XML used to import from Jira.')
-            ->once();
-        $this->error_notifier
-            ->shouldReceive('warnUserAboutError')
-            ->with($import, 'Unable to parse the XML used to import from Jira.')
-            ->once();
+        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+            ->with($import, 'Unable to parse the XML used to import from Jira.');
 
-        $this->dao
-            ->shouldReceive('deleteById')
-            ->with(123)
-            ->once();
+        $this->dao->expects(self::once())->method('deleteById')->with(123);
 
-        $this->user_manager
-            ->shouldReceive('setCurrentUser')
-            ->once();
+        $this->user_manager->expects(self::once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
+        self::assertTrue($this->logger->hasErrorThatContains('Unable to parse the XML used to import from Jira.'));
     }
 }
