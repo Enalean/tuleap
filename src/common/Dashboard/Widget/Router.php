@@ -55,9 +55,11 @@ class Router
 
         switch ($action) {
             case 'get-add-modal-content':
+                $this->rejectIfRequestDoesNotAppearToBeFetched($request);
                 $this->add_widget_controller->display($request);
                 break;
             case 'get-edit-modal-content':
+                $this->rejectIfRequestDoesNotAppearToBeFetched($request);
                 $this->preferences_controller->display($request);
                 break;
             case 'add-widget':
@@ -83,6 +85,7 @@ class Router
                 $instance_id = (int) $param[$name];
 
                 if ($widget->isAjax()) {
+                    $this->rejectIfRequestDoesNotAppearToBeFetched($request);
                     $widget->loadContent($instance_id);
                     echo $widget->getContent();
                 }
@@ -90,10 +93,29 @@ class Router
             case 'rss':
                 $widget = $this->getWidgetFromUrl($request);
                 if ($widget) {
+                    $this->rejectIfRequestDoesNotAppearToBeFetched($request);
                     $widget->displayRss();
                 }
                 break;
         }
+    }
+
+    private function rejectIfRequestDoesNotAppearToBeFetched(HTTPRequest $request): void
+    {
+        $sec_fetch_dest = $request->getFromServer('HTTP_SEC_FETCH_DEST');
+        $sec_fetch_mode = $request->getFromServer('HTTP_SEC_FETCH_MODE');
+
+        if ($sec_fetch_dest === false || $sec_fetch_mode === false) {
+            return;
+        }
+
+        if ($sec_fetch_dest === 'empty' && $sec_fetch_mode === 'cors') {
+            return;
+        }
+
+        $GLOBALS['Response']->sendStatusCode(400);
+        echo 'Direct accesses to this page are not expected';
+        exit;
     }
 
     private function getWidgetFromUrl(HTTPRequest $request)
