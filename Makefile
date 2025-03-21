@@ -111,12 +111,12 @@ clean-rng:
 #
 
 generate-templates: generate-templates-plugins ## Generate XML templates
-	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
-		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
-	cp tools/utils/setup_templates/generate-templates/trackers/testmanagement.xml \
-		tools/utils/setup_templates/agile_alm/testmanagement_generated.xml
-	xsltproc tools/utils/setup_templates/generate-templates/generate-kanban.xml \
-		-o tools/utils/setup_templates/kanban/kanban_template.xml
+	xsltproc tools/setup_templates/generate-templates/generate-agile_alm.xml \
+		-o tools/setup_templates/agile_alm/agile_alm_template.xml
+	cp tools/setup_templates/generate-templates/trackers/testmanagement.xml \
+		tools/setup_templates/agile_alm/testmanagement_generated.xml
+	xsltproc tools/setup_templates/generate-templates/generate-kanban.xml \
+		-o tools/setup_templates/kanban/kanban_template.xml
 
 generate-templates-plugins:
 	@find . plugins/ -mindepth 2 -maxdepth 2 -type f -name 'Makefile' | while read file; do \

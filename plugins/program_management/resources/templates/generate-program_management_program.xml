@@ -1,4 +1,4 @@
-<?xml-stylesheet type="text/xsl" href="../../../../tools/utils/setup_templates/generate-templates/style.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../../../../tools/setup_templates/generate-templates/style.xsl"?>
 <project unix-name="program" full-name="Program" description="Program" access="public">
   <long-description/>
   <services>

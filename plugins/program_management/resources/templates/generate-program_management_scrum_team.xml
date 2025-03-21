@@ -1,4 +1,4 @@
-<?xml-stylesheet type="text/xsl" href="../../../../tools/utils/setup_templates/generate-templates/style.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../../../../tools/setup_templates/generate-templates/style.xsl"?>
 <project unix-name="scrum-team" full-name="Scrum Team" description="Scrum Team" access="private">
   <long-description/>
   <services>
@@ -17,7 +17,7 @@
     <service shortname="plugin_baseline" enabled="0"/>
   </services>
   <trackers use-natures="true">
-    <include-template-tracker path="../../../../tools/utils/setup_templates/generate-templates/trackers/bug.xml"/>
+    <include-template-tracker path="../../../../tools/setup_templates/generate-templates/trackers/bug.xml"/>
     <tracker id="T1036" parent_id="T36342" instantiate_for_new_projects="1" notifications_level="1">
       <name><![CDATA[Iterations]]></name>
       <item_name><![CDATA[Iteration]]></item_name>
@@ -1608,9 +1608,9 @@
         <permission scope="field" REF="F792757" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
     </tracker>
-    <include-template-tracker path="../../../../tools/utils/setup_templates/generate-templates/trackers/ttm-def.xml"/>
-    <include-template-tracker path="../../../../tools/utils/setup_templates/generate-templates/trackers/ttm-exec.xml"/>
-    <include-template-tracker path="../../../../tools/utils/setup_templates/generate-templates/trackers/ttm-campaign.xml"/>
+    <include-template-tracker path="../../../../tools/setup_templates/generate-templates/trackers/ttm-def.xml"/>
+    <include-template-tracker path="../../../../tools/setup_templates/generate-templates/trackers/ttm-exec.xml"/>
+    <include-template-tracker path="../../../../tools/setup_templates/generate-templates/trackers/ttm-campaign.xml"/>
     <triggers>
       <trigger_rule>
         <triggers>
