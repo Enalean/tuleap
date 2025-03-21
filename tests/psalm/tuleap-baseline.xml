@@ -4275,7 +4275,7 @@
       <code><![CDATA[getRow]]></code>
     </PossiblyFalseReference>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerArtifactReportDao.php">
+  <file src="plugins/crosstracker/include/CrossTrackerArtifactReportDao.php">
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
@@ -4284,7 +4284,7 @@
       <code><![CDATA[searchArtifactsFromTracker]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryBuilder/CrossTrackerExpertQueryReportDao.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryBuilder/CrossTrackerExpertQueryReportDao.php">
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
@@ -4293,13 +4293,13 @@
       <code><![CDATA[searchArtifactsMatchingQuery]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryBuilder/Metadata/AlwaysThereField/Users/UsersFromWhereBuilder.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryBuilder/Metadata/AlwaysThereField/Users/UsersFromWhereBuilder.php">
     <ImplicitToStringCast>
       <code><![CDATA[$in_condition]]></code>
       <code><![CDATA[$in_condition]]></code>
     </ImplicitToStringCast>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryBuilderVisitor.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryBuilderVisitor.php">
     <MissingParamType>
       <code><![CDATA[$from_where_expression]]></code>
       <code><![CDATA[$from_where_expression]]></code>
@@ -4309,32 +4309,32 @@
       <code><![CDATA[buildOrClause]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Comparison/EmptyStringComparisonException.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/EmptyStringComparisonException.php">
     <MissingParamType>
       <code><![CDATA[$operator]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Comparison/OperatorNotAllowedForMetadataException.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/OperatorNotAllowedForMetadataException.php">
     <MissingParamType>
       <code><![CDATA[$operator]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Comparison/StatusToSimpleValueComparisonException.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/StatusToSimpleValueComparisonException.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Comparison/ToStringComparisonException.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/ToStringComparisonException.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/ResultBuilder/Representations/UserRepresentation.php">
+  <file src="plugins/crosstracker/include/Report/Query/Advanced/ResultBuilder/Representations/UserRepresentation.php">
     <DeprecatedMethod>
       <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Widget/CrossTrackerSearchWidget.php">
+  <file src="plugins/crosstracker/include/Widget/CrossTrackerSearchWidget.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -4343,7 +4343,7 @@
       <code><![CDATA[$owner_type]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Widget/WidgetPermissionChecker.php">
+  <file src="plugins/crosstracker/include/Widget/WidgetPermissionChecker.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>

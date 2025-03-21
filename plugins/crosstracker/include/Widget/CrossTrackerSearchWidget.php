@@ -67,7 +67,7 @@ class CrossTrackerSearchWidget extends Widget
     public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            __DIR__ . '/../../../templates/widgets'
+            __DIR__ . '/../../templates/widgets'
         );
 
         $request = HTTPRequest::instance();
@@ -160,7 +160,7 @@ class CrossTrackerSearchWidget extends Widget
     private function getAssets(): IncludeViteAssets
     {
         return new IncludeViteAssets(
-            __DIR__ . '/../../../scripts/cross-tracker/frontend-assets',
+            __DIR__ . '/../../scripts/cross-tracker/frontend-assets',
             '/assets/crosstracker/cross-tracker'
         );
     }
@@ -183,7 +183,7 @@ class CrossTrackerSearchWidget extends Widget
     public function getPurifiedCustomTitle(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            __DIR__ . '/../../../templates/widgets'
+            __DIR__ . '/../../templates/widgets'
         );
 
         return $renderer->renderToString(
