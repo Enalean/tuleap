@@ -45,23 +45,13 @@ let
           !plugins/*/scripts/*/frontend-assets
           !plugins/*/resources/templates/*
           plugins/*/themes
+          tools/docker/
           tools/publish_additional_tools/
-          tools/publish_js_library/
+          tools/publish_js_libraries/
           tools/rpm/
-          !tools/utils/setup_templates/*/*_template.xml
-          !tools/utils/setup_templates/*/*_generated.xml
-          tools/utils/gerrit_setup
-          tools/utils/githooks
-          tools/utils/jetbrains
-          tools/utils/nix
-          tools/utils/signing-keys
-          tools/utils/version_numbers
-          tools/utils/generate-mo.sh
-          tools/utils/generate-smarty-mo.php
-          tools/utils/generate-po.php
-          tools/utils/TuleapDev/
-          tools/utils/xml-templates-to-php/
-          tools/utils/scripts/
+          tools/utils/
+          !tools/setup_templates/*/*_template.xml
+          !tools/setup_templates/*/*_generated.xml
         '';
       };
       # Clean files src/scripts/<name>/(not "frontend_assets" directory)

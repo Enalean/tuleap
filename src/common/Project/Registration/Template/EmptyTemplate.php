@@ -28,7 +28,7 @@ use Tuleap\Glyph\GlyphFinder;
 
 class EmptyTemplate implements TuleapTemplate
 {
-    private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/empty_template/project.xml';
+    private const PROJECT_XML = __DIR__ . '/../../../../../tools/setup_templates/empty_template/project.xml';
 
     public const NAME = 'empty';
 
