@@ -141,6 +141,12 @@ artidoc-section {
 artidoc-section-title {
     display: block;
     margin: 0 0 var(--tlp-medium-spacing);
+    word-break: break-word;
+}
+
+artidoc-section-description {
+    display: block;
+    word-break: break-word;
 }
 
 /* stylelint-disable selector-class-pattern */
@@ -179,10 +185,6 @@ artidoc-section-title {
     font-size: 20px;
     font-weight: 600;
     line-height: 24px;
-}
-
-artidoc-section-description {
-    display: block;
 }
 
 .artidoc-section-container:has(.document-section-is-just-refreshed) .editor,

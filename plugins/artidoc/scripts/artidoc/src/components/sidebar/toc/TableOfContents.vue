@@ -493,5 +493,6 @@ $arrows-overflow: calc(var(--tlp-small-spacing) / 2);
     color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     font-weight: 600;
+    word-break: break-all;
 }
 </style>

@@ -124,6 +124,7 @@ h1.section-title {
 body {
     overflow: visible !important;
     margin: 0;
+    word-break: break-word
 }
 
 a:link, a:visited {
