@@ -1394,7 +1394,8 @@ class ArtifactsResource extends AuthenticatedResource
                 new BindValueForDuckTypingUpdater(
                     new FieldValueMatcher($user_finder),
                     $XML_updater,
-                    $cdata_factory
+                    $cdata_factory,
+                    $this->user_manager
                 ),
                 new BindOpenValueForDuckTypingUpdater(
                     new FieldValueMatcher($user_finder),

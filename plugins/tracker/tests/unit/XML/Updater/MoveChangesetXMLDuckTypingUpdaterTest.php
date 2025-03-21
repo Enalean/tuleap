@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\FieldMapping;
@@ -85,7 +86,8 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
                 )
             ),
             $XML_updater,
-            $cdata_factory
+            $cdata_factory,
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())
         );
         $bind_open_value_updater  = new BindOpenValueForDuckTypingUpdater(
             new FieldValueMatcher(
