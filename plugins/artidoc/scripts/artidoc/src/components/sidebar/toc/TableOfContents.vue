@@ -27,16 +27,22 @@
             data-test="section-in-toc"
             v-for="(section, index) in sections_collection.sections.value"
             v-bind:key="section.value.id"
-            v-bind:draggable="sections_being_moved.length === 0"
+            v-bind:draggable="sections_being_saved.length === 0"
             v-bind:data-internal-id="section.value.internal_id"
             v-bind:class="{
-                'section-moved-with-success': just_moved_sections.some(
-                    (just_moved_section) => just_moved_section === section.value,
+                'section-saved-with-success': just_saved_sections.some(
+                    (just_saved_section) =>
+                        just_saved_section.internal_id === section.value.internal_id,
                 ),
-                'section-being-moved': sections_being_moved.some(
-                    (section_being_moved) => section_being_moved === section.value,
+                'section-being-saved': sections_being_saved.some(
+                    (section_being_saved) => section_being_saved === section.value,
                 ),
-                'parent-selected': isSectionParentHovered(section.value),
+                'child-of-hovered-parent': isSectionParentHovered(section.value),
+                'child-of-dragged-parent': isSectionParentDragged(section.value),
+                'with-hidden-move-controls':
+                    sections_being_dragged.length > 0 ||
+                    sections_being_saved.length > 0 ||
+                    just_saved_sections.length > 0,
             }"
         >
             <span
@@ -44,8 +50,8 @@
                 data-test="dragndrop-grip"
                 v-if="is_reorder_allowed"
                 v-bind:class="{ 'dragndrop-grip-when-sections-loading': is_loading_sections }"
-                v-on:mouseover="section_being_hovered = section.value"
-                v-on:mouseout="section_being_hovered = null"
+                v-on:mouseover="setSectionBeingHovered(section)"
+                v-on:mouseout="clearSectionBeingHovered()"
             >
                 <dragndrop-grip-illustration />
             </span>
@@ -74,8 +80,10 @@
                 v-if="is_reorder_allowed"
                 v-bind:class="{ 'reorder-arrows-when-sections-loading': is_loading_sections }"
                 data-not-drag-handle="true"
-                v-on:mouseover="section_being_hovered = section.value"
-                v-on:mouseout="section_being_hovered = null"
+                v-on:mouseover="setSectionBeingHovered(section)"
+                v-on:mouseout="clearSectionBeingHovered()"
+                v-on:focusin="setSectionBeingHovered(section)"
+                v-on:focusout="clearSectionBeingHovered()"
             >
                 <reorder-arrows
                     v-bind:is_first="index === 0"
@@ -84,7 +92,7 @@
                     v-bind:sections_reorderer="sections_reorderer"
                     v-bind:sections_structurer="sections_structurer"
                     v-on:moved-section-up-or-down="showJustSavedTemporaryFeedback"
-                    v-on:moving-section-up-or-down="showSectionBeingMovedTemporaryFeedback"
+                    v-on:moving-section-up-or-down="showSectionBeingSavedTemporaryFeedback"
                     v-on:moved-section-up-or-down-fault="handleReorderingFault"
                 />
             </span>
@@ -105,7 +113,6 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import { init } from "@tuleap/drag-and-drop";
 import type { Drekkenov, SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
-import { noop } from "@/helpers/noop";
 import type {
     InternalArtidocSectionId,
     ReactiveStoredArtidocSection,
@@ -118,6 +125,7 @@ import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-co
 import { isCannotReorderSectionsFault } from "@/sections/reorder/CannotReorderSectionsFault";
 import { buildSectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 import { getSectionsStructurer } from "@/sections/reorder/SectionsStructurer";
+import type { DragCallbackParameter } from "@tuleap/drag-and-drop/src";
 
 const { $gettext } = useGettext();
 
@@ -137,9 +145,34 @@ const list = ref<HTMLElement>();
 
 let drek: Drekkenov | undefined = undefined;
 
-const just_moved_sections: Ref<InternalArtidocSectionId[]> = ref([]);
-const sections_being_moved: Ref<InternalArtidocSectionId[]> = ref([]);
+const just_saved_sections: Ref<InternalArtidocSectionId[]> = ref([]);
+const sections_being_saved: Ref<InternalArtidocSectionId[]> = ref([]);
 const section_being_hovered: Ref<null | InternalArtidocSectionId> = ref(null);
+const sections_being_dragged: Ref<InternalArtidocSectionId[]> = ref([]);
+
+const setSectionBeingHovered = (section: ReactiveStoredArtidocSection): void => {
+    if (sections_being_dragged.value.length > 0) {
+        // We do not want to highlight anything since a drag and drop is already in progress
+        return;
+    }
+
+    section_being_hovered.value = section.value;
+};
+
+const clearSectionBeingHovered = (): void => {
+    section_being_hovered.value = null;
+};
+
+const isSectionParentDragged = (section: InternalArtidocSectionId): boolean => {
+    if (sections_being_dragged.value.length <= 1) {
+        // Do nothing, no children is being dragged
+        return false;
+    }
+
+    return sections_being_dragged.value.some((child) => {
+        return child === section;
+    });
+};
 
 const isLastSectionOrBlock = (
     section: InternalArtidocSectionId,
@@ -159,27 +192,27 @@ const isSectionParentHovered = (section: InternalArtidocSectionId): boolean => {
         section_being_hovered.value,
     );
     return children_of_current_hovered_section.some((section_child) => {
-        return section_child.value === section;
+        return section_child.value.internal_id === section.internal_id;
     });
 };
 
 const showJustSavedTemporaryFeedback = (moved_sections: InternalArtidocSectionId[]): void => {
-    just_moved_sections.value = moved_sections;
-    sections_being_moved.value = [];
+    just_saved_sections.value = moved_sections;
+    sections_being_saved.value = [];
 
     setTimeout(() => {
-        just_moved_sections.value = [];
+        just_saved_sections.value = [];
     }, TEMPORARY_FLAG_DURATION_IN_MS);
 };
 
-const showSectionBeingMovedTemporaryFeedback = (
+const showSectionBeingSavedTemporaryFeedback = (
     moved_sections: InternalArtidocSectionId[],
 ): void => {
-    sections_being_moved.value = moved_sections;
+    sections_being_saved.value = moved_sections;
 };
 
 const handleReorderingFault = (fault: Fault): void => {
-    sections_being_moved.value = [];
+    sections_being_saved.value = [];
 
     const details = isCannotReorderSectionsFault(fault)
         ? $gettext("An error occurred")
@@ -207,6 +240,22 @@ onMounted(() => {
             Boolean(handle.closest("[data-not-drag-handle]")),
         isConsideredInDropzone: (child: Element) => child.hasAttribute("draggable"),
         doesDropzoneAcceptDraggable: () => true,
+        onDragStart: (context: DragCallbackParameter): void => {
+            if (context.dragged_element.dataset.internalId === undefined) {
+                return;
+            }
+
+            const dragged_section = {
+                internal_id: context.dragged_element.dataset.internalId,
+            };
+
+            sections_being_dragged.value = [
+                dragged_section,
+                ...sections_structurer
+                    .getSectionChildren(dragged_section)
+                    .map((child) => child.value),
+            ];
+        },
         onDrop: (context: SuccessfulDropCallbackParameter): void => {
             if (context.dropped_element.dataset.internalId === undefined) {
                 return;
@@ -221,7 +270,7 @@ onMounted(() => {
                 .map((child) => child.value);
             const moved_sections = [moved_section, ...children_of_moved_section];
 
-            showSectionBeingMovedTemporaryFeedback(moved_sections);
+            showSectionBeingSavedTemporaryFeedback(moved_sections);
 
             if (context.next_sibling === null) {
                 sections_reorderer.moveSectionAtTheEnd(document_id, moved_section).match(() => {
@@ -243,7 +292,9 @@ onMounted(() => {
                 showJustSavedTemporaryFeedback(moved_sections);
             }, handleReorderingFault);
         },
-        cleanupAfterDragCallback: noop,
+        cleanupAfterDragCallback: () => {
+            sections_being_dragged.value = [];
+        },
     });
 });
 
@@ -325,22 +376,36 @@ li {
     }
 }
 
-.parent-selected {
+.child-of-hovered-parent {
     transition: background ease-in-out 250ms;
     background: var(--tlp-main-color-lighter-90);
 }
 
-.section-moved-with-success {
+.child-of-dragged-parent {
+    display: none;
+}
+
+.with-hidden-move-controls {
+    .dragndrop-grip {
+        visibility: hidden;
+    }
+
+    .reorder-arrows {
+        opacity: 0;
+    }
+}
+
+.section-saved-with-success {
     animation: pulse-section 500ms ease-in-out;
     background-color: var(--tlp-success-color-lighter-90);
 }
 
-.section-being-moved {
+.section-being-saved {
     animation: blink-toc-item 1200ms ease-in-out alternate infinite;
 }
 
-.section-moved-with-success,
-.section-being-moved,
+.section-saved-with-success,
+.section-being-saved,
 li[draggable="false"] {
     > .reorder-arrows,
     > .dragndrop-grip {
@@ -354,7 +419,8 @@ li[draggable="false"] {
 
     > .dragndrop-grip,
     > .table-of-content-section-title,
-    > .reorder-arrows {
+    > .reorder-arrows,
+    > .toc-display-level {
         visibility: hidden;
     }
 }
