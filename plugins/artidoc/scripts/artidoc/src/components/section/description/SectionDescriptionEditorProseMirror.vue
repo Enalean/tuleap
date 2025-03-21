@@ -185,4 +185,9 @@ artidoc-section-title {
 artidoc-section-description {
     display: block;
 }
+
+.artidoc-section-container:has(.document-section-is-just-refreshed) .editor,
+.artidoc-section-container:has(.document-section-is-just-saved) .editor {
+    background: transparent;
+}
 </style>
