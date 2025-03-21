@@ -31,7 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporter;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\Test\Builders\ArtifactImportedMappingBuilder;
@@ -44,7 +44,7 @@ use Tuleap\Tracker\Tracker\XML\Updater\UpdateMoveChangesetXMLDuckTyping;
 final class MegaMoverArtifactByDuckTypingTest extends TestCase
 {
     private ArtifactsDeletionManager&\PHPUnit\Framework\MockObject\MockObject $artifacts_deletion_manager;
-    private Tracker_XML_Exporter_ArtifactXMLExporter&\PHPUnit\Framework\MockObject\MockObject $xml_exporter;
+    private ArtifactXMLExporter&\PHPUnit\Framework\MockObject\MockObject $xml_exporter;
     private UpdateMoveChangesetXMLDuckTyping $xml_updater;
     private Tracker_Artifact_PriorityManager&\PHPUnit\Framework\MockObject\MockObject $artifact_priority_manager;
     private Tracker_Artifact_XMLImport&\PHPUnit\Framework\MockObject\MockObject $xml_import;
@@ -59,7 +59,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
     protected function setUp(): void
     {
         $this->artifacts_deletion_manager = $this->createMock(ArtifactsDeletionManager::class);
-        $this->xml_exporter               = $this->createMock(Tracker_XML_Exporter_ArtifactXMLExporter::class);
+        $this->xml_exporter               = $this->createMock(ArtifactXMLExporter::class);
         $this->xml_updater                = UpdateMoveChangesetXMLDuckTypingStub::build();
         $this->artifact_priority_manager  = $this->createMock(Tracker_Artifact_PriorityManager::class);
         $transaction_executor             = new DBTransactionExecutorPassthrough();

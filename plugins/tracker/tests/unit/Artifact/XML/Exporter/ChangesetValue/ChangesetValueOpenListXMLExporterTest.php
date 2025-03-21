@@ -41,9 +41,9 @@ use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $exporter;
+    private ChangesetValueOpenListXMLExporter $exporter;
 
     private SimpleXMLElement $changeset_xml;
 
@@ -68,7 +68,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
         $user_manager->method('getUserById')->with(112)->willReturn($user);
         $user_xml_exporter = new UserXMLExporter($user_manager, new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory()));
 
-        $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter($user_xml_exporter);
+        $this->exporter = new ChangesetValueOpenListXMLExporter($user_xml_exporter);
     }
 
     private function setUpUserTests(): void

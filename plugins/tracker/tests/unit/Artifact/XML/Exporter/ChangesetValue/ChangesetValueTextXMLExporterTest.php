@@ -24,41 +24,49 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue;
 
 use SimpleXMLElement;
-use Tracker_Artifact_ChangesetValue_Integer;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use XML_SimpleXMLCDATAFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ChangesetValueTextXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $exporter;
+    private ChangesetValueTextXMLExporter $exporter;
 
     private SimpleXMLElement $changeset_xml;
 
     private SimpleXMLElement $artifact_xml;
 
-    private Tracker_Artifact_ChangesetValue_Integer $changeset_value;
+    private Tracker_Artifact_ChangesetValue_Text $changeset_value;
 
     private Tracker_FormElement_Field $field;
 
     protected function setUp(): void
     {
-        $this->field         = IntFieldBuilder::anIntField(1001)->withName('story_points')->build();
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter();
+        $this->field    = TextFieldBuilder::aTextField(1001)->withName('textarea')->build();
+        $this->exporter = new ChangesetValueTextXMLExporter(
+            new FieldChangeTextBuilder(
+                new XML_SimpleXMLCDATAFactory()
+            )
+        );
+
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $this->changeset_value = ChangesetValueIntegerTestBuilder::aValue(
-            101,
-            ChangesetTestBuilder::aChangeset(101)->build(),
-            $this->field
-        )->withValue(123)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(102)->build();
+
+        $this->changeset_value = ChangesetValueTextTestBuilder::aValue(101, $changeset, $this->field)
+            ->withValue('<p>test</p>')
+            ->withFormat(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+            ->build();
     }
 
-    public function testItCreatesFieldChangeNodeInChangesetNode(): void
+    public function testItCreatesTextNodeWithHTMLFormattedText(): void
     {
         $this->exporter->export(
             $this->artifact_xml,
@@ -68,8 +76,11 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter
         );
 
         $field_change = $this->changeset_xml->field_change;
-        $this->assertEquals('int', (string) $field_change['type']);
-        $this->assertEquals($this->field->getName(), (string) $field_change['field_name']);
-        $this->assertEquals(123, (int) $field_change->value);
+
+        $this->assertEquals('textarea', (string) $field_change['field_name']);
+        $this->assertEquals('text', (string) $field_change['type']);
+
+        $this->assertEquals('<p>test</p>', (string) $field_change->value);
+        $this->assertEquals('html', (string) $field_change->value['format']);
     }
 }

@@ -34,11 +34,11 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FileInfoXMLExporter&MockObject $file_exporter;
 
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter $exporter;
+    private ChangesetValueFileXMLExporter $exporter;
 
     private SimpleXMLElement $artifact_xml;
 
@@ -53,7 +53,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->file_exporter = $this->createMock(FileInfoXMLExporter::class);
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
+        $this->exporter      = new ChangesetValueFileXMLExporter(
             $this->file_exporter
         );
 

@@ -28,7 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueDateXMLExporter extends ChangesetValueXMLExporter
 {
     /**
      * @var FieldChangeDateBuilder

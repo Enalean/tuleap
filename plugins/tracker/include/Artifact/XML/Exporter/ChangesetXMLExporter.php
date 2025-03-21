@@ -24,13 +24,12 @@ use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use UserXMLExporter;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ChangesetXMLExporter
+class ChangesetXMLExporter
 {
     public const PREFIX = 'CHANGESET_';
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValuesXMLExporter
+     * @var ChangesetValuesXMLExporter
      */
     private $values_exporter;
 
@@ -38,7 +37,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
     private $user_xml_exporter;
 
     public function __construct(
-        Tracker_XML_Exporter_ChangesetValuesXMLExporter $values_exporter,
+        ChangesetValuesXMLExporter $values_exporter,
         UserXMLExporter $user_xml_exporter,
     ) {
         $this->values_exporter   = $values_exporter;

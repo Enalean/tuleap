@@ -25,8 +25,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ArtifactAttachmentExporter
+class ArtifactAttachmentExporter
 {
     public const FILE_PREFIX = 'Artifact';
 

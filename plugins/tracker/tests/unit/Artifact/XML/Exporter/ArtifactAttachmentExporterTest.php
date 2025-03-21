@@ -74,7 +74,7 @@ final class ArtifactAttachmentExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $form_element_factory->method('getUsedFileFields')->with($tracker)->willReturn([$file_field]);
 
-        $exporter = new Tracker_XML_Exporter_ArtifactAttachmentExporter($form_element_factory);
+        $exporter = new ArtifactAttachmentExporter($form_element_factory);
 
         $exporter->exportAttachmentsInArchive($artifact, $this->archive);
 

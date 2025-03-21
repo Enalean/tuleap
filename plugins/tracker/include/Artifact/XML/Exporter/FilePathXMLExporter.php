@@ -25,7 +25,7 @@ use Tracker_FileInfo;
 /**
  * I give a suitable file path for xml export
  */
-interface Tracker_XML_Exporter_FilePathXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+interface FilePathXMLExporter
 {
     /**
      *

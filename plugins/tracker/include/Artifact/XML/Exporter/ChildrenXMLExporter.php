@@ -25,8 +25,7 @@ use Tracker_ArtifactFactory;
 use Tracker_XML_ChildrenCollector;
 use Tracker_XML_Updater_TemporaryFileXMLUpdater;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ChildrenXMLExporter
+class ChildrenXMLExporter
 {
     /**
      * @var Tracker_XML_ChildrenCollector
@@ -39,7 +38,7 @@ class Tracker_XML_Exporter_ChildrenXMLExporter
     private $artifact_factory;
 
     /**
-     * @var Tracker_XML_Exporter_ArtifactXMLExporter
+     * @var ArtifactXMLExporter
      */
     private $artifact_xml_updater;
 
@@ -49,7 +48,7 @@ class Tracker_XML_Exporter_ChildrenXMLExporter
     private $file_xml_updater;
 
     public function __construct(
-        Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_updater,
+        ArtifactXMLExporter $artifact_xml_updater,
         Tracker_XML_Updater_TemporaryFileXMLUpdater $file_xml_updater,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_XML_ChildrenCollector $children_collector,

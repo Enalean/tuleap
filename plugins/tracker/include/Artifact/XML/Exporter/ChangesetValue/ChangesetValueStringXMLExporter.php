@@ -26,7 +26,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueStringXMLExporter extends ChangesetValueTextXMLExporter
 {
     /**
      * @var FieldChangeStringBuilder

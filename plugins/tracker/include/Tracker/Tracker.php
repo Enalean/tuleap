@@ -78,11 +78,11 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChildrenXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_FilePathXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_NullChildrenCollector;
+use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporterBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChildrenXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\FilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\LocalAbsoluteFilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
 use Tuleap\Tracker\Artifact\XML\Exporter\TrackerStructureXMLExporter;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
@@ -858,7 +858,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $artifact_factory          = $this->getTrackerArtifactFactory();
                 $file_xml_updater          = $this->getFileXMLUpdater();
                 $export_children_collector = $this->getChildrenCollector($request);
-                $file_path_xml_exporter    = new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter();
+                $file_path_xml_exporter    = new LocalAbsoluteFilePathXMLExporter();
                 $artifact_xml_exporter     = $this->getArtifactXMLExporter(
                     $export_children_collector,
                     $file_path_xml_exporter,
@@ -872,7 +872,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                     $xml_importer,
                     $this->getChangesetXMLUpdater(),
                     $file_xml_updater,
-                    new Tracker_XML_Exporter_ChildrenXMLExporter(
+                    new ChildrenXMLExporter(
                         $artifact_xml_exporter,
                         $file_xml_updater,
                         $artifact_factory,
@@ -3253,15 +3253,15 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
             return new Tracker_XML_ChildrenCollector();
         }
 
-        return new Tracker_XML_Exporter_NullChildrenCollector();
+        return new NullChildrenCollector();
     }
 
     private function getArtifactXMLExporter(
         Tracker_XML_ChildrenCollector $children_collector,
-        Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
+        FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user,
     ) {
-        $builder               = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+        $builder               = new ArtifactXMLExporterBuilder();
         $user_xml_exporter     = $this->getUserXMLExporter();
         $is_in_archive_context = false;
 

@@ -28,7 +28,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $exporter;
+    private ChangesetValuePermissionsOnArtifactXMLExporter $exporter;
 
     private SimpleXMLElement $changeset_xml;
 
@@ -54,7 +54,7 @@ final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\T
             1
         );
 
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter();
+        $this->exporter      = new ChangesetValuePermissionsOnArtifactXMLExporter();
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
     }

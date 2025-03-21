@@ -25,8 +25,8 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChildrenXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChildrenXMLExporter;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -52,7 +52,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private Codendi_Request $request;
 
-    private Tracker_XML_Exporter_ArtifactXMLExporter&MockObject $xml_exporter;
+    private ArtifactXMLExporter&MockObject $xml_exporter;
 
     private int $changeset_id = 101;
 
@@ -78,7 +78,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private Tracker_XML_Updater_TemporaryFileXMLUpdater&MockObject $file_updater;
 
-    private Tracker_XML_Exporter_ChildrenXMLExporter&MockObject $children_xml_exporter;
+    private ChildrenXMLExporter&MockObject $children_xml_exporter;
 
     private Tracker_XML_Importer_ArtifactImportedMapping&MockObject $artifacts_imported_mapping;
 
@@ -106,7 +106,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->new_artifact->setId($this->new_artifact_id);
         $this->layout        = DisplayTrackerLayoutStub::build();
         $this->user          = UserTestBuilder::buildWithDefaults();
-        $this->xml_exporter  = $this->createMock(Tracker_XML_Exporter_ArtifactXMLExporter::class);
+        $this->xml_exporter  = $this->createMock(ArtifactXMLExporter::class);
         $this->xml_importer  = $this->createMock(Tracker_Artifact_XMLImport::class);
         $this->xml_updater   = $this->createMock(Tracker_XML_Updater_ChangesetXMLUpdater::class);
         $this->file_updater  = $this->createMock(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
@@ -116,7 +116,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->from_changeset = ChangesetTestBuilder::aChangeset($this->changeset_id)->ofArtifact($this->from_artifact)->build();
         $this->from_artifact->setChangesets([$this->changeset_id => $this->from_changeset]);
         $this->from_artifact->method('getChangesetFactory')->willReturn($changeset_factory);
-        $this->children_xml_exporter      = $this->createMock(Tracker_XML_Exporter_ChildrenXMLExporter::class);
+        $this->children_xml_exporter      = $this->createMock(ChildrenXMLExporter::class);
         $this->artifacts_imported_mapping = $this->createMock(Tracker_XML_Importer_ArtifactImportedMapping::class);
 
         $this->children_xml_exporter->method('exportChildren');

@@ -22,8 +22,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
 use Tracker_FileInfo;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter implements Tracker_XML_Exporter_FilePathXMLExporter
+class LocalAbsoluteFilePathXMLExporter implements FilePathXMLExporter
 {
     /**
      *

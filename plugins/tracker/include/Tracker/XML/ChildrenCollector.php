@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_TooManyChildrenException;
+use Tuleap\Tracker\Artifact\XML\Exporter\TooManyChildrenException;
 
 class Tracker_XML_ChildrenCollector
 {
@@ -41,7 +41,7 @@ class Tracker_XML_ChildrenCollector
     public function addChild($artifact_id, $parent_id)
     {
         if (count($this->children_stack) >= self::MAX) {
-            throw new Tracker_XML_Exporter_TooManyChildrenException();
+            throw new TooManyChildrenException();
         }
 
         $this->stackChild($artifact_id);

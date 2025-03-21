@@ -23,8 +23,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 use Tracker_FileInfo;
 use Tuleap;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_InArchiveFilePathXMLExporter implements Tracker_XML_Exporter_FilePathXMLExporter
+class InArchiveFilePathXMLExporter implements FilePathXMLExporter
 {
     /**
      *
@@ -34,7 +33,7 @@ class Tracker_XML_Exporter_InArchiveFilePathXMLExporter implements Tracker_XML_E
     {
         return Tuleap\Project\XML\ArchiveInterface::DATA_DIR .
             DIRECTORY_SEPARATOR .
-            Tracker_XML_Exporter_ArtifactAttachmentExporter::FILE_PREFIX .
+            ArtifactAttachmentExporter::FILE_PREFIX .
             $file_info->getId();
     }
 }

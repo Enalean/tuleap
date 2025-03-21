@@ -25,8 +25,7 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_Computed;
 use Tuleap\Tracker\Artifact\Artifact;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ChangesetValuesXMLExporter
+class ChangesetValuesXMLExporter
 {
     public const ARTIFACT_XML_KEY  = 'artifact_xml';
     public const CHANGESET_XML_KEY = 'changeset_xml';
@@ -36,7 +35,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
     public const EXPORT_CHANGES    = false;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor
+     * @var ChangesetValueXMLExporterVisitor
      */
     private $visitor;
 
@@ -46,7 +45,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
     private $is_in_archive_context;
 
     public function __construct(
-        Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor $visitor,
+        ChangesetValueXMLExporterVisitor $visitor,
         $is_in_archive_context,
     ) {
         $this->visitor               = $visitor;

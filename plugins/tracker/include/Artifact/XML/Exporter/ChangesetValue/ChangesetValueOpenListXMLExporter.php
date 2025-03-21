@@ -26,7 +26,7 @@ use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserXMLExporter;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
 {
     /**
      * @var UserXMLExporter

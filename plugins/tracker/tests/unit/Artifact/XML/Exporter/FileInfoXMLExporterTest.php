@@ -36,7 +36,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact = ArtifactTestBuilder::anArtifact(123)->build();
 
-        $path_exporter = $this->createMock(Tracker_XML_Exporter_FilePathXMLExporter::class);
+        $path_exporter = $this->createMock(FilePathXMLExporter::class);
         $exporter      = new FileInfoXMLExporter($path_exporter);
 
         $exporter->export($artifact_xml, $artifact);
@@ -52,7 +52,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $another_artifact = ArtifactTestBuilder::anArtifact(124)->build();
         \assert($another_artifact instanceof Artifact);
 
-        $path_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
+        $path_exporter = new InArchiveFilePathXMLExporter();
         $exporter      = new FileInfoXMLExporter($path_exporter);
 
         $exporter->add(

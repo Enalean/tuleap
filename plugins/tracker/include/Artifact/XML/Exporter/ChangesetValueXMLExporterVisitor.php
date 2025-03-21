@@ -37,74 +37,73 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ExternalExporterCollector;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueArtifactLinkXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueDateXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFileXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFloatXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueIntegerXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueListXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueOpenListXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValuePermissionsOnArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueStringXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueTextXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueUnknownXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueXMLExporter;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
+class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
 {
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter
+     * @var ChangesetValueArtifactLinkXMLExporter
      */
     private $artlink_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter
+     * @var ChangesetValuePermissionsOnArtifactXMLExporter
      */
     private $perms_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter
+     * @var ChangesetValueUnknownXMLExporter
      */
     private $unknown_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter
+     * @var ChangesetValueTextXMLExporter
      */
     private $text_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter
+     * @var ChangesetValueListXMLExporter
      */
     private $list_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter
+     * @var ChangesetValueOpenListXMLExporter
      */
     private $open_list_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter
+     * @var ChangesetValueStringXMLExporter
      */
     private $string_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter
+     * @var ChangesetValueIntegerXMLExporter
      */
     private $integer_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter
+     * @var ChangesetValueFloatXMLExporter
      */
     private $float_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter
+     * @var ChangesetValueDateXMLExporter
      */
     private $date_exporter;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter
+     * @var ChangesetValueFileXMLExporter
      */
     private $file_exporter;
 
@@ -118,18 +117,18 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
     private $collector;
 
     public function __construct(
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter $date_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter $file_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter $float_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $integer_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter $string_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter $text_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter $list_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $open_list_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
+        ChangesetValueDateXMLExporter $date_exporter,
+        ChangesetValueFileXMLExporter $file_exporter,
+        ChangesetValueFloatXMLExporter $float_exporter,
+        ChangesetValueIntegerXMLExporter $integer_exporter,
+        ChangesetValueStringXMLExporter $string_exporter,
+        ChangesetValueTextXMLExporter $text_exporter,
+        ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
+        ChangesetValueListXMLExporter $list_exporter,
+        ChangesetValueOpenListXMLExporter $open_list_exporter,
+        ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
         ChangesetValueComputedXMLExporter $computed_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter,
+        ChangesetValueUnknownXMLExporter $unknown_exporter,
         ExternalExporterCollector $collector,
     ) {
         $this->file_exporter      = $file_exporter;
@@ -154,7 +153,7 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
         Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         $exporter = $changeset_value->accept($this);
-        \assert($exporter instanceof Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter);
+        \assert($exporter instanceof ChangesetValueXMLExporter);
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
     }
 

@@ -20,10 +20,10 @@
 
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_NullChildrenCollector;
+use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporterBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\InArchiveFilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
 
 class Tracker_Artifact_XMLExport
 {
@@ -142,13 +142,13 @@ class Tracker_Artifact_XMLExport
     }
 
     /**
-     * @return Tracker_XML_Exporter_ArtifactXMLExporter
+     * @return ArtifactXMLExporter
      */
     private function getArtifactXMLExporter(PFUser $current_user, $is_in_archive_context)
     {
-        $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
-        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
-        $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
+        $builder                = new ArtifactXMLExporterBuilder();
+        $children_collector     = new NullChildrenCollector();
+        $file_path_xml_exporter = new InArchiveFilePathXMLExporter();
 
         return $builder->build(
             $children_collector,
