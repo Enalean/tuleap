@@ -211,8 +211,8 @@ const { is_in_error, is_outdated } = section_state;
 artidoc-section-description,
 .section-description {
     h1 {
+        margin: 0 0 var(--tlp-medium-spacing);
         font-size: 20px;
-        line-height: 1;
     }
 
     h2 {
