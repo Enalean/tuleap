@@ -55,7 +55,6 @@ describe("QuerySuggestedModal", () => {
 
     it("Shows the modal and then send the query", async () => {
         const wrapper = getWrapper();
-        // FIXME: expect(wrapper.find("[data-test=modal-query-title]").isVisible()).toBe(false);
         emitter.emit(DISPLAY_QUERY_PREVIEW_EVENT, { query });
         await vi.runOnlyPendingTimersAsync();
 
@@ -78,7 +77,6 @@ describe("QuerySuggestedModal", () => {
 
     it("Shows the modal and then do nothing", async () => {
         const wrapper = getWrapper();
-        // FIXME: expect(wrapper.find("[data-test=modal-query-title]").isVisible()).toBe(false);
         emitter.emit(DISPLAY_QUERY_PREVIEW_EVENT, { query });
         await vi.runOnlyPendingTimersAsync();
 

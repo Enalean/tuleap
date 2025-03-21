@@ -36,26 +36,27 @@ export const SuggestedQueries = (gettext_provider: VueGettextProvider): Suggeste
             return [
                 {
                     title: gettext_provider.$gettext("All open artifacts"),
-                    description: gettext_provider.$gettext("All open artifacts"),
-                    tql_query: `SELECT @id, @tracker.name, @project.name, @last_update_date, @submitted_by
+                    description: "",
+                    tql_query: `SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
 FROM @project = 'self'
-WHERE @status = OPEN()`,
+WHERE @status = OPEN()
+ORDER BY @last_update_date DESC`,
                 },
                 {
                     title: gettext_provider.$gettext("Open artifacts assigned to me"),
-                    description: gettext_provider.$gettext("Open artifacts assigned to me"),
-                    tql_query: `SELECT @id, @tracker.name, @project.name, @last_update_date, @submitted_by
+                    description: "",
+                    tql_query: `SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
 FROM @project = 'self'
-WHERE @status = OPEN() AND @assigned_to = MYSELF()`,
+WHERE @status = OPEN() AND @assigned_to = MYSELF()
+ORDER BY @last_update_date DESC`,
                 },
                 {
                     title: gettext_provider.$gettext("All artifacts created in the last 10 days"),
-                    description: gettext_provider.$gettext(
-                        "All artifacts created in the last 10 days",
-                    ),
-                    tql_query: `SELECT @id, @tracker.name, @project.name, @last_update_date, @submitted_by
+                    description: "",
+                    tql_query: `SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
 FROM @project = 'self'
-WHERE @submitted_on > NOW() - 10d`,
+WHERE @submitted_on > NOW() - 10d
+ORDER BY @last_update_date DESC`,
                 },
             ];
         },
@@ -65,12 +66,11 @@ WHERE @submitted_on > NOW() - 10d`,
                     title: gettext_provider.$gettext(
                         "Open artifacts assigned to me in my projects",
                     ),
-                    description: gettext_provider.$gettext(
-                        "Open artifacts assigned to me in my projects",
-                    ),
-                    tql_query: `SELECT @id, @tracker.name, @project.name, @last_update_date, @submitted_by
+                    description: "",
+                    tql_query: `SELECT @pretty_title, @tracker.name, @project.name, @last_update_date, @submitted_by
 FROM @project = MY_PROJECTS()
-WHERE @assigned_to = MYSELF()`,
+WHERE @assigned_to = MYSELF() AND @status = OPEN()
+ORDER BY @last_update_date DESC`,
                 },
             ];
         },
