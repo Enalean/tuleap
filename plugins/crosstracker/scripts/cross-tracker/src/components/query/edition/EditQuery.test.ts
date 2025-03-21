@@ -30,12 +30,14 @@ import type {
     Events,
     NotifyFaultEvent,
     NotifySuccessEvent,
+    SwitchQueryEvent,
 } from "../../../helpers/emitter-provider";
 import {
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
     SEARCH_ARTIFACTS_EVENT,
+    SWITCH_QUERY_EVENT,
 } from "../../../helpers/emitter-provider";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import mitt from "mitt";
@@ -53,6 +55,7 @@ describe("EditQuery", () => {
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_success_events: NotifySuccessEvent[];
     let dispatched_search_events: true[];
+    let dispatched_switch_query_events: SwitchQueryEvent[];
     let emitter: EmitterProvider;
     let query: Query;
 
@@ -70,6 +73,7 @@ describe("EditQuery", () => {
         dispatched_fault_events = [];
         dispatched_success_events = [];
         dispatched_search_events = [];
+        dispatched_switch_query_events = [];
         emitter.on(CLEAR_FEEDBACK_EVENT, () => {
             dispatched_clear_feedback_events.push(true);
         });
@@ -81,6 +85,9 @@ describe("EditQuery", () => {
         });
         emitter.on(SEARCH_ARTIFACTS_EVENT, () => {
             dispatched_search_events.push(true);
+        });
+        emitter.on(SWITCH_QUERY_EVENT, (event) => {
+            dispatched_switch_query_events.push(event);
         });
         query = {
             id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
@@ -263,6 +270,8 @@ describe("EditQuery", () => {
             expect(dispatched_fault_events).toHaveLength(0);
             expect(dispatched_clear_feedback_events).toHaveLength(2);
             expect(dispatched_success_events).toHaveLength(1);
+            expect(dispatched_switch_query_events).toHaveLength(1);
+            expect(dispatched_switch_query_events[0].query.title).toBe(title);
             expect(wrapper.emitted()).toHaveProperty("return-to-active-query-pane");
         });
         it("show an error if the save failed", async () => {
@@ -284,6 +293,7 @@ describe("EditQuery", () => {
             expect(dispatched_fault_events).toHaveLength(1);
             expect(dispatched_clear_feedback_events).toHaveLength(2);
             expect(dispatched_success_events).toHaveLength(0);
+            expect(dispatched_switch_query_events).toHaveLength(0);
             expect(wrapper.emitted()).not.toHaveProperty("return-to-active-query-pane");
         });
     });

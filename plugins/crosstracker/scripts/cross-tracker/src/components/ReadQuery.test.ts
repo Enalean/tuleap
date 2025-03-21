@@ -68,8 +68,10 @@ describe("ReadQuery", () => {
     let dispatched_refresh_events: RefreshArtifactsEvent[];
     let emitter: EmitterProvider;
     let is_multiple_query_supported: boolean;
+    let selected_query: Query | undefined;
 
     beforeEach(() => {
+        selected_query = undefined;
         is_user_admin = true;
         dispatched_switch_query_events = [];
         dispatched_clear_feedback_events = [];
@@ -121,6 +123,9 @@ describe("ReadQuery", () => {
                     [EMITTER.valueOf()]: emitter,
                     [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: is_multiple_query_supported,
                 },
+            },
+            props: {
+                selected_query,
             },
         });
     }
@@ -306,6 +311,67 @@ describe("ReadQuery", () => {
             expect(dispatched_switch_query_events.length).toBe(0);
         });
 
+        it("Does emit a SWITCH_QUERY_EVENT with the first query as parameter once done loading", async () => {
+            const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
+            const uuid1 = "0194dfd6-a489-703b-aabd-9d473212d908";
+            const uuid2 = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
+            const queries: ReadonlyArray<Query> = [
+                {
+                    tql_query: query,
+                    title: "TQL query title 1",
+                    description: "",
+                    id: uuid1,
+                    is_default: false,
+                },
+                {
+                    tql_query: query,
+                    title: "TQL query title 2",
+                    description: "",
+                    id: uuid2,
+                    is_default: false,
+                },
+            ];
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync(queries));
+            getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(dispatched_switch_query_events.length).toBe(1);
+            expect(dispatched_switch_query_events[0].query).toStrictEqual(queries[0]);
+        });
+
+        it("Does emit a SWITCH_QUERY_EVENT with the selected query as parameter if it is defined", async () => {
+            const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
+
+            const uuid_previously_selected = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
+            const previously_selected_query = {
+                tql_query: query,
+                title: "Preselected TQL query",
+                description: "",
+                id: uuid_previously_selected,
+                is_default: false,
+            };
+            selected_query = previously_selected_query;
+
+            const uuid_query = "0194dfd6-a489-703b-aabd-9d473212d908";
+            const queries: ReadonlyArray<Query> = [
+                {
+                    tql_query: query,
+                    title: "TQL query title 1",
+                    description: "",
+                    id: uuid_query,
+                    is_default: false,
+                },
+            ];
+            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync(queries));
+            getWrapper();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(dispatched_switch_query_events.length).toBe(1);
+            expect(dispatched_switch_query_events[0].query).toStrictEqual(
+                previously_selected_query,
+            );
+        });
+
         it("Does emit a UPDATE_WIDGET_TITLE_EVENT with the first query as parameter once done loading", async () => {
             const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
             const uuid1 = "0194dfd6-a489-703b-aabd-9d473212d908";
@@ -436,8 +502,8 @@ describe("ReadQuery", () => {
             await vi.runOnlyPendingTimersAsync();
             emitter.emit(QUERY_DELETED_EVENT, { deleted_query: query_1 });
 
-            expect(dispatched_switch_query_events).toHaveLength(1);
-            expect(dispatched_switch_query_events[0]).toStrictEqual({ query: query_2 });
+            expect(dispatched_switch_query_events).toHaveLength(2);
+            expect(dispatched_switch_query_events[1]).toStrictEqual({ query: query_2 });
             expect(dispatched_updated_title_events).toHaveLength(2); // First one is in loadBackendQueries
             expect(dispatched_updated_title_events[1]).toStrictEqual({ new_title: query_2.title });
             expect(dispatched_refresh_events).toHaveLength(1);
@@ -460,7 +526,7 @@ describe("ReadQuery", () => {
 
             expect(wrapper.vm.query_state).toBe("edit-query");
             expect(wrapper.emitted("switch-to-create-query-pane")).toBeDefined();
-            expect(dispatched_switch_query_events).toHaveLength(0);
+            expect(dispatched_switch_query_events).toHaveLength(1);
         });
     });
 });

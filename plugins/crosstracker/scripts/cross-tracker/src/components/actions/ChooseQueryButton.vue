@@ -81,7 +81,6 @@ import {
     CREATE_NEW_QUERY_EVENT,
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
-    UPDATE_WIDGET_TITLE_EVENT,
 } from "../../helpers/emitter-provider";
 
 const dropdown_trigger = ref<HTMLElement>();
@@ -127,7 +126,6 @@ function updateFilter(event: Event): void {
 function updateSelectedQuery(query: Query): void {
     emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
     emitter.emit(SWITCH_QUERY_EVENT, { query });
-    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: query.title });
     resetFilter();
     dropdown?.hide();
 }

@@ -73,7 +73,6 @@ import {
 import { QueryRetrievalFault } from "../domain/QueryRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
 import type {
-    CreatedQueryEvent,
     DeletedQueryEvent,
     SwitchQueryEvent,
     ToggleQueryDetailsEvent,
@@ -87,12 +86,15 @@ import {
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_SUCCESS_EVENT,
     NOTIFY_FAULT_EVENT,
-    NEW_QUERY_CREATED_EVENT,
     SWITCH_QUERY_EVENT,
 } from "../helpers/emitter-provider";
 
 const emit = defineEmits<{
     (e: "switch-to-create-query-pane"): void;
+}>();
+
+const props = defineProps<{
+    selected_query: Query | undefined;
 }>();
 
 const widget_id = strictInject(WIDGET_ID);
@@ -162,10 +164,10 @@ function loadBackendQueries(): void {
                 backend_query.value = widget_queries[0];
                 if (is_multiple_query_supported) {
                     backend_query.value =
-                        widget_queries.find((query) => query.is_default) ?? widget_queries[0];
-                    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, {
-                        new_title: backend_query.value.title,
-                    });
+                        props.selected_query ??
+                        widget_queries.find((query) => query.is_default) ??
+                        widget_queries[0];
+                    emitter.emit(SWITCH_QUERY_EVENT, { query: backend_query.value });
                 }
                 initQueries();
                 has_error.value = false;
@@ -182,25 +184,19 @@ function loadBackendQueries(): void {
 
 onMounted(() => {
     emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
-    emitter.on(NEW_QUERY_CREATED_EVENT, handleAddQuery);
     emitter.on(QUERY_DELETED_EVENT, handleDeleteQuery);
     emitter.on(TOGGLE_QUERY_DETAILS_EVENT, handleToggleQueryDetails);
     loadBackendQueries();
 });
 
 onBeforeUnmount(() => {
-    emitter.off(SWITCH_QUERY_EVENT);
-    emitter.off(NEW_QUERY_CREATED_EVENT);
+    emitter.off(SWITCH_QUERY_EVENT, handleSwitchQuery);
     emitter.off(TOGGLE_QUERY_DETAILS_EVENT);
     emitter.off(QUERY_DELETED_EVENT);
 });
 
 function handleToggleQueryDetails(toggle: ToggleQueryDetailsEvent): void {
     are_query_details_toggled.value = toggle.display_query_details;
-}
-
-function handleAddQuery(new_query: CreatedQueryEvent): void {
-    queries.value = queries.value.concat([new_query.created_query]);
 }
 
 function handleDeleteQuery(event: DeletedQueryEvent): void {
@@ -214,7 +210,6 @@ function handleDeleteQuery(event: DeletedQueryEvent): void {
         const query = queries.value[0];
         emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
         emitter.emit(SWITCH_QUERY_EVENT, { query });
-        emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: query.title });
     }
 }
 
@@ -235,6 +230,7 @@ function handleSwitchQuery(event: SwitchQueryEvent): void {
     backend_query.value = event.query;
     initQueries();
 
+    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: event.query.title });
     emitter.emit(CLEAR_FEEDBACK_EVENT);
 }
 
