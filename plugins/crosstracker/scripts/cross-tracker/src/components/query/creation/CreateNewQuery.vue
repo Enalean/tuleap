@@ -18,11 +18,13 @@
   -->
 
 <template>
-    <section class="tlp-pane-section create-new-query-section">
+    <section class="tlp-pane-section">
         <query-suggested
             v-on:query-chosen="handleChosenQuery"
             v-bind:is_modal_should_be_displayed="is_modal_should_be_displayed"
         />
+    </section>
+    <section class="tlp-pane-section create-new-query-section">
         <div class="create-new-query-title-description-container">
             <title-input v-model:title="title" />
             <description-text-area v-model:description="description" />
