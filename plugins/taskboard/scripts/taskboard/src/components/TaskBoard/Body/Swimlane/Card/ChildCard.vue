@@ -39,28 +39,25 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref } from "vue-property-decorator";
-import { State } from "vuex-class";
+<script setup lang="ts">
+import { ref } from "vue";
 import BaseCard from "./BaseCard.vue";
 import type { Card } from "../../../../../type";
 import EditCardButtons from "./EditMode/EditCardButtons.vue";
+import { useState } from "vuex-composition-helpers";
 
-@Component({
-    components: { EditCardButtons, BaseCard },
-})
-export default class ChildCard extends Vue {
-    @State
-    readonly are_closed_items_displayed!: boolean;
+const { are_closed_items_displayed } = useState(["are_closed_items_displayed"]);
 
-    @Prop({ required: true })
-    readonly card!: Card;
+const childCard = ref<InstanceType<typeof HTMLElement>>();
 
-    @Ref() readonly childCard!: HTMLElement;
+defineProps<{
+    card: Card;
+}>();
 
-    focusCard(): void {
-        this.childCard.focus();
+function focusCard(): void {
+    if (!childCard.value) {
+        return;
     }
+    childCard.value.focus();
 }
 </script>
