@@ -96,7 +96,7 @@ class FileTest extends RestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testDELETEFile(): void
@@ -122,7 +122,7 @@ class FileTest extends RestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testPOSTFile(): void

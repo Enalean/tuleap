@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\FRS;
 
 use Codendi_HTMLPurifier;
+use FRSPackageFactory;
 use FRSReleaseFactory;
 use HTTPRequest;
 use PermissionsManager;
@@ -53,60 +54,38 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
 
-class ReleaseNotesController implements DispatchableWithRequest, DispatchableWithBurningParrot
+readonly class ReleaseNotesController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /** @var FRSReleaseFactory */
-    private $release_factory;
-    /** @var LicenseAgreementFactory */
-    private $license_agreement_factory;
-    /** @var ReleasePermissionsForGroupsBuilder */
-    private $permissions_for_groups_builder;
-    /** @var Retriever */
-    private $link_retriever;
-    /** @var UploadedLinksRetriever */
-    private $uploaded_links_retriever;
-    /** @var FRSPermissionManager */
-    private $permission_manager;
-    /** @var TemplateRenderer */
-    private $renderer;
-    /** @var IncludeAssets */
-    private $assets;
-
     public function __construct(
-        FRSReleaseFactory $release_factory,
-        LicenseAgreementFactory $license_agreement_factory,
-        ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder,
-        Retriever $link_retriever,
-        UploadedLinksRetriever $uploaded_links_retriever,
-        FRSPermissionManager $permission_manager,
+        private FRSReleaseFactory $release_factory,
+        private LicenseAgreementFactory $license_agreement_factory,
+        private ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder,
+        private Retriever $link_retriever,
+        private UploadedLinksRetriever $uploaded_links_retriever,
+        private PackagePermissionManager $package_permission_manager,
+        private FRSPermissionManager $permission_manager,
         private ContentInterpretor $interpreter,
-        TemplateRenderer $renderer,
-        IncludeAssets $assets,
-        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+        private TemplateRenderer $renderer,
+        private IncludeAssets $assets,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
-        $this->release_factory                = $release_factory;
-        $this->license_agreement_factory      = $license_agreement_factory;
-        $this->permissions_for_groups_builder = $permissions_for_groups_builder;
-        $this->link_retriever                 = $link_retriever;
-        $this->uploaded_links_retriever       = $uploaded_links_retriever;
-        $this->permission_manager             = $permission_manager;
-        $this->renderer                       = $renderer;
-        $this->assets                         = $assets;
     }
 
     public static function buildSelf(): self
     {
+        $frs_permission_manager = FRSPermissionManager::build();
         return new self(
             new FRSReleaseFactory(),
             new LicenseAgreementFactory(new LicenseAgreementDao()),
             new ReleasePermissionsForGroupsBuilder(
-                FRSPermissionManager::build(),
+                $frs_permission_manager,
                 PermissionsManager::instance(),
                 new UGroupManager()
             ),
             new Retriever(new Dao()),
             new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance()),
-            FRSPermissionManager::build(),
+            new PackagePermissionManager(FRSPackageFactory::instance()),
+            $frs_permission_manager,
             CommonMarkInterpreter::build(
                 Codendi_HTMLPurifier::instance()
             ),
@@ -122,13 +101,19 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
     /**
      * @inheritDoc
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $release = $this->release_factory->getFRSReleaseFromDb($variables['release_id']);
-        if ($release === null) {
+        $package = $release?->getPackage();
+
+        $user = $request->getCurrentUser();
+
+        if (
+            $release === null || $package === null ||
+            ! $this->package_permission_manager->canUserSeePackage($user, $package, $release->getProject())
+        ) {
             throw new NotFoundException(dgettext('tuleap-frs', 'Release not found.'));
         }
-        $user = $request->getCurrentUser();
 
         $representation = new ReleaseRepresentation(
             $release,

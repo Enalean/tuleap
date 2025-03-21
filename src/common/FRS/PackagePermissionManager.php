@@ -25,27 +25,15 @@ use FRSPackageFactory;
 use PFUser;
 use Project;
 
-class PackagePermissionManager
+readonly class PackagePermissionManager
 {
-    /**
-     * @var FRSPermissionManager
-     */
-    private $frs_service_permission_manager;
-
-    /**
-     * @var FRSPackageFactory
-     */
-    private $package_factory;
-
-    public function __construct(FRSPermissionManager $permission_manager, FRSPackageFactory $package_factory)
+    public function __construct(private FRSPackageFactory $package_factory)
     {
-        $this->frs_service_permission_manager = $permission_manager;
-        $this->package_factory                = $package_factory;
     }
 
-    public function canUserSeePackage(PFUser $user, FRSPackage $package, Project $project)
+    public function canUserSeePackage(PFUser $user, FRSPackage $package, Project $project): bool
     {
-        if ($package->isActive() && $this->frs_service_permission_manager->userCanRead($project, $user)) {
+        if ($package->isActive() && $this->package_factory->userCanRead($project->getID(), $package->getPackageID(), $user->getId())) {
             return true;
         } elseif ($package->isHidden() && $this->package_factory->userCanAdmin($user, $project->getID())) {
             return true;

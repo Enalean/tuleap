@@ -25,11 +25,13 @@ namespace TuleapCodingStandard\Tuleap\FRS;
 use FRSRelease;
 use FRSReleaseFactory;
 use HTTPRequest;
+use PHPUnit\Framework\MockObject\Stub;
 use TemplateRenderer;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\ReleaseNotesController;
 use Tuleap\FRS\ReleasePresenter;
 use Tuleap\FRS\REST\v1\ReleasePermissionsForGroupsBuilder;
@@ -82,6 +84,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var IncludeAssets&\PHPUnit\Framework\MockObject\MockObject
      */
     private $script_assets;
+    private PackagePermissionManager&Stub $package_permission_manager;
 
     protected function setUp(): void
     {
@@ -91,6 +94,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->link_retriever                 = $this->createMock(Retriever::class);
         $this->uploaded_links_retriever       = $this->createMock(UploadedLinksRetriever::class);
         $this->permission_manager             = $this->createMock(FRSPermissionManager::class);
+        $this->package_permission_manager     = $this->createStub(PackagePermissionManager::class);
         $this->renderer                       = $this->createMock(TemplateRenderer::class);
         $this->script_assets                  = $this->createMock(IncludeAssets::class);
         $content_interpreter                  = new class implements ContentInterpretor {
@@ -116,6 +120,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->permissions_for_groups_builder,
             $this->link_retriever,
             $this->uploaded_links_retriever,
+            $this->package_permission_manager,
             $this->permission_manager,
             $content_interpreter,
             $this->renderer,
@@ -130,10 +135,31 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $variables = ['release_id' => 124];
         $layout    = $this->createMock(BaseLayout::class);
         $request   = $this->createMock(HTTPRequest::class);
+        $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
         $this->release_factory->expects(self::once())
             ->method('getFRSReleaseFromDb')
             ->with(124)
             ->willReturn(null);
+
+        $this->expectException(NotFoundException::class);
+        $this->release_notes_controller->process($request, $layout, $variables);
+    }
+
+    public function testProcessThrowsNotFoundWhenReleaseCantBeRead(): void
+    {
+        $variables = ['release_id' => 124];
+        $layout    = $this->createMock(BaseLayout::class);
+        $request   = $this->createMock(HTTPRequest::class);
+        $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
+        $release = $this->createStub(FRSRelease::class);
+        $release->method('getPackage')->willReturn($this->createStub(\FRSPackage::class));
+        $release->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->release_factory->expects(self::once())
+            ->method('getFRSReleaseFromDb')
+            ->with(124)
+            ->willReturn($release);
+
+        $this->package_permission_manager->method('canUserSeePackage')->willReturn(false);
 
         $this->expectException(NotFoundException::class);
         $this->release_notes_controller->process($request, $layout, $variables);
@@ -162,6 +188,8 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(FRSRelease::STATUS_ACTIVE);
         $release->method('getFiles')->willReturn([]);
         $release->method('getName')->willReturn('release01');
+
+        $this->package_permission_manager->method('canUserSeePackage')->willReturn(true);
 
         $this->release_factory->expects(self::once())
             ->method('getFRSReleaseFromDb')
