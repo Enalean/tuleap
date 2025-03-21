@@ -52,6 +52,8 @@ use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
@@ -61,6 +63,7 @@ use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
@@ -134,10 +137,7 @@ class ActionsRunner
         );
         $frozen_fields_detector         = new FrozenFieldDetector(
             $transition_retriever,
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                Tracker_FormElementFactory::instance()
-            )
+            new FrozenFieldsRetriever(new FrozenFieldsDao(), $form_element_factory)
         );
         $ugroup_manager                 = new UGroupManager();
         $permissions_functions_wrapper  = new PermissionsFunctionsWrapper();
@@ -195,7 +195,13 @@ class ActionsRunner
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
                         ),
-                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                        new PermissionChecker(
+                            new CachingTrackerPrivateCommentInformationRetriever(
+                                new TrackerPrivateCommentInformationRetriever(
+                                    new TrackerPrivateCommentUGroupEnabledDao()
+                                )
+                            )
+                        ),
                         new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                     ),
                     new Tracker_REST_TrackerRestBuilder(
@@ -206,10 +212,7 @@ class ActionsRunner
                             new HiddenFieldsetChecker(
                                 new HiddenFieldsetsDetector(
                                     $transition_retriever,
-                                    new HiddenFieldsetsRetriever(
-                                        new HiddenFieldsetsDao(),
-                                        $form_element_factory,
-                                    ),
+                                    new HiddenFieldsetsRetriever(new HiddenFieldsetsDao(), $form_element_factory),
                                     $form_element_factory,
                                 ),
                                 new FieldsExtractor(),
@@ -219,19 +222,16 @@ class ActionsRunner
                                 $frozen_fields_detector,
                                 $permissions_functions_wrapper,
                             ),
-                            new TypePresenterFactory(
-                                new TypeDao(),
-                                new ArtifactLinksUsageDao(),
-                            ),
+                            new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
                         ),
-                        new PermissionsRepresentationBuilder(
-                            $ugroup_manager,
-                            $permissions_functions_wrapper,
-                        ),
+                        new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                         new WorkflowRestBuilder(),
+                        static fn(\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+                        new ParentInHierarchyRetriever(new HierarchyDAO(), \TrackerFactory::instance()),
+                        TrackersPermissionsRetriever::build()
                     ),
                     new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
-                    new UGroupManager(),
+                    $ugroup_manager,
                 ),
             ),
         );

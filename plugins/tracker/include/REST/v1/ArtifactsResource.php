@@ -132,6 +132,8 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
@@ -287,45 +289,36 @@ class ArtifactsResource extends AuthenticatedResource
 
         $frozen_fields_detector = new FrozenFieldDetector(
             $transition_retriever,
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                Tracker_FormElementFactory::instance()
-            )
+            new FrozenFieldsRetriever(new FrozenFieldsDao(), $this->formelement_factory)
         );
 
-        $this->tracker_rest_builder = new \Tracker_REST_TrackerRestBuilder(
+        $ugroup_manager                = new \UGroupManager();
+        $permissions_functions_wrapper = new PermissionsFunctionsWrapper();
+        $this->tracker_rest_builder    = new \Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
             new FormElementRepresentationsBuilder(
                 $this->formelement_factory,
-                new PermissionsExporter(
-                    $frozen_fields_detector
-                ),
+                new PermissionsExporter($frozen_fields_detector),
                 new HiddenFieldsetChecker(
                     new HiddenFieldsetsDetector(
                         $transition_retriever,
-                        new HiddenFieldsetsRetriever(
-                            new HiddenFieldsetsDao(),
-                            Tracker_FormElementFactory::instance()
-                        ),
-                        Tracker_FormElementFactory::instance()
+                        new HiddenFieldsetsRetriever(new HiddenFieldsetsDao(), $this->formelement_factory),
+                        $this->formelement_factory
                     ),
                     new FieldsExtractor()
                 ),
                 new PermissionsForGroupsBuilder(
-                    new \UGroupManager(),
+                    $ugroup_manager,
                     $frozen_fields_detector,
-                    new PermissionsFunctionsWrapper()
+                    $permissions_functions_wrapper
                 ),
-                new TypePresenterFactory(
-                    new TypeDao(),
-                    new ArtifactLinksUsageDao()
-                )
+                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
             ),
-            new PermissionsRepresentationBuilder(
-                new \UGroupManager(),
-                new PermissionsFunctionsWrapper()
-            ),
-            new WorkflowRestBuilder()
+            new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
+            new WorkflowRestBuilder(),
+            static fn(\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+            new ParentInHierarchyRetriever(new HierarchyDAO(), $this->tracker_factory),
+            TrackersPermissionsRetriever::build()
         );
 
         $this->trackers_permissions_retriever = TrackersPermissionsRetriever::build();
