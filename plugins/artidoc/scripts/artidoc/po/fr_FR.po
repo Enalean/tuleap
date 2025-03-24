@@ -198,6 +198,9 @@ msgstr "Ouvrir la barre latérale"
 msgid "Please log in in order to be able to export as PDF"
 msgstr "Veuillez vous connecter afin de pouvoir exporter en PDF"
 
+msgid "Please select a tracker first"
+msgstr "Veuillez sélectionner un tracker au préalable"
+
 msgid "Reload page"
 msgstr "Recharger la page"
 
