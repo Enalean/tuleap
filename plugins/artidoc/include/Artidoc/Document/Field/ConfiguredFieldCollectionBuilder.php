@@ -66,6 +66,12 @@ final readonly class ConfiguredFieldCollectionBuilder
                 continue;
             }
 
+            $tracker              = $field->getTracker();
+            $semantic_title_field = \Tracker_Semantic_Title::load($tracker)->getField();
+            if ($semantic_title_field && $semantic_title_field->getId() === $field->getId()) {
+                continue;
+            }
+
             if (! isset($fields[$field->tracker_id])) {
                 $fields[$field->tracker_id] = [];
             }
