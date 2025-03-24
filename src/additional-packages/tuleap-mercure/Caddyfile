@@ -9,7 +9,9 @@
 log
 route {
 	mercure {
-		transport_url bolt:///var/lib/tuleap-mercure/mercure.db
+	    transport bolt {
+	        path /var/lib/tuleap-mercure/mercure.db
+	    }
 		publisher_jwt {env.MERCURE_KEY}
 		subscriber_jwt {env.MERCURE_KEY}
 		subscriptions
