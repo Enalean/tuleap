@@ -28,23 +28,11 @@ use XML_SimpleXMLCDATAFactory;
 
 class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
 {
-    /**
-     * @var PFUser
-     */
-    private $current_user;
-
-    /**
-     * @var bool
-     */
-    private $is_in_archive_context;
-
-    public function __construct(PFUser $current_user, $is_in_archive_context)
+    public function __construct(private readonly PFUser $current_user, private readonly bool $is_in_archive_context)
     {
-        $this->current_user          = $current_user;
-        $this->is_in_archive_context = $is_in_archive_context;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return 'computed';
     }
@@ -54,7 +42,7 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         if ($this->isCurrentChangesetTheLastChangeset($artifact, $changeset_value)) {
             $this->exportLastChangeset($changeset_xml, $artifact, $changeset_value);
         } else {
@@ -65,7 +53,7 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
     private function isCurrentChangesetTheLastChangeset(
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $current_changeset_value,
-    ) {
+    ): bool {
         $field          = $current_changeset_value->getField();
         $last_changeset = $artifact->getLastChangeset();
 
@@ -86,7 +74,7 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         if ($this->is_in_archive_context) {
             $this->exportLastChangesetInArchiveContext($changeset_xml, $artifact, $changeset_value);
         } else {
@@ -94,13 +82,10 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
         }
     }
 
-    /**
-     * @return SimpleXMLElement
-     */
     private function createFieldChangeTag(
         SimpleXMLElement $changeset_xml,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): SimpleXMLElement {
         return $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
@@ -111,7 +96,7 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $number_of_changeset = count($artifact->getChangesets());
 
         if (
@@ -127,8 +112,8 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
     private function previousChangesetIsNotInManualValue(
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-        $number_of_changeset,
-    ) {
+        int $number_of_changeset,
+    ): bool {
         $previous_changeset = $artifact->getPreviousChangeset((int) $changeset_value->getChangeset()->getId());
 
         if (! $previous_changeset) {
@@ -147,7 +132,7 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
     private function exportInGlobalContext(
         SimpleXMLElement $changeset_xml,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $field_change = $this->createFieldChangeTag($changeset_xml, $changeset_value);
 
         if ($changeset_value->isManualValue()) {
@@ -157,10 +142,7 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
         }
     }
 
-    /**
-     * @return float
-     */
-    private function getLastComputedValue(Artifact $artifact, Tracker_Artifact_ChangesetValue $changeset_value)
+    private function getLastComputedValue(Artifact $artifact, Tracker_Artifact_ChangesetValue $changeset_value): float
     {
         $computed_value = $changeset_value->getField()->getComputedValue(
             $this->current_user,
@@ -174,7 +156,7 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
         return $computed_value;
     }
 
-    private function exportManualValue(\SimpleXMLElement $field_change, $manual_value)
+    private function exportManualValue(\SimpleXMLElement $field_change, $manual_value): void
     {
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
         $cdata_factory->insert($field_change, 'manual_value', $manual_value);

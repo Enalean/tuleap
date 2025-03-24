@@ -31,18 +31,12 @@ use XML_SimpleXMLCDATAFactory;
 class FileInfoXMLExporter
 {
     /**
-     * @var FilePathXMLExporter
-     */
-    private $path_exporter;
-
-    /**
      * @var array<int, array<int, Tracker_FileInfo>>
      */
     private $file_infos_by_artifact_id = [];
 
-    public function __construct(FilePathXMLExporter $path_exporter)
+    public function __construct(private readonly FilePathXMLExporter $path_exporter)
     {
-        $this->path_exporter = $path_exporter;
     }
 
     public function export(SimpleXMLElement $artifact_xml, Artifact $artifact): void
@@ -68,7 +62,7 @@ class FileInfoXMLExporter
     private function appendFileToArtifactNode(
         SimpleXMLElement $artifact_xml,
         Tracker_FileInfo $file_info,
-    ) {
+    ): void {
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
 
         $node = $artifact_xml->addChild('file');
@@ -80,7 +74,7 @@ class FileInfoXMLExporter
         $cdata_factory->insert($node, 'description', $file_info->getDescription());
     }
 
-    private function getFileInfoIdForXML(Tracker_FileInfo $file_info)
+    private function getFileInfoIdForXML(Tracker_FileInfo $file_info): string
     {
         return IdForXMLImportExportConvertor::convertFileInfoIdToXMLId((int) $file_info->getId());
     }

@@ -30,18 +30,12 @@ class GetExternalExporter implements Dispatchable
     public const NAME = 'getExternalExporter';
 
     /**
-     * @var Tracker_Artifact_ChangesetValue
-     */
-    private $changeset_value;
-
-    /**
      * @var ChangesetValueXMLExporter | null
      */
     private $exporter;
 
-    public function __construct(Tracker_Artifact_ChangesetValue $changeset_value)
+    public function __construct(private readonly Tracker_Artifact_ChangesetValue $changeset_value)
     {
-        $this->changeset_value = $changeset_value;
     }
 
     public function getChangesetValue(): Tracker_Artifact_ChangesetValue

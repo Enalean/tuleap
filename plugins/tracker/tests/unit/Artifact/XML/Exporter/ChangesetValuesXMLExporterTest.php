@@ -32,27 +32,20 @@ use Tuleap\Tracker\Artifact\Artifact;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var ChangesetValueXMLExporterVisitor */
-    private $visitor;
+    private ChangesetValueXMLExporterVisitor $visitor;
 
-    /** @var SimpleXMLElement */
-    private $changeset_xml;
+    private SimpleXMLElement $changeset_xml;
 
-    /** @var SimpleXMLElement */
-    private $artifact_xml;
+    private SimpleXMLElement $artifact_xml;
 
-    /** @var Tracker_Artifact_ChangesetValue */
-    private $int_changeset_value;
+    private Tracker_Artifact_ChangesetValue $int_changeset_value;
 
-    /** @var Tracker_Artifact_ChangesetValue */
-    private $float_changeset_value;
+    private Tracker_Artifact_ChangesetValue $float_changeset_value;
 
-    /** @var ChangesetValuesXMLExporter */
-    private $values_exporter;
+    private ChangesetValuesXMLExporter $values_exporter;
 
-    /** @var Artifact */
-    private $artifact;
-    private $values;
+    private Artifact $artifact;
+    private array $values;
 
     protected function setUp(): void
     {

@@ -35,13 +35,10 @@ abstract class ChangesetValueXMLExporter
         Tracker_Artifact_ChangesetValue $changeset_value,
     );
 
-    /**
-     * @return SimpleXMLElement
-     */
     protected function createFieldChangeNodeInChangesetNode(
         Tracker_Artifact_ChangesetValue $changeset_value,
         SimpleXMLElement $changeset_xml,
-    ) {
+    ): SimpleXMLElement {
         $field = $changeset_value->getField();
 
         $field_change = $changeset_xml->addChild('field_change');

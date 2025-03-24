@@ -29,17 +29,11 @@ use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 
 class ChangesetValueFileXMLExporter extends ChangesetValueXMLExporter
 {
-    /**
-     * @var FileInfoXMLExporter
-     */
-    private $file_info_xml_exporter;
-
-    public function __construct(FileInfoXMLExporter $file_info_xml_exporter)
+    public function __construct(private readonly FileInfoXMLExporter $file_info_xml_exporter)
     {
-        $this->file_info_xml_exporter = $file_info_xml_exporter;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return 'file';
     }
@@ -49,7 +43,7 @@ class ChangesetValueFileXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
@@ -66,7 +60,7 @@ class ChangesetValueFileXMLExporter extends ChangesetValueXMLExporter
         array_walk(
             $files,
             function (Tracker_FileInfo $file_info, $index, SimpleXMLElement $field_xml) {
-                $this->appendFileToFieldChangeNode($file_info, $index, $field_xml);
+                $this->appendFileToFieldChangeNode($file_info, $field_xml);
             },
             $field_change
         );
@@ -78,19 +72,18 @@ class ChangesetValueFileXMLExporter extends ChangesetValueXMLExporter
 
     private function appendFileToFieldChangeNode(
         Tracker_FileInfo $file_info,
-        $index,
         SimpleXMLElement $field_xml,
-    ) {
+    ): void {
         $node = $field_xml->addChild('value');
         $node->addAttribute('ref', $this->getFileInfoIdForXML($file_info));
     }
 
-    private function appendEmptyValueToFieldChangeNode(SimpleXMLElement $field_xml)
+    private function appendEmptyValueToFieldChangeNode(SimpleXMLElement $field_xml): void
     {
         $field_xml->addChild('value');
     }
 
-    private function getFileInfoIdForXML(Tracker_FileInfo $file_info)
+    private function getFileInfoIdForXML(Tracker_FileInfo $file_info): string
     {
         return IdForXMLImportExportConvertor::convertFileInfoIdToXMLId((int) $file_info->getId());
     }

@@ -26,12 +26,9 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter\FieldChange;
 use SimpleXMLElement;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FieldChangeFileBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldChangeFileBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var FieldChangeFileBuilder
-     */
-    private $builder;
+    private FieldChangeFileBuilder $builder;
 
     protected function setUp(): void
     {

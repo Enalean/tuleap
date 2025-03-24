@@ -25,21 +25,10 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter\FieldChange;
 /**
  * @psalm-immutable
  */
-final class ArtifactLinkChange
+final readonly class ArtifactLinkChange
 {
-    /**
-     * @var int
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $type;
-
-    public function __construct(int $id, string $type = '')
+    public function __construct(public int $id, public string $type = '')
     {
-        $this->id   = $id;
-        $this->type = $type;
     }
 
     public function hasType(): bool

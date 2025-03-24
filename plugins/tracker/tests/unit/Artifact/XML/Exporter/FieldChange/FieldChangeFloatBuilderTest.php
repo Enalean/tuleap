@@ -27,12 +27,9 @@ use SimpleXMLElement;
 use XML_SimpleXMLCDATAFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FieldChangeFloatBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldChangeFloatBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var FieldChangeFloatBuilder
-     */
-    private $builder;
+    private FieldChangeFloatBuilder $builder;
 
     protected function setUp(): void
     {

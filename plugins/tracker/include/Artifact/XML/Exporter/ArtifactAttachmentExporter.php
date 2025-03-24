@@ -29,17 +29,11 @@ class ArtifactAttachmentExporter
 {
     public const FILE_PREFIX = 'Artifact';
 
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
+    public function __construct(private readonly Tracker_FormElementFactory $form_element_factory)
     {
-        $this->form_element_factory = $form_element_factory;
     }
 
-    public function exportAttachmentsInArchive(Artifact $artifact, ArchiveInterface $archive)
+    public function exportAttachmentsInArchive(Artifact $artifact, ArchiveInterface $archive): void
     {
         $file_fields    = $this->form_element_factory->getUsedFileFields($artifact->getTracker());
         $last_changeset = $artifact->getLastChangeset();
@@ -57,7 +51,7 @@ class ArtifactAttachmentExporter
         }
     }
 
-    private function addFilesIntoArchive(Tracker_Artifact_ChangesetValue_File $value, ArchiveInterface $archive)
+    private function addFilesIntoArchive(Tracker_Artifact_ChangesetValue_File $value, ArchiveInterface $archive): void
     {
         $archive->addEmptyDir(ArchiveInterface::DATA_DIR);
 

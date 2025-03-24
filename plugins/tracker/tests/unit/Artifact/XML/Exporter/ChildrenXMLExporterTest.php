@@ -31,7 +31,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_ChildrenCollector $collector;
 

@@ -53,7 +53,7 @@ class ArtifactXMLExporterBuilder
         FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user,
         UserXMLExporter $user_xml_exporter,
-        $is_in_archive_context,
+        bool $is_in_archive_context,
     ): ArtifactXMLExporter {
         $file_info_xml_exporter = new FileInfoXMLExporter($file_path_xml_exporter);
 

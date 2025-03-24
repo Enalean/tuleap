@@ -59,7 +59,7 @@ final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\T
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
     }
 
-    public function testItCreatesFieldChangeNodeInChangesetNode()
+    public function testItCreatesFieldChangeNodeInChangesetNode(): void
     {
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
         $changeset_value->method('getUgroupNamesFromPerms')->willReturn(['ug01', 'ug02']);
@@ -83,7 +83,7 @@ final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\T
         $this->assertEquals((string) $field_change->ugroup[1]['ugroup_name'], 'ug02');
     }
 
-    public function testItDoesNotAddEmptyUgroupIfASelectedUgroupHAsBeenDeleted()
+    public function testItDoesNotAddEmptyUgroupIfASelectedUgroupHAsBeenDeleted(): void
     {
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
         $changeset_value->method('getUgroupNamesFromPerms')->willReturn(['ug01', null]);

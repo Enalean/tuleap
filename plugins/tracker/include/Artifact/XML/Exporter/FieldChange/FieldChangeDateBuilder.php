@@ -27,16 +27,10 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use XML_SimpleXMLCDATAFactory;
 
-class FieldChangeDateBuilder
+readonly class FieldChangeDateBuilder
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $simple_xml_cdata_factory;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $simple_xml_cdata_factory)
+    public function __construct(private XML_SimpleXMLCDATAFactory $simple_xml_cdata_factory)
     {
-        $this->simple_xml_cdata_factory = $simple_xml_cdata_factory;
     }
 
     public function build(SimpleXMLElement $changeset_xml, string $field_name, DateTimeImmutable $time_value): void

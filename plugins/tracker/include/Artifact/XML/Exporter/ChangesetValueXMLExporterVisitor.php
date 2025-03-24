@@ -50,100 +50,23 @@ use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueTextXMLExp
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueUnknownXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueXMLExporter;
 
-class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
+readonly class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
 {
-    /**
-     * @var ChangesetValueArtifactLinkXMLExporter
-     */
-    private $artlink_exporter;
-
-    /**
-     * @var ChangesetValuePermissionsOnArtifactXMLExporter
-     */
-    private $perms_exporter;
-
-    /**
-     * @var ChangesetValueUnknownXMLExporter
-     */
-    private $unknown_exporter;
-
-    /**
-     * @var ChangesetValueTextXMLExporter
-     */
-    private $text_exporter;
-
-    /**
-     * @var ChangesetValueListXMLExporter
-     */
-    private $list_exporter;
-
-    /**
-     * @var ChangesetValueOpenListXMLExporter
-     */
-    private $open_list_exporter;
-
-    /**
-     * @var ChangesetValueStringXMLExporter
-     */
-    private $string_exporter;
-
-    /**
-     * @var ChangesetValueIntegerXMLExporter
-     */
-    private $integer_exporter;
-
-    /**
-     * @var ChangesetValueFloatXMLExporter
-     */
-    private $float_exporter;
-
-    /**
-     * @var ChangesetValueDateXMLExporter
-     */
-    private $date_exporter;
-
-    /**
-     * @var ChangesetValueFileXMLExporter
-     */
-    private $file_exporter;
-
-    /**
-     * @var ChangesetValueComputedXMLExporter
-     */
-    private $computed_exporter;
-    /**
-     * @var ExternalExporterCollector
-     */
-    private $collector;
-
     public function __construct(
-        ChangesetValueDateXMLExporter $date_exporter,
-        ChangesetValueFileXMLExporter $file_exporter,
-        ChangesetValueFloatXMLExporter $float_exporter,
-        ChangesetValueIntegerXMLExporter $integer_exporter,
-        ChangesetValueStringXMLExporter $string_exporter,
-        ChangesetValueTextXMLExporter $text_exporter,
-        ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
-        ChangesetValueListXMLExporter $list_exporter,
-        ChangesetValueOpenListXMLExporter $open_list_exporter,
-        ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
-        ChangesetValueComputedXMLExporter $computed_exporter,
-        ChangesetValueUnknownXMLExporter $unknown_exporter,
-        ExternalExporterCollector $collector,
+        private ChangesetValueDateXMLExporter $date_exporter,
+        private ChangesetValueFileXMLExporter $file_exporter,
+        private ChangesetValueFloatXMLExporter $float_exporter,
+        private ChangesetValueIntegerXMLExporter $integer_exporter,
+        private ChangesetValueStringXMLExporter $string_exporter,
+        private ChangesetValueTextXMLExporter $text_exporter,
+        private ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
+        private ChangesetValueListXMLExporter $list_exporter,
+        private ChangesetValueOpenListXMLExporter $open_list_exporter,
+        private ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
+        private ChangesetValueComputedXMLExporter $computed_exporter,
+        private ChangesetValueUnknownXMLExporter $unknown_exporter,
+        private ExternalExporterCollector $collector,
     ) {
-        $this->file_exporter      = $file_exporter;
-        $this->date_exporter      = $date_exporter;
-        $this->float_exporter     = $float_exporter;
-        $this->integer_exporter   = $integer_exporter;
-        $this->string_exporter    = $string_exporter;
-        $this->text_exporter      = $text_exporter;
-        $this->perms_exporter     = $perms_exporter;
-        $this->list_exporter      = $list_exporter;
-        $this->open_list_exporter = $open_list_exporter;
-        $this->unknown_exporter   = $unknown_exporter;
-        $this->artlink_exporter   = $artlink_exporter;
-        $this->computed_exporter  = $computed_exporter;
-        $this->collector          = $collector;
     }
 
     public function export(
@@ -151,68 +74,68 @@ class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValu
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $exporter = $changeset_value->accept($this);
         \assert($exporter instanceof ChangesetValueXMLExporter);
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
     }
 
-    public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value)
+    public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value): ChangesetValueArtifactLinkXMLExporter
     {
         return $this->artlink_exporter;
     }
 
-    public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value)
+    public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value): ChangesetValueDateXMLExporter
     {
         return $this->date_exporter;
     }
 
-    public function visitFile(Tracker_Artifact_ChangesetValue_File $changeset_value)
+    public function visitFile(Tracker_Artifact_ChangesetValue_File $changeset_value): ChangesetValueFileXMLExporter
     {
         return $this->file_exporter;
     }
 
-    public function visitFloat(Tracker_Artifact_ChangesetValue_Float $changeset_value)
+    public function visitFloat(Tracker_Artifact_ChangesetValue_Float $changeset_value): ChangesetValueFloatXMLExporter
     {
         return $this->float_exporter;
     }
 
-    public function visitInteger(Tracker_Artifact_ChangesetValue_Integer $changeset_value)
+    public function visitInteger(Tracker_Artifact_ChangesetValue_Integer $changeset_value): ChangesetValueIntegerXMLExporter
     {
         return $this->integer_exporter;
     }
 
-    public function visitList(Tracker_Artifact_ChangesetValue_List $changeset_value)
+    public function visitList(Tracker_Artifact_ChangesetValue_List $changeset_value): ChangesetValueListXMLExporter
     {
         return $this->list_exporter;
     }
 
-    public function visitOpenList(Tracker_Artifact_ChangesetValue_OpenList $changeset_value)
+    public function visitOpenList(Tracker_Artifact_ChangesetValue_OpenList $changeset_value): ChangesetValueOpenListXMLExporter
     {
         return $this->open_list_exporter;
     }
 
-    public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value)
+    public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value): ChangesetValuePermissionsOnArtifactXMLExporter
     {
         return $this->perms_exporter;
     }
 
-    public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value)
+    public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value): ChangesetValueStringXMLExporter
     {
         return $this->string_exporter;
     }
 
-    public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value)
+    public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value): ChangesetValueTextXMLExporter
     {
         return $this->text_exporter;
     }
 
-    public function visitComputed(ChangesetValueComputed $changeset_value)
+    public function visitComputed(ChangesetValueComputed $changeset_value): ChangesetValueComputedXMLExporter
     {
         return $this->computed_exporter;
     }
 
-    public function visitExternalField(Tracker_Artifact_ChangesetValue $changeset_value)
+    public function visitExternalField(Tracker_Artifact_ChangesetValue $changeset_value): ChangesetValueXMLExporter
     {
         $external_exporter = $this->collector->collectExporter($changeset_value);
 

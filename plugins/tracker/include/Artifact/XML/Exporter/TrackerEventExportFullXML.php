@@ -32,48 +32,18 @@ use Tuleap\Project\XML\Export\ArchiveInterface;
 class TrackerEventExportFullXML implements Dispatchable
 {
     public const NAME = 'trackerEventExportFullXML';
-    /**
-     * @var PFUser
-     */
-    private $user;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_element;
-
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var array
-     * @psalm-var array<string, Tracker>
-     */
-    private $exported_trackers;
-
-    /**
-     * @var ArchiveInterface
-     */
-    private $archive;
 
     /**
      * @psalm-param array<string, Tracker> $exported_trackers
      * @param Tracker[] $exported_trackers
      */
     public function __construct(
-        PFUser $user,
-        SimpleXMLElement $xml_element,
-        Project $project,
-        array $exported_trackers,
-        ArchiveInterface $archive,
+        private readonly PFUser $user,
+        private readonly SimpleXMLElement $xml_element,
+        private readonly Project $project,
+        private readonly array $exported_trackers,
+        private readonly ArchiveInterface $archive,
     ) {
-        $this->user              = $user;
-        $this->xml_element       = $xml_element;
-        $this->project           = $project;
-        $this->exported_trackers = $exported_trackers;
-        $this->archive           = $archive;
     }
 
     public function getUser(): PFUser

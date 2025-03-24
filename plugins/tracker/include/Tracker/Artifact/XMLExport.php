@@ -71,7 +71,7 @@ class Tracker_Artifact_XMLExport
         SimpleXMLElement $xml_content,
         PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-    ) {
+    ): void {
         $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());
         $this->checkThreshold(count($all_artifacts));
 
@@ -100,7 +100,7 @@ class Tracker_Artifact_XMLExport
         SimpleXMLElement $xml_content,
         PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-        $is_in_archive_context,
+        bool $is_in_archive_context,
     ) {
         $artifacts_node = $xml_content->addChild('artifacts');
 
@@ -129,7 +129,7 @@ class Tracker_Artifact_XMLExport
         SimpleXMLElement $xml_content,
         PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-    ) {
+    ): void {
         $is_in_archive_context = true;
 
         $this->exportBunchOfArtifacts(
@@ -141,10 +141,7 @@ class Tracker_Artifact_XMLExport
         );
     }
 
-    /**
-     * @return ArtifactXMLExporter
-     */
-    private function getArtifactXMLExporter(PFUser $current_user, $is_in_archive_context)
+    private function getArtifactXMLExporter(PFUser $current_user, bool $is_in_archive_context): ArtifactXMLExporter
     {
         $builder                = new ArtifactXMLExporterBuilder();
         $children_collector     = new NullChildrenCollector();
