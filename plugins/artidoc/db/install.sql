@@ -33,6 +33,15 @@ CREATE TABLE plugin_artidoc_document_tracker
     tracker_id INT(11)          NOT NULL
 ) ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS plugin_artidoc_document_tracker_field;
+CREATE TABLE plugin_artidoc_document_tracker_field
+(
+    item_id      INT(11) UNSIGNED NOT NULL,
+    field_id     INT(11) UNSIGNED NOT NULL,
+    `rank`       INT(11) UNSIGNED NOT NULL,
+    display_type VARCHAR(10)      NOT NULL DEFAULT 'column',
+    UNIQUE KEY idx (item_id, field_id)
+) ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS plugin_artidoc_section_upload;
 CREATE TABLE plugin_artidoc_section_upload

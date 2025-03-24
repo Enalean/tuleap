@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,28 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
 
 /**
  * @psalm-immutable
  */
-final readonly class ArtifactSectionRepresentation implements SectionRepresentation
+final readonly class SectionStringFieldRepresentation
 {
-    public string $type;
+    private const TYPE = 'string';
 
-    /**
-     * @param list<SectionStringFieldRepresentation> $fields
-     */
+    public string $type;
+    public string $label;
+    public string $display_type;
+
     public function __construct(
-        public string $id,
-        public int $level,
-        public ArtifactReference $artifact,
-        public string $title,
-        public string $description,
-        public bool $can_user_edit_section,
-        public ?ArtifactSectionAttachmentsRepresentation $attachments,
-        public array $fields,
+        ConfiguredField $configured_field,
+        public string $value,
     ) {
-        $this->type = 'artifact';
+        $this->type         = self::TYPE;
+        $this->label        = $configured_field->field->getLabel();
+        $this->display_type = $configured_field->display_type->value;
     }
 }

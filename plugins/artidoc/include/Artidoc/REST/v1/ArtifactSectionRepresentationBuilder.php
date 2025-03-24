@@ -29,10 +29,12 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
-final class ArtifactSectionRepresentationBuilder implements BuildArtifactSectionRepresentation
+final readonly class ArtifactSectionRepresentationBuilder implements BuildArtifactSectionRepresentation
 {
-    public function __construct(private GetFileUploadData $file_upload_data_provider)
-    {
+    public function __construct(
+        private GetFileUploadData $file_upload_data_provider,
+        private BuildSectionFields $section_fields_builder,
+    ) {
     }
 
     public function build(
@@ -71,7 +73,8 @@ final class ArtifactSectionRepresentationBuilder implements BuildArtifactSection
             $artifact_information->title,
             $artifact_information->description,
             $can_user_edit_section,
-            $attachments
+            $attachments,
+            $this->section_fields_builder->getFields($artifact_information->last_changeset),
         );
     }
 }

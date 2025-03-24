@@ -38,6 +38,7 @@ use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
+use Tuleap\Artidoc\Stubs\REST\v1\BuildSectionFieldsStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -181,7 +182,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -259,7 +260,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -320,7 +321,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -381,7 +382,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -453,7 +454,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -505,7 +506,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -577,7 +578,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -646,7 +647,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         );
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -697,7 +698,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         );
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -748,7 +749,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         );
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -799,7 +800,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         );
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -850,7 +851,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         );
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,
@@ -884,7 +885,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         );
         $transformer = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider),
+                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
             ),
             new RequiredSectionInformationCollector(
                 $user,

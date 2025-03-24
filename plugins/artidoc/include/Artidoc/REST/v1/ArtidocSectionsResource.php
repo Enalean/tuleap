@@ -57,6 +57,8 @@ use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CannotUpdatePartiallyReadableDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
@@ -178,7 +180,9 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         return $this->getSectionRetriever($user, $collector)
             ->retrieveSectionUserCanRead($section_id)
             ->andThen(fn(RetrievedSection $section) =>
-                $this->getSectionRepresentationBuilder()->getSectionRepresentation($section, $collector, $user))->match(
+                $this->getSectionRepresentationBuilder($section_id, $user)
+                    ->getSectionRepresentation($section, $collector, $user))
+                ->match(
                     fn(SectionRepresentation $representation) => $representation,
                     function (Fault $fault) {
                         Fault::writeToLogger($fault, RESTLogger::getLogger());
@@ -388,7 +392,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     ->retrieveSectionUserCanRead($section_identifier)
             )->andThen(
                 fn (RetrievedSection $section) =>
-                $this->getSectionRepresentationBuilder()
+                $this->getSectionRepresentationBuilder($section->id, $user)
                     ->getSectionRepresentation($section, $collector, $user)
             )
             ->match(
@@ -477,15 +481,28 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         return new UUIDFreetextIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
-    private function getSectionRepresentationBuilder(): SectionRepresentationBuilder
-    {
-        return new SectionRepresentationBuilder($this->getArtifactSectionRepresentationBuilder());
+    private function getSectionRepresentationBuilder(
+        SectionIdentifier $section_identifier,
+        PFUser $user,
+    ): SectionRepresentationBuilder {
+        return new SectionRepresentationBuilder(
+            $this->getArtifactSectionRepresentationBuilder($section_identifier, $user),
+        );
     }
 
-    private function getArtifactSectionRepresentationBuilder(): ArtifactSectionRepresentationBuilder
-    {
+    private function getArtifactSectionRepresentationBuilder(
+        SectionIdentifier $section_identifier,
+        PFUser $user,
+    ): ArtifactSectionRepresentationBuilder {
+        $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
+            new ConfiguredFieldDao(),
+            Tracker_FormElementFactory::instance(),
+        );
         return new ArtifactSectionRepresentationBuilder(
             $this->getFileUploadDataProvider(),
+            new SectionFieldsBuilder(
+                $configured_field_collection_builder->buildFromSectionIdentifier($section_identifier, $user),
+            )
         );
     }
 

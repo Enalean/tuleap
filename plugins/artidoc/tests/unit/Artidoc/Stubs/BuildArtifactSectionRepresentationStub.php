@@ -56,7 +56,8 @@ final class BuildArtifactSectionRepresentationStub implements BuildArtifactSecti
             $artifact_information->title,
             $artifact_information->description,
             $can_user_edit_section,
-            $attachments
+            $attachments,
+            [],
         );
     }
 }
