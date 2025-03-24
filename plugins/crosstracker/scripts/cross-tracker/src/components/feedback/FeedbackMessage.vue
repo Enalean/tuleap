@@ -20,9 +20,9 @@
 <template>
     <error-message v-bind:fault="current_fault" v-bind:tql_query="tql_query" />
     <div
-        class="tlp-alert-success cross-tracker-report-success"
+        class="tlp-alert-success cross-tracker-query-success"
         v-if="current_success.isValue()"
-        data-test="cross-tracker-report-success"
+        data-test="cross-tracker-query-success"
     >
         {{ current_success.unwrapOr("") }}
     </div>
@@ -79,7 +79,7 @@ function handleClear(): void {
 </script>
 
 <style lang="scss" scoped>
-.cross-tracker-report-success {
+.cross-tracker-query-success {
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 </style>

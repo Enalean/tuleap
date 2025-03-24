@@ -59,7 +59,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     EMITTER,
     GET_COLUMN_NAME,
-    REPORT_STATE,
+    QUERY_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
@@ -79,7 +79,7 @@ import type { Query } from "../../type";
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
-const report_state = strictInject(REPORT_STATE);
+const query_state = strictInject(QUERY_STATE);
 
 const props = defineProps<{
     writing_query: Query;
@@ -126,12 +126,12 @@ function loadArtifacts(): void {
         is_loading.value = false;
         return;
     }
-    getArtifactsFromReportOrUnsavedQuery()
+    getArtifactsFromQueryOrUnsavedQuery()
         .match(
-            (report_with_total) => {
-                columns.value = report_with_total.table.columns;
-                rows.value = report_with_total.table.rows;
-                total.value = report_with_total.total;
+            (content_with_total) => {
+                columns.value = content_with_total.table.columns;
+                rows.value = content_with_total.table.rows;
+                total.value = content_with_total.total;
             },
             (fault) => {
                 emitter.emit(NOTIFY_FAULT_EVENT, {
@@ -150,10 +150,10 @@ function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
     artifacts_retriever
         .getSelectableQueryResult(event.query.tql_query, limit, offset)
         .match(
-            (report_with_total) => {
-                columns.value = report_with_total.table.columns;
-                rows.value = report_with_total.table.rows;
-                total.value = report_with_total.total;
+            (content_with_total) => {
+                columns.value = content_with_total.table.columns;
+                rows.value = content_with_total.table.rows;
+                total.value = content_with_total.total;
             },
             (fault) => {
                 emitter.emit(NOTIFY_FAULT_EVENT, {
@@ -167,13 +167,9 @@ function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
         });
 }
 
-function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithTotal, Fault> {
-    if (report_state.value === "report-saved") {
-        return artifacts_retriever.getSelectableReportContent(
-            props.writing_query.id,
-            limit,
-            offset,
-        );
+function getArtifactsFromQueryOrUnsavedQuery(): ResultAsync<ArtifactsTableWithTotal, Fault> {
+    if (query_state.value === "query-saved") {
+        return artifacts_retriever.getSelectableQueryContent(props.writing_query.id, limit, offset);
     }
 
     return artifacts_retriever.getSelectableQueryResult(

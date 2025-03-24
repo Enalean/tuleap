@@ -17,9 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Fault } from "@tuleap/fault";
-
-export const ReportRetrievalFault = (previous: Fault): Fault => ({
-    ...previous,
-    isReportRetrieval: () => true,
-});
+export type QueryState = "query-saved" | "edit-query" | "result-preview";

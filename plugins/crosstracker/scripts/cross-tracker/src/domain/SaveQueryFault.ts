@@ -19,7 +19,7 @@
 
 import type { Fault } from "@tuleap/fault";
 
-export const SaveReportFault = (previous: Fault): Fault => ({
+export const SaveQueryFault = (previous: Fault): Fault => ({
     ...previous,
-    isSaveReport: () => true,
+    isSaveQuery: () => true,
 });

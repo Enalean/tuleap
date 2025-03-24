@@ -26,11 +26,11 @@ import {
     transformReportCellIntoASheetCell,
     buildSheetTextCell,
 } from "@tuleap/plugin-docgen-xlsx";
-import type { ReportSection } from "./data-formater";
+import type { ContentSection } from "./data-formater";
 
-export function transformAReportCellIntoASheet(report: ReportSection): WorkSheet {
+export function transformAContentCellIntoASheet(content: ContentSection): WorkSheet {
     const book = utils.book_new();
-    const cells = transformReportCellRowsIntoSheetRows(report);
+    const cells = transformContentCellRowsIntoSheetRows(content);
     const worksheet = utils.aoa_to_sheet(cells);
     worksheet["!cols"] = fitColumnWidthsToContent(cells);
     worksheet["!rows"] = fitRowHeightsToContent(cells);
@@ -38,17 +38,17 @@ export function transformAReportCellIntoASheet(report: ReportSection): WorkSheet
     return worksheet;
 }
 
-function transformReportCellRowsIntoSheetRows(
-    xlsx_report_cells: ReportSection,
+function transformContentCellRowsIntoSheetRows(
+    xlsx_content_cells: ContentSection,
 ): CellObjectWithExtraInfo[][] {
-    const report_cells_for_sheet: CellObjectWithExtraInfo[][] = [];
-    report_cells_for_sheet.push(
-        xlsx_report_cells.headers.map((report_header_cell_value) =>
+    const content_cells_for_sheet: CellObjectWithExtraInfo[][] = [];
+    content_cells_for_sheet.push(
+        xlsx_content_cells.headers.map((report_header_cell_value) =>
             buildSheetTextCell(report_header_cell_value.value),
         ),
     );
-    report_cells_for_sheet.push(
-        ...xlsx_report_cells.rows.map((row) => row.map(transformReportCellIntoASheetCell)),
+    content_cells_for_sheet.push(
+        ...xlsx_content_cells.rows.map((row) => row.map(transformReportCellIntoASheetCell)),
     );
-    return report_cells_for_sheet;
+    return content_cells_for_sheet;
 }

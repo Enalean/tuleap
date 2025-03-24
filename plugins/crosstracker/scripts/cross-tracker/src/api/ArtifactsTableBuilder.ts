@@ -67,7 +67,9 @@ import {
 } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
-    mapReportToArtifactsTable(report: SelectableQueryContentRepresentation): ArtifactsTable;
+    mapQueryContentToArtifactsTable(
+        query_content: SelectableQueryContentRepresentation,
+    ): ArtifactsTable;
 };
 
 function findArtifactSelectable(selected: ReadonlyArray<Selectable>): Option<ArtifactSelectable> {
@@ -246,17 +248,17 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
 
 export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
     return {
-        mapReportToArtifactsTable(report): ArtifactsTable {
+        mapQueryContentToArtifactsTable(query_content): ArtifactsTable {
             const initial_table: ArtifactsTable = {
                 columns: new Set(),
                 rows: [],
             };
-            return findArtifactSelectable(report.selected).mapOr((artifact_selectable) => {
+            return findArtifactSelectable(query_content.selected).mapOr((artifact_selectable) => {
                 initial_table.columns.add(artifact_selectable.name);
-                return report.artifacts.reduce((accumulator, artifact) => {
+                return query_content.artifacts.reduce((accumulator, artifact) => {
                     const artifact_uri = findArtifactURI(artifact_selectable, artifact);
                     const row: ArtifactRow = { uri: artifact_uri, cells: new Map<string, Cell>() };
-                    for (const selectable of report.selected) {
+                    for (const selectable of query_content.selected) {
                         // Filter out unsupported selectable
                         buildCell(selectable, artifact).map((cell) => {
                             accumulator.columns.add(selectable.name);

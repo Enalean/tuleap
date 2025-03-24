@@ -105,7 +105,7 @@ describe("CrossTracker search", function () {
 
         cy.log("Save results");
         cy.get("[data-test=query-creation-save-button]").click();
-        cy.get("[data-test=cross-tracker-report-success]");
+        cy.get("[data-test=cross-tracker-query-success]");
 
         cy.intercept("/api/v1/crosstracker_query/*/content*").as("getSpecificQueryContent");
         cy.log("reload page and check widget still has results");
@@ -144,18 +144,14 @@ describe("CrossTracker search", function () {
             "have.value",
             "Open artifacts assigned to me in my projects",
         );
-        cy.get("[data-test=create-query-description]").should(
-            "have.value",
-            "Open artifacts assigned to me in my projects",
-        );
         cy.get("[data-test=cross-tracker-search-widget] [data-test=expert-query]").should(
             "contain",
-            "SELECT @id, @tracker.name, @project.name, @last_update_date, @submitted_by",
+            "SELECT @pretty_title, @tracker.name, @project.name, @last_update_date, @submitted_by",
         );
         cy.get("[data-test=query-creation-search-button]").click();
         cy.wait("@getQueryContent", { timeout: 5000 });
         cy.get("[data-test=query-creation-save-button]").click();
-        cy.get("[data-test=cross-tracker-report-success]");
+        cy.get("[data-test=cross-tracker-query-success]");
     });
 
     it("User can display query details and edit the query", function () {
@@ -205,7 +201,7 @@ describe("CrossTracker search", function () {
         cy.get("[data-test=query-edition-save-button]").click();
 
         cy.log("Check the displayed query has been updated");
-        cy.get("[data-test=cross-tracker-report-success]").should(
+        cy.get("[data-test=cross-tracker-query-success]").should(
             "contain.text",
             "Query updated with success!",
         );

@@ -66,16 +66,16 @@ msgstr ""
 msgid "Error while deleting the query: %{error}"
 msgstr ""
 
-msgid "Error while exporting the report as .xlsx: %{error}"
+msgid "Error while exporting the query as .xlsx: %{error}"
 msgstr ""
 
 msgid "Error while fetching the artifacts matching the query: %{error}"
 msgstr ""
 
-msgid "Error while fetching the report: %{error}"
+msgid "Error while fetching the query: %{error}"
 msgstr ""
 
-msgid "Error while saving the report: %{error}"
+msgid "Error while saving the query: %{error}"
 msgstr ""
 
 msgid ""
@@ -151,6 +151,9 @@ msgstr ""
 msgid "Query details & tools"
 msgstr ""
 
+msgid "Query has been successfully saved"
+msgstr ""
+
 msgid "Query is empty"
 msgstr ""
 
@@ -163,13 +166,10 @@ msgstr ""
 msgid "Query updated with success!"
 msgstr ""
 
-msgid "Report has been successfully saved"
-msgstr ""
-
 msgid "Save"
 msgstr ""
 
-msgid "Save report"
+msgid "Save query"
 msgstr ""
 
 msgid "Search"

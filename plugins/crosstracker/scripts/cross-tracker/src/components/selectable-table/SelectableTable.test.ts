@@ -33,7 +33,7 @@ import {
     GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
     WIDGET_ID,
-    REPORT_STATE,
+    QUERY_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
@@ -47,7 +47,7 @@ import type {
 import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "../EmptyState.vue";
-import type { ReportState } from "../../domain/ReportState";
+import type { QueryState } from "../../domain/QueryState";
 import SelectableCell from "./SelectableCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
@@ -64,14 +64,14 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
-    let report_state: ReportState;
+    let query_state: QueryState;
     let is_xslx_export_allowed: boolean;
     let writing_query: Query;
     let emitter: EmitterProvider;
     let dispatched_fault_events: NotifyFaultEvent[];
 
     beforeEach(() => {
-        report_state = "report-saved";
+        query_state = "query-saved";
         is_xslx_export_allowed = true;
 
         writing_query = {
@@ -106,7 +106,7 @@ describe(`SelectableTable`, () => {
                         "date-with-time",
                     ),
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
-                    [REPORT_STATE.valueOf()]: ref(report_state),
+                    [QUERY_STATE.valueOf()]: ref(query_state),
                     [WIDGET_ID.valueOf()]: 15,
                     [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xslx_export_allowed),
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
@@ -203,10 +203,10 @@ describe(`SelectableTable`, () => {
         });
     });
     describe("loadArtifact()", () => {
-        let initial_report_with_total: ArtifactsTableWithTotal;
-        let query_report_with_total: ArtifactsTableWithTotal;
+        let initial_content_with_total: ArtifactsTableWithTotal;
+        let query_content_with_total: ArtifactsTableWithTotal;
         beforeEach(() => {
-            const initial_report = new ArtifactsTableBuilder()
+            const initial_content = new ArtifactsTableBuilder()
                 .withColumn(DATE_COLUMN_NAME)
                 .withColumn(NUMERIC_COLUMN_NAME)
                 .withArtifactRow(
@@ -237,7 +237,7 @@ describe(`SelectableTable`, () => {
                 )
                 .build();
 
-            const query_report = new ArtifactsTableBuilder()
+            const query_content = new ArtifactsTableBuilder()
                 .withColumn(TEXT_COLUMN_NAME)
                 .withArtifactRow(
                     new ArtifactRowBuilder()
@@ -257,23 +257,23 @@ describe(`SelectableTable`, () => {
                 )
                 .build();
 
-            initial_report_with_total = {
-                table: initial_report,
+            initial_content_with_total = {
+                table: initial_content,
                 total: 2,
             };
 
-            query_report_with_total = {
-                table: query_report,
+            query_content_with_total = {
+                table: query_content,
                 total: 1,
             };
         });
-        it("returns the current query report, if the current report is not saved", async () => {
+        it("returns the current query content, if the current query is not saved", async () => {
             const table_retriever = RetrieveArtifactsTableStub.withContent(
-                query_report_with_total,
-                initial_report_with_total,
-                [initial_report_with_total.table],
+                query_content_with_total,
+                initial_content_with_total,
+                [initial_content_with_total.table],
             );
-            report_state = "result-preview";
+            query_state = "result-preview";
             const wrapper = getWrapper(table_retriever);
 
             await vi.runOnlyPendingTimersAsync();
@@ -283,11 +283,11 @@ describe(`SelectableTable`, () => {
             ).toContain(TEXT_COLUMN_NAME);
             expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(2);
         });
-        it("returns the saved report, if the current report is saved", async () => {
+        it("returns the saved query, if the current query is saved", async () => {
             const table_retriever = RetrieveArtifactsTableStub.withContent(
-                query_report_with_total,
-                initial_report_with_total,
-                [initial_report_with_total.table],
+                query_content_with_total,
+                initial_content_with_total,
+                [initial_content_with_total.table],
             );
 
             const wrapper = getWrapper(table_retriever);

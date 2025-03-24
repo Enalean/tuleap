@@ -126,10 +126,10 @@ function loadArtifacts(): void {
     artifacts_retriever
         .getSelectableQueryResult(props.tql_query, limit, offset)
         .match(
-            (report_with_total) => {
-                columns.value = report_with_total.table.columns;
-                rows.value = report_with_total.table.rows;
-                total.value = report_with_total.total;
+            (content_with_total) => {
+                columns.value = content_with_total.table.columns;
+                rows.value = content_with_total.table.rows;
+                total.value = content_with_total.total;
             },
             (fault) => {
                 emitter.emit(NOTIFY_FAULT_EVENT, {

@@ -53,11 +53,11 @@ import {
     SUBMITTED_BY_COLUMN_NAME,
     TRACKER_COLUMN_NAME,
 } from "../domain/ColumnName";
-import { SelectableReportContentRepresentationStub } from "../../tests/builders/SelectableReportContentRepresentationStub";
+import { SelectableQueryContentRepresentationStub } from "../../tests/builders/SelectableQueryContentRepresentationStub";
 import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
 
 describe(`ArtifactsTableBuilder`, () => {
-    describe(`mapReportToArtifactsTable()`, () => {
+    describe(`mapQueryContentToArtifactsTable()`, () => {
         const artifact_column = ARTIFACT_COLUMN_NAME;
 
         it(`will transform each selected name into a column name
@@ -74,8 +74,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const int_value = 10;
             const numeric_column = "remaining_effort";
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [
                         { type: DATE_SELECTABLE_TYPE, name: date_column },
                         { type: NUMERIC_SELECTABLE_TYPE, name: numeric_column },
@@ -137,8 +137,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const second_date = "2018-09-23T23:26:36+09:00";
             const date_column = "start_date";
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: DATE_SELECTABLE_TYPE, name: date_column }],
                     [
                         ArtifactRepresentationStub.build({
@@ -184,8 +184,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const int_value = 10;
             const numeric_column = "remaining_effort";
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: NUMERIC_SELECTABLE_TYPE, name: numeric_column }],
                     [
                         ArtifactRepresentationStub.build({
@@ -225,8 +225,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const text_value = "<p>Griffith II</p>";
             const text_column = "details";
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: TEXT_SELECTABLE_TYPE, name: text_column }],
                     [
                         ArtifactRepresentationStub.build({ [text_column]: { value: text_value } }),
@@ -267,8 +267,8 @@ describe(`ArtifactsTableBuilder`, () => {
             };
             const user_column = SUBMITTED_BY_COLUMN_NAME;
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: USER_SELECTABLE_TYPE, name: user_column }],
                     [
                         ArtifactRepresentationStub.build({ [user_column]: first_user }),
@@ -303,8 +303,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const third_list_item = { label: "Restricted", color: "fiesta-red" };
             const list_column = STATUS_COLUMN_NAME;
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: STATIC_LIST_SELECTABLE_TYPE, name: list_column }],
                     [
                         ArtifactRepresentationStub.build({
@@ -373,8 +373,8 @@ describe(`ArtifactsTableBuilder`, () => {
             };
             const list_column = ASSIGNED_TO_COLUMN_NAME;
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: USER_LIST_SELECTABLE_TYPE, name: list_column }],
                     [
                         ArtifactRepresentationStub.build({
@@ -429,8 +429,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const third_user_group = { label: "integrators" };
             const list_column = "notified_team";
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: USER_GROUP_LIST_SELECTABLE_TYPE, name: list_column }],
                     [
                         ArtifactRepresentationStub.build({
@@ -476,8 +476,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const second_project = { icon: "🖍️", name: "Teal Creek" };
             const project_column = PROJECT_COLUMN_NAME;
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: PROJECT_SELECTABLE_TYPE, name: project_column }],
                     [
                         ArtifactRepresentationStub.build({ [project_column]: first_project }),
@@ -509,8 +509,8 @@ describe(`ArtifactsTableBuilder`, () => {
             const second_tracker = { color: "inca-silver", name: "Activities" };
             const tracker_column = TRACKER_COLUMN_NAME;
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: TRACKER_SELECTABLE_TYPE, name: tracker_column }],
                     [
                         ArtifactRepresentationStub.build({ [tracker_column]: first_tracker }),
@@ -552,8 +552,8 @@ describe(`ArtifactsTableBuilder`, () => {
             };
             const title_column = PRETTY_TITLE_COLUMN_NAME;
 
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: PRETTY_TITLE_SELECTABLE_TYPE, name: title_column }],
                     [
                         ArtifactRepresentationStub.build({ [title_column]: first_title }),
@@ -584,11 +584,11 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(title_second_row.title).toBe(second_title.title);
         });
 
-        it(`given a report content representation with an unsupported selectable type,
+        it(`given a query content representation with an unsupported selectable type,
             it will NOT include it in the columns of the table
             and will NOT include it in the rows`, () => {
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [{ type: "unsupported", name: "wacken" }],
                     [ArtifactRepresentationStub.build({ wacken: { value: "frightfulness" } })],
                 ),
@@ -618,8 +618,8 @@ describe(`ArtifactsTableBuilder`, () => {
             `when the artifact value does not match the %s representation, it will throw an error`,
             (selected_type, representation) => {
                 expect(() =>
-                    ArtifactsTableBuilder().mapReportToArtifactsTable(
-                        SelectableReportContentRepresentationStub.build(
+                    ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                        SelectableQueryContentRepresentationStub.build(
                             [{ type: selected_type, name: "makeress" }],
                             [ArtifactRepresentationStub.build({ makeress: representation })],
                         ),
@@ -628,8 +628,8 @@ describe(`ArtifactsTableBuilder`, () => {
             },
         );
 
-        it(`allows an empty report so that we can show an empty state screen`, () => {
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
+        it(`allows an empty query so that we can show an empty state screen`, () => {
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable({
                 selected: [],
                 artifacts: [],
             });
@@ -639,7 +639,7 @@ describe(`ArtifactsTableBuilder`, () => {
 
         it(`when the artifact value does not match the @artifact representation, it will throw an error`, () => {
             expect(() =>
-                ArtifactsTableBuilder().mapReportToArtifactsTable({
+                ArtifactsTableBuilder().mapQueryContentToArtifactsTable({
                     selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }],
                     artifacts: [{ [ARTIFACT_COLUMN_NAME]: { uri_is_missing: true } }],
                 }),

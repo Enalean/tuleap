@@ -37,7 +37,7 @@
                 type="button"
                 class="tlp-button-primary"
                 v-on:click="search"
-                data-test="search-report-button"
+                data-test="search-query-button"
             >
                 <i aria-hidden="true" class="fa-solid fa-search tlp-button-icon"></i>
                 {{ $gettext("Search") }}

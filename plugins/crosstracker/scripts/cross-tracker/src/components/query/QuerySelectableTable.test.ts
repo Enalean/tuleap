@@ -191,7 +191,7 @@ describe(`SelectableTable`, () => {
             expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(0);
         });
         it("returns the result of the tql query", async () => {
-            const query_report = new ArtifactsTableBuilder()
+            const query_content = new ArtifactsTableBuilder()
                 .withColumn(TEXT_COLUMN_NAME)
                 .withArtifactRow(
                     new ArtifactRowBuilder()
@@ -211,14 +211,14 @@ describe(`SelectableTable`, () => {
                 )
                 .build();
 
-            const query_report_with_total = {
-                table: query_report,
+            const query_content_with_total = {
+                table: query_content,
                 total: 1,
             };
             const table_retriever = RetrieveArtifactsTableStub.withContent(
-                query_report_with_total,
-                query_report_with_total,
-                [query_report_with_total.table],
+                query_content_with_total,
+                query_content_with_total,
+                [query_content_with_total.table],
             );
 
             const wrapper = getWrapper(table_retriever);
