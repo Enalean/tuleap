@@ -25,8 +25,8 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
 use RuntimeException;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
-use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use function PHPUnit\Framework\assertEquals;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

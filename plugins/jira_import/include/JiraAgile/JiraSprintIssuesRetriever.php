@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\ArtifactLinkChange;
 
 interface JiraSprintIssuesRetriever
 {

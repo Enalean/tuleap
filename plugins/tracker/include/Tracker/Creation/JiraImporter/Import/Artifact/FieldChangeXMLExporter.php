@@ -28,19 +28,19 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\ArtifactLinkChange;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeFileBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeListBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeStringBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InvalidMappingValueException;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
-use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
 class FieldChangeXMLExporter
 {

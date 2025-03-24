@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChildrenCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_XML_Exporter_ChildrenCollectorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var Tracker_XML_Exporter_ChildrenCollectorTest */
     private $collector;
@@ -34,7 +34,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \Tuleap\Test\PHPU
 
     public function testItRaisesAnExceptionWhenTooManyChildrenAreAdded(): void
     {
-        $this->expectException(\Tracker_XML_Exporter_TooManyChildrenException::class);
+        $this->expectException(\Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_TooManyChildrenException::class);
         for ($i = 0; $i <= Tracker_XML_ChildrenCollector::MAX; ++$i) {
             $this->collector->addChild($i, 'whatever');
         }

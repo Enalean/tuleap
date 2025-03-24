@@ -31972,6 +31972,343 @@
       <code><![CDATA[TrackerArtifactView]]></code>
     </InvalidFalsableReturnType>
   </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ArtifactAttachmentExporter.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$value]]></code>
+    </ArgumentTypeCoercion>
+    <MissingReturnType>
+      <code><![CDATA[addFilesIntoArchive]]></code>
+      <code><![CDATA[exportAttachmentsInArchive]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ArtifactXMLExporter.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[$artifact->getId()]]></code>
+      <code><![CDATA[$changeset->getArtifact()->getId()]]></code>
+      <code><![CDATA[$changeset->getArtifact()->getTrackerId()]]></code>
+    </InvalidScalarArgument>
+    <MissingReturnType>
+      <code><![CDATA[exportFullHistory]]></code>
+      <code><![CDATA[exportSnapshotWithoutComments]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ArtifactXMLExporterBuilder.php">
+    <MissingParamType>
+      <code><![CDATA[$is_in_archive_context]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueArtifactLinkXMLExporter.php">
+    <MissingClosureParamType>
+      <code><![CDATA[$index]]></code>
+      <code><![CDATA[$userdata]]></code>
+    </MissingClosureParamType>
+    <MissingParamType>
+      <code><![CDATA[$index]]></code>
+      <code><![CDATA[$userdata]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[appendValueToFieldChangeNode]]></code>
+      <code><![CDATA[canExportLinkedArtifact]]></code>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueComputedXMLExporter.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[true]]></code>
+    </InvalidScalarArgument>
+    <MissingParamType>
+      <code><![CDATA[$is_in_archive_context]]></code>
+      <code><![CDATA[$manual_value]]></code>
+      <code><![CDATA[$number_of_changeset]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[exportInGlobalContext]]></code>
+      <code><![CDATA[exportLastChangeset]]></code>
+      <code><![CDATA[exportLastChangesetInArchiveContext]]></code>
+      <code><![CDATA[exportManualValue]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+      <code><![CDATA[isCurrentChangesetTheLastChangeset]]></code>
+      <code><![CDATA[previousChangesetIsNotInManualValue]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getComputedValue]]></code>
+      <code><![CDATA[isManualValue]]></code>
+      <code><![CDATA[isManualValue]]></code>
+      <code><![CDATA[isManualValue]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueDateXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueFileXMLExporter.php">
+    <MissingClosureParamType>
+      <code><![CDATA[$index]]></code>
+    </MissingClosureParamType>
+    <MissingParamType>
+      <code><![CDATA[$index]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[appendEmptyValueToFieldChangeNode]]></code>
+      <code><![CDATA[appendFileToFieldChangeNode]]></code>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+      <code><![CDATA[getFileInfoIdForXML]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int) $file_info->getId()]]></code>
+    </RedundantCastGivenDocblockType>
+    <UndefinedMethod>
+      <code><![CDATA[getFiles]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueFloatXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueIntegerXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueListXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getBind]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueOpenListXMLExporter.php">
+    <MissingParamType>
+      <code><![CDATA[$bind_type]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[appendOpenValueLabelToFieldChangeNode]]></code>
+      <code><![CDATA[appendUserValueToFieldChangeNode]]></code>
+      <code><![CDATA[appendValue]]></code>
+      <code><![CDATA[appendValueToFieldChangeNode]]></code>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+      <code><![CDATA[getUserIdFromValue]]></code>
+      <code><![CDATA[isValueAnOpenValue]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getBind]]></code>
+      <code><![CDATA[getOpenValueById]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValuePermissionsOnArtifactXMLExporter.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[(int) $this->isUsed($changeset_value)]]></code>
+    </InvalidScalarArgument>
+    <MissingClosureParamType>
+      <code><![CDATA[$index]]></code>
+      <code><![CDATA[$ugroup_name]]></code>
+    </MissingClosureParamType>
+    <MissingParamType>
+      <code><![CDATA[$index]]></code>
+      <code><![CDATA[$ugroup_name]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[appendUgroupToFieldChangeNode]]></code>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+      <code><![CDATA[isUsed]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <UndefinedMethod>
+      <code><![CDATA[getPerms]]></code>
+      <code><![CDATA[getUgroupNamesFromPerms]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueStringXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getText]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueTextXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getFormat]]></code>
+      <code><![CDATA[getText]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueUnknownXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/ChangesetValueXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[getFieldChangeType]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValueXMLExporterVisitor.php">
+    <MissingReturnType>
+      <code><![CDATA[export]]></code>
+      <code><![CDATA[visitArtifactLink]]></code>
+      <code><![CDATA[visitComputed]]></code>
+      <code><![CDATA[visitDate]]></code>
+      <code><![CDATA[visitExternalField]]></code>
+      <code><![CDATA[visitFile]]></code>
+      <code><![CDATA[visitFloat]]></code>
+      <code><![CDATA[visitInteger]]></code>
+      <code><![CDATA[visitList]]></code>
+      <code><![CDATA[visitOpenList]]></code>
+      <code><![CDATA[visitPermissionsOnArtifact]]></code>
+      <code><![CDATA[visitString]]></code>
+      <code><![CDATA[visitText]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValuesXMLExporter.php">
+    <MissingParamType>
+      <code><![CDATA[$export_mode]]></code>
+      <code><![CDATA[$export_mode]]></code>
+      <code><![CDATA[$is_in_archive_context]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[exportChangedFields]]></code>
+      <code><![CDATA[exportSnapshot]]></code>
+      <code><![CDATA[exportValue]]></code>
+      <code><![CDATA[exportValues]]></code>
+      <code><![CDATA[isComputedField]]></code>
+      <code><![CDATA[isFieldChangeExportable]]></code>
+      <code><![CDATA[isFileField]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[exportFullHistory]]></code>
+      <code><![CDATA[exportWithoutComments]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidOperand>
+      <code><![CDATA[$changeset->getId()]]></code>
+    </PossiblyInvalidOperand>
+    <PossiblyNullArgument>
+      <code><![CDATA[$changeset_xml]]></code>
+      <code><![CDATA[$comments_node]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChildrenXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[exportChildren]]></code>
+    </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$last_changeset]]></code>
+      <code><![CDATA[$xml->artifact[$index_last_artifact]]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FieldChange/FieldChangeArtifactLinksBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FieldChange/FieldChangeDateBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FieldChange/FieldChangeFileBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FieldChange/FieldChangeFloatBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FieldChange/FieldChangeListBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FieldChange/FieldChangeStringBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FieldChange/FieldChangeTextBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/FileInfoXMLExporter.php">
+    <MissingReturnType>
+      <code><![CDATA[appendFileToArtifactNode]]></code>
+      <code><![CDATA[getFileInfoIdForXML]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int) $artifact->getId()]]></code>
+      <code><![CDATA[(int) $artifact->getId()]]></code>
+      <code><![CDATA[(int) $artifact->getId()]]></code>
+      <code><![CDATA[(int) $artifact->getId()]]></code>
+      <code><![CDATA[(int) $artifact->getId()]]></code>
+      <code><![CDATA[(int) $file->getId()]]></code>
+      <code><![CDATA[(int) $file_info->getId()]]></code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="plugins/tracker/include/Artifact/XML/Exporter/NullChildrenCollector.php">
+    <InvalidReturnType>
+      <code><![CDATA[pop]]></code>
+    </InvalidReturnType>
+    <MissingParamType>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$parent_id]]></code>
+      <code><![CDATA[$parent_id]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[addChild]]></code>
+      <code><![CDATA[getAllParents]]></code>
+      <code><![CDATA[getChildrenForParent]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/PermissionsPerGroup/PermissionPerGroupPanePresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -46467,343 +46804,6 @@
       <code><![CDATA[getChildrenForParent]]></code>
       <code><![CDATA[stackChild]]></code>
       <code><![CDATA[stackParent]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ArtifactAttachmentExporter.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$value]]></code>
-    </ArgumentTypeCoercion>
-    <MissingReturnType>
-      <code><![CDATA[addFilesIntoArchive]]></code>
-      <code><![CDATA[exportAttachmentsInArchive]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ArtifactXMLExporter.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$artifact->getId()]]></code>
-      <code><![CDATA[$changeset->getArtifact()->getId()]]></code>
-      <code><![CDATA[$changeset->getArtifact()->getTrackerId()]]></code>
-    </InvalidScalarArgument>
-    <MissingReturnType>
-      <code><![CDATA[exportFullHistory]]></code>
-      <code><![CDATA[exportSnapshotWithoutComments]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ArtifactXMLExporterBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$is_in_archive_context]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueArtifactLinkXMLExporter.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$index]]></code>
-      <code><![CDATA[$userdata]]></code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code><![CDATA[$index]]></code>
-      <code><![CDATA[$userdata]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[appendValueToFieldChangeNode]]></code>
-      <code><![CDATA[canExportLinkedArtifact]]></code>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueComputedXMLExporter.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[true]]></code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code><![CDATA[$is_in_archive_context]]></code>
-      <code><![CDATA[$manual_value]]></code>
-      <code><![CDATA[$number_of_changeset]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[exportInGlobalContext]]></code>
-      <code><![CDATA[exportLastChangeset]]></code>
-      <code><![CDATA[exportLastChangesetInArchiveContext]]></code>
-      <code><![CDATA[exportManualValue]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-      <code><![CDATA[isCurrentChangesetTheLastChangeset]]></code>
-      <code><![CDATA[previousChangesetIsNotInManualValue]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getComputedValue]]></code>
-      <code><![CDATA[isManualValue]]></code>
-      <code><![CDATA[isManualValue]]></code>
-      <code><![CDATA[isManualValue]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueDateXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueFileXMLExporter.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$index]]></code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code><![CDATA[$index]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[appendEmptyValueToFieldChangeNode]]></code>
-      <code><![CDATA[appendFileToFieldChangeNode]]></code>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-      <code><![CDATA[getFileInfoIdForXML]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $file_info->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-    <UndefinedMethod>
-      <code><![CDATA[getFiles]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueFloatXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueIntegerXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueListXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getBind]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueOpenListXMLExporter.php">
-    <MissingParamType>
-      <code><![CDATA[$bind_type]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[appendOpenValueLabelToFieldChangeNode]]></code>
-      <code><![CDATA[appendUserValueToFieldChangeNode]]></code>
-      <code><![CDATA[appendValue]]></code>
-      <code><![CDATA[appendValueToFieldChangeNode]]></code>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-      <code><![CDATA[getUserIdFromValue]]></code>
-      <code><![CDATA[isValueAnOpenValue]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getBind]]></code>
-      <code><![CDATA[getOpenValueById]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValuePermissionsOnArtifactXMLExporter.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[(int) $this->isUsed($changeset_value)]]></code>
-    </InvalidScalarArgument>
-    <MissingClosureParamType>
-      <code><![CDATA[$index]]></code>
-      <code><![CDATA[$ugroup_name]]></code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code><![CDATA[$index]]></code>
-      <code><![CDATA[$ugroup_name]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[appendUgroupToFieldChangeNode]]></code>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-      <code><![CDATA[isUsed]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <UndefinedMethod>
-      <code><![CDATA[getPerms]]></code>
-      <code><![CDATA[getUgroupNamesFromPerms]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueStringXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getText]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueTextXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getFormat]]></code>
-      <code><![CDATA[getText]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueUnknownXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[getFieldChangeType]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValueXMLExporterVisitor.php">
-    <MissingReturnType>
-      <code><![CDATA[export]]></code>
-      <code><![CDATA[visitArtifactLink]]></code>
-      <code><![CDATA[visitComputed]]></code>
-      <code><![CDATA[visitDate]]></code>
-      <code><![CDATA[visitExternalField]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFloat]]></code>
-      <code><![CDATA[visitInteger]]></code>
-      <code><![CDATA[visitList]]></code>
-      <code><![CDATA[visitOpenList]]></code>
-      <code><![CDATA[visitPermissionsOnArtifact]]></code>
-      <code><![CDATA[visitString]]></code>
-      <code><![CDATA[visitText]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValuesXMLExporter.php">
-    <MissingParamType>
-      <code><![CDATA[$export_mode]]></code>
-      <code><![CDATA[$export_mode]]></code>
-      <code><![CDATA[$is_in_archive_context]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[exportChangedFields]]></code>
-      <code><![CDATA[exportSnapshot]]></code>
-      <code><![CDATA[exportValue]]></code>
-      <code><![CDATA[exportValues]]></code>
-      <code><![CDATA[isComputedField]]></code>
-      <code><![CDATA[isFieldChangeExportable]]></code>
-      <code><![CDATA[isFileField]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[exportFullHistory]]></code>
-      <code><![CDATA[exportWithoutComments]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$changeset->getId()]]></code>
-    </PossiblyInvalidOperand>
-    <PossiblyNullArgument>
-      <code><![CDATA[$changeset_xml]]></code>
-      <code><![CDATA[$comments_node]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/ChildrenXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[exportChildren]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$last_changeset]]></code>
-      <code><![CDATA[$xml->artifact[$index_last_artifact]]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeArtifactLinksBuilder.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeDateBuilder.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeFileBuilder.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeFloatBuilder.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeListBuilder.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeStringBuilder.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeTextBuilder.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/FileInfoXMLExporter.php">
-    <MissingReturnType>
-      <code><![CDATA[appendFileToArtifactNode]]></code>
-      <code><![CDATA[getFileInfoIdForXML]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-      <code><![CDATA[(int) $artifact->getId()]]></code>
-      <code><![CDATA[(int) $file->getId()]]></code>
-      <code><![CDATA[(int) $file_info->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Exporter/NullChildrenCollector.php">
-    <InvalidReturnType>
-      <code><![CDATA[pop]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$parent_id]]></code>
-      <code><![CDATA[$parent_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addChild]]></code>
-      <code><![CDATA[getAllParents]]></code>
-      <code><![CDATA[getChildrenForParent]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Importer/ArtifactImportedMapping.php">
@@ -62660,7 +62660,6 @@
     <MissingReturnType>
       <code><![CDATA[cloneContent]]></code>
       <code><![CDATA[destroy]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -62669,9 +62668,6 @@
       <code><![CDATA[loadContent]]></code>
       <code><![CDATA[updatePreferences]]></code>
     </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[getLink]]></code>
-    </PossiblyNullReference>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $this->rss_url]]></code>
       <code><![CDATA[$this->rss_title]]></code>

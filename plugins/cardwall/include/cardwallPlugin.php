@@ -38,14 +38,14 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
+use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\ExternalSemanticsExportEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
-use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
-use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
