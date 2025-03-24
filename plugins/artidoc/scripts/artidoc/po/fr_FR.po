@@ -112,6 +112,9 @@ msgstr ""
 msgid "Each section is an artifact."
 msgstr "Chaque section est un artéfact."
 
+msgid "Empty"
+msgstr "Vide"
+
 msgid "Error"
 msgstr "Erreur"
 

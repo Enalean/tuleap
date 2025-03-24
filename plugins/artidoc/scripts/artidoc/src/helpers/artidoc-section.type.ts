@@ -21,6 +21,7 @@ import type { Tracker } from "@/stores/configuration-store";
 import type { Project } from "@/helpers/project.type";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 import type { FileIdentifier } from "@tuleap/file-upload/dist/file-upload-options";
+import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
 
 export interface ArtifactSectionAttachmentsRepresentation {
     upload_url: string;
@@ -48,6 +49,7 @@ export type SectionBasedOnArtifact = {
     attachments: ArtifactSectionAttachmentsRepresentation | null;
     level: Level;
     display_level: string;
+    fields: ReadonlyField[];
 };
 
 export interface ArtifactSection extends SectionBasedOnArtifact {
