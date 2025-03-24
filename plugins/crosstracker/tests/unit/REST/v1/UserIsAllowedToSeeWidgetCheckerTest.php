@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\CrossTracker\SearchCrossTrackerWidgetStub;
+use Tuleap\CrossTracker\Tests\Stub\Widget\SearchCrossTrackerWidgetStub;
 use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\include\CheckUserCanAccessProject;
@@ -57,24 +57,24 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
 
     private function checkUserIsAllowedToSeeWidget(SearchCrossTrackerWidget $cross_tracker_dao): void
     {
-        $user_is_allowed_to_see_report_checker = new UserIsAllowedToSeeWidgetChecker(
+        $user_is_allowed_to_see_widget_checker = new UserIsAllowedToSeeWidgetChecker(
             $cross_tracker_dao,
             $this->project_manager,
             $this->url_verification,
         );
 
-        $user_is_allowed_to_see_report_checker->checkUserIsAllowedToSeeWidget($this->user, 1);
+        $user_is_allowed_to_see_widget_checker->checkUserIsAllowedToSeeWidget($this->user, 1);
     }
 
     private function checkUserIsAllowedToUpdateWidget(SearchCrossTrackerWidget $cross_tracker_dao): void
     {
-        $user_is_allowed_to_see_report_checker = new UserIsAllowedToSeeWidgetChecker(
+        $user_is_allowed_to_see_widget_checker = new UserIsAllowedToSeeWidgetChecker(
             $cross_tracker_dao,
             $this->project_manager,
             $this->url_verification,
         );
 
-        $user_is_allowed_to_see_report_checker->checkUserIsAllowedToUpdateWidget($this->user, 1);
+        $user_is_allowed_to_see_widget_checker->checkUserIsAllowedToUpdateWidget($this->user, 1);
     }
 
     public function testItThrowsExceptionWhenTheCurrentUserWantToSeeAnotherUserWidget(): void

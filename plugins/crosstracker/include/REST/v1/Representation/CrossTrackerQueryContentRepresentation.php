@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1\Representation;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 
 /**
  * @psalm-immutable

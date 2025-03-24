@@ -127,7 +127,7 @@ final class CrossTrackerQueryTest extends RestBase
         self::assertEquals($this->epic_artifact_ids[1], $json_response['artifacts'][0]['@id']['value']);
     }
 
-    public function testGetReportWithoutArtifacts(): void
+    public function testGetQueryWithoutArtifacts(): void
     {
         $params       = [
             'tql_query'   => "SELECT @id FROM @project = 'self' WHERE @id < 1",

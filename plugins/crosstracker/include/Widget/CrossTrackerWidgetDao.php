@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
-use Tuleap\CrossTracker\Report\CloneWidget;
-use Tuleap\CrossTracker\Report\CreateWidget;
 use Tuleap\DB\DataAccessObject;
 
 final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateWidget, CloneWidget

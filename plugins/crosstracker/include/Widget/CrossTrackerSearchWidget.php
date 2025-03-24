@@ -29,8 +29,6 @@ use TemplateRendererFactory;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
-use Tuleap\CrossTracker\Report\CreateWidget;
-use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -52,7 +50,7 @@ class CrossTrackerSearchWidget extends Widget
 
     public function __construct(
         private readonly CreateWidget $widget_creator,
-        private readonly ReportInheritanceHandler $inheritance_handler,
+        private readonly WidgetInheritanceHandler $inheritance_handler,
         private readonly WidgetPermissionChecker $permission_checker,
         private readonly SearchCrossTrackerWidget $search_cross_tracker_widget,
     ) {

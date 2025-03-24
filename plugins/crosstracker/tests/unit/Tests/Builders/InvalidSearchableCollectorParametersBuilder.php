@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Builders;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
+use Tuleap\CrossTracker\Query\Advanced\InvalidComparisonCollectorParameters;
+use Tuleap\CrossTracker\Query\Advanced\InvalidSearchableCollectorParameters;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;

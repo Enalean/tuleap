@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1\Representation;
 
-use Tuleap\CrossTracker\CrossTrackerQuery;
+use Tuleap\CrossTracker\Query\CrossTrackerQuery;
 
 /**
  * @psalm-immutable
