@@ -85,4 +85,8 @@ const { error_message, is_outdated, is_in_error, is_not_found } = props.section_
     padding: var(--tlp-medium-spacing) 0;
     background: var(--tuleap-artidoc-section-background);
 }
+
+.artidoc-section-container:has(.document-section-is-being-saved) .section-footer {
+    animation: blink-section 1200ms ease-in-out alternate infinite;
+}
 </style>
