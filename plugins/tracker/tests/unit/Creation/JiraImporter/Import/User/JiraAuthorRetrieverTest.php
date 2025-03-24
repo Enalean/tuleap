@@ -22,157 +22,111 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
-use Psr\Log\LoggerInterface;
+use ColinODell\PsrTestLogger\TestLogger;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraClientStub;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
+use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class JiraAuthorRetrieverTest extends TestCase
 {
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var JiraUserRetriever
-     */
-    private $retriever;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $forge_user;
-
-    /**
-     * @var JiraUserOnTuleapCache
-     */
-    private $user_cache;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|JiraUserInfoQuerier
-     */
-    private $info_querier;
+    private UserManager&MockObject $user_manager;
+    private TestLogger $logger;
+    private JiraUserRetriever $retriever;
+    private PFUser $forge_user;
 
     protected function setUp(): void
     {
-        $this->forge_user = \Mockery::mock(\PFUser::class);
-        $this->forge_user->shouldReceive('getRealName')->andReturn('Tracker Importer (forge__tracker_importer_user)');
+        $this->forge_user = UserTestBuilder::aUser()->withRealName('Tracker Importer (forge__tracker_importer_user)')->build();
 
-        $this->user_manager = \Mockery::mock(\UserManager::class);
-        $this->logger       = \Mockery::mock(LoggerInterface::class);
-        $this->user_cache   = \Mockery::mock(JiraUserOnTuleapCache::class);
-        $this->info_querier = \Mockery::mock(JiraUserInfoQuerier::class);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $this->logger       = new TestLogger();
         $this->retriever    = new JiraUserRetriever(
             $this->logger,
             $this->user_manager,
-            $this->user_cache,
-            $this->info_querier,
+            new JiraUserOnTuleapCache(new JiraTuleapUsersMapping(), $this->forge_user),
+            new JiraUserInfoQuerier(JiraClientStub::aJiraClient(), $this->logger),
             $this->forge_user
         );
-
-        $this->logger->shouldReceive('debug');
     }
 
     protected function tearDown(): void
     {
-        \Mockery::close();
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testItReturnsTheTuleapUserIfEmailAddressMatchesOnce(): void
     {
-        $tuleap_user = \Mockery::mock(\PFUser::class);
-        $tuleap_user->shouldReceive('getRealName')->andReturn('John Doe');
-        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')->with('johndoe@example.com')->andReturn([$tuleap_user]);
-
-        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($tuleap_user, \Mockery::any());
+        $tuleap_user = UserTestBuilder::aUser()->withRealName('John Doe')->build();
+        $this->user_manager->method('getAndEventuallyCreateUserByEmail')->with('johndoe@example.com')->willReturn([$tuleap_user]);
 
         $submitter = $this->retriever->retrieveUserFromAPIData([
-            'accountId' => '5e8dss456a2d45f3',
-            'displayName' => 'John Doe',
+            'accountId'    => '5e8dss456a2d45f3',
+            'displayName'  => 'John Doe',
             'emailAddress' => 'johndoe@example.com',
         ]);
 
-        $this->assertEquals('John Doe', $submitter->getRealName());
+        self::assertEquals('John Doe', $submitter->getRealName());
     }
 
     public function testItReturnsForgeUserWhenMoreThanOneEmailAddressMatchesOnTuleapSide(): void
     {
-        $tuleap_user = \Mockery::mock(\PFUser::class);
-        $tuleap_user->shouldReceive('getRealName')->andReturn('John Doe');
-        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
+        $tuleap_user = UserTestBuilder::aUser()->withRealName('John Doe')->build();
+        $this->user_manager->method('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
-            ->andReturn([
+            ->willReturn([
                 $tuleap_user,
-                \Mockery::mock(\PFUser::class),
-                \Mockery::mock(\PFUser::class),
+                UserTestBuilder::buildWithDefaults(),
+                UserTestBuilder::buildWithDefaults(),
             ]);
 
-        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
-
         $submitter = $this->retriever->retrieveUserFromAPIData([
-            'accountId' => '5e8dss456a2d45f3',
-            'displayName' => 'John Doe',
+            'accountId'    => '5e8dss456a2d45f3',
+            'displayName'  => 'John Doe',
             'emailAddress' => 'johndoe@example.com',
         ]);
 
-        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
+        self::assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 
     public function testItReturnsForgeUserWhenNoEmailAddressMatchesOnTuleapSide(): void
     {
-        $tuleap_user = \Mockery::mock(\PFUser::class);
-        $tuleap_user->shouldReceive('getRealName')->andReturn('John Doe');
-        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
-            ->with('johndoe@example.com')
-            ->andReturn([]);
-
-        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
+        $this->user_manager->method('getAndEventuallyCreateUserByEmail')->with('johndoe@example.com')->willReturn([]);
 
         $submitter = $this->retriever->retrieveUserFromAPIData([
-            'accountId' => '5e8dss456a2d45f3',
-            'displayName' => 'John Doe',
+            'accountId'    => '5e8dss456a2d45f3',
+            'displayName'  => 'John Doe',
             'emailAddress' => 'johndoe@example.com',
         ]);
 
-        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
+        self::assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 
     public function testItReturnsForgeUserUserDoesNotShareHisEmailAddress(): void
     {
-        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
-
         $submitter = $this->retriever->retrieveUserFromAPIData([
-            'accountId' => '5e8dss456a2d45f3',
+            'accountId'   => '5e8dss456a2d45f3',
             'displayName' => 'John Doe',
         ]);
 
-        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
+        self::assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 
     public function testItDoesNotCallUserManagerWhenUserExistsInCache(): void
     {
-        $this->user_cache->shouldReceive('isUserCached')->andReturn(true);
-        $this->user_cache->shouldReceive('getUserFromCache')
-            ->with(\Mockery::any())
-            ->andReturn($this->forge_user);
-
-        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')->never();
-        $this->forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+        $this->user_manager->expects(self::never())->method('getAndEventuallyCreateUserByEmail');
+        $this->forge_user->setId(TrackerImporterUser::ID);
 
         $submitter = $this->retriever->retrieveUserFromAPIData([
             'accountId'   => '5e8dss456a2d45f3',
             'displayName' => 'John Doe',
         ]);
 
-        $this->assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
+        self::assertEquals('Tracker Importer (forge__tracker_importer_user)', $submitter->getRealName());
     }
 }

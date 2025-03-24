@@ -22,65 +22,45 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
-use Tracker;
+use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use SimpleXMLElement;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
-use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesCheckerInterface;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\UserRole\UserRolesCheckerInterfaceStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FromJiraTrackerCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerCreationDataChecker
-     */
-    private $creation_data_checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImport
-     */
-    private $tracker_xml_import;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserOnTuleapCache
-     */
-    private $jira_user_on_tuleap_cache;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlatformConfigurationRetriever
-     */
-    private $platform_configuration_retriever;
+    private TrackerCreationDataChecker&MockObject $creation_data_checker;
+    private TrackerFactory&MockObject $tracker_factory;
+    private TrackerXmlImport&MockObject $tracker_xml_import;
+    private TestLogger $logger;
+    private JiraUserOnTuleapCache $jira_user_on_tuleap_cache;
+    private PlatformConfigurationRetriever&MockObject $platform_configuration_retriever;
 
     protected function setUp(): void
     {
-        $this->tracker_xml_import               = Mockery::mock(TrackerXmlImport::class);
-        $this->tracker_factory                  = Mockery::mock(TrackerFactory::class);
-        $this->creation_data_checker            = Mockery::mock(TrackerCreationDataChecker::class);
-        $this->logger                           = Mockery::mock(LoggerInterface::class);
-        $this->jira_user_on_tuleap_cache        = Mockery::mock(JiraUserOnTuleapCache::class);
-        $this->platform_configuration_retriever = Mockery::mock(PlatformConfigurationRetriever::class);
+        $this->tracker_xml_import               = $this->createMock(TrackerXmlImport::class);
+        $this->tracker_factory                  = $this->createMock(TrackerFactory::class);
+        $this->creation_data_checker            = $this->createMock(TrackerCreationDataChecker::class);
+        $this->logger                           = new TestLogger();
+        $this->jira_user_on_tuleap_cache        = new JiraUserOnTuleapCache(new JiraTuleapUsersMapping(), UserTestBuilder::buildWithDefaults());
+        $this->platform_configuration_retriever = $this->createMock(PlatformConfigurationRetriever::class);
     }
 
     public function testItDuplicatedATrackerFromJira(): void
@@ -94,48 +74,32 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->creation_data_checker->shouldReceive('checkAtProjectCreation')->once();
+        $this->creation_data_checker->expects(self::once())->method('checkAtProjectCreation');
 
-        $this->platform_configuration_retriever->shouldReceive('getJiraPlatformConfiguration')
-            ->once()
-            ->with(
-                $jira_client,
-                $this->logger
-            )
-            ->andReturn(
-                new PlatformConfiguration()
-            );
+        $this->platform_configuration_retriever->expects(self::once())->method('getJiraPlatformConfiguration')
+            ->with($jira_client, $this->logger)
+            ->willReturn(new PlatformConfiguration());
 
-        $user_roles_checker = new class implements UserRolesCheckerInterface {
-            public function checkUserIsAdminOfJiraProject(
-                JiraClient $jira_client,
-                LoggerInterface $logger,
-                string $jira_project,
-            ): void {
-            }
-        };
 
-        $creator = Mockery::mock(
-            FromJiraTrackerCreator::class,
-            [
+        $creator = $this->getMockBuilder(FromJiraTrackerCreator::class)
+            ->setConstructorArgs([
                 $this->tracker_xml_import,
                 $this->tracker_factory,
                 $this->creation_data_checker,
                 $this->logger,
                 $this->jira_user_on_tuleap_cache,
                 $this->platform_configuration_retriever,
-                $user_roles_checker,
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+                UserRolesCheckerInterfaceStub::build(),
+            ])
+            ->onlyMethods(['getJiraExporter'])
+            ->getMock();
 
-        $jira_exporter = Mockery::mock(JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter::class);
-        $creator->shouldReceive('getJiraExporter')->andReturn($jira_exporter);
+        $jira_exporter = $this->createMock(JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter::class);
+        $creator->method('getJiraExporter')->willReturn($jira_exporter);
 
-        $jira_exporter->shouldReceive('exportIssuesToXml')->once()->andReturn(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
-        $this->tracker_xml_import->shouldReceive('import')->once()->andReturn([1]);
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(Mockery::mock(Tracker::class));
-
-        $this->logger->shouldReceive('info');
+        $jira_exporter->expects(self::once())->method('exportIssuesToXml')->willReturn(new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
+        $this->tracker_xml_import->expects(self::once())->method('import')->willReturn([1]);
+        $this->tracker_factory->method('getTrackerById')->with(1)->willReturn(TrackerTestBuilder::aTracker()->build());
 
         $creator->createFromJira(
             $project,
@@ -149,63 +113,41 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Story',
             UserTestBuilder::aUser()->build(),
         );
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testItDoesNotDuplicateATrackerFromJiraIfUserIsNotJiraAdmin(): void
     {
-        $jira_client = Mockery::mock(JiraClient::class)
-            ->shouldReceive('getUrl')
-            ->once()
-            ->andReturn(['id' => '10005', 'name' => 'Story', 'subtask' => false])
-            ->getMock();
+        $jira_client = $this->createMock(JiraClient::class);
+        $jira_client->expects(self::once())->method('getUrl')->willReturn(['id' => '10005', 'name' => 'Story', 'subtask' => false]);
 
-        $project = ProjectTestBuilder::aProject()->build();
+        $this->creation_data_checker->expects(self::once())->method('checkAtProjectCreation');
 
-        $this->creation_data_checker->shouldReceive('checkAtProjectCreation')->once();
+        $this->platform_configuration_retriever->expects(self::once())->method('getJiraPlatformConfiguration')
+            ->with($jira_client, $this->logger)
+            ->willReturn(new PlatformConfiguration());
 
-        $this->platform_configuration_retriever->shouldReceive('getJiraPlatformConfiguration')
-            ->once()
-            ->with(
-                $jira_client,
-                $this->logger
-            )
-            ->andReturn(
-                new PlatformConfiguration()
-            );
-
-        $user_roles_checker = new class implements UserRolesCheckerInterface {
-            public function checkUserIsAdminOfJiraProject(
-                JiraClient $jira_client,
-                LoggerInterface $logger,
-                string $jira_project,
-            ): void {
-                throw new UserIsNotProjectAdminException();
-            }
-        };
-
-        $creator = Mockery::mock(
-            FromJiraTrackerCreator::class,
-            [
+        $creator = $this->getMockBuilder(FromJiraTrackerCreator::class)
+            ->setConstructorArgs([
                 $this->tracker_xml_import,
                 $this->tracker_factory,
                 $this->creation_data_checker,
                 $this->logger,
                 $this->jira_user_on_tuleap_cache,
                 $this->platform_configuration_retriever,
-                $user_roles_checker,
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+                UserRolesCheckerInterfaceStub::withException(new UserIsNotProjectAdminException()),
+            ])
+            ->onlyMethods(['getJiraExporter'])
+            ->getMock();
 
-        $creator->shouldNotReceive('getJiraExporter');
-        $this->tracker_xml_import->shouldNotReceive('import');
-        $this->tracker_factory->shouldNotReceive('getTrackerById');
-
-        $this->logger->shouldReceive('info');
+        $creator->expects(self::never())->method('getJiraExporter');
+        $this->tracker_xml_import->expects(self::never())->method('import');
+        $this->tracker_factory->expects(self::never())->method('getTrackerById');
 
         $this->expectException(TrackerCreationHasFailedException::class);
 
         $creator->createFromJira(
-            $project,
+            ProjectTestBuilder::aProject()->build(),
             'my new tracker',
             'my_tracker',
             'tracker desc',
@@ -216,5 +158,6 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Story',
             UserTestBuilder::aUser()->build(),
         );
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 }
