@@ -901,8 +901,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         $can_edit_reverse_links = $properties['can_edit_reverse_links'] ?? false;
 
         if ($can_edit_reverse_links) {
-            $template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../FormElement/Field/ArtifactLink');
-            $presenter         = (new EditorWithReverseLinksBuilder())->build($artifact);
+            $user              = $this->getCurrentUser();
+            $template_renderer = TemplateRendererFactory::build()->getRenderer(
+                __DIR__ . '/../../FormElement/Field/ArtifactLink'
+            );
+            $builder           = new EditorWithReverseLinksBuilder(
+                new ParentInHierarchyRetriever(
+                    new HierarchyDAO(),
+                    $this->getTrackerFactory()
+                ),
+                TrackersPermissionsRetriever::build()
+            );
+            $presenter         = $builder->build($this, $artifact, $user);
             return $template_renderer->renderToString('editor-with-reverse-links', $presenter);
         }
 
