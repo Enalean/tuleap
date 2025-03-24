@@ -29,6 +29,7 @@ use PFUser;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -70,16 +71,19 @@ class ReleaseResource extends AuthenticatedResource
      * @var ReleasePermissionsForGroupsBuilder
      */
     private $permissions_for_groups_builder;
+    private readonly PackagePermissionManager $package_permissions_manager;
 
     public function __construct()
     {
         $this->release_factory                = FRSReleaseFactory::instance();
         $this->retriever                      = new Retriever(new Dao());
         $this->uploaded_link_retriever        = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
+        $frs_permission_manager               = FRSPermissionManager::build();
         $this->package_factory                = FRSPackageFactory::instance();
+        $this->package_permissions_manager    = new PackagePermissionManager($this->package_factory);
         $this->user_manager                   = UserManager::instance();
         $this->permissions_for_groups_builder = new ReleasePermissionsForGroupsBuilder(
-            FRSPermissionManager::build(),
+            $frs_permission_manager,
             PermissionsManager::instance(),
             new UGroupManager()
         );
@@ -194,12 +198,18 @@ class ReleaseResource extends AuthenticatedResource
         $package = $this->package_factory->getFRSPackageFromDb($body->package_id);
 
         if (! $package) {
-            throw new RestException(400, 'Package not found');
+            throw new RestException(404, 'Package not found');
         }
 
+        $project = \ProjectManager::instance()->getProject($package->getGroupID());
+
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            \ProjectManager::instance()->getProject($package->getGroupID())
+            $project
         );
+
+        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $project)) {
+            throw new RestException(404);
+        }
 
         if (! $package->isActive()) {
             throw new RestException(403, 'Package is not active');
@@ -259,6 +269,8 @@ class ReleaseResource extends AuthenticatedResource
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $release->getProject()
         );
+
+        $this->checkUserCanReadRelease($release, $user);
 
         if (! $this->release_factory->userCanUpdate($release->getGroupID(), $release->getReleaseID(), $user->getId())) {
             throw new RestException(403, 'Write access to release denied');
@@ -377,25 +389,11 @@ class ReleaseResource extends AuthenticatedResource
         return $release_array;
     }
 
-    private function checkUserCanReadRelease(FRSRelease $release, PFUser $user)
+    private function checkUserCanReadRelease(FRSRelease $release, PFUser $user): void
     {
         $package = $release->getPackage();
-
-        if ($package->isHidden() && ! $this->release_factory->userCanAdmin($user, $package->getGroupID())) {
-            throw new RestException(403, 'Access to package denied');
+        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $release->getProject())) {
+            throw new RestException(404);
         }
-
-        if (
-            ! $this->release_factory->userCanRead(
-                $package->getGroupID(),
-                $package->getPackageID(),
-                $release->getReleaseID(),
-                $user->getId()
-            )
-        ) {
-            throw new RestException(403, 'Access to release denied');
-        }
-
-        return $user;
     }
 }

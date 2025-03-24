@@ -31,13 +31,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FRSPackagePermissionManagerTest extends TestCase
+final class FRSPackagePermissionManagerTest extends TestCase
 {
-    /**
-     * @var MockObject&FRSPermissionManager
-     */
-    private $permission_manager;
-
     /**
      * @var MockObject&FRSPackageFactory
      */
@@ -65,11 +60,9 @@ class FRSPackagePermissionManagerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->permission_manager = $this->createMock(FRSPermissionManager::class);
-        $this->package_factory    = $this->createMock(FRSPackageFactory::class);
+        $this->package_factory = $this->createMock(FRSPackageFactory::class);
 
         $this->package_permission_manager = new PackagePermissionManager(
-            $this->permission_manager,
             $this->package_factory
         );
 
@@ -97,20 +90,20 @@ class FRSPackagePermissionManagerTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueWhenPackageIsActiveAndUserCanAccessFrsService(): void
+    public function testItReturnsTrueWhenPackageIsActiveAndUserCanReadThePackage(): void
     {
         $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
-        $this->permission_manager->method('userCanRead')->with($this->project, $this->user)->willReturn(true);
+        $this->package_factory->method('userCanRead')->willReturn(true);
 
         self::assertTrue(
             $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
         );
     }
 
-    public function testItReturnsFalseWhenPackageIsActiveAndUserCannotAccessFrsService(): void
+    public function testItReturnsFalseWhenPackageIsActiveAndUserCannotReadThePackage(): void
     {
         $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
-        $this->permission_manager->method('userCanRead')->with($this->project, $this->user)->willReturn(false);
+        $this->package_factory->method('userCanRead')->willReturn(false);
 
         self::assertFalse(
             $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)

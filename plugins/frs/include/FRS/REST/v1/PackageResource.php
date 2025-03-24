@@ -28,6 +28,7 @@ use ProjectManager;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -66,6 +67,7 @@ class PackageResource extends AuthenticatedResource
      * @var ReleasePermissionsForGroupsBuilder
      */
     private $release_permissions_for_groups_builder;
+    private readonly PackagePermissionManager $package_permissions_manager;
 
     public function __construct()
     {
@@ -75,16 +77,18 @@ class PackageResource extends AuthenticatedResource
         $this->retriever                              = new Retriever(new Dao());
         $this->user_manager                           = UserManager::instance();
         $this->uploaded_link_retriever                = new UploadedLinksRetriever(new UploadedLinksDao(), $this->user_manager);
+        $frs_permission_manager                       = FRSPermissionManager::build();
         $this->package_representation_builder         = new PackageRepresentationBuilder(
             \PermissionsManager::instance(),
             new \UGroupManager(),
-            FRSPermissionManager::build()
+            $frs_permission_manager
         );
         $this->release_permissions_for_groups_builder = new ReleasePermissionsForGroupsBuilder(
-            FRSPermissionManager::build(),
+            $frs_permission_manager,
             PermissionsManager::instance(),
             new UGroupManager()
         );
+        $this->package_permissions_manager            = new PackagePermissionManager($this->package_factory);
     }
 
     /**
@@ -241,13 +245,13 @@ class PackageResource extends AuthenticatedResource
         $package = $this->package_factory->getFRSPackageFromDb($id);
 
         if (! $package) {
-            throw new RestException(404, 'Package not found');
+            throw new RestException(404);
         }
 
         $user = $this->user_manager->getCurrentUser();
 
-        if (! $this->package_factory->userCanRead($package->getGroupID(), $package->getPackageID(), $user->getId())) {
-            throw new RestException(403, 'Access to package denied');
+        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $this->getPackageProject($package))) {
+            throw new RestException(404);
         }
 
         if (! $package->isActive()) {

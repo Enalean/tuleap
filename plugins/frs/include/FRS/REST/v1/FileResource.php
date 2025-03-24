@@ -26,12 +26,15 @@ use FRSFile;
 use FRSFileDao;
 use FRSFileFactory;
 use FRSLogDao;
+use FRSPackageFactory;
+use FRSRelease;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\Upload\EmptyFileToUploadFinisher;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\FileToUploadCreator;
@@ -61,12 +64,14 @@ class FileResource extends AuthenticatedResource
      * @var UserManager
      */
     private $user_manager;
+    private readonly PackagePermissionManager $package_permissions_manager;
 
     public function __construct()
     {
-        $this->release_factory = FRSReleaseFactory::instance();
-        $this->user_manager    = UserManager::instance();
-        $this->file_factory    = new FRSFileFactory();
+        $this->release_factory             = FRSReleaseFactory::instance();
+        $this->user_manager                = UserManager::instance();
+        $this->file_factory                = new FRSFileFactory();
+        $this->package_permissions_manager = new PackagePermissionManager(FRSPackageFactory::instance());
     }
 
     /**
@@ -138,7 +143,7 @@ class FileResource extends AuthenticatedResource
     }
 
     /**
-     * @throws RestException 403
+     * @throws RestException
      */
     private function getFile($id, PFUser $user): FRSFile
     {
@@ -146,16 +151,12 @@ class FileResource extends AuthenticatedResource
         if (! $file || $file->isDeleted()) {
             throw new RestException(404);
         }
-
-        $is_user_able_to_read_file = $this->release_factory->userCanRead(
-            $file->getGroup()->getID(),
-            $file->getPackageID(),
-            $file->getReleaseID(),
-            $user->getId()
-        );
-        if (! $is_user_able_to_read_file) {
-            throw new RestException(403);
+        $release = $this->release_factory->getFRSReleaseFromDb($file->getReleaseID());
+        if ($release === null) {
+            throw new RestException(404);
         }
+
+        $this->checkUserCanReadRelease($release, $user);
 
         return $file;
     }
@@ -196,10 +197,11 @@ class FileResource extends AuthenticatedResource
         $release = $this->release_factory->getFRSReleaseFromDb($file_post_representation->release_id);
         if (! $release) {
             throw new I18NRestException(
-                400,
+                404,
                 dgettext('tuleap-frs', 'The parent release cannot be found.')
             );
         }
+        $this->checkUserCanReadRelease($release, $user);
 
         $frs_permission_manager = FRSPermissionManager::build();
 
@@ -241,5 +243,13 @@ class FileResource extends AuthenticatedResource
             $file_post_representation,
             new \DateTimeImmutable()
         );
+    }
+
+    private function checkUserCanReadRelease(FRSRelease $release, PFUser $user): void
+    {
+        $package = $release->getPackage();
+        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $release->getProject())) {
+            throw new RestException(404);
+        }
     }
 }

@@ -179,7 +179,7 @@ if (! $pv && $permission_manager->isAdmin($project, $user)) {
     $html .= '<p><a href="admin/package.php?func=add&amp;group_id=' . $hp->purify(urlencode($group_id)) . '" data-test="create-new-package">[' . $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') . ']</a></p>';
 }
 
-$package_permission_manager = new PackagePermissionManager($permission_manager, $frspf);
+$package_permission_manager = new PackagePermissionManager($frspf);
 $release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
 $license_agreement_display  = new LicenseAgreementDisplay(
     $hp,

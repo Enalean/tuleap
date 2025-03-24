@@ -46,7 +46,7 @@ if ($request->valid($vFilemodule_id)) {
     $fmmf               = new FileModuleMonitorFactory();
     $permission_manager = FRSPermissionManager::build();
 
-    $package_permission_manager = new PackagePermissionManager($permission_manager, $package_factory);
+    $package_permission_manager = new PackagePermissionManager($package_factory);
     $package                    = $package_factory->getFRSPackageFromDb($filemodule_id);
 
     if ($package_permission_manager->canUserSeePackage($current_user, $package, $request->getProject())) {
