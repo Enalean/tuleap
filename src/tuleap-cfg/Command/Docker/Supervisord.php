@@ -38,7 +38,7 @@ final class Supervisord
     private const UNIT_REALTIME       = 'realtime';
     private const UNIT_SMOKESCREEN    = 'smokescreen';
 
-    private const BASE_DIR = __DIR__ . '/../../../../tools/docker/tuleap-aio-c7/supervisor.d';
+    private const BASE_DIR = __DIR__ . '/../../../../tools/tuleap-docker-supervisor.d';
 
     private const UNITS = [
         self::UNIT_CROND,
