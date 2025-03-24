@@ -33,12 +33,12 @@ import ErrorMessage from "./ErrorMessage.vue";
 import { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
 import { onMounted, onUnmounted, ref } from "vue";
-import type { NotifyFaultEvent, NotifySuccessEvent } from "../../helpers/emitter-provider";
+import type { NotifyFaultEvent, NotifySuccessEvent } from "../../helpers/widget-events";
 import {
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
-} from "../../helpers/emitter-provider";
+} from "../../helpers/widget-events";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER } from "../../injection-symbols";
 
@@ -55,9 +55,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    emitter.off(NOTIFY_FAULT_EVENT);
-    emitter.off(NOTIFY_SUCCESS_EVENT);
-    emitter.off(CLEAR_FEEDBACK_EVENT);
+    emitter.off(NOTIFY_FAULT_EVENT, handleFault);
+    emitter.off(NOTIFY_SUCCESS_EVENT, handleSuccess);
+    emitter.off(CLEAR_FEEDBACK_EVENT, handleClear);
 });
 
 function handleFault(event: NotifyFaultEvent): void {

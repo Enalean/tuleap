@@ -81,7 +81,7 @@ import {
     CREATE_NEW_QUERY_EVENT,
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
-} from "../../helpers/emitter-provider";
+} from "../../helpers/widget-events";
 
 const dropdown_trigger = ref<HTMLElement>();
 const dropdown_menu = ref<HTMLElement>();

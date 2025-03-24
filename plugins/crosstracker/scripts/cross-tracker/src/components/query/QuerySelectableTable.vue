@@ -60,7 +60,7 @@ import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../inject
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import type { ColumnName } from "../../domain/ColumnName";
-import { NOTIFY_FAULT_EVENT, SEARCH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT, SEARCH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
 import SelectablePagination from "../selectable-table/SelectablePagination.vue";
 import EditCell from "../selectable-table/EditCell.vue";
 import SelectableCell from "../selectable-table/SelectableCell.vue";
@@ -112,7 +112,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    emitter.off(SEARCH_ARTIFACTS_EVENT);
+    emitter.off(SEARCH_ARTIFACTS_EVENT, refreshArtifactList);
 });
 
 function loadArtifacts(): void {

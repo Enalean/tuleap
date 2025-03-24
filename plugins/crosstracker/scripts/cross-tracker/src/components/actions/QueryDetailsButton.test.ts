@@ -20,28 +20,31 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { EMITTER, WIDGET_ID } from "../../injection-symbols";
-import { beforeEach, expect, describe, it } from "vitest";
-import type {
-    Events,
-    EmitterProvider,
-    ToggleQueryDetailsEvent,
-} from "../../helpers/emitter-provider";
-import { TOGGLE_QUERY_DETAILS_EVENT } from "../../helpers/emitter-provider";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import type { Events, ToggleQueryDetailsEvent } from "../../helpers/widget-events";
+import { TOGGLE_QUERY_DETAILS_EVENT } from "../../helpers/widget-events";
 import QueryDetailsButton from "./QueryDetailsButton.vue";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 
 describe("QueryDetailsButton", () => {
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let dispatched_toggle_query_details_events: ToggleQueryDetailsEvent[];
     let are_query_details_toggled: boolean;
+
+    const registerToggleDetailsEvent = (event: ToggleQueryDetailsEvent): void => {
+        dispatched_toggle_query_details_events.push(event);
+    };
 
     beforeEach(() => {
         are_query_details_toggled = false;
         dispatched_toggle_query_details_events = [];
         emitter = mitt<Events>();
-        emitter.on(TOGGLE_QUERY_DETAILS_EVENT, (event) => {
-            dispatched_toggle_query_details_events.push(event);
-        });
+        emitter.on(TOGGLE_QUERY_DETAILS_EVENT, registerToggleDetailsEvent);
+    });
+
+    afterEach(() => {
+        emitter.off(TOGGLE_QUERY_DETAILS_EVENT, registerToggleDetailsEvent);
     });
     const getWrapper = (): VueWrapper<InstanceType<typeof QueryDetailsButton>> => {
         return shallowMount(QueryDetailsButton, {

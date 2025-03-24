@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
@@ -28,13 +28,12 @@ import ReadingMode from "../components/reading-mode/ReadingMode.vue";
 import { EMITTER, IS_USER_ADMIN, WIDGET_ID } from "../injection-symbols";
 import ReadQuery from "./ReadQuery.vue";
 import type {
-    EmitterProvider,
     Events,
     NotifyFaultEvent,
     RefreshArtifactsEvent,
     SwitchQueryEvent,
     UpdateWidgetTitleEvent,
-} from "../helpers/emitter-provider";
+} from "../helpers/widget-events";
 import {
     NOTIFY_FAULT_EVENT,
     QUERY_DELETED_EVENT,
@@ -42,8 +41,9 @@ import {
     SWITCH_QUERY_EVENT,
     TOGGLE_QUERY_DETAILS_EVENT,
     UPDATE_WIDGET_TITLE_EVENT,
-} from "../helpers/emitter-provider";
+} from "../helpers/widget-events";
 import type { Query } from "../type";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 
 vi.useFakeTimers();
@@ -54,8 +54,24 @@ describe("ReadQuery", () => {
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_updated_title_events: UpdateWidgetTitleEvent[];
     let dispatched_refresh_events: RefreshArtifactsEvent[];
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let selected_query: Query | undefined;
+
+    const registerSwitchQueryEvent = (event: SwitchQueryEvent): void => {
+        dispatched_switch_query_events.push(event);
+    };
+
+    const registerFaultEvent = (event: NotifyFaultEvent): void => {
+        dispatched_fault_events.push(event);
+    };
+
+    const registerUpdateTitleEvent = (event: UpdateWidgetTitleEvent): void => {
+        dispatched_updated_title_events.push(event);
+    };
+
+    const registerRefreshArtifactsEvent = (event: RefreshArtifactsEvent): void => {
+        dispatched_refresh_events.push(event);
+    };
 
     beforeEach(() => {
         selected_query = undefined;
@@ -65,18 +81,10 @@ describe("ReadQuery", () => {
         dispatched_updated_title_events = [];
         dispatched_refresh_events = [];
         emitter = mitt<Events>();
-        emitter.on(SWITCH_QUERY_EVENT, (event) => {
-            dispatched_switch_query_events.push(event);
-        });
-        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
-            dispatched_fault_events.push(event);
-        });
-        emitter.on(UPDATE_WIDGET_TITLE_EVENT, (event) => {
-            dispatched_updated_title_events.push(event);
-        });
-        emitter.on(REFRESH_ARTIFACTS_EVENT, (event) => {
-            dispatched_refresh_events.push(event);
-        });
+        emitter.on(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
+        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.on(UPDATE_WIDGET_TITLE_EVENT, registerUpdateTitleEvent);
+        emitter.on(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
 
         vi.spyOn(rest_querier, "getQueries").mockReturnValue(
             okAsync([
@@ -89,6 +97,13 @@ describe("ReadQuery", () => {
                 },
             ]),
         );
+    });
+
+    afterEach(() => {
+        emitter.off(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
+        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.off(UPDATE_WIDGET_TITLE_EVENT, registerUpdateTitleEvent);
+        emitter.off(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ReadQuery>> {

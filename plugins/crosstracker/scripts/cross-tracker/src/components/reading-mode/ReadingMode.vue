@@ -79,7 +79,7 @@ import { updateQuery, createQuery } from "../../api/rest-querier";
 import type { Query } from "../../type";
 import { EMITTER, IS_USER_ADMIN, QUERY_STATE, WIDGET_ID } from "../../injection-symbols";
 import { SaveQueryFault } from "../../domain/SaveQueryFault";
-import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
 import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
 
 const { $gettext } = useGettext();

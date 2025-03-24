@@ -86,7 +86,7 @@ import type { Query } from "../../type";
 import { deleteQuery } from "../../api/rest-querier";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER } from "../../injection-symbols";
-import { NOTIFY_FAULT_EVENT, QUERY_DELETED_EVENT } from "../../helpers/emitter-provider";
+import { NOTIFY_FAULT_EVENT, QUERY_DELETED_EVENT } from "../../helpers/widget-events";
 import type { Fault } from "@tuleap/fault";
 import { QueryDeletionFault } from "../../domain/QueryDeletionFault";
 import { onMounted, onUnmounted, ref } from "vue";

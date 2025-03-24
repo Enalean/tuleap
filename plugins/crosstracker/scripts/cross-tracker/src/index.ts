@@ -43,7 +43,7 @@ import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { ColumnNameGetter } from "./domain/ColumnNameGetter";
-import type { Events } from "./helpers/emitter-provider";
+import type { Events } from "./helpers/widget-events";
 import mitt from "mitt";
 import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 import { SuggestedQueries } from "./domain/SuggestedQueriesGetter";

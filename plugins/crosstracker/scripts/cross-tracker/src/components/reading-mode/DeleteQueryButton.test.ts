@@ -17,14 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import type {
-    DeletedQueryEvent,
-    EmitterProvider,
-    Events,
-    NotifyFaultEvent,
-} from "../../helpers/emitter-provider";
-import { NOTIFY_FAULT_EVENT, QUERY_DELETED_EVENT } from "../../helpers/emitter-provider";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { DeletedQueryEvent, Events, NotifyFaultEvent } from "../../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT, QUERY_DELETED_EVENT } from "../../helpers/widget-events";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -40,9 +36,17 @@ vi.useFakeTimers();
 
 describe("DeleteQueryButton", () => {
     let current_query: Query;
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_delete_events: DeletedQueryEvent[];
+
+    const registerFaultEvent = (event: NotifyFaultEvent): void => {
+        dispatched_fault_events.push(event);
+    };
+
+    const registerDeleteEvents = (event: DeletedQueryEvent): void => {
+        dispatched_delete_events.push(event);
+    };
 
     beforeEach(() => {
         current_query = {
@@ -55,12 +59,13 @@ describe("DeleteQueryButton", () => {
         emitter = mitt<Events>();
         dispatched_fault_events = [];
         dispatched_delete_events = [];
-        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
-            dispatched_fault_events.push(event);
-        });
-        emitter.on(QUERY_DELETED_EVENT, (event) => {
-            dispatched_delete_events.push(event);
-        });
+        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.on(QUERY_DELETED_EVENT, registerDeleteEvents);
+    });
+
+    afterEach(() => {
+        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.off(QUERY_DELETED_EVENT, registerDeleteEvents);
     });
 
     const getWrapper = (): VueWrapper<InstanceType<typeof DeleteQueryButton>> => {

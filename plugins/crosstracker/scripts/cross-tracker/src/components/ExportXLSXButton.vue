@@ -41,7 +41,7 @@ import { useGettext } from "vue3-gettext";
 import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../injection-symbols";
 import { XLSXExportFault } from "../domain/XLSXExportFault";
 import type { Query } from "../type";
-import { CLEAR_FEEDBACK_EVENT, NOTIFY_FAULT_EVENT } from "../helpers/emitter-provider";
+import { CLEAR_FEEDBACK_EVENT, NOTIFY_FAULT_EVENT } from "../helpers/widget-events";
 
 const artifact_table_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const column_name_getter = strictInject(GET_COLUMN_NAME);

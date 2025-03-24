@@ -17,12 +17,9 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Emitter } from "mitt";
 import type { Query } from "../type";
 import type { Fault } from "@tuleap/fault";
 import type { QuerySuggestion } from "../domain/SuggestedQueriesGetter";
-
-export type EmitterProvider = Pick<Emitter<Events>, "off" | "on" | "emit">;
 
 export const SWITCH_QUERY_EVENT = "switch-query";
 export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";

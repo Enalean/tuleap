@@ -50,7 +50,7 @@ import { DASHBOARD_TYPE, EMITTER, GET_SUGGESTED_QUERIES } from "../../injection-
 import type { QuerySuggestion } from "../../domain/SuggestedQueriesGetter";
 import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
 import QuerySuggestedModal from "./QuerySuggestedModal.vue";
-import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/emitter-provider";
+import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/widget-events";
 
 const props = defineProps<{
     is_modal_should_be_displayed: boolean;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, beforeEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -25,17 +25,23 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { EMITTER, IS_EXPORT_ALLOWED, IS_USER_ADMIN } from "../../injection-symbols";
 import type { Query } from "../../type";
 import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
-import type { EditQueryEvent, EmitterProvider, Events } from "../../helpers/emitter-provider";
-import { EDIT_QUERY_EVENT } from "../../helpers/emitter-provider";
+import type { EditQueryEvent, Events } from "../../helpers/widget-events";
+import { EDIT_QUERY_EVENT } from "../../helpers/widget-events";
 import DeleteQueryButton from "./DeleteQueryButton.vue";
 
 describe("ReadingModeActionButtons", () => {
     let is_xlsx_export_allowed: boolean,
         current_query: Query,
-        emitter: EmitterProvider,
+        emitter: Emitter<Events>,
         is_user_admin: boolean,
         dispatched_edit_query_events: EditQueryEvent[];
+
+    const registerEditQueryEvent = (event: EditQueryEvent): void => {
+        dispatched_edit_query_events.push(event);
+    };
+
     function getWrapper(): VueWrapper<InstanceType<typeof ReadingModeActionButtons>> {
         return shallowMount(ReadingModeActionButtons, {
             global: {
@@ -63,10 +69,13 @@ describe("ReadingModeActionButtons", () => {
             is_default: false,
         };
         emitter = mitt<Events>();
-        emitter.on(EDIT_QUERY_EVENT, (event) => {
-            dispatched_edit_query_events.push(event);
-        });
+        emitter.on(EDIT_QUERY_EVENT, registerEditQueryEvent);
     });
+
+    afterEach(() => {
+        emitter.off(EDIT_QUERY_EVENT, registerEditQueryEvent);
+    });
+
     describe(`render XLSX button`, () => {
         it(`does not show the XLSX export button when told not to`, () => {
             is_xlsx_export_allowed = false;

@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER, WIDGET_ID } from "../../injection-symbols";
-import { TOGGLE_QUERY_DETAILS_EVENT } from "../../helpers/emitter-provider";
+import { TOGGLE_QUERY_DETAILS_EVENT } from "../../helpers/widget-events";
 
 defineProps<{
     are_query_details_toggled: boolean;

@@ -72,8 +72,8 @@ import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
 import EditCell from "./EditCell.vue";
-import type { RefreshArtifactsEvent } from "../../helpers/emitter-provider";
-import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import type { RefreshArtifactsEvent } from "../../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
 import type { Query } from "../../type";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
@@ -118,7 +118,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    emitter.off(REFRESH_ARTIFACTS_EVENT);
+    emitter.off(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
 });
 
 function loadArtifacts(): void {

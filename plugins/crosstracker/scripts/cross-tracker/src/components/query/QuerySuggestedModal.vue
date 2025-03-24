@@ -82,8 +82,8 @@ import { createModal } from "@tuleap/tlp-modal";
 import { onMounted, onUnmounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER } from "../../injection-symbols";
-import type { DisplayQueryPreviewEvent } from "../../helpers/emitter-provider";
-import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/emitter-provider";
+import type { DisplayQueryPreviewEvent } from "../../helpers/widget-events";
+import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/widget-events";
 import type { QuerySuggestion } from "../../domain/SuggestedQueriesGetter";
 
 const modal_element = ref<HTMLDivElement>();
@@ -114,6 +114,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     modal.value?.destroy();
+    emitter.off(DISPLAY_QUERY_PREVIEW_EVENT, display);
 });
 
 function display(event: DisplayQueryPreviewEvent): void {

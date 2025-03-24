@@ -42,7 +42,7 @@ import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { EMITTER, IS_EXPORT_ALLOWED, IS_USER_ADMIN } from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Query } from "../../type";
-import { EDIT_QUERY_EVENT } from "../../helpers/emitter-provider";
+import { EDIT_QUERY_EVENT } from "../../helpers/widget-events";
 import DeleteQueryButton from "./DeleteQueryButton.vue";
 
 defineProps<{

@@ -17,17 +17,19 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EmitterProvider, Events } from "../../src/helpers/emitter-provider";
+import type { Events } from "../../src/helpers/widget-events";
 import { Option } from "@tuleap/option";
+import type { Emitter } from "mitt";
 
 type EmittedEventTest = {
     emitted_event_name: Array<keyof Events>;
     emitted_event_message: Array<Option<Events[keyof Events]>>;
 };
 
-export type EmitterStub = EmitterProvider & EmittedEventTest;
+export type EmitterStub = Emitter<Events> & EmittedEventTest;
 
 export const EmitterStub = (): EmitterStub => {
+    const all = new Map();
     const emitted_event_name: Array<keyof Events> = [];
     const emitted_event_message: Array<Option<Events[keyof Events]>> = [];
     function off(): void {}
@@ -47,6 +49,7 @@ export const EmitterStub = (): EmitterStub => {
     return {
         emitted_event_name,
         emitted_event_message,
+        all,
         off,
         emit,
         on,

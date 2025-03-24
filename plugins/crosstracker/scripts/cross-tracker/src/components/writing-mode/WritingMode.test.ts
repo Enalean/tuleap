@@ -25,7 +25,7 @@ import WritingMode from "./WritingMode.vue";
 import { EMITTER } from "../../injection-symbols";
 import type { Query } from "../../type";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
-import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
 
 describe("WritingMode", () => {
     let emitter: EmitterStub;

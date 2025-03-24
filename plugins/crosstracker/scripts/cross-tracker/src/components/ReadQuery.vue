@@ -75,7 +75,7 @@ import type {
     DeletedQueryEvent,
     SwitchQueryEvent,
     ToggleQueryDetailsEvent,
-} from "../helpers/emitter-provider";
+} from "../helpers/widget-events";
 import {
     EDIT_QUERY_EVENT,
     REFRESH_ARTIFACTS_EVENT,
@@ -86,7 +86,7 @@ import {
     NOTIFY_SUCCESS_EVENT,
     NOTIFY_FAULT_EVENT,
     SWITCH_QUERY_EVENT,
-} from "../helpers/emitter-provider";
+} from "../helpers/widget-events";
 
 const emit = defineEmits<{
     (e: "switch-to-create-query-pane"): void;
@@ -181,8 +181,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     emitter.off(SWITCH_QUERY_EVENT, handleSwitchQuery);
-    emitter.off(TOGGLE_QUERY_DETAILS_EVENT);
-    emitter.off(QUERY_DELETED_EVENT);
+    emitter.off(TOGGLE_QUERY_DETAILS_EVENT, handleToggleQueryDetails);
+    emitter.off(QUERY_DELETED_EVENT, handleDeleteQuery);
 });
 
 function handleToggleQueryDetails(toggle: ToggleQueryDetailsEvent): void {

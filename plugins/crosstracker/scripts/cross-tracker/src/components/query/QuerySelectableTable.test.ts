@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
@@ -36,8 +36,9 @@ import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
 import QuerySelectableTable from "./QuerySelectableTable.vue";
 import SelectableCell from "../selectable-table/SelectableCell.vue";
-import type { EmitterProvider, Events, NotifyFaultEvent } from "../../helpers/emitter-provider";
-import { NOTIFY_FAULT_EVENT } from "../../helpers/emitter-provider";
+import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 
 vi.useFakeTimers();
@@ -47,15 +48,21 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
+
+    const registerFaultEvent = (event: NotifyFaultEvent): void => {
+        dispatched_fault_events.push(event);
+    };
+
+    afterEach(() => {
+        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
+    });
 
     beforeEach(() => {
         emitter = mitt<Events>();
         dispatched_fault_events = [];
-        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
-            dispatched_fault_events.push(event);
-        });
+        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
     });
 
     const getWrapper = (

@@ -113,7 +113,7 @@ import {
     NOTIFY_SUCCESS_EVENT,
     SEARCH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
-} from "../../../helpers/emitter-provider";
+} from "../../../helpers/widget-events";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
 import { useGettext } from "vue3-gettext";
