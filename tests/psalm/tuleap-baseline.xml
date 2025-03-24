@@ -4284,22 +4284,13 @@
       <code><![CDATA[searchArtifactsFromTracker]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryBuilder/CrossTrackerExpertQueryReportDao.php">
-    <MissingParamType>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[searchArtifactsMatchingQuery]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryBuilder/Metadata/AlwaysThereField/Users/UsersFromWhereBuilder.php">
+  <file src="plugins/crosstracker/include/Query/Advanced/QueryBuilder/Metadata/AlwaysThereField/Users/UsersFromWhereBuilder.php">
     <ImplicitToStringCast>
       <code><![CDATA[$in_condition]]></code>
       <code><![CDATA[$in_condition]]></code>
     </ImplicitToStringCast>
   </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryBuilderVisitor.php">
+  <file src="plugins/crosstracker/include/Query/Advanced/QueryBuilderVisitor.php">
     <MissingParamType>
       <code><![CDATA[$from_where_expression]]></code>
       <code><![CDATA[$from_where_expression]]></code>
@@ -4309,27 +4300,7 @@
       <code><![CDATA[buildOrClause]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/EmptyStringComparisonException.php">
-    <MissingParamType>
-      <code><![CDATA[$operator]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/OperatorNotAllowedForMetadataException.php">
-    <MissingParamType>
-      <code><![CDATA[$operator]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/StatusToSimpleValueComparisonException.php">
-    <MissingParamType>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/QueryValidation/Comparison/ToStringComparisonException.php">
-    <MissingParamType>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/Report/Query/Advanced/ResultBuilder/Representations/UserRepresentation.php">
+  <file src="plugins/crosstracker/include/Query/Advanced/ResultBuilder/Representations/UserRepresentation.php">
     <DeprecatedMethod>
       <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>

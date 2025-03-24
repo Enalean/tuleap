@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Widget;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
-use Tuleap\CrossTracker\SearchCrossTrackerWidgetStub;
+use Tuleap\CrossTracker\Tests\Stub\Widget\SearchCrossTrackerWidgetStub;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Test\Builders\ProjectTestBuilder;

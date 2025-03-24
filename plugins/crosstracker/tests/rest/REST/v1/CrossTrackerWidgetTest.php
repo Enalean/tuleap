@@ -70,21 +70,21 @@ final class CrossTrackerWidgetTest extends RestBase
         self::assertMatchesRegularExpression(self::UUID_PATTERN, $queries[0]['id']);
     }
 
-    public function testItThrowsAnExceptionWhenReportIsNotFound(): void
+    public function testItThrowsAnExceptionWhenWidgetIsNotFound(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_widget/100'));
 
         self::assertEquals(404, $response->getStatusCode());
     }
 
-    public function testYouCantAccessPersonalReportOfAnOtherUser(): void
+    public function testYouCantAccessPersonalWidgetOfAnOtherUser(): void
     {
         $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/2'));
 
         self::assertEquals(404, $response->getStatusCode());
     }
 
-    public function testYouCantAccessProjectReportOfProjectYouCantSee(): void
+    public function testYouCantAccessProjectWidgetOfProjectYouCantSee(): void
     {
         $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/3'));
 

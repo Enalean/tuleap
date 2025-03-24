@@ -24,8 +24,8 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use ProjectManager;
-use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryDao;
-use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryFactory;
+use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
+use Tuleap\CrossTracker\Query\CrossTrackerQueryFactory;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerWidgetRepresentation;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;

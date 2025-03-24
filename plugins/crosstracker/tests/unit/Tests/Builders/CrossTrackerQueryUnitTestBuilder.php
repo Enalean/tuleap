@@ -21,7 +21,7 @@
 declare(strict_types=1);
 namespace Tuleap\CrossTracker\Tests\Builders;
 
-use Tuleap\CrossTracker\CrossTrackerQuery;
+use Tuleap\CrossTracker\Query\CrossTrackerQuery;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
 

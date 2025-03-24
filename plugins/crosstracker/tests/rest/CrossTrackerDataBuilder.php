@@ -26,7 +26,7 @@ namespace Tuleap\CrossTracker;
 use EventManager;
 use LogicException;
 use REST_TestDataBuilder;
-use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryDao;
+use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
@@ -66,11 +66,11 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 
         $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
 
-        $user_report_id = $widget_dao->createWidget();
-        $query_dao->create('', 'Title 2', '', $user_report_id, false);
-        $dashboard_widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
-        $project_report_id = $widget_dao->createWidget();
-        $query_dao->create('', 'Title 3', '', $project_report_id, true);
-        $dashboard_widget_dao->create($dashboards[0]['project_id'], 'g', $dashboards[0]['id'], 'crosstrackersearch', $project_report_id);
+        $user_widget_id = $widget_dao->createWidget();
+        $query_dao->create('', 'Title 2', '', $user_widget_id, false);
+        $dashboard_widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_widget_id);
+        $project_widget_id = $widget_dao->createWidget();
+        $query_dao->create('', 'Title 3', '', $project_widget_id, true);
+        $dashboard_widget_dao->create($dashboards[0]['project_id'], 'g', $dashboards[0]['id'], 'crosstrackersearch', $project_widget_id);
     }
 }

@@ -28,18 +28,18 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerQuery;
-use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
-use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactoryBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
-use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryDao;
-use Tuleap\CrossTracker\Report\Query\CrossTrackerQueryFactory;
-use Tuleap\CrossTracker\Report\Query\QueryCreator;
-use Tuleap\CrossTracker\Report\Query\QueryUpdater;
+use Tuleap\CrossTracker\Query\Advanced\ExpertQueryIsEmptyException;
+use Tuleap\CrossTracker\Query\Advanced\InvalidOrderByBuilder;
+use Tuleap\CrossTracker\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\CrossTracker\Query\Advanced\InvalidSelectablesCollectionBuilder;
+use Tuleap\CrossTracker\Query\Advanced\InvalidSelectablesCollectorVisitor;
+use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactory;
+use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactoryBuilder;
+use Tuleap\CrossTracker\Query\CrossTrackerQuery;
+use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
+use Tuleap\CrossTracker\Query\CrossTrackerQueryFactory;
+use Tuleap\CrossTracker\Query\QueryCreator;
+use Tuleap\CrossTracker\Query\QueryUpdater;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerGetContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPostRepresentation;
@@ -79,13 +79,13 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
     public const  MAX_LIMIT = 50;
 
     private readonly ProvideCurrentUser $current_user_provider;
-    private readonly CrossTrackerArtifactReportFactoryBuilder $factory_builder;
+    private readonly CrossTrackerArtifactQueryFactoryBuilder $factory_builder;
     private readonly QueryParameterParser $parameter_parser;
 
     public function __construct()
     {
         $this->current_user_provider = UserManager::instance();
-        $this->factory_builder       = new CrossTrackerArtifactReportFactoryBuilder();
+        $this->factory_builder       = new CrossTrackerArtifactQueryFactoryBuilder();
         $this->parameter_parser      = new QueryParameterParser(new JsonDecoder());
     }
 
@@ -133,7 +133,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $query->widget_id);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingReport(
+                fn() => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingQuery(
                     CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($query->tql_query, $query->widget_id),
                     $current_user,
                     $limit,
@@ -204,7 +204,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $query        = $this->getQuery($id, $current_user);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingReport($query, $current_user, $limit, $offset)
+                fn() => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingQuery($query, $current_user, $limit, $offset)
             );
 
             assert($artifacts instanceof CrossTrackerQueryContentRepresentation);
@@ -266,7 +266,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             }
             $new_query = CrossTrackerQueryFactory::fromQueryToEdit($previous_query, $query_representation);
 
-            $trackers = $this->factory_builder->getReportTrackersRetriever()->getReportTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
+            $trackers = $this->factory_builder->getQueryTrackersRetriever()->getQueryTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactQueryFactory::MAX_TRACKER_FROM));
             $this->checkQueryIsValid($trackers, $new_query->getQuery(), $current_user, $new_query->getWidgetId());
 
             $query_dao = $this->getQueryDao();
@@ -350,7 +350,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToUpdateWidget($current_user, $query_representation->widget_id);
 
             $new_query = CrossTrackerQueryFactory::fromQueryPostRepresentation($query_representation);
-            $trackers  = $this->factory_builder->getReportTrackersRetriever()->getReportTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_TRACKER_FROM));
+            $trackers  = $this->factory_builder->getQueryTrackersRetriever()->getQueryTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactQueryFactory::MAX_TRACKER_FROM));
             $this->checkQueryIsValid($trackers, $new_query->getQuery(), $current_user, $new_query->getWidgetId());
 
             $query_dao     = $this->getQueryDao();

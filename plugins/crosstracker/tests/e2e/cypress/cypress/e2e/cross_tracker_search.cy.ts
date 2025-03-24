@@ -108,7 +108,7 @@ describe("CrossTracker search", function () {
         cy.get("[data-test=cross-tracker-report-success]");
 
         cy.intercept("/api/v1/crosstracker_query/*/content*").as("getSpecificQueryContent");
-        cy.log("reload page and check report still has results");
+        cy.log("reload page and check widget still has results");
         cy.reload();
         cy.wait("@getSpecificQueryContent", { timeout: 5000 });
         cy.get("[data-test=cross-tracker-search-widget] [data-test=cell]").then((cell) => {
