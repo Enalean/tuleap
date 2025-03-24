@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 use SimpleXMLElement;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
+use Tuleap\User\RetrieveUserByUserName;
 
 final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
 {
@@ -32,6 +33,7 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
         private readonly RetrieveMatchingValueByDuckTyping $field_value_matcher,
         private readonly MoveChangesetXMLUpdater $XML_updater,
         private readonly \XML_SimpleXMLCDATAFactory $cdata_factory,
+        private readonly RetrieveUserByUserName $retrieve_user_by_user_name,
     ) {
     }
 
@@ -48,6 +50,13 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
 
         $destinations_values_ids = [];
         foreach ($list_value_ids as $value_id) {
+            if ($source_field->getBind()->getType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+                $user = $this->retrieve_user_by_user_name->getUserByUserName((string) $value_id);
+                if ($user) {
+                    $value_id = $user->getId();
+                }
+            }
+
             $destination_list_value_id = $this->field_value_matcher->getMatchingValueByDuckTyping(
                 $source_field,
                 $destination_field,

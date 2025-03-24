@@ -23,7 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML\Updater;
 
 use SimpleXMLElement;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingValueByDuckTypingStub;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
@@ -43,13 +47,15 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
 
     public function testItDoesNotSetBindValueWhenXmlValueIsZero(): void
     {
+        ListStaticBindBuilder::aStaticBind($this->target_field)->build();
+        ListStaticBindBuilder::aStaticBind($this->source_field)->build();
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
         $field_change        = $changeset_xml->addChild('field_change');
         $field_change->value = 0;
 
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([0 => 0]);
-        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
+        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory(), ProvideAndRetrieveUserStub::build(UserTestBuilder::aUser()->build()));
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
         self::assertSame('0', (string) $changeset_xml->field_change[0]->value);
@@ -57,13 +63,15 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
 
     public function testItSetBindValueForSingleValueSelect(): void
     {
+        ListStaticBindBuilder::aStaticBind($this->target_field)->build();
+        ListStaticBindBuilder::aStaticBind($this->source_field)->build();
         $xml                 = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
         $changeset_xml       = new SimpleXMLElement($xml);
         $field_change        = $changeset_xml->addChild('field_change');
         $field_change->value = 101;
 
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([101 => 309]);
-        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
+        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory(), ProvideAndRetrieveUserStub::build(UserTestBuilder::aUser()->build()));
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
         self::assertSame('309', (string) $changeset_xml->field_change[0]->value);
@@ -71,6 +79,8 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
 
     public function testItSetBindValueForMultipleValuesSelect(): void
     {
+        ListStaticBindBuilder::aStaticBind($this->target_field)->build();
+        ListStaticBindBuilder::aStaticBind($this->source_field)->build();
         $xml           = '<?xml version="1.0" encoding="UTF-8"?>'
             . '<changeset>'
             . '    <field_change field_name="plop" type="list" bind="static">'
@@ -81,7 +91,7 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
         $changeset_xml = new SimpleXMLElement($xml);
 
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([102 => 190]);
-        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
+        $updater             = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory(), ProvideAndRetrieveUserStub::build(UserTestBuilder::aUser()->build()));
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
         self::assertSame('190', (string) $changeset_xml->field_change[0]->value);
@@ -89,6 +99,8 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
 
     public function testItIgnoresDuplicates(): void
     {
+        ListStaticBindBuilder::aStaticBind($this->target_field)->build();
+        ListStaticBindBuilder::aStaticBind($this->source_field)->build();
         $xml           = '<?xml version="1.0" encoding="UTF-8"?>'
             . '<changeset>'
             . '    <field_change field_name="plop" type="list" bind="static">'
@@ -104,9 +116,37 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
         ]);
 
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
-        $updater       = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), $cdata_factory);
+        $updater       = new BindValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), $cdata_factory, ProvideAndRetrieveUserStub::build(UserTestBuilder::aUser()->build()));
 
         $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
         $this->addToAssertionCount(1);
+    }
+
+    public function testItBindsValueWithAUserInUserNameFormat(): void
+    {
+        ListUserBindBuilder::aUserBind($this->target_field)->build();
+        ListUserBindBuilder::aUserBind($this->source_field)->build();
+
+        $user          = UserTestBuilder::aUser()->withId(102)->withUserName('my-user-name')->build();
+        $retrieve_user = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$user]);
+        $xml           = '<?xml version="1.0" encoding="UTF-8"?>'
+            . '<changeset>'
+            . '    <field_change field_name="plop" type="list" bind="users">'
+            . '        <value format="username">' . $user->getUserName() . '</value>'
+            . '    </field_change>'
+            . '</changeset>';
+        $changeset_xml = new SimpleXMLElement($xml);
+
+        $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withMatchingValues([102 => 190]);
+
+        $updater = new BindValueForDuckTypingUpdater(
+            $field_value_matcher,
+            new MoveChangesetXMLUpdater(),
+            new XML_SimpleXMLCDATAFactory(),
+            $retrieve_user
+        );
+
+        $updater->updateValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
+        self::assertSame(190, (int) $changeset_xml->field_change[0]->value);
     }
 }
