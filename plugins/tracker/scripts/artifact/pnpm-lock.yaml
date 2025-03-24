@@ -26,9 +26,15 @@ dependencies:
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
     specifier: workspace:*
     version: link:../lib/artifact-ckeditor-image-upload
+  '@tuleap/plugin-tracker-artifact-common':
+    specifier: workspace:^
+    version: link:../lib/artifact-common
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:*
     version: link:../lib/constants
+  '@tuleap/plugin-tracker-link-field':
+    specifier: workspace:^
+    version: link:../lib/link-field
   '@tuleap/plugin-tracker-rich-text-editor':
     specifier: workspace:*
     version: link:../lib/rich-text-editor

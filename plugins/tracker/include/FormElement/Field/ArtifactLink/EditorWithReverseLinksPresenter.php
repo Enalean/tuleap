@@ -56,6 +56,6 @@ final readonly class EditorWithReverseLinksPresenter
         $this->current_tracker_short_name = $current_tracker->getItemName();
         $this->current_project_id         = (int) $current_tracker->getGroupId();
         $this->parent_tracker_id          = $parent_tracker?->getId();
-        $this->allowed_link_types         = '';
+        $this->allowed_link_types         = '[]';
     }
 }

@@ -20,6 +20,7 @@
 import "./adapters/UI/link-field.scss";
 import "./adapters/UI/LinkField";
 
+export { createLinkField } from "./adapters/UI/CreateLinkField";
 export { UserIdentifier } from "./domain/UserIdentifier";
 export { ParentTrackerIdentifier } from "./domain/ParentTrackerIdentifier";
 export { TrackerShortname } from "./domain/TrackerShortname";

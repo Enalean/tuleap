@@ -30,6 +30,7 @@ use Tracker_Artifact_Followup_Item;
 use Tracker_ArtifactByEmailStatus;
 use Tracker_FormElementFactory;
 use TransitionFactory;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\EditView\NewCommentPresenter;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
@@ -112,6 +113,7 @@ readonly class ArtifactViewEdit extends TrackerArtifactView
             __DIR__ . '/../../../scripts/artifact/frontend-assets',
             '/assets/trackers/artifact'
         );
+        $GLOBALS['HTML']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($include_assets, 'edition-style'));
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
     }
 

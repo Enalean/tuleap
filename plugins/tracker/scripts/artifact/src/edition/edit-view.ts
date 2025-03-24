@@ -25,6 +25,7 @@ import { CommentEditor } from "./comments/CommentEditor";
 import { LitHTMLAdapter } from "./comments/LitHTMLAdapter";
 import { DOMAdapter } from "./comments/DOMAdapter";
 import { TuleapAPIClient } from "./comments/TuleapAPIClient";
+import { LinkFieldEditor } from "./link-field/LinkFieldEditor";
 
 // Do not use DOMContentLoaded event because it arrives after jQuery document ready event
 // and it will cause the "submission bar" to stop working.
@@ -42,7 +43,14 @@ document.addEventListener("readystatechange", () => {
     creator.createTextFieldEditors();
 });
 
-document.addEventListener("DOMContentLoaded", async () => {
+function initLinkField(): void {
+    const mount_point = document.querySelector("[data-link-field-id]");
+    if (mount_point instanceof HTMLElement) {
+        LinkFieldEditor(document).init(mount_point);
+    }
+}
+
+async function initComments(): Promise<void> {
     const locale = getLocaleWithDefault(document);
     const gettext_provider = await initGettext(
         locale,
@@ -64,6 +72,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         TuleapAPIClient(document, window),
     );
     dom_adapter.findEditCommentButtons().forEach(editor.init);
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    initLinkField();
+    await initComments();
 });
 
 // Edition-switcher must execute after CKEditors are initialized, otherwise the
