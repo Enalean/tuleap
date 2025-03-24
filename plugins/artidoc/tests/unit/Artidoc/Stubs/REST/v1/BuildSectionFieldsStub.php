@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Stubs\REST\v1;
 
-use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tracker_Artifact_Changeset;
+use Tuleap\Artidoc\REST\v1\BuildSectionFields;
+use Tuleap\Artidoc\REST\v1\SectionStringFieldRepresentation;
 
-/**
- * @psalm-immutable
- */
-final readonly class ArtifactSectionRepresentation implements SectionRepresentation
+final readonly class BuildSectionFieldsStub implements BuildSectionFields
 {
-    public string $type;
-
     /**
      * @param list<SectionStringFieldRepresentation> $fields
      */
-    public function __construct(
-        public string $id,
-        public int $level,
-        public ArtifactReference $artifact,
-        public string $title,
-        public string $description,
-        public bool $can_user_edit_section,
-        public ?ArtifactSectionAttachmentsRepresentation $attachments,
-        public array $fields,
-    ) {
-        $this->type = 'artifact';
+    private function __construct(private array $fields)
+    {
+    }
+
+    public static function withoutFields(): self
+    {
+        return new self([]);
+    }
+
+    public function getFields(Tracker_Artifact_Changeset $changeset): array
+    {
+        return $this->fields;
     }
 }

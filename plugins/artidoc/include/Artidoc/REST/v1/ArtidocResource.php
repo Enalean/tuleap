@@ -40,12 +40,15 @@ use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
 use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\TooManyRequiredFieldsFault;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\EmptyDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\CannotMoveSectionRelativelyToItselfFault;
 use Tuleap\Artidoc\Domain\Document\Order\ChangeSectionOrder;
@@ -195,7 +198,7 @@ final class ArtidocResource extends AuthenticatedResource
         return $this->getPaginatedRetrievedSectionsRetriever($user)
             ->retrievePaginatedRetrievedSections($id, $limit, $offset)
             ->andThen(fn (PaginatedRetrievedSections $retrieved_sections) =>
-                $this->getRepresentationTransformer($user)->getRepresentation($retrieved_sections, $user))->match(
+                $this->getRepresentationTransformer($retrieved_sections->artidoc, $user)->getRepresentation($retrieved_sections, $user))->match(
                     function (PaginatedArtidocSectionRepresentationCollection $collection) use ($limit, $offset) {
                         Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
                         return $collection->sections;
@@ -395,10 +398,12 @@ final class ArtidocResource extends AuthenticatedResource
         );
     }
 
-    private function getRepresentationTransformer(\PFUser $user): RetrievedSectionsToRepresentationTransformer
-    {
+    private function getRepresentationTransformer(
+        ArtidocWithContext $artidoc,
+        \PFUser $user,
+    ): RetrievedSectionsToRepresentationTransformer {
         return new RetrievedSectionsToRepresentationTransformer(
-            $this->getSectionRepresentationBuilder(),
+            $this->getSectionRepresentationBuilder($artidoc, $user),
             new RequiredSectionInformationCollector(
                 $user,
                 new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance())
@@ -406,9 +411,11 @@ final class ArtidocResource extends AuthenticatedResource
         );
     }
 
-    private function getSectionRepresentationBuilder(): SectionRepresentationBuilder
-    {
-        return new SectionRepresentationBuilder($this->getArtifactSectionRepresentationBuilder());
+    private function getSectionRepresentationBuilder(
+        ArtidocWithContext $artidoc,
+        \PFUser $user,
+    ): SectionRepresentationBuilder {
+        return new SectionRepresentationBuilder($this->getArtifactSectionRepresentationBuilder($artidoc, $user));
     }
 
     private function getArtidocWithContextRetriever(\PFUser $user): RetrieveArtidocWithContext
@@ -429,9 +436,16 @@ final class ArtidocResource extends AuthenticatedResource
         return $retriever_builder->buildForUser($user);
     }
 
-    private function getArtifactSectionRepresentationBuilder(): ArtifactSectionRepresentationBuilder
-    {
+    private function getArtifactSectionRepresentationBuilder(
+        ArtidocWithContext $artidoc,
+        \PFUser $user,
+    ): ArtifactSectionRepresentationBuilder {
         $form_element_factory = \Tracker_FormElementFactory::instance();
+
+        $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
+            new ConfiguredFieldDao(),
+            $form_element_factory,
+        );
 
         return new ArtifactSectionRepresentationBuilder(
             new FileUploadDataProvider(
@@ -450,6 +464,9 @@ final class ArtidocResource extends AuthenticatedResource
                 ),
                 $form_element_factory
             ),
+            new SectionFieldsBuilder(
+                $configured_field_collection_builder->buildFromArtidoc($artidoc, $user),
+            )
         );
     }
 
