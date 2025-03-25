@@ -37,57 +37,57 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValueXMLExporterVisitor;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ExternalExporterCollector&MockObject $collector;
 
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter&MockObject $unknown_exporter;
+    private ChangesetValueUnknownXMLExporter&MockObject $unknown_exporter;
 
     private Tracker_Artifact_Changeset $changeset;
 
-    private Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor $visitor;
+    private ChangesetValueXMLExporterVisitor $visitor;
 
     private SimpleXMLElement $changeset_xml;
 
     private SimpleXMLElement $artifact_xml;
 
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $int_exporter;
+    private ChangesetValueIntegerXMLExporter $int_exporter;
 
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter $float_exporter;
+    private ChangesetValueFloatXMLExporter $float_exporter;
 
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter;
+    private ChangesetValueArtifactLinkXMLExporter $artlink_exporter;
 
     protected function setUp(): void
     {
         $this->int_exporter     = $this->createMock(
-            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter::class
+            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueIntegerXMLExporter::class
         );
         $this->float_exporter   = $this->createMock(
-            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter::class
+            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFloatXMLExporter::class
         );
         $this->artlink_exporter = $this->createMock(
-            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter::class
+            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueArtifactLinkXMLExporter::class
         );
         $this->collector        = $this->createMock(ExternalExporterCollector::class);
         $this->artifact_xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->unknown_exporter = $this->createMock(
-            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter::class
+            \Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueUnknownXMLExporter::class
         );
-        $this->visitor          = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
-            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter::class),
-            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter::class),
+        $this->visitor          = new ChangesetValueXMLExporterVisitor(
+            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueDateXMLExporter::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFileXMLExporter::class),
             $this->float_exporter,
             $this->int_exporter,
-            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter::class),
-            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter::class),
-            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter::class),
-            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter::class),
-            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueStringXMLExporter::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueTextXMLExporter::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValuePermissionsOnArtifactXMLExporter::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueListXMLExporter::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueOpenListXMLExporter::class),
             $this->artlink_exporter,
             $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter::class),
             $this->unknown_exporter,
@@ -240,9 +240,9 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
         };
     }
 
-    private function getExternalExporter(): Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
+    private function getExternalExporter(): ChangesetValueXMLExporter
     {
-        return new class extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
+        return new class extends ChangesetValueXMLExporter {
             protected function getFieldChangeType()
             {
             }

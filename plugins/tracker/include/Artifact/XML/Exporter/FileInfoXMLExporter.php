@@ -28,11 +28,10 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 use XML_SimpleXMLCDATAFactory;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class FileInfoXMLExporter
 {
     /**
-     * @var Tracker_XML_Exporter_FilePathXMLExporter
+     * @var FilePathXMLExporter
      */
     private $path_exporter;
 
@@ -41,7 +40,7 @@ class FileInfoXMLExporter
      */
     private $file_infos_by_artifact_id = [];
 
-    public function __construct(Tracker_XML_Exporter_FilePathXMLExporter $path_exporter)
+    public function __construct(FilePathXMLExporter $path_exporter)
     {
         $this->path_exporter = $path_exporter;
     }

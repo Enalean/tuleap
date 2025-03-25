@@ -28,7 +28,7 @@ use Tracker_XML_ChildrenCollector;
 use Tuleap\Tracker\Artifact\Artifact;
 use XML_SimpleXMLCDATAFactory;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueArtifactLinkXMLExporter extends ChangesetValueXMLExporter
 {
     /**
      * @var PFUser

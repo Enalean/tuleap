@@ -24,7 +24,7 @@ use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueUnknownXMLExporter extends ChangesetValueXMLExporter
 {
     protected function getFieldChangeType()
     {

@@ -27,17 +27,17 @@ use PFUser;
 use Tracker_XML_ChildrenCollector;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ExternalExporterCollector;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueArtifactLinkXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueDateXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFileXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFloatXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueIntegerXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueListXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueOpenListXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValuePermissionsOnArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueStringXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueTextXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueUnknownXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeListBuilder;
@@ -46,63 +46,62 @@ use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
+class ArtifactXMLExporterBuilder
 {
     public function build(
         Tracker_XML_ChildrenCollector $children_collector,
-        Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
+        FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user,
         UserXMLExporter $user_xml_exporter,
         $is_in_archive_context,
-    ): Tracker_XML_Exporter_ArtifactXMLExporter {
+    ): ArtifactXMLExporter {
         $file_info_xml_exporter = new FileInfoXMLExporter($file_path_xml_exporter);
 
-        $visitor            = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(
+        $visitor            = new ChangesetValueXMLExporterVisitor(
+            new ChangesetValueDateXMLExporter(
                 new FieldChangeDateBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 )
             ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter($file_info_xml_exporter),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter(
+            new ChangesetValueFileXMLExporter($file_info_xml_exporter),
+            new ChangesetValueFloatXMLExporter(
                 new FieldChangeFloatBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 )
             ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter(
+            new ChangesetValueIntegerXMLExporter(),
+            new ChangesetValueStringXMLExporter(
                 new FieldChangeStringBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 )
             ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(
+            new ChangesetValueTextXMLExporter(
                 new FieldChangeTextBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 )
             ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
+            new ChangesetValuePermissionsOnArtifactXMLExporter(),
+            new ChangesetValueListXMLExporter(
                 new FieldChangeListBuilder(
                     new XML_SimpleXMLCDATAFactory(),
                     $user_xml_exporter
                 )
             ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter($user_xml_exporter),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter(
+            new ChangesetValueOpenListXMLExporter($user_xml_exporter),
+            new ChangesetValueArtifactLinkXMLExporter(
                 $children_collector,
                 $current_user
             ),
             new ChangesetValueComputedXMLExporter($current_user, $is_in_archive_context),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter(),
+            new ChangesetValueUnknownXMLExporter(),
             new ExternalExporterCollector(EventManager::instance())
         );
-        $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor, $is_in_archive_context);
-        $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter(
+        $values_exporter    = new ChangesetValuesXMLExporter($visitor, $is_in_archive_context);
+        $changeset_exporter = new ChangesetXMLExporter(
             $values_exporter,
             $user_xml_exporter
         );
 
-        return new Tracker_XML_Exporter_ArtifactXMLExporter($changeset_exporter, $file_info_xml_exporter);
+        return new ArtifactXMLExporter($changeset_exporter, $file_info_xml_exporter);
     }
 }

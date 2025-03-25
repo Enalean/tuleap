@@ -21,8 +21,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
 use Tracker_XML_ChildrenCollector;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_NullChildrenCollector extends Tracker_XML_ChildrenCollector
+class NullChildrenCollector extends Tracker_XML_ChildrenCollector
 {
     public const MAX = 50;
 

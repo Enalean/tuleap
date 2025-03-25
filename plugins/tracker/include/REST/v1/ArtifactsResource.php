@@ -118,9 +118,9 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_NullChildrenCollector;
+use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporterBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\LocalAbsoluteFilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
@@ -1363,9 +1363,9 @@ class ArtifactsResource extends AuthenticatedResource
 
     private function getMoveDuckTypingAction(PFUser $user): MegaMoverArtifactByDuckTyping
     {
-        $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
-        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
-        $file_path_xml_exporter = new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter();
+        $builder                = new ArtifactXMLExporterBuilder();
+        $children_collector     = new NullChildrenCollector();
+        $file_path_xml_exporter = new LocalAbsoluteFilePathXMLExporter();
 
         $user_xml_exporter = new UserXMLExporter(
             $this->user_manager,

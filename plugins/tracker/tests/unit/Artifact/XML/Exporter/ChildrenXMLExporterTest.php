@@ -31,19 +31,19 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker_XML_ChildrenCollector $collector;
 
-    private Tracker_XML_Exporter_ChildrenXMLExporter $exporter;
+    private ChildrenXMLExporter $exporter;
 
-    private Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_exporter;
+    private ArtifactXMLExporter $artifact_xml_exporter;
 
     private Tracker_XML_Updater_TemporaryFileXMLUpdater&MockObject $file_updater;
 
     private SimpleXMLElement $artifact_xml;
 
-    private Tracker_XML_Exporter_ChangesetXMLExporter&MockObject $changeset_exporter;
+    private ChangesetXMLExporter&MockObject $changeset_exporter;
 
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
@@ -93,17 +93,17 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
             });
         $this->collector = new Tracker_XML_ChildrenCollector();
 
-        $this->changeset_exporter = $this->createMock(Tracker_XML_Exporter_ChangesetXMLExporter::class);
+        $this->changeset_exporter = $this->createMock(ChangesetXMLExporter::class);
 
         $file_info_xml_exporter = $this->createMock(FileInfoXMLExporter::class);
         $file_info_xml_exporter->method('export');
 
-        $this->artifact_xml_exporter = new Tracker_XML_Exporter_ArtifactXMLExporter(
+        $this->artifact_xml_exporter = new ArtifactXMLExporter(
             $this->changeset_exporter,
             $file_info_xml_exporter
         );
 
-        $this->exporter = new Tracker_XML_Exporter_ChildrenXMLExporter(
+        $this->exporter = new ChildrenXMLExporter(
             $this->artifact_xml_exporter,
             $this->file_updater,
             $this->artifact_factory,

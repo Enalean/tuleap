@@ -38,9 +38,9 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $exporter;
+    private ChangesetValueArtifactLinkXMLExporter $exporter;
 
     private SimpleXMLElement $changeset_xml;
 
@@ -79,7 +79,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             ->inTracker($story_tracker)
             ->withName('artifact links')
             ->build();
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter(
+        $this->exporter      = new ChangesetValueArtifactLinkXMLExporter(
             $this->collector,
             $this->user
         );

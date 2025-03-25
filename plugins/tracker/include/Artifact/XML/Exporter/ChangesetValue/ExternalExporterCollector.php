@@ -37,7 +37,7 @@ class ExternalExporterCollector
         $this->event_manager = $event_manager;
     }
 
-    public function collectExporter(Tracker_Artifact_ChangesetValue $changeset_value): ?Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
+    public function collectExporter(Tracker_Artifact_ChangesetValue $changeset_value): ?ChangesetValueXMLExporter
     {
         $external_exporter_getter = new GetExternalExporter($changeset_value);
         $this->event_manager->processEvent($external_exporter_getter);

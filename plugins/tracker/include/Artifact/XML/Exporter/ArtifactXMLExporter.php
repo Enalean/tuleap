@@ -24,11 +24,10 @@ use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\Artifact;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ArtifactXMLExporter
+class ArtifactXMLExporter
 {
     /**
-     * @var Tracker_XML_Exporter_ChangesetXMLExporter
+     * @var ChangesetXMLExporter
      */
     private $changeset_exporter;
     /**
@@ -37,7 +36,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporter
     private $file_info_xml_exporter;
 
     public function __construct(
-        Tracker_XML_Exporter_ChangesetXMLExporter $changeset_exporter,
+        ChangesetXMLExporter $changeset_exporter,
         FileInfoXMLExporter $file_info_xml_exporter,
     ) {
         $this->changeset_exporter     = $changeset_exporter;

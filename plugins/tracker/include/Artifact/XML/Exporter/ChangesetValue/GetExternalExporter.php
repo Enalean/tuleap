@@ -35,7 +35,7 @@ class GetExternalExporter implements Dispatchable
     private $changeset_value;
 
     /**
-     * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter | null
+     * @var ChangesetValueXMLExporter | null
      */
     private $exporter;
 
@@ -49,12 +49,12 @@ class GetExternalExporter implements Dispatchable
         return $this->changeset_value;
     }
 
-    public function addExporter(Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter $exporter): void
+    public function addExporter(ChangesetValueXMLExporter $exporter): void
     {
         $this->exporter = $exporter;
     }
 
-    public function getExporter(): ?Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
+    public function getExporter(): ?ChangesetValueXMLExporter
     {
         return $this->exporter;
     }

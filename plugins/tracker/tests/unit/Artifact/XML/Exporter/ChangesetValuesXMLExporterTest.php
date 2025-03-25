@@ -30,9 +30,9 @@ use Tracker_Artifact_ChangesetValue_Integer;
 use Tuleap\Tracker\Artifact\Artifact;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor */
+    /** @var ChangesetValueXMLExporterVisitor */
     private $visitor;
 
     /** @var SimpleXMLElement */
@@ -47,7 +47,7 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\
     /** @var Tracker_Artifact_ChangesetValue */
     private $float_changeset_value;
 
-    /** @var Tracker_XML_Exporter_ChangesetValuesXMLExporter */
+    /** @var ChangesetValuesXMLExporter */
     private $values_exporter;
 
     /** @var Artifact */
@@ -59,8 +59,8 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \Tuleap\
         parent::setUp();
         $this->artifact_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml   = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->visitor         = $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor::class);
-        $this->values_exporter = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($this->visitor, false);
+        $this->visitor         = $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValueXMLExporterVisitor::class);
+        $this->values_exporter = new ChangesetValuesXMLExporter($this->visitor, false);
 
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
 

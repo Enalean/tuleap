@@ -39,13 +39,13 @@ use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_XML_Exporter_ChangesetXMLExporter $exporter;
+    private ChangesetXMLExporter $exporter;
 
     private SimpleXMLElement $artifact_xml;
 
-    private Tracker_XML_Exporter_ChangesetValuesXMLExporter&MockObject $values_exporter;
+    private ChangesetValuesXMLExporter&MockObject $values_exporter;
 
     private array $values;
 
@@ -67,8 +67,8 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \Tuleap\Test\P
             ->onlyMethods(['exportUserByMail'])
             ->getMock();
         $this->artifact_xml      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
-        $this->values_exporter   = $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ChangesetValuesXMLExporter::class);
-        $this->exporter          = new Tracker_XML_Exporter_ChangesetXMLExporter(
+        $this->values_exporter   = $this->createMock(\Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValuesXMLExporter::class);
+        $this->exporter          = new ChangesetXMLExporter(
             $this->values_exporter,
             $this->user_xml_exporter
         );

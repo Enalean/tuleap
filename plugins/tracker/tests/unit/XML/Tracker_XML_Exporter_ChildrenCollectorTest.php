@@ -34,7 +34,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \Tuleap\Test\PHPU
 
     public function testItRaisesAnExceptionWhenTooManyChildrenAreAdded(): void
     {
-        $this->expectException(\Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_TooManyChildrenException::class);
+        $this->expectException(\Tuleap\Tracker\Artifact\XML\Exporter\TooManyChildrenException::class);
         for ($i = 0; $i <= Tracker_XML_ChildrenCollector::MAX; ++$i) {
             $this->collector->addChild($i, 'whatever');
         }

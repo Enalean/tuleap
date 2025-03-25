@@ -26,7 +26,7 @@ use Tracker_Artifact_ChangesetValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use XML_SimpleXMLCDATAFactory;
 
-class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter
+class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
 {
     /**
      * @var PFUser

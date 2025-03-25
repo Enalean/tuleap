@@ -27,7 +27,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueFloatXMLExporter extends ChangesetValueXMLExporter
 {
     /**
      * @var FieldChangeFloatBuilder

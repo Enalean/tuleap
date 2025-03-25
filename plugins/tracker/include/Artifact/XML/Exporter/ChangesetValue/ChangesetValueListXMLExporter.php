@@ -25,7 +25,7 @@ use Tracker_Artifact_ChangesetValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeListBuilder;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueListXMLExporter extends ChangesetValueXMLExporter
 {
     /**
      * @var FieldChangeListBuilder

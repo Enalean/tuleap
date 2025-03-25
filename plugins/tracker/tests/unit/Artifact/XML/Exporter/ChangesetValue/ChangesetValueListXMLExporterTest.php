@@ -33,9 +33,9 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ChangesetValueListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter $exporter;
+    private ChangesetValueListXMLExporter $exporter;
 
     private SimpleXMLElement $changeset_xml;
 
@@ -48,7 +48,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
     protected function setUp(): void
     {
         parent::setUp();
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
+        $this->exporter      = new ChangesetValueListXMLExporter(
             new FieldChangeListBuilder(
                 new XML_SimpleXMLCDATAFactory(),
                 $this->createMock(\UserXMLExporter::class)

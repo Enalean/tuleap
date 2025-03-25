@@ -67,9 +67,9 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\Tracker_XML_Exporter_NullChildrenCollector;
+use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporterBuilder;
+use Tuleap\Tracker\Artifact\XML\Exporter\InArchiveFilePathXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -838,9 +838,9 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 
         $collection = $this->createStub(UserXMLExportedCollection::class);
         $collection->method('add');
-        $artifact_xml_exporter = (new Tracker_XML_Exporter_ArtifactXMLExporterBuilder())->build(
-            new Tracker_XML_Exporter_NullChildrenCollector(),
-            $this->createStub(Tracker_XML_Exporter_InArchiveFilePathXMLExporter::class),
+        $artifact_xml_exporter = (new ArtifactXMLExporterBuilder())->build(
+            new NullChildrenCollector(),
+            $this->createStub(InArchiveFilePathXMLExporter::class),
             $user,
             new UserXMLExporter($user_manager, $collection),
             false

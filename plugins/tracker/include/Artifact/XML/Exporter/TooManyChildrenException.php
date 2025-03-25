@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
 use Exception;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_TooManyChildrenException extends Exception
+class TooManyChildrenException extends Exception
 {
 }

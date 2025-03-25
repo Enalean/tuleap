@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\FileInfoXMLExporter;
 use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ChangesetValueFileXMLExporter extends ChangesetValueXMLExporter
 {
     /**
      * @var FileInfoXMLExporter

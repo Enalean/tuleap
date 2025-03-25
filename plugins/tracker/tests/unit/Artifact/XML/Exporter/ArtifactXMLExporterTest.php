@@ -30,13 +30,13 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Exporter_ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_XML_Exporter_ArtifactXMLExporter $exporter;
+    private ArtifactXMLExporter $exporter;
 
     private SimpleXMLElement $artifacts_xml;
 
-    private Tracker_XML_Exporter_ChangesetXMLExporter&MockObject $changeset_exporter;
+    private ChangesetXMLExporter&MockObject $changeset_exporter;
 
     private Tracker_Artifact_Changeset $changeset;
 
@@ -56,10 +56,10 @@ final class Tracker_XML_Exporter_ArtifactXMLExporterTest extends \Tuleap\Test\PH
         $previous_changeset = ChangesetTestBuilder::aChangeset(67)->ofArtifact($this->artifact)->build();
         $this->artifact->setChangesets([$previous_changeset, $this->changeset]);
 
-        $this->changeset_exporter = $this->createMock(Tracker_XML_Exporter_ChangesetXMLExporter::class);
+        $this->changeset_exporter = $this->createMock(ChangesetXMLExporter::class);
         $this->file_exporter      = $this->createMock(FileInfoXMLExporter::class);
 
-        $this->exporter = new Tracker_XML_Exporter_ArtifactXMLExporter(
+        $this->exporter = new ArtifactXMLExporter(
             $this->changeset_exporter,
             $this->file_exporter
         );
