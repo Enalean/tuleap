@@ -73,7 +73,7 @@
     "turbo": "^2.3.3",
     "typescript": "^5.3.3",
     "unplugin-vue2-script-setup": "^0.9.2",
-    "vite": "^6.2.1",
+    "vite": "^6.2.3",
     "vite-plugin-dts": "^3.6.4",
     "vite-plugin-externals": "^0.6.2",
     "vitest": "^3.0.8",
