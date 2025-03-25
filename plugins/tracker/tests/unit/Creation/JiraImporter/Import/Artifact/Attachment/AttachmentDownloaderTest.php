@@ -24,28 +24,25 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraClientStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class AttachmentDownloaderTest extends TestCase
 {
     use ForgeConfigSandbox;
-    use MockeryPHPUnitIntegration;
 
     public function testItCreatesTheJiraImportFolder(): void
     {
         $tmp_folder = vfsStream::setup();
         ForgeConfig::set('tmp_dir', $tmp_folder->url());
 
-        $client = new class extends JiraCloudClientStub {
-        };
-
         $downloader = new AttachmentDownloader(
-            $client,
+            JiraClientStub::aJiraClient(),
             new NullLogger(),
             new RandomAttachmentNameGenerator(),
         );
@@ -59,7 +56,7 @@ class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $downloaded_filname = $downloader->downloadAttachment($attachment);
-        $this->assertTrue(is_dir($tmp_folder->url() . '/' . AttachmentDownloader::JIRA_TEMP_FOLDER . '/'));
-        $this->assertTrue(is_file($tmp_folder->url() . '/' . AttachmentDownloader::JIRA_TEMP_FOLDER . '/' . $downloaded_filname));
+        self::assertTrue(is_dir($tmp_folder->url() . '/' . AttachmentDownloader::JIRA_TEMP_FOLDER . '/'));
+        self::assertTrue(is_file($tmp_folder->url() . '/' . AttachmentDownloader::JIRA_TEMP_FOLDER . '/' . $downloaded_filname));
     }
 }

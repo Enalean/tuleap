@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use Mockery;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List_Bind_Static;
@@ -209,11 +208,10 @@ final class CurrentSnapshotBuilderTest extends TestCase
             )
         );
 
-        $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
-        $builder             = new CurrentSnapshotBuilder(
+        $builder = new CurrentSnapshotBuilder(
             new NullLogger(),
             new CreationStateListValueFormatter(),
-            $jira_user_retriever
+            $this->createStub(JiraUserRetriever::class)
         );
 
         $snapshot_owner = UserTestBuilder::aUser()->build();
@@ -268,7 +266,7 @@ final class CurrentSnapshotBuilderTest extends TestCase
         $builder = new CurrentSnapshotBuilder(
             new NullLogger(),
             new CreationStateListValueFormatter(),
-            Mockery::mock(JiraUserRetriever::class)
+            $this->createStub(JiraUserRetriever::class)
         );
 
         $linked_issues = (new LinkedIssuesCollection())

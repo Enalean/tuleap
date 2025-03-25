@@ -23,19 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
+use Tuleap\Test\PHPUnit\TestCase;
 use XML_SimpleXMLCDATAFactory;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AttachmentXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class AttachmentXMLExporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItExportsAttachmentFilesInXML(): void
     {
-        $downloader = Mockery::mock(AttachmentDownloader::class);
+        $downloader = $this->createMock(AttachmentDownloader::class);
 
         $exporter = new AttachmentXMLExporter(
             $downloader,
@@ -63,17 +61,14 @@ class AttachmentXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_node = new SimpleXMLElement('<artifacts/>');
 
-        $downloader->shouldReceive('downloadAttachment')->andReturn(
-            'file0123',
-            'file5678'
-        );
+        $downloader->method('downloadAttachment')->willReturnOnConsecutiveCalls('file0123', 'file5678');
 
         $exporter->exportCollectionOfAttachmentInXML(
             $attachment_collection,
             $artifact_node
         );
 
-        $this->assertCount(2, $artifact_node->children());
+        self::assertCount(2, $artifact_node->children());
         $exported_file_01 = $artifact_node->file[0];
         self::assertSame('fileinfo_10007', (string) $exported_file_01['id']);
         self::assertSame('file01.png', (string) $exported_file_01->filename);
