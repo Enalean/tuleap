@@ -17,36 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerProjectRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
-
 export type Query = {
     readonly id: string;
     readonly tql_query: string;
     readonly title: string;
     readonly description: string;
     readonly is_default: boolean;
-};
-
-export type Artifact = {
-    readonly id: number;
-    readonly title: string;
-    readonly badge: {
-        readonly uri: string;
-        readonly cross_ref: string;
-        readonly color: string;
-    };
-    formatted_last_update_date?: string;
-    readonly last_update_date: string;
-    readonly status: string;
-    readonly submitted_by: User;
-    readonly assigned_to: ReadonlyArray<User>;
-    readonly project: TrackerProjectRepresentation;
-};
-
-export type User = {
-    readonly id: number;
-    readonly display_name: string;
-    readonly user_url: string;
 };
 
 export type WidgetData = {

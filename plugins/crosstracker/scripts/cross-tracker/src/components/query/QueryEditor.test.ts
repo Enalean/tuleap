@@ -68,7 +68,7 @@ describe("QueryEditor", () => {
         };
     }
 
-    it("Updates the report when query is updated", () => {
+    it("Updates the query when tql query is updated", () => {
         vi.spyOn(TQLEditor, "buildTQLEditor").mockImplementation(
             buildFakeEditorImplementation("update"),
         );
@@ -82,7 +82,7 @@ describe("QueryEditor", () => {
         ]);
     });
 
-    it(`Updates the report and emits an event when the form submit keybinding is run`, () => {
+    it(`Updates the query and emits an event when the form submit keybinding is run`, () => {
         vi.spyOn(TQLEditor, "buildTQLEditor").mockImplementation(
             buildFakeEditorImplementation("submit"),
         );

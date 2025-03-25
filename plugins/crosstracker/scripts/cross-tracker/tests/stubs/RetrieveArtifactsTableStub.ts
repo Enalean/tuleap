@@ -36,16 +36,16 @@ export const RetrieveArtifactsTableStub = {
     ): RetrieveArtifactsTable {
         return {
             getSelectableQueryResult: () => okAsync(query_table_with_total),
-            getSelectableReportContent: () => okAsync(report_table_with_total),
-            getSelectableFullReport: () => okAsync(report_table_with_all_artifact),
+            getSelectableQueryContent: () => okAsync(report_table_with_total),
+            getSelectableQueryFullResult: () => okAsync(report_table_with_all_artifact),
         };
     },
 
     withFault(fault: Fault): RetrieveArtifactsTable {
         return {
-            getSelectableReportContent: () => errAsync(fault),
+            getSelectableQueryContent: () => errAsync(fault),
             getSelectableQueryResult: () => errAsync(fault),
-            getSelectableFullReport: () => errAsync(fault),
+            getSelectableQueryFullResult: () => errAsync(fault),
         };
     },
     withDefaultContent(): RetrieveArtifactsTable {

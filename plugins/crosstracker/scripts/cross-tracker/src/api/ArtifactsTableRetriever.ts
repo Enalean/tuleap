@@ -52,7 +52,7 @@ export const ArtifactsTableRetriever = (
                 return decodeJSON<SelectableQueryContentRepresentation>(response).map(
                     (query_content) => {
                         return {
-                            table: table_builder.mapReportToArtifactsTable(query_content),
+                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
                             total,
                         };
                     },
@@ -60,7 +60,7 @@ export const ArtifactsTableRetriever = (
             });
         },
 
-        getSelectableReportContent(
+        getSelectableQueryContent(
             query_id,
             limit,
             offset,
@@ -75,7 +75,7 @@ export const ArtifactsTableRetriever = (
                 return decodeJSON<SelectableQueryContentRepresentation>(response).map(
                     (query_content) => {
                         return {
-                            table: table_builder.mapReportToArtifactsTable(query_content),
+                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
                             total,
                         };
                     },
@@ -83,7 +83,7 @@ export const ArtifactsTableRetriever = (
             });
         },
 
-        getSelectableFullReport(query_id): ResultAsync<readonly ArtifactsTable[], Fault> {
+        getSelectableQueryFullResult(query_id): ResultAsync<readonly ArtifactsTable[], Fault> {
             return getAllJSON<SelectableQueryContentRepresentation>(
                 uri`/api/v1/crosstracker_query/${query_id}/content`,
                 {
@@ -92,7 +92,9 @@ export const ArtifactsTableRetriever = (
                     },
                 },
             ).map((query_content) => {
-                return query_content.map((table) => table_builder.mapReportToArtifactsTable(table));
+                return query_content.map((table) =>
+                    table_builder.mapQueryContentToArtifactsTable(table),
+                );
             });
         },
     };

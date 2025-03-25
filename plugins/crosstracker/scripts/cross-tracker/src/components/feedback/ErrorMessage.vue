@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-alert-danger cross-tracker-report-error" v-if="error_message.isValue()">
+    <div class="tlp-alert-danger cross-tracker-query-error" v-if="error_message.isValue()">
         {{ error_message.unwrapOr("") }}
         <pre
             v-if="code_to_show.isValue()"
@@ -47,23 +47,23 @@ const error_message = computed<Option<string>>(() =>
                 true,
             );
         }
-        if ("isReportRetrieval" in fault && fault.isReportRetrieval() === true) {
+        if ("isQueryRetrieval" in fault && fault.isQueryRetrieval() === true) {
             return $gettext(
-                "Error while fetching the report: %{error}",
+                "Error while fetching the query: %{error}",
                 { error: String(fault) },
                 true,
             );
         }
-        if ("isSaveReport" in fault && fault.isSaveReport() === true) {
+        if ("isSaveQuery" in fault && fault.isSaveQuery() === true) {
             return $gettext(
-                "Error while saving the report: %{error}",
+                "Error while saving the query: %{error}",
                 { error: String(fault) },
                 true,
             );
         }
         if ("isXLSXExport" in fault && fault.isXLSXExport() === true) {
             return $gettext(
-                "Error while exporting the report as .xlsx: %{error}",
+                "Error while exporting the query as .xlsx: %{error}",
                 { error: String(fault) },
                 true,
             );
@@ -126,7 +126,7 @@ const code_to_show = computed(
     background: none;
 }
 
-.cross-tracker-report-error {
+.cross-tracker-query-error {
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 </style>

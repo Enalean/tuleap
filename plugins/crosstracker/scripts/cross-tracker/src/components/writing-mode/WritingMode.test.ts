@@ -88,7 +88,7 @@ describe("WritingMode", () => {
                 is_default: false,
             });
 
-            wrapper.find("[data-test=search-report-button]").trigger("click");
+            wrapper.find("[data-test=search-query-button]").trigger("click");
             const emitted = wrapper.emitted("preview-result");
             expect(emitted).toBeDefined();
             expect(emitter.emitted_event_name.length).toBe(1);

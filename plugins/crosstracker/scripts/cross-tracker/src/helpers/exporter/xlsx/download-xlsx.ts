@@ -18,12 +18,12 @@
  */
 
 import { utils, writeFile } from "xlsx";
-import { transformAReportCellIntoASheet } from "./transform-report-to-xlsx-sheet";
-import type { ReportSection } from "./data-formater";
+import { transformAContentCellIntoASheet } from "./transform-query-to-xlsx-sheet";
+import type { ContentSection } from "./data-formater";
 
-export function downloadXLSX(report: ReportSection, title: string): void {
+export function downloadXLSX(content: ContentSection, title: string): void {
     const book = utils.book_new();
-    const sheet = transformAReportCellIntoASheet(report);
+    const sheet = transformAContentCellIntoASheet(content);
     utils.book_append_sheet(book, sheet);
     writeFile(book, `${title}.xlsx`, { bookSST: true });
 }

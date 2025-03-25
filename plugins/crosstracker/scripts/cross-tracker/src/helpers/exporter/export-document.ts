@@ -20,7 +20,7 @@ import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { ok } from "neverthrow";
-import type { ReportSection } from "./xlsx/data-formater";
+import type { ContentSection } from "./xlsx/data-formater";
 import { formatData } from "./xlsx/data-formater";
 import type { GetColumnName } from "../../domain/ColumnNameGetter";
 import type { Query } from "../../type";
@@ -29,9 +29,9 @@ export function downloadXLSXDocument(
     artifact_table_retriever: RetrieveArtifactsTable,
     query: Query,
     column_name_getter: GetColumnName,
-    download_document: (formated_data: ReportSection, title: string) => void,
+    download_document: (formated_data: ContentSection, title: string) => void,
 ): ResultAsync<null, Fault> {
-    return artifact_table_retriever.getSelectableFullReport(query.id).andThen((table) => {
+    return artifact_table_retriever.getSelectableQueryFullResult(query.id).andThen((table) => {
         const formated_data = formatData(table, column_name_getter);
         download_document(formated_data, query.title);
         return ok(null);

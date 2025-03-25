@@ -126,10 +126,10 @@ describe("ReadQuery", () => {
     }
 
     describe("switchToWritingMode()", () => {
-        it(`Given a saved report,
+        it(`Given a saved query,
             when I switch to writing mode to modify it,
-            then the report will be in "edit-query" state
-            and the writing report will be updated
+            then the query will be in "edit-query" state
+            and the writing query will be updated
             and it will clear the feedback messages`, async () => {
             is_multiple_query_supported = false;
             const wrapper = getWrapper();
@@ -138,7 +138,7 @@ describe("ReadQuery", () => {
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
-            expect(wrapper.vm.report_state).toBe("edit-query");
+            expect(wrapper.vm.query_state).toBe("edit-query");
             expect(dispatched_clear_feedback_events).toHaveLength(1);
         });
 
@@ -151,15 +151,15 @@ describe("ReadQuery", () => {
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
-            expect(wrapper.vm.report_state).toBe("report-saved");
+            expect(wrapper.vm.query_state).toBe("query-saved");
         });
     });
 
     describe(`handleCancelQueryEdition()`, () => {
-        it(`Given I started to modify the report
+        it(`Given I started to modify the query
             when I cancel,
-            then the report will be back to its "report-saved" state
-            and the reading report will be reset
+            then the query will be back to its "query-saved" state
+            and the reading query will be reset
             and it will clear the feedback messages`, async () => {
             is_multiple_query_supported = false;
             const wrapper = getWrapper();
@@ -170,16 +170,16 @@ describe("ReadQuery", () => {
             await nextTick();
             wrapper.findComponent(WritingMode).vm.$emit("cancel-query-edition");
 
-            expect(wrapper.vm.report_state).toBe("report-saved");
+            expect(wrapper.vm.query_state).toBe("query-saved");
             expect(dispatched_clear_feedback_events).toHaveLength(2);
         });
     });
 
     describe("handlePreviewResult()", () => {
-        it(`Given I started to modify the report
+        it(`Given I started to modify the query
             when I preview the results
-            then the report will be in "result-preview" state
-            and the reading report will be updated
+            then the query will be in "result-preview" state
+            and the reading query will be updated
             and it will clear the feedback messages`, async () => {
             is_multiple_query_supported = false;
             const wrapper = getWrapper();
@@ -196,14 +196,14 @@ describe("ReadQuery", () => {
                 is_default: false,
             });
 
-            expect(wrapper.vm.report_state).toBe("result-preview");
+            expect(wrapper.vm.query_state).toBe("result-preview");
             expect(dispatched_clear_feedback_events).toHaveLength(2);
         });
     });
 
-    describe("reportSaved()", () => {
-        it(`when the report is saved,
-            then the reports will be updated
+    describe("querySaved()", () => {
+        it(`when the query is saved,
+            then the queries will be updated
             and it will set a success message`, async () => {
             is_multiple_query_supported = false;
             const wrapper = getWrapper();
@@ -227,17 +227,17 @@ describe("ReadQuery", () => {
                 is_default: false,
             });
 
-            expect(wrapper.vm.report_state).toBe("report-saved");
+            expect(wrapper.vm.query_state).toBe("query-saved");
             expect(dispatched_fault_events).toHaveLength(0);
             expect(dispatched_success_events).toHaveLength(1);
             expect(dispatched_success_events[0].message).toStrictEqual(expect.any(String));
         });
     });
 
-    describe(`unsavedReportDiscarded()`, () => {
-        it(`Given a report that has been modified,
+    describe(`unsavedQueryDiscarded()`, () => {
+        it(`Given a query that has been modified,
             when its changes are discarded,
-            then it will restore the reading and writing reports
+            then it will restore the reading and writing queries
             and will clear the feedback messages`, async () => {
             is_multiple_query_supported = false;
             const wrapper = getWrapper();
@@ -254,15 +254,15 @@ describe("ReadQuery", () => {
                 is_default: false,
             });
             await nextTick();
-            wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-report");
+            wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-query");
 
-            expect(wrapper.vm.report_state).toBe("report-saved");
+            expect(wrapper.vm.query_state).toBe("query-saved");
             expect(dispatched_clear_feedback_events).toHaveLength(3);
         });
     });
 
-    describe("loadBackendReport()", () => {
-        it("When I load the report, then the reports will be initialized", async () => {
+    describe("loadBackendQueries()", () => {
+        it("When I load the widget, then the queries will be initialized", async () => {
             const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
             const uuid = "0194dfd6-a489-703b-aabd-9d473212d908";
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(
@@ -282,13 +282,13 @@ describe("ReadQuery", () => {
 
         it("When there is a REST error, it will be shown", async () => {
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(
-                errAsync(Fault.fromMessage("Report 41 not found")),
+                errAsync(Fault.fromMessage("Query 41 not found")),
             );
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             expect(dispatched_fault_events).toHaveLength(1);
-            expect(dispatched_fault_events[0].fault.isReportRetrieval()).toBe(true);
+            expect(dispatched_fault_events[0].fault.isQueryRetrieval()).toBe(true);
         });
 
         it("Force edit mode when widget has no query", async () => {
@@ -296,7 +296,7 @@ describe("ReadQuery", () => {
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.report_state).toBe("edit-query");
+            expect(wrapper.vm.query_state).toBe("edit-query");
         });
 
         it("Does not emit a SWITCH_QUERY_EVENT when there are no queries", () => {
@@ -335,7 +335,7 @@ describe("ReadQuery", () => {
     });
 
     describe(`isXLSXExportAllowed`, () => {
-        it(`when the report state is not "report-saved", it does not allow CSV export`, async () => {
+        it(`when the query state is not "query-saved", it does not allow CSV export`, async () => {
             is_multiple_query_supported = false;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
@@ -365,7 +365,7 @@ describe("ReadQuery", () => {
             expect(wrapper.vm.is_export_allowed).toBe(true);
         });
 
-        it(`when user is admin and there is an error selected in the report,
+        it(`when user is admin and there is an error selected in the query,
             it does not allow XLSX export`, async () => {
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(
                 errAsync(Fault.fromMessage("Ooops an error")),
@@ -438,7 +438,7 @@ describe("ReadQuery", () => {
 
             expect(dispatched_switch_query_events).toHaveLength(1);
             expect(dispatched_switch_query_events[0]).toStrictEqual({ query: query_2 });
-            expect(dispatched_updated_title_events).toHaveLength(2); // First one is in loadBackendReport
+            expect(dispatched_updated_title_events).toHaveLength(2); // First one is in loadBackendQueries
             expect(dispatched_updated_title_events[1]).toStrictEqual({ new_title: query_2.title });
             expect(dispatched_refresh_events).toHaveLength(1);
             expect(dispatched_refresh_events[0]).toStrictEqual({ query: query_2 });
@@ -458,7 +458,7 @@ describe("ReadQuery", () => {
             await vi.runOnlyPendingTimersAsync();
             emitter.emit(QUERY_DELETED_EVENT, { deleted_query: query });
 
-            expect(wrapper.vm.report_state).toBe("edit-query");
+            expect(wrapper.vm.query_state).toBe("edit-query");
             expect(wrapper.emitted("switch-to-create-query-pane")).toBeDefined();
             expect(dispatched_switch_query_events).toHaveLength(0);
         });

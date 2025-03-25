@@ -23,7 +23,7 @@ import { okAsync } from "neverthrow";
 import { ArtifactsTableRetriever } from "./ArtifactsTableRetriever";
 import type { RetrieveArtifactsTable } from "../domain/RetrieveArtifactsTable";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
-import { SelectableReportContentRepresentationStub } from "../../tests/builders/SelectableReportContentRepresentationStub";
+import { SelectableQueryContentRepresentationStub } from "../../tests/builders/SelectableQueryContentRepresentationStub";
 import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
 import { uri } from "@tuleap/fetch-result";
 
@@ -45,7 +45,7 @@ describe(`ArtifactsTableRetriever`, () => {
             const date_field_name = "start_date";
             const total = 45;
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const query_content = SelectableReportContentRepresentationStub.build(
+            const query_content = SelectableQueryContentRepresentationStub.build(
                 [{ type: "date", name: date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
@@ -88,11 +88,11 @@ describe(`ArtifactsTableRetriever`, () => {
         });
         it(`will return organized in ArtifactsTable
             with the total number of artifacts
-            from an already existing report and not from a saved query`, async () => {
+            from an already existing query and not from a saved query`, async () => {
             const date_field_name = "start_date";
             const total = 45;
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const widget_content = SelectableReportContentRepresentationStub.build(
+            const widget_content = SelectableQueryContentRepresentationStub.build(
                 [{ type: "date", name: date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
@@ -110,7 +110,7 @@ describe(`ArtifactsTableRetriever`, () => {
                 } as Response),
             );
 
-            const result = await getRetriever().getSelectableReportContent(query_id, limit, offset);
+            const result = await getRetriever().getSelectableQueryContent(query_id, limit, offset);
 
             expect(getResponse).toHaveBeenCalledWith(
                 fetch_result.uri`/api/v1/crosstracker_query/${query_id}/content`,
@@ -130,10 +130,10 @@ describe(`ArtifactsTableRetriever`, () => {
             expect(table.rows).toHaveLength(2);
         });
         it(`will return organized in ArtifactsTable
-            from an already existing report and not from a saved query`, async () => {
+            from an already existing query and not from a saved query`, async () => {
             const date_field_name = "start_date";
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const widget_content = SelectableReportContentRepresentationStub.build(
+            const widget_content = SelectableQueryContentRepresentationStub.build(
                 [{ type: "date", name: date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
@@ -146,7 +146,7 @@ describe(`ArtifactsTableRetriever`, () => {
             );
             const end_date_field_name = "end_date";
             const second_date_value = "2025-04-10T11:54:15+07:00";
-            const report_content_second_page = SelectableReportContentRepresentationStub.build(
+            const query_content_second_page = SelectableQueryContentRepresentationStub.build(
                 [{ type: "date", name: end_date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
@@ -162,9 +162,9 @@ describe(`ArtifactsTableRetriever`, () => {
             );
             const getAllJSON = vi
                 .spyOn(fetch_result, "getAllJSON")
-                .mockReturnValue(okAsync([widget_content, report_content_second_page]));
+                .mockReturnValue(okAsync([widget_content, query_content_second_page]));
 
-            const result = await getRetriever().getSelectableFullReport(query_id);
+            const result = await getRetriever().getSelectableQueryFullResult(query_id);
 
             expect(getAllJSON).toHaveBeenCalledWith(
                 uri`/api/v1/crosstracker_query/${query_id}/content`,

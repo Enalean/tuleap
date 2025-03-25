@@ -19,7 +19,7 @@
 
 <template>
     <div
-        class="report"
+        class="query"
         v-bind:class="{ disabled: !is_user_admin }"
         v-on:click="switchToWritingMode"
         data-test="cross-tracker-reading-mode"
@@ -43,21 +43,21 @@
         </tlp-syntax-highlighting>
     </div>
     <reading-mode-action-buttons v-bind:current_query="reading_query" />
-    <div class="actions" v-if="report_state === 'result-preview'">
+    <div class="actions" v-if="query_state === 'result-preview'">
         <button
             type="button"
             class="tlp-button-primary tlp-button-outline"
-            v-on:click="cancelReport()"
-            data-test="cross-tracker-cancel-report"
+            v-on:click="cancelQuery()"
+            data-test="cross-tracker-cancel-query"
         >
             {{ $gettext("Cancel") }}
         </button>
         <button
             type="button"
             class="tlp-button-primary"
-            v-on:click="saveReport()"
+            v-on:click="saveQuery()"
             v-bind:disabled="is_save_disabled"
-            data-test="cross-tracker-save-report"
+            data-test="cross-tracker-save-query"
         >
             <i
                 aria-hidden="true"
@@ -67,7 +67,7 @@
                     'fa-save': !is_loading,
                 }"
             ></i>
-            {{ $gettext("Save report") }}
+            {{ $gettext("Save query") }}
         </button>
     </div>
 </template>
@@ -81,15 +81,15 @@ import {
     EMITTER,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
-    REPORT_STATE,
+    QUERY_STATE,
     WIDGET_ID,
 } from "../../injection-symbols";
-import { SaveReportFault } from "../../domain/SaveReportFault";
+import { SaveQueryFault } from "../../domain/SaveQueryFault";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
 
 const { $gettext } = useGettext();
-const report_state = strictInject(REPORT_STATE);
+const query_state = strictInject(QUERY_STATE);
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
@@ -103,7 +103,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: "switch-to-writing-mode"): void;
     (e: "saved", query: Query): void;
-    (e: "discard-unsaved-report"): void;
+    (e: "discard-unsaved-query"): void;
 }>();
 const emitter = strictInject(EMITTER);
 
@@ -127,7 +127,7 @@ function switchToWritingMode(): void {
     emit("switch-to-writing-mode");
 }
 
-function saveReport(): void {
+function saveQuery(): void {
     if (is_save_disabled.value) {
         return;
     }
@@ -142,7 +142,7 @@ function saveReport(): void {
                 },
                 (fault) => {
                     emitter.emit(NOTIFY_FAULT_EVENT, {
-                        fault: SaveReportFault(fault),
+                        fault: SaveQueryFault(fault),
                         tql_query: props.reading_query.tql_query,
                     });
                 },
@@ -160,7 +160,7 @@ function saveReport(): void {
             },
             (fault) => {
                 emitter.emit(NOTIFY_FAULT_EVENT, {
-                    fault: SaveReportFault(fault),
+                    fault: SaveQueryFault(fault),
                     tql_query: props.reading_query.tql_query,
                 });
             },
@@ -170,14 +170,14 @@ function saveReport(): void {
         });
 }
 
-function cancelReport(): void {
-    emit("discard-unsaved-report");
+function cancelQuery(): void {
+    emit("discard-unsaved-query");
     emitter.emit(REFRESH_ARTIFACTS_EVENT, { query: props.backend_query });
 }
 </script>
 
 <style scoped lang="scss">
-.report {
+.query {
     display: flex;
     flex-direction: column;
     margin: var(--tlp-medium-spacing) 0;

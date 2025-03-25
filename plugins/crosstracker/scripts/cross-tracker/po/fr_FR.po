@@ -67,18 +67,18 @@ msgstr "Éditer"
 msgid "Error while deleting the query: %{error}"
 msgstr "Erreur pendant la suppression de la requête : %{error}"
 
-msgid "Error while exporting the report as .xlsx: %{error}"
-msgstr "Erreur pendant l'export du rapport au format .xlsx: %{error}"
+msgid "Error while exporting the query as .xlsx: %{error}"
+msgstr "Erreur pendant l'export de la requête au format .xlsx: %{error}"
 
 msgid "Error while fetching the artifacts matching the query: %{error}"
 msgstr ""
 "Erreur à la récupération des artéfacts correspondant à la requête : %{error}"
 
-msgid "Error while fetching the report: %{error}"
-msgstr "Erreur à la récupération du rapport : %{error}"
+msgid "Error while fetching the query: %{error}"
+msgstr "Erreur à la récupération de la requête : %{error}"
 
-msgid "Error while saving the report: %{error}"
-msgstr "Erreur pendant la sauvegarde du rapport : %{error}"
+msgid "Error while saving the query: %{error}"
+msgstr "Erreur pendant la sauvegarde de la requête : %{error}"
 
 msgid ""
 "Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title "
@@ -158,6 +158,9 @@ msgstr "La création de requête est en cours d'implémentation"
 msgid "Query details & tools"
 msgstr "Détails & outils de la requête"
 
+msgid "Query has been successfully saved"
+msgstr "La requête est enregistrée avec succès"
+
 msgid "Query is empty"
 msgstr "La requête est vide"
 
@@ -170,14 +173,11 @@ msgstr "Titre de la requête"
 msgid "Query updated with success!"
 msgstr "Requête mise à jour avec succès !"
 
-msgid "Report has been successfully saved"
-msgstr "Rapport enregistré avec succès"
-
 msgid "Save"
 msgstr "Sauvegarder"
 
-msgid "Save report"
-msgstr "Enregistrer le rapport"
+msgid "Save query"
+msgstr "Enregistrer la requête"
 
 msgid "Search"
 msgstr "Rechercher"

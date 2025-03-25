@@ -17,20 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    ArtifactRepresentation,
-    Selectable,
-    SelectableQueryContentRepresentation,
-} from "../../src/api/cross-tracker-rest-api-types";
-import { ARTIFACT_SELECTABLE_TYPE } from "../../src/api/cross-tracker-rest-api-types";
-import { ARTIFACT_COLUMN_NAME } from "../../src/domain/ColumnName";
+import type { Fault } from "@tuleap/fault";
 
-export const SelectableReportContentRepresentationStub = {
-    build: (
-        selected: ReadonlyArray<Selectable>,
-        artifacts: ReadonlyArray<ArtifactRepresentation>,
-    ): SelectableQueryContentRepresentation => ({
-        selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }, ...selected],
-        artifacts,
-    }),
-};
+export const QueryRetrievalFault = (previous: Fault): Fault => ({
+    ...previous,
+    isQueryRetrieval: () => true,
+});

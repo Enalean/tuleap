@@ -18,7 +18,7 @@
  */
 
 import { ArtifactsTableBuilder } from "../../../api/ArtifactsTableBuilder";
-import { SelectableReportContentRepresentationStub } from "../../../../tests/builders/SelectableReportContentRepresentationStub";
+import { SelectableQueryContentRepresentationStub } from "../../../../tests/builders/SelectableQueryContentRepresentationStub";
 import {
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
@@ -35,7 +35,7 @@ import { ArtifactRepresentationStub } from "../../../../tests/builders/ArtifactR
 import { ARTIFACT_COLUMN_NAME } from "../../../domain/ColumnName";
 
 import { describe, expect, it } from "vitest";
-import type { ReportSection } from "./data-formater";
+import type { ContentSection } from "./data-formater";
 import { formatData } from "./data-formater";
 import { NumberCell, TextCell, EmptyCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
 import { ColumnNameGetter } from "../../../domain/ColumnNameGetter";
@@ -117,8 +117,8 @@ describe("data-formater", () => {
 
     it("generates the formatted data with that will be used to create the XLSX document with rows", () => {
         const table = [
-            ArtifactsTableBuilder().mapReportToArtifactsTable(
-                SelectableReportContentRepresentationStub.build(
+            ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
                     [
                         { type: NUMERIC_SELECTABLE_TYPE, name: numeric_column },
                         { type: PROJECT_SELECTABLE_TYPE, name: project_column },
@@ -194,7 +194,7 @@ describe("data-formater", () => {
         ];
         const result = formatData(table, ColumnNameGetter(createVueGettextProviderPassThrough()));
 
-        const report_cell_result: ReportSection = {
+        const content_cell_result: ContentSection = {
             headers: [
                 new TextCell(numeric_column),
                 new TextCell(project_column),
@@ -268,6 +268,6 @@ describe("data-formater", () => {
                 ],
             ],
         };
-        expect(report_cell_result).toStrictEqual(result);
+        expect(content_cell_result).toStrictEqual(result);
     });
 });

@@ -22,7 +22,7 @@
         class="tlp-pane-section"
         v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
     >
-        <div v-if="is_multiple_query_supported && report_state !== 'edit-query'">
+        <div v-if="is_multiple_query_supported && query_state !== 'edit-query'">
             <action-buttons
                 v-bind:backend_query="backend_query"
                 v-bind:queries="queries"
@@ -36,11 +36,11 @@
             v-bind:reading_query="reading_query"
             v-bind:has_error="has_error"
             v-on:switch-to-writing-mode="handleSwitchWriting"
-            v-on:saved="reportSaved"
-            v-on:discard-unsaved-report="unsavedReportDiscarded"
+            v-on:saved="querySaved"
+            v-on:discard-unsaved-query="unsavedQueryDiscarded"
         />
         <writing-mode
-            v-if="report_state === 'edit-query' && are_query_details_shown"
+            v-if="query_state === 'edit-query' && are_query_details_shown"
             v-bind:writing_query="writing_query"
             v-bind:backend_query="backend_query"
             v-on:preview-result="handlePreviewResult"
@@ -61,16 +61,16 @@ import WritingMode from "../components/writing-mode/WritingMode.vue";
 import { getQueries } from "../api/rest-querier";
 import type { Query } from "../type";
 import SelectableTable from "../components/selectable-table/SelectableTable.vue";
-import type { ReportState } from "../domain/ReportState";
+import type { QueryState } from "../domain/QueryState";
 import {
     EMITTER,
     IS_EXPORT_ALLOWED,
     IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     WIDGET_ID,
-    REPORT_STATE,
+    QUERY_STATE,
 } from "../injection-symbols";
-import { ReportRetrievalFault } from "../domain/ReportRetrievalFault";
+import { QueryRetrievalFault } from "../domain/QueryRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
 import type {
     CreatedQueryEvent,
@@ -107,8 +107,8 @@ const backend_query = ref<Query>(empty_query);
 const reading_query = ref<Query>(empty_query);
 const writing_query = ref<Query>(empty_query);
 
-const report_state = ref<ReportState>("report-saved");
-provide(REPORT_STATE, report_state);
+const query_state = ref<QueryState>("query-saved");
+provide(QUERY_STATE, query_state);
 const is_loading = ref(true);
 const queries = ref<ReadonlyArray<Query>>([]);
 
@@ -119,14 +119,14 @@ const are_query_details_shown = computed<boolean>(() =>
 );
 const is_reading_mode_shown = computed<boolean>(
     () =>
-        (report_state.value === "report-saved" || report_state.value === "result-preview") &&
+        (query_state.value === "query-saved" || query_state.value === "result-preview") &&
         !is_loading.value,
 );
 
 const has_error = ref<boolean>(false);
 
 const is_export_allowed = computed<boolean>(() => {
-    if (report_state.value !== "report-saved" || has_error.value) {
+    if (query_state.value !== "query-saved" || has_error.value) {
         return false;
     }
     if (!is_user_admin) {
@@ -142,15 +142,15 @@ function initQueries(): void {
     writing_query.value = backend_query.value;
 }
 
-function loadBackendReport(): void {
+function loadBackendQueries(): void {
     is_loading.value = true;
     getQueries(widget_id)
         .match(
-            (reports: ReadonlyArray<Query>) => {
-                queries.value = reports;
-                if (reports.length === 0) {
+            (widget_queries: ReadonlyArray<Query>) => {
+                queries.value = widget_queries;
+                if (widget_queries.length === 0) {
                     if (is_user_admin) {
-                        report_state.value = "edit-query";
+                        query_state.value = "edit-query";
                         if (is_multiple_query_supported) {
                             emit("switch-to-create-query-pane");
                         }
@@ -159,9 +159,10 @@ function loadBackendReport(): void {
                     return;
                 }
 
-                backend_query.value = reports[0];
+                backend_query.value = widget_queries[0];
                 if (is_multiple_query_supported) {
-                    backend_query.value = reports.find((query) => query.is_default) ?? reports[0];
+                    backend_query.value =
+                        widget_queries.find((query) => query.is_default) ?? widget_queries[0];
                     emitter.emit(UPDATE_WIDGET_TITLE_EVENT, {
                         new_title: backend_query.value.title,
                     });
@@ -170,7 +171,7 @@ function loadBackendReport(): void {
                 has_error.value = false;
             },
             (fault) => {
-                emitter.emit(NOTIFY_FAULT_EVENT, { fault: ReportRetrievalFault(fault) });
+                emitter.emit(NOTIFY_FAULT_EVENT, { fault: QueryRetrievalFault(fault) });
                 has_error.value = true;
             },
         )
@@ -184,7 +185,7 @@ onMounted(() => {
     emitter.on(NEW_QUERY_CREATED_EVENT, handleAddQuery);
     emitter.on(QUERY_DELETED_EVENT, handleDeleteQuery);
     emitter.on(TOGGLE_QUERY_DETAILS_EVENT, handleToggleQueryDetails);
-    loadBackendReport();
+    loadBackendQueries();
 });
 
 onBeforeUnmount(() => {
@@ -205,7 +206,7 @@ function handleAddQuery(new_query: CreatedQueryEvent): void {
 function handleDeleteQuery(event: DeletedQueryEvent): void {
     queries.value = queries.value.filter((query) => query.id !== event.deleted_query.id);
     if (queries.value.length === 0) {
-        report_state.value = "edit-query";
+        query_state.value = "edit-query";
         if (is_multiple_query_supported) {
             emit("switch-to-create-query-pane");
         }
@@ -227,7 +228,7 @@ function handleSwitchWriting(): void {
         return;
     }
     writing_query.value = reading_query.value;
-    report_state.value = "edit-query";
+    query_state.value = "edit-query";
 }
 
 function handleSwitchQuery(event: SwitchQueryEvent): void {
@@ -240,34 +241,34 @@ function handleSwitchQuery(event: SwitchQueryEvent): void {
 function handlePreviewResult(query: Query): void {
     writing_query.value = query;
     reading_query.value = query;
-    report_state.value = "result-preview";
+    query_state.value = "result-preview";
     emitter.emit(CLEAR_FEEDBACK_EVENT);
 }
 
 function handleCancelQueryEdition(): void {
     reading_query.value = backend_query.value;
-    report_state.value = "report-saved";
+    query_state.value = "query-saved";
     emitter.emit(CLEAR_FEEDBACK_EVENT);
 }
 
-function reportSaved(query: Query): void {
+function querySaved(query: Query): void {
     backend_query.value = query;
     initQueries();
-    report_state.value = "report-saved";
+    query_state.value = "query-saved";
     emitter.emit(CLEAR_FEEDBACK_EVENT);
     emitter.emit(NOTIFY_SUCCESS_EVENT, {
-        message: gettext_provider.$gettext("Report has been successfully saved"),
+        message: gettext_provider.$gettext("Query has been successfully saved"),
     });
 }
 
-function unsavedReportDiscarded(): void {
+function unsavedQueryDiscarded(): void {
     initQueries();
-    report_state.value = "report-saved";
+    query_state.value = "query-saved";
     emitter.emit(CLEAR_FEEDBACK_EVENT);
 }
 
 defineExpose({
-    report_state,
+    query_state,
     is_export_allowed,
 });
 </script>
