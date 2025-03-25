@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/tlp-modal": "workspace:*",
-    "@tuleap/tlp-button": "workspace:*"
+    "@tuleap/tlp-styles": "workspace:^"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

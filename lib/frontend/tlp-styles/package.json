@@ -6,6 +6,7 @@
   "private": true,
   "exports": {
     "./components/alerts.scss": "./styles/components/alerts.scss",
+    "./components/buttons.scss": "./styles/components/buttons.scss",
     "./components/form-element.scss": "./styles/components/forms/form-element.scss",
     "./components/forms.scss": "./styles/components/forms/forms.scss",
     "./components/selects.scss": "./styles/components/forms/selects.scss",

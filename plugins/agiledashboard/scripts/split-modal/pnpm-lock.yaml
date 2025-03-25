@@ -5,12 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/tlp-button':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/tlp-button
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-styles
 
 devDependencies:
   '@tuleap/build-system-configurator':

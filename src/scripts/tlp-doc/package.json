@@ -17,7 +17,6 @@
     "@tuleap/prose-mirror-editor-toolbar": "workspace:^",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
-    "@tuleap/tlp-button": "workspace:^",
     "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:^",
     "@tuleap/tlp-modal": "workspace:^",

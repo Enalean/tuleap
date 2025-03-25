@@ -43,6 +43,6 @@ defineProps<{ properties: GlobalExportProperties }>();
         )
     );
     @include meta.load-css("pkg:@tuleap/tlp-modal");
-    @include meta.load-css("pkg:@tuleap/tlp-button");
+    @include meta.load-css("pkg:@tuleap/tlp-styles/components/buttons");
 }
 </style>

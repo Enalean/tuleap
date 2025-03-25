@@ -18,7 +18,7 @@
  */
 
 @use "pkg:@tuleap/tlp-modal";
-@use "pkg:@tuleap/tlp-button";
+@use "pkg:@tuleap/tlp-styles/components/buttons";
 
 .tracker-creation-success-body {
     font-size: 1.125rem;
