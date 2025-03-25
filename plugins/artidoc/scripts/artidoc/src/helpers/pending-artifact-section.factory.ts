@@ -36,6 +36,7 @@ const PendingArtifactSectionFactory = {
         },
         level: 1,
         display_level: "",
+        fields: [],
     }),
 
     override: (overrides: Partial<PendingArtifactSection>): PendingArtifactSection => ({

@@ -61,6 +61,10 @@
                 v-bind:manage_section_editor_state="section_editor_state_manager"
                 v-bind:manage_section_attachment_files="section_attachments_manager"
             />
+            <readonly-fields
+                v-if="isSectionBasedOnArtifact(section.value) && section.value.fields.length > 0"
+                v-bind:section="section.value"
+            />
             <section-footer
                 v-bind:section="section"
                 v-bind:section_state="section_state"
@@ -84,6 +88,7 @@ import SectionDescription from "./description/SectionDescription.vue";
 import SectionDropdown from "./header/SectionDropdown.vue";
 import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
 import SectionFooter from "./footer/SectionFooter.vue";
+import ReadonlyFields from "./readonly-fields/ReadonlyFields.vue";
 
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
@@ -93,6 +98,7 @@ import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/components/temporary-flag-durat
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
 
+import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import { getPendingSectionsReplacer } from "@/sections/insert/PendingSectionsReplacer";
 import { getSectionsUpdater } from "@/sections/update/SectionsUpdater";
 import { getSectionsRemover } from "@/sections/remove/SectionsRemover";

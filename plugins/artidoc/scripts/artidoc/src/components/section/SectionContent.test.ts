@@ -40,6 +40,7 @@ import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
 import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
+import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
 
 describe("SectionContent", () => {
     let is_loading_sections: boolean;
@@ -98,5 +99,40 @@ describe("SectionContent", () => {
 
         expect(wrapper.findComponent(SectionHeaderSkeleton).exists()).toBe(true);
         expect(wrapper.findComponent(SectionHeader).exists()).toBe(false);
+    });
+
+    it("When a freetext section is loaded, Then it should not display readonly fields", () => {
+        is_loading_sections = false;
+
+        const wrapper = getWrapper(FreetextSectionFactory.create());
+
+        expect(wrapper.findComponent(ReadonlyFields).exists()).toBe(false);
+    });
+
+    it("When an artifact section is loaded, Then it should not display readonly fields if there is none ", () => {
+        is_loading_sections = false;
+
+        const wrapper = getWrapper(ArtifactSectionFactory.create());
+
+        expect(wrapper.findComponent(ReadonlyFields).exists()).toBe(false);
+    });
+
+    it("When an artifact section is loaded, Then it should display readonly fields if any ", () => {
+        is_loading_sections = false;
+
+        const wrapper = getWrapper(
+            ArtifactSectionFactory.override({
+                fields: [
+                    {
+                        type: "string",
+                        label: "Label",
+                        value: "Value",
+                        display_type: "column",
+                    },
+                ],
+            }),
+        );
+
+        expect(wrapper.findComponent(ReadonlyFields).exists()).toBe(true);
     });
 });

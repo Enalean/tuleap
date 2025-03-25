@@ -49,6 +49,7 @@ const ArtifactSectionFactory = {
         },
         level: 1,
         display_level: "",
+        fields: [],
     }),
 
     skeleton: (): ArtifactSection => {
