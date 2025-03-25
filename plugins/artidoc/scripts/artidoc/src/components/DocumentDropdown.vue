@@ -29,6 +29,7 @@
         </button>
         <div class="tlp-dropdown-menu" role="menu">
             <configuration-modal-trigger v-if="can_user_edit_document" />
+            <switch-to-fullscreen />
             <pdf-export-menu-item v-if="should_display_pdf_menu_item" />
         </div>
         <configuration-modal v-if="can_user_edit_document" />
@@ -47,6 +48,7 @@ import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
 import { IS_LOADING_SECTIONS } from "@/is-loading-sections-injection-key";
+import SwitchToFullscreen from "@/components/SwitchToFullscreen.vue";
 
 const { $gettext } = useGettext();
 

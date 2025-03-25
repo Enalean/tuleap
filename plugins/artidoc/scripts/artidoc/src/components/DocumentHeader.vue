@@ -45,6 +45,10 @@ const title = strictInject(TITLE);
         whitespace.$header-title-padding-bottom;
 }
 
+:fullscreen .document-header {
+    display: none;
+}
+
 .artidoc-header-title {
     margin: 0;
 }
