@@ -36,12 +36,14 @@ use Tracker_Workflow_WorkflowUser;
 use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
-use Tuleap\include\CheckUserCanAccessProject;
+use Tuleap\Project\CachedProjectAccessChecker;
+use Tuleap\Project\CheckProjectAccess;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\TuleapFunctionsUser;
-use URLVerification;
 use UserManager;
 
 final readonly class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFields, RetrieveUserPermissionOnTrackers, RetrieveUserPermissionOnArtifacts
@@ -55,7 +57,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         private SearchUserGroupsPermissionOnFields $fields_dao,
         private SearchUserGroupsPermissionOnTrackers $trackers_dao,
         private SearchUserGroupsPermissionOnArtifacts $artifacts_dao,
-        private CheckUserCanAccessProject $project_access,
+        private CheckProjectAccess $project_access,
         private EventDispatcherInterface $dispatcher,
         private RetrieveUserById $user_manager,
     ) {
@@ -63,9 +65,17 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
 
     public static function build(): self
     {
-        $dao = new TrackersPermissionsDao();
+        $dao              = new TrackersPermissionsDao();
+        $event_dispatcher = EventManager::instance();
 
-        return new self($dao, $dao, $dao, new URLVerification(), EventManager::instance(), UserManager::instance());
+        return new self(
+            $dao,
+            $dao,
+            $dao,
+            new CachedProjectAccessChecker(new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_dispatcher)),
+            $event_dispatcher,
+            UserManager::instance()
+        );
     }
 
     public static function isEnabled(): bool
@@ -306,7 +316,8 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
     private function userCanAccessProject(PFUser $user, Project $project): bool
     {
         try {
-            return $this->project_access->userCanAccessProject($user, $project);
+            $this->project_access->checkUserCanAccessProject($user, $project);
+            return true;
         } catch (Project_AccessException) {
             return false;
         }
