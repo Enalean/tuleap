@@ -112,6 +112,7 @@ import {
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
     SEARCH_ARTIFACTS_EVENT,
+    SWITCH_QUERY_EVENT,
 } from "../../../helpers/emitter-provider";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
@@ -181,10 +182,11 @@ function handleSaveButton(): void {
     new_query_creator
         .postNewQuery(new_query)
         .match(
-            () => {
+            (created_query) => {
                 emitter.emit(NOTIFY_SUCCESS_EVENT, {
                     message: $gettext("Query created with success!"),
                 });
+                emitter.emit(SWITCH_QUERY_EVENT, { query: created_query });
                 emit("return-to-active-query-pane");
             },
             (fault) => {

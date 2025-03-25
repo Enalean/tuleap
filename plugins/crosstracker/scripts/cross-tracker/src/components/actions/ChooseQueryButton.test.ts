@@ -28,7 +28,6 @@ import {
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
     CREATE_NEW_QUERY_EVENT,
-    UPDATE_WIDGET_TITLE_EVENT,
 } from "../../helpers/emitter-provider";
 
 vi.mock("@tuleap/tlp-dropdown", () => ({
@@ -93,7 +92,7 @@ describe("ChooseQueryButton", () => {
         const wrapper = getWrapper();
         await wrapper.find("[data-test=query]").trigger("click");
 
-        expect(emitter.emitted_event_name.length).toBe(3);
+        expect(emitter.emitted_event_name.length).toBe(2);
         expect(emitter.emitted_event_name[0]).toBe(REFRESH_ARTIFACTS_EVENT);
         expect(emitter.emitted_event_message[0].unwrapOr("")).toStrictEqual({
             query: queries[0],
@@ -101,10 +100,6 @@ describe("ChooseQueryButton", () => {
         expect(emitter.emitted_event_name[1]).toBe(SWITCH_QUERY_EVENT);
         expect(emitter.emitted_event_message[1].unwrapOr("")).toStrictEqual({
             query: queries[0],
-        });
-        expect(emitter.emitted_event_name[2]).toBe(UPDATE_WIDGET_TITLE_EVENT);
-        expect(emitter.emitted_event_message[2].unwrapOr("")).toStrictEqual({
-            new_title: queries[0].title,
         });
     });
 
