@@ -29,7 +29,7 @@ use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
 
-class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
+class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * build pie chart properties
@@ -76,6 +76,9 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
 
     protected function buildSourceField(): Tracker_FormElement_Field_List
     {
+        if ($this->chart->getField_base() === null) {
+            throw new ChartFieldNotFoundException($this->chart->getTitle());
+        }
         $source_field = $this->getFormElementFactory()->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
         if (! $source_field) {
             throw new ChartFieldNotFoundException($this->chart->getTitle());
