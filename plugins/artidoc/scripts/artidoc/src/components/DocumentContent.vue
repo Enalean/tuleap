@@ -114,6 +114,12 @@ ul {
 li {
     position: relative;
 
+    &:last-child {
+        &:not(.artidoc-section-with-add-button) {
+            margin-bottom: var(--tlp-x-large-spacing);
+        }
+    }
+
     &::marker {
         color: transparent; // hack to hide the bullet list to be displayed in the margin
     }
