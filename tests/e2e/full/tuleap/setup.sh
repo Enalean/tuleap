@@ -51,7 +51,6 @@ enable_plugins() {
 
     sudo -u codendiadm /usr/bin/tuleap -c
     sudo -u codendiadm /usr/bin/tuleap config-set feature_flag_enable_artidoc_fields 1
-    sudo -u codendiadm /usr/bin/tuleap config-set feature_flag_cross_tracker_widget_multiple_query 1
 
     instantiate_licence_manager
 }

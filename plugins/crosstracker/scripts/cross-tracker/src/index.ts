@@ -30,7 +30,6 @@ import {
     EMITTER,
     GET_COLUMN_NAME,
     GET_SUGGESTED_QUERIES,
-    IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -101,7 +100,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(DOCUMENTATION_BASE_URL, widget_data.documentation_base_url)
             .provide(GET_COLUMN_NAME, column_name_getter)
             .provide(EMITTER, emitter)
-            .provide(IS_MULTIPLE_QUERY_SUPPORTED, widget_data.is_multiple_query_supported)
             .provide(GET_SUGGESTED_QUERIES, SuggestedQueries({ $gettext: gettext_plugin.$gettext }))
             .provide(DASHBOARD_TYPE, widget_data.dashboard_type)
             .provide(NEW_QUERY_CREATOR, NewQueryCreator())

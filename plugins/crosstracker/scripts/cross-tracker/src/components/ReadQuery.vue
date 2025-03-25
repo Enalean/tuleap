@@ -22,7 +22,7 @@
         class="tlp-pane-section"
         v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
     >
-        <div v-if="is_multiple_query_supported && query_state !== 'edit-query'">
+        <div v-if="query_state !== 'edit-query'">
             <action-buttons
                 v-bind:backend_query="backend_query"
                 v-bind:queries="queries"
@@ -31,7 +31,7 @@
         </div>
         <div class="cross-tracker-loader" v-if="is_loading"></div>
         <reading-mode
-            v-if="is_reading_mode_shown && are_query_details_shown"
+            v-if="is_reading_mode_shown && are_query_details_toggled"
             v-bind:backend_query="backend_query"
             v-bind:reading_query="reading_query"
             v-bind:has_error="has_error"
@@ -40,7 +40,7 @@
             v-on:discard-unsaved-query="unsavedQueryDiscarded"
         />
         <writing-mode
-            v-if="query_state === 'edit-query' && are_query_details_shown"
+            v-if="query_state === 'edit-query' && are_query_details_toggled"
             v-bind:writing_query="writing_query"
             v-bind:backend_query="backend_query"
             v-on:preview-result="handlePreviewResult"
@@ -65,7 +65,6 @@ import type { QueryState } from "../domain/QueryState";
 import {
     EMITTER,
     IS_EXPORT_ALLOWED,
-    IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     WIDGET_ID,
     QUERY_STATE,
@@ -100,7 +99,6 @@ const props = defineProps<{
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
-const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
 
 const gettext_provider = useGettext();
 
@@ -116,9 +114,6 @@ const queries = ref<ReadonlyArray<Query>>([]);
 
 const are_query_details_toggled = ref<boolean>(false);
 
-const are_query_details_shown = computed<boolean>(() =>
-    is_multiple_query_supported ? are_query_details_toggled.value : true,
-);
 const is_reading_mode_shown = computed<boolean>(
     () =>
         (query_state.value === "query-saved" || query_state.value === "result-preview") &&
@@ -153,22 +148,17 @@ function loadBackendQueries(): void {
                 if (widget_queries.length === 0) {
                     if (is_user_admin) {
                         query_state.value = "edit-query";
-                        if (is_multiple_query_supported) {
-                            emit("switch-to-create-query-pane");
-                        }
+                        emit("switch-to-create-query-pane");
                     }
 
                     return;
                 }
 
-                backend_query.value = widget_queries[0];
-                if (is_multiple_query_supported) {
-                    backend_query.value =
-                        props.selected_query ??
-                        widget_queries.find((query) => query.is_default) ??
-                        widget_queries[0];
-                    emitter.emit(SWITCH_QUERY_EVENT, { query: backend_query.value });
-                }
+                backend_query.value =
+                    props.selected_query ??
+                    widget_queries.find((query) => query.is_default) ??
+                    widget_queries[0];
+                emitter.emit(SWITCH_QUERY_EVENT, { query: backend_query.value });
                 initQueries();
                 has_error.value = false;
             },
@@ -203,9 +193,7 @@ function handleDeleteQuery(event: DeletedQueryEvent): void {
     queries.value = queries.value.filter((query) => query.id !== event.deleted_query.id);
     if (queries.value.length === 0) {
         query_state.value = "edit-query";
-        if (is_multiple_query_supported) {
-            emit("switch-to-create-query-pane");
-        }
+        emit("switch-to-create-query-pane");
     } else {
         const query = queries.value[0];
         emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
@@ -218,12 +206,7 @@ function handleSwitchWriting(): void {
         return;
     }
     emitter.emit(CLEAR_FEEDBACK_EVENT);
-    if (is_multiple_query_supported) {
-        emitter.emit(EDIT_QUERY_EVENT, { query_to_edit: backend_query.value });
-        return;
-    }
-    writing_query.value = reading_query.value;
-    query_state.value = "edit-query";
+    emitter.emit(EDIT_QUERY_EVENT, { query_to_edit: backend_query.value });
 }
 
 function handleSwitchQuery(event: SwitchQueryEvent): void {

@@ -25,7 +25,7 @@
         data-test="cross-tracker-reading-mode"
     >
         <label
-            v-if="is_description_displayed"
+            v-if="props.reading_query.description !== ''"
             class="tlp-label"
             v-bind:for="syntax_highlighted_query_id"
             data-test="query-description"
@@ -77,13 +77,7 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { updateQuery, createQuery } from "../../api/rest-querier";
 import type { Query } from "../../type";
-import {
-    EMITTER,
-    IS_MULTIPLE_QUERY_SUPPORTED,
-    IS_USER_ADMIN,
-    QUERY_STATE,
-    WIDGET_ID,
-} from "../../injection-symbols";
+import { EMITTER, IS_USER_ADMIN, QUERY_STATE, WIDGET_ID } from "../../injection-symbols";
 import { SaveQueryFault } from "../../domain/SaveQueryFault";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
 import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
@@ -92,7 +86,6 @@ const { $gettext } = useGettext();
 const query_state = strictInject(QUERY_STATE);
 const widget_id = strictInject(WIDGET_ID);
 const is_user_admin = strictInject(IS_USER_ADMIN);
-const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
 
 const props = defineProps<{
     has_error: boolean;
@@ -109,9 +102,6 @@ const emitter = strictInject(EMITTER);
 
 const is_loading = ref(false);
 
-const is_description_displayed = computed<boolean>(
-    () => is_multiple_query_supported && props.reading_query.description !== "",
-);
 const is_save_disabled = computed(() => is_loading.value === true || props.has_error);
 
 const syntax_highlighted_query_id = "syntax-highlighted-query-" + widget_id;

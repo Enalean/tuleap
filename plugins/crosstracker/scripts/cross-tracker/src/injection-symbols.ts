@@ -40,7 +40,6 @@ export const IS_USER_ADMIN: StrictInjectionKey<boolean> = Symbol();
 export const DOCUMENTATION_BASE_URL: StrictInjectionKey<string> = Symbol();
 export const GET_COLUMN_NAME: StrictInjectionKey<GetColumnName> = Symbol();
 export const EMITTER: StrictInjectionKey<EmitterProvider> = Symbol();
-export const IS_MULTIPLE_QUERY_SUPPORTED: StrictInjectionKey<boolean> = Symbol();
 export const GET_SUGGESTED_QUERIES: StrictInjectionKey<SuggestedQueriesGetter> = Symbol();
 export const DASHBOARD_TYPE: StrictInjectionKey<DashboardType> = Symbol();
 export const NEW_QUERY_CREATOR: StrictInjectionKey<PostNewQuery> = Symbol();
