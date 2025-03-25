@@ -52,10 +52,13 @@ import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import type { LinkedArtifact, LinkedArtifactIdentifier } from "../../domain/links/LinkedArtifact";
 import type { NewLink } from "../../domain/links/NewLink";
 
-export interface LinkField {
-    readonly controller: LinkFieldController;
-    readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
-    readonly creatorController: ArtifactCreatorController;
+export interface ExternalLinkField {
+    controller: LinkFieldController;
+    autocompleter: ArtifactLinkSelectorAutoCompleterType;
+    creatorController: ArtifactCreatorController;
+}
+
+export interface LinkField extends Readonly<ExternalLinkField> {
     current_artifact_reference: Option<ArtifactCrossReference>;
     field_presenter: LabeledField;
     allowed_link_types: CollectionOfAllowedLinksTypesPresenters;

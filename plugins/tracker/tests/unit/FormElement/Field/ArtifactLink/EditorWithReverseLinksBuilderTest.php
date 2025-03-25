@@ -100,7 +100,7 @@ final class EditorWithReverseLinksBuilderTest extends TestCase
         self::assertSame(self::CURRENT_TRACKER_SHORTNAME, $presenter->current_tracker_short_name);
         self::assertSame(self::PARENT_TRACKER_ID, $presenter->parent_tracker_id);
         self::assertSame(self::CURRENT_PROJECT_ID, $presenter->current_project_id);
-        self::assertSame('', $presenter->allowed_link_types);
+        self::assertSame('[]', $presenter->allowed_link_types);
     }
 
     public function testItBuildsWithoutHierarchy(): void

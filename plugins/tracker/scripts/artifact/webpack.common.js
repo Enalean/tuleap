@@ -25,6 +25,7 @@ const config = {
         "children-view": "./src/children-view.ts",
         "create-view": "./src/create-view.ts",
         "edit-view": "./src/edition/edit-view.ts",
+        "edition-style": "./src/edition/styles/edition.scss",
         "artifact-links-field": "./src/fields/artifact-links-field.ts",
         "cross-references-fields": "./src/fields/cross-references-fields.ts",
         "list-fields": "./src/fields/list-fields.ts",
@@ -48,11 +49,13 @@ const config = {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_po_files,
+            webpack_configurator.rule_scss_loader,
         ],
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
+        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
 };
 
