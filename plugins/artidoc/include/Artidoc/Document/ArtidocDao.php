@@ -112,6 +112,16 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
                 $target_id,
                 $source_id
             );
+
+            $db->run('DELETE FROM plugin_artidoc_document_tracker_field WHERE item_id = ?', $target_id);
+            $db->run(
+                'INSERT INTO plugin_artidoc_document_tracker_field (item_id, field_id, display_type, `rank`)
+                SELECT ?, field_id, display_type, `rank`
+                FROM plugin_artidoc_document_tracker_field
+                WHERE item_id = ?',
+                $target_id,
+                $source_id
+            );
         });
     }
 
