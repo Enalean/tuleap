@@ -89,6 +89,28 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
         self::assertEmpty($builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker));
     }
 
+    public function testExcludeFieldsThatAreUnused(): void
+    {
+        $factory = $this->createMock(Tracker_FormElementFactory::class);
+        $factory->method('getFieldById')
+            ->with(123)
+            ->willReturn(
+                StringFieldBuilder::aStringField(123)
+                    ->unused()
+                    ->build()
+            );
+
+        $builder = new ConfiguredFieldCollectionBuilder(
+            RetrieveConfiguredFieldStub::withConfiguredFields([
+                ['field_id' => 123, 'display_type' => DisplayType::COLUMN],
+            ]),
+            $factory,
+        );
+
+        self::assertEmpty($builder->buildFromArtidoc($this->artidoc, $this->user)->getFields($this->tracker));
+        self::assertEmpty($builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker));
+    }
+
     public function testExcludeFieldsThatAreNotReadable(): void
     {
         $factory = $this->createMock(Tracker_FormElementFactory::class);

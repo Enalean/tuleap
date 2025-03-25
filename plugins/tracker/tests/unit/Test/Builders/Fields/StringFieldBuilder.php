@@ -32,6 +32,7 @@ final class StringFieldBuilder
     private string $label     = 'Title';
     private string $name      = 'title';
     private bool $is_required = false;
+    private bool $use_it      = true;
     private \Tracker $tracker;
     /** @var array<string, mixed> */
     private array $specific_properties = [];
@@ -76,6 +77,13 @@ final class StringFieldBuilder
         return $this;
     }
 
+    public function unused(): self
+    {
+        $this->use_it = false;
+
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_String
     {
         $field = new Tracker_FormElement_Field_String(
@@ -85,7 +93,7 @@ final class StringFieldBuilder
             $this->name,
             $this->label,
             '',
-            true,
+            $this->use_it,
             'P',
             $this->is_required,
             '',
