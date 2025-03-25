@@ -68,6 +68,16 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
         );
     }
 
+    public function deleteConfiguredFieldById(int $field_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_artidoc_document_tracker_field',
+            [
+                'field_id' => $field_id,
+            ]
+        );
+    }
+
     /**
      * @param array{field_id: int, display_type: string} $row
      * @return ConfiguredFieldRow
