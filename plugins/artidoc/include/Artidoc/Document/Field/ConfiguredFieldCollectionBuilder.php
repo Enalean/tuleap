@@ -62,6 +62,10 @@ final readonly class ConfiguredFieldCollectionBuilder
                 continue;
             }
 
+            if (! $field->isUsed()) {
+                continue;
+            }
+
             if (! $field->userCanRead($user)) {
                 continue;
             }
