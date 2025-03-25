@@ -21,14 +21,10 @@
 namespace Tuleap\CrossTracker\Widget;
 
 use Codendi_Request;
-use ForgeConfig;
 use HTTPRequest;
 use LogicException;
 use Project;
 use TemplateRendererFactory;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -39,13 +35,8 @@ use Tuleap\Project\MappingRegistry;
 use Widget;
 use function Psl\Json\encode;
 
-#[ConfigKeyCategory('CrossTracker Search')]
 class CrossTrackerSearchWidget extends Widget
 {
-    #[FeatureFlagConfigKey('Support multiple query in Cross Tracker widget')]
-    #[ConfigKeyInt(0)]
-    public const FEATURE_FLAG = 'cross_tracker_widget_multiple_query';
-
     public const NAME = 'crosstrackersearch';
 
     public function __construct(
@@ -85,7 +76,6 @@ class CrossTrackerSearchWidget extends Widget
                     $this->content_id,
                     $is_admin,
                     $user,
-                    ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
                     $row['dashboard_type'],
                     $this->getTitleAttributeValue(),
                     $this->getTitle(),

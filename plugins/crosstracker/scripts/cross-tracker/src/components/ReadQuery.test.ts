@@ -20,33 +20,23 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { nextTick } from "vue";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import * as rest_querier from "../api/rest-querier";
 import ReadingMode from "../components/reading-mode/ReadingMode.vue";
-import WritingMode from "../components/writing-mode/WritingMode.vue";
-import {
-    EMITTER,
-    IS_MULTIPLE_QUERY_SUPPORTED,
-    IS_USER_ADMIN,
-    WIDGET_ID,
-} from "../injection-symbols";
+import { EMITTER, IS_USER_ADMIN, WIDGET_ID } from "../injection-symbols";
 import ReadQuery from "./ReadQuery.vue";
 import type {
     EmitterProvider,
     Events,
     NotifyFaultEvent,
-    NotifySuccessEvent,
     RefreshArtifactsEvent,
     SwitchQueryEvent,
     UpdateWidgetTitleEvent,
 } from "../helpers/emitter-provider";
 import {
-    CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
-    NOTIFY_SUCCESS_EVENT,
     QUERY_DELETED_EVENT,
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
@@ -61,37 +51,25 @@ vi.useFakeTimers();
 describe("ReadQuery", () => {
     let is_user_admin: boolean;
     let dispatched_switch_query_events: SwitchQueryEvent[];
-    let dispatched_clear_feedback_events: true[];
     let dispatched_fault_events: NotifyFaultEvent[];
-    let dispatched_success_events: NotifySuccessEvent[];
     let dispatched_updated_title_events: UpdateWidgetTitleEvent[];
     let dispatched_refresh_events: RefreshArtifactsEvent[];
     let emitter: EmitterProvider;
-    let is_multiple_query_supported: boolean;
     let selected_query: Query | undefined;
 
     beforeEach(() => {
         selected_query = undefined;
         is_user_admin = true;
         dispatched_switch_query_events = [];
-        dispatched_clear_feedback_events = [];
         dispatched_fault_events = [];
-        dispatched_success_events = [];
         dispatched_updated_title_events = [];
         dispatched_refresh_events = [];
-        is_multiple_query_supported = true;
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, (event) => {
             dispatched_switch_query_events.push(event);
         });
-        emitter.on(CLEAR_FEEDBACK_EVENT, () => {
-            dispatched_clear_feedback_events.push(true);
-        });
         emitter.on(NOTIFY_FAULT_EVENT, (event) => {
             dispatched_fault_events.push(event);
-        });
-        emitter.on(NOTIFY_SUCCESS_EVENT, (event) => {
-            dispatched_success_events.push(event);
         });
         emitter.on(UPDATE_WIDGET_TITLE_EVENT, (event) => {
             dispatched_updated_title_events.push(event);
@@ -121,7 +99,6 @@ describe("ReadQuery", () => {
                     [WIDGET_ID.valueOf()]: 96,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
-                    [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: is_multiple_query_supported,
                 },
             },
             props: {
@@ -129,142 +106,6 @@ describe("ReadQuery", () => {
             },
         });
     }
-
-    describe("switchToWritingMode()", () => {
-        it(`Given a saved query,
-            when I switch to writing mode to modify it,
-            then the query will be in "edit-query" state
-            and the writing query will be updated
-            and it will clear the feedback messages`, async () => {
-            is_multiple_query_supported = false;
-            const wrapper = getWrapper();
-            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
-            await vi.runOnlyPendingTimersAsync();
-
-            wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
-
-            expect(wrapper.vm.query_state).toBe("edit-query");
-            expect(dispatched_clear_feedback_events).toHaveLength(1);
-        });
-
-        it(`Given I am not admin,
-            when I try to switch to writing mode, then nothing will happen`, async () => {
-            is_user_admin = false;
-            const wrapper = getWrapper();
-            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
-            await vi.runOnlyPendingTimersAsync();
-
-            wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
-
-            expect(wrapper.vm.query_state).toBe("query-saved");
-        });
-    });
-
-    describe(`handleCancelQueryEdition()`, () => {
-        it(`Given I started to modify the query
-            when I cancel,
-            then the query will be back to its "query-saved" state
-            and the reading query will be reset
-            and it will clear the feedback messages`, async () => {
-            is_multiple_query_supported = false;
-            const wrapper = getWrapper();
-            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
-            await vi.runOnlyPendingTimersAsync();
-
-            wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
-            await nextTick();
-            wrapper.findComponent(WritingMode).vm.$emit("cancel-query-edition");
-
-            expect(wrapper.vm.query_state).toBe("query-saved");
-            expect(dispatched_clear_feedback_events).toHaveLength(2);
-        });
-    });
-
-    describe("handlePreviewResult()", () => {
-        it(`Given I started to modify the query
-            when I preview the results
-            then the query will be in "result-preview" state
-            and the reading query will be updated
-            and it will clear the feedback messages`, async () => {
-            is_multiple_query_supported = false;
-            const wrapper = getWrapper();
-            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
-            await vi.runOnlyPendingTimersAsync();
-
-            wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
-            await nextTick();
-            wrapper.findComponent(WritingMode).vm.$emit("preview-result", {
-                id: "0194dfd6-a489-703b-aabd-9d473212d908",
-                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
-                title: "My title",
-                description: "",
-                is_default: false,
-            });
-
-            expect(wrapper.vm.query_state).toBe("result-preview");
-            expect(dispatched_clear_feedback_events).toHaveLength(2);
-        });
-    });
-
-    describe("querySaved()", () => {
-        it(`when the query is saved,
-            then the queries will be updated
-            and it will set a success message`, async () => {
-            is_multiple_query_supported = false;
-            const wrapper = getWrapper();
-            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
-            await vi.runOnlyPendingTimersAsync();
-
-            wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
-            await nextTick();
-            wrapper.findComponent(WritingMode).vm.$emit("preview-result", {
-                id: "0194dfd6-a489-703b-aabd-9d473212d908",
-                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
-                title: "My title",
-                description: "",
-            });
-            await nextTick();
-            wrapper.findComponent(ReadingMode).vm.$emit("saved", {
-                id: "0194dfd6-a489-703b-aabd-9d473212d908",
-                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
-                title: "My title",
-                description: "",
-                is_default: false,
-            });
-
-            expect(wrapper.vm.query_state).toBe("query-saved");
-            expect(dispatched_fault_events).toHaveLength(0);
-            expect(dispatched_success_events).toHaveLength(1);
-            expect(dispatched_success_events[0].message).toStrictEqual(expect.any(String));
-        });
-    });
-
-    describe(`unsavedQueryDiscarded()`, () => {
-        it(`Given a query that has been modified,
-            when its changes are discarded,
-            then it will restore the reading and writing queries
-            and will clear the feedback messages`, async () => {
-            is_multiple_query_supported = false;
-            const wrapper = getWrapper();
-            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
-            await vi.runOnlyPendingTimersAsync();
-
-            wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
-            await nextTick();
-            wrapper.findComponent(WritingMode).vm.$emit("preview-result", {
-                id: "0194dfd6-a489-703b-aabd-9d473212d908",
-                tql_query: "SELECT @id FROM @project = 'self' WHERE @id >= 1",
-                title: "My title",
-                description: "",
-                is_default: false,
-            });
-            await nextTick();
-            wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-query");
-
-            expect(wrapper.vm.query_state).toBe("query-saved");
-            expect(dispatched_clear_feedback_events).toHaveLength(3);
-        });
-    });
 
     describe("loadBackendQueries()", () => {
         it("When I load the widget, then the queries will be initialized", async () => {
@@ -401,18 +242,6 @@ describe("ReadQuery", () => {
     });
 
     describe(`isXLSXExportAllowed`, () => {
-        it(`when the query state is not "query-saved", it does not allow CSV export`, async () => {
-            is_multiple_query_supported = false;
-            const wrapper = getWrapper();
-            emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
-            await vi.runOnlyPendingTimersAsync();
-
-            wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
-            await nextTick();
-
-            expect(wrapper.vm.is_export_allowed).toBe(false);
-        });
-
         it(`when there was an error, it does not allow XLSX export`, async () => {
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(
                 errAsync(Fault.fromMessage("Oops an error")),
@@ -453,16 +282,7 @@ describe("ReadQuery", () => {
     });
 
     describe("areQueryDetailsShown()", () => {
-        it("should always display query details if multiple queries are not enabled", async () => {
-            is_multiple_query_supported = false;
-            const wrapper = getWrapper();
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(wrapper.findComponent(ReadingMode).exists()).toBe(true);
-        });
-
         it("should not display query details if multiple queries are enabled but details are not toggled", async () => {
-            is_multiple_query_supported = true;
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
@@ -470,7 +290,6 @@ describe("ReadQuery", () => {
         });
 
         it("should display query details if multiple queries are enabled and details are toggled", async () => {
-            is_multiple_query_supported = true;
             const wrapper = getWrapper();
             emitter.emit(TOGGLE_QUERY_DETAILS_EVENT, { display_query_details: true });
             await vi.runOnlyPendingTimersAsync();
@@ -511,7 +330,6 @@ describe("ReadQuery", () => {
         });
 
         it("delete the event query and then display the creation pane", async () => {
-            is_multiple_query_supported = true;
             const query = {
                 tql_query: 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""',
                 title: "TQL query title 1",

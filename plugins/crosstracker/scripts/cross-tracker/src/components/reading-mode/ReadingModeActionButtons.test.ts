@@ -22,12 +22,7 @@ import ExportXLSXButton from "../ExportXLSXButton.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import {
-    EMITTER,
-    IS_EXPORT_ALLOWED,
-    IS_MULTIPLE_QUERY_SUPPORTED,
-    IS_USER_ADMIN,
-} from "../../injection-symbols";
+import { EMITTER, IS_EXPORT_ALLOWED, IS_USER_ADMIN } from "../../injection-symbols";
 import type { Query } from "../../type";
 import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
 import mitt from "mitt";
@@ -49,7 +44,6 @@ describe("ReadingModeActionButtons", () => {
                     [IS_EXPORT_ALLOWED.valueOf()]: is_xlsx_export_allowed,
                     [EMITTER.valueOf()]: emitter,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
-                    [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
                 },
             },
             props: {

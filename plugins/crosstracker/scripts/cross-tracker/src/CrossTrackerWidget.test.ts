@@ -24,7 +24,6 @@ import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import {
     DEFAULT_WIDGET_TITLE,
     EMITTER,
-    IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     UPDATE_WIDGET_TITLE,
 } from "./injection-symbols";
@@ -55,7 +54,6 @@ describe("CrossTrackerWidget", () => {
                 provide: {
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
-                    [IS_MULTIPLE_QUERY_SUPPORTED.valueOf()]: true,
                     [UPDATE_WIDGET_TITLE.valueOf()]: WidgetTitleUpdater(
                         emitter,
                         widget_title_element,

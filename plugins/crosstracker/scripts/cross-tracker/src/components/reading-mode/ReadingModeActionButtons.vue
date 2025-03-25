@@ -21,7 +21,7 @@
     <div class="reading-mode-action-buttons">
         <div>
             <button
-                v-if="is_user_admin && is_multiple_query_suppoerted"
+                v-if="is_user_admin"
                 type="button"
                 class="tlp-button-primary tlp-button-mini tlp-button-outline reading-mode-action-edit-button"
                 v-on:click="emitter.emit(EDIT_QUERY_EVENT, { query_to_edit: current_query })"
@@ -30,10 +30,7 @@
                 <i class="fa-solid fa-fw fa-edit" aria-hidden="true"></i> {{ $gettext("Edit") }}
             </button>
         </div>
-        <delete-query-button
-            v-if="is_user_admin && is_multiple_query_suppoerted"
-            v-bind:current_query="current_query"
-        />
+        <delete-query-button v-if="is_user_admin" v-bind:current_query="current_query" />
         <div v-if="is_xlsx_export_allowed" class="export-button">
             <export-x-l-s-x-button v-bind:current_query="current_query" />
         </div>
@@ -42,12 +39,7 @@
 
 <script setup lang="ts">
 import ExportXLSXButton from "../ExportXLSXButton.vue";
-import {
-    EMITTER,
-    IS_EXPORT_ALLOWED,
-    IS_MULTIPLE_QUERY_SUPPORTED,
-    IS_USER_ADMIN,
-} from "../../injection-symbols";
+import { EMITTER, IS_EXPORT_ALLOWED, IS_USER_ADMIN } from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Query } from "../../type";
 import { EDIT_QUERY_EVENT } from "../../helpers/emitter-provider";
@@ -59,7 +51,6 @@ defineProps<{
 
 const is_xlsx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 const is_user_admin = strictInject(IS_USER_ADMIN);
-const is_multiple_query_suppoerted = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
 const emitter = strictInject(EMITTER);
 </script>
 

@@ -25,7 +25,7 @@
         v-bind:selected_query="selected_query"
     />
     <create-new-query
-        v-else-if="widget_pane === 'query-creation' && is_multiple_query_supported && is_user_admin"
+        v-else-if="widget_pane === 'query-creation' && is_user_admin"
         v-on:return-to-active-query-pane="displayActiveQuery"
     />
     <edit-query
@@ -40,7 +40,6 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     DEFAULT_WIDGET_TITLE,
     EMITTER,
-    IS_MULTIPLE_QUERY_SUPPORTED,
     IS_USER_ADMIN,
     UPDATE_WIDGET_TITLE,
 } from "./injection-symbols";
@@ -65,7 +64,6 @@ import type { Query } from "./type";
 
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
-const is_multiple_query_supported = strictInject(IS_MULTIPLE_QUERY_SUPPORTED);
 const widget_title_updater = strictInject(UPDATE_WIDGET_TITLE);
 const default_widget_title = strictInject(DEFAULT_WIDGET_TITLE);
 
@@ -87,18 +85,14 @@ onMounted(() => {
     emitter.on(CREATE_NEW_QUERY_EVENT, handleCreateNewQuery);
     emitter.on(EDIT_QUERY_EVENT, handleEditQuery);
     emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
-    if (is_multiple_query_supported) {
-        widget_title_updater.listenToUpdateTitle();
-    }
+    widget_title_updater.listenToUpdateTitle();
 });
 
 onBeforeUnmount(() => {
     emitter.off(CREATE_NEW_QUERY_EVENT);
     emitter.off(EDIT_QUERY_EVENT);
     emitter.off(SWITCH_QUERY_EVENT, handleSwitchQuery);
-    if (is_multiple_query_supported) {
-        widget_title_updater.removeListener();
-    }
+    widget_title_updater.removeListener();
 });
 
 function handleSwitchQuery(event: SwitchQueryEvent): void {
