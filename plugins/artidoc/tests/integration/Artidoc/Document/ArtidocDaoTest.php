@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIden
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\SectionsAsserter;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
@@ -90,6 +91,21 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             ContentToInsert::fromArtifactId(1001, Level::Two),
         ]);
         $dao->saveTracker($this->artidoc_102->document->getId(), 10001);
+        $db->insertMany('plugin_artidoc_document_tracker_field', [
+            [
+                'item_id'      => $this->artidoc_102->document->getId(),
+                'field_id'     => 456,
+                'rank'         => 2,
+                'display_type' => 'column',
+            ],
+            [
+                'item_id'      => $this->artidoc_102->document->getId(),
+                'field_id'     => 457,
+                'rank'         => 1,
+                'display_type' => 'column',
+            ],
+        ]);
+        $this->assertConfiguredFields($this->artidoc_102->document->getId(), 457, 456);
 
         SectionsAsserter::assertSectionsForDocument($this->artidoc_103, []);
         self::assertSame(2, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
@@ -102,6 +118,18 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         self::assertSame(4, $db->cell('SELECT count(*) FROM plugin_artidoc_section_freetext'));
 
         self::assertSame(10001, $dao->getTracker($this->artidoc_103->document->getId()));
+        $this->assertConfiguredFields($this->artidoc_103->document->getId(), 457, 456);
+    }
+
+    private function assertConfiguredFields(int $item_id, int ...$field_ids): void
+    {
+        $dao    = new ConfiguredFieldDao();
+        $fields = $dao->retrieveConfiguredFieldsFromItemId($item_id);
+
+        self::assertCount(count($field_ids), $fields);
+        foreach ($field_ids as $index => $field_id) {
+            self::assertSame($field_id, $fields[$index]['field_id']);
+        }
     }
 
     public function testCloneItemForEmptyDocument(): void
