@@ -34,6 +34,7 @@ use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
@@ -83,6 +84,7 @@ use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -145,6 +147,12 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             ArtidocAttachmentController::ROUTE_PREFIX . '/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[-{filename:.*}]',
             $this->getRouteHandler('routeAttachmentController'),
         );
+    }
+
+    #[ListeningToEventClass]
+    public function formElementDeletedEvent(FormElementDeletedEvent $event): void
+    {
+        (new ConfiguredFieldDao())->deleteConfiguredFieldById($event->field_id);
     }
 
     public function routeAttachmentController(): DispatchableWithRequest

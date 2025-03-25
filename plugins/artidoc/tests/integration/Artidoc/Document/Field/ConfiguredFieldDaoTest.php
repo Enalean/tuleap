@@ -118,6 +118,19 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
         );
     }
 
+    public function testDeleteConfiguredFieldById(): void
+    {
+        $dao = new ConfiguredFieldDao();
+
+        $dao->deleteConfiguredFieldById(456);
+
+        $this->assertConfiguredFieldsAfterDeletingField456(
+            $dao->retrieveConfiguredFieldsFromItemId(self::ITEM_ID_1),
+            $dao->retrieveConfiguredFieldsFromItemId(self::ITEM_ID_2),
+            $dao->retrieveConfiguredFieldsFromItemId(self::ITEM_ID_3),
+        );
+    }
+
     /**
      * @param list<ConfiguredFieldRow> $fields_in_item_1
      * @param list<ConfiguredFieldRow> $fields_in_item_2
@@ -138,6 +151,25 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
         self::assertSame(457, $fields_in_item_3[0]['field_id']);
         self::assertSame('column', $fields_in_item_3[1]['display_type']->value);
         self::assertSame(456, $fields_in_item_3[1]['field_id']);
+        self::assertSame('column', $fields_in_item_3[0]['display_type']->value);
+    }
+
+    /**
+     * @param list<ConfiguredFieldRow> $fields_in_item_1
+     * @param list<ConfiguredFieldRow> $fields_in_item_2
+     * @param list<ConfiguredFieldRow> $fields_in_item_3
+     */
+    private function assertConfiguredFieldsAfterDeletingField456(
+        array $fields_in_item_1,
+        array $fields_in_item_2,
+        array $fields_in_item_3,
+    ): void {
+        self::assertEmpty($fields_in_item_1);
+
+        self::assertEmpty($fields_in_item_2);
+
+        self::assertCount(1, $fields_in_item_3);
+        self::assertSame(457, $fields_in_item_3[0]['field_id']);
         self::assertSame('column', $fields_in_item_3[0]['display_type']->value);
     }
 

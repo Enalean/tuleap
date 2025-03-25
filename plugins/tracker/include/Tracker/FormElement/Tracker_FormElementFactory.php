@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
@@ -1416,15 +1417,20 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      */
     public function deleteFormElement($form_element_id)
     {
-        $success = false;
-        if ($form_element = $this->getFormElementById($form_element_id)) {
-            //TODO: remove changeset values? or simply mark the formElement as deleted to be able to retrieve history?
-            if ($success = $this->getDao()->delete($form_element)) {
-                unset($this->formElements[$form_element_id]);
-                unset($this->formElements_by_formElementcomponent[$form_element->parent_id]);
-            }
+        $form_element = $this->getFormElementById($form_element_id);
+        if (! $form_element) {
+            return false;
         }
-        return $success;
+
+        //TODO: remove changeset values? or simply mark the formElement as deleted to be able to retrieve history?
+        $success = $this->getDao()->delete($form_element);
+        if ($success) {
+            $this->getEventManager()->dispatch(new FormElementDeletedEvent((int) $form_element_id));
+            unset($this->formElements[$form_element_id]);
+            unset($this->formElements_by_formElementcomponent[$form_element->parent_id]);
+        }
+
+        return true;
     }
 
     /**
