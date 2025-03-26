@@ -20,6 +20,9 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\BurnupEffortCalculatorForArtifact;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_DAILY;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\VisitRetriever;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
@@ -56,8 +59,6 @@ use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
-use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
-use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
@@ -1157,11 +1158,13 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
 
         return new BurnupCalculator(
-            $changeset_factory,
             $this->getArtifactFactory(),
             new BurnupDataDAO(),
-            $this->getSemanticInitialEffortFactory(),
-            $this->getSemanticDoneFactory()
+            new BurnupEffortCalculatorForArtifact(
+                $changeset_factory,
+                $this->getSemanticInitialEffortFactory(),
+                $this->getSemanticDoneFactory()
+            )
         );
     }
 

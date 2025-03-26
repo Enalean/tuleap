@@ -20,137 +20,117 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\FormElement;
+namespace Tuleap\AgileDashboard\Test\Builders\FormElement;
 
-use AgileDashBoard_Semantic_InitialEffort;
-use AgileDashboard_Semantic_InitialEffortFactory;
-use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
-use Tracker_Semantic_Status;
-use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
-use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\RetrieveBurnupEffortForArtifact;
+use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
+use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
+use Tuleap\AgileDashboard\FormElement\BurnupEffort;
+use Tuleap\AgileDashboard\Stub\FormElement\Burnup\Claculator\RetrieveBurnupEffortForArtifactStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class BurnupCalculatorTest extends TestCase
+final class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TIMESTAMP_1 = 1537187828;
-    private const TIMESTAMP_2 = 1537189326;
+    private BurnupCalculator $burnup_calculator;
+    private Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\MockObject $artifact_factory_mock;
+    private BurnupDataDAO&\PHPUnit\Framework\MockObject\MockObject $burnup_dao_mock;
+    private RetrieveBurnupEffortForArtifact $artifact_effort_calculator;
+    private BurnupEffort $burnup_effort;
 
-    private BurnupCalculator $calculator;
-    private array $plannable_trackers;
-
-    public function testItCalculsBurnupWithFirstChangeset(): void
+    protected function setUp(): void
     {
-        $this->setUpForTimestamp(self::TIMESTAMP_1);
-        $effort = $this->calculator->getValue(101, self::TIMESTAMP_1, $this->plannable_trackers);
+        $this->artifact_factory_mock      = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->burnup_dao_mock            = $this->createMock(BurnupDataDAO::class);
+        $this->burnup_effort              = new BurnupEffort(5.0, 10.0);
+        $this->artifact_effort_calculator = RetrieveBurnupEffortForArtifactStub::withEffort($this->burnup_effort);
 
-        self::assertSame(0.0, $effort->getTeamEffort());
-        self::assertSame(9.0, $effort->getTotalEffort());
-    }
-
-    public function testItCalculsBurnupWithLastChangeset(): void
-    {
-        $this->setUpForTimestamp(self::TIMESTAMP_2);
-        $effort = $this->calculator->getValue(101, self::TIMESTAMP_2, $this->plannable_trackers);
-
-        self::assertSame(4.0, $effort->getTeamEffort());
-        self::assertSame(9.0, $effort->getTotalEffort());
-    }
-
-    private function setUpForTimestamp(int $timestamp): void
-    {
-        $changeset_factory      = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
-        $artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);
-        $burnup_dao             = $this->createMock(BurnupDataDAO::class);
-        $initial_effort_factory = $this->createMock(AgileDashboard_Semantic_InitialEffortFactory::class);
-        $semantic_done_factory  = $this->createMock(SemanticDoneFactory::class);
-
-        $tracker                  = TrackerTestBuilder::aTracker()->withId(10)->build();
-        $this->plannable_trackers = [$tracker->getId()];
-
-        $this->calculator = new BurnupCalculator(
-            $changeset_factory,
-            $artifact_factory,
-            $burnup_dao,
-            $initial_effort_factory,
-            $semantic_done_factory
+        $this->burnup_calculator = new BurnupCalculator(
+            $this->artifact_factory_mock,
+            $this->burnup_dao_mock,
+            $this->artifact_effort_calculator
         );
+    }
 
-        $burnup_dao->method('searchLinkedArtifactsAtGivenTimestamp')
-            ->with(101, $timestamp, $this->plannable_trackers)
-            ->willReturn([
-                ['id' => 102],
-                ['id' => 103],
-            ]);
+    public function testGetValueReturnsEffortWithNoArtifacts(): void
+    {
+        $artifact_id          = 1;
+        $timestamp            = 1000;
+        $backlog_trackers_ids = [101, 102];
 
-        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $tracker);
+        $this->burnup_dao_mock
+            ->expects($this->once())
+            ->method('searchLinkedArtifactsAtGivenTimestamp')
+            ->with($artifact_id, $timestamp, $backlog_trackers_ids)
+            ->willReturn([]);
 
-        $user_story_01 = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
-        $changeset_01  = ChangesetTestBuilder::aChangeset(1)->ofArtifact($user_story_01)->build();
-        $changeset_02  = ChangesetTestBuilder::aChangeset(2)->ofArtifact($user_story_01)->build();
+        $result = $this->burnup_calculator->getValue($artifact_id, $timestamp, $backlog_trackers_ids);
 
-        $user_story_02 = ArtifactTestBuilder::anArtifact(103)->inTracker($tracker)->build();
-        $changeset_03  = ChangesetTestBuilder::aChangeset(3)->ofArtifact($user_story_02)->build();
-        $changeset_04  = ChangesetTestBuilder::aChangeset(4)->ofArtifact($user_story_02)->build();
+        $this->assertEquals(0.0, $result->getTeamEffort());
+        $this->assertEquals(0.0, $result->getTotalEffort());
+    }
 
-        $artifact_factory->method('getArtifactById')
+    public function testGetValueReturnsEffortWithValidArtifacts(): void
+    {
+        $artifact_id          = 1;
+        $timestamp            = 1000;
+        $backlog_trackers_ids = [101, 102];
+
+        $backlog_items = [
+            ['id' => 201],
+            ['id' => 202],
+        ];
+
+        $artifact_1 = ArtifactTestBuilder::anArtifact(201)->build();
+
+
+        $this->burnup_dao_mock
+            ->expects($this->once())
+            ->method('searchLinkedArtifactsAtGivenTimestamp')
+            ->with($artifact_id, $timestamp, $backlog_trackers_ids)
+            ->willReturn($backlog_items);
+
+        $this->artifact_factory_mock
+            ->method('getArtifactById')
             ->willReturnMap([
-                [102, $user_story_01],
-                [103, $user_story_02],
+                [201, $artifact_1],
             ]);
 
-        $semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
-        $initial_effort_field    = IntFieldBuilder::anIntField(324)->build();
-        $semantic_initial_effort->method('getField')->willReturn($initial_effort_field);
 
-        $initial_effort_factory->method('getByTracker')->with($tracker)->willReturn($semantic_initial_effort);
+        $result = $this->burnup_calculator->getValue($artifact_id, $timestamp, $backlog_trackers_ids);
 
-        $semantic_done = $this->createMock(SemanticDone::class);
-        $semantic_done_factory->method('getInstanceByTracker')->with($tracker)->willReturn($semantic_done);
+        $this->assertEquals($this->burnup_effort->getTeamEffort(), $result->getTeamEffort());
+        $this->assertEquals($this->burnup_effort->getTotalEffort(), $result->getTotalEffort());
+    }
 
-        if ($timestamp === self::TIMESTAMP_1) {
-            $changeset_factory->expects(self::exactly(2))->method('getChangesetAtTimestamp')
-                ->willReturnMap([
-                    [$user_story_01, $timestamp, $changeset_01],
-                    [$user_story_02, $timestamp, $changeset_03],
-                ]);
-            $semantic_done->method('isDone')->willReturnMap([
-                [$changeset_01, false],
-                [$changeset_03, false],
+    public function testGetValueIgnoresInvalidArtifacts(): void
+    {
+        $artifact_id          = 1;
+        $timestamp            = 1000;
+        $backlog_trackers_ids = [101, 102];
+
+        $backlog_items = [
+            ['id' => 201],
+            ['id' => 202],
+        ];
+
+        $this->burnup_dao_mock
+            ->expects($this->once())
+            ->method('searchLinkedArtifactsAtGivenTimestamp')
+            ->with($artifact_id, $timestamp, $backlog_trackers_ids)
+            ->willReturn($backlog_items);
+
+        $this->artifact_factory_mock
+            ->expects($this->exactly(2))
+            ->method('getArtifactById')
+            ->willReturnMap([
+                [201, null],
             ]);
-            $user_story_status_semantic->method('isOpenAtGivenChangeset')
-                ->willReturnMap([
-                    [$changeset_01, true],
-                    [$changeset_03, true],
-                ]);
-        } elseif ($timestamp === self::TIMESTAMP_2) {
-            $changeset_factory->expects(self::exactly(2))->method('getChangesetAtTimestamp')
-                ->willReturnMap([
-                    [$user_story_01, $timestamp, $changeset_02],
-                    [$user_story_02, $timestamp, $changeset_04],
-                ]);
-            $semantic_done->method('isDone')->willReturnMap([
-                [$changeset_02, true],
-                [$changeset_04, false],
-            ]);
-            $user_story_status_semantic->method('isOpenAtGivenChangeset')
-                ->willReturnMap([
-                    [$changeset_02, false],
-                    [$changeset_04, true],
-                ]);
-        }
 
-        ChangesetValueIntegerTestBuilder::aValue(1, $changeset_01, $initial_effort_field)->withValue(4)->build();
-        ChangesetValueIntegerTestBuilder::aValue(2, $changeset_02, $initial_effort_field)->withValue(4)->build();
+        $result = $this->burnup_calculator->getValue($artifact_id, $timestamp, $backlog_trackers_ids);
 
-        ChangesetValueIntegerTestBuilder::aValue(3, $changeset_03, $initial_effort_field)->withValue(5)->build();
-        ChangesetValueIntegerTestBuilder::aValue(4, $changeset_04, $initial_effort_field)->withValue(5)->build();
+        $this->assertEquals(0.0, $result->getTeamEffort());
+        $this->assertEquals(0.0, $result->getTotalEffort());
     }
 }

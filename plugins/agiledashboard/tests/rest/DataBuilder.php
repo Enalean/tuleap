@@ -30,7 +30,7 @@ use SystemEvent;
 use SystemEventManager;
 use SystemEventProcessor_Factory;
 use TruncateLevelLogger;
-use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\Project\SystemEventRunner;
 
 class DataBuilder extends REST_TestDataBuilder

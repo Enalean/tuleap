@@ -22,7 +22,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use SystemEvent;
 use SystemEventManager;
-use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class BurnupCacheGenerator
