@@ -21,28 +21,24 @@
 
 namespace Tuleap\Tracker\Rule;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Rule_List;
 use Tracker_Rule_List_View;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_Rule_List_ViewTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Rule_List_ViewTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testFetch()
+    public function testFetch(): void
     {
-        $rule               = Mockery::mock(Tracker_Rule_List::class);
-        $rule->id           = 'id';
-        $rule->tracker_id   = 'tracker_id';
-        $rule->source_field = 'source_field';
-        $rule->target_field = 'target_field';
-        $rule->source_value = 'source_value_1';
-        $rule->target_value = 'target_value_2';
+        $rule = new Tracker_Rule_List(
+            123,
+            'tracker_id',
+            'source_field',
+            'source_value_1',
+            'target_field',
+            'target_value_2',
+        );
 
         $view = new Tracker_Rule_List_View($rule);
-        $this->assertEquals('#id@tracker_id source_field(source_value_1) => target_field(target_value_2)', $view->fetch());
+        $this->assertEquals('#123@tracker_id source_field(source_value_1) => target_field(target_value_2)', $view->fetch());
     }
 }

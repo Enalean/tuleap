@@ -22,49 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Rule;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\GlobalResponseMock;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
-    /**
-     * @var TrackerRulesDateValidator
-     */
-    private $tracker_rules_date_validator;
+    private TrackerRulesDateValidator $tracker_rules_date_validator;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $formelement_factory;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
 
     public function setUp(): void
     {
-        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
-
-        $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->formelement_factory          = $this->createMock(\Tracker_FormElementFactory::class);
         $this->tracker_rules_date_validator = new TrackerRulesDateValidator($this->formelement_factory, new \Psr\Log\NullLogger());
-    }
-
-    public function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
     }
 
     public function testValidateDateRulesReturnsTrueWhenThereAreValidDateRules()
     {
-        $tracker_rule_date  = Mockery::mock(\Tracker_Rule_Date::class);
-        $tracker_rule_date2 = Mockery::mock(\Tracker_Rule_Date::class);
+        $tracker_rule_date  = $this->createMock(\Tracker_Rule_Date::class);
+        $tracker_rule_date2 = $this->createMock(\Tracker_Rule_Date::class);
 
-        $tracker_rule_date->shouldReceive('validate')->andReturn(true);
-        $tracker_rule_date->shouldReceive('getSourceFieldId')->andReturn(10);
-        $tracker_rule_date->shouldReceive('getTargetFieldId')->andReturn(11);
-        $tracker_rule_date2->shouldReceive('validate')->andReturn(true);
-        $tracker_rule_date2->shouldReceive('getSourceFieldId')->andReturn(12);
-        $tracker_rule_date2->shouldReceive('getTargetFieldId')->andReturn(13);
+        $tracker_rule_date->method('validate')->willReturn(true);
+        $tracker_rule_date->method('getSourceFieldId')->willReturn(10);
+        $tracker_rule_date->method('getTargetFieldId')->willReturn(11);
+        $tracker_rule_date2->method('validate')->willReturn(true);
+        $tracker_rule_date2->method('getSourceFieldId')->willReturn(12);
+        $tracker_rule_date2->method('getTargetFieldId')->willReturn(13);
 
         $value_field_list = [
             10 => '',
@@ -77,32 +65,34 @@ class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDateRulesReturnsFalseAndFeedbackWhenADateIsnotValid()
     {
-        $source_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $source_field->shouldReceive('getID')->andReturns(123);
-        $source_field->shouldReceive('getLabel')->andReturns('aaaaa');
-        $target_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $target_field->shouldReceive('getID')->andReturns(789);
-        $target_field->shouldReceive('getLabel')->andReturns('bbbbb');
+        $source_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $source_field->method('getID')->willReturn(123);
+        $source_field->method('getLabel')->willReturn('aaaaa');
+        $target_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $target_field->method('getID')->willReturn(789);
+        $target_field->method('getLabel')->willReturn('bbbbb');
 
         $comparator         =  Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
-        $tracker_rule_date  = Mockery::mock(\Tracker_Rule_Date::class);
-        $tracker_rule_date2 = Mockery::mock(\Tracker_Rule_Date::class);
+        $tracker_rule_date  = $this->createMock(\Tracker_Rule_Date::class);
+        $tracker_rule_date2 = $this->createMock(\Tracker_Rule_Date::class);
 
-        $tracker_rule_date->shouldReceive('validate')->andReturn(true);
-        $tracker_rule_date->shouldReceive('getSourceFieldId')->andReturn(10);
-        $tracker_rule_date->shouldReceive('getTargetFieldId')->andReturn(11);
-        $tracker_rule_date->shouldReceive('getComparator')->andReturn($comparator);
+        $tracker_rule_date->method('validate')->willReturn(true);
+        $tracker_rule_date->method('getSourceFieldId')->willReturn(10);
+        $tracker_rule_date->method('getTargetFieldId')->willReturn(11);
+        $tracker_rule_date->method('getComparator')->willReturn($comparator);
 
-        $tracker_rule_date2->shouldReceive('validate')->andReturn(false);
-        $tracker_rule_date2->shouldReceive('getSourceFieldId')->andReturn(12);
-        $tracker_rule_date2->shouldReceive('getTargetFieldId')->andReturn(13);
-        $tracker_rule_date2->shouldReceive('getComparator')->andReturn($comparator);
-        $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([12])->andReturns($source_field);
-        $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([13])->andReturns($target_field);
+        $tracker_rule_date2->method('validate')->willReturn(false);
+        $tracker_rule_date2->method('getSourceFieldId')->willReturn(12);
+        $tracker_rule_date2->method('getTargetFieldId')->willReturn(13);
+        $tracker_rule_date2->method('getComparator')->willReturn($comparator);
+        $this->formelement_factory->method('getFormElementById')->willReturnCallback(static fn (int $id) => match ($id) {
+            12 => $source_field,
+            13 => $target_field,
+        });
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'Error on the date value : aaaaa must be > to bbbbb.']);
-        $source_field->shouldReceive('setHasErrors')->withArgs([true]);
-        $target_field->shouldReceive('setHasErrors')->withArgs([true]);
+        $GLOBALS['Response']->method('addFeedback')->with('error', 'Error on the date value : aaaaa must be > to bbbbb.');
+        $source_field->method('setHasErrors')->with(true);
+        $target_field->method('setHasErrors')->with(true);
 
         $value_field_list = [
             10 => '',
@@ -115,33 +105,37 @@ class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDateRulesReturnsFalseAndFeedbackDuringCSVImportWhenADateIsValidButNotInFieldList()
     {
-        $source_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $source_field->shouldReceive('getID')->andReturns(123);
-        $source_field->shouldReceive('getLabel')->andReturns('aaaaa');
+        $source_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $source_field->method('getID')->willReturn(123);
+        $source_field->method('getLabel')->willReturn('aaaaa');
 
-        $target_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $target_field->shouldReceive('getID')->andReturns(789);
-        $target_field->shouldReceive('getLabel')->andReturns('bbbbb');
+        $target_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $target_field->method('getID')->willReturn(789);
+        $target_field->method('getLabel')->willReturn('bbbbb');
         $comparator =  Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
 
-        $tracker_rule_date  = Mockery::mock(\Tracker_Rule_Date::class);
-        $tracker_rule_date2 = Mockery::mock(\Tracker_Rule_Date::class);
-        $tracker_rule_date->shouldReceive('validate')->andReturn(true);
-        $tracker_rule_date->shouldReceive('getSourceFieldId')->andReturn(10);
-        $tracker_rule_date->shouldReceive('getTargetFieldId')->andReturn(11);
-        $tracker_rule_date->shouldReceive('getComparator')->andReturn($comparator);
+        $tracker_rule_date  = $this->createMock(\Tracker_Rule_Date::class);
+        $tracker_rule_date2 = $this->createMock(\Tracker_Rule_Date::class);
+        $tracker_rule_date->method('validate')->willReturn(true);
+        $tracker_rule_date->method('getSourceFieldId')->willReturn(10);
+        $tracker_rule_date->method('getTargetFieldId')->willReturn(11);
+        $tracker_rule_date->method('getComparator')->willReturn($comparator);
 
-        $tracker_rule_date2->shouldReceive('validate')->andReturn(true);
-        $tracker_rule_date2->shouldReceive('getSourceFieldId')->andReturn(12);
-        $tracker_rule_date2->shouldReceive('getTargetFieldId')->andReturn(13);
-        $tracker_rule_date2->shouldReceive('getComparator')->andReturn($comparator);
-        $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([12])->andReturns($source_field);
-        $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([13])->andReturns($target_field);
+        $tracker_rule_date2->method('validate')->willReturn(true);
+        $tracker_rule_date2->method('getSourceFieldId')->willReturn(12);
+        $tracker_rule_date2->method('getTargetFieldId')->willReturn(13);
+        $tracker_rule_date2->method('getComparator')->willReturn($comparator);
+        $this->formelement_factory->method('getFormElementById')->willReturnCallback(static fn (int $id) => match ($id) {
+            12 => $source_field,
+            13 => $target_field,
+        });
 
-        $GLOBALS['Response']->shouldReceive('addUniqueFeedback')->withArgs(['error', 'Missing field in data:aaaaa']);
-        $GLOBALS['Response']->shouldReceive('addUniqueFeedback')->withArgs(['error', 'Missing field in data:bbbbb']);
-        $source_field->shouldReceive('setHasErrors')->withArgs([true]);
-        $target_field->shouldReceive('setHasErrors')->withArgs([true]);
+        $GLOBALS['Response']->method('addUniqueFeedback')->willReturnCallback(static fn (string $level, string $message) => match (true) {
+            $level === 'error' && $message === 'Missing field in data:aaaaa',
+                $level === 'error' && $message === 'Missing field in data:bbbbb' => true,
+        });
+        $source_field->method('setHasErrors')->with(true);
+        $target_field->method('setHasErrors')->with(true);
 
         $value_field_list = [
             10 => '',
