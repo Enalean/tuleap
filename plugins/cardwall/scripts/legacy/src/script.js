@@ -127,7 +127,9 @@ document.observe("dom:loaded", function () {
                     parameters = {};
 
                 if ($("tracker_report_cardwall_settings_column")) {
+                    // Cardwall renderer for tracker
                     field_id = $F("tracker_report_cardwall_settings_column");
+                    parameters.challenge = dragged.readAttribute("data-csrf-token-update");
                     parameters["artifact[" + field_id + "]"] = value_id;
                 } else {
                     let values = [];
