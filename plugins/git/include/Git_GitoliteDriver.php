@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Symfony\Component\Process\Process;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\PathJoinUtil;
 
@@ -285,11 +286,11 @@ class Git_GitoliteDriver
 
     public function delete(string $path): void
     {
-        if (empty($path) || ! is_writable($path)) {
-            throw new GitDriverErrorException('Empty path or permission denied ' . $path);
-        }
         $this->logger->debug('Removing physically the repository...');
-        \Psl\Filesystem\delete_directory($path, true);
+        $delete_process = new Process(
+            ['sudo', '-u', 'gitolite', 'DISPLAY_ERRORS=true', __DIR__ . '/../bin/delete-repo.php', $path]
+        );
+        $delete_process->mustRun();
         $this->logger->debug('Removing physically the repository: done');
     }
 
