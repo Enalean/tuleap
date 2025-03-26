@@ -26,7 +26,6 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
     >
       <span
         class="tlp-popover-title"
-        tag="h1"
       >
         
                 Incompatible usage of color
@@ -46,8 +45,6 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
             class="taskboard-header-wrong-color-preview-color"
             style="background: #87DBEF;"
           />
-          
-                
           <code>
             #87DBEF
           </code>

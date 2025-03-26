@@ -32,6 +32,9 @@ dependencies:
   '@tuleap/tlp-modal':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-popovers
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-swatch-colors
