@@ -23,7 +23,6 @@ import SwimlaneHeader from "./SwimlaneHeader.vue";
 import type { Swimlane } from "../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { FullscreenState } from "../../../../../store/fullscreen/type";
 import type { SwimlaneState } from "../../../../../store/swimlane/type";
 
 const swimlane: Swimlane = {
@@ -36,14 +35,13 @@ const swimlane: Swimlane = {
 async function createWrapper(
     is_fullscreen: boolean,
     backlog_items_have_children: boolean,
-): Promise<Wrapper<SwimlaneHeader>> {
+): Promise<Wrapper<Vue>> {
     return shallowMount(SwimlaneHeader, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
             $store: createStoreMock({
                 state: {
                     swimlane: {} as SwimlaneState,
-                    fullscreen: {} as FullscreenState,
                     backlog_items_have_children: backlog_items_have_children,
                 },
                 getters: {
