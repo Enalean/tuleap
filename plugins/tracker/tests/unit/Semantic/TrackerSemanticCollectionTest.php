@@ -20,44 +20,31 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Semantic;
 use Tracker_SemanticCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Semantic|\Mockery\MockInterface|Tracker_Semantic
-     */
-    private $status_semantic;
-    /**
-     * @var Tracker_Semantic|\Mockery\MockInterface|Tracker_Semantic
-     */
-    private $title;
-
-    /**
-     * @var Tracker_Semantic|\Mockery\MockInterface|Tracker_Semantic
-     */
-    private $done;
+    private Tracker_Semantic&MockObject $status_semantic;
+    private Tracker_Semantic&MockObject $title;
+    private Tracker_Semantic&MockObject $done;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->status_semantic = Mockery::mock(\Tracker_Semantic::class);
-        $this->status_semantic->shouldReceive('getShortName')->andReturn('status');
+        $this->status_semantic = $this->createMock(\Tracker_Semantic::class);
+        $this->status_semantic->method('getShortName')->willReturn('status');
 
-        $this->title = Mockery::mock(\Tracker_Semantic::class);
-        $this->title->shouldReceive('getShortName')->andReturn('title');
+        $this->title = $this->createMock(\Tracker_Semantic::class);
+        $this->title->method('getShortName')->willReturn('title');
 
-        $this->done = Mockery::mock(\Tracker_Semantic::class);
-        $this->done->shouldReceive('getShortName')->andReturn('done');
+        $this->done = $this->createMock(\Tracker_Semantic::class);
+        $this->done->method('getShortName')->willReturn('done');
     }
 
-    public function testItAppendsSemanticAtTheEndOfTheCollection()
+    public function testItAppendsSemanticAtTheEndOfTheCollection(): void
     {
         $collection = new Tracker_SemanticCollection();
         $collection->add($this->status_semantic);
@@ -66,7 +53,7 @@ class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSemanticsCollectionIsIdenticalTo($collection, [$this->status_semantic, $this->title]);
     }
 
-    public function testItInsertSemanticAfterAnotherOne()
+    public function testItInsertSemanticAfterAnotherOne(): void
     {
         $collection = new Tracker_SemanticCollection();
         $collection->add($this->status_semantic);
@@ -76,7 +63,7 @@ class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSemanticsCollectionIsIdenticalTo($collection, [$this->status_semantic, $this->done, $this->title]);
     }
 
-    public function testItInsertSemanticAtTheBeginningWhenItemIsNotFound()
+    public function testItInsertSemanticAtTheBeginningWhenItemIsNotFound(): void
     {
         $collection = new Tracker_SemanticCollection();
         $collection->add($this->status_semantic);
@@ -86,7 +73,7 @@ class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSemanticsCollectionIsIdenticalTo($collection, [$this->done, $this->status_semantic, $this->title]);
     }
 
-    public function testItRetrievesSemanticByItsShortName()
+    public function testItRetrievesSemanticByItsShortName(): void
     {
         $collection = new Tracker_SemanticCollection();
         $collection->add($this->status_semantic);
@@ -96,7 +83,7 @@ class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($this->title, $collection['title']);
     }
 
-    public function testItRemovesASemanticFromCollection()
+    public function testItRemovesASemanticFromCollection(): void
     {
         $collection = new Tracker_SemanticCollection();
         $collection->add($this->status_semantic);
@@ -108,7 +95,7 @@ class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse(isset($collection['status']));
     }
 
-    private function assertSemanticsCollectionIsIdenticalTo(Tracker_SemanticCollection $collection, array $expected)
+    private function assertSemanticsCollectionIsIdenticalTo(Tracker_SemanticCollection $collection, array $expected): void
     {
         $index = 0;
         foreach ($collection as $semantic) {
