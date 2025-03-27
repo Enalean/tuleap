@@ -17,15 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    Card,
-    ColumnDefinition,
-    Swimlane,
-    Tracker,
-    User,
-    UserProperties,
-} from "../../../type";
-import type { DataFormat } from "tlp";
+import type { Card, ColumnDefinition, Swimlane, Tracker, User } from "../../../type";
+import type { UserForPeoplePicker } from "./UserForPeoplePicker";
 
 export interface NewRemainingEffortPayload {
     readonly card: Card;
@@ -49,5 +42,3 @@ export interface TrackerAssignableUsersPayload {
     readonly assigned_to_field_id: number;
     readonly users: UserForPeoplePicker[];
 }
-
-export type UserForPeoplePicker = DataFormat & UserProperties;

@@ -18,12 +18,8 @@
  */
 import type { ActionContext } from "vuex";
 import type { RootState } from "../../type";
-import type {
-    NewCardPayload,
-    NewRemainingEffortPayload,
-    UpdateCardPayload,
-    UserForPeoplePicker,
-} from "./type";
+import type { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
+import type { UserForPeoplePicker } from "./UserForPeoplePicker";
 import { get, patch, post, put } from "@tuleap/tlp-fetch";
 import type { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import {

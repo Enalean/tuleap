@@ -18,7 +18,7 @@
  */
 
 import type { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
-import type { UserForPeoplePicker } from "./card/type";
+import type { UserForPeoplePicker } from "./card/UserForPeoplePicker";
 
 export interface SwimlaneState {
     swimlanes: Array<Swimlane>;

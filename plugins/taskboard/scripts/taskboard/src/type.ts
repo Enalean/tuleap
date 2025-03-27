@@ -104,7 +104,7 @@ export interface Card {
     is_just_saved: boolean;
 }
 
-export interface UserProperties {
+interface UserProperties {
     avatar_url: string;
     display_name: string;
 }

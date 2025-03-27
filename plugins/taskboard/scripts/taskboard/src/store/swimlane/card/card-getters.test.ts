@@ -19,7 +19,7 @@
 
 import * as getters from "./card-getters";
 import type { SwimlaneState } from "../type";
-import type { UserForPeoplePicker } from "./type";
+import type { UserForPeoplePicker } from "./UserForPeoplePicker";
 import type { Tracker } from "../../../type";
 
 describe("Card getters", () => {
