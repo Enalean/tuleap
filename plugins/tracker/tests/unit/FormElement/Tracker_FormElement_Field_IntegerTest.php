@@ -198,7 +198,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('getCriteriaValue')->andReturn(0);
 
         $this->assertEquals(
-            '<input type="text" name="criteria[1]" id="tracker_report_criteria_1" value="0" />',
+            '<input data-test="integer-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="0" />',
             $field->fetchCriteriaValue($criteria)
         );
     }
@@ -212,7 +212,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field->shouldReceive('getCriteriaValue')->andReturn('');
 
         $this->assertEquals(
-            '<input type="text" name="criteria[1]" id="tracker_report_criteria_1" value="" />',
+            '<input data-test="integer-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="" />',
             $field->fetchCriteriaValue($criteria)
         );
     }

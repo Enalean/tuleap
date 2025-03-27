@@ -489,7 +489,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
 
         $html .= '<input type="hidden" name="' . $hp->purify($prefix_name) . '" />';
-        $html .= '<select id="tracker_report_criteria_' . ($criteria->is_advanced ? 'adv_' : '') . $hp->purify($this->id) . '"
+        $html .= '<select data-test="list-report-criteria" id="tracker_report_criteria_' . ($criteria->is_advanced ? 'adv_' : '') . $hp->purify($this->id) . '"
                           name="' . $hp->purify($name) . '" ' .
                           $size .
                           $multiple . '>';

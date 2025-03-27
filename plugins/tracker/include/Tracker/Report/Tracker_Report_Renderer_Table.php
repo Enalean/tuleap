@@ -678,7 +678,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function fetchMatchingNumber($total_rows)
     {
-        $html = '<p>' . sprintf(dgettext('tuleap-tracker', 'Matching artifacts: <strong>%1$s</strong>'), $total_rows) . '</p>';
+        $html = '<p data-test="number-of-matching-artifacts">' . sprintf(dgettext('tuleap-tracker', 'Matching artifacts: <strong>%1$s</strong>'), $total_rows) . '</p>';
         return $html;
     }
 
