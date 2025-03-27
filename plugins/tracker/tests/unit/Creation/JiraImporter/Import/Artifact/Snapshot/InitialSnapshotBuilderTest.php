@@ -24,10 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_Users;
+use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
@@ -39,38 +43,35 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class InitialSnapshotBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsSnapshotForInitialChangeset(): void
     {
-        $logger              = new NullLogger();
-        $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
+        $jira_user_retriever = $this->createMock(JiraUserRetriever::class);
         $generator           = new InitialSnapshotBuilder(
-            $logger,
+            new NullLogger(),
             new ListFieldChangeInitialValueRetriever(
                 new CreationStateListValueFormatter(),
                 $jira_user_retriever
             )
         );
 
-        $user           = Mockery::mock(PFUser::class);
+        $user           = UserTestBuilder::buildWithDefaults();
         $jira_issue_api = IssueAPIRepresentation::buildFromAPIResponse(
             [
-                'id' => '10001',
-                'key' => 'key01',
-                'fields' => [
-                    'created' => '2020-03-25T14:10:10.823+0100',
-                    'updated' => '2020-04-25T14:10:10.823+0100',
+                'id'             => '10001',
+                'key'            => 'key01',
+                'fields'         => [
+                    'created'           => '2020-03-25T14:10:10.823+0100',
+                    'updated'           => '2020-04-25T14:10:10.823+0100',
                     'customfield_10036' => '11',
                     'customfield_10045' => '02/Feb/21',
-                    'status' => '10001',
+                    'status'            => '10001',
                     'customfield_10040' => [
                         '10009', '10010',
                     ],
-                    'description' => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*",
+                    'description'       => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*",
                 ],
                 'renderedFields' => [
                     'description' => "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>",
@@ -102,12 +103,9 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $mysterio = Mockery::mock(PFUser::class);
-        $mysterio->shouldReceive('getId')->andReturn('104');
-        $john_doe = Mockery::mock(PFUser::class);
-        $john_doe->shouldReceive('getId')->andReturn('105');
-
-        $jira_user_retriever->shouldReceive('getAssignedTuleapUser')->andReturnValues([$mysterio, $john_doe]);
+        $mysterio = UserTestBuilder::buildWithId(104);
+        $john_doe = UserTestBuilder::buildWithId(105);
+        $jira_user_retriever->method('getAssignedTuleapUser')->willReturnOnConsecutiveCalls($mysterio, $john_doe);
 
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
@@ -147,47 +145,47 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals(
             [
-                [ 'id' => '10003' ],
-                [ 'id' => '10004' ],
+                ['id' => '10003'],
+                ['id' => '10004'],
             ],
             $initial_snapshot->getFieldInSnapshot('versions')->getValue()
         );
 
         self::assertEquals(
             [
-                [ 'id' => '10005' ],
-                [ 'id' => '10006' ],
+                ['id' => '10005'],
+                ['id' => '10006'],
             ],
             $initial_snapshot->getFieldInSnapshot('fixVersions')->getValue()
         );
 
         self::assertEquals(
             [
-                [ 'id' => '10005' ],
+                ['id' => '10005'],
             ],
             $initial_snapshot->getFieldInSnapshot('components')->getValue()
         );
 
         self::assertEquals(
             [
-                [ 'id' => '10010' ],
-                [ 'id' => '10011' ],
+                ['id' => '10010'],
+                ['id' => '10011'],
             ],
             $initial_snapshot->getFieldInSnapshot('customfield_10100')->getValue()
         );
 
         self::assertEquals(
             [
-                [ 'id' => '10012' ],
+                ['id' => '10012'],
             ],
             $initial_snapshot->getFieldInSnapshot('customfield_10101')->getValue()
         );
 
         self::assertEquals(
             [
-                [ 'id' => '10030' ],
-                [ 'id' => '10031' ],
-                [ 'id' => '10032' ],
+                ['id' => '10030'],
+                ['id' => '10031'],
+                ['id' => '10032'],
             ],
             $initial_snapshot->getFieldInSnapshot('customfield_10102')->getValue()
         );
@@ -204,7 +202,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fstatus',
                 'status',
                 'sb',
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],
             )
         );
@@ -216,7 +214,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fcustomfield_10040',
                 'customfield_10040',
                 'msb',
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],
             )
         );
@@ -268,7 +266,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fassignee',
                 'assignee',
                 'sb',
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
             ),
         );
@@ -280,7 +278,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fhomies',
                 'homies',
                 'msb',
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
             ),
         );
@@ -298,9 +296,9 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return [
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '100',
+                    'id'      => '100',
                     'created' => '2020-03-25T14:10:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'customfield_10036',
                             'from'       => null,
@@ -309,18 +307,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '9',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '101',
+                    'id'      => '101',
                     'created' => '2020-03-25T14:11:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'customfield_10036',
                             'from'       => null,
@@ -329,18 +327,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '11',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '102',
+                    'id'      => '102',
                     'created' => '2020-03-25T14:12:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'status',
                             'from'       => '10000',
@@ -349,18 +347,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'Done',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '103',
+                    'id'      => '103',
                     'created' => '2020-03-25T14:13:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'customfield_10040',
                             'from'       => '[10009]',
@@ -376,18 +374,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => "----\r\n",
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '104',
+                    'id'      => '104',
                     'created' => '2020-03-25T14:14:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'attachment',
                             'from'       => null,
@@ -396,18 +394,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'file.png',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '105',
+                    'id'      => '105',
                     'created' => '2020-03-25T14:15:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'description',
                             'from'       => null,
@@ -416,18 +414,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*",
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '106',
+                    'id'      => '106',
                     'created' => '2020-03-25T14:15:11.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'assignee',
                             'from'       => 'e8d9s4f123ds',
@@ -436,18 +434,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'John (The great) Doe',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '107',
+                    'id'      => '107',
                     'created' => '2020-03-25T14:15:11.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'homies',
                             'from'       => 'e485s54bacs5',
@@ -456,18 +454,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'John (The great) Doe, Mysterio (The mysterious)',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '108',
+                    'id'      => '108',
                     'created' => '2020-03-25T14:15:12.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'customfield_10045',
                             'from'       => '2021-01-01',
@@ -476,18 +474,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '02/Feb/21',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '109',
+                    'id'      => '109',
                     'created' => '2020-03-25T14:15:16.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'versions',
                             'from'       => null,
@@ -496,18 +494,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'Release 1.0',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '110',
+                    'id'      => '110',
                     'created' => '2020-03-25T14:15:17.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'fixVersions',
                             'from'       => null,
@@ -516,18 +514,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'Release 2.0',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '111',
+                    'id'      => '111',
                     'created' => '2020-03-25T14:15:18.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'components',
                             'from'       => null,
@@ -536,18 +534,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'Comp 01',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '112',
+                    'id'      => '112',
                     'created' => '2020-03-25T14:15:19.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'customfield_10100',
                             'from'       => null,
@@ -556,18 +554,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '[v1]',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '112',
+                    'id'      => '112',
                     'created' => '2020-03-25T14:15:20.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'customfield_10101',
                             'from'       => null,
@@ -576,18 +574,18 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '[v1]',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '112',
+                    'id'      => '112',
                     'created' => '2020-03-25T14:15:21.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
                             'fieldId'    => 'customfield_10102',
                             'from'       => null,
@@ -596,9 +594,9 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '[test1]',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
@@ -620,7 +618,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'Fstatus',
                         'status',
                         'sb',
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                        Tracker_FormElement_Field_List_Bind_Static::TYPE,
                         [],
                     ),
                     [
@@ -636,7 +634,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'Fcustomfield_10040',
                         'customfield_10040',
                         'msb',
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                        Tracker_FormElement_Field_List_Bind_Static::TYPE,
                         [],
                     ),
                     [
@@ -690,7 +688,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'Fassignee',
                         'assignee',
                         'sb',
-                        \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        Tracker_FormElement_Field_List_Bind_Users::TYPE,
                         [],
                     ),
                     [
@@ -706,7 +704,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'Fhomies',
                         'homies',
                         'msb',
-                        \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        Tracker_FormElement_Field_List_Bind_Users::TYPE,
                         [],
                     ),
                     [
@@ -718,47 +716,47 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     $this->getVersionMapping(),
                     [
-                        [ 'id' => '10003' ],
-                        [ 'id' => '10004' ],
+                        ['id' => '10003'],
+                        ['id' => '10004'],
                     ],
                     null,
                 ),
                 new FieldSnapshot(
                     $this->getFixVersionsMapping(),
                     [
-                        [ 'id' => '10005' ],
-                        [ 'id' => '10006' ],
+                        ['id' => '10005'],
+                        ['id' => '10006'],
                     ],
                     null,
                 ),
                 new FieldSnapshot(
                     $this->getComponentsMapping(),
                     [
-                        [ 'id' => '10005' ],
+                        ['id' => '10005'],
                     ],
                     null,
                 ),
                 new FieldSnapshot(
                     $this->getCustomMultiversionMapping(),
                     [
-                        [ 'id' => '10010' ],
-                        [ 'id' => '10011' ],
+                        ['id' => '10010'],
+                        ['id' => '10011'],
                     ],
                     null,
                 ),
                 new FieldSnapshot(
                     $this->getCustomVersionMapping(),
                     [
-                        [ 'id' => '10012' ],
+                        ['id' => '10012'],
                     ],
                     null,
                 ),
                 new FieldSnapshot(
                     $this->getCustomMulticheckboxesMapping(),
                     [
-                        [ 'id' => '10030' ],
-                        [ 'id' => '10031' ],
-                        [ 'id' => '10032' ],
+                        ['id' => '10030'],
+                        ['id' => '10031'],
+                        ['id' => '10032'],
                     ],
                     null,
                 ),
@@ -775,8 +773,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             'Fversions',
             'versions',
-            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
     }
@@ -789,8 +787,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             'Ffixversions',
             'fixversions',
-            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
     }
@@ -803,8 +801,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             'Fcomponents',
             'components',
-            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
     }
@@ -817,8 +815,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'com.atlassian.jira.plugin.system.customfieldtypes:multiversion',
             'Fcustomfield_10100',
             'customfield_10100',
-            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
     }
@@ -831,8 +829,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'com.atlassian.jira.plugin.system.customfieldtypes:version',
             'Fcustomfield_10101',
             'customfield_10101',
-            \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
     }
@@ -845,8 +843,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes',
             'Fcustomfield_10102',
             'customfield_10102',
-            \Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
+            Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
     }
