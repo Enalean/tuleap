@@ -22,47 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class JiraTuleapUsersMappingTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var JiraTuleapUsersMapping
-     */
-    private $mapping;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $tuleap_user;
+    private JiraTuleapUsersMapping $mapping;
+    private PFUser $tuleap_user;
 
     protected function setUp(): void
     {
         $this->mapping     = new JiraTuleapUsersMapping();
-        $this->tuleap_user = \Mockery::mock(\PFUser::class);
+        $this->tuleap_user = UserTestBuilder::aUser()->withId(105)->withRealName('John Doe')->withUserName('jdoe')->build();
     }
 
     public function testItStoresIdentifiedUsersInTheListOfIdentifiedUsers(): void
     {
         $jira_user = new ActiveJiraCloudUser([
-            'displayName' => 'Jeannot',
-            'accountId' => 'e8a4sd5d6',
+            'displayName'  => 'Jeannot',
+            'accountId'    => 'e8a4sd5d6',
             'emailAddress' => 'john.doe@example.com',
         ]);
-
-        $this->tuleap_user->shouldReceive('getId')->andReturn(105);
-        $this->tuleap_user->shouldReceive('getRealName')->andReturn('John Doe');
-        $this->tuleap_user->shouldReceive('getUserName')->andReturn('jdoe');
-        $this->tuleap_user->shouldReceive('getPublicProfileUrl')->andReturn('/users/jdoe');
 
         $this->mapping->addUserMapping($jira_user, $this->tuleap_user);
 
         $identified_users = $this->mapping->getIdentifiedUsers();
-        $this->assertEquals(1, count($identified_users));
+        self::assertEquals(1, count($identified_users));
         self::assertSame(
             [
                 'jira_display_name'       => 'Jeannot',
@@ -77,16 +66,16 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItStoresUsersInTheListOfNotMatchingEmailAddresses(): void
     {
         $jira_user = new ActiveJiraCloudUser([
-            'displayName' => 'Jeannot',
-            'accountId' => 'e8a4sd5d6',
+            'displayName'  => 'Jeannot',
+            'accountId'    => 'e8a4sd5d6',
             'emailAddress' => 'john.doe@example.com',
         ]);
 
-        $this->tuleap_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+        $this->tuleap_user->setId(TrackerImporterUser::ID);
         $this->mapping->addUserMapping($jira_user, $this->tuleap_user);
 
         $not_matching_email_address_users = $this->mapping->getUserEmailsNotMatching();
-        $this->assertEquals(1, count($not_matching_email_address_users));
+        self::assertEquals(1, count($not_matching_email_address_users));
         self::assertSame(
             ['jira_display_name' => 'Jeannot'],
             $not_matching_email_address_users[0]
@@ -97,14 +86,14 @@ final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $jira_user = new ActiveJiraCloudUser([
             'displayName' => 'Jeannot',
-            'accountId' => 'e8a4sd5d6',
+            'accountId'   => 'e8a4sd5d6',
         ]);
 
-        $this->tuleap_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+        $this->tuleap_user->setId(TrackerImporterUser::ID);
         $this->mapping->addUserMapping($jira_user, $this->tuleap_user);
 
         $unknown_users = $this->mapping->getUnknownUsers();
-        $this->assertEquals(1, count($unknown_users));
+        self::assertEquals(1, count($unknown_users));
         self::assertSame(
             ['jira_display_name' => 'Jeannot'],
             $unknown_users[0]
