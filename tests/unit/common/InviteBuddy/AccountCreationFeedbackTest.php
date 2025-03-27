@@ -58,12 +58,12 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveJustCreatedUserThanksToInvitation')
             ->with('doe@example.com', 104, null);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByCreatedUserId')
             ->with(104)
             ->willReturn([]);
@@ -94,17 +94,17 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveJustCreatedUserThanksToInvitation')
             ->with('doe@example.com', 104, 1);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByCreatedUserId')
             ->with(104)
             ->willReturn([]);
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects($this->once())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::never())->method('incrementCompletedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withNoUser();
@@ -172,7 +172,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $another_invitation,
         ]);
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects($this->once())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::exactly(3))->method('incrementCompletedInvitation');
 
         $this->email_notifier
@@ -239,7 +239,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $another_invitation,
         ]);
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects($this->once())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::exactly(2))->method('incrementCompletedInvitation');
 
         $this->email_notifier
@@ -317,7 +317,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $another_invitation,
         ]);
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects($this->once())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::exactly(3))->method('incrementCompletedInvitation');
 
         $this->email_notifier
@@ -365,7 +365,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByCreatedUserId')
             ->with(104)
             ->willReturn([]);
@@ -422,7 +422,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByCreatedUserId')
             ->with(105)
             ->willReturn(
@@ -472,7 +472,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByCreatedUserId')
             ->with(104)
             ->willReturn([$an_invitation]);
@@ -482,12 +482,12 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('send');
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error')
             ->with('Invitation was referencing an unknown user #103');
 
         $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
+        $this->invitation_instrumentation->expects($this->once())->method('incrementCompletedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
@@ -522,7 +522,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByCreatedUserId')
             ->with(104)
             ->willReturn([$an_invitation]);
@@ -532,12 +532,12 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('send');
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('warning')
             ->with('Cannot send invitation feedback to inactive user #103');
 
         $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
+        $this->invitation_instrumentation->expects($this->once())->method('incrementCompletedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -572,23 +572,23 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByCreatedUserId')
             ->with(104)
             ->willReturn([$an_invitation]);
 
         $this->email_notifier
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('send')
             ->willReturn(false);
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error')
             ->with('Unable to send invitation feedback to user #103 after registration of user #104');
 
         $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
+        $this->invitation_instrumentation->expects($this->once())->method('incrementCompletedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
         $account_creation_feedback = new AccountCreationFeedback(

@@ -66,9 +66,9 @@ final class PlanningUpdaterTest extends TestCase
         $updated_planning_id = 10;
         $planning_parameters = $this->createMock(PlanningParameters::class);
 
-        $this->planning_dao->expects(self::once())->method('updatePlanning')
+        $this->planning_dao->expects($this->once())->method('updatePlanning')
             ->with($updated_planning_id, $planning_parameters);
-        $this->permissions_manager->expects(self::once())->method('savePlanningPermissionForUgroups');
+        $this->permissions_manager->expects($this->once())->method('savePlanningPermissionForUgroups');
 
         $planning = PlanningBuilder::aPlanning(102)->withId(20)->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
@@ -85,14 +85,14 @@ final class PlanningUpdaterTest extends TestCase
         $updated_planning_id = 10;
         $planning_parameters = $this->createMock(PlanningParameters::class);
 
-        $this->planning_dao->expects(self::once())->method('updatePlanning')
+        $this->planning_dao->expects($this->once())->method('updatePlanning')
             ->with($updated_planning_id, $planning_parameters);
-        $this->permissions_manager->expects(self::once())->method('savePlanningPermissionForUgroups');
+        $this->permissions_manager->expects($this->once())->method('savePlanningPermissionForUgroups');
 
         $planning = PlanningBuilder::aPlanning(102)->withId($updated_planning_id)->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method(
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method(
             'removeNoMoreSelectableItemsFromExplicitBacklogOfProject'
         );
 

@@ -96,8 +96,8 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent');
-        $this->history_dao->expects(self::once())
+        $this->system_event_manager->expects($this->once())->method('createEvent');
+        $this->history_dao->expects($this->once())
             ->method('groupAddHistory')
             ->with('svn_multi_repository_creation', self::anything(), self::anything());
 
@@ -133,12 +133,12 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent');
-        $this->history_creator->expects(self::once())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
-        $this->history_dao->expects(self::once())->method('groupAddHistory')
+        $this->system_event_manager->expects($this->once())->method('createEvent');
+        $this->history_creator->expects($this->once())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
+        $this->history_dao->expects($this->once())->method('groupAddHistory')
             ->with('svn_multi_repository_creation_with_full_settings', self::anything(), self::anything());
         $this->history_creator->expects(self::never())->method('storeInDBWithoutCleaningContent');
-        $this->history_creator->expects(self::once())->method('storeInDB');
+        $this->history_creator->expects($this->once())->method('storeInDB');
         $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
         $this->hook_config_updator->method('initHookConfiguration');
 
@@ -174,12 +174,12 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent');
-        $this->history_creator->expects(self::once())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
-        $this->history_dao->expects(self::once())
+        $this->system_event_manager->expects($this->once())->method('createEvent');
+        $this->history_creator->expects($this->once())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
+        $this->history_dao->expects($this->once())
             ->method('groupAddHistory')
             ->with('svn_multi_repository_creation_with_full_settings', self::anything(), self::anything());
-        $this->history_creator->expects(self::once())->method('storeInDBWithoutCleaningContent');
+        $this->history_creator->expects($this->once())->method('storeInDBWithoutCleaningContent');
         $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
         $this->hook_config_updator->method('initHookConfiguration');
 
@@ -215,15 +215,15 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent');
-        $this->hook_config_updator->expects(self::once())->method('initHookConfiguration');
+        $this->system_event_manager->expects($this->once())->method('createEvent');
+        $this->hook_config_updator->expects($this->once())->method('initHookConfiguration');
         $this->history_creator->expects(self::never())->method('useAVersionWithHistoryWithoutUpdateSVNAccessFile');
-        $this->history_dao->expects(self::once())->method('groupAddHistory')->with(
+        $this->history_dao->expects($this->once())->method('groupAddHistory')->with(
             'svn_multi_repository_creation_with_full_settings',
             self::anything(),
             self::anything(),
         );
-        $this->history_creator->expects(self::once())->method('storeInDB');
+        $this->history_creator->expects($this->once())->method('storeInDB');
         $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
         $this->hook_config_updator->method('initHookConfiguration');
 
@@ -253,9 +253,9 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent');
+        $this->system_event_manager->expects($this->once())->method('createEvent');
         $this->hook_config_updator->expects(self::never())->method('initHookConfiguration');
-        $this->history_dao->expects(self::once())
+        $this->history_dao->expects($this->once())
             ->method('groupAddHistory')
             ->with('svn_multi_repository_creation', self::anything(), self::anything());
         $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);

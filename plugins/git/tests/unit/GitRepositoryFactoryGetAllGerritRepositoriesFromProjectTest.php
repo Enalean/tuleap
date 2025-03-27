@@ -71,7 +71,7 @@ final class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends 
 
     public function testItFetchAllGerritRepositoriesFromDao(): void
     {
-        $this->dao->expects(self::once())->method('searchAllGerritRepositoriesOfProject')->with($this->project_id)->willReturn([]);
+        $this->dao->expects($this->once())->method('searchAllGerritRepositoriesOfProject')->with($this->project_id)->willReturn([]);
         $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
     }
 

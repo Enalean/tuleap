@@ -44,11 +44,11 @@ final class RecursiveBoundUGroupsRefresherTest extends \Tuleap\Test\PHPUnit\Test
         $source      = ProjectUGroupTestBuilder::aCustomUserGroup(149)->build();
         $destination = ProjectUGroupTestBuilder::aCustomUserGroup(371)->build();
         $this->refresher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('refresh')
             ->with($source, $destination);
         $this->ugroup_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchUGroupByBindingSource')
             ->with(371)
             ->willReturn([]);

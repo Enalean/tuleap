@@ -82,22 +82,22 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
         $data->setAccessFromProjectData(['is_public' => $project_is_public, 'allow_restricted' => $project_allow_restricted]);
 
         $this->rule_project_name
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isValid')
             ->willReturn(false);
 
         $this->rule_project_name
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getErrorMessage')
             ->willReturn('error 01');
 
         $this->rule_project_full_name
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isValid')
             ->willReturn(false);
 
         $this->rule_project_full_name
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getErrorMessage')
             ->willReturn('error 02');
 
@@ -128,12 +128,12 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
         $data->setShortDescription('Description');
 
         $this->rule_project_name
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isValid')
             ->willReturn(true);
 
         $this->rule_project_full_name
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isValid')
             ->willReturn(true);
 

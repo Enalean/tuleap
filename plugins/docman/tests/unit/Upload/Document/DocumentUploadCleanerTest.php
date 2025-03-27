@@ -48,7 +48,7 @@ final class DocumentUploadCleanerTest extends TestCase
         $non_existing_item_path        = $path_allocator->getPathForItemBeingUploaded($non_existing_file_information);
         touch($non_existing_item_path);
 
-        $dao->expects(self::once())->method('deleteUnusableDocuments');
+        $dao->expects($this->once())->method('deleteUnusableDocuments');
 
         $cleaner = new DocumentUploadCleaner($path_allocator, $dao);
 

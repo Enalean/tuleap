@@ -48,7 +48,7 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSetParentProjectReturnsTrueIfItAddsParent(): void
     {
-        $this->dao->expects(self::once())->method('addParentProject')->willReturn(true);
+        $this->dao->expects($this->once())->method('addParentProject')->willReturn(true);
 
         $this->hierarchy_manager->method('getParentProject')->willReturn(null);
         $this->hierarchy_manager->method('getAllParents')->willReturn([]);
@@ -63,7 +63,7 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSetParentProjectReturnsTrueIfItUpdatesParent(): void
     {
         $this->hierarchy_manager->method('getAllParents')->willReturn([]);
-        $this->dao->expects(self::once())->method('updateParentProject')->willReturn(true);
+        $this->dao->expects($this->once())->method('updateParentProject')->willReturn(true);
 
         $parent_project_already_saved = ProjectTestBuilder::aProject()->withId(52)->build();
 
@@ -79,7 +79,7 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSetParentProjectReturnsTrueIfItDeletesParent(): void
     {
         $this->hierarchy_manager->method('getAllParents')->willReturn([]);
-        $this->dao->expects(self::once())->method('removeParentProject')->willReturn(true);
+        $this->dao->expects($this->once())->method('removeParentProject')->willReturn(true);
 
         $parent_project_already_saved = ProjectTestBuilder::aProject()->withId(52)->build();
 

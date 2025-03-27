@@ -43,7 +43,7 @@ final class ActiveTrackerRetrieverMiddlewareTest extends TestCase
         $middleware = new ActiveTrackerRetrieverMiddleware($retriever);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::once())->method('handle')->with(
+        $handler->expects($this->once())->method('handle')->with(
             self::callback(
                 fn (ServerRequestInterface $enriched_request): bool =>
                     $enriched_request->getAttribute(\Tracker::class) === $tracker

@@ -76,7 +76,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
         ];
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addMediawikiUserGroupMapping')
             ->with($project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3');
 
@@ -107,7 +107,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             'bureaucrat' => [],
         ];
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('removeMediawikiUserGroupMapping')
             ->with($project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3');
 

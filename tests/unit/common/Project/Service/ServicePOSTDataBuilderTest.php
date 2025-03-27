@@ -297,7 +297,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
         $request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('exist')
             ->with('short_name')
             ->willReturn(true);
@@ -371,7 +371,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
         $request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('exist')
             ->with('short_name')
             ->willReturn(false);

@@ -72,7 +72,7 @@ final class MilestoneSelectorControllerTest extends TestCase
 
     public function testItRedirectToTheCurrentMilestone(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('redirect')
+        $GLOBALS['Response']->expects($this->once())->method('redirect')
             ->with(self::matchesRegularExpression("/aid=$this->current_milestone_artifact_id/"));
         $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
         $controller->show();

@@ -80,7 +80,7 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $issue_collection->addIssueRepresentationInCollection($issue_representation);
 
         $this->worklog_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIssueWorklogsFromAPI')
             ->with($issue_representation)
             ->willReturn([
@@ -103,7 +103,7 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $time_user->method('getId')->willReturn('147');
 
         $this->jira_user_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveJiraAuthor')
             ->willReturn($time_user);
 

@@ -71,7 +71,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBuildTransformsAppsIntoPresenters(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->dispatcher->expects(self::once())->method('dispatch')
+        $this->dispatcher->expects($this->once())->method('dispatch')
             ->with(self::isInstanceOf(AccountTabPresenterCollection::class))
             ->willReturnArgument(0);
         $jenkins_app    = new OAuth2App(
@@ -95,7 +95,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             true,
             null
         );
-        $this->app_factory->expects(self::once())->method('getAppsAuthorizedByUser')
+        $this->app_factory->expects($this->once())->method('getAppsAuthorizedByUser')
             ->with($user)
             ->willReturn([$jenkins_app, $custom_app, $site_level_app]);
 

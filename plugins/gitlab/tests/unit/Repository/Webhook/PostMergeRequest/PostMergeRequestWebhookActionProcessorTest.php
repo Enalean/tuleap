@@ -142,12 +142,12 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveGitlabMergeRequestInfo')
             ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'some_feature', 'opened', 1611315112);
 
         $this->reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
@@ -179,18 +179,18 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             );
 
         $this->author_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
             ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setAuthorData')
             ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addCommentOnMergeRequest')
             ->with(
                 $merge_request_webhook_data,
@@ -265,7 +265,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ));
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveGitlabMergeRequestInfo')
             ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'some_feature', 'opened', 1611315112);
 
@@ -312,13 +312,13 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             );
 
         $this->author_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
             ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setAuthorData')
             ->with(1, 2, 'John', 'john@thewall.fr');
 
@@ -393,12 +393,12 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ));
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveGitlabMergeRequestInfo')
             ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666', 'some_feature', 'opened', 1611315112);
 
         $this->reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
@@ -440,18 +440,18 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             );
 
         $this->author_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
             ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setAuthorData')
             ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addCommentOnMergeRequest')
             ->with(
                 $merge_request_webhook_data,
@@ -499,16 +499,16 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveGitlabMergeRequestInfo')
             ->with(1, 2, 'My Title TULEAP-58', '', 'some_feature', 'closed', 1611315112);
 
         $this->reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(58)
             ->willReturn(
@@ -526,18 +526,18 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             );
 
         $this->author_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
             ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setAuthorData')
             ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
@@ -589,16 +589,16 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveGitlabMergeRequestInfo')
             ->with(1, 2, 'My Title TULEAP-58', '', 'some_feature', 'closed', 1611315112);
 
         $this->reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(58)
             ->willReturn(
@@ -618,7 +618,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $exception = new GitlabRequestException(404, 'Unauthorized');
 
         $this->author_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
             ->willThrowException($exception);
@@ -628,7 +628,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->method('setAuthorData');
 
         $this->bot_commenter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
@@ -742,7 +742,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ));
 
         $this->merge_request_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveGitlabMergeRequestInfo')
             ->with(1, 2, 'My Title', '', 'some_feature', 'closed', 1611315112);
 

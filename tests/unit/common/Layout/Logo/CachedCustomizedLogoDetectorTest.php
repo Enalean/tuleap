@@ -48,7 +48,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
 
-        $detector->expects(self::once())
+        $detector->expects($this->once())
             ->method('isLegacyOrganizationLogoCustomized');
 
         $cache->isLegacyOrganizationLogoCustomized();
@@ -87,7 +87,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $logger   = new NullLogger();
         $detector = $this->createMock(CustomizedLogoDetector::class);
-        $detector->expects(self::once())
+        $detector->expects($this->once())
             ->method('isLegacyOrganizationLogoCustomized')
             ->willReturn(false);
 
@@ -101,7 +101,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $logger   = new NullLogger();
         $detector = $this->createMock(CustomizedLogoDetector::class);
-        $detector->expects(self::once())
+        $detector->expects($this->once())
             ->method('isLegacyOrganizationLogoCustomized')
             ->willReturn(true);
 
@@ -115,7 +115,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $logger   = new NullLogger();
         $detector = $this->createMock(CustomizedLogoDetector::class);
-        $detector->expects(self::once())
+        $detector->expects($this->once())
             ->method('isLegacyOrganizationLogoCustomized')
             ->willReturn(true);
 
@@ -142,7 +142,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $logger   = new NullLogger();
         $detector = $this->createMock(CustomizedLogoDetector::class);
-        $detector->expects(self::once())
+        $detector->expects($this->once())
             ->method('isSvgOrganizationLogoCustomized')
             ->willReturn(true);
 

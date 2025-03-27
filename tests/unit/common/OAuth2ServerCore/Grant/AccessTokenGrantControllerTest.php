@@ -72,7 +72,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_response = $this->response_factory->createResponse();
 
-        $this->grant_access_token_from_auth_code->expects(self::once())->method('grantAccessToken')->willReturn($expected_response);
+        $this->grant_access_token_from_auth_code->expects($this->once())->method('grantAccessToken')->willReturn($expected_response);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $app     = $this->buildOAuth2App();
@@ -89,7 +89,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_response = $this->response_factory->createResponse();
 
-        $this->grant_access_token_from_refresh_token->expects(self::once())->method('grantAccessToken')->willReturn($expected_response);
+        $this->grant_access_token_from_refresh_token->expects($this->once())->method('grantAccessToken')->willReturn($expected_response);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $app     = $this->buildOAuth2App();

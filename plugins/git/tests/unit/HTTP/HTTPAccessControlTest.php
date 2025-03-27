@@ -116,7 +116,7 @@ final class HTTPAccessControlTest extends TestCase
         $this->access_key_authenticator->method('getUser')->willReturn(null);
         $expected_user = UserTestBuilder::buildWithDefaults();
         $this->user_login_manager->method('authenticate')->willReturn($expected_user);
-        $this->user_dao->expects(self::once())->method('storeLastAccessDate');
+        $this->user_dao->expects($this->once())->method('storeLastAccessDate');
 
         $authenticated_user = $this->http_access_control->getUser($this->git_repository, $this->git_operation);
 
@@ -154,7 +154,7 @@ final class HTTPAccessControlTest extends TestCase
             ->willThrowException(new HTTPBasicAuthUserAccessKeyMisusageException('user1', $found_user));
 
         $not_supposed_to_return = new LogicException();
-        $this->ask_basic_authentication_challenge->expects(self::once())->method('askBasicAuthenticationChallenge')->willThrowException($not_supposed_to_return);
+        $this->ask_basic_authentication_challenge->expects($this->once())->method('askBasicAuthenticationChallenge')->willThrowException($not_supposed_to_return);
         $this->expectExceptionObject($not_supposed_to_return);
 
         $this->http_access_control->getUser($this->git_repository, $this->git_operation);

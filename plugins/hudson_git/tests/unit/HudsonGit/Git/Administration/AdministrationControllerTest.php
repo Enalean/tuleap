@@ -148,7 +148,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
             ->willReturn(null);
@@ -162,12 +162,12 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(false);
@@ -181,12 +181,12 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
@@ -194,7 +194,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = $this->createMock(PFUser::class);
         $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->expects(self::once())
+        $this->git_permissions_manager->expects($this->once())
             ->method('userIsGitAdmin')
             ->with(
                 $user,
@@ -211,12 +211,12 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
@@ -224,7 +224,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = $this->createMock(PFUser::class);
         $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->expects(self::once())
+        $this->git_permissions_manager->expects($this->once())
             ->method('userIsGitAdmin')
             ->with(
                 $user,
@@ -233,7 +233,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(true);
 
         $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'url', 'encrypted_token', $this->project);
-        $this->jenkins_server_factory->expects(self::once())
+        $this->jenkins_server_factory->expects($this->once())
             ->method('getJenkinsServerOfProject')
             ->with($this->project)
             ->willReturn([$jenkins_server]);
@@ -245,11 +245,11 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($jenkins_server)
             ->willReturn([$log]);
 
-        $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
-        $this->renderer->expects(self::once())->method('renderToPage');
-        $this->layout->expects(self::once())->method('footer');
-        $this->layout->expects(self::once())->method('includeFooterJavascriptFile');
-        $this->include_assets->expects(self::once())->method('getFileURL');
+        $this->header_renderer->expects($this->once())->method('renderServiceAdministrationHeader');
+        $this->renderer->expects($this->once())->method('renderToPage');
+        $this->layout->expects($this->once())->method('footer');
+        $this->layout->expects($this->once())->method('includeFooterJavascriptFile');
+        $this->include_assets->expects($this->once())->method('getFileURL');
 
         $this->controller->process($this->request, $this->layout, $variables);
     }

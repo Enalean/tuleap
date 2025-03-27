@@ -58,7 +58,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $last_changeset_value->method('getListValues')->willReturn([$last_changeset_value_value]);
 
-        $this->source_list_field->expects(self::once())->method('getLastChangesetValue')->with($this->artifact)->willReturn($last_changeset_value);
+        $this->source_list_field->expects($this->once())->method('getLastChangesetValue')->with($this->artifact)->willReturn($last_changeset_value);
         $verifier = new CanStaticFieldValuesBeFullyMovedVerifier(RetrieveMatchingBindValueByDuckTypingStub::withoutMatchingBindValue());
         $this->assertFalse($verifier->canAllStaticFieldValuesBeMoved($this->source_list_field, $this->destination_list_field, $this->artifact, new NullLogger()));
     }
@@ -69,7 +69,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
         $last_changeset_value       = $this->createStub(Tracker_Artifact_ChangesetValue_List::class);
         $last_changeset_value->method('getListValues')->willReturn([$last_changeset_value_value]);
 
-        $this->source_list_field->expects(self::once())->method('getLastChangesetValue')->with($this->artifact)->willReturn($last_changeset_value);
+        $this->source_list_field->expects($this->once())->method('getLastChangesetValue')->with($this->artifact)->willReturn($last_changeset_value);
         $bind     = ListStaticValueBuilder::aStaticValue('my value')->build();
         $verifier = new CanStaticFieldValuesBeFullyMovedVerifier(RetrieveMatchingBindValueByDuckTypingStub::withMatchingBindValue($bind));
 

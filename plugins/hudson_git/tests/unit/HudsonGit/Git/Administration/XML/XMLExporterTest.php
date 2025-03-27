@@ -70,7 +70,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsProjectJenkinsServer(): void
     {
-        $this->jenkins_server_factory->expects(self::once())
+        $this->jenkins_server_factory->expects($this->once())
             ->method('getJenkinsServerOfProject')
             ->willReturn([
                 new JenkinsServer(new UUIDTestContext(), ('https://url'), null, $this->project),
@@ -101,7 +101,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportProjectJenkinsServerIfNoServerDefined(): void
     {
-        $this->jenkins_server_factory->expects(self::once())
+        $this->jenkins_server_factory->expects($this->once())
             ->method('getJenkinsServerOfProject')
             ->willReturn([]);
 

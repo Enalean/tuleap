@@ -56,7 +56,7 @@ final class ReferenceIsReadOnlyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             1,
             $project_id
         );
-        $this->event_manager->expects(self::once())->method('processEvent')->with(Event::GET_REFERENCE_ADMIN_CAPABILITIES, self::callback(function (array $args) {
+        $this->event_manager->expects($this->once())->method('processEvent')->with(Event::GET_REFERENCE_ADMIN_CAPABILITIES, self::callback(function (array $args) {
             $args['can_be_edited'] = true;
             return true;
         }));

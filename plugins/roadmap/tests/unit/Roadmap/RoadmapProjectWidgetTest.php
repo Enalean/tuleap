@@ -76,7 +76,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::anActiveUser()->build());
 
         $this->presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPresenter')
             ->willReturn(new RoadmapWidgetPresenter(123, [], false, false, 'month'));
 
@@ -86,7 +86,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentBlindlyCloneContentIfNoTrackerMapping(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('cloneContent')
             ->with(42, 102, 'g');
 
@@ -103,13 +103,13 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentBlindlyCloneContentIfContentIdCannotBeFound(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchContent')
             ->with(42, 101, 'g')
             ->willReturn([]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('cloneContent')
             ->with(42, 102, 'g');
 
@@ -128,7 +128,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentTakeThePreviousTrackerIdIfItIsNotPartOfTheMapping(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchContent')
             ->with(42, 101, 'g')
             ->willReturn([
@@ -138,13 +138,13 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
                 'default_timescale'         => 'week',
             ]);
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchSelectedTrackers')
             ->with(42)
             ->willReturn([110]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertContent')
             ->with(102, 'g', 'Roadmap', [110], 0, 'week', 120, 130);
 
@@ -163,7 +163,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentTakeTheTrackerIdFromTheMapping(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchContent')
             ->with(42, 101, 'g')
             ->willReturn([
@@ -173,13 +173,13 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
                 'default_timescale'         => 'week',
             ]);
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchSelectedTrackers')
             ->with(42)
             ->willReturn([111]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertContent')
             ->with(102, 'g', 'Roadmap', [1110], 0, 'week', 1210, 1310);
 
@@ -214,7 +214,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchContent')
             ->with(42, 101, 'g')
             ->willReturn([
@@ -225,13 +225,13 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
                 'report_id'                 => $old_report_id,
             ]);
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchSelectedTrackers')
             ->with(42)
             ->willReturn([111]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertContent')
             ->with(102, 'g', 'Roadmap', [1110], $new_report_id, 'week', 1210, 1310);
 

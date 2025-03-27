@@ -82,15 +82,15 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->method('searchUsageByUserId')->willReturn(\TestHelper::emptyDar());
         $this->can_remove_user_mapping_checker->method('canAUserMappingBeRemoved')->willReturn(true);
-        $this->dao->expects(self::once())->method('deleteById')->willReturn(true);
+        $this->dao->expects($this->once())->method('deleteById')->willReturn(true);
 
         $this->user_mapping_manager->remove($user, $user_mapping);
     }
 
     public function testUpdatesLastUsedInformation(): void
     {
-        $this->user_dao->expects(self::once())->method('storeLoginSuccess');
-        $this->dao->expects(self::once())->method('updateLastUsed')->willReturn(true);
+        $this->user_dao->expects($this->once())->method('storeLoginSuccess');
+        $this->dao->expects($this->once())->method('updateLastUsed')->willReturn(true);
 
         $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
 
@@ -99,8 +99,8 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreatesAMapping(): void
     {
-        $this->user_dao->expects(self::once())->method('storeLoginSuccess');
-        $this->dao->expects(self::once())->method('save')->willReturn(true);
+        $this->user_dao->expects($this->once())->method('storeLoginSuccess');
+        $this->dao->expects($this->once())->method('save')->willReturn(true);
 
         $this->user_mapping_manager->create(102, 1, 'identifier', 10);
     }

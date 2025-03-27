@@ -66,10 +66,10 @@ final class GitActionsProjectPrivacyTest extends TestCase
         $project_id = 99;
         $repo_id    = 333;
         $repo       = $this->createMock(GitRepository::class);
-        $repo->expects(self::once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
+        $repo->expects($this->once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
 
         $repo->method('getAccess');
-        $repo->expects(self::once())->method('changeAccess');
+        $repo->expects($this->once())->method('changeAccess');
 
         $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id => null]);
         $this->factory->method('getRepositoryById')->with($repo_id)->willReturn($repo);
@@ -96,16 +96,16 @@ final class GitActionsProjectPrivacyTest extends TestCase
         $repo_id2   = 444;
 
         $repo1 = $this->createMock(GitRepository::class);
-        $repo1->expects(self::once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
+        $repo1->expects($this->once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
 
         $repo2 = $this->createMock(GitRepository::class);
-        $repo2->expects(self::once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
+        $repo2->expects($this->once())->method('setAccess')->with(GitRepository::PRIVATE_ACCESS)->willReturn('whatever');
 
         $repo1->method('getAccess');
         $repo2->method('getAccess');
 
-        $repo1->expects(self::once())->method('changeAccess');
-        $repo2->expects(self::once())->method('changeAccess');
+        $repo1->expects($this->once())->method('changeAccess');
+        $repo2->expects($this->once())->method('changeAccess');
 
         $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id1 => null, $repo_id2 => null]);
         $this->factory->method('getRepositoryById')->willReturnCallback(static fn(int $id) => match ($id) {

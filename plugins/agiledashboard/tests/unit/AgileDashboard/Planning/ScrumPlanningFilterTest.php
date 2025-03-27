@@ -43,7 +43,7 @@ final class ScrumPlanningFilterTest extends TestCase
 
     public function testItRetrievesMilestoneTracker(): void
     {
-        $this->planning_factory->expects(self::once())->method('getAvailablePlanningTrackers');
+        $this->planning_factory->expects($this->once())->method('getAvailablePlanningTrackers');
         $tracker = TrackerTestBuilder::aTracker()->withId(888)->build();
         $this->planning_factory->method('getAvailablePlanningTrackers')->willReturn([$tracker]);
 

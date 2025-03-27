@@ -88,7 +88,7 @@ final class OAuth2ConsentCheckerTest extends TestCase
         $scopes        = [OAuth2OfflineAccessScope::fromItself()];
 
         $this->authorization_comparator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('areRequestedScopesAlreadyGranted')
             ->willReturn(false);
 
@@ -117,7 +117,7 @@ final class OAuth2ConsentCheckerTest extends TestCase
         $scopes        = [OAuth2OfflineAccessScope::fromItself()];
 
         $this->authorization_comparator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('areRequestedScopesAlreadyGranted')
             ->willReturn(true);
 
@@ -146,7 +146,7 @@ final class OAuth2ConsentCheckerTest extends TestCase
         $scopes        = [OAuth2SignInScope::fromItself()];
 
         $this->authorization_comparator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('areRequestedScopesAlreadyGranted')
             ->willReturn(true);
 

@@ -68,8 +68,8 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
             ]
         );
         $this->field_dao->expects(self::never())->method('deleteCardwall');
-        $this->value_dao->expects(self::once())->method('deleteForColumn')->with($this->tracker_id, 14);
-        $this->dao->expects(self::once())->method('delete')->with($this->tracker_id, 14);
+        $this->value_dao->expects($this->once())->method('deleteForColumn')->with($this->tracker_id, 14);
+        $this->dao->expects($this->once())->method('delete')->with($this->tracker_id, 14);
         $this->command->execute($request);
     }
 
@@ -116,9 +116,9 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
     {
         $request = new HTTPRequest();
         $request->set('column', [14 => ['label' => '']]);
-        $this->field_dao->expects(self::once())->method('deleteCardwall')->with($this->tracker_id);
-        $this->value_dao->expects(self::once())->method('deleteForColumn')->with($this->tracker_id, 14);
-        $this->dao->expects(self::once())->method('delete')->with($this->tracker_id, 14);
+        $this->field_dao->expects($this->once())->method('deleteCardwall')->with($this->tracker_id);
+        $this->value_dao->expects($this->once())->method('deleteForColumn')->with($this->tracker_id, 14);
+        $this->dao->expects($this->once())->method('delete')->with($this->tracker_id, 14);
         $this->command->execute($request);
     }
 
@@ -132,7 +132,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
                 13 => ['label' => ''],
             ]
         );
-        $this->field_dao->expects(self::once())->method('deleteCardwall')->with($this->tracker_id);
+        $this->field_dao->expects($this->once())->method('deleteCardwall')->with($this->tracker_id);
         $matcher = self::exactly(2);
         $this->value_dao->expects($matcher)
             ->method('deleteForColumn')->willReturnCallback(function (...$parameters) use ($matcher) {

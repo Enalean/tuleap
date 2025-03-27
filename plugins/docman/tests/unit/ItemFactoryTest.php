@@ -257,8 +257,8 @@ final class ItemFactoryTest extends TestCase
 
         $fld110 = new Docman_Folder(['parent_id' => 0]);
 
-        $itemFactory->expects(self::once())->method('getItemFromDb')->with(110)->willReturn($fld110);
-        $itemFactory->expects(self::once())->method('isRoot')->with($fld110)->willReturn(true);
+        $itemFactory->expects($this->once())->method('getItemFromDb')->with(110)->willReturn($fld110);
+        $itemFactory->expects($this->once())->method('isRoot')->with($fld110)->willReturn(true);
 
         self::assertFalse($itemFactory->isInSubTree(110, 113));
     }
@@ -305,8 +305,8 @@ final class ItemFactoryTest extends TestCase
 
         $fld110 = new Docman_Folder(['parent_id' => 0]);
 
-        $itemFactory->expects(self::once())->method('getItemFromDb')->with(110)->willReturn($fld110);
-        $itemFactory->expects(self::once())->method('isRoot')->with($fld110)->willReturn(true);
+        $itemFactory->expects($this->once())->method('getItemFromDb')->with(110)->willReturn($fld110);
+        $itemFactory->expects($this->once())->method('isRoot')->with($fld110)->willReturn(true);
 
         self::assertEquals([], $itemFactory->getParents(110));
     }
@@ -453,7 +453,7 @@ final class ItemFactoryTest extends TestCase
         ]));
         $itemFactory->method('_getItemDao')->willReturn($dao);
 
-        $itemFactory->expects(self::once())->method('purgeDeletedItem');
+        $itemFactory->expects($this->once())->method('purgeDeletedItem');
 
         self::assertTrue($itemFactory->PurgeDeletedItems(1234567890));
     }
@@ -469,7 +469,7 @@ final class ItemFactoryTest extends TestCase
         $item = new Docman_Folder(['item_id' => 112, 'group_id' => 114]);
 
         $dao = $this->createMock(Docman_ItemDao::class);
-        $dao->expects(self::once())->method('restore')->with(112)->willReturn(true);
+        $dao->expects($this->once())->method('restore')->with(112)->willReturn(true);
         $itemFactory->method('_getItemDao')->willReturn($dao);
 
         // Event
@@ -498,7 +498,7 @@ final class ItemFactoryTest extends TestCase
         $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
         $dao = $this->createMock(Docman_ItemDao::class);
-        $dao->expects(self::once())->method('restore')->with(112)->willReturn(true);
+        $dao->expects($this->once())->method('restore')->with(112)->willReturn(true);
         $itemFactory->method('_getItemDao')->willReturn($dao);
 
         $v1 = new Docman_Version();
@@ -571,7 +571,7 @@ final class ItemFactoryTest extends TestCase
         $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
         $dao = $this->createMock(Docman_ItemDao::class);
-        $dao->expects(self::once())->method('restore')->with(112)->willReturn(true);
+        $dao->expects($this->once())->method('restore')->with(112)->willReturn(true);
         $itemFactory->method('_getItemDao')->willReturn($dao);
 
         $v1 = new Docman_Version();
@@ -666,9 +666,9 @@ final class ItemFactoryTest extends TestCase
             'getRecentlyVisitedDao',
         ]);
         $item_factory->method('getUgroupsToNotifyDao')->willReturn($ugroups_to_notify_dao);
-        $ugroups_to_notify_dao->expects(self::once())->method('deleteByItemId')->with($item_id);
+        $ugroups_to_notify_dao->expects($this->once())->method('deleteByItemId')->with($item_id);
         $item_factory->method('getUsersToNotifyDao')->willReturn($users_to_notify_dao);
-        $users_to_notify_dao->expects(self::once())->method('deleteByItemId')->with($item_id);
+        $users_to_notify_dao->expects($this->once())->method('deleteByItemId')->with($item_id);
         $item_factory->method('getItemFromDb')->willReturn(null);
         $user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $item_factory->method('_getUserManager')->willReturn($user_manager);

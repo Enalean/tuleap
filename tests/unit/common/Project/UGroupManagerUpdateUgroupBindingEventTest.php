@@ -57,14 +57,14 @@ final class UGroupManagerUpdateUgroupBindingEventTest extends \Tuleap\Test\PHPUn
 
     public function testItRaiseAnEventWithGroupsWhenOneIsAdded(): void
     {
-        $this->event_manager->expects(self::once())->method('processEvent')
+        $this->event_manager->expects($this->once())->method('processEvent')
             ->with('ugroup_manager_update_ugroup_binding_add', ['ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24]);
         $this->ugroup_manager->updateUgroupBinding(12, 24);
     }
 
     public function testItRaiseAnEventWithGroupsWhenOneIsRemoved(): void
     {
-        $this->event_manager->expects(self::once())->method('processEvent')
+        $this->event_manager->expects($this->once())->method('processEvent')
             ->with('ugroup_manager_update_ugroup_binding_remove', ['ugroup' => $this->ugroup_12]);
         $this->ugroup_manager->updateUgroupBinding(12);
     }

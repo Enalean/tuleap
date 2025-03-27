@@ -93,7 +93,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         );
 
         $this->factory->method('getMetadataFromLabel')->with($existing_metadata->short_name)->willReturn('field_list_1');
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $this->collection_builder->method('build')->willReturn(
             CustomMetadataCollection::build([$project_field_representation, $project_list_representation])
@@ -127,7 +127,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         );
 
         $this->factory->method('getMetadataFromLabel')->with($existing_metadata->short_name)->willReturn('field_list_1');
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
@@ -159,7 +159,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         );
 
         $this->factory->method('getMetadataFromLabel')->with($existing_metadata->short_name)->willReturn('field_list_1');
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
@@ -191,7 +191,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         );
 
         $this->factory->method('getMetadataFromLabel')->with([$existing_metadata->short_name])->willReturn('field_list_1');
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
@@ -222,7 +222,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
             null
         );
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_configured_metadata = new Docman_Metadata();
         $project_configured_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
@@ -247,7 +247,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
     {
         $item = new Docman_Item();
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -273,7 +273,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
     {
         $item = new Docman_Item();
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -299,7 +299,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
     {
         $item = new Docman_Item();
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -350,7 +350,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
             $existing_metadata->short_name => 'field_list_1',
             default                        => null,
         });
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
@@ -373,7 +373,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $project_configured_metadata->setIsMultipleValuesAllowed(true);
         $this->factory->method('getMetadataFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -417,7 +417,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $project_configured_metadata->setIsMultipleValuesAllowed(false);
         $this->factory->method('getMetadataFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -451,7 +451,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata = new Docman_Metadata();
         $project_configured_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
         $this->factory->method('getMetadataFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -486,7 +486,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $project_configured_metadata->setIsMultipleValuesAllowed(false);
         $this->factory->method('getMetadataFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -537,7 +537,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         self::expectException(CustomMetadataException::class);
         self::expectExceptionMessage('value: 999 are unknown for metadata field_list_1');
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -570,7 +570,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setLabel($metadata->short_name);
         $this->factory->method('getMetadataFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -612,7 +612,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setIsMultipleValuesAllowed(false);
         $project_configured_metadata->setLabel($metadata->short_name);
         $this->factory->method('getMetadataFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -664,7 +664,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->list_values_builder->method('build')->with(1, true)->willReturn([$element, $element_two]);
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -702,7 +702,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setIsMultipleValuesAllowed(true);
         $project_configured_metadata->setLabel($metadata->short_name);
         $this->factory->method('getMetadataFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -729,7 +729,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
         $project_configured_metadata->setIsMultipleValuesAllowed(false);
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([]));
 
@@ -758,7 +758,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
             default                        => null,
         });
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -804,7 +804,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $project_configured_metadata->setIsMultipleValuesAllowed(true);
         $project_configured_metadata->setLabel($metadata->short_name);
         $this->factory->method('getFromLabel')->with($metadata->short_name)->willReturn($project_configured_metadata);
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -862,7 +862,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->list_values_builder->method('build')->with(1, true)->willReturn([$element, $element_two]);
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
@@ -919,7 +919,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->list_values_builder->method('build')->with(1, true)->willReturn([$element, $element_two]);
 
-        $this->factory->expects(self::once())->method('appendItemMetadataList');
+        $this->factory->expects($this->once())->method('appendItemMetadataList');
 
         $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(

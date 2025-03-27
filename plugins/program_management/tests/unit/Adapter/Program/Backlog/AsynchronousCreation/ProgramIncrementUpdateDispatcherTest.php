@@ -88,7 +88,7 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
     public function testItPushesASingleMessageForProgramIncrementUpdateAndIterationCreations(): void
     {
         $queue = $this->createMock(PersistentQueue::class);
-        $queue->expects(self::once())
+        $queue->expects($this->once())
             ->method('pushSinglePersistentMessage')
             ->with(
                 ProgramIncrementUpdateEvent::TOPIC,

@@ -87,7 +87,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build());
-        $this->changeset_representation_builder->expects(self::once())->method('buildWithFieldValuesWithoutPermissions')
+        $this->changeset_representation_builder->expects($this->once())->method('buildWithFieldValuesWithoutPermissions')
             ->willReturn($this->buildChangesetRepresentation($user));
 
         $payload = $this->builder->buildPayload($changeset);
@@ -117,7 +117,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build());
-        $this->changeset_representation_builder->expects(self::once())->method('buildWithFieldValuesWithoutPermissions')
+        $this->changeset_representation_builder->expects($this->once())->method('buildWithFieldValuesWithoutPermissions')
             ->willReturn($this->buildChangesetRepresentation($user));
 
         $payload = $this->builder->buildPayload($changeset);

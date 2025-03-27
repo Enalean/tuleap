@@ -304,7 +304,7 @@ final class CardwallConfigXmlImportTest extends TestCase
                 return 22;
             }
         });
-        $this->column_dao->expects(self::once())->method('createWithTLPColor')->with(555, 'Done', 'fiesta-red');
+        $this->column_dao->expects($this->once())->method('createWithTLPColor')->with(555, 'Done', 'fiesta-red');
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
@@ -334,7 +334,7 @@ final class CardwallConfigXmlImportTest extends TestCase
             ->willReturnOnConsecutiveCalls(20, 21, 22);
         $this->column_dao->method('createWithTLPColor')->willReturn(23);
 
-        $this->mapping_field_dao->expects(self::once())->method('create')->with(555, 666, 1);
+        $this->mapping_field_dao->expects($this->once())->method('create')->with(555, 666, 1);
         $matcher = self::exactly(3);
 
         $this->mapping_field_value_dao->expects($matcher)->method('save')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -384,7 +384,7 @@ final class CardwallConfigXmlImportTest extends TestCase
     public function testItDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException(): void
     {
         $cardwall_ontop_dao = $this->createMock(Cardwall_OnTop_Dao::class);
-        $cardwall_ontop_dao->expects(self::once())->method('enable')->willReturn(false);
+        $cardwall_ontop_dao->expects($this->once())->method('enable')->willReturn(false);
         $cardwall_ontop_dao->method('startTransaction');
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -446,7 +446,7 @@ final class CardwallConfigXmlImportTest extends TestCase
             $this->logger
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, self::anything());
+        $this->event_manager->expects($this->once())->method('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, self::anything());
 
         $cardwall_config_xml_import->import(new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project></project>'));
     }

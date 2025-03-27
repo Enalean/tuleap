@@ -168,7 +168,7 @@ final class GerritServerFactoryTest extends TestCase
     {
         $this->project_manager->method('getChildProjects')->willReturn([]);
         $project = ProjectTestBuilder::aProject()->withId(458)->build();
-        $this->dao->expects(self::once())->method('searchAllByProjectId')->with(458)->willReturn([$this->dar_1]);
+        $this->dao->expects($this->once())->method('searchAllByProjectId')->with(458)->willReturn([$this->dar_1]);
         $servers = $this->factory->getServersForProject($project);
         self::assertInstanceOf(Git_RemoteServer_GerritServer::class, $servers[$this->server_id]);
     }
@@ -236,7 +236,7 @@ final class GerritServerFactoryTest extends TestCase
     public function testItSavesAnExistingServer(): void
     {
         $this->main_gerrit_server->setLogin('new_login');
-        $this->dao->expects(self::once())->method('save')
+        $this->dao->expects($this->once())->method('save')
             ->with($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl, $this->gerrit_version, $this->http_password);
         $this->system_event_manager->method('queueGerritReplicationKeyUpdate');
         $this->factory->save($this->main_gerrit_server);
@@ -245,7 +245,7 @@ final class GerritServerFactoryTest extends TestCase
     public function testItTriggersKeyUpdateEventOnSave(): void
     {
         $this->main_gerrit_server->setLogin('new_login');
-        $this->system_event_manager->expects(self::once())->method('queueGerritReplicationKeyUpdate')->with($this->main_gerrit_server);
+        $this->system_event_manager->expects($this->once())->method('queueGerritReplicationKeyUpdate')->with($this->main_gerrit_server);
         $this->dao->method('save');
         $this->factory->save($this->main_gerrit_server);
     }
@@ -273,14 +273,14 @@ final class GerritServerFactoryTest extends TestCase
 
     public function testItDeletesAnExistingServer(): void
     {
-        $this->dao->expects(self::once())->method('delete')->with($this->alternate_server_id);
+        $this->dao->expects($this->once())->method('delete')->with($this->alternate_server_id);
         $this->system_event_manager->method('queueGerritReplicationKeyUpdate');
         $this->factory->delete($this->alternate_gerrit_server);
     }
 
     public function testItTriggersKeyUpdateEventOnDelete(): void
     {
-        $this->system_event_manager->expects(self::once())->method('queueGerritReplicationKeyUpdate')->with($this->alternate_gerrit_server);
+        $this->system_event_manager->expects($this->once())->method('queueGerritReplicationKeyUpdate')->with($this->alternate_gerrit_server);
         $this->dao->method('delete');
         $this->factory->delete($this->alternate_gerrit_server);
     }

@@ -55,7 +55,7 @@ final class WillBeCreatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesANewUserInDatabase(): void
     {
-        $this->user_manager->expects(self::once())->method('createAccount')->willReturn(new \PFUser(['language_id' => 'en']));
+        $this->user_manager->expects($this->once())->method('createAccount')->willReturn(new \PFUser(['language_id' => 'en']));
 
         $this->user->process($this->user_manager, $this->logger);
     }

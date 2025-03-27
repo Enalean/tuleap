@@ -221,8 +221,8 @@ final class GitGerritRouteTest extends TestCase
 
         $git = $this->getGitDisconnect($request, $factory);
 
-        $git->expects(self::once())->method('addError');
-        $git->expects(self::once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
+        $git->expects($this->once())->method('addError');
+        $git->expects($this->once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
 
         $git->request();
     }
@@ -236,10 +236,10 @@ final class GitGerritRouteTest extends TestCase
 
         $git = $this->getGitDisconnect($request, $factory);
 
-        $git->expects(self::once())->method('addError');
+        $git->expects($this->once())->method('addError');
         $git->expects(self::never())->method('addAction');
 
-        $git->expects(self::once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
+        $git->expects($this->once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
         $git->request();
     }
 
@@ -250,7 +250,7 @@ final class GitGerritRouteTest extends TestCase
         $request->params = ['repo_id' => $this->repo_id];
         $repo            = GitRepositoryTestBuilder::aProjectRepository()->build();
         $factory         = $this->createMock(GitRepositoryFactory::class);
-        $factory->expects(self::once())->method('getRepositoryById')->willReturn($repo);
+        $factory->expects($this->once())->method('getRepositoryById')->willReturn($repo);
         $git     = $this->getGitDisconnect($request, $factory);
         $matcher = $this->exactly(2);
 
@@ -269,7 +269,7 @@ final class GitGerritRouteTest extends TestCase
     public function testItIsForbiddenForNonProjectAdmins(): void
     {
         $factory = $this->createMock(GitRepositoryFactory::class);
-        $factory->expects(self::once())->method('getRepositoryById')->willReturn(null);
+        $factory->expects($this->once())->method('getRepositoryById')->willReturn(null);
 
         $this->assertItIsForbiddenForNonProjectAdmins($factory);
     }
@@ -277,7 +277,7 @@ final class GitGerritRouteTest extends TestCase
     public function testItNeedsAValidRepoId(): void
     {
         $factory = $this->createMock(GitRepositoryFactory::class);
-        $factory->expects(self::once())->method('getRepositoryById')->willReturn(null);
+        $factory->expects($this->once())->method('getRepositoryById')->willReturn(null);
 
         $this->assertItNeedsAValidRepoId($factory);
     }
@@ -293,7 +293,7 @@ final class GitGerritRouteTest extends TestCase
     {
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
         $factory = $this->createMock(GitRepositoryFactory::class);
-        $factory->expects(self::once())->method('getRepositoryById')->willReturn($this->repository);
+        $factory->expects($this->once())->method('getRepositoryById')->willReturn($this->repository);
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
         $request            = new HTTPRequest();
@@ -324,7 +324,7 @@ final class GitGerritRouteTest extends TestCase
     {
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
         $factory = $this->createMock(GitRepositoryFactory::class);
-        $factory->expects(self::once())->method('getRepositoryById')->willReturn($this->repository);
+        $factory->expects($this->once())->method('getRepositoryById')->willReturn($this->repository);
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
         $request = new HTTPRequest();
@@ -334,9 +334,9 @@ final class GitGerritRouteTest extends TestCase
 
         $git = $this->getGitMigrate($request, $factory);
 
-        $git->expects(self::once())->method('addError');
+        $git->expects($this->once())->method('addError');
         $git->expects(self::never())->method('addAction');
-        $git->expects(self::once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
+        $git->expects($this->once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
 
         $git->request();
     }
@@ -344,7 +344,7 @@ final class GitGerritRouteTest extends TestCase
     public function testItForbidsGerritMigrationIfTuleapIsNotConnectedToLDAP(): void
     {
         $factory = $this->createMock(GitRepositoryFactory::class);
-        $factory->expects(self::once())->method('getRepositoryById')->willReturn($this->repository);
+        $factory->expects($this->once())->method('getRepositoryById')->willReturn($this->repository);
         ForgeConfig::set('sys_auth_type', 'not_ldap');
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
         $request   = new HTTPRequest();
@@ -355,7 +355,7 @@ final class GitGerritRouteTest extends TestCase
 
         $git->expects(self::never())->method('addAction');
         $git->method('addError');
-        $git->expects(self::once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
+        $git->expects($this->once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
 
         $git->request();
     }
@@ -364,7 +364,7 @@ final class GitGerritRouteTest extends TestCase
     {
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
         $factory = $this->createMock(GitRepositoryFactory::class);
-        $factory->expects(self::once())->method('getRepositoryById')->willReturn($this->repository);
+        $factory->expects($this->once())->method('getRepositoryById')->willReturn($this->repository);
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
 
         $template_id = 3;

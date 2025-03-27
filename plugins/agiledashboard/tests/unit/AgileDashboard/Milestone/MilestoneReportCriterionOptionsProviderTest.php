@@ -148,7 +148,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
         $this->release_tracker->method('userCanView')->with($this->user)->willReturn(false);
         $this->sprint_tracker->method('userCanView')->with($this->user)->willReturn(true);
 
-        $this->dao->expects(self::once())->method('getAllMilestoneByTrackers')
+        $this->dao->expects($this->once())->method('getAllMilestoneByTrackers')
             ->willReturn($this->getDBResults());
 
         $options = $this->provider->getSelectboxOptions($this->task_tracker, 0, $this->user);

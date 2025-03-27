@@ -129,17 +129,17 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with([1, 123, 124])
             ->willReturn([]);
 
-        $top_planning_tracker_semantic_status->expects(self::once())
+        $top_planning_tracker_semantic_status->expects($this->once())
             ->method('getOpenLabels')
             ->willReturn(['open', 'review']);
 
         $tracker_01_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
-        $tracker_01_semantic_status->expects(self::once())
+        $tracker_01_semantic_status->expects($this->once())
             ->method('getOpenLabels')
             ->willReturn(['open', 'review']);
 
         $tracker_02_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
-        $tracker_02_semantic_status->expects(self::once())
+        $tracker_02_semantic_status->expects($this->once())
             ->method('getOpenLabels')
             ->willReturn(['open', 'in progress', 'review']);
 
@@ -238,7 +238,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with([1, 123, 124])
             ->willReturn([]);
 
-        $top_planning_tracker_semantic_status->expects(self::once())
+        $top_planning_tracker_semantic_status->expects($this->once())
             ->method('getOpenLabels')
             ->willReturn(['open', 'review']);
 
@@ -252,7 +252,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             );
 
-        $tracker_01_semantic_status->expects(self::once())
+        $tracker_01_semantic_status->expects($this->once())
             ->method('getOpenLabels')
             ->willReturn(['open']);
 

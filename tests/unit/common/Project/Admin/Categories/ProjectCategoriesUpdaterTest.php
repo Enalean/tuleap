@@ -83,7 +83,7 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddEntryInProjectHistory(): void
     {
         $this->history_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('groupAddHistory')
             ->with('changed_trove', '', 42);
 

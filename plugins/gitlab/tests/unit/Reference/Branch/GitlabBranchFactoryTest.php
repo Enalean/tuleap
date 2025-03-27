@@ -50,7 +50,7 @@ final class GitlabBranchFactoryTest extends TestCase
         $gitlab_integration = $this->buildGitlabIntegration();
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchBranchInRepositoryWithBranchName')
             ->with(1, 'dev_tuleap-123')
             ->willReturn([
@@ -76,7 +76,7 @@ final class GitlabBranchFactoryTest extends TestCase
         $gitlab_integration = $this->buildGitlabIntegration();
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchBranchInRepositoryWithBranchName')
             ->with(1, 'dev_tuleap-123')
             ->willReturn([
@@ -101,7 +101,7 @@ final class GitlabBranchFactoryTest extends TestCase
         $gitlab_integration = $this->buildGitlabIntegration();
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchBranchInRepositoryWithBranchName')
             ->with(1, 'dev_tuleap-123')
             ->willReturn(null);

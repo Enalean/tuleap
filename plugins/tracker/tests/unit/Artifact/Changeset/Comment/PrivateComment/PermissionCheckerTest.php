@@ -63,7 +63,7 @@ final class PermissionCheckerTest extends TestCase
 
     public function testReturnsFalseIfTrackerDoesNotUsePrivateComment(): void
     {
-        $this->tracker_private_comment_information_retriever->expects(self::once())
+        $this->tracker_private_comment_information_retriever->expects($this->once())
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(false);
@@ -77,7 +77,7 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(true);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(true);
         self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
@@ -87,8 +87,8 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(true);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(true);
 
         self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
@@ -99,9 +99,9 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
-        $this->tracker->expects(self::once())->method('userIsAdmin')->willReturn(true);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->tracker->expects($this->once())->method('userIsAdmin')->willReturn(true);
         self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
@@ -112,8 +112,8 @@ final class PermissionCheckerTest extends TestCase
             ->with($this->tracker)
             ->willReturn(true);
         $this->tracker->method('userIsAdmin')->willReturn(false);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
         $ugroup_1 = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
         $ugroup_2 = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
@@ -133,8 +133,8 @@ final class PermissionCheckerTest extends TestCase
             ->with($this->tracker)
             ->willReturn(true);
         $this->tracker->method('userIsAdmin')->willReturn(false);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
         $this->user->expects(self::never())->method('isMemberOfUGroup');
 
@@ -148,8 +148,8 @@ final class PermissionCheckerTest extends TestCase
             ->with($this->tracker)
             ->willReturn(true);
         $this->tracker->method('userIsAdmin')->willReturn(false);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
         $this->user->expects(self::never())->method('isMemberOfUGroup');
 
@@ -164,8 +164,8 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
         $this->tracker->method('userIsAdmin')->willReturn(false);
 
@@ -186,7 +186,7 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(true);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(true);
 
         $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
         $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
@@ -205,8 +205,8 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(true);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(true);
 
         $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
         $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
@@ -224,10 +224,10 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $this->tracker->expects(self::once())->method('userIsAdmin')->willReturn(true);
+        $this->tracker->expects($this->once())->method('userIsAdmin')->willReturn(true);
 
         $ugroup_1      = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
         $ugroup_2      = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
@@ -245,8 +245,8 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
         $this->tracker->method('userIsAdmin')->willReturn(false);
 
@@ -272,8 +272,8 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::once())->method('isSuperUser')->willReturn(false);
-        $this->user->expects(self::once())->method('isAdmin')->with(101)->willReturn(false);
+        $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
+        $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
         $this->tracker->method('userIsAdmin')->willReturn(false);
 

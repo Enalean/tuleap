@@ -68,7 +68,7 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $pull_request->method('getId')->willReturn(85);
         $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $this->dao->expects(self::once())->method('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1)
+        $this->dao->expects($this->once())->method('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1)
             ->willReturn(78);
 
         $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(ReviewerChangeEvent::class));
@@ -92,7 +92,7 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_2->method('getId')->willReturn('102');
 
         $expected_change_id = 79;
-        $this->dao->expects(self::once())->method('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)
+        $this->dao->expects($this->once())->method('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)
             ->willReturn($expected_change_id);
         $this->permissions_checker->expects(self::exactly(2))->method('checkPullRequestIsReadableByUser');
 
@@ -119,7 +119,7 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $pull_request->method('getId')->willReturn(85);
         $pull_request->method('getStatus')->willReturn(PullRequest::STATUS_REVIEW);
 
-        $this->dao->expects(self::once())->method('setReviewers')->willReturn(null);
+        $this->dao->expects($this->once())->method('setReviewers')->willReturn(null);
         $this->permissions_checker->method('checkPullRequestIsReadableByUser');
 
         $this->event_dispatcher->expects(self::never())->method('dispatch');

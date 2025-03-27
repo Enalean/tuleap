@@ -74,21 +74,21 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
 
     public function testItAddsAndNotifyActiveUsers(): void
     {
-        $this->base_language->expects(self::once())->method('getOverridableText')->willReturn('A Subject');
-        $this->base_language->expects(self::once())->method('getContent')->willReturn(__DIR__ . '/_fixtures/empty.php');
+        $this->base_language->expects($this->once())->method('getOverridableText')->willReturn('A Subject');
+        $this->base_language->expects($this->once())->method('getContent')->willReturn(__DIR__ . '/_fixtures/empty.php');
 
         $mail = $this->createMock(\Codendi_Mail::class);
-        $mail->expects(self::once())->method('setTo')->with('foo@example.com');
-        $mail->expects(self::once())->method('setFrom');
-        $mail->expects(self::once())->method('setSubject')->with('A Subject');
-        $mail->expects(self::once())->method('setBodyText')->with('A body');
-        $mail->expects(self::once())->method('send')->willReturn(true);
+        $mail->expects($this->once())->method('setTo')->with('foo@example.com');
+        $mail->expects($this->once())->method('setFrom');
+        $mail->expects($this->once())->method('setSubject')->with('A Subject');
+        $mail->expects($this->once())->method('setBodyText')->with('A body');
+        $mail->expects($this->once())->method('send')->willReturn(true);
 
-        $this->mail_factory->expects(self::once())->method('getMail')->willReturn($mail);
+        $this->mail_factory->expects($this->once())->method('getMail')->willReturn($mail);
 
-        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
+        $this->add_project_member->expects($this->once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::INFO);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::INFO);
 
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
     }
@@ -97,19 +97,19 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
     {
         $this->an_active_user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
 
-        $this->base_language->expects(self::once())->method('getOverridableText')->willReturn('A Subject');
-        $this->base_language->expects(self::once())->method('getContent')->willReturn(__DIR__ . '/_fixtures/empty.php');
+        $this->base_language->expects($this->once())->method('getOverridableText')->willReturn('A Subject');
+        $this->base_language->expects($this->once())->method('getContent')->willReturn(__DIR__ . '/_fixtures/empty.php');
 
         $mail = $this->createMock(\Codendi_Mail::class);
-        $mail->expects(self::once())->method('setTo');
-        $mail->expects(self::once())->method('setFrom');
-        $mail->expects(self::once())->method('setSubject');
-        $mail->expects(self::once())->method('setBodyText');
-        $mail->expects(self::once())->method('send')->willReturn(true);
+        $mail->expects($this->once())->method('setTo');
+        $mail->expects($this->once())->method('setFrom');
+        $mail->expects($this->once())->method('setSubject');
+        $mail->expects($this->once())->method('setBodyText');
+        $mail->expects($this->once())->method('send')->willReturn(true);
 
-        $this->mail_factory->expects(self::once())->method('getMail')->willReturn($mail);
+        $this->mail_factory->expects($this->once())->method('getMail')->willReturn($mail);
 
-        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
+        $this->add_project_member->expects($this->once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
     }
@@ -118,9 +118,9 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
     {
         $this->an_active_user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => '']);
 
-        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
+        $this->add_project_member->expects($this->once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
     }
@@ -129,7 +129,7 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_SUSPENDED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
     }
@@ -138,7 +138,7 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_DELETED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
     }
@@ -147,7 +147,7 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
     {
         $this->add_project_member->method('addProjectMember')->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($this->an_active_user, $this->an_active_project));
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
     }
@@ -156,7 +156,7 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
     {
         $this->add_project_member->method('addProjectMember')->willThrowException(new AlreadyProjectMemberException());
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
     }

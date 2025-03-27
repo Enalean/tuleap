@@ -81,7 +81,7 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact = $this->createStub(Artifact::class);
         $artifact->method('getLastChangeset')->willReturn($last_changeset);
 
-        $this->dao->expects(self::once())->method('searchChangesetValues')->willReturn($this->getDbData());
+        $this->dao->expects($this->once())->method('searchChangesetValues')->willReturn($this->getDbData());
 
         $forward_links = $this->retrieve($artifact);
 
@@ -104,7 +104,7 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact = $this->createStub(Artifact::class);
         $artifact->method('getLastChangeset')->willReturn($last_changeset);
 
-        $this->dao->expects(self::once())->method('searchChangesetValues')->willReturn($this->getDbData());
+        $this->dao->expects($this->once())->method('searchChangesetValues')->willReturn($this->getDbData());
 
         $artifact_103             = $this->getMockedArtifact(self::FIRST_ARTIFACT_ID, false);
         $artifact_104             = $this->getMockedArtifact(self::SECOND_ARTIFACT_ID, false);

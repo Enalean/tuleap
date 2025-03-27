@@ -46,8 +46,8 @@ final class PostArtifactDeletionCleanerTest extends TestCase
 
     public function testItCleanDependenciesAtArtifactRemoval(): void
     {
-        $this->reference_manager->expects(self::once())->method('deleteEntity');
-        $this->artifact_dao->expects(self::once())->method('deleteArtifactLinkReference');
+        $this->reference_manager->expects($this->once())->method('deleteEntity');
+        $this->artifact_dao->expects($this->once())->method('deleteArtifactLinkReference');
 
         $file_field = FileFieldBuilder::aFileField(1)->build();
         $tracker    = $this->createStub(\Tracker::class);
@@ -62,7 +62,7 @@ final class PostArtifactDeletionCleanerTest extends TestCase
         $file_changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue_File::class);
         $file                 = $this->createMock(Tracker_FileInfo::class);
         $file_changeset_value->method('getFiles')->willReturn([$file]);
-        $file->expects(self::once())->method('deleteFiles');
+        $file->expects($this->once())->method('deleteFiles');
 
         $artifact->method('getValue')->willReturn($file_changeset_value);
 

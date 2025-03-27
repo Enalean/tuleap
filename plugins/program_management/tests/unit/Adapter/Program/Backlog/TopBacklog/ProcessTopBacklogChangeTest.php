@@ -107,7 +107,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->visible_feature_verifier = VerifyFeatureIsVisibleByProgramStub::withVisibleIds(741);
 
-        $this->dao->expects(self::once())->method('removeArtifactsFromExplicitTopBacklog')->with([741]);
+        $this->dao->expects($this->once())->method('removeArtifactsFromExplicitTopBacklog')->with([741]);
 
         $this->getProcessor()->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),
@@ -135,12 +135,12 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->program_increment_dao = SearchProgramIncrementLinkedToFeatureStub::with([['id' => 63]]);
         $program_increment           = ArtifactTestBuilder::anArtifact(63)->build();
-        $this->artifact_factory->expects(self::once())->method('getArtifactById')->with(63)->willReturn(
+        $this->artifact_factory->expects($this->once())->method('getArtifactById')->with(63)->willReturn(
             $program_increment
         );
 
-        $this->dao->expects(self::once())->method('addArtifactsToTheExplicitTopBacklog');
-        $this->artifact_link_updater->expects(self::once())->method('updateArtifactLinks')->with(
+        $this->dao->expects($this->once())->method('addArtifactsToTheExplicitTopBacklog');
+        $this->artifact_link_updater->expects($this->once())->method('updateArtifactLinks')->with(
             $this->user,
             $program_increment,
             [],

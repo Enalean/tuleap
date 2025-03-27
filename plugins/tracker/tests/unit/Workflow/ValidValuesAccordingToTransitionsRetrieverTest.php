@@ -99,7 +99,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         );
 
         $this->workflow->method('isUsed')->willReturn(true);
-        $this->field_changed->expects(self::once())->method('getListValueById')->willReturn(null);
+        $this->field_changed->expects($this->once())->method('getListValueById')->willReturn(null);
 
         $this->first_valid_value_according_to_dependencies_retriever->getValidValuesAccordingToTransitions(
             $this->artifact,
@@ -127,7 +127,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         );
 
         $this->workflow->method('isUsed')->willReturn(false);
-        $this->field_changed->expects(self::once())->method('getListValueById')->willReturn(
+        $this->field_changed->expects($this->once())->method('getListValueById')->willReturn(
             $this->value_from_artifact
         );
 
@@ -157,7 +157,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         $expected_result->removeValue(self::SECOND_VALUE_ID);
         $expected_result->removeValue(self::THIRD_VALUE_ID);
 
-        $this->field_changed->expects(self::once())->method('getListValueById')->with(
+        $this->field_changed->expects($this->once())->method('getListValueById')->with(
             self::ORIGINAL_FIELD_CHANGED_VALUE_ID
         )->willReturn(
             $this->value_from_artifact

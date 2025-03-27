@@ -61,7 +61,7 @@ final class MetadataValueUpdatorTest extends TestCase
 
         $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
-        $this->store->expects(self::once())->method('storeMetadata')->with($metadata_value, 102);
+        $this->store->expects($this->once())->method('storeMetadata')->with($metadata_value, 102);
         $this->store->expects(self::never())->method('updateMetadata');
 
         $metadata_to_create = new Docman_Metadata();
@@ -69,9 +69,9 @@ final class MetadataValueUpdatorTest extends TestCase
         $metadata_to_create->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $metadata_to_create->setGroupId(102);
 
-        $this->metadata_value_dao->expects(self::once())->method('searchById')->with(1, 100)->willReturn(new ArrayIterator());
+        $this->metadata_value_dao->expects($this->once())->method('searchById')->with(1, 100)->willReturn(new ArrayIterator());
 
-        $this->validator->expects(self::once())->method('validateInput')->with($metadata_to_create, 'new value');
+        $this->validator->expects($this->once())->method('validateInput')->with($metadata_to_create, 'new value');
 
         $this->updator->updateMetadata($metadata_to_create, 1000, 'new value');
     }
@@ -85,20 +85,20 @@ final class MetadataValueUpdatorTest extends TestCase
         $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
         $this->store->expects(self::never())->method('storeMetadata');
-        $this->store->expects(self::once())->method('updateMetadata')->with($metadata_value, 102);
+        $this->store->expects($this->once())->method('updateMetadata')->with($metadata_value, 102);
 
         $metadata_to_create = new Docman_Metadata();
         $metadata_to_create->setId(1);
         $metadata_to_create->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $metadata_to_create->setGroupId(102);
 
-        $this->metadata_value_dao->expects(self::once())->method('searchById')->with(1, 100)->willReturn(new ArrayIterator([
+        $this->metadata_value_dao->expects($this->once())->method('searchById')->with(1, 100)->willReturn(new ArrayIterator([
             'field_id' => 1,
             'item_id'  => 100,
             'value'    => 'old value',
         ]));
 
-        $this->validator->expects(self::once())->method('validateInput')->with($metadata_to_create, 'new value');
+        $this->validator->expects($this->once())->method('validateInput')->with($metadata_to_create, 'new value');
 
         $this->updator->updateMetadata($metadata_to_create, 1000, 'new value');
     }

@@ -105,7 +105,7 @@ final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\
             ->with($automated_tests_results)
             ->willReturn(['firsttest' => $extracted_test]);
 
-        $this->execution_change_extractor->expects(self::once())->method('getChanges')->with(
+        $this->execution_change_extractor->expects($this->once())->method('getChanges')->with(
             'passed',
             [],
             [],

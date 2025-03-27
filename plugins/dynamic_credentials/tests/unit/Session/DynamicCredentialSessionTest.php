@@ -35,8 +35,8 @@ final class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
         $credential_retriever = $this->createMock(CredentialRetriever::class);
         $credential           = $this->createMock(Credential::class);
         $credential->method('getIdentifier')->willReturn('identifier');
-        $credential_retriever->expects(self::once())->method('authenticate')->willReturn($credential);
-        $credential_retriever->expects(self::once())->method('getByIdentifier')->willReturn($credential);
+        $credential_retriever->expects($this->once())->method('authenticate')->willReturn($credential);
+        $credential_retriever->expects($this->once())->method('getByIdentifier')->willReturn($credential);
         $storage = new DynamicCredentialNonPersistentStorage();
 
         $dynamic_session = new DynamicCredentialSession($storage, $credential_retriever);
@@ -61,7 +61,7 @@ final class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSessionIsNotInitializedWhenAuthenticationFail(): void
     {
         $credential_retriever = $this->createMock(CredentialRetriever::class);
-        $credential_retriever->expects(self::once())->method('authenticate')->willThrowException(new CredentialAuthenticationException());
+        $credential_retriever->expects($this->once())->method('authenticate')->willThrowException(new CredentialAuthenticationException());
 
         $dynamic_session = new DynamicCredentialSession(new DynamicCredentialNonPersistentStorage(), $credential_retriever);
 

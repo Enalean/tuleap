@@ -197,7 +197,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone->method('getTracker')->willReturn($milestone_tracker);
 
         $this->response
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addFeedback')
             ->with(
                 \Feedback::INFO,

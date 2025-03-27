@@ -115,7 +115,7 @@ final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase /
     public function testFactoryShouldCallTheDatabaseToBuildHierarchy(): void
     {
         $dao = $this->createMock(HierarchyDAO::class);
-        $dao->expects(self::once())->method('searchTrackerHierarchy')->willReturn([]);
+        $dao->expects($this->once())->method('searchTrackerHierarchy')->willReturn([]);
 
         $factory = $this->givenAHierarchyFactory($dao);
         $factory->getHierarchy([111]);

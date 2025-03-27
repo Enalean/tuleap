@@ -68,7 +68,7 @@ final class PullRequestIsMergeableCheckerTest extends TestCase
 
     public function testItDoesNothingWHenUSerCanMergePullrequest(): void
     {
-        $this->permission_checker->expects(self::once())->method('checkPullRequestIsMergeableByUser');
+        $this->permission_checker->expects($this->once())->method('checkPullRequestIsMergeableByUser');
         $this->pull_request_is_mergeable_checker->checkUserCanMerge($this->pullrequest, $this->user);
     }
 }

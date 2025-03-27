@@ -75,8 +75,8 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAlwaysIncludesDashboardJsAndCss(): void
     {
-        $this->layout->expects(self::once())->method('includeFooterJavascriptFile')->with('dashboards/dashboard.js');
-        $this->layout->expects(self::once())->method('addCssAssetCollection')->with($this->css_asset_collection);
+        $this->layout->expects($this->once())->method('includeFooterJavascriptFile')->with('dashboards/dashboard.js');
+        $this->layout->expects($this->once())->method('addCssAssetCollection')->with($this->css_asset_collection);
 
         $this->includer->includeAssets([]);
     }
@@ -84,7 +84,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotIncludeDependenciesIfThereIsNoDashboard(): void
     {
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $this->layout->expects(self::once())->method('addCssAssetCollection')->with($this->css_asset_collection);
+        $this->layout->expects($this->once())->method('addCssAssetCollection')->with($this->css_asset_collection);
 
         $this->includer->includeAssets([]);
     }
@@ -96,7 +96,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
         $empty_dashboard->widget_lines = [];
 
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $this->layout->expects(self::once())->method('addCssAssetCollection');
+        $this->layout->expects($this->once())->method('addCssAssetCollection');
 
         $this->includer->includeAssets([$empty_dashboard]);
     }
@@ -106,7 +106,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
         $dashboard = $this->getDashboardWithWidgets(['widget_without_dependencies']);
 
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $this->layout->expects(self::once())->method('addCssAssetCollection');
+        $this->layout->expects($this->once())->method('addCssAssetCollection');
 
         $this->includer->includeAssets([$dashboard]);
     }
@@ -133,16 +133,16 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::assertSame('dependency_four', $parameters[0]);
             }
         });
-        $this->layout->expects(self::once())->method('includeFooterJavascriptSnippet')->with('dependency_two');
+        $this->layout->expects($this->once())->method('includeFooterJavascriptSnippet')->with('dependency_two');
 
-        $this->layout->expects(self::once())->method('addCssAssetCollection');
+        $this->layout->expects($this->once())->method('addCssAssetCollection');
 
         $this->includer->includeAssets([$dashboard]);
     }
 
     private function expectDependenciesScriptsWillNOTBeIncluded(): void
     {
-        $this->layout->expects(self::once())->method('includeFooterJavascriptFile')->with('dashboards/dashboard.js');
+        $this->layout->expects($this->once())->method('includeFooterJavascriptFile')->with('dashboards/dashboard.js');
         $this->layout->expects(self::never())->method('includeFooterJavascriptSnippet');
     }
 

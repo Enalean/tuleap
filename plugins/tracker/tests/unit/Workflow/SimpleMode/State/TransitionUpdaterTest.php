@@ -96,7 +96,7 @@ final class TransitionUpdaterTest extends TestCase
         $state = new State(1, [$transition]);
 
         $this->condition_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('update')
             ->with(
                 $transition,

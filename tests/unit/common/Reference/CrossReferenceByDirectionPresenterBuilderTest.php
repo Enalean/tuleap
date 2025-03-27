@@ -61,12 +61,12 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSourcesOfEntity')
             ->with('PageName', 'wiki', 102)
             ->willReturn([]);
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTargetsOfEntity')
             ->with('PageName', 'wiki', 102)
             ->willReturn([]);

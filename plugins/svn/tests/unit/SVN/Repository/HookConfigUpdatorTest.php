@@ -83,8 +83,8 @@ final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(true);
 
-        $this->hook_dao->expects(self::once())->method('updateHookConfig');
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->hook_dao->expects($this->once())->method('updateHookConfig');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
 
         $hook_config = [
             'mandatory_reference'       => true,
@@ -120,7 +120,7 @@ final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(true);
 
-        $this->hook_dao->expects(self::once())->method('updateHookConfig');
+        $this->hook_dao->expects($this->once())->method('updateHookConfig');
         $this->project_history_dao->expects(self::never())->method('groupAddHistory');
 
         $hook_config = [
@@ -138,7 +138,7 @@ final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->hook_config_checker->method('hasConfigurationChanged')->willReturn(false);
 
-        $this->hook_dao->expects(self::once())->method('updateHookConfig');
+        $this->hook_dao->expects($this->once())->method('updateHookConfig');
         $this->project_history_dao->expects(self::never())->method('groupAddHistory');
 
         $hook_config = [

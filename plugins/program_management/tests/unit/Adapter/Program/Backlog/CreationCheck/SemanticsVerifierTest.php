@@ -89,11 +89,11 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
 
-        $this->title_dao->expects(self::once())
+        $this->title_dao->expects($this->once())
             ->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);
-        $this->description_dao->expects(self::once())
+        $this->description_dao->expects($this->once())
             ->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);

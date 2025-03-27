@@ -116,7 +116,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
         $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
-        $this->git_jenkins_administration_server_factory->expects(self::once())
+        $this->git_jenkins_administration_server_factory->expects($this->once())
             ->method('getProjectByJenkinsServerID')
             ->willReturn(null);
 
@@ -134,11 +134,11 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
         $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
-        $this->git_jenkins_administration_server_factory->expects(self::once())
+        $this->git_jenkins_administration_server_factory->expects($this->once())
             ->method('getProjectByJenkinsServerID')
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(false);
@@ -157,11 +157,11 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
         $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
-        $this->git_jenkins_administration_server_factory->expects(self::once())
+        $this->git_jenkins_administration_server_factory->expects($this->once())
             ->method('getProjectByJenkinsServerID')
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
@@ -169,7 +169,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->build();
         $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->expects(self::once())
+        $this->git_permissions_manager->expects($this->once())
             ->method('userIsGitAdmin')
             ->with(
                 $user,
@@ -191,11 +191,11 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
         $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
-        $this->git_jenkins_administration_server_factory->expects(self::once())
+        $this->git_jenkins_administration_server_factory->expects($this->once())
             ->method('getProjectByJenkinsServerID')
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
@@ -203,7 +203,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->build();
         $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->expects(self::once())
+        $this->git_permissions_manager->expects($this->once())
             ->method('userIsGitAdmin')
             ->with(
                 $user,
@@ -211,7 +211,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn(true);
 
-        $this->git_jenkins_administration_server_deleter->expects(self::once())
+        $this->git_jenkins_administration_server_deleter->expects($this->once())
             ->method('deleteServer')
             ->with('uuid');
 

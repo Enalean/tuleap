@@ -192,7 +192,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact_factory   = $this->createMock(\Tracker_ArtifactFactory::class);
 
         $target_artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkArtifact')
             ->with(
                 $new_artifact_id,
@@ -200,7 +200,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
                 \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
             );
 
-        $artifact_factory->expects(self::once())
+        $artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->with($target_artifact_id)
             ->willReturn($target_artifact);

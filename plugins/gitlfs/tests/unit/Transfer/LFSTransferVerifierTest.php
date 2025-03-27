@@ -72,9 +72,9 @@ final class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository = $this->createStub(\GitRepository::class);
         $repository->method('getId')->willReturn(100);
 
-        $this->dao->expects(self::once())->method('saveObject');
-        $this->dao->expects(self::once())->method('saveObjectReference');
-        $this->filesystem->expects(self::once())->method('move')->with($ready_path, $available_path);
+        $this->dao->expects($this->once())->method('saveObject');
+        $this->dao->expects($this->once())->method('saveObjectReference');
+        $this->filesystem->expects($this->once())->method('move')->with($ready_path, $available_path);
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($lfs_object, $repository);
     }
@@ -103,8 +103,8 @@ final class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository = $this->createStub(\GitRepository::class);
         $repository->method('getId')->willReturn(100);
 
-        $this->dao->expects(self::once())->method('saveObjectReferenceByOIDValue');
-        $this->filesystem->expects(self::once())->method('delete')->with($ready_path);
+        $this->dao->expects($this->once())->method('saveObjectReferenceByOIDValue');
+        $this->filesystem->expects($this->once())->method('delete')->with($ready_path);
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($lfs_object, $repository);
     }
@@ -124,7 +124,7 @@ final class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(true);
 
-        $this->filesystem->expects(self::once())->method('delete')->with($ready_path);
+        $this->filesystem->expects($this->once())->method('delete')->with($ready_path);
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($this->createStub(LFSObject::class), $this->createStub(\GitRepository::class));
     }

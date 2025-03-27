@@ -54,7 +54,7 @@ final class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends TestCas
     {
         $request = new HTTPRequest();
         $request->set('add_mapping_on', '42');
-        $this->dao->expects(self::once())->method('create')->with($this->tracker_id, 42, null);
+        $this->dao->expects($this->once())->method('create')->with($this->tracker_id, 42, null);
         $this->command->execute($request);
     }
 }

@@ -36,7 +36,7 @@ final class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRequestAcceptingGitLFSResponseAreProcessed(string $accept_header): void
     {
         $dispatchable = $this->createMock(DispatchableWithRequestNoAuthz::class);
-        $dispatchable->expects(self::once())->method('process');
+        $dispatchable->expects($this->once())->method('process');
 
         $request = $this->createMock(HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_ACCEPT')

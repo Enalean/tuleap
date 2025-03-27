@@ -232,7 +232,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         //self::assertEqual($GLOBALS['feedback'],  '');
         //S6
         $GLOBALS['Response'] = $this->createMock(\Response::class);
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error', 'f_1(a_1) -> f_2(b_2)');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', 'f_1(a_1) -> f_2(b_2)');
         self::assertFalse(
             $arm->validate(
                 1,

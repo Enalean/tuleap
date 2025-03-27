@@ -30,7 +30,7 @@ final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        $dao->expects(self::once())->method('createWebhook')->willReturn(true);
+        $dao->expects($this->once())->method('createWebhook')->willReturn(true);
         $updater->add('Webhook name', 'https://example.com');
     }
 
@@ -39,7 +39,7 @@ final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        $dao->expects(self::once())->method('editWebhook')->willReturn(true);
+        $dao->expects($this->once())->method('editWebhook')->willReturn(true);
         $updater->edit(1, 'Webhook name', 'https://example.com');
     }
 
@@ -48,7 +48,7 @@ final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        $dao->expects(self::once())->method('deleteWebhookById')->willReturn(true);
+        $dao->expects($this->once())->method('deleteWebhookById')->willReturn(true);
         $updater->delete(1);
     }
 

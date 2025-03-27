@@ -48,7 +48,7 @@ final class BotEditorTest extends TestCase
     public function testItEditsBot(): void
     {
         $this->bot_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('update');
 
         $this->bot_editor->editBotById(
@@ -110,7 +110,7 @@ final class BotEditorTest extends TestCase
     public function testItEditsBotIfOptionalAvatarURLIsMissing(): void
     {
         $this->bot_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('update');
 
         $this->bot_editor->editBotById(

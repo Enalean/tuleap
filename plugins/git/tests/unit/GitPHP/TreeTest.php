@@ -44,7 +44,7 @@ final class TreeTest extends TestCase
         $project->expects(self::exactly(2))->method('GetBlob')
             ->with(self::callback(static fn(string $hash) => $hash === '81f8847ccc5c49931663dedfed16c2c3dc9ea69d' || $hash === '59c50daea6b2c23544c77629a2af4d1134ee0bc3'))
             ->willReturn($blob);
-        $project->expects(self::once())->method('GetTree')->with('0543c7a05785554d8f80b7a4b40bc64add26b7d2')
+        $project->expects($this->once())->method('GetTree')->with('0543c7a05785554d8f80b7a4b40bc64add26b7d2')
             ->willReturn($sub_tree);
 
         $blob->method('SetMode');

@@ -28,7 +28,7 @@ final class TaskboardUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDefaultTemplateOrXMLTemplateShouldForceTaskboardUsage(): void
     {
         $dao = $this->createMock(TaskboardUsageDao::class);
-        $dao->expects(self::once())->method('create')->with(1002, 'taskboard');
+        $dao->expects($this->once())->method('create')->with(1002, 'taskboard');
 
         $duplicator = new TaskboardUsageDuplicator($dao);
         $duplicator->duplicateUsage(1002, 100);
@@ -37,7 +37,7 @@ final class TaskboardUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRegularTemplateShouldDuplicateItsTaskboardUsage(): void
     {
         $dao = $this->createMock(TaskboardUsageDao::class);
-        $dao->expects(self::once())->method('duplicate')->with(1002, 101);
+        $dao->expects($this->once())->method('duplicate')->with(1002, 101);
 
         $duplicator = new TaskboardUsageDuplicator($dao);
         $duplicator->duplicateUsage(1002, 101);

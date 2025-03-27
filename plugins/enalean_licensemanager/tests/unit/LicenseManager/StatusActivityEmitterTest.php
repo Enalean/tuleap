@@ -31,7 +31,7 @@ final class StatusActivityEmitterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testWebhookIsCalledWhenAvailable(): void
     {
         $emitter = $this->createMock(Emitter::class);
-        $emitter->expects(self::once())->method('emit');
+        $emitter->expects($this->once())->method('emit');
 
         $status_activity_emitter = new StatusActivityEmitter($emitter);
 

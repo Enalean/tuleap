@@ -100,9 +100,9 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesUserSSHKey(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->csrf_token->expects(self::once())->method('check')->with('/account/keys-tokens');
+        $this->csrf_token->expects($this->once())->method('check')->with('/account/keys-tokens');
 
-        $this->user_manager->expects(self::once())->method('addSSHKeys')->with($user, 'ssh-rsa blabla');
+        $this->user_manager->expects($this->once())->method('addSSHKeys')->with($user, 'ssh-rsa blabla');
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/account/keys-tokens'));
         $this->controller->process(

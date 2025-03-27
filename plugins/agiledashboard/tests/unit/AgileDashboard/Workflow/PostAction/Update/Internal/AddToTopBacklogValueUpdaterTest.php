@@ -52,14 +52,14 @@ final class AddToTopBacklogValueUpdaterTest extends TestCase
 
     public function testItAddsOnlyOneAddToTopBacklogPostAction(): void
     {
-        $this->collection->expects(self::once())->method('getExternalPostActionsValue')
+        $this->collection->expects($this->once())->method('getExternalPostActionsValue')
             ->willReturn([
                 new AddToTopBacklogValue(),
                 new AddToTopBacklogValue(),
             ]);
 
-        $this->value_repository->expects(self::once())->method('deleteAllByTransition');
-        $this->value_repository->expects(self::once())->method('create');
+        $this->value_repository->expects($this->once())->method('deleteAllByTransition');
+        $this->value_repository->expects($this->once())->method('create');
 
         $this->value_updater->updateByTransition(
             $this->collection,
@@ -69,9 +69,9 @@ final class AddToTopBacklogValueUpdaterTest extends TestCase
 
     public function testItOnlyDeletesAddToTopBacklogPostActionIfNoActionProvided(): void
     {
-        $this->collection->expects(self::once())->method('getExternalPostActionsValue')->willReturn([]);
+        $this->collection->expects($this->once())->method('getExternalPostActionsValue')->willReturn([]);
 
-        $this->value_repository->expects(self::once())->method('deleteAllByTransition');
+        $this->value_repository->expects($this->once())->method('deleteAllByTransition');
         $this->value_repository->expects(self::never())->method('create');
 
         $this->value_updater->updateByTransition(

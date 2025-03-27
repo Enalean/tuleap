@@ -151,8 +151,8 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = $this->createMock(\Project::class);
         $project->method('getTruncatedEmailsUsage')->willReturn(false);
         $codendi_mail_2 = $this->createMock(\Codendi_Mail::class);
-        $codendi_mail_2->expects(self::once())->method('send')->willReturn(true);
-        $this->codendi_mail->expects(self::once())->method('send')->willReturn(false);
+        $codendi_mail_2->expects($this->once())->method('send')->willReturn(true);
+        $this->codendi_mail->expects($this->once())->method('send')->willReturn(false);
         $this->codendi_mail->method('getTo')->willReturn('user1@example.com');
         $codendi_mail_2->method('getTo')->willReturn('user2@example.com');
         $codendi_mail_2->method('setFrom');

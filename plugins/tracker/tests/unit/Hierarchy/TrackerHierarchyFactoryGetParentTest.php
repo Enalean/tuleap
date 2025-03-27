@@ -56,7 +56,7 @@ final class TrackerHierarchyFactoryGetParentTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsTheParentTracker(): void
     {
-        $this->tracker_factory->expects(self::once())->method('getTrackerById')->with(111)->willReturn($this->epic_tracker);
+        $this->tracker_factory->expects($this->once())->method('getTrackerById')->with(111)->willReturn($this->epic_tracker);
         $this->dao->method('searchTrackerHierarchy')->willReturn(
             [
                 ['parent_id' => 111, 'child_id' => 112],
@@ -67,7 +67,7 @@ final class TrackerHierarchyFactoryGetParentTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsNullIfNoParentTracker(): void
     {
-        $this->dao->expects(self::once())->method('searchTrackerHierarchy')->willReturn([]);
+        $this->dao->expects($this->once())->method('searchTrackerHierarchy')->willReturn([]);
         $this->assertNull($this->hierarchy_factory->getParent($this->epic_tracker));
     }
 }

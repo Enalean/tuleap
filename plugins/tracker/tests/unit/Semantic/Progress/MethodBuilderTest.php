@@ -177,7 +177,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ])->build();
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
@@ -185,7 +185,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->natures_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTypeEnabledInProjectFromShortname')
             ->with($this->project, '_is_child')
             ->willReturn(
@@ -278,7 +278,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAMethodBasedOnChildCount(): void
     {
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
@@ -286,7 +286,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->natures_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTypeEnabledInProjectFromShortname')
             ->with($this->project, '_is_child')
             ->willReturn(
@@ -307,7 +307,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAnInvalidMethodWhenThereIsNoArtifactLinkFieldInTracker(): void
     {
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([]);
@@ -326,7 +326,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAnInvalidMethodWhenLinkNatureIsNotIsChild(): void
     {
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
@@ -347,7 +347,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAnInvalidMethodWhenLinkNatureIsChildIsNotEnabledInProject(): void
     {
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
@@ -355,7 +355,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->natures_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTypeEnabledInProjectFromShortname')
             ->with($this->project, '_is_child')
             ->willReturn(null);

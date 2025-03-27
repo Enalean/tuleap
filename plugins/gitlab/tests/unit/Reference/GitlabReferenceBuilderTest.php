@@ -95,7 +95,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullIfAProjectReferenceIsAlreadyExisting(): void
     {
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_commit', 101)
             ->willReturn(true);
@@ -112,7 +112,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullIfTheReferenceValueIsNotWellFormed(): void
     {
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_commit', 101)
             ->willReturn(false);
@@ -131,13 +131,13 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_commit', 101)
             ->willReturn(false);
 
         $this->repository_integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationByNameInProject')
             ->with(
                 $project,
@@ -159,13 +159,13 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_commit', 101)
             ->willReturn(false);
 
         $this->repository_integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationByNameInProject')
             ->with(
                 $project,
@@ -202,13 +202,13 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_mr', 101)
             ->willReturn(false);
 
         $this->repository_integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationByNameInProject')
             ->with(
                 $project,
@@ -245,7 +245,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_tag', 101)
             ->willReturn(false);
@@ -255,7 +255,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationByNameInProject')
             ->with(
                 $project,
@@ -292,7 +292,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_branch', 101)
             ->willReturn(false);
@@ -302,7 +302,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationByNameInProject')
             ->with(
                 $project,
@@ -339,13 +339,13 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectReferenceExisting')
             ->with('gitlab_commit', 101)
             ->willReturn(false);
 
         $this->repository_integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationByNameInProject')
             ->with(
                 $project,

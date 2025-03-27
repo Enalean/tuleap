@@ -83,7 +83,7 @@ final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPU
         $charts_in_order = func_get_args();
         $i               = 0;
         foreach ($charts_in_order as $chart) {
-            $this->$chart->expects(self::once())->method('setRank')->with($i);
+            $this->$chart->expects($this->once())->method('setRank')->with($i);
             $this->session->method('set');
             ++$i;
         }

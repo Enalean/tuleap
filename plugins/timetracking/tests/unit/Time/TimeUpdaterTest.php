@@ -99,7 +99,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
 
         $this->time_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addTime')
             ->with(102, 200, '2018-07-19', 671, 'oui');
 
@@ -149,7 +149,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
 
         $this->time_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateTime')
             ->with(1, '2018-07-19', 672, 'step');
 
@@ -187,7 +187,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
 
         $this->time_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteTime')
             ->with(1);
 

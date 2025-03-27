@@ -26,7 +26,7 @@ final class ParameterSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSavesParameters(): void
     {
         $dao = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->expects(self::once())->method('save')->willReturn(true);
+        $dao->expects($this->once())->method('save')->willReturn(true);
 
         $event_manager = $this->createMock(\EventManager::class);
         $event_manager->method('processEvent');

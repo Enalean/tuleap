@@ -75,7 +75,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
 
-        $this->reference_manager->expects(self::once())->method('createReference');
+        $this->reference_manager->expects($this->once())->method('createReference');
     }
 
     public function testItAddsReferences(): void
@@ -88,7 +88,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsTrackerInDropDownIfSettingsSaidSo(): void
     {
         $settings = new TrackerCreationSettings(true, true, true);
-        $this->in_new_dropdown_dao->expects(self::once())->method('insert')->with($this->tracker->getId());
+        $this->in_new_dropdown_dao->expects($this->once())->method('insert')->with($this->tracker->getId());
 
         $this->processor->postCreationProcess($this->tracker, $settings);
     }
@@ -104,7 +104,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDisablesPrivateCommentOnTracker(): void
     {
         $settings = new TrackerCreationSettings(false, false, true);
-        $this->private_comment_dao->expects(self::once())->method('disabledPrivateCommentOnTracker')->with($this->tracker->getId());
+        $this->private_comment_dao->expects($this->once())->method('disabledPrivateCommentOnTracker')->with($this->tracker->getId());
 
         $this->processor->postCreationProcess($this->tracker, $settings);
     }
@@ -112,7 +112,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItForbidsMoveOfArtifactsInTracker(): void
     {
         $settings = new TrackerCreationSettings(false, true, false);
-        $this->move_action_allowed_dao->expects(self::once())->method('forbidMoveArtifactInTracker')->with($this->tracker->getId());
+        $this->move_action_allowed_dao->expects($this->once())->method('forbidMoveArtifactInTracker')->with($this->tracker->getId());
 
         $this->processor->postCreationProcess($this->tracker, $settings);
     }

@@ -70,7 +70,7 @@ final class TokenTest extends TestCase
         $referer = 'https://example.com/?id=1&action=show';
 
         $dao = $this->createMock(Docman_TokenDao::class);
-        $dao->expects(self::once())->method('create')->with($user_id, self::anything(), $referer);
+        $dao->expects($this->once())->method('create')->with($user_id, self::anything(), $referer);
         $http = new Codendi_Request(['bc' => false]);
 
         $this->mockToken($dao, $referer, $user_id, $http);

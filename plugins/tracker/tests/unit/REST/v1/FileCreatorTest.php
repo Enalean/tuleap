@@ -111,7 +111,7 @@ final class FileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($this->post_payload->description);
 
         $this->mockNoConflict();
-        $this->ongoing_dao->expects(self::once())->method('saveFileOngoingUpload')->willReturnCallback(
+        $this->ongoing_dao->expects($this->once())->method('saveFileOngoingUpload')->willReturnCallback(
             function (NewFileUpload $new_upload) {
                 self::assertSame('', $new_upload->description);
                 return self::NEW_FILE_UPLOAD_ID;
@@ -128,7 +128,7 @@ final class FileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockNoConflict();
         $this->ongoing_dao->method('saveFileOngoingUpload')->willReturn(self::NEW_FILE_UPLOAD_ID);
 
-        $this->empty_file_finisher->expects(self::once())->method('createEmptyFile');
+        $this->empty_file_finisher->expects($this->once())->method('createEmptyFile');
 
         $created_file = $this->create();
         self::assertNull($created_file->upload_href);

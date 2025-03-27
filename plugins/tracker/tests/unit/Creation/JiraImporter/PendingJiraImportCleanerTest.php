@@ -60,7 +60,7 @@ final class PendingJiraImportCleanerTest extends TestCase
 
         $jira_import_row_1 = $this->anExpiredImportRow('jira 1');
         $jira_import_row_2 = $this->anExpiredImportRow('jira 2');
-        $this->dao->expects(self::once())->method('searchExpiredImports')
+        $this->dao->expects($this->once())->method('searchExpiredImports')
             ->with($expected_timestamp)
             ->willReturn([$jira_import_row_1, $jira_import_row_2]);
 
@@ -71,7 +71,7 @@ final class PendingJiraImportCleanerTest extends TestCase
             $jira_import_row_2 => $jira_import_2,
         });
 
-        $this->dao->expects(self::once())->method('deleteExpiredImports')->with($expected_timestamp);
+        $this->dao->expects($this->once())->method('deleteExpiredImports')->with($expected_timestamp);
 
         $this->notifier->expects(self::exactly(2))->method('warnUserAboutDeletion')
             ->with(self::callback(static fn(PendingJiraImport $import) => in_array($import, [$jira_import_1, $jira_import_2])));
@@ -85,13 +85,13 @@ final class PendingJiraImportCleanerTest extends TestCase
         $expected_timestamp = (new DateTimeImmutable('2020-05-12'))->getTimestamp();
 
         $jira_import_row = $this->anExpiredImportRow();
-        $this->dao->expects(self::once())->method('searchExpiredImports')
+        $this->dao->expects($this->once())->method('searchExpiredImports')
             ->with($expected_timestamp)->willReturn([$jira_import_row]);
 
         $this->builder->method('buildFromRow')->with($jira_import_row)
             ->willThrowException(new UnableToBuildPendingJiraImportException());
 
-        $this->dao->expects(self::once())->method('deleteExpiredImports')->with($expected_timestamp);
+        $this->dao->expects($this->once())->method('deleteExpiredImports')->with($expected_timestamp);
 
         $this->notifier->expects(self::never())->method('warnUserAboutDeletion');
 

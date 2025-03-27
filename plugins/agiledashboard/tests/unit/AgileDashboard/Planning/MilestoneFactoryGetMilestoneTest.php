@@ -225,7 +225,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
             ->withAncestors([])
             ->build();
 
-        $this->artifact_factory->expects(self::once())->method('getArtifactById')
+        $this->artifact_factory->expects($this->once())->method('getArtifactById')
             ->with($artifact->getId())
             ->willReturn($artifact);
 
@@ -245,7 +245,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
     {
         $project     = ProjectTestBuilder::aProject()->build();
         $artifact_id = 101;
-        $this->artifact_factory->expects(self::once())->method('getArtifactById')
+        $this->artifact_factory->expects($this->once())->method('getArtifactById')
             ->with($artifact_id)
             ->willReturn(null);
 

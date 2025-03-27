@@ -144,8 +144,8 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset(): void
     {
-        $this->workflow->expects(self::once())->method('after');
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(self::NEW_CHANGESET_ID);
+        $this->workflow->expects($this->once())->method('after');
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(self::NEW_CHANGESET_ID);
         $this->comment_dao->method('createNewVersion')->willReturn(true);
 
         $this->create();
@@ -156,7 +156,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails(): void
     {
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(self::NEW_CHANGESET_ID);
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(self::NEW_CHANGESET_ID);
         $this->artifact_saver = SaveArtifactStub::withFailure();
         $this->workflow->expects(self::never())->method('after');
         $this->comment_dao->method('createNewVersion')->willReturn(true);
@@ -168,7 +168,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset(): void
     {
         $this->workflow->expects(self::never())->method('after');
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')
             ->willThrowException(new \Tracker_Artifact_Exception_CannotCreateNewChangeset());
 
         self::expectException(\Tracker_ChangesetNotCreatedException::class);
@@ -178,15 +178,15 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSavesUgroupPrivateComment(): void
     {
         $ugroup = $this->createMock(\ProjectUGroup::class);
-        $this->comment_dao->expects(self::once())->method('createNewVersion')->willReturn(15);
+        $this->comment_dao->expects($this->once())->method('createNewVersion')->willReturn(15);
 
         $this->ugroup_private_comment_inserter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertUGroupsOnPrivateComment')
             ->with(15, [$ugroup]);
 
-        $this->workflow->expects(self::once())->method('after');
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(self::NEW_CHANGESET_ID);
+        $this->workflow->expects($this->once())->method('after');
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(self::NEW_CHANGESET_ID);
         $this->ugroups_array = [$ugroup];
 
         $this->create();

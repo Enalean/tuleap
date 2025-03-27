@@ -65,13 +65,13 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItLoadsTheRepositoryWhenRootRepo(): void
     {
-        $this->repository_factory->expects(self::once())->method('getRepositoryByPath')->with(101, 'gpig/rantanplan.git');
+        $this->repository_factory->expects($this->once())->method('getRepositoryByPath')->with(101, 'gpig/rantanplan.git');
         $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
     }
 
     public function testItLoadsTheRepositoryWhenRepoInHierarchy(): void
     {
-        $this->repository_factory->expects(self::once())->method('getRepositoryByPath')->with(101, 'gpig/dev/x86_64/rantanplan.git');
+        $this->repository_factory->expects($this->once())->method('getRepositoryByPath')->with(101, 'gpig/dev/x86_64/rantanplan.git');
         $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'dev/x86_64/rantanplan/469eaa9');
     }
 
@@ -79,7 +79,7 @@ final class ReferenceManagerTest extends TestCase
     {
         $this->repository_factory->method('getRepositoryByPath')->willReturn($this->repository);
 
-        $this->reference_manager->expects(self::once())->method('loadReferenceFromKeywordAndNumArgs')->with(Git::REFERENCE_KEYWORD, 101, 2, 'rantanplan/469eaa9');
+        $this->reference_manager->expects($this->once())->method('loadReferenceFromKeywordAndNumArgs')->with(Git::REFERENCE_KEYWORD, 101, 2, 'rantanplan/469eaa9');
 
         $this->git_reference_manager->getCommitReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
     }
@@ -106,7 +106,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testItReturnsTheRepositoryFromCrossReferenceValue(): void
     {
-        $this->repository_factory->expects(self::once())
+        $this->repository_factory->expects($this->once())
             ->method('getRepositoryByPath')
             ->with(101, 'gpig/rantanplan.git')
             ->willReturn($this->repository);
@@ -124,7 +124,7 @@ final class ReferenceManagerTest extends TestCase
         $reference = $this->createMock(Reference::class);
         $reference->method('replaceLink');
 
-        $this->reference_dao->expects(self::once())->method('searchExistingProjectReference')
+        $this->reference_dao->expects($this->once())->method('searchExistingProjectReference')
             ->with('git_tag', 101)
             ->willReturn(null);
 
@@ -143,12 +143,12 @@ final class ReferenceManagerTest extends TestCase
             'keyword' => 'git_tag',
         ];
 
-        $this->reference_dao->expects(self::once())->method('searchExistingProjectReference')
+        $this->reference_dao->expects($this->once())->method('searchExistingProjectReference')
             ->with('git_tag', 101)
             ->willReturn($reference_row);
 
         $this->repository_factory->method('getRepositoryByPath')->willReturn($this->repository);
-        $this->reference_manager->expects(self::once())->method('buildReference')
+        $this->reference_manager->expects($this->once())->method('buildReference')
             ->with($reference_row)
             ->willReturn($reference);
 

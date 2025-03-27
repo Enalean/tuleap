@@ -77,7 +77,7 @@ final class ListLicenseAgreementsControllerTest extends TestCase
 
         $this->project           = $this->createConfiguredMock(Project::class, ['getID' => '101']);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
-        $this->project_retriever->expects(self::once())->method('getProjectFromId')
+        $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
@@ -102,7 +102,7 @@ final class ListLicenseAgreementsControllerTest extends TestCase
         $this->helper->method('renderHeader')->with($this->project);
 
         $content_renderer = $this->createMock(TemplateRenderer::class);
-        $content_renderer->expects(self::once())->method('renderToPage')->with('list-license-agreements', self::anything());
+        $content_renderer->expects($this->once())->method('renderToPage')->with('list-license-agreements', self::anything());
         $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
         }))->willReturn($content_renderer);

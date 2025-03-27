@@ -77,7 +77,7 @@ final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $base_language_factory = $this->createMock(BaseLanguageFactory::class);
         $base_language_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBaseLanguage')
             ->with('fr_FR')
             ->willReturn($this->language);
@@ -99,7 +99,7 @@ final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->evt->method('compareMd5Checksums')->willReturn(true);
         // Expect everything went OK
         $this->evt->method('sendNotificationMail')->willReturn(false);
-        $this->evt->expects(self::once())->method('done');
+        $this->evt->expects($this->once())->method('done');
 
         // Launch the event
         self::assertTrue($this->evt->process());
@@ -143,7 +143,7 @@ final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->evt->method('sendNotificationMail')->willReturn(true);
 
-        $this->evt->expects(self::once())->method('done');
+        $this->evt->expects($this->once())->method('done');
 
         self::assertTrue($this->evt->process());
     }

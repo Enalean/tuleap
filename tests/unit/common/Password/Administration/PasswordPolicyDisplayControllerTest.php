@@ -62,10 +62,10 @@ final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testProcessRendersThePage(): void
     {
         $site_admin = UserTestBuilder::aUser()->withSiteAdministrator()->build();
-        $this->admin_renderer->expects(self::once())->method('header');
-        $this->admin_renderer->expects(self::once())->method('footer');
+        $this->admin_renderer->expects($this->once())->method('header');
+        $this->admin_renderer->expects($this->once())->method('footer');
         $this->configuration_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPasswordConfiguration')
             ->willReturn(new PasswordConfiguration(true));
         ob_start();

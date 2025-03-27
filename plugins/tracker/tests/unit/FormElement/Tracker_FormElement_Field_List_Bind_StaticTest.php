@@ -145,7 +145,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
 
         $bind_static->shouldReceive('getValueDao')->andReturn($value_dao);
 
-        $value_dao->expects(self::once())->method(
+        $value_dao->expects($this->once())->method(
             'create'
         )->with(
             101,
@@ -168,7 +168,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
 
         $bind_static->shouldReceive('getValueDao')->andReturn($value_dao);
 
-        $value_dao->expects(self::once())->method(
+        $value_dao->expects($this->once())->method(
             'create'
         )->with(
             101,

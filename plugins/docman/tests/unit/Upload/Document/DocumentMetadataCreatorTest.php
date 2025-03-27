@@ -70,7 +70,7 @@ final class DocumentMetadataCreatorTest extends TestCase
         $this->metadata_dao->method('searchById')
             ->willReturn(TestHelper::arrayToDar(['data_type' => PLUGIN_DOCMAN_METADATA_TYPE_TEXT]));
 
-        $this->value_creator->expects(self::once())->method('createMetadataObject');
+        $this->value_creator->expects($this->once())->method('createMetadataObject');
 
         $this->creator->storeItemCustomMetadata(1, $metadata_list);
     }

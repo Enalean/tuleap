@@ -57,7 +57,7 @@ final class ParseLogTest extends TestCase
         $push_details->method('getRefnameType');
         $this->extract_cross_ref->method('extractCommitReference');
 
-        $this->log_pushes->expects(self::once())->method('executeForRepository')->with($push_details);
+        $this->log_pushes->expects($this->once())->method('executeForRepository')->with($push_details);
 
         $this->executeParseLog($push_details);
     }
@@ -80,7 +80,7 @@ final class ParseLogTest extends TestCase
         $push_details->method('getRevisionList')->willReturn(['469eaa9']);
         $push_details->method('getRefnameType');
 
-        $this->extract_cross_ref->expects(self::once())->method('extractCommitReference')->with($push_details, '469eaa9');
+        $this->extract_cross_ref->expects($this->once())->method('extractCommitReference')->with($push_details, '469eaa9');
         $this->log_pushes->method('executeForRepository');
 
         $this->executeParseLog($push_details);
@@ -97,9 +97,9 @@ final class ParseLogTest extends TestCase
             []
         );
 
-        $this->log_pushes->expects(self::once())->method('executeForRepository')->with($push_details);
+        $this->log_pushes->expects($this->once())->method('executeForRepository')->with($push_details);
 
-        $this->extract_cross_ref->expects(self::once())->method('extractTagReference');
+        $this->extract_cross_ref->expects($this->once())->method('extractTagReference');
 
         $this->executeParseLog($push_details);
     }

@@ -33,7 +33,7 @@ final class AzureADUserLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->method('getTime')->willReturn(false);
         $request->method('get')->with('return_to');
 
-        $login_controller->expects(self::once())->method('login');
+        $login_controller->expects($this->once())->method('login');
 
         $router = new AzureADUserLinkController($login_controller);
 

@@ -63,7 +63,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         // System
         $backendSystem = $this->createMock(\BackendSystem::class);
-        $backendSystem->expects(self::once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(true);
+        $backendSystem->expects($this->once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(true);
 
         $evt->method('getBackend')->willReturnMap([
             ['System', $backendSystem],
@@ -76,9 +76,9 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $em = $this->createMock(EventManager::class);
         $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->method('getEventManager')->willReturn($em);
-        $evt->expects(self::once())->method('addProjectHistory')->with('rename_done', 'TestProj :: FooBar', $project->getId());
+        $evt->expects($this->once())->method('addProjectHistory')->with('rename_done', 'TestProj :: FooBar', $project->getId());
         // Expect everything went OK
-        $evt->expects(self::once())->method('done');
+        $evt->expects($this->once())->method('done');
 
         // Launch the event
         self::assertTrue($evt->process());
@@ -119,7 +119,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         // System
         $backendSystem = $this->createMock(\BackendSystem::class);
-        $backendSystem->expects(self::once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(false);
+        $backendSystem->expects($this->once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(false);
 
         $evt->method('getBackend')->willReturnMap([
             ['System', $backendSystem],
@@ -133,7 +133,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->method('getEventManager')->willReturn($em);
 
-        $evt->expects(self::once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
+        $evt->expects($this->once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
         $evt->expects(self::never())->method('done');
@@ -196,7 +196,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->method('getEventManager')->willReturn($em);
 
-        $evt->expects(self::once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
+        $evt->expects($this->once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
         $evt->expects(self::never())->method('done');

@@ -80,7 +80,7 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
         $this->push_webhook_create_action->expects(self::never())->method('createTagReferences');
 
         $this->push_webhook_delete_action
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteTagReferences')
             ->with(
                 $integration,
@@ -116,7 +116,7 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->push_webhook_create_action
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createTagReferences')
             ->with(
                 $integration,
@@ -154,7 +154,7 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->push_webhook_delete_action
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteTagReferences')
             ->with(
                 $integration,
@@ -162,7 +162,7 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
             );
 
         $this->push_webhook_create_action
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createTagReferences')
             ->with(
                 $integration,

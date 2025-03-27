@@ -65,7 +65,7 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetColumnsThrowsWhenMilestoneCantBeFound(): void
     {
         $current_user = $this->buildCurrentUser();
-        $this->milestone_factory->expects(self::once())
+        $this->milestone_factory->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($current_user, 18)
             ->willReturn(null);
@@ -79,11 +79,11 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $current_user = $this->buildCurrentUser();
         $milestone    = $this->createMock(\Planning_ArtifactMilestone::class);
-        $this->milestone_factory->expects(self::once())
+        $this->milestone_factory->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($current_user, 18)
             ->willReturn($milestone);
-        $this->milestone_checker->expects(self::once())
+        $this->milestone_checker->expects($this->once())
             ->method('checkMilestoneIsAllowed')
             ->with($milestone)
             ->willThrowException(new MilestoneIsNotAllowedException());
@@ -98,13 +98,13 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = $this->buildCurrentUser();
         $milestone    = $this->mockMilestone($current_user);
         $planning     = $this->createMock(\Planning::class);
-        $planning->expects(self::once())
+        $planning->expects($this->once())
             ->method('getPlanningTrackerId')
             ->willReturn(98);
-        $milestone->expects(self::once())
+        $milestone->expects($this->once())
             ->method('getPlanning')
             ->willReturn($planning);
-        $this->column_dao->expects(self::once())
+        $this->column_dao->expects($this->once())
             ->method('searchColumnsByTrackerId')
             ->willReturn([]);
 
@@ -117,13 +117,13 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = $this->buildCurrentUser();
         $milestone    = $this->mockMilestone($current_user);
         $planning     = $this->createMock(\Planning::class);
-        $planning->expects(self::once())
+        $planning->expects($this->once())
             ->method('getPlanningTrackerId')
             ->willReturn(98);
-        $milestone->expects(self::once())
+        $milestone->expects($this->once())
             ->method('getPlanning')
             ->willReturn($planning);
-        $this->column_dao->expects(self::once())
+        $this->column_dao->expects($this->once())
             ->method('searchColumnsByTrackerId')
             ->willReturn(
                 [
@@ -148,7 +148,7 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $current_user = UserTestBuilder::aUser()->build();
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($current_user);
 
@@ -159,12 +159,12 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $milestone = $this->createMock(\Planning_ArtifactMilestone::class);
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($current_user, 18)
             ->willReturn($milestone);
         $this->milestone_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkMilestoneIsAllowed')
             ->with($milestone);
 

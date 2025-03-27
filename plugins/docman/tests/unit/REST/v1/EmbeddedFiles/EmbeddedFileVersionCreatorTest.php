@@ -81,7 +81,7 @@ final class EmbeddedFileVersionCreatorTest extends TestCase
         $representation->status                = 'rejected';
         $representation->obsolescence_date     = $obsolescence_date_formatted;
 
-        $this->transaction_executor->expects(self::once())->method('execute');
+        $this->transaction_executor->expects($this->once())->method('execute');
 
         $this->embedded_updator->createEmbeddedFileVersion(
             $item,
@@ -104,7 +104,7 @@ final class EmbeddedFileVersionCreatorTest extends TestCase
         $representation->content = 'We will send Mowgli takes the medal';
 
         $current_time = new DateTimeImmutable();
-        $this->transaction_executor->expects(self::once())->method('execute');
+        $this->transaction_executor->expects($this->once())->method('execute');
 
         $this->embedded_updator->createEmbeddedFileVersionFromEmpty(
             $item,

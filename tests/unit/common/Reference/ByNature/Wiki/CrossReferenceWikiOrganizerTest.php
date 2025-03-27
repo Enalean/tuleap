@@ -69,13 +69,13 @@ final class CrossReferenceWikiOrganizerTest extends TestCase
             ->build();
 
         $this->wiki_page_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getWikiPageUserCanView')
             ->with($this->project, $this->user, 'MyWikiPage')
             ->willReturn(null);
 
         $this->by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($wiki_ref);
 
@@ -90,13 +90,13 @@ final class CrossReferenceWikiOrganizerTest extends TestCase
             ->build();
 
         $this->wiki_page_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getWikiPageUserCanView')
             ->with($this->project, $this->user, 'MyWikiPage')
             ->willReturn($this->createMock(WikiPage::class));
 
         $this->by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with($wiki_ref, '');
 

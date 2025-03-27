@@ -40,7 +40,7 @@ final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\
         $project = ProjectTestBuilder::aProject()->build();
 
         $dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchAllIntegrationsInProject')
             ->with(101)
             ->willReturn(

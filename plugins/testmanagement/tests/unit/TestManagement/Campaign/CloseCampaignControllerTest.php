@@ -81,17 +81,17 @@ final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
         $this->campaign_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getById')
             ->with(3)
             ->willReturn($campaign);
 
         $this->status_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('closeCampaign');
 
-        $layout->expects(self::once())->method('addFeedback');
-        $layout->expects(self::once())->method('redirect');
+        $layout->expects($this->once())->method('addFeedback');
+        $layout->expects($this->once())->method('redirect');
 
         $this->controller->process(
             $request,
@@ -111,7 +111,7 @@ final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->campaign_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getById')
             ->with(3)
             ->willThrowException(
@@ -152,7 +152,7 @@ final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
         $this->campaign_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getById')
             ->with(3)
             ->willReturn($campaign);

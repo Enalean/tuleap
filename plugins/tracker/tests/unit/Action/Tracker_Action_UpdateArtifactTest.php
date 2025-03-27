@@ -142,7 +142,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $this->formelement_factory->method('getComputableFieldByNameForUser')->with(self::TRACKER_ID, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->willReturn(null);
 
         $expected = [];
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
+        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -160,7 +160,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
 
         $user_story_id = $this->user_story->getId();
         $expected      = [$user_story_id => ['remaining_effort' => 23]];
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
+        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -174,7 +174,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($user_story);
         $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturn(null);
 
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with([]);
+        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with([]);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -214,7 +214,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $expected = [
             self::ARTIFACT_ID => ['remaining_effort' => '42 (autocomputed)'],
         ];
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
+        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $action->process($this->layout, $this->request, $this->user);
     }
@@ -237,7 +237,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
             self::ARTIFACT_ID => ['remaining_effort' => 42],
             $user_story_id    => ['remaining_effort' => 23],
         ];
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
+        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -253,7 +253,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $expected = [
             self::ARTIFACT_ID => ['remaining_effort' => 42],
         ];
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
+        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -277,7 +277,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $expected = [
             self::ARTIFACT_ID => ['remaining_effort' => 42],
         ];
-        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
+        $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -294,7 +294,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
         $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
 
-        $this->task->expects(self::once())->method('createNewChangeset')->willReturn(true);
+        $this->task->expects($this->once())->method('createNewChangeset')->willReturn(true);
 
         $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
     }

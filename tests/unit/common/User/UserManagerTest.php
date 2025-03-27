@@ -27,7 +27,7 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
     {
         $cookie_manager = $this->createMock(CookieManager::class);
         $cookie_manager->method('getCookie')->willReturn('valid_hash');
-        $cookie_manager->expects(self::once())->method('removeCookie')->with('session_hash');
+        $cookie_manager->expects($this->once())->method('removeCookie')->with('session_hash');
 
         $user123 = $this->createMock(PFUser::class);
         $user123->method('getId')->willReturn(123);
@@ -40,7 +40,7 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 
         $session_manager = $this->createMock(\Tuleap\User\SessionManager::class);
         $session_manager->method('getUser')->willReturn($user123);
-        $session_manager->expects(self::once())->method('destroyCurrentSession')->with($user123);
+        $session_manager->expects($this->once())->method('destroyCurrentSession')->with($user123);
 
         $user_manager = $this->getMockBuilder(UserManager::class)
             ->disableOriginalConstructor()
@@ -66,7 +66,7 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $user_manager->method('getSessionManager')->willReturn($session_manager);
         $user_manager->method('_getEventManager')->willReturn($event_manager);
         $user_manager->method('getUserInstanceFromRow')->with(['user_name' => 'user_123', 'user_id' => 123])->willReturn($user123);
-        $user_manager->expects(self::once())->method('destroySession');
+        $user_manager->expects($this->once())->method('destroySession');
 
         $user_manager->logout();
     }

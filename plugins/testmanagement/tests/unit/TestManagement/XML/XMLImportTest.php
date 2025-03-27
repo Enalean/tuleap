@@ -73,11 +73,11 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
-        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
-        $tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $config
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setProjectConfiguration')
             ->with($project, 102, 103, 104, 101);
 
@@ -208,7 +208,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
-        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
@@ -242,7 +242,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $tracker_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkSubmittedTrackerCanBeUsed')
             ->willThrowException(new MissingArtifactLinkException());
         $tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
@@ -278,7 +278,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
-        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
@@ -312,7 +312,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
-        $tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 

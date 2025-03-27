@@ -31,7 +31,7 @@ final class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\Test
         $reference_02 = GitPullRequestReference::PR_NAMESPACE . '2/head';
 
         $executor = $this->createMock(GitExec::class);
-        $executor->expects(self::once())->method('getReferencesFromPattern')->willReturn([
+        $executor->expects($this->once())->method('getReferencesFromPattern')->willReturn([
             $reference_01,
             $reference_02,
         ]);
@@ -53,7 +53,7 @@ final class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\Test
     public function testEmptyReferencesInPullRequestNamespaceAreNotRemoved(): void
     {
         $executor = $this->createMock(GitExec::class);
-        $executor->expects(self::once())->method('getReferencesFromPattern')->willReturn([]);
+        $executor->expects($this->once())->method('getReferencesFromPattern')->willReturn([]);
 
         $executor->expects(self::never())->method('removeReference');
 

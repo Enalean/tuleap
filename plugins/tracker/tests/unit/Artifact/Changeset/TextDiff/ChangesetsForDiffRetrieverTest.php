@@ -54,7 +54,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
     public function testItThrowsAnErrorWhenChangesetIsNotFound(): void
     {
         $artifact = ArtifactTestBuilder::anArtifact(1)->build();
-        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn(null);
+        $this->changeset_factory->expects($this->once())->method('getChangeset')->willReturn(null);
 
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('Changeset is not found.');
@@ -66,7 +66,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
     {
         $artifact      = ArtifactTestBuilder::anArtifact(1)->build();
         $next_changset = ChangesetTestBuilder::aChangeset(789)->build();
-        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn($next_changset);
+        $this->changeset_factory->expects($this->once())->method('getChangeset')->willReturn($next_changset);
 
         $this->field_factory->method('getFieldById')->with(123)->willReturn(null);
 
@@ -80,7 +80,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
     {
         $artifact      = ArtifactTestBuilder::anArtifact(1)->build();
         $next_changset = ChangesetTestBuilder::aChangeset(789)->build();
-        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn($next_changset);
+        $this->changeset_factory->expects($this->once())->method('getChangeset')->willReturn($next_changset);
 
         $field = IntFieldBuilder::anIntField(123)->build();
 
@@ -96,7 +96,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
     {
         $next_changset = ChangesetTestBuilder::aChangeset(12)->build();
         $artifact      = ArtifactTestBuilder::anArtifact(1)->withChangesets($next_changset)->build();
-        $this->changeset_factory->expects(self::once())->method('getChangeset')->willReturn($next_changset);
+        $this->changeset_factory->expects($this->once())->method('getChangeset')->willReturn($next_changset);
 
         $field = TextFieldBuilder::aTextField(123)->build();
 

@@ -52,7 +52,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project           = ProjectTestBuilder::aProject()->withId(102)->build();
         $project_retriever = $this->createMock(ProjectRetriever::class);
         $project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('102')
             ->willReturn($project);
@@ -62,7 +62,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         $request      = $this->createMock(HTTPRequest::class);
         $request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($current_user);
 
@@ -83,7 +83,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         $project_retriever = $this->createMock(ProjectRetriever::class);
         $project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('102')
             ->willReturn($project);
@@ -93,7 +93,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         $request      = $this->createMock(HTTPRequest::class);
         $request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($current_user);
 

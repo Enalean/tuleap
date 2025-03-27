@@ -135,10 +135,10 @@ final class GitActionsDeleteTest extends TestCase
     public function testItMarksRepositoryAsDeleted(): void
     {
         $this->controller->method('addInfo');
-        $this->controller->expects(self::once())->method('redirect');
+        $this->controller->expects($this->once())->method('redirect');
 
         $this->repository->method('canBeDeleted')->willReturn(true);
-        $this->repository->expects(self::once())->method('markAsDeleted');
+        $this->repository->expects($this->once())->method('markAsDeleted');
         $this->git_system_event_manager->method('queueRepositoryDeletion');
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
@@ -147,13 +147,13 @@ final class GitActionsDeleteTest extends TestCase
     public function testItTriggersASystemEventForPhysicalRemove(): void
     {
         $this->controller->method('addInfo');
-        $this->controller->expects(self::once())->method('redirect');
+        $this->controller->expects($this->once())->method('redirect');
 
         $this->repository->method('canBeDeleted')->willReturn(true);
         $this->repository->method('markAsDeleted');
         $this->repository->method('getBackend')->willReturn($this->createMock(Git_Backend_Gitolite::class));
 
-        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryDeletion')->with($this->repository);
+        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryDeletion')->with($this->repository);
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
@@ -161,7 +161,7 @@ final class GitActionsDeleteTest extends TestCase
     public function testItDoesntDeleteWhenRepositoryCannotBeDeleted(): void
     {
         $this->controller->method('addError');
-        $this->controller->expects(self::once())->method('redirect');
+        $this->controller->expects($this->once())->method('redirect');
 
         $this->repository->method('canBeDeleted')->willReturn(false);
         $this->repository->expects(self::never())->method('markAsDeleted');

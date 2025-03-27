@@ -44,7 +44,7 @@ class BotFactoryTest extends TestCase
     public function testItThrowsAnExceptionIfSystemBotAlreadyExists(): void
     {
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isASystemBotWithNameAndWebhookUrlAlreadyExisting')
             ->willReturn(true);
 
@@ -55,7 +55,7 @@ class BotFactoryTest extends TestCase
     public function testItThrowsAnExceptionIfAProjectBotAlreadyExists(): void
     {
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAProjectBotWithNameWebhookUrlAndProjectIdAlreadyExisting')
             ->willReturn(true);
 
@@ -74,12 +74,12 @@ class BotFactoryTest extends TestCase
         ];
 
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isThereAnotherProjectBotWithNameWebhookUrlAndProjectId')
             ->willReturn(true);
 
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchBotById')
             ->with(10)
             ->willReturn($bot_to_be_updated);
@@ -99,18 +99,18 @@ class BotFactoryTest extends TestCase
         ];
 
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isThereAnotherProjectBotWithNameWebhookUrlAndProjectId')
             ->willReturn(false);
 
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchBotById')
             ->with(10)
             ->willReturn($bot_to_be_updated);
 
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateBot')
             ->willReturn(true);
 
@@ -128,7 +128,7 @@ class BotFactoryTest extends TestCase
         ];
 
         $this->bot_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchBotById')
             ->with(10)
             ->willReturn($bot_to_be_updated);

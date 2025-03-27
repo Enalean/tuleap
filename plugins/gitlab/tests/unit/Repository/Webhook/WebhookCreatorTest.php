@@ -99,19 +99,19 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn([]);
 
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getEncryptionKey')
             ->willReturn($encryption_key);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with(
                 $credentials,
@@ -135,7 +135,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('storeWebhook')
             ->with(1, 7, self::anything());
 
@@ -160,7 +160,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn(['gitlab_webhook_id' => 6]);
@@ -172,18 +172,18 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '/projects/2/hooks/6'
             );
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteGitlabRepositoryWebhook')
             ->with(1);
 
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getEncryptionKey')
             ->willReturn($encryption_key);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with(
                 $credentials,
@@ -207,7 +207,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('storeWebhook')
             ->with(1, 7, self::anything());
 
@@ -238,7 +238,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn(['gitlab_webhook_id' => 6]);
@@ -250,18 +250,18 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '/projects/2/hooks/6'
             );
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteGitlabRepositoryWebhook')
             ->with(1);
 
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getEncryptionKey')
             ->willReturn($encryption_key);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with(
                 $credentials,
@@ -285,7 +285,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('storeWebhook')
             ->with(1, 7, self::anything());
 
@@ -321,13 +321,13 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn([]);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with(
                 $credentials,
@@ -375,13 +375,13 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn([]);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with(
                 $credentials,

@@ -69,7 +69,7 @@ final class ArtifactDeletorTest extends TestCase
 
         $project_history_dao->method('groupAddHistory');
 
-        $event_dispatcher->expects(self::once())->method('dispatch')->with(self::isInstanceOf(ArtifactDeleted::class));
+        $event_dispatcher->expects($this->once())->method('dispatch')->with(self::isInstanceOf(ArtifactDeleted::class));
 
         $artifact_deletor->delete($artifact, $user, $context);
     }

@@ -58,12 +58,12 @@ final class BotDeletorTest extends TestCase
         $bot = new Bot(1, 'bot', '', '', 101);
 
         $this->bot_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteBotById')
             ->with(1);
 
         $this->event_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(self::isInstanceOf(BotMattermostDeleted::class));
 
@@ -75,7 +75,7 @@ final class BotDeletorTest extends TestCase
         $bot = new Bot(1, 'bot', '', '', 101);
 
         $this->bot_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteBotById')
             ->with(1)
             ->willThrowException(

@@ -116,8 +116,8 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
-        $this->tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
-        $this->tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $this->getAdminController($request)->update();
     }
@@ -152,7 +152,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
         $this->tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
-        $this->tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $this->getAdminController($request)->update();
     }
@@ -186,7 +186,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new TrackerHasAtLeastOneFrozenFieldsPostActionException());
 
         $this->tracker_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
@@ -222,7 +222,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new TrackerDefinitionNotValidException());
 
         $this->tracker_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
@@ -263,7 +263,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
         $this->tracker_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($this->project, self::NEW_DEFINITION_TRACKER_ID);
 
@@ -315,12 +315,12 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         $this->tracker_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($this->project, self::NEW_DEFINITION_TRACKER_ID);
 
         $this->tracker_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID);
 
@@ -364,9 +364,9 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             self::NEW_ISSUE_TRACKER_ID,
         );
 
-        $this->tracker_checker->expects(self::once())->method('checkSubmittedTrackerCanBeUsed');
-        $this->tracker_checker->expects(self::once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
-        $this->tracker_checker->expects(self::once())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->once())->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $this->getAdminController($request)->update();
         $GLOBALS['Response']->method('addFeedback')->with(

@@ -153,10 +153,10 @@ final class FRSPackageFactoryTest extends TestCase
     {
         $this->frs_permission_manager->method('userCanRead')->willReturn(true);
         $this->frs_permission_manager->method('isAdmin')->willReturn(false);
-        $this->user->expects(self::once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
+        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
 
         $this->permission_manager->method('isPermissionExist')->willReturn(true);
-        $this->permission_manager->expects(self::once())->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn($can_read_package);
+        $this->permission_manager->expects($this->once())->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn($can_read_package);
         $this->frs_package_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
 
         return $this->frs_package_factory;
@@ -181,11 +181,11 @@ final class FRSPackageFactoryTest extends TestCase
     {
         $this->frs_permission_manager->method('userCanRead')->willReturn(true);
         $this->frs_permission_manager->method('isAdmin');
-        $this->user->expects(self::once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
+        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
 
         $this->permission_manager = $this->createMock(PermissionsManager::class);
-        $this->permission_manager->expects(self::once())->method('isPermissionExist')->with($this->package_id, 'PACKAGE_READ')->willReturn(false);
-        $this->permission_manager->expects(self::once())->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn(false);
+        $this->permission_manager->expects($this->once())->method('isPermissionExist')->with($this->package_id, 'PACKAGE_READ')->willReturn(false);
+        $this->permission_manager->expects($this->once())->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn(false);
         $this->frs_package_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
 
         self::assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));

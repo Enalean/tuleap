@@ -54,7 +54,7 @@ final class CheckRunningEventsTest extends TestCase
     {
         $this->process_manager->method('isAlreadyRunning')->with($this->process)->willReturn(false);
 
-        $this->next->expects(self::once())->method('execute');
+        $this->next->expects($this->once())->method('execute');
 
         $this->command->execute();
     }
@@ -74,8 +74,8 @@ final class CheckRunningEventsTest extends TestCase
     {
         $this->process_manager->method('isAlreadyRunning')->with($this->process)->willReturn(true);
 
-        $this->response->expects(self::once())->method('error')->with('There is still an event marked as running. Start again when all events marked as running are done.');
-        $this->response->expects(self::once())->method('abort');
+        $this->response->expects($this->once())->method('error')->with('There is still an event marked as running. Start again when all events marked as running are done.');
+        $this->response->expects($this->once())->method('abort');
 
         $this->command->execute();
     }

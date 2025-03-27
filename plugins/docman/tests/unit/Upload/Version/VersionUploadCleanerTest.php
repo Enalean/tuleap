@@ -48,7 +48,7 @@ final class VersionUploadCleanerTest extends TestCase
         $non_existing_item_path        = $path_allocator->getPathForItemBeingUploaded($non_existing_file_information);
         touch($non_existing_item_path);
 
-        $dao->expects(self::once())->method('deleteUnusableVersions');
+        $dao->expects($this->once())->method('deleteUnusableVersions');
 
         $cleaner = new VersionUploadCleaner($path_allocator, $dao);
 

@@ -80,7 +80,7 @@ final class BuildStatusChangePermissionManagerTest extends TestCase
 
     public function testItUpdatesThePermissions(): void
     {
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('updateBuildStatusChangePermissionsForRepository')
             ->with(5, '101,18,25');
 

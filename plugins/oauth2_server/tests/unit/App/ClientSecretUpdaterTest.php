@@ -57,9 +57,9 @@ final class ClientSecretUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGeneratesClientSecretAndStoresItInAppAndStore(): void
     {
-        $this->app_dao->expects(self::once())->method('updateSecret')
+        $this->app_dao->expects($this->once())->method('updateSecret')
             ->with(45, self::anything());
-        $this->client_secret_store->expects(self::once())->method('storeLastGeneratedClientSecret')
+        $this->client_secret_store->expects($this->once())->method('storeLastGeneratedClientSecret')
             ->with(45, self::anything());
         $this->updater->updateClientSecret(45);
     }

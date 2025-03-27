@@ -107,18 +107,18 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->willThrowException(new Project_AccessProjectNotFoundException());
 
@@ -140,18 +140,18 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->willThrowException(
                 new class extends Project_AccessException {
@@ -182,18 +182,18 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->expectException(RestException::class);
@@ -220,22 +220,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn(null);
@@ -264,22 +264,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -312,22 +312,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -364,22 +364,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -419,22 +419,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -478,22 +478,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -514,7 +514,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($title_field);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($this->tracker)
             ->willReturn(new SemanticTimeframe($this->tracker, new TimeframeNotConfigured()));
@@ -543,22 +543,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -585,7 +585,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($this->tracker)
             ->willReturn(
@@ -622,22 +622,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -664,7 +664,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($this->tracker)
             ->willReturn(
@@ -701,22 +701,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -743,7 +743,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($this->tracker)
             ->willReturn(
@@ -780,22 +780,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -822,7 +822,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($this->tracker)
             ->willReturn(
@@ -839,7 +839,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration->method('userCanView')->willReturn(false);
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByTrackerId')
             ->with(self::ITERATION_TRACKER_ID, 0, 10, false)
             ->willReturn(
@@ -869,22 +869,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -926,7 +926,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration = $this->anArtifactWithoutChangesetValue(201, 'Title', $this->tracker);
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByTrackerId')
             ->with(self::ITERATION_TRACKER_ID, 0, 10, false)
             ->willReturn(
@@ -956,22 +956,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -1022,7 +1022,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDate($iteration, $end_date_field, null);
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByTrackerId')
             ->with(self::ITERATION_TRACKER_ID, 0, 10, false)
             ->willReturn(
@@ -1052,22 +1052,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -1118,7 +1118,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDate($iteration, $end_date_field, 1234567890);
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByTrackerId')
             ->with(self::ITERATION_TRACKER_ID, 0, 10, false)
             ->willReturn(
@@ -1148,22 +1148,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -1215,7 +1215,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDate($iteration, $end_date_field, 1123456789);
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByTrackerId')
             ->with(self::ITERATION_TRACKER_ID, 0, 10, false)
             ->willReturn(
@@ -1245,22 +1245,22 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(self::PROJECT_ID)
             ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(self::ITERATION_TRACKER_ID)
             ->willReturn($this->tracker);
@@ -1302,7 +1302,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration = $this->anArtifact(123, 'Sprint W42', $this->tracker);
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByTrackerId')
             ->with(self::ITERATION_TRACKER_ID, 0, 10, false)
             ->willReturn(
@@ -1353,7 +1353,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockRoadmapConfig(array $db_result): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn($db_result);

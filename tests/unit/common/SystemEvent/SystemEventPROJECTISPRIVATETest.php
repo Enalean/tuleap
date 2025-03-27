@@ -93,14 +93,14 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
         $member               = UserTestBuilder::anActiveUser()->build();
 
         $project->method('getAdmins')->willReturn([$restricted_admin, $member]);
-        $user_remover->expects(self::once())->method('forceRemoveAdminRestrictedUserFromProject')->with($project, $restricted_admin);
+        $user_remover->expects($this->once())->method('forceRemoveAdminRestrictedUserFromProject')->with($project, $restricted_admin);
         $project->method('getMembers')->willReturn([$restricted_member, $member]);
-        $user_remover->expects(self::once())->method('removeUserFromProject')->with($this->project_id, $restricted_member_id);
+        $user_remover->expects($this->once())->method('removeUserFromProject')->with($this->project_id, $restricted_member_id);
 
         $restricted_user_in_ugroup_only = UserTestBuilder::aRestrictedUser()->build();
         $ugroup_with_restricted         = $this->createMock(ProjectUGroup::class);
         $ugroup_with_restricted->method('getMembers')->willReturn([$restricted_user_in_ugroup_only, $member]);
-        $ugroup_with_restricted->expects(self::once())->method('removeUser')->with(
+        $ugroup_with_restricted->expects($this->once())->method('removeUser')->with(
             $restricted_user_in_ugroup_only,
             self::callback(
                 function (PFUser $user) {
@@ -146,13 +146,13 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
         $project->method('getAdmins')->willReturn([$restricted_admin]);
         $project->method('getMembers')->willReturn([$restricted_member, $member]);
 
-        $user_remover->expects(self::once())->method('forceRemoveAdminRestrictedUserFromProject')->with($project, $restricted_admin);
-        $user_remover->expects(self::once())->method('removeUserFromProject')->with($this->project_id, $restricted_member_id);
+        $user_remover->expects($this->once())->method('forceRemoveAdminRestrictedUserFromProject')->with($project, $restricted_admin);
+        $user_remover->expects($this->once())->method('removeUserFromProject')->with($this->project_id, $restricted_member_id);
 
         $restricted_user_in_ugroup_only = UserTestBuilder::aRestrictedUser()->build();
         $ugroup_with_restricted         = $this->createMock(ProjectUGroup::class);
         $ugroup_with_restricted->method('getMembers')->willReturn([$restricted_user_in_ugroup_only, $member]);
-        $ugroup_with_restricted->expects(self::once())->method('removeUser')->with(
+        $ugroup_with_restricted->expects($this->once())->method('removeUser')->with(
             $restricted_user_in_ugroup_only,
             self::callback(
                 function (PFUser $user) {

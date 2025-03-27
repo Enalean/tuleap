@@ -65,7 +65,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPatchCellThrowsWhenSwimlaneArtifactCantBeFound(): void
     {
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->willReturn(null);
 
@@ -100,7 +100,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPatchCellThrowsWhenPatchPayloadIsInvalid(): void
     {
         $artifact = $this->mockSwimlaneArtifactWithValidProject();
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->with(45)
             ->willReturn($artifact);
@@ -162,7 +162,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->mapped_field_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateCardMappedField')
             ->with($swimlane_artifact, 7, $artifact_to_add, $this->current_user);
 
@@ -172,7 +172,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPatchCellThrowsWhenOrderRepresentationIsInvalid(): void
     {
         $artifact = $this->mockSwimlaneArtifactWithValidProject();
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->with(45)
             ->willReturn($artifact);
@@ -189,14 +189,14 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPatchCellThrowsWhenOrderRepresentationDoesNotHaveUniqueIds(): void
     {
         $swimlane_artifact = $this->mockSwimlaneArtifactWithValidProject();
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->with(45)
             ->willReturn($swimlane_artifact);
 
         $order   = OrderRepresentation::build([456, 456], OrderRepresentation::BEFORE, 123);
         $payload = CellPatchRepresentation::build(null, $order);
-        $this->children_retriever->expects(self::once())
+        $this->children_retriever->expects($this->once())
             ->method('getSwimlaneArtifactIds')
             ->with($swimlane_artifact, $this->current_user)
             ->willReturn([123, 456]);
@@ -210,7 +210,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPatchCellReordersChildrenOfSwimlane(): void
     {
         $swimlane_artifact = $this->mockSwimlaneArtifactWithValidProject();
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->with(45)
             ->willReturn($swimlane_artifact);
@@ -218,12 +218,12 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $order   = OrderRepresentation::build([456], OrderRepresentation::BEFORE, 123);
         $payload = CellPatchRepresentation::build(null, $order);
         $this->children_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSwimlaneArtifactIds')
             ->with($swimlane_artifact, $this->current_user)
             ->willReturn([123, 456]);
         $this->rank_orderer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('reorder')
             ->with($order, \Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT, self::isInstanceOf(\Project::class));
 
@@ -242,7 +242,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->method('getId')->willReturn($artifact_id);
-        $artifact->expects(self::once())
+        $artifact->expects($this->once())
             ->method('userCanView')
             ->with($this->current_user)
             ->willReturn($user_can_view);
@@ -252,7 +252,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockArtifact(int $artifact_id, bool $user_can_view): MockObject&Artifact
     {
         $artifact = $this->mockArtifactWithoutFactory($artifact_id, $user_can_view);
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->with($artifact_id)
             ->willReturn($artifact);

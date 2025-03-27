@@ -44,7 +44,7 @@ final class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNothingIfNoWebhookDefinedForTracker()
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
-        $this->webhook_factory->expects(self::once())->method('getWebhooksForTracker')->with($this->tracker)->willReturn([]);
+        $this->webhook_factory->expects($this->once())->method('getWebhooksForTracker')->with($this->tracker)->willReturn([]);
 
         $this->exporter->exportTrackerWebhooksInXML($xml, $this->tracker);
 
@@ -54,7 +54,7 @@ final class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportWebhooksDefinedForTracker()
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
-        $this->webhook_factory->expects(self::once())->method('getWebhooksForTracker')->with($this->tracker)->willReturn([
+        $this->webhook_factory->expects($this->once())->method('getWebhooksForTracker')->with($this->tracker)->willReturn([
             new Webhook(1, 1, 'https://example.com/01'),
             new Webhook(2, 1, 'https://example.com/02'),
         ]);

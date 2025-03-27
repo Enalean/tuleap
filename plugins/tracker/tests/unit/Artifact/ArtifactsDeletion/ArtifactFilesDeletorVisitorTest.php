@@ -47,10 +47,10 @@ final class ArtifactFilesDeletorVisitorTest extends TestCase
         $field = FileFieldBuilder::aFileField(25)->build();
 
         $file1 = $this->createMock(Tracker_FileInfo::class);
-        $file1->expects(self::once())->method('deleteFiles');
+        $file1->expects($this->once())->method('deleteFiles');
 
         $file2 = $this->createMock(Tracker_FileInfo::class);
-        $file2->expects(self::once())->method('deleteFiles');
+        $file2->expects($this->once())->method('deleteFiles');
 
         $files = [$file1, $file2];
 

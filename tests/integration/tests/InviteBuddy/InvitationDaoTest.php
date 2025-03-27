@@ -303,7 +303,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
         );
 
         $this->instrumentation
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('incrementExpiredInvitations')
             ->with(2);
 
@@ -366,7 +366,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
         $this->dao->saveJustCreatedUserThanksToInvitation('charlie@example.com', 201, $a_used_invitation_that_should_not_be_removed);
 
         $this->instrumentation
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('incrementExpiredInvitations')
             ->with(2);
 

@@ -64,7 +64,7 @@ final class ProgramIncrementCreationDispatcherTest extends \Tuleap\Test\PHPUnit\
         $queue = $this->createMock(PersistentQueue::class);
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 
-        $queue->expects(self::once())
+        $queue->expects($this->once())
             ->method('pushSinglePersistentMessage')
             ->with(
                 'tuleap.program_management.program_increment.creation',

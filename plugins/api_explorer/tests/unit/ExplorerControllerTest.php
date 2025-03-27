@@ -45,8 +45,8 @@ final class ExplorerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $layout = $this->createMock(BaseLayout::class);
         $layout->expects(self::atLeast(1))->method('addJavascriptAsset');
-        $layout->expects(self::once())->method('header');
-        $layout->expects(self::once())->method('footer');
+        $layout->expects($this->once())->method('header');
+        $layout->expects($this->once())->method('footer');
 
         $this->expectOutputRegex('/id="api-explorer"/');
         $controller->process(

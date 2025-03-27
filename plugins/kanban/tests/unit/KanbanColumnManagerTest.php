@@ -89,7 +89,7 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->kanban_actions_checker->method('checkUserCanAdministrate')->with($this->user, $this->kanban);
 
-        $this->column_dao->expects(self::once())->method('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit);
+        $this->column_dao->expects($this->once())->method('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit);
 
         $this->kanban_column_manager->updateWipLimit($this->user, $this->kanban, $this->column, $this->wip_limit);
     }

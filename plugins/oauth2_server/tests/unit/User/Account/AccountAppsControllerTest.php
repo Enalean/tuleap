@@ -74,7 +74,7 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleForbidsAnonymousUsers(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle(new NullServerRequest());
@@ -83,10 +83,10 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRendersAccountApps(): void
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
-        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
         $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
 
-        $this->presenter_builder->expects(self::once())->method('build')
+        $this->presenter_builder->expects($this->once())->method('build')
             ->with($user, self::isInstanceOf(CSRFSynchronizerTokenPresenter::class))
             ->willReturn(new AppsPresenter($csrf_presenter, new AccountTabPresenterCollection($user, 'href')));
 

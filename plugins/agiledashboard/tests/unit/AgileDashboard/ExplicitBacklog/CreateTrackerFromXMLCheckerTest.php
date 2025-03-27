@@ -64,7 +64,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml = $this->buildFullTrackerXML();
 
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
@@ -80,7 +80,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml = $this->buildFullTrackerXML();
 
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(false);

@@ -54,7 +54,7 @@ final class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willThrowException(new NewsNotFoundException());
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($a_ref);
 
@@ -74,7 +74,7 @@ final class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willThrowException(new RestrictedNewsAccessException());
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($a_ref);
 
@@ -98,7 +98,7 @@ final class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCas
             ]));
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with(
                 self::callback(function (CrossReferencePresenter $presenter): bool {

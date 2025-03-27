@@ -55,7 +55,7 @@ final class OAuth2ScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $scope_b = $this->createMock(AuthenticationScope::class);
         $scope_b->method('getIdentifier')->willReturn($identifier_b);
 
-        $this->dao->expects(self::once())->method('saveScopeKeysByID')->with(12, 'foobar', 'barbaz');
+        $this->dao->expects($this->once())->method('saveScopeKeysByID')->with(12, 'foobar', 'barbaz');
 
         $this->saver->saveScopes(12, [$scope_a, $scope_b]);
     }

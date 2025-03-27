@@ -113,7 +113,7 @@ final class PlanningFactoryDuplicationTest extends TestCase
         ];
 
         $this->planning_dao->method('searchById')->with(1)->willReturn($parameters);
-        $this->planning_dao->expects(self::once())->method('createPlanning')
+        $this->planning_dao->expects($this->once())->method('createPlanning')
             ->with($group_id, self::anything());
 
         $this->planning_permissions_manager->method('getGroupIdsWhoHasPermissionOnPlanning');
@@ -185,7 +185,7 @@ final class PlanningFactoryDuplicationTest extends TestCase
         $this->planning_dao->method('searchById')->with(1)->willReturn($parameters);
 
         $expected_ugroups = [113, 114];
-        $this->planning_permissions_manager->expects(self::once())->method('savePlanningPermissionForUgroups')->with(
+        $this->planning_permissions_manager->expects($this->once())->method('savePlanningPermissionForUgroups')->with(
             self::anything(),
             self::anything(),
             PlanningPermissionsManager::PERM_PRIORITY_CHANGE,

@@ -61,7 +61,7 @@ final class CommitDetailsRetrieverTest extends TestCase
     {
         $dao = $this->createMock(CommitDetailsCacheDao::class);
         $dao->method('searchCommitDetails')->willReturn([]);
-        $dao->expects(self::once())->method('saveCommitDetails')->with(
+        $dao->expects($this->once())->method('saveCommitDetails')->with(
             1,
             '1a2b3c4d5e6f7g8h9i',
             'Add foo to stuff',

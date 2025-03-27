@@ -83,7 +83,7 @@ final class DocmanLinkVersionCreatorTest extends TestCase
         $representation->status                = 'rejected';
         $representation->obsolescence_date     = $obsolescence_date_formatted;
 
-        $this->transaction_executor->expects(self::once())->method('execute');
+        $this->transaction_executor->expects($this->once())->method('execute');
 
         $this->version_creator->createLinkVersion(
             $item,
@@ -105,7 +105,7 @@ final class DocmanLinkVersionCreatorTest extends TestCase
         $representation           = new LinkPropertiesPOSTPATCHRepresentation();
         $representation->link_url = 'https://example.test';
 
-        $this->transaction_executor->expects(self::once())->method('execute');
+        $this->transaction_executor->expects($this->once())->method('execute');
 
         $this->version_creator->createLinkVersionFromEmpty($item, $user, $representation, new DateTimeImmutable());
     }

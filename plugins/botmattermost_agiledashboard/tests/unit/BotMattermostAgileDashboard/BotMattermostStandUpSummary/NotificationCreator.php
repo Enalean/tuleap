@@ -67,7 +67,7 @@ final class NotificationCreatorTest extends TestCase
     {
         $bot = new Bot(1, 'bot', '', '', null);
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('createNotification')
             ->willReturn(false);
 
@@ -85,7 +85,7 @@ final class NotificationCreatorTest extends TestCase
     {
         $bot = new Bot(1, 'bot', '', '', null);
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('createNotification')
             ->willReturn(true);
 

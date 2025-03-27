@@ -103,7 +103,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsNotFoundWhenProjectIdIsNotProvided(): void
     {
-        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn(false);
+        $this->request->expects($this->once())->method('get')->with('project_id')->willReturn(false);
 
         $this->expectException(NotFoundException::class);
 
@@ -112,9 +112,9 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsNotFoundWhenProjectIsInError(): void
     {
-        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn('101');
+        $this->request->expects($this->once())->method('get')->with('project_id')->willReturn('101');
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn(null);
@@ -126,14 +126,14 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsNotFoundExceptionWhenProjectDoesNotUseGitService(): void
     {
-        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn('101');
+        $this->request->expects($this->once())->method('get')->with('project_id')->willReturn('101');
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(false);
@@ -145,14 +145,14 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsForbiddenWhenUserIsNotGitAdmin(): void
     {
-        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn('101');
+        $this->request->expects($this->once())->method('get')->with('project_id')->willReturn('101');
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
@@ -160,7 +160,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->build();
         $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->expects(self::once())
+        $this->git_permissions_manager->expects($this->once())
             ->method('userIsGitAdmin')
             ->with(
                 $user,
@@ -180,12 +180,12 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['url', false],
         ]);
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
@@ -193,7 +193,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->build();
         $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->expects(self::once())
+        $this->git_permissions_manager->expects($this->once())
             ->method('userIsGitAdmin')
             ->with(
                 $user,
@@ -214,12 +214,12 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['token', 'my_secret_token'],
         ]);
 
-        $this->project_manager->expects(self::once())
+        $this->project_manager->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn($this->project);
 
-        $this->project->expects(self::once())
+        $this->project->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
@@ -227,7 +227,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->build();
         $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->expects(self::once())
+        $this->git_permissions_manager->expects($this->once())
             ->method('userIsGitAdmin')
             ->with(
                 $user,
@@ -235,7 +235,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn(true);
 
-        $this->git_jenkins_administration_server_adder->expects(self::once())
+        $this->git_jenkins_administration_server_adder->expects($this->once())
             ->method('addServerInProject')
             ->with(
                 $this->project,

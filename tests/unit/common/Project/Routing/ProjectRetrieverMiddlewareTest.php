@@ -36,12 +36,12 @@ final class ProjectRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
         $middleware        = new ProjectRetrieverMiddleware($project_retriever);
 
         $project = new \Project(['group_id' => 102]);
-        $project_retriever->expects(self::once())
+        $project_retriever->expects($this->once())
             ->method('getProjectFromId')
             ->with('102')
             ->willReturn($project);
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::once())->method('handle')->with(self::callback(function (ServerRequestInterface $enriched_request) use ($project): bool {
+        $handler->expects($this->once())->method('handle')->with(self::callback(function (ServerRequestInterface $enriched_request) use ($project): bool {
             return $enriched_request->getAttribute(\Project::class) === $project;
         }));
 

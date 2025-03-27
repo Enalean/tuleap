@@ -179,7 +179,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
         $this->dao->method('searchMappingFields')->with($this->tracker->getId())->willReturn(TestHelper::arrayToDar(
             ['tracker_id' => 20, 'field_id' => 124]
         ));
-        $this->value_mapping_factory->expects(self::once())->method('getMappings')->with($this->tracker, $this->tracker_20, $this->field_124)
+        $this->value_mapping_factory->expects($this->once())->method('getMappings')->with($this->tracker, $this->tracker_20, $this->field_124)
             ->willReturn([]);
 
         $this->factory->getMappings($this->tracker, $this->columns);
@@ -190,7 +190,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
         $this->dao->method('searchMappingFields')->with($this->tracker->getId())->willReturn(TestHelper::arrayToDar(
             ['tracker_id' => 10, 'field_id' => null]
         ));
-        $this->value_mapping_factory->expects(self::once())->method('getStatusMappings')->with($this->tracker_10, $this->columns)
+        $this->value_mapping_factory->expects($this->once())->method('getStatusMappings')->with($this->tracker_10, $this->columns)
             ->willReturn([]);
 
         $this->factory->getMappings($this->tracker, $this->columns);

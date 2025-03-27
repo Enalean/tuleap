@@ -79,7 +79,7 @@ final class BranchCreatorTest extends TestCase
 
     public function testItAsksToCreateABranch(): void
     {
-        $this->branch_creation_executor->expects(self::once())
+        $this->branch_creation_executor->expects($this->once())
             ->method('createNewBranch');
 
         $this->creator->createBranch(
@@ -183,7 +183,7 @@ final class BranchCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfGitCommandFailed(): void
     {
-        $this->branch_creation_executor->expects(self::once())
+        $this->branch_creation_executor->expects($this->once())
             ->method('createNewBranch')
             ->willThrowException(
                 new CannotCreateNewBranchException('')

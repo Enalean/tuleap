@@ -37,10 +37,10 @@ final class GitPullRequestReferenceCreatorTest extends \Tuleap\Test\PHPUnit\Test
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
 
-        $dao->expects(self::once())->method('createGitReferenceForPullRequest')->willReturn(1);
-        $dao->expects(self::once())->method('updateStatusByPullRequestId');
+        $dao->expects($this->once())->method('createGitReferenceForPullRequest')->willReturn(1);
+        $dao->expects($this->once())->method('updateStatusByPullRequestId');
         $namespace_checker->method('isAvailable')->willReturn(true);
-        $executor_source->expects(self::once())->method('push');
+        $executor_source->expects($this->once())->method('push');
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getRepoDestId')->willReturn(1);
@@ -62,11 +62,11 @@ final class GitPullRequestReferenceCreatorTest extends \Tuleap\Test\PHPUnit\Test
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
 
-        $dao->expects(self::once())->method('createGitReferenceForPullRequest')->willReturn(1);
+        $dao->expects($this->once())->method('createGitReferenceForPullRequest')->willReturn(1);
         $dao->expects(self::exactly(2))->method('updateGitReferenceToNextAvailableOne')->willReturn(2, 3);
-        $dao->expects(self::once())->method('updateStatusByPullRequestId');
+        $dao->expects($this->once())->method('updateStatusByPullRequestId');
         $namespace_checker->method('isAvailable')->willReturn(false, false, true);
-        $executor_source->expects(self::once())->method('push');
+        $executor_source->expects($this->once())->method('push');
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getRepoDestId')->willReturn(1);
@@ -107,10 +107,10 @@ final class GitPullRequestReferenceCreatorTest extends \Tuleap\Test\PHPUnit\Test
         $executor_destination   = $this->createMock(GitExec::class);
         $repository_destination = $this->createMock(\GitRepository::class);
 
-        $dao->expects(self::once())->method('createGitReferenceForPullRequest')->willReturn(1);
-        $dao->expects(self::once())->method('updateStatusByPullRequestId')->with(1, GitPullRequestReference::STATUS_BROKEN);
+        $dao->expects($this->once())->method('createGitReferenceForPullRequest')->willReturn(1);
+        $dao->expects($this->once())->method('updateStatusByPullRequestId')->with(1, GitPullRequestReference::STATUS_BROKEN);
         $namespace_checker->method('isAvailable')->willReturn(true);
-        $executor_source->expects(self::once())->method('push')->willThrowException($this->createMock(\Git_Command_Exception::class));
+        $executor_source->expects($this->once())->method('push')->willThrowException($this->createMock(\Git_Command_Exception::class));
 
         $pull_request->method('getId')->willReturn(1);
         $pull_request->method('getRepoDestId')->willReturn(1);

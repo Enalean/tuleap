@@ -64,7 +64,7 @@ class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->reminder->method('getNotificationType')->willReturn('1');
 
         $expected_time = strtotime('-2 days', $this->today_at_midnight);
-        $this->field->expects(self::once())->method('getArtifactsByCriterias')->with($expected_time, self::TRACKER_ID);
+        $this->field->expects($this->once())->method('getArtifactsByCriterias')->with($expected_time, self::TRACKER_ID);
 
         $this->reminder_manager->getArtifactsByReminder($this->reminder);
     }
@@ -75,7 +75,7 @@ class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->reminder->method('getNotificationType')->willReturn('0');
 
         $expected_time = strtotime('4 days', $this->today_at_midnight);
-        $this->field->expects(self::once())->method('getArtifactsByCriterias')->with($expected_time, self::TRACKER_ID);
+        $this->field->expects($this->once())->method('getArtifactsByCriterias')->with($expected_time, self::TRACKER_ID);
 
         $this->reminder_manager->getArtifactsByReminder($this->reminder);
     }

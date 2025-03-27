@@ -67,7 +67,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
             DocumentServer::withoutProjectRestrictions($server_id, 'https://example.com', new ConcealedString('very_secret')),
         );
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('create')
             ->with($user->getId(), $item->getId(), self::anything(), 70, $server_id)
             ->willReturn(147);

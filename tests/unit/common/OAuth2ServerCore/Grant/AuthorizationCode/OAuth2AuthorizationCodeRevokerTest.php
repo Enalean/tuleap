@@ -30,7 +30,7 @@ final class OAuth2AuthorizationCodeRevokerTest extends \Tuleap\Test\PHPUnit\Test
         $dao     = $this->createMock(OAuth2AuthorizationCodeDAO::class);
         $revoker = new OAuth2AuthorizationCodeRevoker($dao);
 
-        $dao->expects(self::once())->method('deleteAuthorizationCodeByID')->with(15);
+        $dao->expects($this->once())->method('deleteAuthorizationCodeByID')->with(15);
 
         $revoker->revokeByAuthCodeId(15);
     }

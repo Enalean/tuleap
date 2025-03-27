@@ -74,7 +74,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         self::assertTrue(is_dir($this->fixtureRenamePath . '/legacy'));
         self::assertFalse(is_dir($this->fixtureRenamePath . '/newone'));
 
-        $backend->expects(self::once())->method('glRenameProject')->with('legacy', 'newone');
+        $backend->expects($this->once())->method('glRenameProject')->with('legacy', 'newone');
         self::assertTrue($backend->renameProject($project, 'newone'));
 
         clearstatcache(true, $this->fixtureRenamePath . '/legacy');
@@ -101,8 +101,8 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         $dao     = $this->createMock(GitDao::class);
         $backend->setDao($dao);
 
-        $backend->expects(self::once())->method('clonePermissions')->with($old_repo, $new_repo);
-        $dao->expects(self::once())->method('save')->with($new_repo)->willReturn(667);
+        $backend->expects($this->once())->method('clonePermissions')->with($old_repo, $new_repo);
+        $dao->expects($this->once())->method('save')->with($new_repo)->willReturn(667);
         $dao->method('isRepositoryExisting')->with(self::anything(), $new_repo_path)->willReturn(false);
 
         self::assertEquals(667, $backend->fork($old_repo, $new_repo, $this->forkPermissions));
@@ -134,8 +134,8 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
             ->onlyMethods([])
             ->getMock();
 
-        $driver->expects(self::once())->method('fork')->with($name, 'gpig/' . $old_namespace, 'gpig/' . $new_namespace)->willReturn(true);
-        $driver->expects(self::once())->method('dumpProjectRepoConf')->with($project);
+        $driver->expects($this->once())->method('fork')->with($name, 'gpig/' . $old_namespace, 'gpig/' . $new_namespace)->willReturn(true);
+        $driver->expects($this->once())->method('dumpProjectRepoConf')->with($project);
         $driver->expects(self::never())->method('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
@@ -170,8 +170,8 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
             ->onlyMethods([])
             ->getMock();
 
-        $driver->expects(self::once())->method('fork')->with($repo_name, $old_project_name . '/' . $namespace, $new_project_name . '/' . $namespace)->willReturn(true);
-        $driver->expects(self::once())->method('dumpProjectRepoConf')->with($new_project);
+        $driver->expects($this->once())->method('fork')->with($repo_name, $old_project_name . '/' . $namespace, $new_project_name . '/' . $namespace)->willReturn(true);
+        $driver->expects($this->once())->method('dumpProjectRepoConf')->with($new_project);
         $driver->expects(self::never())->method('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
@@ -230,7 +230,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         $backend = $this->givenABackendGitolite();
 
         $permissions_manager = $backend->getPermissionsManager();
-        $permissions_manager->expects(self::once())->method('duplicateWithStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes());
+        $permissions_manager->expects($this->once())->method('duplicateWithStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes());
 
         $backend->clonePermissions($old, $new);
     }
@@ -265,7 +265,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         $backend = $this->givenABackendGitolite();
 
         $permissionsManager = $backend->getPermissionsManager();
-        $permissionsManager->expects(self::once())->method('duplicateWithoutStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes());
+        $permissionsManager->expects($this->once())->method('duplicateWithoutStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes());
 
         $backend->clonePermissions($old, $new);
     }

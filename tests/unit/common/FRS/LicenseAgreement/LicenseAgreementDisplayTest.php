@@ -67,8 +67,8 @@ class LicenseAgreementDisplayTest extends TestCase
     {
         ForgeConfig::set('sys_frs_license_mandatory', true);
 
-        $this->factory->expects(self::once())->method('getLicenseAgreementForPackage')->willReturn(new DefaultLicenseAgreement());
-        $this->factory->expects(self::once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([]);
+        $this->factory->expects($this->once())->method('getLicenseAgreementForPackage')->willReturn(new DefaultLicenseAgreement());
+        $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([]);
 
         $package = new FRSPackage(['package_id' => '470']);
         self::assertEquals('<input type="hidden" name="package[approve_license]" value="1">', $this->display->getPackageEditSelector($package, $this->project));
@@ -78,7 +78,7 @@ class LicenseAgreementDisplayTest extends TestCase
     {
         ForgeConfig::set('sys_frs_license_mandatory', true);
 
-        $this->renderer->expects(self::once())->method('renderToString')->with(
+        $this->renderer->expects($this->once())->method('renderToString')->with(
             'edit-package',
             [
                 new LicenseOptionPresenter(0, 'Code eXchange Corporate Policy', true),
@@ -88,8 +88,8 @@ class LicenseAgreementDisplayTest extends TestCase
 
         $package = new FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
-        $this->factory->expects(self::once())->method('getLicenseAgreementForPackage')->willReturn(new DefaultLicenseAgreement());
-        $this->factory->expects(self::once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
+        $this->factory->expects($this->once())->method('getLicenseAgreementForPackage')->willReturn(new DefaultLicenseAgreement());
+        $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
             new LicenseAgreement(5, 'Some custom stuff', 'bla'),
         ]);
         self::assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
@@ -98,7 +98,7 @@ class LicenseAgreementDisplayTest extends TestCase
     public function testItRendersWhenThereIsNoCustomLicenseAgreement(): void
     {
         ForgeConfig::set('sys_frs_license_mandatory', false);
-        $this->renderer->expects(self::once())->method('renderToString')->with(
+        $this->renderer->expects($this->once())->method('renderToString')->with(
             'edit-package',
             [
                 new LicenseOptionPresenter(-1, 'No', true),
@@ -116,7 +116,7 @@ class LicenseAgreementDisplayTest extends TestCase
     public function testItRendersWithCustomLicenseAgreementAndNoLicenseForPackage(): void
     {
         ForgeConfig::set('sys_frs_license_mandatory', false);
-        $this->renderer->expects(self::once())->method('renderToString')->with(
+        $this->renderer->expects($this->once())->method('renderToString')->with(
             'edit-package',
             [
                 new LicenseOptionPresenter(-1, 'No', true),
@@ -127,17 +127,17 @@ class LicenseAgreementDisplayTest extends TestCase
 
         $package = new FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
-        $this->factory->expects(self::once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
+        $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
             new LicenseAgreement(5, 'Some custom stuff', 'bla'),
         ]);
-        $this->factory->expects(self::once())->method('getLicenseAgreementForPackage')->willReturn(new NoLicenseToApprove());
+        $this->factory->expects($this->once())->method('getLicenseAgreementForPackage')->willReturn(new NoLicenseToApprove());
         self::assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
     }
 
     public function testItRendersWithCustomLicenseAgreementAndDefaultLicenseForPackage(): void
     {
         ForgeConfig::set('sys_frs_license_mandatory', false);
-        $this->renderer->expects(self::once())->method('renderToString')->with(
+        $this->renderer->expects($this->once())->method('renderToString')->with(
             'edit-package',
             [
                 new LicenseOptionPresenter(-1, 'No', false),
@@ -148,17 +148,17 @@ class LicenseAgreementDisplayTest extends TestCase
 
         $package = new FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
-        $this->factory->expects(self::once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
+        $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
             new LicenseAgreement(5, 'Some custom stuff', 'bla'),
         ]);
-        $this->factory->expects(self::once())->method('getLicenseAgreementForPackage')->willReturn(new DefaultLicenseAgreement());
+        $this->factory->expects($this->once())->method('getLicenseAgreementForPackage')->willReturn(new DefaultLicenseAgreement());
         self::assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
     }
 
     public function testItRendersWithCustomLicenseAgreementSelected(): void
     {
         ForgeConfig::set('sys_frs_license_mandatory', false);
-        $this->renderer->expects(self::once())->method('renderToString')->with(
+        $this->renderer->expects($this->once())->method('renderToString')->with(
             'edit-package',
             [
                 new LicenseOptionPresenter(-1, 'No', false),
@@ -170,16 +170,16 @@ class LicenseAgreementDisplayTest extends TestCase
         $package = new FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
         $custom_agreement = new LicenseAgreement(5, 'Some custom stuff', 'bla');
-        $this->factory->expects(self::once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
+        $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
             $custom_agreement,
         ]);
-        $this->factory->expects(self::once())->method('getLicenseAgreementForPackage')->willReturn($custom_agreement);
+        $this->factory->expects($this->once())->method('getLicenseAgreementForPackage')->willReturn($custom_agreement);
         self::assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
     }
 
     public function testItUsesTheSelectedDefaultAtPackageCreation(): void
     {
-        $this->renderer->expects(self::once())->method('renderToString')->with(
+        $this->renderer->expects($this->once())->method('renderToString')->with(
             'edit-package',
             [
                 new LicenseOptionPresenter(-1, 'No', false),
@@ -190,7 +190,7 @@ class LicenseAgreementDisplayTest extends TestCase
 
         $package          = new FRSPackage();
         $custom_agreement = new LicenseAgreement(5, 'Some custom stuff', 'bla');
-        $this->factory->expects(self::once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
+        $this->factory->expects($this->once())->method('getProjectLicenseAgreements')->with($this->project)->willReturn([
             $custom_agreement,
         ]);
         $this->factory->method('getDefaultLicenseAgreementForProject')->willReturn($custom_agreement);

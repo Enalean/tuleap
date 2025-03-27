@@ -120,7 +120,7 @@ final class ProjectOwnerRemoverTest extends TestCase
         $this->project_owner_retriever->method('getProjectOwner')->willReturn(
             UserTestBuilder::anActiveUser()->withId(102)->build()
         );
-        $this->dao->expects(self::once())->method('delete');
+        $this->dao->expects($this->once())->method('delete');
 
         $this->remover->forceRemovalOfRestrictedProjectOwner(
             $project,

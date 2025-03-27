@@ -122,12 +122,12 @@ final class PlanningControllerTest extends TestCase
 
         $root_planning = PlanningBuilder::aPlanning(101)->withId(109)->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
-        $this->planning_factory->expects(self::once())->method('deletePlanning')->with(42);
+        $this->planning_factory->expects($this->once())->method('deletePlanning')->with(42);
         $this->explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfPlanning');
 
-        $this->event_manager->expects(self::once())->method('dispatch');
+        $this->event_manager->expects($this->once())->method('dispatch');
 
-        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -145,12 +145,12 @@ final class PlanningControllerTest extends TestCase
 
         $root_planning = PlanningBuilder::aPlanning(101)->withId(42)->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
-        $this->planning_factory->expects(self::once())->method('deletePlanning')->with(42);
-        $this->explicit_backlog_dao->expects(self::once())->method('removeExplicitBacklogOfPlanning')->with(42);
+        $this->planning_factory->expects($this->once())->method('deletePlanning')->with(42);
+        $this->explicit_backlog_dao->expects($this->once())->method('removeExplicitBacklogOfPlanning')->with(42);
 
-        $this->event_manager->expects(self::once())->method('dispatch');
+        $this->event_manager->expects($this->once())->method('dispatch');
 
-        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -168,7 +168,7 @@ final class PlanningControllerTest extends TestCase
             ->build();
 
         // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
-        $GLOBALS['Response']->expects(self::once())->method('redirect')->willThrowException(new Exception());
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->willThrowException(new Exception());
 
         self::expectException(Exception::class);
 
@@ -185,17 +185,17 @@ final class PlanningControllerTest extends TestCase
             ->withAdministratorOf($this->project)
             ->build();
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
-        $this->event_manager->expects(self::once())->method('processEvent');
-        $this->event_manager->expects(self::once())->method('dispatch');
+        $this->event_manager->expects($this->once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
         $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
-        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
-        $this->update_request_validator->expects(self::once())->method('getValidatedPlanning')->willReturn(null);
+        $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
+        $this->update_request_validator->expects($this->once())->method('getValidatedPlanning')->willReturn(null);
 
-        $GLOBALS['Response']->expects(self::once())->method('redirect');
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         $this->planning_updater->expects(self::never())->method('update');
         $request = HTTPRequestBuilder::get()
@@ -212,23 +212,23 @@ final class PlanningControllerTest extends TestCase
             ->withAdministratorOf($this->project)
             ->build();
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
-        $this->event_manager->expects(self::once())->method('processEvent');
-        $this->event_manager->expects(self::once())->method('dispatch');
+        $this->event_manager->expects($this->once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
         $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
-        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
+        $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
         $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
-        $this->root_planning_update_checker->expects(self::once())->method('checkUpdateIsAllowed')
+        $this->root_planning_update_checker->expects($this->once())->method('checkUpdateIsAllowed')
             ->willThrowException(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
 
         $this->planning_updater->expects(self::never())->method('update');
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
 
-        $GLOBALS['Response']->expects(self::once())->method('redirect');
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -244,14 +244,14 @@ final class PlanningControllerTest extends TestCase
             ->withAdministratorOf($this->project)
             ->build();
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
-        $this->event_manager->expects(self::once())->method('processEvent');
-        $this->event_manager->expects(self::once())->method('dispatch');
+        $this->event_manager->expects($this->once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
         $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
-        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
+        $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
         $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid')->willThrowException(
@@ -261,7 +261,7 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_updater->expects(self::never())->method('update');
 
-        $GLOBALS['Response']->expects(self::once())->method('redirect');
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -279,25 +279,25 @@ final class PlanningControllerTest extends TestCase
 
         $planning_parameters = [];
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
-        $this->event_manager->expects(self::once())->method('processEvent');
-        $this->event_manager->expects(self::once())->method('dispatch');
+        $this->event_manager->expects($this->once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
         $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
-        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
+        $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
         $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
-        $this->root_planning_update_checker->expects(self::once())->method('checkUpdateIsAllowed');
+        $this->root_planning_update_checker->expects($this->once())->method('checkUpdateIsAllowed');
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
-        $this->project_history_dao->expects(self::once())->method('addHistory');
+        $this->project_history_dao->expects($this->once())->method('addHistory');
 
         $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withName('lorem')->build());
 
-        $this->planning_updater->expects(self::once())->method('update');
+        $this->planning_updater->expects($this->once())->method('update');
 
-        $GLOBALS['Response']->expects(self::once())->method('redirect');
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -317,8 +317,8 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_factory->expects(self::never())->method('createPlanning');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
-        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=new');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=new');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -344,10 +344,10 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_request_validator->method('isValid')->willReturn(true);
 
-        $this->planning_factory->expects(self::once())->method('createPlanning');
+        $this->planning_factory->expects($this->once())->method('createPlanning');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
-        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -366,9 +366,9 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_factory->expects(self::never())->method('createPlanning');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
         // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
-        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101')->willThrowException(new Exception());
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101')->willThrowException(new Exception());
 
         self::expectException(Exception::class);
 

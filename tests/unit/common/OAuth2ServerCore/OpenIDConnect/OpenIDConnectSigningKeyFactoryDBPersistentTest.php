@@ -103,7 +103,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
 
     public function testGetExistingSigningPrivateKeyFromTheDB(): void
     {
-        $this->dao->expects(self::once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(
+        $this->dao->expects($this->once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(
             [
                 'public_key'  => self::SIGNING_PUBLIC_KEY,
                 'private_key' => SymmetricCrypto::encrypt(new ConcealedString(self::SIGNING_PRIVATE_KEY), $this->encryption_key),
@@ -117,7 +117,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
 
     public function testGetExistingSigningPublicKeyFromTheDB(): void
     {
-        $this->dao->expects(self::once())->method('searchPublicKeys')->willReturn([self::SIGNING_PUBLIC_KEY]);
+        $this->dao->expects($this->once())->method('searchPublicKeys')->willReturn([self::SIGNING_PUBLIC_KEY]);
 
         $public_keys = $this->signing_key_factory->getPublicKeys(new \DateTimeImmutable('@100'));
 
@@ -127,8 +127,8 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
 
     public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPrivateKey(): void
     {
-        $this->dao->expects(self::once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(null);
-        $this->dao->expects(self::once())->method('save')->with(self::anything(), self::anything(), 160, 90);
+        $this->dao->expects($this->once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(null);
+        $this->dao->expects($this->once())->method('save')->with(self::anything(), self::anything(), 160, 90);
 
         $key = $this->signing_key_factory->getKey(new \DateTimeImmutable('@100'));
         $this->assertNotEmpty($key->getPrivateKey()->contents());
@@ -136,8 +136,8 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
 
     public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPublicKey(): void
     {
-        $this->dao->expects(self::once())->method('searchPublicKeys')->willReturn([]);
-        $this->dao->expects(self::once())->method('save')->with(self::anything(), self::anything(), 160, 90);
+        $this->dao->expects($this->once())->method('searchPublicKeys')->willReturn([]);
+        $this->dao->expects($this->once())->method('save')->with(self::anything(), self::anything(), 160, 90);
 
         $public_key = $this->signing_key_factory->getPublicKeys(new \DateTimeImmutable('@100'));
         $this->assertNotEmpty($public_key);

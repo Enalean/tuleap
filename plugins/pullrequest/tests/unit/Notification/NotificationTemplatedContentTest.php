@@ -34,7 +34,7 @@ final class NotificationTemplatedContentTest extends \Tuleap\Test\PHPUnit\TestCa
         };
         $expected_rendered_content = 'rendered_content';
 
-        $renderer->expects(self::once())
+        $renderer->expects($this->once())
             ->method('renderToString')
             ->with($expected_template_name, $expected_presenter)
             ->willReturn($expected_rendered_content);

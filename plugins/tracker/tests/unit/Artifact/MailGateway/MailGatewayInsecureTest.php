@@ -126,7 +126,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->expects(self::once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
+        $this->artifact->expects($this->once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -153,7 +153,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->tracker->method('userCanSubmitArtifact')->willReturn(true);
         $this->formelement_factory->method('getUsedFieldsWithDefaultValue')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('create');
+        $this->artifact_creator->expects($this->once())->method('create');
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -167,7 +167,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->tracker->method('userCanSubmitArtifact')->willReturn(true);
         $this->artifact_creator->method('create');
 
-        $this->formelement_factory->expects(self::once())->method('getUsedFieldsWithDefaultValue')->with($this->tracker, self::anything(), $this->user);
+        $this->formelement_factory->expects($this->once())->method('getUsedFieldsWithDefaultValue')->with($this->tracker, self::anything(), $this->user);
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -199,7 +199,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->artifact_creator->method('create');
         $this->formelement_factory->method('getUsedFieldsWithDefaultValue')->willReturn([]);
 
-        $this->incoming_mail_dao->expects(self::once())->method('save')->with(666, 'Raw mail');
+        $this->incoming_mail_dao->expects($this->once())->method('save')->with(666, 'Raw mail');
 
         $this->mailgateway->process($this->incoming_mail);
     }

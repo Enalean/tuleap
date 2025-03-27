@@ -38,7 +38,7 @@ final class DBTransactionExecutorWithConnectionTest extends \Tuleap\Test\PHPUnit
 
         $db = $this->createMock(EasyDB::class);
         $db_connection->method('getDB')->willReturn($db);
-        $db->expects(self::once())->method('tryFlatTransaction')->with($callable);
+        $db->expects($this->once())->method('tryFlatTransaction')->with($callable);
 
         $transaction_executor->execute($callable);
     }

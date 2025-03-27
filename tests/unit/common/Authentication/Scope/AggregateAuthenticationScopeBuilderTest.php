@@ -46,9 +46,9 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
     public function testAllBuildersAreVerifiedIfTheAuthenticationScopeIsNotFound(): void
     {
         $builder_1 = $this->createMock(AuthenticationScopeBuilder::class);
-        $builder_1->expects(self::once())->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(null);
+        $builder_1->expects($this->once())->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(null);
         $builder_2 = $this->createMock(AuthenticationScopeBuilder::class);
-        $builder_2->expects(self::once())->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(null);
+        $builder_2->expects($this->once())->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(null);
 
         $aggregate_builder = AggregateAuthenticationScopeBuilder::fromBuildersList($builder_1, $builder_2);
 
@@ -62,7 +62,7 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
     public function testBuildersCanBeRetrievedFromAnEventDispatcher(): void
     {
         $builder = $this->createMock(AuthenticationScopeBuilder::class);
-        $builder->expects(self::once())->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(
+        $builder->expects($this->once())->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(
             $this->createMock(AuthenticationScope::class)
         );
 

@@ -51,7 +51,7 @@ final class ArtifactLinksUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCa
             ->build();
 
         $this->dao->method('isProjectUsingArtifactLinkTypes')->with(101)->willReturn(true);
-        $this->dao->expects(self::once())->method('duplicate')->with(101, 102);
+        $this->dao->expects($this->once())->method('duplicate')->with(101, 102);
 
         $this->duplicator->duplicate($template, $project);
     }
@@ -71,7 +71,7 @@ final class ArtifactLinksUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->dao->method('isProjectUsingArtifactLinkTypes')->with(101)->willReturn(false);
 
-        $this->dao->expects(self::once())->method('duplicate')->with(101, 102);
+        $this->dao->expects($this->once())->method('duplicate')->with(101, 102);
 
         $this->duplicator->duplicate($template, $project);
     }

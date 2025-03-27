@@ -56,7 +56,7 @@ final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSavesDashboard(): void
     {
-        $this->dao->expects(self::once())->method('save')->with($this->user, 'new_dashboard');
+        $this->dao->expects($this->once())->method('save')->with($this->user, 'new_dashboard');
 
         $this->user_saver->save($this->user, 'new_dashboard');
     }

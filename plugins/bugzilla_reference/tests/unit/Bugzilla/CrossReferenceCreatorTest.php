@@ -56,8 +56,8 @@ final class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->cross_reference_dao->method('fullReferenceExistInDb')->willReturn(false);
 
-        $this->cross_reference_dao->expects(self::once())->method('createDbCrossRef');
-        $this->rest_reference_dao->expects(self::once())->method('create');
+        $this->cross_reference_dao->expects($this->once())->method('createDbCrossRef');
+        $this->rest_reference_dao->expects($this->once())->method('create');
 
         $cross_reference    = $this->createMock(CrossReference::class);
         $bugzilla_reference = $this->createMock(\Tuleap\Bugzilla\Reference\Reference::class);

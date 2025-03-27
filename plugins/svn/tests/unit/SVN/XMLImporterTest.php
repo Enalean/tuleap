@@ -149,8 +149,8 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->xml_user_checker
         );
 
-        $this->rule_name->expects(self::once())->method('isValid')->willReturn(false);
-        $this->rule_name->expects(self::once())->method('getErrorMessage');
+        $this->rule_name->expects($this->once())->method('isValid')->willReturn(false);
+        $this->rule_name->expects($this->once())->method('getErrorMessage');
 
         $this->expectException(XMLImporterException::class);
 

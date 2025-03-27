@@ -147,7 +147,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDateInPast(): void
     {
         $GLOBALS['Language']
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getText')
             ->with(
                 'include_utils',
@@ -165,7 +165,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDateInFuture(): void
     {
         $GLOBALS['Language']
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getText')
             ->with(
                 'include_utils',

@@ -52,7 +52,7 @@ final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $scope_b = $this->createMock(AuthenticationScope::class);
         $scope_b->method('getIdentifier')->willReturn($identifier);
 
-        $this->dao->expects(self::once())->method('saveScopeKeysByAccessKeyID')->with(11, 'foo:bar');
+        $this->dao->expects($this->once())->method('saveScopeKeysByAccessKeyID')->with(11, 'foo:bar');
 
         $this->saver->saveKeyScopes(11, $scope_a, $scope_b);
     }

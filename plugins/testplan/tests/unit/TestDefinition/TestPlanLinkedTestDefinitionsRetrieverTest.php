@@ -69,7 +69,7 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends \Tuleap\Test\PHPU
         $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(102);
 
         $this->artifact_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchPaginatedLinkedArtifactsByLinkTypeAndTrackerId')
             ->willReturn(
                 [['mocked_artifact_row_1'], ['mocked_artifact_row_2']],

@@ -61,7 +61,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         $this->permissions_for_groups_set_factory->method('fromRepresentation')
             ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
 
-        $this->permissions_item_updater->expects(self::once())->method('updateItemPermissions');
+        $this->permissions_item_updater->expects($this->once())->method('updateItemPermissions');
 
         $this->permissions_item_updater_rest->updateItemPermissions(
             $item,
@@ -81,7 +81,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         $representation                                = new DocmanFolderPermissionsForGroupsPUTRepresentation();
         $representation->apply_permissions_on_children = false;
 
-        $this->permissions_item_updater->expects(self::once())->method('updateItemPermissions');
+        $this->permissions_item_updater->expects($this->once())->method('updateItemPermissions');
 
         $this->permissions_item_updater_rest->updateFolderPermissions(
             $folder,
@@ -100,7 +100,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         $representation                                = new DocmanFolderPermissionsForGroupsPUTRepresentation();
         $representation->apply_permissions_on_children = true;
 
-        $this->permissions_item_updater->expects(self::once())->method('updateFolderAndChildrenPermissions');
+        $this->permissions_item_updater->expects($this->once())->method('updateFolderAndChildrenPermissions');
 
         $this->permissions_item_updater_rest->updateFolderPermissions(
             $folder,

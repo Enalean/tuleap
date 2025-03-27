@@ -76,7 +76,7 @@ final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         // Expect everything went OK
-        $evt->expects(self::once())->method('done');
+        $evt->expects($this->once())->method('done');
 
         // Launch the event
         self::assertTrue($evt->process());

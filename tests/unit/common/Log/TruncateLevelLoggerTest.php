@@ -40,10 +40,10 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::DEBUG);
 
-        $this->logger->expects(self::once())->method('debug')->with('debug message', []);
-        $this->logger->expects(self::once())->method('info')->with('info message', []);
-        $this->logger->expects(self::once())->method('warning')->with('warn message', []);
-        $this->logger->expects(self::once())->method('error')->with('error message', []);
+        $this->logger->expects($this->once())->method('debug')->with('debug message', []);
+        $this->logger->expects($this->once())->method('info')->with('info message', []);
+        $this->logger->expects($this->once())->method('warning')->with('warn message', []);
+        $this->logger->expects($this->once())->method('error')->with('error message', []);
 
         $truncate_logger->debug('debug message');
         $truncate_logger->info('info message');
@@ -56,9 +56,9 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
         $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::INFO);
 
         $this->logger->expects(self::never())->method('debug');
-        $this->logger->expects(self::once())->method('info')->with('info message', []);
-        $this->logger->expects(self::once())->method('warning')->with('warn message', []);
-        $this->logger->expects(self::once())->method('error')->with('error message', []);
+        $this->logger->expects($this->once())->method('info')->with('info message', []);
+        $this->logger->expects($this->once())->method('warning')->with('warn message', []);
+        $this->logger->expects($this->once())->method('error')->with('error message', []);
 
         $truncate_logger->debug('debug message');
         $truncate_logger->info('info message');
@@ -72,8 +72,8 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger->expects(self::never())->method('debug');
         $this->logger->expects(self::never())->method('info');
-        $this->logger->expects(self::once())->method('warning')->with('warn message', []);
-        $this->logger->expects(self::once())->method('error')->with('error message', []);
+        $this->logger->expects($this->once())->method('warning')->with('warn message', []);
+        $this->logger->expects($this->once())->method('error')->with('error message', []);
 
         $truncate_logger->debug('debug message');
         $truncate_logger->info('info message');
@@ -88,7 +88,7 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->expects(self::never())->method('debug');
         $this->logger->expects(self::never())->method('info');
         $this->logger->expects(self::never())->method('warning');
-        $this->logger->expects(self::once())->method('error')->with('error message', []);
+        $this->logger->expects($this->once())->method('error')->with('error message', []);
 
         $truncate_logger->debug('debug message');
         $truncate_logger->info('info message');
@@ -102,8 +102,8 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger->expects(self::never())->method('debug');
         $this->logger->expects(self::never())->method('info');
-        $this->logger->expects(self::once())->method('warning')->with('warn message', []);
-        $this->logger->expects(self::once())->method('error')->with('error message', []);
+        $this->logger->expects($this->once())->method('warning')->with('warn message', []);
+        $this->logger->expects($this->once())->method('error')->with('error message', []);
 
         $truncate_logger->debug('debug message');
         $truncate_logger->info('info message');

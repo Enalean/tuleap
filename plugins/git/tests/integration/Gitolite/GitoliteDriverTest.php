@@ -147,7 +147,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
     {
         $new_name = 'newone';
         $this->project_manager->method('getProjectByUnixName')->with($new_name)->willReturn(ProjectTestBuilder::aProject()->withUnixName($new_name)->build());
-        $this->git_exec->expects(self::once())->method('push')->willReturn(true);
+        $this->git_exec->expects($this->once())->method('push')->willReturn(true);
         $this->gitoliterc_reader->method('getHostname');
 
         self::assertTrue(is_file($this->gitolite_admin_dir . '/conf/projects/legacy.conf'));

@@ -92,7 +92,7 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
             TestHelper::arrayToDar(['group_id' => '400'])
         );
 
-        $this->user_remover->expects(self::once())->method('removeUserFromProject');
+        $this->user_remover->expects($this->once())->method('removeUserFromProject');
 
         $this->assertTrue($this->system_event->process());
     }

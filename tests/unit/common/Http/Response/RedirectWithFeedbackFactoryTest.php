@@ -39,7 +39,7 @@ final class RedirectWithFeedbackFactoryTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $user       = UserTestBuilder::anAnonymousUser()->build();
         $feedback   = new NewFeedback(\Feedback::INFO, 'Success !');
-        $serializer->expects(self::once())
+        $serializer->expects($this->once())
             ->method('serialize')
             ->with($user, $feedback);
 

@@ -57,7 +57,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->http_request          = $this->createMock(\HTTPRequest::class);
         $this->layout                = $this->createMock(BaseLayout::class);
         $this->csrf                  = $this->createMock(\CSRFSynchronizerToken::class);
-        $this->csrf->expects(self::once())->method('check');
+        $this->csrf->expects($this->once())->method('check');
         $this->controller = new MemberAdditionController(
             $this->project_retriever,
             $this->administrator_checker,
@@ -73,11 +73,11 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkUserIsProjectAdmin(\Project $project): void
     {
         $this->http_request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->project_admin);
         $this->administrator_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserIsProjectAdministrator')
             ->with($this->project_admin, $project);
     }
@@ -86,7 +86,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('101')
             ->willReturn($project);
@@ -103,9 +103,9 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->http_request->method('get')->with('add_user_name')->willReturn('danton');
         $this->user_manager->method('findUser')->with('danton')->willReturn($user_to_add);
 
-        $this->member_adder->expects(self::once())->method('addMember')->with($user_to_add, $ugroup, $this->project_admin);
+        $this->member_adder->expects($this->once())->method('addMember')->with($user_to_add, $ugroup, $this->project_admin);
 
-        $this->layout->expects(self::once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+        $this->layout->expects($this->once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
@@ -114,7 +114,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('101')
             ->willReturn($project);
@@ -128,7 +128,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
 
         $exception_stop_exec_redirect = new \Exception('Redirect');
-        $this->layout->expects(self::once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))
+        $this->layout->expects($this->once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))
             ->willThrowException($exception_stop_exec_redirect);
 
         self::expectExceptionObject($exception_stop_exec_redirect);
@@ -139,7 +139,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('101')
             ->willReturn($project);
@@ -155,9 +155,9 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->http_request->method('get')->with('add_user_name')->willReturn('danton');
         $this->user_manager->method('findUser')->with('danton')->willReturn(null);
 
-        $this->layout->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR, self::anything());
+        $this->layout->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR, self::anything());
         $exception_stop_exec_redirect = new \Exception('Redirect');
-        $this->layout->expects(self::once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))
+        $this->layout->expects($this->once())->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))
             ->willThrowException($exception_stop_exec_redirect);
 
         self::expectExceptionObject($exception_stop_exec_redirect);

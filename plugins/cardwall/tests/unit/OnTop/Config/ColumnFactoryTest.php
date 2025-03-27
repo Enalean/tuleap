@@ -47,7 +47,7 @@ final class ColumnFactoryTest extends TestCase
 
     public function testItBuildsColumnsFromTheDataStorage(): void
     {
-        $this->dao->expects(self::once())->method('searchColumnsByTrackerId')
+        $this->dao->expects($this->once())->method('searchColumnsByTrackerId')
             ->with(42)
             ->willReturn([
                 [
@@ -98,7 +98,7 @@ final class ColumnFactoryTest extends TestCase
 
     public function testGetColumnByIdReturnsNullWhenColumnCantBeFound(): void
     {
-        $this->dao->expects(self::once())->method('searchByColumnId')
+        $this->dao->expects($this->once())->method('searchByColumnId')
             ->with(79)
             ->willReturn(false);
         self::assertNull($this->factory->getColumnById(79));
@@ -106,7 +106,7 @@ final class ColumnFactoryTest extends TestCase
 
     public function testGetColumnByIdBuildsASingleColumn(): void
     {
-        $this->dao->expects(self::once())->method('searchByColumnId')
+        $this->dao->expects($this->once())->method('searchByColumnId')
             ->with(79)
             ->willReturn(TestHelper::arrayToDar([
                 'id'             => 79,

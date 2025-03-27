@@ -28,7 +28,7 @@ class ConfigurationSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testKeysAreSaved(): void
     {
         $dao = $this->createMock(DataAccessObject::class);
-        $dao->expects(self::once())->method('save')->with('valid_site_key', 'valid_secret_key')->willReturn(true);
+        $dao->expects($this->once())->method('save')->with('valid_site_key', 'valid_secret_key')->willReturn(true);
 
         $saver = new ConfigurationSaver($dao);
 
@@ -49,7 +49,7 @@ class ConfigurationSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUnsuccessfulSaveIsNoSilent(): void
     {
         $dao = $this->createMock(DataAccessObject::class);
-        $dao->expects(self::once())->method('save')->willReturn(false);
+        $dao->expects($this->once())->method('save')->willReturn(false);
 
         $saver = new ConfigurationSaver($dao);
 

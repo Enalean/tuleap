@@ -240,8 +240,8 @@ final class ProjectCreatorCallToGerritTest extends TestCase
 
         $this->membership_manager->method('createArrayOfGroupsForServer')->willReturn([$project_admins]);
 
-        $this->umbrella_manager->expects(self::once())->method('recursivelyCreateUmbrellaProjects')->with([$this->server], $this->project);
-        $this->driver->expects(self::once())->method('createProject')->with($this->server, $this->repository, self::PROJECT_UNIX_NAME)
+        $this->umbrella_manager->expects($this->once())->method('recursivelyCreateUmbrellaProjects')->with([$this->server], $this->project);
+        $this->driver->expects($this->once())->method('createProject')->with($this->server, $this->repository, self::PROJECT_UNIX_NAME)
             ->willReturn($this->gerrit_project);
 
         $project_name = $this->project_creator->createGerritProject($this->server, $this->repository, $this->migrate_access_rights);
@@ -258,15 +258,15 @@ final class ProjectCreatorCallToGerritTest extends TestCase
         $ugroup_project_members = ProjectUGroupTestBuilder::buildProjectMembers();
         $ugroup_project_admins  = ProjectUGroupTestBuilder::buildProjectAdmins();
 
-        $this->ugroup_manager->expects(self::once())->method('getUGroups')
+        $this->ugroup_manager->expects($this->once())->method('getUGroups')
             ->with($this->project)
             ->willReturn([$ugroup_project_members, $ugroup_project_admins]);
 
-        $this->membership_manager->expects(self::once())->method('createArrayOfGroupsForServer')
+        $this->membership_manager->expects($this->once())->method('createArrayOfGroupsForServer')
             ->with($this->server, [$ugroup_project_members, $ugroup_project_admins])
             ->willReturn([$ugroup_project_members, $ugroup_project_admins]);
 
-        $this->driver->expects(self::once())->method('createProject')->with($this->server, $this->repository, self::PROJECT_UNIX_NAME)
+        $this->driver->expects($this->once())->method('createProject')->with($this->server, $this->repository, self::PROJECT_UNIX_NAME)
             ->willReturn($this->gerrit_project);
 
         $this->umbrella_manager->method('recursivelyCreateUmbrellaProjects');
@@ -283,11 +283,11 @@ final class ProjectCreatorCallToGerritTest extends TestCase
 
         $this->ugroup_manager->method('getUGroups')->willReturn([$ugroup_project_members, $ugroup_another_group, $ugroup_project_admins]);
 
-        $this->membership_manager->expects(self::once())->method('createArrayOfGroupsForServer')
+        $this->membership_manager->expects($this->once())->method('createArrayOfGroupsForServer')
             ->with($this->server, [$ugroup_project_members, $ugroup_another_group, $ugroup_project_admins])
             ->willReturn([$ugroup_project_members, $ugroup_another_group, $ugroup_project_admins]);
 
-        $this->driver->expects(self::once())->method('createProject')->with($this->server, $this->repository, self::PROJECT_UNIX_NAME)
+        $this->driver->expects($this->once())->method('createProject')->with($this->server, $this->repository, self::PROJECT_UNIX_NAME)
             ->willReturn($this->gerrit_project);
 
         $this->umbrella_manager->method('recursivelyCreateUmbrellaProjects');

@@ -101,10 +101,10 @@ final class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->changelog_entries_builder->method('buildEntriesCollectionForIssue')
             ->with('key01')->willReturn($this->buildChangelogEntriesCollection());
 
-        $this->current_snapshot_builder->expects(self::once())->method('buildCurrentSnapshot')
+        $this->current_snapshot_builder->expects($this->once())->method('buildCurrentSnapshot')
             ->willReturn($this->buildCurrentSnapshot($this->user));
 
-        $this->initial_snapshot_builder->expects(self::once())->method('buildInitialSnapshot')
+        $this->initial_snapshot_builder->expects($this->once())->method('buildInitialSnapshot')
             ->willReturn($this->buildInitialSnapshot($this->user));
 
         $this->changelog_snapshot_builder->method('buildSnapshotFromChangelogEntry')->willReturnOnConsecutiveCalls(
@@ -143,10 +143,10 @@ final class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->changelog_entries_builder->method('buildEntriesCollectionForIssue')
             ->with('key01')->willReturn($this->buildChangelogEntriesCollection());
 
-        $this->initial_snapshot_builder->expects(self::once())->method('buildInitialSnapshot')
+        $this->initial_snapshot_builder->expects($this->once())->method('buildInitialSnapshot')
             ->willReturn($this->buildInitialSnapshot($this->user));
 
-        $this->current_snapshot_builder->expects(self::once())->method('buildCurrentSnapshot')
+        $this->current_snapshot_builder->expects($this->once())->method('buildCurrentSnapshot')
             ->willReturn($this->buildCurrentSnapshotInEmptyTestCase($this->user));
 
         $this->changelog_snapshot_builder->method('buildSnapshotFromChangelogEntry')->willReturnOnConsecutiveCalls(
@@ -182,10 +182,10 @@ final class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->changelog_entries_builder->method('buildEntriesCollectionForIssue')
             ->with('key01')->willReturn($this->buildChangelogEntriesCollection());
 
-        $this->current_snapshot_builder->expects(self::once())->method('buildCurrentSnapshot')
+        $this->current_snapshot_builder->expects($this->once())->method('buildCurrentSnapshot')
             ->willReturn($this->buildCurrentSnapshot($this->user));
 
-        $this->initial_snapshot_builder->expects(self::once())->method('buildInitialSnapshot')
+        $this->initial_snapshot_builder->expects($this->once())->method('buildInitialSnapshot')
             ->willReturn($this->buildInitialSnapshot($this->user));
 
         $this->changelog_snapshot_builder->method('buildSnapshotFromChangelogEntry')->willReturnOnConsecutiveCalls(

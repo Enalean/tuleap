@@ -34,7 +34,7 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $db = $this->createMock(EasyDB::class);
 
-        $db_creator->expects(self::once())->method('createDB')->willReturn($db);
+        $db_creator->expects($this->once())->method('createDB')->willReturn($db);
         self::assertSame($db, $db_connection->getDB());
         self::assertSame($db, $db_connection->getDB());
     }
@@ -54,7 +54,7 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $db_connection = new DBConnection($db_creator);
 
         $db = $this->createMock(EasyDB::class);
-        $db_creator->expects(self::once())->method('createDB')->willReturn($db);
+        $db_creator->expects($this->once())->method('createDB')->willReturn($db);
         $db->method('run');
 
         $db_connection->reconnectAfterALongRunningProcess();

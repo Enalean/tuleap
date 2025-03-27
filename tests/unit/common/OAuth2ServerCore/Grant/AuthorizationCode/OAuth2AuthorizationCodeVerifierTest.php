@@ -89,7 +89,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'oidc_nonce'            => 'nonce',
             ]
         );
-        $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
+        $this->dao->expects($this->once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([OAuth2TestScope::fromItself()]);
 
@@ -171,7 +171,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 0,
             ]
         );
-        $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
+        $this->dao->expects($this->once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
 
         $this->expectException(OAuth2AuthCodeMatchingUnknownUserException::class);
@@ -192,7 +192,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 1,
             ]
         );
-        $this->dao->expects(self::once())->method('deleteAuthorizationCodeByID')->with($auth_code->getID());
+        $this->dao->expects($this->once())->method('deleteAuthorizationCodeByID')->with($auth_code->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
 
         $this->expectException(OAuth2AuthCodeReusedException::class);
@@ -216,7 +216,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 0,
             ]
         );
-        $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
+        $this->dao->expects($this->once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([]);
 

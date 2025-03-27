@@ -91,7 +91,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
         $this->auth_code_verifier->method('getAuthorizationCode')->willReturn(
             $this->buildAuthorizationCodeGrant()
         );
-        $this->pkce_code_verifier->expects(self::once())->method('verifyCode');
+        $this->pkce_code_verifier->expects($this->once())->method('verifyCode');
         $this->representation_builder->method('buildRepresentationFromAuthorizationCode')->willReturn(
             OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
                 new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),

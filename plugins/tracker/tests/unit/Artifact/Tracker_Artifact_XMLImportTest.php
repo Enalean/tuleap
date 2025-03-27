@@ -177,9 +177,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     {
         $archive = $this->createMock(Tracker_Artifact_XMLImport_XMLImportZipArchive::class);
         $archive->method('getXML')->willReturn('<?xml version="1.0"?><artifacts />');
-        $archive->expects(self::once())->method('extractFiles');
+        $archive->expects($this->once())->method('extractFiles');
         $archive->method('getExtractionPath')->willReturn($this->extraction_path);
-        $archive->expects(self::once())->method('cleanUp');
+        $archive->expects($this->once())->method('cleanUp');
 
         $importer = $this->getMockBuilder(Tracker_Artifact_XMLImport::class)
             ->setConstructorArgs([
@@ -196,7 +196,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
                 $this->private_comment_extractor,
                 $this->db_connection,
             ])->onlyMethods(['importFromXML'])->getMock();
-        $importer->expects(self::once())->method('importFromXML')
+        $importer->expects($this->once())->method('importFromXML')
             ->with(
                 $this->tracker,
                 self::isInstanceOf(SimpleXMLElement::class),
@@ -212,7 +212,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     public function testItCreatesArtifactOnTracker(): void
     {
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker)->willReturn(ArtifactTestBuilder::anArtifact(41864)->inTracker($this->tracker)->build());
 
         $this->importer->importFromXML(
@@ -230,10 +230,10 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $data = [$this->summary_field_id => 'Ça marche'];
 
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker)->willReturn(ArtifactTestBuilder::anArtifact(41864)->inTracker($this->tracker)->build());
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -265,7 +265,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     public function testItCreatedArtifactWithSubmitter(): void
     {
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker)->willReturn(ArtifactTestBuilder::anArtifact(41864)->inTracker($this->tracker)->build());
 
         $this->importer->importFromXML(
@@ -281,7 +281,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     public function testItCreatesArtifactAtDate(): void
     {
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker, self::anything(), strtotime('2014-01-15T10:38:06+01:00'))
             ->willReturn(ArtifactTestBuilder::anArtifact(41864)->inTracker($this->tracker)->build());
 
@@ -316,7 +316,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     public function testItCreatesTheComments(): void
     {
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -397,7 +397,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesTheCommentsWithUpdates(): void
     {
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -417,7 +417,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')
+        $this->new_changeset_creator->expects($this->once())->method('create')
             ->with(self::callback(function (NewChangeset $new_changeset) {
                 $comment = $new_changeset->getComment();
                 if ($comment->getBody() !== 'Some text') {
@@ -430,8 +430,8 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             }))
             ->willReturn($changeset);
 
-        $changeset->expects(self::once())->method('updateCommentWithoutNotification')->with('<p>Some text</p>', $this->john_doe, CommentFormatIdentifier::HTML->value, strtotime('2014-01-15T11:23:50+01:00'), []);
-        $changeset->expects(self::once())->method('getArtifact')->willReturn(ArtifactTestBuilder::anArtifact(1486)->build());
+        $changeset->expects($this->once())->method('updateCommentWithoutNotification')->with('<p>Some text</p>', $this->john_doe, CommentFormatIdentifier::HTML->value, strtotime('2014-01-15T11:23:50+01:00'), []);
+        $changeset->expects($this->once())->method('getArtifact')->willReturn(ArtifactTestBuilder::anArtifact(1486)->build());
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
@@ -493,7 +493,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
                 (string) $comment->private_ugroups->ugroup[1] === 'the_best_group' => [$my_group, $my_best_group],
             });
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -513,7 +513,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')
+        $this->new_changeset_creator->expects($this->once())->method('create')
             ->with(self::callback(function (NewChangeset $new_changeset) use ($my_other_group, $my_group) {
                 $comment = $new_changeset->getComment();
                 if ($comment->getBody() !== 'Some text') {
@@ -529,7 +529,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             }))
             ->willReturn($changeset);
 
-        $changeset->expects(self::once())->method('updateCommentWithoutNotification')
+        $changeset->expects($this->once())->method('updateCommentWithoutNotification')
             ->with(
                 'New comment update',
                 $this->john_doe,
@@ -537,7 +537,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
                 strtotime('2014-01-15T11:23:50+01:00'),
                 [$my_group, $my_best_group]
             );
-        $changeset->expects(self::once())->method('getArtifact')->willReturn(ArtifactTestBuilder::anArtifact(2465)->build());
+        $changeset->expects($this->once())->method('getArtifact')->willReturn(ArtifactTestBuilder::anArtifact(2465)->build());
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
@@ -605,7 +605,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->willReturnCallback(
                 fn(Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact => match (true) {
                     $user->isAnonymous() && $user->getEmail() === 'jmalko' => $this->artifact
@@ -643,7 +643,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $this->user_manager->expects(self::atLeastOnce())->method('getUserByIdentifier')->with('id:700')->willReturn($this->john_doe);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker, $this->john_doe)->willReturn($this->artifact);
 
         $this->importer->importFromXML(
@@ -675,7 +675,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             ->with('ldapId:uid=jo,ou=people,dc=example,dc=com')
             ->willReturn($this->john_doe);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker, $this->john_doe)->willReturn($this->artifact);
 
         $this->importer->importFromXML(
@@ -705,7 +705,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $this->user_manager->expects(self::atLeastOnce())->method('getUserByIdentifier')->with('email:jo@example.com')->willReturn($this->john_doe);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker, $this->john_doe)->willReturn($this->artifact);
 
         $this->importer->importFromXML(
@@ -743,14 +743,14 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesTwoChangesets(): void
     {
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturn(ChangesetTestBuilder::aChangeset(41654)->build());
 
         $this->artifact_creator->method('create')->willReturn($this->artifact);
 
-        $this->new_changeset_creator->expects(self::once())->method('create');
+        $this->new_changeset_creator->expects($this->once())->method('create');
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
         $this->formelement_factory->method('getUsedFieldByName')->willReturn(null);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
@@ -771,9 +771,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             $this->summary_field_id => '^Wit updates',
         ];
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -790,7 +790,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $this->artifact_creator->method('create')->willReturn($this->artifact);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')
+        $this->new_changeset_creator->expects($this->once())->method('create')
             ->with(self::callback(function (NewChangeset $new_changeset) use ($data) {
                 if ($new_changeset->getFieldsData() !== $data) {
                     return false;
@@ -816,9 +816,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesTheNewChangesetWithSubmitter(): void
     {
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -835,7 +835,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $this->artifact_creator->method('create')->willReturn($this->artifact);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')
+        $this->new_changeset_creator->expects($this->once())->method('create')
             ->with(self::callback(function (NewChangeset $new_changeset) {
                 if ($new_changeset->getSubmitter() !== $this->john_doe) {
                     return false;
@@ -860,9 +860,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesTheNewChangesetWithoutNotification(): void
     {
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -879,7 +879,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $this->artifact_creator->method('create')->willReturn($this->artifact);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')->willReturn(ChangesetTestBuilder::aChangeset(4265)->build());
+        $this->new_changeset_creator->expects($this->once())->method('create')->willReturn(ChangesetTestBuilder::aChangeset(4265)->build());
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
         $this->formelement_factory->method('getUsedFieldByName')->willReturn(null);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
@@ -896,14 +896,14 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesTheChangesetsAccordingToDates(): void
     {
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->willReturnCallback(
                 fn(Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact => match (true) {
                     $tracker === $this->tracker && $submitted_on === strtotime('2014-01-15T10:38:06+01:00') => $this->artifact
                 }
             );
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -920,7 +920,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $this->artifact_creator->method('create')->willReturn($this->artifact);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')
+        $this->new_changeset_creator->expects($this->once())->method('create')
             ->with(self::callback(function (NewChangeset $new_changeset) {
                 if ($new_changeset->getSubmissionTimestamp() !== strtotime('2014-01-15T11:03:50+01:00')) {
                     return false;
@@ -964,11 +964,11 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker, self::anything(), strtotime('2014-01-15T10:38:06+01:00'))
             ->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -985,7 +985,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         $this->artifact_creator->method('create')->willReturn($this->artifact);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')
+        $this->new_changeset_creator->expects($this->once())->method('create')
             ->with(self::callback(function (NewChangeset $new_changeset) {
                 if ($new_changeset->getSubmissionTimestamp() !== strtotime('2014-01-15T11:03:50+01:00')) {
                     return false;
@@ -1043,11 +1043,11 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->with($this->tracker, self::anything(), strtotime('2014-01-15T10:38:06+01:00'))
             ->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1212,10 +1212,10 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             $this->summary_field_id => 'Newly submitted',
         ];
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1259,7 +1259,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
         touch($this->extraction_path . '/34_File33.png');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->willReturn($this->artifact);
 
         $this->new_changeset_creator->method('create')->willReturn(ChangesetTestBuilder::aChangeset(48)->build());
@@ -1317,10 +1317,10 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->user_manager->method('getUserByIdentifier')->with('manuel')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')
+        $this->artifact_creator->expects($this->once())->method('createBare')
             ->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1386,7 +1386,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->user_manager->method('getUserByIdentifier')->with('manuel')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -1446,7 +1446,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->user_manager->method('getUserByIdentifier')->with('manuel')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
         $this->new_changeset_creator->method('create')
             ->with(
@@ -1534,9 +1534,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1586,9 +1586,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1637,9 +1637,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1718,9 +1718,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1773,9 +1773,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1829,9 +1829,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1898,9 +1898,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -1966,9 +1966,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
               </artifact>
             </artifacts>');
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -2038,9 +2038,9 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
             'john_doe' => $this->john_doe,
         });
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
 
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
                     Artifact $artifact,
@@ -2099,8 +2099,8 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesTheLastChangesetEvenWhenTheIntermediateFails(): void
     {
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')->willReturn(ChangesetTestBuilder::aChangeset(14561)->build());
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')->willReturn(ChangesetTestBuilder::aChangeset(14561)->build());
 
         $changeset = ChangesetTestBuilder::aChangeset(464265)->build();
         $this->new_changeset_creator->method('create')->willReturnOnConsecutiveCalls(null, $changeset, $changeset);
@@ -2120,8 +2120,8 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesTheLastChangesetEvenWhenTheIntermediateThrowsException(): void
     {
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($this->artifact);
-        $this->artifact_creator->expects(self::once())->method('createFirstChangeset')->willReturn(ChangesetTestBuilder::aChangeset(18641)->build());
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($this->artifact);
+        $this->artifact_creator->expects($this->once())->method('createFirstChangeset')->willReturn(ChangesetTestBuilder::aChangeset(18641)->build());
 
         $changeset = ChangesetTestBuilder::aChangeset(4526456)->build();
         $this->new_changeset_creator->method('create')->willReturnOnConsecutiveCalls(self::throwException(new Exception('Bad luck')), $changeset, $changeset);
@@ -2316,8 +2316,8 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $changeset1 = ChangesetTestBuilder::aChangeset(11001)->build();
         $changeset2 = ChangesetTestBuilder::aChangeset(11002)->build();
 
-        $artifact_creator->expects(self::once())->method('createFirstChangeset')->willReturn($changeset1);
-        $new_changeset_creator->expects(self::once())->method('create')->willReturn($changeset2);
+        $artifact_creator->expects($this->once())->method('createFirstChangeset')->willReturn($changeset1);
+        $new_changeset_creator->expects($this->once())->method('create')->willReturn($changeset2);
 
         $importer->importArtifactChangesFromXML(
             $tracker,
@@ -2338,7 +2338,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     public function testItCreatesArtifactsWithProvidedIds(): void
     {
         $this->artifact_creator->expects(self::never())->method('createBare');
-        $this->artifact_creator->expects(self::once())->method('createBareWithAllData')
+        $this->artifact_creator->expects($this->once())->method('createBareWithAllData')
             ->with($this->tracker, 4918)
             ->willReturn(ArtifactTestBuilder::anArtifact(4918)->inTracker($this->tracker)->build());
         $this->user_manager->method('getUserByIdentifier')->with('john_doe')->willReturn($this->john_doe);

@@ -76,8 +76,8 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelRepresentation(6),
         ];
 
-        $this->item_label_dao->expects(self::once())->method('addLabelsInTransaction')->with(101, [1, 2, 3]);
-        $this->item_label_dao->expects(self::once())->method('removeLabelsInTransaction')->with(101, [4, 5, 6]);
+        $this->item_label_dao->expects($this->once())->method('addLabelsInTransaction')->with(101, [1, 2, 3]);
+        $this->item_label_dao->expects($this->once())->method('removeLabelsInTransaction')->with(101, [4, 5, 6]);
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -89,8 +89,8 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelRepresentation(1),
         ];
 
-        $this->project_label_dao->expects(self::once())->method('startTransaction');
-        $this->project_label_dao->expects(self::once())->method('commit');
+        $this->project_label_dao->expects($this->once())->method('startTransaction');
+        $this->project_label_dao->expects($this->once())->method('commit');
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -104,8 +104,8 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelRepresentation(3),
         ];
 
-        $this->item_label_dao->expects(self::once())->method('addLabelsInTransaction')->with(101, [1, 2, 3]);
-        $this->item_label_dao->expects(self::once())->method('removeLabelsInTransaction')->with(101, []);
+        $this->item_label_dao->expects($this->once())->method('addLabelsInTransaction')->with(101, [1, 2, 3]);
+        $this->item_label_dao->expects($this->once())->method('removeLabelsInTransaction')->with(101, []);
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -119,8 +119,8 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelRepresentation(6),
         ];
 
-        $this->item_label_dao->expects(self::once())->method('addLabelsInTransaction')->with(101, []);
-        $this->item_label_dao->expects(self::once())->method('removeLabelsInTransaction')->with(101, [4, 5, 6]);
+        $this->item_label_dao->expects($this->once())->method('addLabelsInTransaction')->with(101, []);
+        $this->item_label_dao->expects($this->once())->method('removeLabelsInTransaction')->with(101, [4, 5, 6]);
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -140,7 +140,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::expectException(\Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException::class);
         $this->item_label_dao->expects(self::never())->method('addLabelsInTransaction');
         $this->item_label_dao->expects(self::never())->method('removeLabelsInTransaction');
-        $this->project_label_dao->expects(self::once())->method('rollback');
+        $this->project_label_dao->expects($this->once())->method('rollback');
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -157,7 +157,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(\Tuleap\Label\UnknownLabelException::class);
         $this->item_label_dao->expects(self::never())->method('addLabelsInTransaction');
         $this->item_label_dao->expects(self::never())->method('removeLabelsInTransaction');
-        $this->project_label_dao->expects(self::once())->method('rollback');
+        $this->project_label_dao->expects($this->once())->method('rollback');
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -173,7 +173,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelToCreateRepresentation('Emergency Fix'),
         ];
 
-        $this->item_label_dao->expects(self::once())->method('addLabelsInTransaction')->with(101, [1, 2, 10]);
+        $this->item_label_dao->expects($this->once())->method('addLabelsInTransaction')->with(101, [1, 2, 10]);
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -185,7 +185,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelToCreateRepresentation('  Emergency Fix  '),
         ];
 
-        $this->project_label_dao->expects(self::once())->method('createIfNeededInTransaction')->with(66, 'Emergency Fix', self::anything());
+        $this->project_label_dao->expects($this->once())->method('createIfNeededInTransaction')->with(66, 'Emergency Fix', self::anything());
 
         $this->updater->update($this->project_id, $this->item, $body);
     }

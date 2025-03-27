@@ -34,7 +34,7 @@ final class VisitCleanerTest extends TestCase
         $user    = UserTestBuilder::anActiveUser()->withId($user_id)->build();
 
         $recently_visited_dao = $this->createMock(RecentlyVisitedDao::class);
-        $recently_visited_dao->expects(self::once())->method('deleteVisitByUserId')->with($user_id);
+        $recently_visited_dao->expects($this->once())->method('deleteVisitByUserId')->with($user_id);
 
         $visit_cleaner = new VisitCleaner($recently_visited_dao);
         $visit_cleaner->clearVisitedArtifacts($user);

@@ -144,7 +144,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItValidateFields(): void
     {
         $context = new NullChangesetValidationContext();
-        $this->fields_validator->expects(self::once())
+        $this->fields_validator->expects($this->once())
             ->method('validate')
             ->with(
                 self::callback(
@@ -203,7 +203,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->fields_validator->method('validate')->willReturn(true);
 
-        $this->dao->expects(self::once())->method('create')->with(123, 101, 1234567890, 0);
+        $this->dao->expects($this->once())->method('create')->with(123, 101, 1234567890, 0);
 
         $artifact_creator = $this->getCreator(
             CreateInitialChangesetStub::withChangesetCreationExpected(),
@@ -308,8 +308,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->bare_artifact->setId(1001);
 
-        $this->event_dispatcher->expects(self::once())->method('dispatch');
-        $this->visit_recorder->expects(self::once())->method('record');
+        $this->event_dispatcher->expects($this->once())->method('dispatch');
+        $this->visit_recorder->expects($this->once())->method('record');
 
         $create_initial_changeset_stub = CreateInitialChangesetStub::withChangesetCreationExpected();
         $this->getCreator(
@@ -337,8 +337,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->send_notification = false;
         $this->bare_artifact->setId(1001);
 
-        $this->visit_recorder->expects(self::once())->method('record');
-        $this->event_dispatcher->expects(self::once())->method('dispatch');
+        $this->visit_recorder->expects($this->once())->method('record');
+        $this->event_dispatcher->expects($this->once())->method('dispatch');
 
         $artifact_creator = $this->getCreator(
             CreateInitialChangesetStub::withChangesetCreationExpected(),
@@ -366,7 +366,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->visit_recorder->expects(self::never())->method('record');
 
-        $this->event_dispatcher->expects(self::once())->method('dispatch');
+        $this->event_dispatcher->expects($this->once())->method('dispatch');
 
         $artifact_creator = $this->getCreator(
             CreateInitialChangesetStub::withChangesetCreationExpected(),

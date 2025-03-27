@@ -122,7 +122,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
 
     public function testSetSVNPrivacyPrivate(): void
     {
-        $this->backend->expects(self::once())->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0770)->willReturn(true);
+        $this->backend->expects($this->once())->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0770)->willReturn(true);
         $this->backend->method('getProjectManager')->willReturn($this->project_manager);
         $project = $this->createMock(Project::class);
         $project->method('getUnixNameMixedCase')->willReturn('toto');
@@ -132,7 +132,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
 
     public function testsetSVNPrivacyPublic(): void
     {
-        $this->backend->expects(self::once())->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0775)->willReturn(true);
+        $this->backend->expects($this->once())->method('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0775)->willReturn(true);
         $project = $this->createMock(Project::class);
         $project->method('getUnixNameMixedCase')->willReturn('toto');
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
@@ -162,7 +162,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         $project = $this->createMock(Project::class);
         $project->method('getUnixName')->willReturn('toto');
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
-        $backend->expects(self::once())->method('log');
+        $backend->expects($this->once())->method('log');
 
         self::expectException(BackendSVNFileForSimlinkAlreadyExistsException::class);
         $backend->updateHooks(

@@ -115,7 +115,7 @@ final class PostReceiveTest extends TestCase
 
     public function testItGetRepositoryFromFactory(): void
     {
-        $this->git_repository_factory->expects(self::once())->method('getFromFullPath')->with(self::REPOSITORY_PATH);
+        $this->git_repository_factory->expects($this->once())->method('getFromFullPath')->with(self::REPOSITORY_PATH);
 
         $this->executePostReceive();
     }
@@ -155,7 +155,7 @@ final class PostReceiveTest extends TestCase
         $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
         $this->user_retriever = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$this->user]);
 
-        $this->log_analyzer->expects(self::once())->method('getPushDetails')
+        $this->log_analyzer->expects($this->once())->method('getPushDetails')
             ->with($this->repository, self::anything(), self::OLD_REV_SHA1, self::NEW_REV_SHA1, self::MASTER_REF_NAME)
             ->willReturn($this->getPushDetailsWithoutRevisions());
         $this->ci_launcher->method('executeForRepository');
@@ -172,7 +172,7 @@ final class PostReceiveTest extends TestCase
         $this->log_analyzer->method('getPushDetails')->willReturn($push_details);
 
         $this->ci_launcher->method('executeForRepository');
-        $this->parse_log->expects(self::once())->method('execute')->with($push_details);
+        $this->parse_log->expects($this->once())->method('execute')->with($push_details);
         $this->executePostReceive();
     }
 
@@ -182,7 +182,7 @@ final class PostReceiveTest extends TestCase
         $this->user_retriever = ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())->withUsers([$this->user]);
         $this->log_analyzer->method('getPushDetails')->willReturn($this->getPushDetailsWithNewRevision());
 
-        $this->ci_launcher->expects(self::once())->method('executeForRepository')->with($this->repository);
+        $this->ci_launcher->expects($this->once())->method('executeForRepository')->with($this->repository);
         $this->parse_log->method('execute');
         $this->executePostReceive();
     }
@@ -246,7 +246,7 @@ final class PostReceiveTest extends TestCase
     {
         $this->git_repository_factory->method('getFromFullPath')->willReturn($this->repository);
 
-        $this->default_branch_post_receive_updater->expects(self::once())->method('updateDefaultBranchWhenNeeded');
+        $this->default_branch_post_receive_updater->expects($this->once())->method('updateDefaultBranchWhenNeeded');
 
         $this->beforeParsing();
     }

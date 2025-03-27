@@ -71,9 +71,9 @@ final class GitRepositoryTest extends TestCase
         $pm->method('getProjectByUnixName')->willReturn($project);
         $dao = $this->createMock(GitDao::class);
         $repo->method('getDao')->willReturn($dao);
-        $dao->expects(self::once())->method('getProjectRepositoryByName')->willReturn(['repository_id' => 48]);
+        $dao->expects($this->once())->method('getProjectRepositoryByName')->willReturn(['repository_id' => 48]);
 
-        $repo->expects(self::once())->method('_getProjectManager')->willReturn($pm);
+        $repo->expects($this->once())->method('_getProjectManager')->willReturn($pm);
 
         self::assertEquals(48, $repo->getRepositoryIDByName('repo', 'prj'));
     }
@@ -86,9 +86,9 @@ final class GitRepositoryTest extends TestCase
         $pm->method('getProjectByUnixName')->willReturn($project);
         $dao = $this->createMock(GitDao::class);
         $repo->method('getDao')->willReturn($dao);
-        $dao->expects(self::once())->method('getProjectRepositoryByName')->willReturn(false);
+        $dao->expects($this->once())->method('getProjectRepositoryByName')->willReturn(false);
 
-        $repo->expects(self::once())->method('_getProjectManager')->willReturn($pm);
+        $repo->expects($this->once())->method('_getProjectManager')->willReturn($pm);
 
         self::assertEquals(0, $repo->getRepositoryIDByName('repo', 'prj'));
     }
@@ -99,7 +99,7 @@ final class GitRepositoryTest extends TestCase
         $pm   = $this->createMock(ProjectManager::class);
         $pm->method('getProjectByUnixName')->willReturn(false);
 
-        $repo->expects(self::once())->method('_getProjectManager')->willReturn($pm);
+        $repo->expects($this->once())->method('_getProjectManager')->willReturn($pm);
 
         self::assertSame(0, $repo->getRepositoryIDByName('repo', 'prj'));
     }

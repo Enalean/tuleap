@@ -133,7 +133,7 @@ final class GitActionsTest extends TestCase
         $gitRepository = $this->createMock(GitRepository::class);
         $this->gitAction->method('getGitRepository')->willReturn($gitRepository);
 
-        $git->expects(self::once())->method('addError')->with('Empty required parameter(s)');
+        $git->expects($this->once())->method('addError')->with('Empty required parameter(s)');
         $git->expects(self::never())->method('addInfo');
         $gitRepository->expects(self::never())->method('setMailPrefix');
         $gitRepository->expects(self::never())->method('changeMailPrefix');
@@ -150,7 +150,7 @@ final class GitActionsTest extends TestCase
         $this->gitAction->method('getGitRepository')->willReturn($gitRepository);
 
         $git->expects(self::never())->method('addError');
-        $git->expects(self::once())->method('addInfo')->with('Mail prefix updated');
+        $git->expects($this->once())->method('addInfo')->with('Mail prefix updated');
         $backend = $this->createMock(Git_Backend_Gitolite::class);
         $backend->method('save');
         $backend->method('changeRepositoryMailPrefix');
@@ -190,7 +190,7 @@ final class GitActionsTest extends TestCase
         $gitRepository = new GitRepository();
         $this->gitAction->method('getGitRepository')->willReturn($gitRepository);
 
-        $git->expects(self::once())->method('addError')->with('Empty required parameter(s)');
+        $git->expects($this->once())->method('addError')->with('Empty required parameter(s)');
         $git->expects(self::never())->method('addInfo');
         $this->gitAction->method('addData');
 
@@ -273,7 +273,7 @@ final class GitActionsTest extends TestCase
         $this->gitAction->method('addData');
 
         $git->expects(self::never())->method('addError');
-        $git->expects(self::once())->method('addInfo')->with('Mail added');
+        $git->expects($this->once())->method('addInfo')->with('Mail added');
 
         $mails = ['john.doe@acme.com',
             'jane.doe@acme.com',
@@ -311,7 +311,7 @@ final class GitActionsTest extends TestCase
         $this->gitAction->method('getGitRepository')->willReturn($gitRepository);
         $this->gitAction->method('addData');
 
-        $git->expects(self::once())->method('addError')->with('Empty required parameter(s)');
+        $git->expects($this->once())->method('addError')->with('Empty required parameter(s)');
         $git->expects(self::never())->method('addInfo');
 
         self::assertFalse($this->gitAction->notificationRemoveMail(1, 1, null, 'a_pane'));
@@ -328,7 +328,7 @@ final class GitActionsTest extends TestCase
         $this->gitAction->method('getGitRepository')->willReturn($gitRepository);
         $this->gitAction->method('addData');
 
-        $git->expects(self::once())->method('addError')->with('Could not remove mail john.doe@acme.com');
+        $git->expects($this->once())->method('addError')->with('Could not remove mail john.doe@acme.com');
         $git->expects(self::never())->method('addInfo');
 
         self::assertFalse($this->gitAction->notificationRemoveMail(1, 1, ['john.doe@acme.com'], 'a_pane'));
@@ -346,7 +346,7 @@ final class GitActionsTest extends TestCase
         $this->gitAction->method('addData');
 
         $git->expects(self::never())->method('addError');
-        $git->expects(self::once())->method('addInfo')->with('Mail john.doe@acme.com removed');
+        $git->expects($this->once())->method('addInfo')->with('Mail john.doe@acme.com removed');
 
         self::assertTrue($this->gitAction->notificationRemoveMail(1, 1, ['john.doe@acme.com'], 'a_pane'));
     }
@@ -358,7 +358,7 @@ final class GitActionsTest extends TestCase
         $gitRepository = $this->createMock(GitRepository::class);
         $this->gitAction->method('getGitRepository')->willReturn($gitRepository);
 
-        $git->expects(self::once())->method('addError')->with('Empty required parameter(s)');
+        $git->expects($this->once())->method('addError')->with('Empty required parameter(s)');
         $git->expects(self::never())->method('addWarn');
         $gitRepository->expects(self::never())->method('getNonMemberMails');
         $gitRepository->expects(self::never())->method('setDescription');
@@ -376,7 +376,7 @@ final class GitActionsTest extends TestCase
         $gitRepository = $this->createMock(GitRepository::class);
         $gitAction->method('getGitRepository')->willReturn($gitRepository);
 
-        $git->expects(self::once())->method('addError')->with('Empty required parameter(s)');
+        $git->expects($this->once())->method('addError')->with('Empty required parameter(s)');
         $git->expects(self::never())->method('addWarn');
         $gitRepository->expects(self::never())->method('getNonMemberMails');
         $gitRepository->expects(self::never())->method('setDescription');
@@ -394,7 +394,7 @@ final class GitActionsTest extends TestCase
         $gitRepository = $this->createMock(GitRepository::class);
         $gitAction->method('getGitRepository')->willReturn($gitRepository);
 
-        $git->expects(self::once())->method('addError')->with('Empty required parameter(s)');
+        $git->expects($this->once())->method('addError')->with('Empty required parameter(s)');
         $git->expects(self::never())->method('addWarn');
         $gitRepository->expects(self::never())->method('getNonMemberMails');
         $gitRepository->expects(self::never())->method('setDescription');
@@ -419,7 +419,7 @@ final class GitActionsTest extends TestCase
         $gitRepository->expects(self::never())->method('getNonMemberMails');
         $gitRepository->expects(self::never())->method('setDescription');
         $gitRepository->expects(self::never())->method('save');
-        $gitAction->expects(self::once())->method('save');
+        $gitAction->expects($this->once())->method('save');
 
         self::assertTrue($gitAction->confirmPrivate(1, 1, 'public', 'desc'));
     }
@@ -439,7 +439,7 @@ final class GitActionsTest extends TestCase
         $gitRepository->expects(self::never())->method('getNonMemberMails');
         $gitRepository->expects(self::never())->method('setDescription');
         $gitRepository->expects(self::never())->method('save');
-        $gitAction->expects(self::once())->method('save');
+        $gitAction->expects($this->once())->method('save');
 
         self::assertTrue($gitAction->confirmPrivate(1, 1, 'private', 'desc'));
     }
@@ -456,10 +456,10 @@ final class GitActionsTest extends TestCase
 
         $git->expects(self::never())->method('addError');
         $git->expects(self::never())->method('addWarn');
-        $gitRepository->expects(self::once())->method('getNonMemberMails')->willReturn([]);
+        $gitRepository->expects($this->once())->method('getNonMemberMails')->willReturn([]);
         $gitRepository->expects(self::never())->method('setDescription');
         $gitRepository->expects(self::never())->method('save');
-        $gitAction->expects(self::once())->method('save');
+        $gitAction->expects($this->once())->method('save');
 
         self::assertTrue($gitAction->confirmPrivate(1, 1, 'private', 'desc'));
     }
@@ -474,10 +474,10 @@ final class GitActionsTest extends TestCase
         $gitAction->method('getGitRepository')->willReturn($gitRepository);
 
         $git->expects(self::never())->method('addError');
-        $git->expects(self::once())->method('addWarn')->with('Making the repository access private will remove notification for all mail addresses that doesn\'t correspond to a user member of this project.');
-        $gitRepository->expects(self::once())->method('getNonMemberMails')->willReturn(['john.doe@acme.com']);
-        $gitRepository->expects(self::once())->method('setDescription');
-        $gitRepository->expects(self::once())->method('save');
+        $git->expects($this->once())->method('addWarn')->with('Making the repository access private will remove notification for all mail addresses that doesn\'t correspond to a user member of this project.');
+        $gitRepository->expects($this->once())->method('getNonMemberMails')->willReturn(['john.doe@acme.com']);
+        $gitRepository->expects($this->once())->method('setDescription');
+        $gitRepository->expects($this->once())->method('save');
         $gitAction->expects(self::never())->method('save');
         $gitAction->expects(self::exactly(3))->method('addData');
 

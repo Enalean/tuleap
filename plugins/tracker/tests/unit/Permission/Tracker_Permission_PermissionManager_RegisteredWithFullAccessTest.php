@@ -94,7 +94,7 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
             ]
         );
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::WARN);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::WARN);
 
         $this->permission_manager->save($request, $this->permission_setter);
     }

@@ -115,13 +115,13 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timetracking_enabler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTimetrackingEnabledForTracker')
             ->with($exported_tracker)
             ->willReturn(true);
 
         $this->timetracking_ugroup_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getReaderUgroupsForTracker')
             ->with($exported_tracker)
             ->willReturn(
@@ -129,7 +129,7 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->timetracking_ugroup_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getWriterUgroupsForTracker')
             ->with($exported_tracker)
             ->willReturn(
@@ -138,13 +138,13 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact = $this->createMock(Artifact::class);
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactsByTrackerId')
             ->with(789)
             ->willReturn([$artifact]);
 
         $this->time_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTimesForUser')
             ->with(
                 $this->user,
@@ -166,7 +166,7 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $another_user->method('getId')->willReturn(104);
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUserById')
             ->with(104)
             ->willReturn($another_user);
@@ -218,7 +218,7 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timetracking_enabler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTimetrackingEnabledForTracker')
             ->with($exported_tracker)
             ->willReturn(false);

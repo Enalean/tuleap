@@ -80,8 +80,8 @@ final class CleanUpGitoliteAdminRepoTest extends TestCase
         (new Process(['cp', '-r', 'admin', 'admin.old'], $this->fixtures))->mustRun();
         $this->command->setNextCommand($next);
 
-        $this->response->expects(self::once())->method('error')->with("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.");
-        $this->response->expects(self::once())->method('abort');
+        $this->response->expects($this->once())->method('error')->with("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.");
+        $this->response->expects($this->once())->method('abort');
         $next->expects(self::never())->method('execute');
 
         $this->command->execute();
@@ -106,7 +106,7 @@ final class CleanUpGitoliteAdminRepoTest extends TestCase
 
     public function testItDisplaysMeaningfulFeedbackToTheUser(): void
     {
-        $this->response->expects(self::once())->method('info')->with("Moving admin to $this->fixtures/admin.old and cloning $this->remote_admin_repository");
+        $this->response->expects($this->once())->method('info')->with("Moving admin to $this->fixtures/admin.old and cloning $this->remote_admin_repository");
 
         $this->command->execute();
     }
@@ -114,7 +114,7 @@ final class CleanUpGitoliteAdminRepoTest extends TestCase
     public function testItExecutesTheNextCommand(): void
     {
         $next = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
-        $next->expects(self::once())->method('execute');
+        $next->expects($this->once())->method('execute');
 
         $this->command->setNextCommand($next);
 

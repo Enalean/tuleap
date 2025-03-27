@@ -57,7 +57,7 @@ final class VersionToUploadCreatorTest extends TestCase
         $current_time = new DateTimeImmutable();
 
         $this->dao->method('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->willReturn([]);
-        $this->dao->expects(self::once())->method('saveDocumentVersionOngoingUpload')->willReturn(12);
+        $this->dao->expects($this->once())->method('saveDocumentVersionOngoingUpload')->willReturn(12);
 
         $document_to_upload = $creator->create(
             $item,

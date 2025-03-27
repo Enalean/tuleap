@@ -140,7 +140,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mail_builder = $this->createMock(\MailBuilder::class);
         $mail_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildAndSendEmail')
             ->with(
                 $project,
@@ -158,13 +158,13 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $dao = $this->createMock(IntegrationApiTokenDao::class);
         $dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('storeTheFactWeAlreadySendEmailForInvalidToken')
             ->with(1);
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('Notification has been sent to project administrators to warn them that the token appears to be invalid');
 

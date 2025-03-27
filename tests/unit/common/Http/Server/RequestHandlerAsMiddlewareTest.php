@@ -32,7 +32,7 @@ final class RequestHandlerAsMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
         $request_handler   = $this->createMock(RequestHandlerInterface::class);
-        $request_handler->expects(self::once())->method('handle')->willReturn($expected_response);
+        $request_handler->expects($this->once())->method('handle')->willReturn($expected_response);
 
         $middleware = new RequestHandlerAsMiddleware($request_handler);
         $response   = $middleware->process(

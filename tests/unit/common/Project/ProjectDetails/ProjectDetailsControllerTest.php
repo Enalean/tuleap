@@ -98,7 +98,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new UpdateVisibilityChecker($this->event_manager),
         );
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $GLOBALS['Response'] = $this->createMock(BaseLayout::class);
     }
@@ -127,7 +127,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
         $this->controller->update($request);
     }
@@ -149,7 +149,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
         $this->controller->update($request);
     }
@@ -173,7 +173,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
         $this->controller->update($request);
     }
@@ -227,15 +227,15 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->current_project->expects(self::once())->method('getProjectsDescFieldsValue')->willReturn([]);
+        $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
-        $this->project_details_dao->expects(self::once())->method('updateGroupNameAndDescription');
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
-        $this->event_manager->expects(self::once())->method('processEvent');
-        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureProjectVisibility')->willReturn(false);
-        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureTruncatedMail')->willReturn(false);
+        $this->project_details_dao->expects($this->once())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
+        $this->event_manager->expects($this->once())->method('processEvent');
+        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureProjectVisibility')->willReturn(false);
+        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureTruncatedMail')->willReturn(false);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
 
         $this->controller->update($request);
     }
@@ -314,13 +314,13 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->current_project->expects(self::once())->method('getProjectsDescFieldsValue')->willReturn([]);
+        $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
-        $this->project_details_dao->expects(self::once())->method('updateGroupNameAndDescription');
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
-        $this->event_manager->expects(self::once())->method('processEvent');
-        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureProjectVisibility')->willReturn(true);
-        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureTruncatedMail')->willReturn(false);
+        $this->project_details_dao->expects($this->once())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
+        $this->event_manager->expects($this->once())->method('processEvent');
+        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureProjectVisibility')->willReturn(true);
+        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureTruncatedMail')->willReturn(false);
         $matcher = self::exactly(2);
 
         $GLOBALS['Response']->expects($matcher)->method('addFeedback')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -389,15 +389,15 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->current_project->expects(self::once())->method('getProjectsDescFieldsValue')->willReturn([]);
+        $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
-        $this->project_details_dao->expects(self::once())->method('updateGroupNameAndDescription');
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
-        $this->event_manager->expects(self::once())->method('processEvent');
-        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureProjectVisibility')->willReturn(false);
-        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureTruncatedMail')->willReturn(false);
+        $this->project_details_dao->expects($this->once())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
+        $this->event_manager->expects($this->once())->method('processEvent');
+        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureProjectVisibility')->willReturn(false);
+        $this->project_visibility_configuration->expects($this->once())->method('canUserConfigureTruncatedMail')->willReturn(false);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
 
         $this->controller->update($request);
     }

@@ -155,7 +155,7 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->willReturn(42);
 
         $this->config_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveInt')
             ->with('max_invitations_by_day', 10);
 

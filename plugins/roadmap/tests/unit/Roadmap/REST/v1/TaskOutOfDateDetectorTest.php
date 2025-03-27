@@ -93,7 +93,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
     public function testItReturnsFalseWhenTrackerHasNoStatusSemanticDefined(): void
     {
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn(null);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn(null);
 
         self::assertFalse(
             $this->detector->isArtifactOutOfDate(
@@ -107,8 +107,8 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
     public function testItReturnsFalseForOpenTasks(): void
     {
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(true);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(true);
 
         self::assertFalse(
             $this->detector->isArtifactOutOfDate(
@@ -123,13 +123,13 @@ final class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsFalseForTasksClosedEarlierThanOneYearAgoWithNoEndDate(): void
     {
         $this->status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
 
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(false);
         $this->artifact->setChangesets(
             [
                 $this->buildChangeset(1, '2021-04-13 15:30', true, self::TODO_VALUE_ID),
@@ -159,13 +159,13 @@ final class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsTrueForTasksClosedLaterThanOneYearAgo(): void
     {
         $this->status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
 
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(false);
 
         $this->artifact->setChangesets(
             [
@@ -191,13 +191,13 @@ final class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsFalseForTasksReOpenAndReClosedEarlierThanOneYearAgo(): void
     {
         $this->status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
 
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(false);
         $this->artifact->setChangesets(
             [
                 $this->buildChangeset(1, '2018-04-13 15:30', true, self::TODO_VALUE_ID),
@@ -231,13 +231,13 @@ final class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsTrueForTasksWithoutStatus(): void
     {
         $this->status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
 
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(false);
         $submitted_on = new \DateTimeImmutable('2021-04-13 15:30');
         $changeset    = new Tracker_Artifact_Changeset(
             1,
@@ -264,7 +264,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
                 $this->getDatePeriodWithoutWeekend('2021-01-01', null)
             );
 
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
@@ -278,13 +278,13 @@ final class TaskOutOfDateDetectorTest extends TestCase
     public function testItReturnsTrueForTasksWithUnreadableStatus(): void
     {
         $this->status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(false);
 
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(false);
         $this->artifact->setChangesets(
             [
                 $this->buildChangeset(1, '2018-04-13 15:30', true, self::TODO_VALUE_ID),
@@ -329,20 +329,20 @@ final class TaskOutOfDateDetectorTest extends TestCase
             )
         );
 
-        $this->logger->expects(self::once())->method('info');
+        $this->logger->expects($this->once())->method('info');
         $this->trackers_with_unreadable_status_collection->informLoggerIfWeHaveTrackersWithUnreadableStatus();
     }
 
     public function testItReturnsTrueForClosedArtifactWhenChangesetCantBeFound(): void
     {
         $this->status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
 
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(false);
 
         $this->artifact->setChangesets(
             [
@@ -352,7 +352,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
             ]
         );
 
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
         self::assertTrue(
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
@@ -373,7 +373,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
         bool $expected_out_of_date,
     ): void {
         $this->status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
@@ -393,8 +393,8 @@ final class TaskOutOfDateDetectorTest extends TestCase
                 $this->getDatePeriodWithoutWeekend('2020-01-01', $end_string_date)
             );
 
-        $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
-        $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
+        $this->semantic_status->expects($this->once())->method('getField')->willReturn($this->status_field);
+        $this->semantic_status->expects($this->once())->method('isOpen')->with($this->artifact)->willReturn(false);
 
         self::assertEquals(
             $expected_out_of_date,

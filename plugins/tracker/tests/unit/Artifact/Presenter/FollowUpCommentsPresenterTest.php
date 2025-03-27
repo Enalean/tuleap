@@ -33,16 +33,16 @@ final class FollowUpCommentsPresenterTest extends TestCase
     public function testGetOnlyFollowUpWithContent(): void
     {
         $follow_up_can_see = $this->createMock(Tracker_Artifact_Followup_Item::class);
-        $follow_up_can_see->expects(self::once())->method('diffToPrevious')->willReturn('');
-        $follow_up_can_see->expects(self::once())->method('getFollowupContent')->willReturn('<div></div>');
-        $follow_up_can_see->expects(self::once())->method('getId')->willReturn(123);
-        $follow_up_can_see->expects(self::once())->method('getAvatar')->willReturn("<div class='tracker_artifact_followup_avatar'></div>");
-        $follow_up_can_see->expects(self::once())->method('getUserLink')->willReturn('<span class="tracker_artifact_followup_title_user"></span>');
-        $follow_up_can_see->expects(self::once())->method('getTimeAgo')->willReturn('<div></div>');
+        $follow_up_can_see->expects($this->once())->method('diffToPrevious')->willReturn('');
+        $follow_up_can_see->expects($this->once())->method('getFollowupContent')->willReturn('<div></div>');
+        $follow_up_can_see->expects($this->once())->method('getId')->willReturn(123);
+        $follow_up_can_see->expects($this->once())->method('getAvatar')->willReturn("<div class='tracker_artifact_followup_avatar'></div>");
+        $follow_up_can_see->expects($this->once())->method('getUserLink')->willReturn('<span class="tracker_artifact_followup_title_user"></span>');
+        $follow_up_can_see->expects($this->once())->method('getTimeAgo')->willReturn('<div></div>');
 
         $follow_up_no_content = $this->createMock(Tracker_Artifact_Followup_Item::class);
-        $follow_up_no_content->expects(self::once())->method('diffToPrevious')->willReturn('');
-        $follow_up_no_content->expects(self::once())->method('getFollowupContent')->willReturn('');
+        $follow_up_no_content->expects($this->once())->method('diffToPrevious')->willReturn('');
+        $follow_up_no_content->expects($this->once())->method('getFollowupContent')->willReturn('');
 
         $presenter = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter([$follow_up_can_see, $follow_up_no_content], UserTestBuilder::buildWithDefaults());
 

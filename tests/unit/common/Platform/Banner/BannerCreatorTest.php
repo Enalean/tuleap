@@ -28,7 +28,7 @@ final class BannerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBannerIsCreated(): void
     {
         $dao = $this->createMock(BannerDao::class);
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('addBanner')
             ->with('The message', 'critical', null);
 
@@ -42,7 +42,7 @@ final class BannerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $expiration_date = new \DateTimeImmutable('@2');
 
         $dao = $this->createMock(BannerDao::class);
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('addBanner')
             ->with('The message', 'critical', $expiration_date);
 

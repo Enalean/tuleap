@@ -61,7 +61,7 @@ final class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TestCase
         $remote_server_id = 33;
         $event->method('getParametersAsArray')->willReturn([$repository_id, $remote_server_id]);
 
-        $driver->expects(self::once())->method('makeGerritProjectReadOnly')->with($server, 'projname/repo_01');
+        $driver->expects($this->once())->method('makeGerritProjectReadOnly')->with($server, 'projname/repo_01');
 
         $event->process();
     }

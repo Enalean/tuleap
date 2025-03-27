@@ -115,17 +115,17 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNothingHappenIfNoCredentialsRetrieved(): void
     {
         $this->webhook_data
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSha1')
             ->willReturn('azer12563');
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('debug')
             ->with("Comment can't be added on commit #azer12563 because there is no bot API token.");
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($this->gitlab_repository)
             ->willReturn(null);
@@ -149,14 +149,14 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn('azer12563');
 
         $this->gitlab_repository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryId')
             ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($this->gitlab_repository)
             ->willReturn($credentials);
@@ -172,7 +172,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with($references)
             ->willReturn($references_presenter);
@@ -181,7 +181,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment = "\nThis commit references:\n * [TULEAP-123](https://example.fr)\n * [TULEAP-59](https://example.fr)\n";
 
         $this->client_wrapper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with($credentials, $url, ['note' => $comment])
             ->willThrowException(new GitlabRequestException(404, 'not found'));
@@ -212,14 +212,14 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn('azer12563');
 
         $this->gitlab_repository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryId')
             ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($this->gitlab_repository)
             ->willReturn($credentials);
@@ -233,7 +233,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with($references)
             ->willReturn($references_presenter);
@@ -242,12 +242,12 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment = "This commit references: [TULEAP-123](https://example.fr).\n";
 
         $this->client_wrapper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with($credentials, $url, ['note' => $comment]);
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('debug')
             ->with('Comment was successfully added on commit #azer12563');
 

@@ -88,12 +88,12 @@ final class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUni
         $this->readable_tracker->method('userCanView')->with($user)->willReturn(true);
 
         $this->emails_to_notify_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeAddressByTrackerId')
             ->with($this->unreadable_tracker->getId(), $user);
 
         $this->users_to_notify_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteByTrackerIdAndUserId')
             ->with($this->unreadable_tracker->getId(), $user->getId());
 

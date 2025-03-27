@@ -74,10 +74,10 @@ final class SystemEvent_GIT_REPO_DELETETest extends TestCase // phpcs:ignore Squ
 
     public function testItDeletesTheRepository(): void
     {
-        $this->ugroups_to_notify_dao->expects(self::once())->method('deleteByRepositoryId')->with(69);
-        $this->users_to_notify_dao->expects(self::once())->method('deleteByRepositoryId')->with(69);
+        $this->ugroups_to_notify_dao->expects($this->once())->method('deleteByRepositoryId')->with(69);
+        $this->users_to_notify_dao->expects($this->once())->method('deleteByRepositoryId')->with(69);
         $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with(self::isInstanceOf(GitRepositoryDeletionEvent::class));
-        $this->repository->expects(self::once())->method('delete');
+        $this->repository->expects($this->once())->method('delete');
 
         $this->event->process();
     }

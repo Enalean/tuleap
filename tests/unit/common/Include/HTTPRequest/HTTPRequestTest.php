@@ -135,7 +135,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
     public function testValidKeyScalar(): void
     {
         $v = $this->createMock(\Rule::class);
-        $v->expects(self::once())->method('isValid')->with('testvalue');
+        $v->expects($this->once())->method('isValid')->with('testvalue');
         $r = new HTTPRequest();
         $r->validKey('testkey', $v);
     }
@@ -147,7 +147,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
         ]);
         $v->method('validate')->willReturn(true);
-        $v->expects(self::once())->method('getKey')->willReturn('testkey');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey');
         $r = new HTTPRequest();
         $r->valid($v);
     }
@@ -182,8 +182,8 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
             'validate',
         ]);
-        $v->expects(self::once())->method('getKey')->willReturn('testkey');
-        $v->expects(self::once())->method('validate')->with('testvalue');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey');
+        $v->expects($this->once())->method('validate')->with('testvalue');
         $r = new HTTPRequest();
         $r->valid($v);
     }
@@ -195,7 +195,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
         ]);
         $v->method('validate')->willReturn(true);
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array');
         $r = new HTTPRequest();
         $r->validArray($v);
     }
@@ -230,7 +230,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
             'validate',
         ]);
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array');
         $matcher = $this->exactly(3);
         $v->expects($matcher)->method('validate')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -252,7 +252,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $v = $this->createPartialMock(\Valid::class, [
             'getKey',
         ]);
-        $v->expects(self::once())->method('getKey')->willReturn('testkey');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey');
         $r = new HTTPRequest();
         self::assertFalse($r->validArray($v));
     }
@@ -264,8 +264,8 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'validate',
         ]);
         $v->required();
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_empty');
-        $v->expects(self::once())->method('validate')->with(null)->willReturn(false);
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array_empty');
+        $v->expects($this->once())->method('validate')->with(null)->willReturn(false);
         $r = new HTTPRequest();
         self::assertFalse($r->validArray($v));
     }
@@ -278,8 +278,8 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'validate',
         ]);
         $v->expects(self::never())->method('required');
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_empty');
-        $v->expects(self::once())->method('validate')->with(null)->willReturn(true);
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array_empty');
+        $v->expects($this->once())->method('validate')->with(null)->willReturn(true);
         $r = new HTTPRequest();
         self::assertTrue($r->validArray($v));
     }
@@ -290,7 +290,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
             'validate',
         ]);
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array');
         $v->method('validate');
         $v->required();
         $r = new HTTPRequest();
@@ -305,7 +305,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_mixed1');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array_mixed1');
         $r = new HTTPRequest();
         self::assertFalse($r->validArray($v));
     }
@@ -318,7 +318,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_mixed2');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array_mixed2');
         $r = new HTTPRequest();
         self::assertFalse($r->validArray($v));
     }
@@ -331,7 +331,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_mixed3');
+        $v->expects($this->once())->method('getKey')->willReturn('testkey_array_mixed3');
         $r = new HTTPRequest();
         self::assertFalse($r->validArray($v));
     }
@@ -342,8 +342,8 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
             'validate',
         ]);
-        $v->expects(self::once())->method('getKey')->willReturn('key1');
-        $v->expects(self::once())->method('validate')->with('valuekey1');
+        $v->expects($this->once())->method('getKey')->willReturn('key1');
+        $v->expects($this->once())->method('validate')->with('valuekey1');
         $r = new HTTPRequest();
         $r->validInArray('testarray', $v);
     }
@@ -361,8 +361,8 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
             'validate',
         ]);
-        $v->expects(self::once())->method('getKey')->willReturn('file1');
-        $v->expects(self::once())->method('validate')->with(['file1' => ['name' => 'Test file 1']], 'file1');
+        $v->expects($this->once())->method('getKey')->willReturn('file1');
+        $v->expects($this->once())->method('validate')->with(['file1' => ['name' => 'Test file 1']], 'file1');
         $r = new HTTPRequest();
         $r->validFile($v);
     }

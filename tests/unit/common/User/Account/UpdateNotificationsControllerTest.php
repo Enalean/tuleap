@@ -68,7 +68,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItChecksCSRFToken(): void
     {
-        $this->csrf_token->expects(self::once())->method('check')->with('/account/notifications');
+        $this->csrf_token->expects($this->once())->method('check')->with('/account/notifications');
 
         $this->user
             ->method('getMailSiteUpdates')
@@ -132,10 +132,10 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setMailSiteUpdates')
             ->with(1);
-        $this->user_manager->expects(self::once())->method('updateDb');
+        $this->user_manager->expects($this->once())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -161,10 +161,10 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setMailSiteUpdates')
             ->with(0);
-        $this->user_manager->expects(self::once())->method('updateDb');
+        $this->user_manager->expects($this->once())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -240,10 +240,10 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setMailVA')
             ->with(1);
-        $this->user_manager->expects(self::once())->method('updateDb');
+        $this->user_manager->expects($this->once())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -269,10 +269,10 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setMailVA')
             ->with(0);
-        $this->user_manager->expects(self::once())->method('updateDb');
+        $this->user_manager->expects($this->once())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(

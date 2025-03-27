@@ -53,7 +53,7 @@ final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUn
             ->withAccessPublic()
             ->build();
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isEnabled')
             ->with(165)
             ->willReturn(true);
@@ -68,7 +68,7 @@ final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUn
             ->withAccessPublic()
             ->build();
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isEnabled')
             ->with(165)
             ->willReturn(false);

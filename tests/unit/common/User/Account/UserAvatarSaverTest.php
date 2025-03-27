@@ -43,8 +43,8 @@ final class UserAvatarSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $avatar_file_path = $filesystem->url() . '/folder/user/avatar';
         $user->method('getAvatarFilePath')->willReturn($avatar_file_path);
 
-        $user->expects(self::once())->method('setHasCustomAvatar')->with(true);
-        $user_manager->expects(self::once())->method('updateDb');
+        $user->expects($this->once())->method('setHasCustomAvatar')->with(true);
+        $user_manager->expects($this->once())->method('updateDb');
 
         $avatar_temporary_path = $filesystem->url() . '/avatar_tmp_upload';
         file_put_contents($avatar_temporary_path, base64_decode(self::MINIMAL_PNG_BASE64));

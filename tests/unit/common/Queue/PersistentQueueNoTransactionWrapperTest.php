@@ -34,7 +34,7 @@ final class PersistentQueueNoTransactionWrapperTest extends TestCase
         $content = 'content';
 
         $queue = $this->createMock(PersistentQueue::class);
-        $queue->expects(self::once())->method('pushSinglePersistentMessage')->with($topic, $content);
+        $queue->expects($this->once())->method('pushSinglePersistentMessage')->with($topic, $content);
 
         $wrapper = new PersistentQueueNoTransactionWrapper($queue, CheckThereIsAnOngoingTransactionStub::notInTransaction());
         $wrapper->pushSinglePersistentMessage($topic, $content);
@@ -62,7 +62,7 @@ final class PersistentQueueNoTransactionWrapperTest extends TestCase
         };
 
         $queue = $this->createMock(PersistentQueue::class);
-        $queue->expects(self::once())->method('listen')->with($queue_id, $topic, $callback);
+        $queue->expects($this->once())->method('listen')->with($queue_id, $topic, $callback);
 
         $wrapper = new PersistentQueueNoTransactionWrapper($queue, CheckThereIsAnOngoingTransactionStub::inTransaction());
         $wrapper->listen($queue_id, $topic, $callback);
@@ -73,7 +73,7 @@ final class PersistentQueueNoTransactionWrapperTest extends TestCase
         $statistics = PersistentQueueStatistics::emptyQueue();
 
         $queue = $this->createMock(PersistentQueue::class);
-        $queue->expects(self::once())->method('getStatistics')->willReturn($statistics);
+        $queue->expects($this->once())->method('getStatistics')->willReturn($statistics);
 
         $wrapper = new PersistentQueueNoTransactionWrapper($queue, CheckThereIsAnOngoingTransactionStub::inTransaction());
         self::assertSame(

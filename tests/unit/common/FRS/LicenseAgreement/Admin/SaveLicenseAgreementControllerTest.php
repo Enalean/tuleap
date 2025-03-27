@@ -92,7 +92,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
         $this->project      = $this->createConfiguredMock(Project::class, ['getID' => '101']);
         $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
-        $this->project_retriever->expects(self::once())->method('getProjectFromId')
+        $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
@@ -124,13 +124,13 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(new LicenseAgreement(1, 'some title', 'some content'));
 
-        $this->factory->expects(self::once())->method('save')->with($this->project, self::callback(function (LicenseAgreement $agreement) {
+        $this->factory->expects($this->once())->method('save')->with($this->project, self::callback(function (LicenseAgreement $agreement) {
             return $agreement->getId() === 1 &&
                 $agreement->getTitle() === 'updated title' &&
                 $agreement->getContent() === 'updated content';
         }));
 
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -141,12 +141,12 @@ final class SaveLicenseAgreementControllerTest extends TestCase
         $this->request->set('content', 'updated content');
         $this->request->set('save', '');
 
-        $this->factory->expects(self::once())->method('save')->with($this->project, self::callback(function (LicenseAgreementInterface $agreement) {
+        $this->factory->expects($this->once())->method('save')->with($this->project, self::callback(function (LicenseAgreementInterface $agreement) {
             return $agreement->getTitle() === 'updated title' &&
                 $agreement->getContent() === 'updated content';
         }));
 
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -190,10 +190,10 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $license = new LicenseAgreement(1, 'title', 'content');
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn($license);
-        $this->factory->expects(self::once())->method('delete')->with($this->project, $license);
+        $this->factory->expects($this->once())->method('delete')->with($this->project, $license);
 
-        $this->layout->expects(self::once())->method('redirect');
-        $this->layout->expects(self::once())->method('addFeedback');
+        $this->layout->expects($this->once())->method('redirect');
+        $this->layout->expects($this->once())->method('addFeedback');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }

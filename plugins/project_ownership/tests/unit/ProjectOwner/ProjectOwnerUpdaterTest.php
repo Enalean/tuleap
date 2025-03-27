@@ -37,7 +37,7 @@ final class ProjectOwnerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProjectOwnerCanBeUpdated(): void
     {
-        $this->dao->expects(self::once())->method('save');
+        $this->dao->expects($this->once())->method('save');
 
         $user = $this->createMock(\PFUser::class);
         $user->method('getId')->willReturn('102');

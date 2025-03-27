@@ -102,12 +102,12 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleSilentlyIgnoresBadlyFormattedToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+        $this->refresh_token_revoker->expects($this->once())->method('revokeGrantOfRefreshToken')
             ->willThrowException(
                 new class extends SplitTokenException {
                 }
             );
-        $this->access_token_revoker->expects(self::once())->method('revokeGrantOfAccessToken')
+        $this->access_token_revoker->expects($this->once())->method('revokeGrantOfAccessToken')
             ->willThrowException(
                 new class extends SplitTokenException {
                 }
@@ -120,7 +120,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleSilentlyIgnoresRefreshTokenNotAssociatedToThisClient(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+        $this->refresh_token_revoker->expects($this->once())->method('revokeGrantOfRefreshToken')
             ->willThrowException(
                 new class extends \RuntimeException implements OAuth2ServerException {
                 }
@@ -134,12 +134,12 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleSilentlyIgnoresAccessTokenNotAssociatedToThisClient(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+        $this->refresh_token_revoker->expects($this->once())->method('revokeGrantOfRefreshToken')
             ->willThrowException(
                 new class extends SplitTokenException {
                 }
             );
-        $this->access_token_revoker->expects(self::once())->method('revokeGrantOfAccessToken')
+        $this->access_token_revoker->expects($this->once())->method('revokeGrantOfAccessToken')
             ->willThrowException(
                 new class extends \RuntimeException implements OAuth2Exception {
                 }
@@ -152,7 +152,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRevokesGrantOfRefreshToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken');
+        $this->refresh_token_revoker->expects($this->once())->method('revokeGrantOfRefreshToken');
         $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
 
         $response = $this->controller->handle($request);
@@ -162,12 +162,12 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleFallsbackToRevokingGrantOfAccessToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+        $this->refresh_token_revoker->expects($this->once())->method('revokeGrantOfRefreshToken')
             ->willThrowException(
                 new class extends SplitTokenException {
                 }
             );
-        $this->access_token_revoker->expects(self::once())->method('revokeGrantOfAccessToken');
+        $this->access_token_revoker->expects($this->once())->method('revokeGrantOfAccessToken');
 
         $response = $this->controller->handle($request);
         self::assertSame(200, $response->getStatusCode());

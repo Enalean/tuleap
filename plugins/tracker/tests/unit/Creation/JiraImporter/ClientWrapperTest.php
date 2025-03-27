@@ -46,16 +46,16 @@ final class ClientWrapperTest extends TestCase
 
     public function testItBuildsAnUrlFromLatestAPIAndReturnContent(): void
     {
-        $this->factory->expects(self::once())->method('createRequest')->with('GET', 'https://example.com/rest/api/3/project');
-        $this->client->expects(self::once())->method('sendRequest')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+        $this->factory->expects($this->once())->method('createRequest')->with('GET', 'https://example.com/rest/api/3/project');
+        $this->client->expects($this->once())->method('sendRequest')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
         $this->wrapper->getUrl('/rest/api/3/project');
     }
 
     public function testItThrowsAnExceptionIfStatusCodeIsNot200(): void
     {
-        $this->factory->expects(self::once())->method('createRequest')->with('GET', 'https://example.com/rest/api/3/project')
+        $this->factory->expects($this->once())->method('createRequest')->with('GET', 'https://example.com/rest/api/3/project')
             ->willReturn(HTTPFactoryBuilder::requestFactory()->createRequest('GET', 'https://example.com/rest/api/3/project'));
-        $this->client->expects(self::once())->method('sendRequest')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(403));
+        $this->client->expects($this->once())->method('sendRequest')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(403));
 
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionCode(403);

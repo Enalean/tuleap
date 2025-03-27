@@ -68,7 +68,7 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
 
     public function testItDeletesNothingWhenThereAreNoRepositories(): void
     {
-        $this->repository_factory->expects(self::once())->method('getAllRepositories')
+        $this->repository_factory->expects($this->once())->method('getAllRepositories')
             ->with($this->project)->willReturn([]);
 
         $this->git_repository_manager->deleteProjectRepositories($this->project);
@@ -79,14 +79,14 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
         $backend         = $this->createMock(Git_Backend_Gitolite::class);
         $repository_1_id = 1;
         $repository_1    = $this->createMock(GitRepository::class);
-        $repository_1->expects(self::once())->method('forceMarkAsDeleted');
+        $repository_1->expects($this->once())->method('forceMarkAsDeleted');
         $repository_1->method('getId')->willReturn($repository_1_id);
         $repository_1->method('getProjectId')->willReturn($this->project);
         $repository_1->method('getBackend')->willReturn($backend);
 
         $repository_2_id = 2;
         $repository_2    = $this->createMock(GitRepository::class);
-        $repository_2->expects(self::once())->method('forceMarkAsDeleted');
+        $repository_2->expects($this->once())->method('forceMarkAsDeleted');
         $repository_2->method('getId')->willReturn($repository_2_id);
         $repository_2->method('getProjectId')->willReturn($this->project);
         $repository_2->method('getBackend')->willReturn($backend);

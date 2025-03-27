@@ -148,7 +148,7 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             Tracker::PERMISSION_FULL => 1,
         ];
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::WARN);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::WARN);
 
         $permission_setter = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
         $this->permission_manager->save($request, $permission_setter);

@@ -71,7 +71,7 @@ final class ChangesetValueSaverIgnoringPermissionsTest extends \Tuleap\Test\PHPU
     {
         $this->fields_data[self::FIELD_ID] = self::FIELD_VALUE;
 
-        $this->field->expects(self::once())
+        $this->field->expects($this->once())
             ->method('saveNewChangeset')
             ->with(
                 self::isInstanceOf(Artifact::class),
@@ -89,7 +89,7 @@ final class ChangesetValueSaverIgnoringPermissionsTest extends \Tuleap\Test\PHPU
 
     public function testItBypassesPermissionsForFieldThatWasNotSubmitted(): void
     {
-        $this->field->expects(self::once())
+        $this->field->expects($this->once())
             ->method('saveNewChangeset')
             ->with(
                 self::isInstanceOf(Artifact::class),

@@ -70,7 +70,7 @@ final class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImp
         $widget->method('isUnique');
         $widget->method('create');
 
-        $this->event_manager->expects(self::once())->method('processEvent')->with(self::callback(function (ConfigureAtXMLImport $event) {
+        $this->event_manager->expects($this->once())->method('processEvent')->with(self::callback(function (ConfigureAtXMLImport $event) {
             $event->setContentId(35);
             $event->setWidgetIsConfigured();
             return true;
@@ -78,7 +78,7 @@ final class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImp
 
         $this->widget_factory->method('getInstanceByWidgetName')->with('plugin_agiledashboard_projects_kanban')->willReturn($widget);
 
-        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1);
+        $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 

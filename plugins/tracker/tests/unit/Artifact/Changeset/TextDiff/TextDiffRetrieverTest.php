@@ -140,7 +140,7 @@ final class TextDiffRetrieverTest extends TestCase
         $changesets_for_diff = new ChangesetsForDiff($this->next_changeset, $this->field_text, $previous_changeset);
         $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
-        $this->layout->expects(self::once())->method('sendJSON')->with('');
+        $this->layout->expects($this->once())->method('sendJSON')->with('');
 
         $this->text_diff_retriever->process(
             $request,
@@ -174,7 +174,7 @@ final class TextDiffRetrieverTest extends TestCase
         );
         $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
-        $this->layout->expects(self::once())->method('sendJSON')->with('');
+        $this->layout->expects($this->once())->method('sendJSON')->with('');
 
         $this->text_diff_retriever->process(
             $request,
@@ -214,7 +214,7 @@ final class TextDiffRetrieverTest extends TestCase
         $diff      = new Codendi_Diff(['this is not a test'], ['this is a test']);
         $formatter = new Codendi_UnifiedDiffFormatter();
 
-        $this->layout->expects(self::once())->method('sendJSON')->with(PHP_EOL . $formatter->format($diff));
+        $this->layout->expects($this->once())->method('sendJSON')->with(PHP_EOL . $formatter->format($diff));
 
         $this->text_diff_retriever->process(
             $request,
@@ -251,7 +251,7 @@ final class TextDiffRetrieverTest extends TestCase
         );
         $this->changesets_for_diff_retriever->method('retrieveChangesets')->willReturn($changesets_for_diff);
 
-        $this->layout->expects(self::once())->method('sendJSON')
+        $this->layout->expects($this->once())->method('sendJSON')
             ->with('<div class="block"><div class="difftext"><div class="original"><tt class="prefix">-</tt>this is <del>not </del>a test&nbsp;</div></div><div class="difftext"><div class="final"><tt class="prefix">+</tt>this is a test&nbsp;</div></div></div>');
 
         $this->text_diff_retriever->process(
@@ -275,6 +275,6 @@ final class TextDiffRetrieverTest extends TestCase
             $builder->userCannotView($user);
         }
         $artifact = $builder->build();
-        $this->artifact_factory->expects(self::once())->method('getArtifactById')->with(123)->willReturn($artifact);
+        $this->artifact_factory->expects($this->once())->method('getArtifactById')->with(123)->willReturn($artifact);
     }
 }

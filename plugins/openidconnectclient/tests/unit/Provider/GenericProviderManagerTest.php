@@ -36,7 +36,7 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $generic_provider_dao
         );
 
-        $generic_provider_dao->expects(self::once())->method('create')->willReturn(1);
+        $generic_provider_dao->expects($this->once())->method('create')->willReturn(1);
 
         $generic_provider = new GenericProvider(
             1,
@@ -74,7 +74,7 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $generic_provider_dao
         );
 
-        $generic_provider_dao->expects(self::once())->method('create')->willReturn(1);
+        $generic_provider_dao->expects($this->once())->method('create')->willReturn(1);
 
         $generic_provider = new GenericProvider(
             1,
@@ -113,7 +113,7 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $generic_provider_dao
         );
 
-        $generic_provider_dao->expects(self::once())->method('create')->willReturn(1);
+        $generic_provider_dao->expects($this->once())->method('create')->willReturn(1);
 
         $generic_provider = new GenericProvider(
             1,
@@ -166,7 +166,7 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'fiesta_red'
         );
 
-        $generic_provider_dao->expects(self::once())->method('save');
+        $generic_provider_dao->expects($this->once())->method('save');
         $generic_provider_manager->updateGenericProvider($provider);
     }
 

@@ -42,8 +42,8 @@ final class AccessKeyRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $current_time = new \DateTimeImmutable('@10');
 
-        $this->dao->expects(self::once())->method('deleteByExpirationDate')->with(10);
-        $this->dao->expects(self::once())->method('deleteKeysWithNoScopes');
+        $this->dao->expects($this->once())->method('deleteByExpirationDate')->with(10);
+        $this->dao->expects($this->once())->method('deleteKeysWithNoScopes');
 
         $this->revoker->revokeUnusableUserAccessKeys($current_time);
     }

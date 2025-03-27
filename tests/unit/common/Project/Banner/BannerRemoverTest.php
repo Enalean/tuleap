@@ -34,7 +34,7 @@ final class BannerRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao->expects(self::once())->method('deleteBanner');
+        $dao->expects($this->once())->method('deleteBanner');
 
         $banner_remover->deleteBanner(new UserCanEditBannerPermission($project));
     }

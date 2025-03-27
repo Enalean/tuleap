@@ -31,7 +31,7 @@ final class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $factory = $this->createMock(\BaseLanguageFactory::class);
         $factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAvailableLanguages')
             ->willReturn([
                 'ja_JP' => '日本語',
@@ -41,7 +41,7 @@ final class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user = $this->createMock(\PFUser::class);
         $user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getLocale')
             ->willReturn('fr_FR');
 

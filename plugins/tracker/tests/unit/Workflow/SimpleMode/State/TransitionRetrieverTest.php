@@ -73,7 +73,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $state = new State(1, [$expected_transition]);
 
         $this->state_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getStateFromValueId')
             ->willReturn($state);
 

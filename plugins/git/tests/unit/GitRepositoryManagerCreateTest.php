@@ -111,7 +111,7 @@ final class GitRepositoryManagerCreateTest extends TestCase
         $this->manager->method('isRepositoryNameAlreadyUsed')->with($this->repository)->willReturn(false);
         $this->creator->method('isNameValid')->willReturn(true);
 
-        $this->dao->expects(self::once())->method('save')->with($this->repository);
+        $this->dao->expects($this->once())->method('save')->with($this->repository);
         $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
         $this->git_system_event_manager->method('queueRepositoryUpdate');
 
@@ -125,7 +125,7 @@ final class GitRepositoryManagerCreateTest extends TestCase
 
         $this->dao->method('save')->willReturn(54);
 
-        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate')->with($this->repository, self::anything());
+        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate')->with($this->repository, self::anything());
         $this->ongoing_dao->method('isADeletionForPathOngoingInProject')->willReturn(false);
 
         $this->manager->create($this->repository, $this->creator, BranchName::defaultBranchName());

@@ -117,7 +117,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenMappeFieldIsNotSubmitable(): void
     {
-        $this->mapped_field->expects(self::once())->method('userCanSubmit')->willReturn(false);
+        $this->mapped_field->expects($this->once())->method('userCanSubmit')->willReturn(false);
 
         $taskboard_tracker = $this->getTaskboardTracker();
 
@@ -139,7 +139,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenTitleSemanticIsNotDefinedOnChildTracker(): void
     {
-        $this->mapped_field->expects(self::once())->method('userCanSubmit')->willReturn(true);
+        $this->mapped_field->expects($this->once())->method('userCanSubmit')->willReturn(true);
 
         $taskboard_tracker = $this->getTaskboardTracker();
 
@@ -163,7 +163,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenUserCannotUpdateFieldBoundToSemanticTitle(): void
     {
-        $this->mapped_field->expects(self::once())->method('userCanSubmit')->willReturn(true);
+        $this->mapped_field->expects($this->once())->method('userCanSubmit')->willReturn(true);
 
         $taskboard_tracker = $this->getTaskboardTracker();
 
@@ -187,7 +187,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenSemanticTitleAndMappedFieldAreNotTheOnlyFieldRequiredAtArtifactSubmission(): void
     {
-        $this->mapped_field->expects(self::once())->method('userCanSubmit')->willReturn(true);
+        $this->mapped_field->expects($this->once())->method('userCanSubmit')->willReturn(true);
 
         $taskboard_tracker = $this->getTaskboardTracker();
 
@@ -212,7 +212,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenParentTrackerDoesNotHaveAnArtifactLinkField(): void
     {
-        $this->mapped_field->expects(self::once())->method('userCanSubmit')->willReturn(true);
+        $this->mapped_field->expects($this->once())->method('userCanSubmit')->willReturn(true);
 
         $taskboard_tracker = $this->getTaskboardTracker();
 
@@ -227,7 +227,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockTrackerFields($child_tracker, true, false, true);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAnArtifactLinkField')
             ->with($user, $tracker)
             ->willReturn(null);
@@ -243,7 +243,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenParentTrackerDoesNotHaveAnUpdatableArtifactLinkField(): void
     {
-        $this->mapped_field->expects(self::once())->method('userCanSubmit')->willReturn(true);
+        $this->mapped_field->expects($this->once())->method('userCanSubmit')->willReturn(true);
 
         $taskboard_tracker = $this->getTaskboardTracker();
 
@@ -259,12 +259,12 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_link_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAnArtifactLinkField')
             ->with($user, $tracker)
             ->willReturn($artifact_link_field);
         $artifact_link_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanUpdate')
             ->with($user)
             ->willReturn(false);
@@ -280,7 +280,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnAddInPlaceObject(): void
     {
-        $this->mapped_field->expects(self::once())->method('userCanSubmit')->willReturn(true);
+        $this->mapped_field->expects($this->once())->method('userCanSubmit')->willReturn(true);
 
         $taskboard_tracker = $this->getTaskboardTracker();
 
@@ -296,12 +296,12 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_link_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAnArtifactLinkField')
             ->with($user, $tracker)
             ->willReturn($artifact_link_field);
         $artifact_link_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanUpdate')
             ->with($user)
             ->willReturn(true);
@@ -333,7 +333,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $title_field->method('getId')->willReturn(self::SEMANTIC_TITLE_FIELD_ID);
         }
 
-        $this->semantic_title->expects(self::once())->method('getField')->willReturn($title_field);
+        $this->semantic_title->expects($this->once())->method('getField')->willReturn($title_field);
     }
 
     private function getTaskboardTracker(): TaskboardTracker

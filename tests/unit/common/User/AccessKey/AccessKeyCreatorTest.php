@@ -81,10 +81,10 @@ final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $authentication_scope = $this->createMock(AuthenticationScope::class);
         $this->hasher->method('computeHash')->willReturn('hashed_identifier');
-        $this->dao->expects(self::once())->method('create')->willReturn(1);
-        $this->scope_saver->expects(self::once())->method('saveKeyScopes')->with(1, $authentication_scope);
-        $this->store->expects(self::once())->method('storeLastGeneratedAccessKeyIdentifier');
-        $this->notifier->expects(self::once())->method('notifyCreation');
+        $this->dao->expects($this->once())->method('create')->willReturn(1);
+        $this->scope_saver->expects($this->once())->method('saveKeyScopes')->with(1, $authentication_scope);
+        $this->store->expects($this->once())->method('storeLastGeneratedAccessKeyIdentifier');
+        $this->notifier->expects($this->once())->method('notifyCreation');
 
         $user = UserTestBuilder::aUser()->withId(102)->build();
 
@@ -95,10 +95,10 @@ final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $authentication_scope = $this->createMock(AuthenticationScope::class);
         $this->hasher->method('computeHash')->willReturn('hashed_identifier');
-        $this->dao->expects(self::once())->method('create')->willReturn(1);
-        $this->store->expects(self::once())->method('storeLastGeneratedAccessKeyIdentifier');
-        $this->scope_saver->expects(self::once())->method('saveKeyScopes')->with(1, $authentication_scope);
-        $this->notifier->expects(self::once())->method('notifyCreation');
+        $this->dao->expects($this->once())->method('create')->willReturn(1);
+        $this->store->expects($this->once())->method('storeLastGeneratedAccessKeyIdentifier');
+        $this->scope_saver->expects($this->once())->method('saveKeyScopes')->with(1, $authentication_scope);
+        $this->notifier->expects($this->once())->method('notifyCreation');
 
         $user = UserTestBuilder::aUser()->withId(102)->build();
 

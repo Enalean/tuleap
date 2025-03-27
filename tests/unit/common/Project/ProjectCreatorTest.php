@@ -106,7 +106,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->registration_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
@@ -134,7 +134,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->registration_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
@@ -162,7 +162,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->registration_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
@@ -183,43 +183,43 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $errors_collection = new ProjectRegistrationErrorsCollection();
         $this->registration_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
         $user = UserTestBuilder::buildWithDefaults();
         $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->project_categories_updater->expects(self::once())->method('update');
-        $this->creator->expects(self::once())->method('initFileModule');
-        $this->creator->expects(self::once())->method('setProjectAdmin');
-        $this->creator->expects(self::once())->method('fakeGroupIdIntoHTTPParams');
-        $this->creator->expects(self::once())->method('setMessageToRequesterFromTemplate');
-        $this->creator->expects(self::once())->method('initForumModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initSVNModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initFRSModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initTrackerV3ModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initWikiModuleFromTemplate');
+        $this->project_categories_updater->expects($this->once())->method('update');
+        $this->creator->expects($this->once())->method('initFileModule');
+        $this->creator->expects($this->once())->method('setProjectAdmin');
+        $this->creator->expects($this->once())->method('fakeGroupIdIntoHTTPParams');
+        $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
+        $this->creator->expects($this->once())->method('initForumModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initTrackerV3ModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initWikiModuleFromTemplate');
 
-        $this->email_copier->expects(self::once())->method('copyEmailOptionsFromTemplate');
+        $this->email_copier->expects($this->once())->method('copyEmailOptionsFromTemplate');
 
-        $this->dashboard_duplicator->expects(self::once())->method('duplicate');
-        $this->field_updator->expects(self::once())->method('update');
+        $this->dashboard_duplicator->expects($this->once())->method('duplicate');
+        $this->field_updator->expects($this->once())->method('update');
 
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
         $this->event_manager->expects(self::exactly(2))->method('processEvent');
 
-        $this->reference_manager->expects(self::once())->method('addSystemReferencesWithoutService');
-        $this->synchronized_project_membership_duplicator->expects(self::once())->method('duplicate');
-        $this->ugroup_duplicator->expects(self::once())->method('duplicateOnProjectCreation');
+        $this->reference_manager->expects($this->once())->method('addSystemReferencesWithoutService');
+        $this->synchronized_project_membership_duplicator->expects($this->once())->method('duplicate');
+        $this->ugroup_duplicator->expects($this->once())->method('duplicateOnProjectCreation');
 
-        $this->label_dao->expects(self::once())->method('duplicateLabelsIfNeededBetweenProjectsId');
+        $this->label_dao->expects($this->once())->method('duplicateLabelsIfNeededBetweenProjectsId');
 
-        $this->service_activator->expects(self::once())->method('activateServicesFromTemplate');
+        $this->service_activator->expects($this->once())->method('activateServicesFromTemplate');
 
-        $this->creator->expects(self::once())->method('autoActivateProject');
+        $this->creator->expects($this->once())->method('autoActivateProject');
 
         $this->creator->processProjectCreation($project_creation_data);
 
@@ -238,41 +238,41 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $errors_collection = new ProjectRegistrationErrorsCollection();
         $this->registration_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
         $user = UserTestBuilder::buildWithDefaults();
         $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->project_categories_updater->expects(self::once())->method('update');
-        $this->creator->expects(self::once())->method('initFileModule');
-        $this->creator->expects(self::once())->method('setProjectAdmin');
-        $this->creator->expects(self::once())->method('fakeGroupIdIntoHTTPParams');
-        $this->creator->expects(self::once())->method('setMessageToRequesterFromTemplate');
-        $this->creator->expects(self::once())->method('initForumModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initSVNModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initFRSModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initTrackerV3ModuleFromTemplate');
-        $this->creator->expects(self::once())->method('initWikiModuleFromTemplate');
+        $this->project_categories_updater->expects($this->once())->method('update');
+        $this->creator->expects($this->once())->method('initFileModule');
+        $this->creator->expects($this->once())->method('setProjectAdmin');
+        $this->creator->expects($this->once())->method('fakeGroupIdIntoHTTPParams');
+        $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
+        $this->creator->expects($this->once())->method('initForumModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initTrackerV3ModuleFromTemplate');
+        $this->creator->expects($this->once())->method('initWikiModuleFromTemplate');
 
-        $this->email_copier->expects(self::once())->method('copyEmailOptionsFromTemplate');
+        $this->email_copier->expects($this->once())->method('copyEmailOptionsFromTemplate');
 
-        $this->dashboard_duplicator->expects(self::once())->method('duplicate');
-        $this->field_updator->expects(self::once())->method('update');
+        $this->dashboard_duplicator->expects($this->once())->method('duplicate');
+        $this->field_updator->expects($this->once())->method('update');
 
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
         $this->event_manager->expects(self::exactly(2))->method('processEvent');
 
-        $this->reference_manager->expects(self::once())->method('addSystemReferencesWithoutService');
-        $this->synchronized_project_membership_duplicator->expects(self::once())->method('duplicate');
-        $this->ugroup_duplicator->expects(self::once())->method('duplicateOnProjectCreation');
+        $this->reference_manager->expects($this->once())->method('addSystemReferencesWithoutService');
+        $this->synchronized_project_membership_duplicator->expects($this->once())->method('duplicate');
+        $this->ugroup_duplicator->expects($this->once())->method('duplicateOnProjectCreation');
 
-        $this->label_dao->expects(self::once())->method('duplicateLabelsIfNeededBetweenProjectsId');
+        $this->label_dao->expects($this->once())->method('duplicateLabelsIfNeededBetweenProjectsId');
 
-        $this->service_activator->expects(self::once())->method('activateServicesFromTemplate');
+        $this->service_activator->expects($this->once())->method('activateServicesFromTemplate');
 
         $this->creator->expects(self::never())->method('autoActivateProject');
 

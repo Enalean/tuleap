@@ -135,8 +135,8 @@ final class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\
         $metadata_list_of_values_element_factory->method('getListByFieldId')->willReturn($loveArray);
 
         $dstLoveF = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF->expects(self::once())->method('create');
-        $dstLoveF->expects(self::once())->method('update');
+        $dstLoveF->expects($this->once())->method('create');
+        $dstLoveF->expects($this->once())->method('update');
         $metadata_list_of_values_element_factory->method('getMetadataListOfValuesElementFactory')->willReturn($dstLoveF);
 
         $metadata_list_of_values_element_factory->exportValues($srcMd, $dstMd, $valuesMapping);

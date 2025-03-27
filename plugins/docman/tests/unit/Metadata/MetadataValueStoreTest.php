@@ -59,7 +59,7 @@ final class MetadataValueStoreTest extends TestCase
         $metadata_value->setItemId(1);
         $metadata_value->setFieldId(10);
 
-        $this->metadata_value_dao->expects(self::once())->method('create');
+        $this->metadata_value_dao->expects($this->once())->method('create');
         $this->reference_manager->expects(self::never())->method('extractCrossRef');
         $this->store->storeMetadata($metadata_value, 102);
     }
@@ -72,8 +72,8 @@ final class MetadataValueStoreTest extends TestCase
         $metadata_value->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
         $metadata_value->setValue('text value');
 
-        $this->metadata_value_dao->expects(self::once())->method('create');
-        $this->reference_manager->expects(self::once())->method('extractCrossRef');
+        $this->metadata_value_dao->expects($this->once())->method('create');
+        $this->reference_manager->expects($this->once())->method('extractCrossRef');
 
         $this->store->storeMetadata($metadata_value, 102);
     }
@@ -97,9 +97,9 @@ final class MetadataValueStoreTest extends TestCase
         $metadata_value->setItemId(1);
         $metadata_value->setFieldId(10);
 
-        $this->metadata_value_dao->expects(self::once())->method('delete')->with(10, 1);
+        $this->metadata_value_dao->expects($this->once())->method('delete')->with(10, 1);
 
-        $this->metadata_value_dao->expects(self::once())->method('create');
+        $this->metadata_value_dao->expects($this->once())->method('create');
         $this->reference_manager->expects(self::never())->method('extractCrossRef');
         $this->store->updateMetadata($metadata_value, 102);
     }
@@ -112,8 +112,8 @@ final class MetadataValueStoreTest extends TestCase
         $metadata_value->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
         $metadata_value->setValue('text value');
 
-        $this->metadata_value_dao->expects(self::once())->method('updateValue');
-        $this->reference_manager->expects(self::once())->method('extractCrossRef');
+        $this->metadata_value_dao->expects($this->once())->method('updateValue');
+        $this->reference_manager->expects($this->once())->method('extractCrossRef');
 
         $this->store->updateMetadata($metadata_value, 102);
     }

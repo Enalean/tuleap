@@ -86,15 +86,15 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_id = 101;
         $user_id    = 102;
 
-        $this->dao->expects(self::once())->method('removeNonAdminUserFromProject')->willReturn(true);
-        $this->dao->expects(self::once())->method('removeUserFromProjectUgroups')->willReturn(true);
-        $this->tracker_v3->expects(self::once())->method('deleteUser')->with(102)->willReturn(true);
+        $this->dao->expects($this->once())->method('removeNonAdminUserFromProject')->willReturn(true);
+        $this->dao->expects($this->once())->method('removeUserFromProjectUgroups')->willReturn(true);
+        $this->tracker_v3->expects($this->once())->method('deleteUser')->with(102)->willReturn(true);
         $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
         $this->user_manager->method('getUserById')->with(102)->willReturn($this->user);
         $this->ugroup_manager->method('getStaticUGroups')->with($this->project)->willReturn([]);
         $this->tv3_tracker_factory->method('getArtifactTypesFromId')->with(101)->willReturn([$this->tracker_v3]);
 
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
         $this->event_manager->expects(self::exactly(2))->method('processEvent');
 
         $this->remover->removeUserFromProject($project_id, $user_id);
@@ -107,19 +107,19 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->method('getUserAnonymous')->willReturn(UserTestBuilder::anAnonymousUser()->build());
 
-        $this->user_permissions_dao->expects(self::once())->method('removeUserFromProjectAdmin');
-        $this->dao->expects(self::once())->method('removeNonAdminUserFromProject')->willReturn(true);
-        $this->dao->expects(self::once())->method('removeUserFromProjectUgroups')->willReturn(true);
-        $this->tracker_v3->expects(self::once())->method('deleteUser')->with(102)->willReturn(true);
+        $this->user_permissions_dao->expects($this->once())->method('removeUserFromProjectAdmin');
+        $this->dao->expects($this->once())->method('removeNonAdminUserFromProject')->willReturn(true);
+        $this->dao->expects($this->once())->method('removeUserFromProjectUgroups')->willReturn(true);
+        $this->tracker_v3->expects($this->once())->method('deleteUser')->with(102)->willReturn(true);
         $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
         $this->user_manager->method('getUserById')->with(102)->willReturn($this->user);
         $this->ugroup_manager->method('getStaticUGroups')->with($this->project)->willReturn([]);
         $this->tv3_tracker_factory->method('getArtifactTypesFromId')->with(101)->willReturn([$this->tracker_v3]);
 
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
-        $this->project_history_dao->expects(self::once())->method('addHistory');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->event_manager->expects(self::exactly(2))->method('processEvent');
-        $this->event_manager->expects(self::once())->method('dispatch');
+        $this->event_manager->expects($this->once())->method('dispatch');
 
         $this->remover->forceRemoveAdminRestrictedUserFromProject($project, $user);
     }
@@ -147,7 +147,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
 
-        $this->dao->expects(self::once())->method('removeNonAdminUserFromProject');
+        $this->dao->expects($this->once())->method('removeNonAdminUserFromProject');
         $this->dao->expects(self::never())->method('removeUserFromProjectUgroups');
         $this->project_history_dao->expects(self::never())->method('groupAddHistory');
         $this->tracker_v3->expects(self::never())->method('deleteUser');

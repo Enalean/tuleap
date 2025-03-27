@@ -86,10 +86,10 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = $this->mockSemanticDone();
 
         $last_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
-        $last_changeset_value_list->expects(self::once())->method('getValue')
+        $last_changeset_value_list->expects($this->once())->method('getValue')
             ->willReturn([0 => '431']);
 
-        $last_changeset->expects(self::once())->method('getValue')
+        $last_changeset->expects($this->once())->method('getValue')
             ->with($status_field)
             ->willReturn($last_changeset_value_list);
 
@@ -111,10 +111,10 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = $this->mockSemanticDone();
 
         $last_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
-        $last_changeset_value_list->expects(self::once())->method('getValue')
+        $last_changeset_value_list->expects($this->once())->method('getValue')
             ->willReturn([0 => '431']);
 
-        $last_changeset->expects(self::once())->method('getValue')
+        $last_changeset->expects($this->once())->method('getValue')
             ->with($status_field)
             ->willReturn($last_changeset_value_list);
 
@@ -125,7 +125,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsZeroIfNoLinkedArtifacts(): void
     {
-        $this->velocity_dao->expects(self::once())->method('searchPlanningLinkedArtifact')
+        $this->velocity_dao->expects($this->once())->method('searchPlanningLinkedArtifact')
             ->with(200)
             ->willReturn([]);
 
@@ -199,7 +199,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = $this->mockSemanticDone();
 
         $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
-        $last_changeset->expects(self::once())->method('getValue')
+        $last_changeset->expects($this->once())->method('getValue')
             ->with($status_field)
             ->willReturn(null);
 
@@ -223,10 +223,10 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = $this->mockSemanticDone();
 
         $last_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
-        $last_changeset_value_list->expects(self::once())->method('getValue')
+        $last_changeset_value_list->expects($this->once())->method('getValue')
             ->willReturn([0 => '431']);
 
-        $last_changeset->expects(self::once())->method('getValue')
+        $last_changeset->expects($this->once())->method('getValue')
             ->with($status_field)
             ->willReturn($last_changeset_value_list);
 
@@ -299,7 +299,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockLinkedArtifact(): Artifact&MockObject
     {
-        $this->velocity_dao->expects(self::once())->method('searchPlanningLinkedArtifact')
+        $this->velocity_dao->expects($this->once())->method('searchPlanningLinkedArtifact')
             ->with(200)
             ->willReturn([
                 ['id' => 201],
@@ -308,7 +308,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $linked_artifact = $this->createMock(Artifact::class);
         $linked_artifact->method('getTracker')->willReturn($this->tracker);
 
-        $this->artifact_factory->expects(self::once())->method('getArtifactById')
+        $this->artifact_factory->expects($this->once())->method('getArtifactById')
             ->with(201)
             ->willReturn($linked_artifact);
 

@@ -80,7 +80,7 @@ final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $db_connection = $this->createMock(DBConnection::class);
         $writer        = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
-        $db_connection->expects(self::once())->method('reconnectAfterALongRunningProcess');
+        $db_connection->expects($this->once())->method('reconnectAfterALongRunningProcess');
 
         $item_id          = 12;
         $file_length      = 123;

@@ -64,19 +64,19 @@ final class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $reference_transition = $this->createMock(Transition::class);
 
         $this->transition_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createAndSaveTransition')
             ->with($workflow, $params)
             ->willReturn($transition);
 
         $this->transition_extractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('extractReferenceTransitionFromState')
             ->with($state)
             ->willReturn($reference_transition);
 
         $this->transition_replicator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('replicate')
             ->with($reference_transition, $transition);
 
@@ -96,13 +96,13 @@ final class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $transition = $this->createMock(Transition::class);
 
         $this->transition_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createAndSaveTransition')
             ->with($workflow, $params)
             ->willReturn($transition);
 
         $this->transition_extractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('extractReferenceTransitionFromState')
             ->with($state)
             ->willThrowException(new NoTransitionForStateException());

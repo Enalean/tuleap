@@ -138,18 +138,18 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Empty(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', self::anything(), self::anything(), null, null)
             ->willReturn($created_item);
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+            $this->permissions_for_groups_set_factory->expects($this->once())->method('fromRepresentation')
                 ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->expects(self::once())->method('visitEmpty')
+        $this->creator_visitor->expects($this->once())->method('visitEmpty')
             ->with(self::isInstanceOf(Docman_Empty::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     self::assertNull($params['permissions_for_groups']);
@@ -203,18 +203,18 @@ final class DocmanItemCreatorTest extends TestCase
         $created_item->method('getId')->willReturn(12);
         $created_item->method('getParentId')->willReturn(11);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with('Title', '', 11, 100, 0, 222, Docman_Item::TYPE_OTHER, 'whatever', self::anything(), self::anything(), null, null)
             ->willReturn($created_item);
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+            $this->permissions_for_groups_set_factory->expects($this->once())->method('fromRepresentation')
                 ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->expects(self::once())->method('visitOtherDocument')
+        $this->creator_visitor->expects($this->once())->method('visitOtherDocument')
             ->with(self::isInstanceOf(OtherDocument::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     self::assertNull($params['permissions_for_groups']);
@@ -313,11 +313,11 @@ final class DocmanItemCreatorTest extends TestCase
         $created_item = new Docman_Wiki(['item_id' => 12, 'parent_id' => 11, 'wiki_page' => '']);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+            $this->permissions_for_groups_set_factory->expects($this->once())->method('fromRepresentation')
                 ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->expects(self::once())->method('visitWiki')
+        $this->creator_visitor->expects($this->once())->method('visitWiki')
             ->with(self::isInstanceOf(Docman_Wiki::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     self::assertNull($params['permissions_for_groups']);
@@ -327,7 +327,7 @@ final class DocmanItemCreatorTest extends TestCase
                 return true;
             }));
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with('Title', '', 11, 100, (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', self::anything(), self::anything(), 'Monchichi', null)
             ->willReturn($created_item);
 
@@ -400,7 +400,7 @@ final class DocmanItemCreatorTest extends TestCase
         $file_properties_post_representation->file_name = 'myfile';
         $post_representation->file_properties           = $file_properties_post_representation;
 
-        $this->document_to_upload_creator->expects(self::once())->method('create')->willReturn(new DocumentToUpload(12));
+        $this->document_to_upload_creator->expects($this->once())->method('create')->willReturn(new DocumentToUpload(12));
 
         $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
@@ -522,11 +522,11 @@ final class DocmanItemCreatorTest extends TestCase
         $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+            $this->permissions_for_groups_set_factory->expects($this->once())->method('fromRepresentation')
                 ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->expects(self::once())->method('visitLink')
+        $this->creator_visitor->expects($this->once())->method('visitLink')
             ->with(self::isInstanceOf(Docman_Link::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     self::assertNull($params['permissions_for_groups']);
@@ -538,7 +538,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Link(['item_id' => 12, 'parent_id' => 11, 'link_url' => '']);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with(
                 'Mie faboulouse linke',
                 '',
@@ -595,11 +595,11 @@ final class DocmanItemCreatorTest extends TestCase
         $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+            $this->permissions_for_groups_set_factory->expects($this->once())->method('fromRepresentation')
                 ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->expects(self::once())->method('visitFolder')
+        $this->creator_visitor->expects($this->once())->method('visitFolder')
             ->with(self::isInstanceOf(Docman_Folder::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     self::assertNull($params['permissions_for_groups']);
@@ -611,7 +611,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Folder(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, '', self::anything(), self::anything(), null, null)
             ->willReturn($created_item);
 
@@ -654,11 +654,11 @@ final class DocmanItemCreatorTest extends TestCase
         $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+            $this->permissions_for_groups_set_factory->expects($this->once())->method('fromRepresentation')
                 ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->expects(self::once())->method('visitEmbeddedFile')
+        $this->creator_visitor->expects($this->once())->method('visitEmbeddedFile')
             ->with(self::isInstanceOf(Docman_EmbeddedFile::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     self::assertNull($params['permissions_for_groups']);
@@ -670,7 +670,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_EmbeddedFile(['item_id' => 12, 'parent_id' => 11, 'group_id' => 102]);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with('Embedded file', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, '', self::anything(), self::anything(), null, null)
             ->willReturn($created_item);
 
@@ -783,7 +783,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Folder(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with(
                 'Title',
                 '',
@@ -802,7 +802,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
 
-        $this->creator_visitor->expects(self::once())->method('visitFolder');
+        $this->creator_visitor->expects($this->once())->method('visitFolder');
         $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
@@ -842,13 +842,13 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Empty(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with('Title', '', 11, 100, $obsolescence_date_time_stamp, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', self::anything(), self::anything(), null, null)
             ->willReturn($created_item);
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->expects(self::once())->method('visitEmpty');
+        $this->creator_visitor->expects($this->once())->method('visitEmpty');
         $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
@@ -890,7 +890,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Empty(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with(
                 'Embedded file with status and Obsolescence date',
                 '',
@@ -909,7 +909,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->expects(self::once())->method('visitEmpty');
+        $this->creator_visitor->expects($this->once())->method('visitEmpty');
         $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
@@ -952,7 +952,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Link(['item_id' => 12, 'parent_id' => 11, 'link_url' => '']);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with(
                 'Link with status and Obsolescence date',
                 '',
@@ -971,12 +971,12 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->expects(self::once())->method('visitLink');
+        $this->creator_visitor->expects($this->once())->method('visitLink');
         $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $this->link_validity_checker->expects(self::once())->method('checkLinkValidity');
+        $this->link_validity_checker->expects($this->once())->method('checkLinkValidity');
 
         $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createLink(
@@ -1015,7 +1015,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $created_item = new Docman_Wiki(['item_id' => 12, 'parent_id' => 11, 'wiki_page' => '']);
 
-        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+        $this->item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with(
                 'wiki',
                 '',
@@ -1034,7 +1034,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->expects(self::once())->method('visitWiki');
+        $this->creator_visitor->expects($this->once())->method('visitWiki');
         $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
@@ -1067,7 +1067,7 @@ final class DocmanItemCreatorTest extends TestCase
         $file_properties_post_representation->file_name = 'myfile';
         $post_representation->file_properties           = $file_properties_post_representation;
 
-        $this->document_to_upload_creator->expects(self::once())->method('create')->willReturn(new DocumentToUpload(12));
+        $this->document_to_upload_creator->expects($this->once())->method('create')->willReturn(new DocumentToUpload(12));
 
         $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 

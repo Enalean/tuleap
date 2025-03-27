@@ -54,7 +54,7 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(TuleapReferencedArtifactNotFoundException::class);
         $this->event_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('processEvent')
             ->with(
                 'get_artifact_reference_group_id',
@@ -72,7 +72,7 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(TuleapReferenceNotFoundException::class);
         $this->event_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('processEvent')
             ->with(
                 'get_artifact_reference_group_id',
@@ -94,7 +94,7 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTheReference(): void
     {
         $this->event_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('processEvent')
             ->with(
                 'get_artifact_reference_group_id',

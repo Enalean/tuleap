@@ -55,7 +55,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
@@ -110,7 +110,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
@@ -166,13 +166,13 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addProjectMember')
             ->with($known_user, $project, $current_user);
 
@@ -221,13 +221,13 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addProjectMember')
             ->with($known_user, $project, $current_user)
             ->willThrowException(new UserIsNotActiveOrRestrictedException());
@@ -267,13 +267,13 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addProjectMember')
             ->with($known_user, $project, $current_user)
             ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($known_user, $project));
@@ -334,7 +334,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
@@ -370,7 +370,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withReturnCallback(
             fn(
@@ -425,7 +425,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
@@ -458,7 +458,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
-        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $gate_keeper->expects($this->once())->method('checkNotificationsCanBeSent');
 
         $this->expectException(UnableToSendInvitationsException::class);
 

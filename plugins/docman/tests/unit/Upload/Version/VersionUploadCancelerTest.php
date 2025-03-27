@@ -44,7 +44,7 @@ final class VersionUploadCancelerTest extends TestCase
         mkdir(dirname($item_path), 0777, true);
         touch($item_path);
 
-        $dao->expects(self::once())->method('deleteByVersionID');
+        $dao->expects($this->once())->method('deleteByVersionID');
 
         $canceler->terminateUpload($file_information);
         self::assertFileDoesNotExist($item_path);
@@ -62,7 +62,7 @@ final class VersionUploadCancelerTest extends TestCase
         $file_information->method('getID')->willReturn($item_id);
         $item_path = $path_allocator->getPathForItemBeingUploaded($file_information);
 
-        $dao->expects(self::once())->method('deleteByVersionID');
+        $dao->expects($this->once())->method('deleteByVersionID');
 
         $canceler->terminateUpload($file_information);
         self::assertFileDoesNotExist($item_path);

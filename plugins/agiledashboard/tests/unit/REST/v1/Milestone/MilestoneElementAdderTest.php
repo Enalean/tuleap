@@ -82,12 +82,12 @@ final class MilestoneElementAdderTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(101)->build())->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
+        $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 
-        $this->unplanned_artifact_adder->expects(self::once())->method('addArtifactToTopBacklogFromIds');
-        $this->resources_patcher->expects(self::once())->method('removeArtifactFromSource');
+        $this->unplanned_artifact_adder->expects($this->once())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects($this->once())->method('removeArtifactFromSource');
 
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(102)
             ->willReturn(true);
 
@@ -103,13 +103,13 @@ final class MilestoneElementAdderTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(101)->build())->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
+        $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(102)
             ->willReturn(false);
 
-        $this->resources_patcher->expects(self::once())->method('removeArtifactFromSource')->with($user, $add);
+        $this->resources_patcher->expects($this->once())->method('removeArtifactFromSource')->with($user, $add);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }
@@ -139,7 +139,7 @@ final class MilestoneElementAdderTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(199)->build())->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
+        $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->willThrowException(new ProvidedAddedIdIsNotInPartOfTopBacklogException([]));
 
         $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
@@ -160,7 +160,7 @@ final class MilestoneElementAdderTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(199)->build())->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
+        $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->willThrowException(new NoRootPlanningException());
 
         $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');

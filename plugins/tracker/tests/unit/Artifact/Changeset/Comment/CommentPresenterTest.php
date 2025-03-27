@@ -47,7 +47,7 @@ final class CommentPresenterTest extends TestCase
             ->method('getText')
             ->with('system', 'datefmt')
             ->willReturn('d/m/Y H:i');
-        $this->user_helper->expects(self::once())->method('getLinkOnUserFromUserId')
+        $this->user_helper->expects($this->once())->method('getLinkOnUserFromUserId')
             ->with(101)
             ->willReturn('<a href="https://example.com">A user</a>');
     }

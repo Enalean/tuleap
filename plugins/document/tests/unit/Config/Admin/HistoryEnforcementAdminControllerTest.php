@@ -65,7 +65,7 @@ final class HistoryEnforcementAdminControllerTest extends \Tuleap\Test\PHPUnit\T
         $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $this->admin_page_renderer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('renderANoFramedPresenter');
 
         $this->controller->process(

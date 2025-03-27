@@ -38,7 +38,7 @@ final class PermissionsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $permission_checker = $this->createMock(\Tracker_Permission_PermissionChecker::class);
 
-        $permission_checker->expects(self::once())->method('userCanView')->with($user, $artifact)->willReturn(true);
+        $permission_checker->expects($this->once())->method('userCanView')->with($user, $artifact)->willReturn(true);
 
         PermissionsCache::userCanView($artifact, $user, $permission_checker);
         PermissionsCache::userCanView($artifact, $user, $permission_checker);

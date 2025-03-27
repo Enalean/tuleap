@@ -40,7 +40,7 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'stuff');
 
-        $this->logger->expects(self::once())->method('log')->with(LogLevel::INFO, '[stuff] bla', []);
+        $this->logger->expects($this->once())->method('log')->with(LogLevel::INFO, '[stuff] bla', []);
 
         $wrapper->info('bla');
     }
@@ -51,7 +51,7 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wrapper2 = new WrapperLogger($wrapper1, 'artifact');
 
-        $this->logger->expects(self::once())->method('log')->with(LogLevel::INFO, '[tracker] [artifact] bla', []);
+        $this->logger->expects($this->once())->method('log')->with(LogLevel::INFO, '[tracker] [artifact] bla', []);
 
         $wrapper2->info('bla');
     }
@@ -60,7 +60,7 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->expects(self::once())->method('log')->with(LogLevel::INFO, '[tracker][53] bla', []);
+        $this->logger->expects($this->once())->method('log')->with(LogLevel::INFO, '[tracker][53] bla', []);
 
         $wrapper->push('53');
         $wrapper->info('bla');

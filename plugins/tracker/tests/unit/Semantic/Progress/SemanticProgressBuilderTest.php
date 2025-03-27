@@ -52,7 +52,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnEmptySemanticProgressWhenItHasNotBeenConfiguredYet(): void
     {
-        $this->dao->expects(self::once())->method('searchByTrackerId')->willReturn(null);
+        $this->dao->expects($this->once())->method('searchByTrackerId')->willReturn(null);
         $semantic = $this->progress_builder->getSemantic(
             $this->tracker
         );
@@ -65,7 +65,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
         $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
 
-        $this->dao->expects(self::once())->method('searchByTrackerId')->willReturn(
+        $this->dao->expects($this->once())->method('searchByTrackerId')->willReturn(
             [
                 'total_effort_field_id' => 1001,
                 'remaining_effort_field_id' => 1002,
@@ -73,7 +73,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->method_builder->expects(self::once())->method('buildMethodBasedOnEffort')
+        $this->method_builder->expects($this->once())->method('buildMethodBasedOnEffort')
             ->with(
                 $this->tracker,
                 1001,
@@ -108,7 +108,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAChildCountBasedSemanticProgress(): void
     {
-        $this->dao->expects(self::once())->method('searchByTrackerId')->willReturn(
+        $this->dao->expects($this->once())->method('searchByTrackerId')->willReturn(
             [
                 'total_effort_field_id' => null,
                 'remaining_effort_field_id' => null,
@@ -116,7 +116,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->method_builder->expects(self::once())->method('buildMethodBasedOnChildCount')
+        $this->method_builder->expects($this->once())->method('buildMethodBasedOnChildCount')
             ->with(
                 $this->tracker,
                 'covered_by',
@@ -149,7 +149,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ?int $remaining_effort_field_id,
         ?string $artifact_link_type,
     ): void {
-        $this->dao->expects(self::once())->method('searchByTrackerId')->willReturn(
+        $this->dao->expects($this->once())->method('searchByTrackerId')->willReturn(
             [
                 'total_effort_field_id' => $total_effort_field_id,
                 'remaining_effort_field_id' => $remaining_effort_field_id,

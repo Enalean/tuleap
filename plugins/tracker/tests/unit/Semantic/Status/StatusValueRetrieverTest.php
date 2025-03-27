@@ -222,7 +222,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticStatusNotDefined(): void
     {
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -239,7 +239,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
 
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -263,7 +263,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         ])->build()->getField();
 
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -292,7 +292,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -322,7 +322,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [44]
         );
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -352,7 +352,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [45]
         );
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -379,7 +379,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [44]
         );
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -406,7 +406,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [44]
         );
         $this->semantic_status_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(

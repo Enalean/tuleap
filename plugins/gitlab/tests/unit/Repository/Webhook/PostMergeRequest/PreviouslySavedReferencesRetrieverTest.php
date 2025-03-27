@@ -176,7 +176,7 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             );
 
         $this->tuleap_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(8)
             ->willThrowException(new TuleapReferenceNotFoundException());
@@ -224,7 +224,7 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             );
 
         $this->tuleap_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(8)
             ->willThrowException(new TuleapReferencedArtifactNotFoundException(8));

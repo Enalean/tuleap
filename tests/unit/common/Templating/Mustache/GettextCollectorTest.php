@@ -32,7 +32,7 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->expects(self::once())->method('add')->with(
+        $entries->expects($this->once())->method('add')->with(
             'tuleap-core',
             self::callback(
                 function (POTEntry $entry): bool {
@@ -49,7 +49,7 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->expects(self::once())->method('add')->with(
+        $entries->expects($this->once())->method('add')->with(
             'tuleap-core',
             self::callback(
                 function (POTEntry $entry): bool {
@@ -67,7 +67,7 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->expects(self::once())->method('add')->with(
+        $entries->expects($this->once())->method('add')->with(
             'mydomain',
             self::callback(
                 function (POTEntry $entry): bool {
@@ -84,7 +84,7 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->expects(self::once())->method('add')->with(
+        $entries->expects($this->once())->method('add')->with(
             'mydomain',
             self::callback(
                 function (POTEntry $entry): bool {

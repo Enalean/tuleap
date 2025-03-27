@@ -38,7 +38,7 @@ final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\
         \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
         $language_factory = $this->createMock(\BaseLanguageFactory::class);
         $language_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAvailableLanguages')
             ->willReturn(
                 [
@@ -48,7 +48,7 @@ final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\
                 ]
             );
         $scope_builder = $this->createMock(AuthenticationScopeBuilder::class);
-        $scope_builder->expects(self::once())->method('buildAllAvailableAuthenticationScopes')
+        $scope_builder->expects($this->once())->method('buildAllAvailableAuthenticationScopes')
             ->willReturn(
                 [
                     OAuth2SignInScope::fromItself(),

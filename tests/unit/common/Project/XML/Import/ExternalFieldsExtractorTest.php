@@ -75,7 +75,7 @@ final class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     </tracker>'
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
         $this->external_field_extractor->extractExternalFieldsFromTracker($xml_input);
         self::assertEquals([], $xml_input->xpath('externalField'));
         self::assertEquals([], $xml_input->xpath('permission'));

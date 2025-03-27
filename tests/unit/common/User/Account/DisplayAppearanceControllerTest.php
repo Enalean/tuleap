@@ -85,7 +85,7 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = UserTestBuilder::anActiveUser()->build();
 
         $this->appearance_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAppareancePresenterForUser')
             ->willReturn(
                 new AppearancePresenter(

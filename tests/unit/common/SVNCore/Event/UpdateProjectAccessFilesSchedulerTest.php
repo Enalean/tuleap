@@ -53,7 +53,7 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
             [SystemEvent::TYPE_UGROUP_MODIFY, '102', false],
         ]);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent');
+        $this->system_event_manager->expects($this->once())->method('createEvent');
 
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
 

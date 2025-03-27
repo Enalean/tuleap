@@ -66,7 +66,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
         $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
         $this->release_factory->method('getFRSReleaseFromDb')->with(1)->willReturn(null);
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
@@ -100,7 +100,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->with(101, 18, 115)
             ->willReturn(false);
 
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
@@ -134,7 +134,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->with(101, 18, 115)
             ->willReturn(true);
 
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
@@ -168,7 +168,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->with(101, 18, 115)
             ->willReturn(true);
 
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
@@ -202,7 +202,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->with(101, 18, 115)
             ->willReturn(true);
 
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
@@ -238,7 +238,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with($cross_reference, '');
 
@@ -253,7 +253,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
         $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
         $this->file_factory->method('getFRSFileFromDb')->with(1)->willReturn(null);
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
@@ -272,7 +272,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->willReturn(false);
 
         $this->file_factory->method('getFRSFileFromDb')->with(1)->willReturn($file);
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
@@ -294,7 +294,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with($cross_reference, '');
 

@@ -93,7 +93,7 @@ final class MembershipManagerProjectAdminOwnerOfEverythingTest extends TestCase
 
     public function testItCheckIfProjectAdminsGroupExist(): void
     {
-        $this->membership_manager->expects(self::once())->method('doesGroupExistOnServer')->with($this->remote_server, $this->admin_ugroup);
+        $this->membership_manager->expects($this->once())->method('doesGroupExistOnServer')->with($this->remote_server, $this->admin_ugroup);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }

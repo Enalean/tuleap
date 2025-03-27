@@ -78,18 +78,18 @@ final class AddLicenseAgreementControllerTest extends TestCase
     {
         $project = $this->createMock(Project::class);
         $project->method('getID')->willReturn(102);
-        $this->project_retriever->expects(self::once())->method('getProjectFromId')->with('102')->willReturn($project);
+        $this->project_retriever->expects($this->once())->method('getProjectFromId')->with('102')->willReturn($project);
         $current_user = UserTestBuilder::buildWithDefaults();
         $request      = $this->createMock(HTTPRequest::class);
-        $request->expects(self::once())->method('getCurrentUser')->willReturn($current_user);
+        $request->expects($this->once())->method('getCurrentUser')->willReturn($current_user);
         $layout = $this->createMock(BaseLayout::class);
 
-        $this->helper->expects(self::once())->method('assertCanAccess')->with($project, $current_user);
-        $this->assets->expects(self::once())->method('getFileURL')->with('frs-admin-license-agreement.js');
-        $layout->expects(self::once())->method('includeFooterJavascriptFile');
-        $this->helper->expects(self::once())->method('renderHeader')->with($project);
-        $this->renderer->expects(self::once())->method('renderToPage')->with('edit-license-agreement', self::isInstanceOf(EditLicenseAgreementPresenter::class));
-        $layout->expects(self::once())->method('footer');
+        $this->helper->expects($this->once())->method('assertCanAccess')->with($project, $current_user);
+        $this->assets->expects($this->once())->method('getFileURL')->with('frs-admin-license-agreement.js');
+        $layout->expects($this->once())->method('includeFooterJavascriptFile');
+        $this->helper->expects($this->once())->method('renderHeader')->with($project);
+        $this->renderer->expects($this->once())->method('renderToPage')->with('edit-license-agreement', self::isInstanceOf(EditLicenseAgreementPresenter::class));
+        $layout->expects($this->once())->method('footer');
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }

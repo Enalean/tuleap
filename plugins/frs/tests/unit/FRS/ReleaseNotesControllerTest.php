@@ -136,7 +136,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $layout    = $this->createMock(BaseLayout::class);
         $request   = $this->createMock(HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
-        $this->release_factory->expects(self::once())
+        $this->release_factory->expects($this->once())
             ->method('getFRSReleaseFromDb')
             ->with(124)
             ->willReturn(null);
@@ -154,7 +154,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $release = $this->createStub(FRSRelease::class);
         $release->method('getPackage')->willReturn($this->createStub(\FRSPackage::class));
         $release->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
-        $this->release_factory->expects(self::once())
+        $this->release_factory->expects($this->once())
             ->method('getFRSReleaseFromDb')
             ->with(124)
             ->willReturn($release);
@@ -181,9 +181,9 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $release->method('getReleaseID')->willReturn(652);
         $release->method('getProject')->willReturn($project);
         $release->method('getNotes')->willReturn('Release notes');
-        $release->expects(self::once())->method('getChanges')->willReturn('Change log');
+        $release->expects($this->once())->method('getChanges')->willReturn('Change log');
         $release->method('getPackage')->willReturn($package);
-        $release->expects(self::once())
+        $release->expects($this->once())
             ->method('getStatusID')
             ->willReturn(FRSRelease::STATUS_ACTIVE);
         $release->method('getFiles')->willReturn([]);
@@ -191,13 +191,13 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->package_permission_manager->method('canUserSeePackage')->willReturn(true);
 
-        $this->release_factory->expects(self::once())
+        $this->release_factory->expects($this->once())
             ->method('getFRSReleaseFromDb')
             ->with(124)
             ->willReturn($release);
         $license_agreement = $this->createMock(LicenseAgreementInterface::class);
         $license_agreement->method('getAsJson');
-        $this->license_agreement_factory->expects(self::once())
+        $this->license_agreement_factory->expects($this->once())
             ->method('getLicenseAgreementForPackage')
             ->with($package)
             ->willReturn($license_agreement);
@@ -207,29 +207,29 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         // assets
         $script_url = 'https://example.com/tuleap-frs.js';
-        $this->script_assets->expects(self::once())
+        $this->script_assets->expects($this->once())
             ->method('getFileURL')
             ->with('tuleap-frs.js')
             ->willReturn($script_url);
-        $layout->expects(self::once())
+        $layout->expects($this->once())
             ->method('includeFooterJavascriptFile')
             ->with($script_url);
-        $layout->expects(self::once())
+        $layout->expects($this->once())
             ->method('addCssAsset')
             ->with(self::isInstanceOf(CssAsset::class));
         // toolbar
-        $this->permission_manager->expects(self::once())
+        $this->permission_manager->expects($this->once())
             ->method('isAdmin')
             ->with($project, $current_user)
             ->willReturn(true);
         $layout->expects(self::exactly(2))
             ->method('addToolbarItem');
         // layout
-        $layout->expects(self::once())->method('header');
-        $this->renderer->expects(self::once())
+        $layout->expects($this->once())->method('header');
+        $this->renderer->expects($this->once())
             ->method('renderToPage')
             ->with('release', self::isInstanceOf(ReleasePresenter::class));
-        $layout->expects(self::once())
+        $layout->expects($this->once())
             ->method('footer')
             ->with([]);
 

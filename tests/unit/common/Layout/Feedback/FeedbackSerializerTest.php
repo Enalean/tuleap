@@ -33,7 +33,7 @@ final class FeedbackSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->setSessionId(12);
         $dao                 = $this->createMock(\FeedbackDao::class);
         $feedback_serializer = new FeedbackSerializer($dao);
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('create')
             ->with(
                 12,

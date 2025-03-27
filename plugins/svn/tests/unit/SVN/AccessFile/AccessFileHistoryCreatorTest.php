@@ -108,10 +108,10 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn($current_access_file);
-        $this->access_file_dao->expects(self::once())->method('create')->willReturn(true);
+        $this->access_file_dao->expects($this->once())->method('create')->willReturn(true);
 
-        $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->project_history_formatter->expects($this->once())->method('getAccessFileHistory');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
 
         $this->creator->create($this->repository, $new_access_file, time());
 
@@ -132,10 +132,10 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn($current_access_file);
-        $this->access_file_dao->expects(self::once())->method('create')->willReturn(true);
+        $this->access_file_dao->expects($this->once())->method('create')->willReturn(true);
 
-        $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
-        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->project_history_formatter->expects($this->once())->method('getAccessFileHistory');
+        $this->project_history_dao->expects($this->once())->method('groupAddHistory');
 
         // Make it write somewhere there is no way write can succeed to force exception
         ForgeConfig::set('sys_data_dir', '/');

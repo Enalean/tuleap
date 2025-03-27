@@ -103,18 +103,18 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'tuleap_version' => '11-16',
         ];
 
-        $this->release_note_dao->expects(self::once())->method('getReleaseLink')->willReturn($dao_old_links);
+        $this->release_note_dao->expects($this->once())->method('getReleaseLink')->willReturn($dao_old_links);
         $this->release_note_dao->method('updateReleaseNoteLink');
-        $this->user_preferences_dao->expects(self::once())->method('deletePreferenceForAllUsers');
+        $this->user_preferences_dao->expects($this->once())->method('deletePreferenceForAllUsers');
 
         self::assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink('11.17.99.666'));
     }
 
     public function testGetReleaseNoteLinkIfNotLinkInDatabase(): void
     {
-        $this->release_note_dao->expects(self::once())->method('getReleaseLink')->willReturn(null);
+        $this->release_note_dao->expects($this->once())->method('getReleaseLink')->willReturn(null);
         $this->release_note_dao->method('createReleaseNoteLink');
-        $this->user_preferences_dao->expects(self::once())->method('deletePreferenceForAllUsers');
+        $this->user_preferences_dao->expects($this->once())->method('deletePreferenceForAllUsers');
 
         self::assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink('11.17.99.666'));
     }

@@ -113,7 +113,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::once())
+        $this->tuleap_reference_retriever->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(123)
             ->willReturn(
@@ -130,14 +130,14 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                 )
             );
 
-        $this->cross_reference_dao->expects(self::once())
+        $this->cross_reference_dao->expects($this->once())
             ->method('existInDb')
             ->willReturn(false);
 
-        $this->reference_manager->expects(self::once())
+        $this->reference_manager->expects($this->once())
             ->method('insertCrossReference');
 
-        $this->branch_info_dao->expects(self::once())
+        $this->branch_info_dao->expects($this->once())
             ->method('saveGitlabBranchInfo');
         $this->branch_info_dao->expects(self::never())
             ->method('updateGitlabBranchInformation');
@@ -296,7 +296,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::once())
+        $this->tuleap_reference_retriever->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(123)
             ->willThrowException(
@@ -356,7 +356,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::once())
+        $this->tuleap_reference_retriever->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(123)
             ->willReturn(
@@ -373,7 +373,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                 )
             );
 
-        $this->cross_reference_dao->expects(self::once())
+        $this->cross_reference_dao->expects($this->once())
             ->method('existInDb')
             ->willReturn(true);
 
@@ -382,7 +382,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
 
-        $this->branch_info_dao->expects(self::once())
+        $this->branch_info_dao->expects($this->once())
             ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects(self::never())
@@ -429,7 +429,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::once())
+        $this->tuleap_reference_retriever->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(123)
             ->willReturn(
@@ -455,9 +455,9 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->branch_info_dao->expects(self::never())
             ->method('updateGitlabBranchInformation');
 
-        $this->branch_info_dao->expects(self::once())
+        $this->branch_info_dao->expects($this->once())
             ->method('deleteBranchInGitlabIntegration');
-        $this->cross_reference_manager->expects(self::once())
+        $this->cross_reference_manager->expects($this->once())
             ->method('deleteEntity');
 
         $this->handler->parseBranchReference(

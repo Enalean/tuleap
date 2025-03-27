@@ -63,7 +63,7 @@ final class MilestoneElementRemoverTests extends TestCase
 
     public function testItThrowsAnExceptionIfRemoveIsCalledIntoClassicBacklogContext(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(false);
 
@@ -81,11 +81,11 @@ final class MilestoneElementRemoverTests extends TestCase
     public function testItThrowsAnExceptionIfAtLeastOneRemovedIdIsNotInExplicitBacklog(): void
     {
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(ArtifactTestBuilder::anArtifact(1)->build());
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('isArtifactInTopBacklogOfProject')
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('isArtifactInTopBacklogOfProject')
             ->with(124, 101)
             ->willReturn(false);
 
@@ -103,15 +103,15 @@ final class MilestoneElementRemoverTests extends TestCase
     public function testItRemovesItemsFromExplicitBacklog(): void
     {
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(ArtifactTestBuilder::anArtifact(1)->build());
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('isArtifactInTopBacklogOfProject')
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('isArtifactInTopBacklogOfProject')
             ->with(124, 101)
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('removeItemsFromExplicitBacklogOfProject')
             ->with(101, [124]);
 
         $this->remover->removeElementsFromBacklog(
@@ -124,13 +124,13 @@ final class MilestoneElementRemoverTests extends TestCase
     public function testDoesNotRemoveFromExplicitBacklogItemsTheUserCannotSee(): void
     {
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('isArtifactInTopBacklogOfProject');
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('removeItemsFromExplicitBacklogOfProject')
             ->with(101, []);
 
         $this->remover->removeElementsFromBacklog(

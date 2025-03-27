@@ -80,7 +80,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
     public function testItDoesNothingIfProjectDoesNotUseExplicitBacklogMangement(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(false);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
@@ -94,10 +94,10 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
     public function testItDoesNothingIfArtifactIsNotAMilestone(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(true);
 
-        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+        $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn(null);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
@@ -111,10 +111,10 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
     public function testItDoesNothingIfArtifactDoesNotHaveAnArtifactLinkField(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(true);
 
-        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+        $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
         $artifact = $this->createMock(Artifact::class);
@@ -131,15 +131,15 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
     public function testItDoesNothingIfArtifactDoesNotHaveALastChangeset(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(true);
 
-        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+        $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getLastChangeset')
+        $artifact->expects($this->once())->method('getLastChangeset')
             ->willReturn(null);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
@@ -153,10 +153,10 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
     public function testItDoesNothingIfArtifactDoesNotHaveALastChangesetValue(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(true);
 
-        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+        $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
         $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
@@ -165,7 +165,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getLastChangeset')
+        $artifact->expects($this->once())->method('getLastChangeset')
             ->willReturn($changeset);
 
         $changeset->setFieldValue($artifact_link_field);
@@ -181,10 +181,10 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
     public function testItDoesNothingIfArtifactDoesNotHaveLinkedArtifacts(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(true);
 
-        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+        $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
         $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
@@ -196,7 +196,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn(458);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getLastChangeset')
+        $artifact->expects($this->once())->method('getLastChangeset')
             ->willReturn($changeset);
 
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
@@ -210,10 +210,10 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
     public function testItCleansArtifactInExplicitBacklogThatAreManuallyPlanned(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(true);
 
-        $this->milestone_factory->expects(self::once())->method('getBareMilestoneByArtifact')
+        $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
         $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
@@ -229,10 +229,10 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn(458);
         $artifact->method('getTracker')->willReturn($this->tracker);
-        $artifact->expects(self::once())->method('getLastChangeset')
+        $artifact->expects($this->once())->method('getLastChangeset')
             ->willReturn($changeset);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('cleanUpDirectlyPlannedItemsInArtifact')
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('cleanUpDirectlyPlannedItemsInArtifact')
             ->with(458, [450, 452]);
 
         $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField($artifact_link_field));

@@ -44,7 +44,7 @@ final class GitProjectRenamerTest extends TestCase
     public function testItCallDaoRenameWhenBackendRenameWork(): void
     {
         $this->git_backend->method('renameProject')->with($this->project, 'aname')->willReturn(true);
-        $this->git_dao->expects(self::once())->method('renameProject')->with($this->project, 'aname');
+        $this->git_dao->expects($this->once())->method('renameProject')->with($this->project, 'aname');
         $this->git_project_renamer->renameProject($this->project, 'aName');
     }
 

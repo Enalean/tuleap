@@ -77,8 +77,8 @@ final class ScrumPresenterBuilderTest extends TestCase
         );
 
         $add_to_top_backlog_post_action_dao->method('isAtLeastOnePostActionDefinedInProject')->willReturn(true);
-        $event_manager->expects(self::once())->method('processEvent');
-        $event_manager->expects(self::once())->method('dispatch');
+        $event_manager->expects($this->once())->method('processEvent');
+        $event_manager->expects($this->once())->method('dispatch');
     }
 
     public function testItBuildsPresenterWhenNoRootPlanning(): void
@@ -91,11 +91,11 @@ final class ScrumPresenterBuilderTest extends TestCase
 
         $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn(false);
 
-        $this->configuration_dao->expects(self::once())->method('isScrumActivated')->willReturn(false);
+        $this->configuration_dao->expects($this->once())->method('isScrumActivated')->willReturn(false);
 
         $planning = PlanningBuilder::aPlanning(101)->withId(42)->build();
-        $this->planning_factory->expects(self::once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);
-        $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([$planning]);
+        $this->planning_factory->expects($this->once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);
+        $this->planning_factory->expects($this->once())->method('getPlannings')->willReturn([$planning]);
 
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
@@ -143,15 +143,15 @@ final class ScrumPresenterBuilderTest extends TestCase
             ->build();
         $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn($planning);
 
-        $this->configuration_dao->expects(self::once())->method('isScrumActivated')->willReturn(true);
+        $this->configuration_dao->expects($this->once())->method('isScrumActivated')->willReturn(true);
 
-        $this->planning_factory->expects(self::once())->method('getAvailablePlanningTrackers')->willReturn([]);
-        $this->planning_factory->expects(self::once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);
-        $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([$planning]);
+        $this->planning_factory->expects($this->once())->method('getAvailablePlanningTrackers')->willReturn([]);
+        $this->planning_factory->expects($this->once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);
+        $this->planning_factory->expects($this->once())->method('getPlannings')->willReturn([$planning]);
 
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(true);
 
-        $this->planning_factory->expects(self::once())->method('getPotentialPlanningTrackers')->willReturn([]);
+        $this->planning_factory->expects($this->once())->method('getPotentialPlanningTrackers')->willReturn([]);
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(

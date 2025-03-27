@@ -75,7 +75,7 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testHandleRedirectsWhenUserIsAnonymous(): void
     {
-        $this->user_manager->expects(self::once())->method('getCurrentUser')
+        $this->user_manager->expects($this->once())->method('getCurrentUser')
             ->willReturn(UserTestBuilder::anAnonymousUser()->build());
         $inspector = new LayoutInspector();
         $request   = (new NullServerRequest())->withAttribute(
@@ -91,9 +91,9 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRedirectsWithErrorWhenNoAppIdInBody(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
         $request = (new NullServerRequest())->withAttribute(BaseLayout::class, LayoutBuilder::build());
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with($user, AccountAppsController::URL, self::isInstanceOf(NewFeedback::class))
             ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
@@ -104,16 +104,16 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRedirectsWithErrorIfNoAuthorizationFoundForUserAndAppID(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
         $inspector = new LayoutInspector();
         $request   = (new NullServerRequest())->withAttribute(
             BaseLayout::class,
             LayoutBuilder::buildWithInspector($inspector)
         )->withParsedBody(['app_id' => '53']);
-        $this->autorization_revoker->expects(self::once())->method('doesAuthorizationExist')
+        $this->autorization_revoker->expects($this->once())->method('doesAuthorizationExist')
             ->with($user, 53)
             ->willReturn(false);
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with($user, AccountAppsController::URL, self::isInstanceOf(NewFeedback::class))
             ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
@@ -124,17 +124,17 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRevokesAuthorizationAndRedirects(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
         $inspector = new LayoutInspector();
         $request   = (new NullServerRequest())->withAttribute(
             BaseLayout::class,
             LayoutBuilder::buildWithInspector($inspector)
         )->withParsedBody(['app_id' => '53']);
-        $this->autorization_revoker->expects(self::once())->method('doesAuthorizationExist')
+        $this->autorization_revoker->expects($this->once())->method('doesAuthorizationExist')
             ->with($user, 53)
             ->willReturn(true);
-        $this->autorization_revoker->expects(self::once())->method('revokeAppAuthorization')->with($user, 53);
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->autorization_revoker->expects($this->once())->method('revokeAppAuthorization')->with($user, 53);
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with($user, AccountAppsController::URL, self::isInstanceOf(NewFeedback::class))
             ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 

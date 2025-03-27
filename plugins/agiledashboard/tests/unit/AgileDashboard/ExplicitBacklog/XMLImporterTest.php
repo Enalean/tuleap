@@ -70,7 +70,7 @@ final class XMLImporterTest extends TestCase
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><agiledashboard><plannings/></agiledashboard>');
 
-        $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog')->with(101);
+        $this->explicit_backlog_dao->expects($this->once())->method('setProjectIsUsingExplicitBacklog')->with(101);
 
         $this->importer->importConfiguration($xml, $this->project);
     }
@@ -106,7 +106,7 @@ final class XMLImporterTest extends TestCase
             </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->expects(self::once())->method('setProjectIsUsingExplicitBacklog')->with(101);
+        $this->explicit_backlog_dao->expects($this->once())->method('setProjectIsUsingExplicitBacklog')->with(101);
 
         $this->importer->importConfiguration($xml, $this->project);
     }
@@ -163,7 +163,7 @@ final class XMLImporterTest extends TestCase
 
         $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
 
-        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
+        $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->willThrowException(new NoRootPlanningException());
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
@@ -195,10 +195,10 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->willReturn(true);
 
-        $this->unplanned_artifacts_adder->expects(self::once())->method('addArtifactToTopBacklogFromIds')
+        $this->unplanned_artifacts_adder->expects($this->once())->method('addArtifactToTopBacklogFromIds')
             ->with(225, 101);
 
-        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
+        $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add('125', '225');
@@ -229,7 +229,7 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->willReturn(true);
 
-        $this->unplanned_artifacts_adder->expects(self::once())->method('addArtifactToTopBacklogFromIds')
+        $this->unplanned_artifacts_adder->expects($this->once())->method('addArtifactToTopBacklogFromIds')
             ->with(225, 101);
 
         $this->top_backlog_elements_to_add_checker->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')

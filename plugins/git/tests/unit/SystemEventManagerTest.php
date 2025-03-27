@@ -63,7 +63,7 @@ final class SystemEventManagerTest extends TestCase
 
     public function testItCreatesRepositoryUpdateEvent(): void
     {
-        $this->system_event_manager->expects(self::once())->method('createEvent')
+        $this->system_event_manager->expects($this->once())->method('createEvent')
             ->with(SystemEvent_GIT_REPO_UPDATE::NAME, 54, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP);
         $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter');
 
@@ -76,7 +76,7 @@ final class SystemEventManagerTest extends TestCase
             ->inProject(ProjectTestBuilder::aProject()->withId(116)->build())
             ->withBackend($this->createMock(Git_Backend_Gitolite::class))
             ->build();
-        $this->system_event_manager->expects(self::once())->method('createEvent')
+        $this->system_event_manager->expects($this->once())->method('createEvent')
             ->with(SystemEvent_GIT_REPO_DELETE::NAME, '116' . SystemEvent::PARAMETER_SEPARATOR . '54', self::anything(), SystemEvent::OWNER_APP);
 
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
@@ -87,7 +87,7 @@ final class SystemEventManagerTest extends TestCase
         $old_repository = GitRepositoryTestBuilder::aProjectRepository()->withId(554)->build();
         $new_repository = GitRepositoryTestBuilder::aProjectRepository()->withId(667)->build();
 
-        $this->system_event_manager->expects(self::once())->method('createEvent')
+        $this->system_event_manager->expects($this->once())->method('createEvent')
             ->with(SystemEvent_GIT_REPO_FORK::NAME, '554' . SystemEvent::PARAMETER_SEPARATOR . '667', SystemEvent::PRIORITY_MEDIUM, SystemEvent::OWNER_APP);
 
         $this->git_system_event_manager->queueRepositoryFork($old_repository, $new_repository);
@@ -99,7 +99,7 @@ final class SystemEventManagerTest extends TestCase
         $remote_server_id = 3;
         $requester        = UserTestBuilder::buildWithId(1001);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent')
+        $this->system_event_manager->expects($this->once())->method('createEvent')
             ->with(SystemEvent_GIT_GERRIT_MIGRATION::NAME, 54 . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . true . SystemEvent::PARAMETER_SEPARATOR . 1001, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP);
 
         $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, true, $requester);
@@ -110,7 +110,7 @@ final class SystemEventManagerTest extends TestCase
         $server = $this->createMock(Git_RemoteServer_GerritServer::class);
         $server->method('getId')->willReturn(9);
 
-        $this->system_event_manager->expects(self::once())->method('createEvent')
+        $this->system_event_manager->expects($this->once())->method('createEvent')
             ->with(SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME, 9, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP);
 
         $this->git_system_event_manager->queueGerritReplicationKeyUpdate($server);

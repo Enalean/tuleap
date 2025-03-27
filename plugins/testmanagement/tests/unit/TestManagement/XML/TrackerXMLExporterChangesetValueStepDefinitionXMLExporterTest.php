@@ -66,11 +66,11 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $values = [$step1, $step2];
 
         $field = $this->createMock(StepDefinition::class);
-        $field->expects(self::once())->method('getName')->willReturn('steps');
+        $field->expects($this->once())->method('getName')->willReturn('steps');
 
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
-        $changeset_value->expects(self::once())->method('getValue')->willReturn($values);
-        $changeset_value->expects(self::once())->method('getField')->willReturn($field);
+        $changeset_value->expects($this->once())->method('getValue')->willReturn($values);
+        $changeset_value->expects($this->once())->method('getField')->willReturn($field);
 
         $artifact = ArtifactTestBuilder::anArtifact(42)->build();
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
@@ -98,8 +98,8 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $field->expects(self::never())->method('getName');
 
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
-        $changeset_value->expects(self::once())->method('getValue')->willReturn($values);
-        $changeset_value->expects(self::once())->method('getField')->willReturn($field);
+        $changeset_value->expects($this->once())->method('getValue')->willReturn($values);
+        $changeset_value->expects($this->once())->method('getField')->willReturn($field);
 
         $artifact = ArtifactTestBuilder::anArtifact(42)->build();
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);

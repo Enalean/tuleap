@@ -179,7 +179,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $project_ugroup_members3,
         ]);
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
         $this->dashboard_exporter->method('exportDashboards');
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
@@ -239,7 +239,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ugroup_manager->method('getStaticUGroups')->willReturn([]);
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->dashboard_exporter->method('exportDashboards');
 
@@ -301,7 +301,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager->method('getProjectAdminsUGroup')->with($project)->willReturn($project_ugroup_dynamic);
         $this->ugroup_manager->method('getProjectMembersUGroup')->with($project)->willReturn($project_ugroup_dynamic);
         $this->ugroup_manager->method('getStaticUGroups')->willReturn([]);
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
 
         $this->dashboard_exporter->method('exportDashboards');

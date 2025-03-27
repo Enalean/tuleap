@@ -141,7 +141,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->pull_request_closer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('abandon')
             ->with($pull_request, $this->user);
 
@@ -166,7 +166,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->pull_request_closer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('abandon')
             ->with($pull_request, $this->user);
 
@@ -191,7 +191,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->pull_request_closer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('abandon')
             ->with($pull_request, $this->user);
 
@@ -276,7 +276,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pull_request_permissions_checker->method('checkPullRequestIsMergeableByUser');
 
         $this->pull_request_closer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doMerge')
             ->with(
                 $this->repository_destination,
@@ -330,7 +330,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             'main',
         );
 
-        $this->reopener->expects(self::once())->method('reopen');
+        $this->reopener->expects($this->once())->method('reopen');
 
         $this->patcher->patchStatus(
             $this->user,
@@ -413,7 +413,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockUserCannotAccessProject(Project $project): void
     {
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $project)
             ->willThrowException($this->createMock(RestException::class));

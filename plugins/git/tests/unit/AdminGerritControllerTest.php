@@ -189,7 +189,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $s = $this->a_brand_new_server;
-        $this->factory->expects(self::once())->method('save')->with($s);
+        $this->factory->expects($this->once())->method('save')->with($s);
         $this->factory->method('updateReplicationPassword');
         $this->admin->process($this->request);
     }
@@ -197,7 +197,7 @@ final class AdminGerritControllerTest extends TestCase
     public function testItRedirectsAfterSave(): void
     {
         $this->request->set('action', 'add-gerrit-server');
-        $GLOBALS['Response']->expects(self::once())->method('redirect');
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
         $this->admin->process($this->request);
     }
 
@@ -214,7 +214,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->factory->expects(self::once())->method('save')->with($this->an_existing_server);
+        $this->factory->expects($this->once())->method('save')->with($this->an_existing_server);
         $this->admin->process($this->request);
     }
 
@@ -231,7 +231,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->factory->expects(self::once())->method('save')->with($this->an_existing_server);
+        $this->factory->expects($this->once())->method('save')->with($this->an_existing_server);
         $this->admin->process($this->request);
     }
 
@@ -239,7 +239,7 @@ final class AdminGerritControllerTest extends TestCase
     {
         $this->request->set('action', 'delete-gerrit-server');
         $this->request->set('gerrit_server_id', 1);
-        $this->factory->expects(self::once())->method('delete')->with($this->an_existing_server);
+        $this->factory->expects($this->once())->method('delete')->with($this->an_existing_server);
         $this->factory->expects(self::never())->method('save')->with($this->an_existing_server);
         $this->admin->process($this->request);
     }

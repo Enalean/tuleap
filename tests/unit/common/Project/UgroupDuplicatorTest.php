@@ -64,7 +64,7 @@ final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_project_id = 120;
         $ugroup_mapping = [];
 
-        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([]);
+        $this->manager->expects($this->once())->method('getStaticUGroups')->with($template)->willReturn([]);
 
         $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, UserTestBuilder::buildWithDefaults());
 
@@ -83,17 +83,17 @@ final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $source_ugroup->method('isStatic')->willReturn(true);
         $source_ugroup->method('isBound')->willReturn(false);
         $source_ugroup->method('getMembers')->willReturn([]);
-        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup,]);
+        $this->manager->expects($this->once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup,]);
 
         $new_ugroup_id = 301;
         $new_ugroup    = ProjectUGroupTestBuilder::aCustomUserGroup($new_ugroup_id)->build();
-        $this->dao->expects(self::once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
-        $this->manager->expects(self::once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
+        $this->dao->expects($this->once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
+        $this->manager->expects($this->once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
 
-        $this->event_manager->expects(self::once())->method('processEvent')
+        $this->event_manager->expects($this->once())->method('processEvent')
             ->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id]);
 
-        $this->dao->expects(self::once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
+        $this->dao->expects($this->once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
 
         $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, UserTestBuilder::buildWithDefaults());
         self::assertEquals([201 => 301], $ugroup_mapping);
@@ -113,17 +113,17 @@ final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $source_ugroup->method('isStatic')->willReturn(true);
         $source_ugroup->method('isBound')->willReturn(false);
         $source_ugroup->method('getMembers')->willReturn([$user1, $user2]);
-        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup]);
+        $this->manager->expects($this->once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup]);
 
         $new_ugroup_id = 301;
         $new_ugroup    = ProjectUGroupTestBuilder::aCustomUserGroup($new_ugroup_id)->build();
-        $this->dao->expects(self::once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
-        $this->manager->expects(self::once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
+        $this->dao->expects($this->once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
+        $this->manager->expects($this->once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
 
-        $this->event_manager->expects(self::once())->method('processEvent')
+        $this->event_manager->expects($this->once())->method('processEvent')
             ->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id]);
 
-        $this->dao->expects(self::once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
+        $this->dao->expects($this->once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
 
         $project_admin = UserTestBuilder::buildWithDefaults();
         $matcher       = self::exactly(2);
@@ -158,17 +158,17 @@ final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $source_ugroup->method('isStatic')->willReturn(true);
         $source_ugroup->method('isBound')->willReturn(false);
         $source_ugroup->method('getMembers')->willReturn([$user1, $user2]);
-        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup]);
+        $this->manager->expects($this->once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup]);
 
         $new_ugroup_id = 301;
         $new_ugroup    = ProjectUGroupTestBuilder::aCustomUserGroup($new_ugroup_id)->build();
-        $this->dao->expects(self::once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
-        $this->manager->expects(self::once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
+        $this->dao->expects($this->once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
+        $this->manager->expects($this->once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
 
-        $this->event_manager->expects(self::once())->method('processEvent')
+        $this->event_manager->expects($this->once())->method('processEvent')
             ->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id]);
 
-        $this->dao->expects(self::once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
+        $this->dao->expects($this->once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
 
         $this->member_adder->method('addMember')
             ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user1, ProjectTestBuilder::aProject()->withId(505)->build()));

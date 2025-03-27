@@ -388,7 +388,7 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $utils = $this->createMock(\WebDAVUtils::class);
         $utils->method('isWriteEnabled')->willReturn(true);
-        $utils->expects(self::once())->method('processDocmanRequest');
+        $utils->expects($this->once())->method('processDocmanRequest');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -421,7 +421,7 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $utils = $this->createMock(\WebDAVUtils::class);
         $utils->method('isWriteEnabled')->willReturn(true);
-        $utils->expects(self::once())->method('processDocmanRequest');
+        $utils->expects($this->once())->method('processDocmanRequest');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -470,7 +470,7 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
         $docman_item_factory->method('getChildrenFromParent')->willReturn([]);
         $utils = $this->createMock(\WebDAVUtils::class);
         $utils->method('isWriteEnabled')->willReturn(true);
-        $utils->expects(self::once())->method('processDocmanRequest');
+        $utils->expects($this->once())->method('processDocmanRequest');
         $utils->method('getDocmanItemFactory')->willReturn($docman_item_factory);
         $utils->method('retrieveName')->willReturn('name');
         $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);

@@ -92,9 +92,9 @@ final class SystemEventProcessorRootTest extends TestCase
         $category = SystemEvent::DEFAULT_QUEUE;
 
         $types = ['some_type'];
-        $this->system_event_manager->expects(self::once())->method('getTypesForQueue')->willReturn($types);
+        $this->system_event_manager->expects($this->once())->method('getTypesForQueue')->willReturn($types);
 
-        $this->system_event_dao->expects(self::once())->method('checkOutNextEvent')->with('root', $types)->willReturn(false);
+        $this->system_event_dao->expects($this->once())->method('checkOutNextEvent')->with('root', $types)->willReturn(false);
         $this->processor->execute($category);
     }
 
@@ -105,14 +105,14 @@ final class SystemEventProcessorRootTest extends TestCase
             'notify',
             'process',
         ]);
-        $system_event->expects(self::once())->method('notify');
-        $system_event->expects(self::once())->method('process')->willThrowException(new RuntimeException('Something wrong happened'));
+        $system_event->expects($this->once())->method('notify');
+        $system_event->expects($this->once())->method('process')->willThrowException(new RuntimeException('Something wrong happened'));
 
         $types = ['some_type'];
         $this->system_event_manager->method('getTypesForQueue')->willReturn($types);
 
-        $this->system_event_dao->expects(self::once())->method('getElapsedTime');
-        $this->system_event_dao->expects(self::once())->method('close');
+        $this->system_event_dao->expects($this->once())->method('getElapsedTime');
+        $this->system_event_dao->expects($this->once())->method('close');
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('getRow')->willReturn(['whatever']);
         $this->system_event_dao->expects(self::exactly(2))->method('checkOutNextEvent')
@@ -120,7 +120,7 @@ final class SystemEventProcessorRootTest extends TestCase
                 $dar,
                 null
             );
-        $this->system_event_manager->expects(self::once())->method('getInstanceFromRow')->willReturn($system_event);
+        $this->system_event_manager->expects($this->once())->method('getInstanceFromRow')->willReturn($system_event);
 
         $category = SystemEvent::DEFAULT_QUEUE;
         $this->processor->execute($category);
@@ -131,20 +131,20 @@ final class SystemEventProcessorRootTest extends TestCase
 
     public function testItProcessApplicationOwnerEvents(): void
     {
-        $this->site_cache->expects(self::once())->method('restoreOwnership');
+        $this->site_cache->expects($this->once())->method('restoreOwnership');
 
         $system_event = $this->createPartialMock(SystemEvent::class, [
             'verbalizeParameters',
             'notify',
         ]);
-        $system_event->expects(self::once())->method('notify');
+        $system_event->expects($this->once())->method('notify');
         $system_event->setStatus(SystemEvent::STATUS_DONE);
 
         $this->system_event_manager->method('getTypesForQueue')->willReturn(['SOME_EVENT']);
-        $this->system_event_manager->expects(self::once())->method('getInstanceFromRow')->willReturn($system_event);
+        $this->system_event_manager->expects($this->once())->method('getInstanceFromRow')->willReturn($system_event);
 
-        $this->system_event_dao->expects(self::once())->method('getElapsedTime');
-        $this->system_event_dao->expects(self::once())->method('close');
+        $this->system_event_dao->expects($this->once())->method('getElapsedTime');
+        $this->system_event_dao->expects($this->once())->method('close');
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('getRow')->willReturn(['whatever']);
         $this->system_event_dao->expects(self::exactly(2))->method('checkOutNextEvent')
@@ -154,27 +154,27 @@ final class SystemEventProcessorRootTest extends TestCase
             );
 
         $command = '/usr/bin/tuleap process-system-events ' . SystemEvent::OWNER_APP;
-        $this->processor->expects(self::once())->method('launchAs')->with($this->sys_http_user, $command);
+        $this->processor->expects($this->once())->method('launchAs')->with($this->sys_http_user, $command);
         $category = SystemEvent::DEFAULT_QUEUE;
         $this->processor->execute($category);
     }
 
     public function testItCatchesExceptionsThrownInPostActions(): void
     {
-        $this->site_cache->expects(self::once())->method('restoreOwnership');
+        $this->site_cache->expects($this->once())->method('restoreOwnership');
 
         $system_event = $this->createPartialMock(SystemEvent::class, [
             'verbalizeParameters',
             'notify',
         ]);
-        $system_event->expects(self::once())->method('notify');
+        $system_event->expects($this->once())->method('notify');
         $system_event->setStatus(SystemEvent::STATUS_DONE);
 
         $this->system_event_manager->method('getTypesForQueue')->willReturn(['SOME_EVENT']);
-        $this->system_event_manager->expects(self::once())->method('getInstanceFromRow')->willReturn($system_event);
+        $this->system_event_manager->expects($this->once())->method('getInstanceFromRow')->willReturn($system_event);
 
-        $this->system_event_dao->expects(self::once())->method('getElapsedTime');
-        $this->system_event_dao->expects(self::once())->method('close');
+        $this->system_event_dao->expects($this->once())->method('getElapsedTime');
+        $this->system_event_dao->expects($this->once())->method('close');
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('getRow')->willReturn(['whatever']);
         $this->system_event_dao->expects(self::exactly(2))->method('checkOutNextEvent')

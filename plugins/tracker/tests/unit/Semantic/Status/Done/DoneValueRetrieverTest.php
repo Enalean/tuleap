@@ -155,7 +155,7 @@ final class DoneValueRetrieverTest extends TestCase
     private function mockSemanticStatusNotDefined(): void
     {
         $this->semantic_done_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getInstanceByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -184,7 +184,7 @@ final class DoneValueRetrieverTest extends TestCase
         );
 
         $this->semantic_done_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getInstanceByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -205,7 +205,7 @@ final class DoneValueRetrieverTest extends TestCase
     private function mockSemanticStatusDefinedWithAllValuesHidden(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $field->expects(self::once())
+        $field->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
@@ -218,7 +218,7 @@ final class DoneValueRetrieverTest extends TestCase
         $hidden_done_value->method('getId')->willReturn(45);
 
         $field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllValues')
             ->willReturn([
                 44 => $value1,
@@ -232,7 +232,7 @@ final class DoneValueRetrieverTest extends TestCase
         );
 
         $this->semantic_done_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getInstanceByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -255,7 +255,7 @@ final class DoneValueRetrieverTest extends TestCase
     private function mockDoneSemanticDefinedWithDoneValue(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $field->expects(self::once())
+        $field->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
@@ -268,7 +268,7 @@ final class DoneValueRetrieverTest extends TestCase
         $done_value->method('getId')->willReturn(45);
 
         $field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllValues')
             ->willReturn([
                 44 => $value1,
@@ -282,7 +282,7 @@ final class DoneValueRetrieverTest extends TestCase
         );
 
         $this->semantic_done_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getInstanceByTracker')
             ->with($this->tracker)
             ->willReturn(
@@ -301,7 +301,7 @@ final class DoneValueRetrieverTest extends TestCase
     private function mockDoneSemanticDefinedWithoutDoneValue(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $field->expects(self::once())
+        $field->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
@@ -312,7 +312,7 @@ final class DoneValueRetrieverTest extends TestCase
         $value2->method('isHidden')->willReturn(false);
 
         $field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllValues')
             ->willReturn([
                 44 => $value1,
@@ -326,7 +326,7 @@ final class DoneValueRetrieverTest extends TestCase
         );
 
         $this->semantic_done_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getInstanceByTracker')
             ->with($this->tracker)
             ->willReturn(

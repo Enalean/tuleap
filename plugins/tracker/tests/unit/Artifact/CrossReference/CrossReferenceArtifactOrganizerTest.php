@@ -74,7 +74,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($a_ref);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }
@@ -100,7 +100,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
-        $by_nature_organizer->expects(self::once())->method('moveCrossReferenceToSection')
+        $by_nature_organizer->expects($this->once())->method('moveCrossReferenceToSection')
             ->with(
                 self::callback(static fn(CrossReferencePresenter $presenter) => (
                     $presenter->id === 1
@@ -136,7 +136,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
-        $by_nature_organizer->expects(self::once())->method('moveCrossReferenceToSection')
+        $by_nature_organizer->expects($this->once())->method('moveCrossReferenceToSection')
             ->with(
                 self::callback(static fn(CrossReferencePresenter $presenter) => (
                     $presenter->id === 1

@@ -56,8 +56,8 @@ class WidgetDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
 
-        $dao->expects(self::once())->method('removeColumn');
-        $dao->expects(self::once())->method('reorderColumns');
+        $dao->expects($this->once())->method('removeColumn');
+        $dao->expects($this->once())->method('reorderColumns');
 
         $deletor->deleteColumn($this->column);
     }
@@ -67,8 +67,8 @@ class WidgetDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
 
-        $dao->expects(self::once())->method('removeLine');
-        $dao->expects(self::once())->method('reorderLines');
+        $dao->expects($this->once())->method('removeLine');
+        $dao->expects($this->once())->method('reorderLines');
 
         $deletor->deleteLineByColumn($this->column);
     }

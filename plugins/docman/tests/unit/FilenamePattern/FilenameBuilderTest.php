@@ -132,7 +132,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheNewFilenameUsingSomeVariable(): void
     {
-        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn('1');
+        $this->docman_settings_bo->expects($this->once())->method('getMetadataUsage')->willReturn('1');
 
         $pattern          = 'Brand-${TITLE}-${STATUS}-Not a Mercredes wow-#${ID}';
         $filename_builder = new FilenameBuilder(
@@ -155,7 +155,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheNewFilenameWithoutExtension(): void
     {
-        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn('1');
+        $this->docman_settings_bo->expects($this->once())->method('getMetadataUsage')->willReturn('1');
 
         $pattern          = 'Brand-${TITLE}-${STATUS}-Not a Mercredes wow-#${ID}';
         $filename_builder = new FilenameBuilder(

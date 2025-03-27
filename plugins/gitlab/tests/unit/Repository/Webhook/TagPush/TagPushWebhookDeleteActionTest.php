@@ -80,7 +80,7 @@ final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->cross_reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteEntity')
             ->with(
                 'root/repo01/v1.0.2',
@@ -89,7 +89,7 @@ final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->tag_info_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteTagInGitlabRepository')
             ->with(
                 1,

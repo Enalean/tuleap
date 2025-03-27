@@ -107,7 +107,7 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCanChangeTheHookConfig(): void
     {
         $repository = SvnRepository::buildActiveRepository(22, 'reponame', $this->project);
-        $this->hook_dao->expects(self::once())
+        $this->hook_dao->expects($this->once())
             ->method('updateHookConfig')
             ->with(22, [HookConfig::MANDATORY_REFERENCE => true])
             ->willReturn(true);

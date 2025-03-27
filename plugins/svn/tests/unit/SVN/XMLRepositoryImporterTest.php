@@ -146,7 +146,7 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->instantiateImporterWithXml($xml);
 
         $this->rule_name->method('isValid')->willReturn(false);
-        $this->rule_name->expects(self::once())->method('getErrorMessage');
+        $this->rule_name->expects($this->once())->method('getErrorMessage');
 
         $this->expectException(XMLImporterException::class);
 
@@ -195,7 +195,7 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->rule_name->method('isValid')->willReturn(true);
 
-        $this->repository_creator->expects(self::once())->method('createWithoutUserAdminCheck');
+        $this->repository_creator->expects($this->once())->method('createWithoutUserAdminCheck');
 
         $this->expectException(XMLImporterException::class);
 
@@ -220,14 +220,14 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rule_name->method('isValid')->willReturn(true);
 
         $event = $this->createMock(SystemEvent_SVN_CREATE_REPOSITORY::class);
-        $this->repository_creator->expects(self::once())
+        $this->repository_creator->expects($this->once())
             ->method('createWithoutUserAdminCheck')
             ->willReturn($event);
 
-        $event->expects(self::once())->method('injectDependencies');
-        $event->expects(self::once())->method('process');
+        $event->expects($this->once())->method('injectDependencies');
+        $event->expects($this->once())->method('process');
         $event->method('getStatus')->willReturn(SystemEvent::STATUS_ERROR);
-        $event->expects(self::once())->method('getLog');
+        $event->expects($this->once())->method('getLog');
 
         $this->expectException(XMLImporterException::class);
 
@@ -259,18 +259,18 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rule_name->method('isValid')->willReturn(true);
 
         $event = $this->createMock(SystemEvent_SVN_CREATE_REPOSITORY::class);
-        $this->repository_creator->expects(self::once())
+        $this->repository_creator->expects($this->once())
             ->method('createWithoutUserAdminCheck')
             ->willReturn($event);
 
-        $event->expects(self::once())->method('injectDependencies');
-        $event->expects(self::once())->method('process');
+        $event->expects($this->once())->method('injectDependencies');
+        $event->expects($this->once())->method('process');
         $event->method('getStatus')->willReturn(SystemEvent::STATUS_DONE);
-        $event->expects(self::once())->method('getLog');
+        $event->expects($this->once())->method('getLog');
 
         $this->project->method('getId')->willReturn(101);
 
-        $this->backend_svn->expects(self::once())->method('setUserAndGroup');
+        $this->backend_svn->expects($this->once())->method('setUserAndGroup');
 
         $this->notifications_emails_builder->expects(self::exactly(2))
             ->method('transformNotificationEmailsStringAsArray')
@@ -278,7 +278,7 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mail_notification_manager->expects(self::exactly(2))->method('create');
 
-        $this->xml_user_checker->expects(self::once())->method('currentUserIsHTTPUser')->willReturn(false);
+        $this->xml_user_checker->expects($this->once())->method('currentUserIsHTTPUser')->willReturn(false);
 
         $this->repository_importer->import(
             $this->configuration,
@@ -308,20 +308,20 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rule_name->method('isValid')->willReturn(true);
 
         $event = $this->createMock(SystemEvent_SVN_CREATE_REPOSITORY::class);
-        $this->repository_creator->expects(self::once())
+        $this->repository_creator->expects($this->once())
             ->method('createWithoutUserAdminCheck')
             ->willReturn($event);
 
-        $event->expects(self::once())->method('injectDependencies');
-        $event->expects(self::once())->method('process');
+        $event->expects($this->once())->method('injectDependencies');
+        $event->expects($this->once())->method('process');
         $event->method('getStatus')->willReturn(SystemEvent::STATUS_DONE);
-        $event->expects(self::once())->method('getLog');
+        $event->expects($this->once())->method('getLog');
 
         $this->project->method('getId')->willReturn(101);
 
-        $this->backend_svn->expects(self::once())->method('setUserAndGroup');
+        $this->backend_svn->expects($this->once())->method('setUserAndGroup');
 
-        $this->accessfile_history_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
+        $this->accessfile_history_creator->expects($this->once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->xml_user_checker->method('currentUserIsHTTPUser')->willReturn(false);
 

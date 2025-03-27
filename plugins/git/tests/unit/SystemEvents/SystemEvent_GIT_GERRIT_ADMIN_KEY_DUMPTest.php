@@ -60,7 +60,7 @@ final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:
         $gerrit_server->method('getId')->willReturn($gerrit_server_id);
         $gerrit_server->method('getReplicationKey');
         $this->ssh_key_dumper->method('dumpSSHKeys');
-        $this->gerrit_server_factory->expects(self::once())->method('getServerById')
+        $this->gerrit_server_factory->expects($this->once())->method('getServerById')
             ->with($gerrit_server_id)
             ->willReturn($gerrit_server);
 
@@ -88,7 +88,7 @@ final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:
         );
         $this->gerrit_server_factory->method('getServerById')->willReturn($gerrit_server);
 
-        $this->ssh_key_dumper->expects(self::once())->method('dumpSSHKeys')->with(
+        $this->ssh_key_dumper->expects($this->once())->method('dumpSSHKeys')->with(
             self::callback(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
                 return $key->getGerritHostId() === $gerrit_server_id;
             }),
@@ -106,7 +106,7 @@ final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:
 
         $this->gerrit_server_factory->method('getServerById')->willThrowException(new Git_RemoteServer_NotFoundException($gerrit_server_id));
 
-        $this->ssh_key_dumper->expects(self::once())->method('dumpSSHKeys')->with(
+        $this->ssh_key_dumper->expects($this->once())->method('dumpSSHKeys')->with(
             self::callback(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
                 return $key->getGerritHostId() === $gerrit_server_id;
             }),
@@ -127,7 +127,7 @@ final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:
         $this->gerrit_server_factory->method('getServerById')->willReturn($gerrit_server);
         $this->ssh_key_dumper->method('dumpSSHKeys')->willReturn(true);
 
-        $this->event->expects(self::once())->method('done');
+        $this->event->expects($this->once())->method('done');
 
         $this->event->process();
     }
@@ -142,7 +142,7 @@ final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:
         $this->gerrit_server_factory->method('getServerById')->willReturn($gerrit_server);
         $this->ssh_key_dumper->method('dumpSSHKeys')->willReturn(false);
 
-        $this->event->expects(self::once())->method('error');
+        $this->event->expects($this->once())->method('error');
 
         $this->event->process();
     }

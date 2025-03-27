@@ -83,7 +83,7 @@ final class MembershipManagerNoGerritTest extends TestCase
 
     public function testItAsksForAllTheServersOfAProject(): void
     {
-        $this->remote_server_factory_without_gerrit->expects(self::once())->method('getServersForUGroup')
+        $this->remote_server_factory_without_gerrit->expects($this->once())->method('getServersForUGroup')
             ->with($this->u_group)->willReturn([]);
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);

@@ -144,30 +144,30 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($release);
 
         $this->frs_file_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildFRSFile')
             ->with($release, 'readme.md', 123, $user_id)
             ->willReturn($to_be_created_frs_file);
 
         $this->file_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveFileForgeFromSrcDir')
             ->with($project, $release, $to_be_created_frs_file, $upload_dir)
             ->willReturn(true);
 
         $this->file_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createFromArray')
             ->with($to_be_created_frs_file_as_array)
             ->willReturn($created_file_id);
 
         $this->log_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addLog')
             ->with($user_id, $project_id, $created_file_id, FRSFile::EVT_CREATE);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteByItemID')
             ->with($uploading_id);
 

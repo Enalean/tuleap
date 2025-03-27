@@ -49,7 +49,7 @@ final class CallWASMFunctionTest extends TestCase
     public function testItReturnsResponseProcessorWhenCallerReturnsAValue(): void
     {
         $caller = $this->buildWASMFunctionCaller(WASMCallerStub::successfulWasmCall('wasm-response'));
-        $this->response_processor->expects(self::once())->method('processResponse')->willReturn(Result::ok(new WASMResponseRepresentation([], null)));
+        $this->response_processor->expects($this->once())->method('processResponse')->willReturn(Result::ok(new WASMResponseRepresentation([], null)));
         $result = $caller->callWASMFunction('path', 'payload');
         self::assertTrue(Result::isOk($result));
         self::assertInstanceOf(WASMResponseRepresentation::class, $result->value);

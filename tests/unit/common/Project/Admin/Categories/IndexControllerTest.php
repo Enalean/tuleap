@@ -69,16 +69,16 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $layout  = $this->createMock(BaseLayout::class);
 
         $this->assets
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFileURL')
             ->with('project-admin.js');
-        $layout->expects(self::once())->method('includeFooterJavascriptFile');
+        $layout->expects($this->once())->method('includeFooterJavascriptFile');
         $this->renderer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('renderToPage')
             ->with('categories', self::isArray());
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTopCategories')
             ->willReturn([]);
 

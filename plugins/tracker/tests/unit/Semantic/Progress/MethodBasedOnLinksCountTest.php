@@ -79,7 +79,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getAnArtifactLinkField')->willReturn($this->links_field);
 
-        $this->links_field->expects(self::once())->method('getLastChangesetValue')
+        $this->links_field->expects($this->once())->method('getLastChangesetValue')
             ->with($artifact)
             ->willReturn($last_artifact_changeset);
 
@@ -114,7 +114,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('isOpen')->willReturn($is_artifact_open);
         $artifact->method('getAnArtifactLinkField')->willReturn($this->links_field);
 
-        $this->links_field->expects(self::once())->method('getLastChangesetValue')
+        $this->links_field->expects($this->once())->method('getLastChangesetValue')
             ->with($artifact)
             ->willReturn(null);
 
@@ -139,7 +139,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('isOpen')->willReturn($is_artifact_open);
         $artifact->method('getAnArtifactLinkField')->willReturn($this->links_field);
 
-        $this->links_field->expects(self::once())->method('getLastChangesetValue')
+        $this->links_field->expects($this->once())->method('getLastChangesetValue')
             ->with($artifact)
             ->willReturn($last_artifact_changeset);
 
@@ -191,7 +191,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $this->dao->expects(self::once())->method('save')->with(113, null, null, '_is_child')->willReturn(true);
+        $this->dao->expects($this->once())->method('save')->with(113, null, null, '_is_child')->willReturn(true);
 
         $this->assertTrue($this->method->saveSemanticForTracker($tracker));
     }
@@ -200,7 +200,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $this->dao->expects(self::once())->method('delete')->with(113)->willReturn(true);
+        $this->dao->expects($this->once())->method('delete')->with(113)->willReturn(true);
 
         $this->assertTrue(
             $this->method->deleteSemanticForTracker($tracker)

@@ -93,7 +93,7 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
     public function testItRendersTheMasschangeAdditionalAction(): void
     {
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -105,7 +105,7 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
     public function testItReturnsNullIfUserIsNotTrackerAdmin(): void
     {
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(false);
 
@@ -116,7 +116,7 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
     public function testItReturnsNullIfProjectDoesNotUseExplicitBacklog(): void
     {
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -129,7 +129,7 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
     public function testItReturnsNullIfProjectDoesNotHaveARootPlanning(): void
     {
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -142,7 +142,7 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
     public function testItReturnsNullIfTrackerNotABacklogTracker(): void
     {
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -157,7 +157,7 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
     public function testReturnsNullWhenScrumAccessIsBlocked(): void
     {
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 

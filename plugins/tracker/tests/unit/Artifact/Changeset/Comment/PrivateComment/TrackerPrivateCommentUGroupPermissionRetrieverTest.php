@@ -57,7 +57,7 @@ final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
     public function testReturnsNullIfTrackerDoesNotUsePrivateComment(): void
     {
         $this->permission_dao->expects(self::never())->method('getUgroupIdsOfPrivateComment');
-        $this->tracker_private_comment_information_retriever->expects(self::once())
+        $this->tracker_private_comment_information_retriever->expects($this->once())
             ->method('doesTrackerAllowPrivateComments')->with($this->tracker)->willReturn(false);
         $this->ugroup_manager->expects(self::never())->method('getById');
 
@@ -68,9 +68,9 @@ final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
 
     public function testReturnsNullIfThereIsNotUGroup(): void
     {
-        $this->permission_dao->expects(self::once())->method('getUgroupIdsOfPrivateComment')->with(5)->willReturn([]);
+        $this->permission_dao->expects($this->once())->method('getUgroupIdsOfPrivateComment')->with(5)->willReturn([]);
         $this->ugroup_manager->expects(self::never())->method('getById');
-        $this->tracker_private_comment_information_retriever->expects(self::once())
+        $this->tracker_private_comment_information_retriever->expects($this->once())
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
@@ -82,11 +82,11 @@ final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
 
     public function testReturnsArrayOfUgroupsIfTheyExist(): void
     {
-        $this->permission_dao->expects(self::once())
+        $this->permission_dao->expects($this->once())
             ->method('getUgroupIdsOfPrivateComment')
             ->with(5)
             ->willReturn([1, 2]);
-        $this->tracker_private_comment_information_retriever->expects(self::once())
+        $this->tracker_private_comment_information_retriever->expects($this->once())
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);

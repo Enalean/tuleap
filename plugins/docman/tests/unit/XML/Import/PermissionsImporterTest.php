@@ -72,7 +72,7 @@ final class PermissionsImporterTest extends TestCase
             EOS
         );
 
-        $this->permission_manager->expects(self::once())->method('clonePermissions')
+        $this->permission_manager->expects($this->once())->method('clonePermissions')
             ->with(13, 14, ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']);
 
         $this->importer->importPermissions($this->parent_item, $this->item, $xml);
@@ -134,7 +134,7 @@ final class PermissionsImporterTest extends TestCase
             EOS
         );
 
-        $this->ugroup_retriever_with_legacy->expects(self::once())->method('getUGroupId')
+        $this->ugroup_retriever_with_legacy->expects($this->once())->method('getUGroupId')
             ->with($this->project, 'unknown')->willReturn(null);
 
         $this->permission_manager->expects(self::never())->method('addPermission');

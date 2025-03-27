@@ -69,7 +69,7 @@ final class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSendComment(): void
     {
         $this->client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with($this->credentials, 'gitlab/api', []);
 
@@ -86,7 +86,7 @@ final class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException($exception);
 
         $this->notifier
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('notifyGitAdministratorsThatCredentialsAreInvalid')
             ->with($this->integration, $this->credentials);
 

@@ -139,7 +139,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesANewChangesetInGivenMirroredTimeboxArtifact(): void
     {
-        $this->changeset_creator->expects(self::once())
+        $this->changeset_creator->expects($this->once())
             ->method('create')
             ->with(
                 NewChangeset::fromFieldsDataArrayWithEmptyComment(
@@ -196,7 +196,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesANewChangesetToAddArtifactLink(): void
     {
-        $this->changeset_creator->expects(self::once())
+        $this->changeset_creator->expects($this->once())
             ->method('create')
             ->with(
                 new Callback(function (NewChangeset $new_changeset) {

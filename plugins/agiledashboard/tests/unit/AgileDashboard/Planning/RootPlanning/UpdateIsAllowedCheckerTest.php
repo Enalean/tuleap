@@ -57,7 +57,7 @@ final class UpdateIsAllowedCheckerTest extends TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn(false);
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn(false);
 
         $this->checker->checkUpdateIsAllowed($planning, PlanningParameters::fromArray([]), $user);
     }
@@ -66,7 +66,7 @@ final class UpdateIsAllowedCheckerTest extends TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withId(15)->withName('Not root planning')->build();
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')
             ->willReturn(PlanningBuilder::aPlanning(102)->withId(1)->withName('Root planning')->build());
 
         $this->checker->checkUpdateIsAllowed($planning, PlanningParameters::fromArray([]), $user);
@@ -76,9 +76,9 @@ final class UpdateIsAllowedCheckerTest extends TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
-        $this->backlog_tracker_removal_checker->expects(self::once())->method('checkRemovedBacklogTrackersCanBeRemoved');
-        $this->tracker_factory->expects(self::once())->method('getTrackerById')->willReturn(null);
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn($planning);
+        $this->backlog_tracker_removal_checker->expects($this->once())->method('checkRemovedBacklogTrackersCanBeRemoved');
+        $this->tracker_factory->expects($this->once())->method('getTrackerById')->willReturn(null);
 
         self::expectException(TrackerNotFoundException::class);
         $this->checker->checkUpdateIsAllowed(
@@ -92,12 +92,12 @@ final class UpdateIsAllowedCheckerTest extends TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
-        $this->backlog_tracker_removal_checker->expects(self::once())->method('checkRemovedBacklogTrackersCanBeRemoved');
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn($planning);
+        $this->backlog_tracker_removal_checker->expects($this->once())->method('checkRemovedBacklogTrackersCanBeRemoved');
         $tracker = TrackerTestBuilder::aTracker()
             ->withProject(ProjectTestBuilder::aProject()->withId(103)->build())
             ->build();
-        $this->tracker_factory->expects(self::once())->method('getTrackerById')->willReturn($tracker);
+        $this->tracker_factory->expects($this->once())->method('getTrackerById')->willReturn($tracker);
 
         self::expectException(TrackerNotFoundException::class);
         $this->checker->checkUpdateIsAllowed(
@@ -111,12 +111,12 @@ final class UpdateIsAllowedCheckerTest extends TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
-        $this->backlog_tracker_removal_checker->expects(self::once())->method('checkRemovedBacklogTrackersCanBeRemoved');
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn($planning);
+        $this->backlog_tracker_removal_checker->expects($this->once())->method('checkRemovedBacklogTrackersCanBeRemoved');
         $tracker = TrackerTestBuilder::aTracker()
             ->withProject(ProjectTestBuilder::aProject()->withId(102)->build())
             ->build();
-        $this->tracker_factory->expects(self::once())->method('getTrackerById')
+        $this->tracker_factory->expects($this->once())->method('getTrackerById')
             ->with(86)
             ->willReturn($tracker);
 

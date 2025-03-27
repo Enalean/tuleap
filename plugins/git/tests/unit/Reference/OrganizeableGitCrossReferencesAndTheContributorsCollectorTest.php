@@ -78,7 +78,7 @@ final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extend
         $this->information_builder->method('getCommitDetailsCrossReferenceInformation')->with($this->user, $ref)->willReturn(null);
 
         $this->by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
-        $this->by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($ref);
+        $this->by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($ref);
 
         $this->user_manager->method('getUserCollectionByEmails')->with([])->willReturn(new UserEmailCollection());
 

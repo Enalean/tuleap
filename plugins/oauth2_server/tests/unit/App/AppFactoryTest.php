@@ -57,7 +57,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['id' => 2, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0],
         ];
         $project = ProjectTestBuilder::aProject()->build();
-        $this->app_dao->expects(self::once())->method('searchByProject')
+        $this->app_dao->expects($this->once())->method('searchByProject')
             ->with($project)
             ->willReturn($rows);
 
@@ -77,7 +77,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['id' => 3, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1],
             ['id' => 4, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0],
         ];
-        $this->app_dao->expects(self::once())->method('searchSiteLevelApps')->willReturn($rows);
+        $this->app_dao->expects($this->once())->method('searchSiteLevelApps')->willReturn($rows);
 
         $result = $this->app_factory->getSiteLevelApps();
         $this->assertEquals(
@@ -115,7 +115,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->app_dao->expects(self::once())->method('searchAuthorizedAppsByUser')
+        $this->app_dao->expects($this->once())->method('searchAuthorizedAppsByUser')
             ->with($user)
             ->willReturn($rows);
         $project_204 = new \Project(['group_id' => 204]);
@@ -157,7 +157,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->app_dao->expects(self::once())->method('searchAuthorizedAppsByUser')
+        $this->app_dao->expects($this->once())->method('searchAuthorizedAppsByUser')
             ->with($user)
             ->willReturn($rows);
         $project_204 = new \Project(['group_id' => 204]);

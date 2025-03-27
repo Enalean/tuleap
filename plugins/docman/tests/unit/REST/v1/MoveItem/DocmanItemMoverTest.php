@@ -81,7 +81,7 @@ final class DocmanItemMoverTest extends TestCase
         $item_to_move->method('getParentId')->willReturn(146);
         $item_to_move->method('accept')->with(self::isInstanceOf(BeforeMoveVisitor::class), self::anything());
 
-        $this->item_factory->expects(self::once())->method('moveWithDefaultOrdering')->willReturn(true);
+        $this->item_factory->expects($this->once())->method('moveWithDefaultOrdering')->willReturn(true);
         $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with('send_notifications');
 
         $this->item_mover->moveItem(

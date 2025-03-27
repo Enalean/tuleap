@@ -75,7 +75,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('save');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
@@ -100,7 +100,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('save');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
@@ -125,7 +125,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('save');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
@@ -151,7 +151,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('save');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
@@ -188,7 +188,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         )->willReturn($duration_field);
 
         $this->semantic_timeframe_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')->with(
                 $this->tracker_id,
                 $start_date_field_id,
@@ -197,7 +197,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 null
             )->willReturn(true);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
         );
@@ -236,7 +236,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->semantic_timeframe_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')->with(
                 $this->tracker_id,
                 $start_date_field_id,
@@ -245,7 +245,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 null
             )->willReturn(true);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
         );
@@ -275,7 +275,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->semantic_timeframe_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')->with(
                 $this->tracker_id,
                 null,
@@ -284,7 +284,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $sprints_tracker_id
             )->willReturn(true);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
         );
@@ -317,7 +317,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('save');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::ERROR,
             dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
         );
@@ -369,7 +369,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('save');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::ERROR,
             dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
         );
@@ -389,7 +389,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $sprint_tracker    = TrackerTestBuilder::aTracker()->withId($sprint_tracker_id)->build();
 
         $this->semantic_timeframe_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemanticsImpliedFromGivenTracker')
             ->with($sprint_tracker_id)
             ->willReturn([
@@ -403,7 +403,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('deleteTimeframeSemantic');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'You cannot reset this semantic because some trackers inherit their own semantic timeframe from this one.'
         );
@@ -427,17 +427,17 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $sprint_tracker    = TrackerTestBuilder::aTracker()->withId($sprint_tracker_id)->build();
 
         $this->semantic_timeframe_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemanticsImpliedFromGivenTracker')
             ->with($sprint_tracker_id)
             ->willReturn($implied_semantics);
 
         $this->semantic_timeframe_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteTimeframeSemantic')
             ->with($sprint_tracker_id);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe reset successfully'
         );

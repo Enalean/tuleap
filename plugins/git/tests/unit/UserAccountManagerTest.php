@@ -70,7 +70,7 @@ final class UserAccountManagerTest extends TestCase
 
     public function testItThrowsAnExceptionIfGerritSynchFails(): void
     {
-        $this->gerrit_user_account_manager->expects(self::once())->method('synchroniseSSHKeys')->willThrowException(new Git_UserSynchronisationException());
+        $this->gerrit_user_account_manager->expects($this->once())->method('synchroniseSSHKeys')->willThrowException(new Git_UserSynchronisationException());
 
         $this->expectException(Git_UserSynchronisationException::class);
         $this->user_account_manager->synchroniseSSHKeys(
@@ -82,7 +82,7 @@ final class UserAccountManagerTest extends TestCase
 
     public function testItThrowsAnExceptionIfGerritPushFails(): void
     {
-        $this->gerrit_user_account_manager->expects(self::once())->method('pushSSHKeys')->willThrowException(new Git_UserSynchronisationException());
+        $this->gerrit_user_account_manager->expects($this->once())->method('pushSSHKeys')->willThrowException(new Git_UserSynchronisationException());
 
         $this->expectException(Git_UserSynchronisationException::class);
         $this->user_account_manager->pushSSHKeys($this->user);

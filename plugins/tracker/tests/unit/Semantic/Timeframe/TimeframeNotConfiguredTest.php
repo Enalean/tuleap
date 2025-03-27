@@ -96,8 +96,8 @@ final class TimeframeNotConfiguredTest extends TestCase
         $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
 
-        $artifact->expects(self::once())->method('getLastChangeset')->willReturn($changeset);
-        $changeset->expects(self::once())->method('getTracker')->willReturn($tracker);
+        $artifact->expects($this->once())->method('getLastChangeset')->willReturn($changeset);
+        $changeset->expects($this->once())->method('getTracker')->willReturn($tracker);
 
         $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
             $artifact->getLastChangeset(),
@@ -125,7 +125,7 @@ final class TimeframeNotConfiguredTest extends TestCase
             ->userCanView($user)
             ->build();
         $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
-        $changeset->expects(self::once())->method('getTracker')->willReturn($tracker);
+        $changeset->expects($this->once())->method('getTracker')->willReturn($tracker);
 
         $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
             $artifact->getLastChangeset(),
@@ -154,7 +154,7 @@ final class TimeframeNotConfiguredTest extends TestCase
             ->build();
         $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
 
-        $changeset->expects(self::once())->method('getTracker')->willReturn($tracker);
+        $changeset->expects($this->once())->method('getTracker')->willReturn($tracker);
 
         self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 

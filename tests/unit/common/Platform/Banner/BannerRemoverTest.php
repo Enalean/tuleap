@@ -30,7 +30,7 @@ final class BannerRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao            = $this->createMock(BannerDao::class);
         $banner_remover = new BannerRemover($dao);
 
-        $dao->expects(self::once())->method('deleteBanner');
+        $dao->expects($this->once())->method('deleteBanner');
 
         $banner_remover->deleteBanner();
     }

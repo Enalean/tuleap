@@ -119,7 +119,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
-        $this->artifact->expects(self::once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
+        $this->artifact->expects($this->once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -132,7 +132,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->expects(self::once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
+        $this->artifact->expects($this->once())->method('createNewChangeset')->with([], self::STRIPPED_BODY, $this->user, self::anything(), self::anything());
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -169,7 +169,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->expects(self::once())->method('createNewChangeset');
+        $this->artifact->expects($this->once())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -194,7 +194,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
         $this->artifact->method('createNewChangeset')->willReturn(ChangesetTestBuilder::aChangeset(666)->build());
 
-        $this->incoming_mail_dao->expects(self::once())->method('save')->with(666, 'Raw mail');
+        $this->incoming_mail_dao->expects($this->once())->method('save')->with(666, 'Raw mail');
 
         $this->mailgateway->process($this->incoming_mail);
     }

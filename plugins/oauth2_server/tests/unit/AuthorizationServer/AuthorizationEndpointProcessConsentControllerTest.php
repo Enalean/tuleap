@@ -147,7 +147,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-78', 'scope' => ['not:found']]
         );
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -164,7 +164,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-78', 'scope' => ['foo:bar'], 'pkce_code_challenge' => 'not_hex_encoded']
         );
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -204,10 +204,10 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-77', 'scope' => ['foo:bar', 'type:value', 'foo:bar']]
         );
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->expects(self::once())->method('createSuccessfulResponse')->willReturn($response);
-        $this->authorization_creator->expects(self::once())->method('saveAuthorization')
+        $this->response_factory->expects($this->once())->method('createSuccessfulResponse')->willReturn($response);
+        $this->authorization_creator->expects($this->once())->method('saveAuthorization')
             ->with(
                 self::callback(
                     function (NewAuthorization $new_authorization) use ($user) {

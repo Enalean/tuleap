@@ -230,7 +230,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     public function testItDoesNothingIfRepositoryIsNotIntegratedInProjectOfArtifact(): void
     {
         $this->mockReferencedArtifactIsFound();
-        $this->repository_project_dao->expects(self::once())
+        $this->repository_project_dao->expects($this->once())
             ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(self::GITLAB_INTEGRATION_ID, self::PROJECT_ID)
             ->willReturn(false);
@@ -265,7 +265,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockReferencedArtifactIsFound();
         $this->mockArtifactClosureIsEnabled();
         $this->mockWorkflowUserIsFound();
-        $this->credentials_retriever->expects(self::once())
+        $this->credentials_retriever->expects($this->once())
             ->method('getCredentials')
             ->willReturn(null);
 
@@ -285,7 +285,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockArtifactClosureIsEnabled();
         $this->mockWorkflowUserIsFound();
         $this->mockGitLabRepositoryHasCredentials();
-        $this->gitlab_project_builder->expects(self::once())
+        $this->gitlab_project_builder->expects($this->once())
             ->method('getProjectFromGitlabAPI')
             ->with(
                 $this->credentials,
@@ -422,7 +422,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     private function mockArtifactClosureIsEnabled(): void
     {
-        $this->repository_project_dao->expects(self::once())
+        $this->repository_project_dao->expects($this->once())
             ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(self::GITLAB_INTEGRATION_ID, self::PROJECT_ID)
             ->willReturn(true);
@@ -435,7 +435,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     private function mockGitlabProjectDefaultBranch(): void
     {
-        $this->gitlab_project_builder->expects(self::once())
+        $this->gitlab_project_builder->expects($this->once())
             ->method('getProjectFromGitlabAPI')
             ->with(
                 $this->credentials,

@@ -118,12 +118,12 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(42);
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('debug')
             ->with("Comment can't be added on merge request #42 because there is no bot API token.");
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($this->gitlab_repository)
             ->willReturn(null);
@@ -144,14 +144,14 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(42);
 
         $this->gitlab_repository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryId')
             ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($this->gitlab_repository)
             ->willReturn($credentials);
@@ -167,7 +167,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with($references)
             ->willReturn($references_presenter);
@@ -184,7 +184,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS;
 
         $this->client_wrapper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with($credentials, $url, ['body' => $comment])
             ->willThrowException(new GitlabRequestException(404, 'not found'));
@@ -214,14 +214,14 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(42);
 
         $this->gitlab_repository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryId')
             ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($this->gitlab_repository)
             ->willReturn($credentials);
@@ -235,7 +235,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with($references)
             ->willReturn($references_presenter);
@@ -249,12 +249,12 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS;
 
         $this->client_wrapper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with($credentials, $url, ['body' => $comment]);
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('debug')
             ->with('Comment was successfully added on merge request #42');
 

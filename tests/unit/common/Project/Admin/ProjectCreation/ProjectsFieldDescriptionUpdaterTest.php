@@ -57,9 +57,9 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $layout = $this->createMock(BaseLayout::class);
 
-        $this->custom_description_dao->expects(self::once())->method('updateRequiredCustomDescription')->with(true, 1);
-        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
-        $layout->expects(self::once())->method('redirect');
+        $this->custom_description_dao->expects($this->once())->method('updateRequiredCustomDescription')->with(true, 1);
+        $layout->expects($this->once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects($this->once())->method('redirect');
 
         $this->updater->updateDescription('1', null, $layout);
     }
@@ -68,9 +68,9 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $layout = $this->createMock(BaseLayout::class);
 
-        $this->custom_description_dao->expects(self::once())->method('updateRequiredCustomDescription')->with(false, 1);
-        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
-        $layout->expects(self::once())->method('redirect');
+        $this->custom_description_dao->expects($this->once())->method('updateRequiredCustomDescription')->with(false, 1);
+        $layout->expects($this->once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects($this->once())->method('redirect');
 
         $this->updater->updateDescription(null, '1', $layout);
     }
@@ -79,9 +79,9 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $layout = $this->createMock(BaseLayout::class);
 
-        $this->config_dao->expects(self::once())->method('saveBool')->with('enable_not_mandatory_description', false);
-        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
-        $layout->expects(self::once())->method('redirect');
+        $this->config_dao->expects($this->once())->method('saveBool')->with('enable_not_mandatory_description', false);
+        $layout->expects($this->once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects($this->once())->method('redirect');
 
         $this->updater->updateDescription(
             DescriptionFieldAdminPresenterBuilder::SHORT_DESCRIPTION_FIELD_ID,
@@ -94,9 +94,9 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $layout = $this->createMock(BaseLayout::class);
 
-        $this->config_dao->expects(self::once())->method('saveBool')->with('enable_not_mandatory_description', true);
-        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
-        $layout->expects(self::once())->method('redirect');
+        $this->config_dao->expects($this->once())->method('saveBool')->with('enable_not_mandatory_description', true);
+        $layout->expects($this->once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects($this->once())->method('redirect');
 
         $this->updater->updateDescription(
             null,

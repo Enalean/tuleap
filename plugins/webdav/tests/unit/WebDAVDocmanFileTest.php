@@ -132,7 +132,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->event_manager->method('addListener');
         $this->event_manager->method('processEvent');
-        $this->document_download->expects(self::once())->method('downloadDocument');
+        $this->document_download->expects($this->once())->method('downloadDocument');
 
         $webDAVDocmanFile->get();
     }
@@ -172,7 +172,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
         $item = new \Docman_EmbeddedFile(['title' => 'foo']);
 
         $this->utils->method('isWriteEnabled')->willReturn(true);
-        $this->utils->expects(self::once())->method('processDocmanRequest');
+        $this->utils->expects($this->once())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, $item, $this->document_download, $this->utils);
 
@@ -205,7 +205,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSetNameEmbeddedFile(): void
     {
         $this->utils->method('isWriteEnabled')->willReturn(true);
-        $this->utils->expects(self::once())->method('processDocmanRequest');
+        $this->utils->expects($this->once())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_EmbeddedFile(), $this->document_download, $this->utils);
 
@@ -226,7 +226,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeleteSuccess(): void
     {
         $this->utils->method('isWriteEnabled')->willReturn(true);
-        $this->utils->expects(self::once())->method('processDocmanRequest');
+        $this->utils->expects($this->once())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download, $this->utils);
 

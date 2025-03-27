@@ -117,7 +117,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn($credentials);
@@ -129,7 +129,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->gitlab_tag_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTagFromGitlabAPI')
             ->with($credentials, $integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
@@ -151,7 +151,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($tuleap_reference);
 
         $this->reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertCrossReference')
             ->with(
                 $this->callback(
@@ -163,7 +163,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->tag_info_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
@@ -195,7 +195,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn(null);
@@ -237,7 +237,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn($credentials);
@@ -249,7 +249,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->gitlab_tag_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTagFromGitlabAPI')
             ->with($credentials, $integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
@@ -291,7 +291,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn($credentials);
@@ -303,13 +303,13 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->gitlab_tag_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTagFromGitlabAPI')
             ->with($credentials, $integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
 
         $this->tuleap_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveTuleapReference')
             ->with(1337)
             ->willThrowException(

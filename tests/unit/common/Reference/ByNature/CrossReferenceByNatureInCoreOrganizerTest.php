@@ -68,7 +68,7 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         ]);
 
         $this->wiki_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('organizeWikiReference')
             ->with($wiki_ref, $this->by_nature_organizer);
 
@@ -85,7 +85,7 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         ]);
 
         $this->frs_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('organizeFRSReleaseReference')
             ->with($release_ref, $this->by_nature_organizer);
 
@@ -102,7 +102,7 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         ]);
 
         $this->frs_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('organizeFRSFileReference')
             ->with($file_ref, $this->by_nature_organizer);
 
@@ -119,7 +119,7 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         ]);
 
         $this->forum_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('organizeMessageReference')
             ->with($ref, $this->by_nature_organizer);
 
@@ -136,7 +136,7 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         ]);
 
         $this->forum_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('organizeForumReference')
             ->with($ref, $this->by_nature_organizer);
 
@@ -153,7 +153,7 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         ]);
 
         $this->news_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('organizeNewsReference')
             ->with($ref, $this->by_nature_organizer);
 

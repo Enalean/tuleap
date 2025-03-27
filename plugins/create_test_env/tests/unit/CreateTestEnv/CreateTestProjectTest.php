@@ -72,9 +72,9 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testTemplatedValuesAreEscaped(): void
     {
         $rule_project_name = $this->createMock(\Rule_ProjectName::class);
-        $rule_project_name->expects(self::once())->method('isValid')->willReturn(true);
+        $rule_project_name->expects($this->once())->method('isValid')->willReturn(true);
         $rule_project_full_name = $this->createMock(\Rule_ProjectFullName::class);
-        $rule_project_full_name->expects(self::once())->method('isValid')->willReturn(true);
+        $rule_project_full_name->expects($this->once())->method('isValid')->willReturn(true);
         $create = new CreateTestProject('</member><foo>', __DIR__ . '/../../../resources/sample-project', $rule_project_name, $rule_project_full_name);
         $create->generateXML();
     }

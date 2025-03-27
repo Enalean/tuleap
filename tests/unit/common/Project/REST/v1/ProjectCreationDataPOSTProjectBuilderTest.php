@@ -97,7 +97,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         $post_representation->xml_template_name = null;
 
         $this->project_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn(
@@ -110,7 +110,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 
         $user = $this->createMock(PFUser::class);
         $user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAdmin')
             ->with('101')
             ->willReturn(true);
@@ -144,7 +144,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->template_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTemplate')
             ->with('template')
             ->willReturn(
@@ -195,13 +195,13 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         ');
 
         $this->xml_file_content_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSimpleXMLElementFromFilePath')
             ->with('path/to/xml/template')
             ->willReturn(Result::ok($xml_content));
 
         $this->from_xml_inheritor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('markUsedServicesFromXML');
 
         $creation_data = $this->builder->buildProjectCreationDataFromPOSTRepresentation(

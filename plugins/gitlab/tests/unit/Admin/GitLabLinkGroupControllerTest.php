@@ -160,7 +160,7 @@ final class GitLabLinkGroupControllerTest extends TestCase
     public function testItRendersTheGitlabGroupLinkWizard(): void
     {
         $this->git_permission_manager->method('userIsGitAdmin')->willReturn(true);
-        $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
+        $this->header_renderer->expects($this->once())->method('renderServiceAdministrationHeader');
 
         $this->process();
 
@@ -173,7 +173,7 @@ final class GitLabLinkGroupControllerTest extends TestCase
         $this->group_retriever = RetrieveGroupLinkedToProjectStub::withGroupLink(
             GroupLinkBuilder::aGroupLink(99)->build()
         );
-        $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
+        $this->header_renderer->expects($this->once())->method('renderServiceAdministrationHeader');
 
         $this->process();
 
@@ -185,7 +185,7 @@ final class GitLabLinkGroupControllerTest extends TestCase
         $this->request->set('unlink_group', '1');
 
         $this->git_permission_manager->method('userIsGitAdmin')->willReturn(true);
-        $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
+        $this->header_renderer->expects($this->once())->method('renderServiceAdministrationHeader');
 
         $this->process();
 

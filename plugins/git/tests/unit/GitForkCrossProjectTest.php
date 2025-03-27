@@ -107,7 +107,7 @@ final class GitForkCrossProjectTest extends TestCase
                 self::assertSame($groupId, (int) $parameters[1][0]);
             }
         });
-        $git->expects(self::once())->method('addView')->with('forkRepositories');
+        $git->expects($this->once())->method('addView')->with('forkRepositories');
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
     }
@@ -119,8 +119,8 @@ final class GitForkCrossProjectTest extends TestCase
         $git = $this->createPartialMock(Git::class, ['addError', 'redirect']);
         $git->setProject($project);
         $git->setFactory($this->createMock(GitRepositoryFactory::class));
-        $git->expects(self::once())->method('addError')->with('No repository selected for the fork');
-        $git->expects(self::once())->method('redirect')->with('/plugins/git/projectname/');
+        $git->expects($this->once())->method('addError')->with('No repository selected for the fork');
+        $git->expects($this->once())->method('redirect')->with('/plugins/git/projectname/');
 
         $request = new Codendi_Request(['to_project' => 234, 'repo_access' => []]);
 
@@ -133,8 +133,8 @@ final class GitForkCrossProjectTest extends TestCase
 
         $git = $this->createPartialMock(Git::class, ['addError', 'redirect']);
         $git->setProject($project);
-        $git->expects(self::once())->method('addError')->with('No project selected for the fork');
-        $git->expects(self::once())->method('redirect')->with('/plugins/git/projectname/');
+        $git->expects($this->once())->method('addError')->with('No project selected for the fork');
+        $git->expects($this->once())->method('redirect')->with('/plugins/git/projectname/');
 
         $request = new Codendi_Request([
             'repos'       => ['qdfj'],
@@ -176,7 +176,7 @@ final class GitForkCrossProjectTest extends TestCase
         $git->setProject($project);
         $git->setPermissionsManager($permissions_manager);
         $git->setProjectManager($project_manager);
-        $git->expects(self::once())->method('addError')->with('Only project administrator can create repositories');
+        $git->expects($this->once())->method('addError')->with('Only project administrator can create repositories');
         $git->expects(self::never())->method('addAction');
 
         $git->_doDispatchForkCrossProject($request, $user);

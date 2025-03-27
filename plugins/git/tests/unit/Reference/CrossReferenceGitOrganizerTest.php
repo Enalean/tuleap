@@ -63,7 +63,7 @@ final class CrossReferenceGitOrganizerTest extends TestCase
             'Leeloominaï Lekatariba Lamina-Tchaï Ekbat De Sebat',
             1234567890,
         );
-        $collector->expects(self::once())->method('collectOrganizeableGitCrossReferencesAndTheContributorsCollection')
+        $collector->expects($this->once())->method('collectOrganizeableGitCrossReferencesAndTheContributorsCollection')
             ->with($by_nature_organizer)
             ->willReturn(new OrganizeableGitCrossReferencesAndTheContributors([
                 new CommitDetailsCrossReferenceInformation($commit_details_for_ref, $ref, 'a'),

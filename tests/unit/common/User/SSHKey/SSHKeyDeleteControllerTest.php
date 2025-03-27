@@ -55,9 +55,9 @@ final class SSHKeyDeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesUserSSHKey(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->csrf_token->expects(self::once())->method('check')->with('/account/keys-tokens');
+        $this->csrf_token->expects($this->once())->method('check')->with('/account/keys-tokens');
 
-        $this->user_manager->expects(self::once())->method('deleteSSHKeys')->with($user, ['1', '3']);
+        $this->user_manager->expects($this->once())->method('deleteSSHKeys')->with($user, ['1', '3']);
 
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/account/keys-tokens'));

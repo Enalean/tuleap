@@ -66,10 +66,10 @@ final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
-        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
+        $this->key_factory->expects($this->once())->method('getEncryptionKey')->willReturn($encryption_key);
 
         $this->integration_api_token_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('storeToken')
             ->willReturnCallback(
                 function (int $integration_id, string $encrypted_token) use ($encryption_key): void {

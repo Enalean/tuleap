@@ -115,7 +115,7 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user_group_id = 105;
 
-        $this->dao->expects(self::once())->method('getForgeUGroup')->with($user_group_id)->willReturn(false);
+        $this->dao->expects($this->once())->method('getForgeUGroup')->with($user_group_id)->willReturn(false);
 
         $this->factory->getForgeUserGroupById($user_group_id);
     }

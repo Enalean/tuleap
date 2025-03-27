@@ -155,7 +155,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $payload->method('getPayload')->willReturn($payload_content);
 
         $stream_factory = $this->createMock(StreamFactoryInterface::class);
-        $stream_factory->expects(self::once())->method('createStream')->with(json_encode($payload->getPayload()));
+        $stream_factory->expects($this->once())->method('createStream')->with(json_encode($payload->getPayload()));
 
         $jenkins_client = new JenkinsClient(
             $http_client,
@@ -195,7 +195,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $payload->method('getPayload')->willReturn($payload_content);
 
         $stream_factory = $this->createMock(StreamFactoryInterface::class);
-        $stream_factory->expects(self::once())->method('createStream')->with(json_encode($payload->getPayload()));
+        $stream_factory->expects($this->once())->method('createStream')->with(json_encode($payload->getPayload()));
 
         $jenkins_client = new JenkinsClient(
             $http_client,

@@ -82,17 +82,17 @@ final class DocumentToUploadCreatorTest extends TestCase
         $current_time = new DateTimeImmutable();
 
         $this->dao->method('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->willReturn([]);
-        $this->dao->expects(self::once())->method('updateDocumentFilenameOngoingUpload');
-        $this->dao->expects(self::once())->method('saveDocumentOngoingUpload')->willReturn(12);
+        $this->dao->expects($this->once())->method('updateDocumentFilenameOngoingUpload');
+        $this->dao->expects($this->once())->method('saveDocumentOngoingUpload')->willReturn(12);
 
         $obsolescence_date = DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
         $metadata_creator->expects(self::never())->method('storeItemCustomMetadata');
 
         if ($permissions_for_groups === null) {
-            $this->permissions_manager->expects(self::once())->method('clonePermissions');
+            $this->permissions_manager->expects($this->once())->method('clonePermissions');
         } else {
-            $this->permissions_item_updater->expects(self::once())->method('initPermissionsOnNewlyCreatedItem');
+            $this->permissions_item_updater->expects($this->once())->method('initPermissionsOnNewlyCreatedItem');
         }
 
         $document_to_upload = $creator->create(
@@ -138,13 +138,13 @@ final class DocumentToUploadCreatorTest extends TestCase
         $current_time = new DateTimeImmutable();
 
         $this->dao->method('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->willReturn([]);
-        $this->dao->expects(self::once())->method('updateDocumentFilenameOngoingUpload');
-        $this->dao->expects(self::once())->method('saveDocumentOngoingUpload')->willReturn(12);
+        $this->dao->expects($this->once())->method('updateDocumentFilenameOngoingUpload');
+        $this->dao->expects($this->once())->method('saveDocumentOngoingUpload')->willReturn(12);
 
         $obsolescence_date = DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
-        $metadata_creator->expects(self::once())->method('storeItemCustomMetadata');
-        $this->permissions_item_updater->expects(self::once())->method('initPermissionsOnNewlyCreatedItem');
+        $metadata_creator->expects($this->once())->method('storeItemCustomMetadata');
+        $this->permissions_item_updater->expects($this->once())->method('initPermissionsOnNewlyCreatedItem');
 
         $document_to_upload = $creator->create(
             $parent_item,

@@ -143,7 +143,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('insertContent')
             ->willReturnCallback(fn (
                 int $owner_id,
@@ -238,7 +238,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('insertContent')
             ->willReturnCallback(fn (
                 int $owner_id,
@@ -330,7 +330,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('insertContent')
             ->willReturnCallback(fn (
                 int $owner_id,
@@ -422,7 +422,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('insertContent')
             ->willReturnCallback(fn (
                 int $owner_id,
@@ -481,7 +481,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('insertContent')
             ->willReturnCallback(fn (
                 int $owner_id,
@@ -544,7 +544,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('insertContent')
             ->willReturnCallback(fn (
                 int $owner_id,

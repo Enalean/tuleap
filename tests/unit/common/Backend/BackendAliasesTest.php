@@ -76,7 +76,7 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRunNewaliasesCommand(): void
     {
-        $this->backend->expects(self::once())->method('system')->with('/usr/bin/newaliases > /dev/null');
+        $this->backend->expects($this->once())->method('system')->with('/usr/bin/newaliases > /dev/null');
         $this->backend->update();
     }
 

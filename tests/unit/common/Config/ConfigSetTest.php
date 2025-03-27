@@ -55,7 +55,7 @@ final class ConfigSetTest extends TestCase
     public function testSaveConfigKeyValue(): void
     {
         $config_dao = $this->createMock(ConfigDao::class);
-        $config_dao->expects(self::once())
+        $config_dao->expects($this->once())
             ->method('save')
             ->with('foo', 'value');
 

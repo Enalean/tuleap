@@ -49,7 +49,7 @@ final class GitBackendGitoliteDisconnectGerritTest extends TestCase
 
     public function testItAsksToDAOToDisconnectFromGerrit(): void
     {
-        $this->dao->expects(self::once())->method('disconnectFromGerrit')->with($this->repo_id);
+        $this->dao->expects($this->once())->method('disconnectFromGerrit')->with($this->repo_id);
 
         $this->backend->disconnectFromGerrit($this->repository);
     }

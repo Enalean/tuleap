@@ -53,14 +53,14 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_presenters_builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectPresenters')
             ->with($user)
             ->willReturn([]);
 
         $search_form_presenter_builder = $this->createMock(SearchFormPresenterBuilder::class);
         $search_form_presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->willReturn(new SearchFormPresenter('soft', []));
 
@@ -84,14 +84,14 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_presenters_builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectPresenters')
             ->with($user)
             ->willReturn([]);
 
         $search_form_presenter_builder = $this->createMock(SearchFormPresenterBuilder::class);
         $search_form_presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->willReturn(new SearchFormPresenter('soft', []));
 
@@ -111,14 +111,14 @@ final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_presenters_builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectPresenters')
             ->with($user)
             ->willReturn([]);
 
         $search_form_presenter_builder = $this->createMock(SearchFormPresenterBuilder::class);
         $search_form_presenter_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->willReturn(new SearchFormPresenter('soft', []));
 

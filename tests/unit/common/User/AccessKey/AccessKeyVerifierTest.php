@@ -86,7 +86,7 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_user = $this->createMock(\PFUser::class);
         $this->user_manager->method('getUserById')->with(101)->willReturn($expected_user);
         if ($expect_to_log_access) {
-            $this->dao->expects(self::once())->method('updateAccessKeyUsageByID');
+            $this->dao->expects($this->once())->method('updateAccessKeyUsageByID');
         } else {
             $this->dao->expects(self::never())->method('updateAccessKeyUsageByID');
         }

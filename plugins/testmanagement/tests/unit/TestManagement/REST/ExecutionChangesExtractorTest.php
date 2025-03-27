@@ -60,19 +60,19 @@ final class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetChanges(): void
     {
         $this->formatted_changeset_value_for_file_field_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFormattedChangesetValueForFieldFile')
             ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
         $this->formatted_changeset_value_for_int_field_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFormattedChangesetValueForFieldInt')
             ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
         $this->formatted_changeset_value_for_text_field_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFormattedChangesetValueForFieldText')
             ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
         $this->formatted_changeset_value_for_list_field_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFormattedChangesetValueForFieldList')
             ->willReturn($this->createMock(ArtifactValuesRepresentation::class));
 
@@ -99,11 +99,11 @@ final class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('getFormattedChangesetValueForFieldInt');
         $this->formatted_changeset_value_for_text_field_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFormattedChangesetValueForFieldText')
             ->willReturn(null);
         $this->formatted_changeset_value_for_list_field_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFormattedChangesetValueForFieldList')
             ->willReturn(null);
 

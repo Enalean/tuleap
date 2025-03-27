@@ -107,7 +107,7 @@ class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
             'rank' => 0,
         ]));
 
-        $dao->expects(self::once())->method('updateColumnIdByWidgetId');
+        $dao->expects($this->once())->method('updateColumnIdByWidgetId');
         $dao->expects(self::atLeastOnce())->method('updateWidgetRankByWidgetId');
 
         $widget_reorder->reorderWidgets($this->line_one_columns[1], $this->line_one_columns[0], $this->widget_one, 2);

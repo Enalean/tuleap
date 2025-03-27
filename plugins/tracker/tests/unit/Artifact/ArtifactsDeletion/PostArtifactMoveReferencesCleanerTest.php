@@ -88,8 +88,8 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
 
     public function testItDeletesReferencesAndResetsReverseLinksTypesWhenArtifactIsChildOfAnotherOneInAnotherProject(): void
     {
-        $this->cross_references_dao->expects(self::once())->method('deleteReferencesWhenArtifactIsSource');
-        $this->cross_references_dao->expects(self::once())->method('updateReferencesWhenArtifactIsInTarget');
+        $this->cross_references_dao->expects($this->once())->method('deleteReferencesWhenArtifactIsSource');
+        $this->cross_references_dao->expects($this->once())->method('updateReferencesWhenArtifactIsInTarget');
         $matcher = self::exactly(2);
 
         $this->artifact_linker->expects($matcher)->method('linkArtifact')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -132,7 +132,7 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
 
     public function testItOnlyDeletesReferencesWhenArtifactHasBeenMovedIntoATrackerOfTheSameProject(): void
     {
-        $this->cross_references_dao->expects(self::once())->method('deleteReferencesWhenArtifactIsSource');
+        $this->cross_references_dao->expects($this->once())->method('deleteReferencesWhenArtifactIsSource');
         $this->cross_references_dao->expects(self::never())->method('updateReferencesWhenArtifactIsInTarget');
         $this->artifact_linker->expects(self::never())->method('linkArtifact');
 

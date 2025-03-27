@@ -54,12 +54,12 @@ final class MetadataValueCreatorTest extends TestCase
 
         $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
-        $this->store->expects(self::once())->method('storeMetadata')->with($metadata_value, 102);
+        $this->store->expects($this->once())->method('storeMetadata')->with($metadata_value, 102);
 
         $metadata_to_create = new Docman_Metadata();
         $metadata_to_create->initFromRow(['id' => 1, 'type' => PLUGIN_DOCMAN_METADATA_TYPE_LIST, 'group_id' => 102]);
 
-        $this->validator->expects(self::once())->method('validateInput')->with($metadata_to_create, 'new value');
+        $this->validator->expects($this->once())->method('validateInput')->with($metadata_to_create, 'new value');
 
         $this->creator->createMetadataObject($metadata_to_create, 1000, 'new value');
     }

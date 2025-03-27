@@ -102,9 +102,9 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportSvnAttributes(): void
     {
         $this->zip->method('isADirectory')->willReturn(false);
-        $this->zip->expects(self::once())->method('addFile');
+        $this->zip->expects($this->once())->method('addFile');
 
-        $this->access_file_reader->expects(self::once())->method('readContentBlock');
+        $this->access_file_reader->expects($this->once())->method('readContentBlock');
 
         $this->svn_admin->method('dumpRepository');
 
@@ -124,9 +124,9 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 @members = r';
 
         $this->zip->method('isADirectory')->willReturn(false);
-        $this->zip->expects(self::once())->method('addFile');
+        $this->zip->expects($this->once())->method('addFile');
 
-        $this->access_file_reader->expects(self::once())->method('readContentBlock')->willReturn($expected_access_file);
+        $this->access_file_reader->expects($this->once())->method('readContentBlock')->willReturn($expected_access_file);
 
         $this->svn_admin->method('dumpRepository');
 
@@ -142,9 +142,9 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsNotifiedMails(): void
     {
         $this->zip->method('isADirectory')->willReturn(false);
-        $this->zip->expects(self::once())->method('addFile');
+        $this->zip->expects($this->once())->method('addFile');
 
-        $this->access_file_reader->expects(self::once())->method('readContentBlock');
+        $this->access_file_reader->expects($this->once())->method('readContentBlock');
 
         $this->svn_admin->method('dumpRepository');
 

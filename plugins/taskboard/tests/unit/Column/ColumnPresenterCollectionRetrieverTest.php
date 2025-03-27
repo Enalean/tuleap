@@ -67,7 +67,7 @@ final class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\
 
     public function testEmptyCollection(): void
     {
-        $this->column_factory->expects(self::once())
+        $this->column_factory->expects($this->once())
             ->method('getDashboardColumns')
             ->with($this->release_tracker)
             ->willReturn(new ColumnCollection());
@@ -82,7 +82,7 @@ final class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\
         $todo_column    = new Cardwall_Column(2, 'To do', 'fiesta-red');
         $ongoing_column = new Cardwall_Column(4, 'On going', '');
         $done_column    = new Cardwall_Column(6, 'Done', 'rgb(135,219,239)');
-        $this->column_factory->expects(self::once())
+        $this->column_factory->expects($this->once())
             ->method('getDashboardColumns')
             ->with($this->release_tracker)
             ->willReturn(new ColumnCollection([$todo_column, $ongoing_column, $done_column]));

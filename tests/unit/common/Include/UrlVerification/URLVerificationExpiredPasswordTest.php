@@ -65,8 +65,8 @@ final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testExpiredPasswordShouldRedirectToUpdatePasswordPage(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR, 'Please update your password first');
-        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(DisplaySecurityController::URL);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR, 'Please update your password first');
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with(DisplaySecurityController::URL);
 
         $this->url_verification->assertValidUrl(
             [

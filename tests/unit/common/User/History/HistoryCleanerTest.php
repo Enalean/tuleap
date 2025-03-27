@@ -30,7 +30,7 @@ final class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user          = UserTestBuilder::aUser()->build();
         $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->expects(self::once())->method('processEvent')->with(\Event::USER_HISTORY_CLEAR, ['user' => $user]);
+        $event_manager->expects($this->once())->method('processEvent')->with(\Event::USER_HISTORY_CLEAR, ['user' => $user]);
 
         $delete_visit_by_user_id = new class implements DeleteVisitByUserId {
             public bool $called = false;

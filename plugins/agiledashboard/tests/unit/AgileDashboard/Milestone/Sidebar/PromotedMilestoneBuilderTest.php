@@ -196,7 +196,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
                 new TimeframeWithEndDate($this->start_field, $this->end_field)
             )
         );
-        $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn(null);
+        $this->planning_factory->expects($this->once())->method('getPlanningByPlanningTracker')->willReturn(null);
         self::assertTrue($this->builder->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 

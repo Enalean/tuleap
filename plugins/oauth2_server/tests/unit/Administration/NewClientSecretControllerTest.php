@@ -85,7 +85,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
         $this->client_secret_updater->expects(self::never())->method('updateClientSecret');
@@ -105,7 +105,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '45']);
         $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(true);
-        $this->client_secret_updater->expects(self::once())->method('updateClientSecret')->with(45);
+        $this->client_secret_updater->expects($this->once())->method('updateClientSecret')->with(45);
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -116,7 +116,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = $this->buildSiteAdminRequest()->withParsedBody(['app_id' => '45']);
         $this->project_verifier->method('isASiteLevelApp')->willReturn(true);
-        $this->client_secret_updater->expects(self::once())->method('updateClientSecret')->with(45);
+        $this->client_secret_updater->expects($this->once())->method('updateClientSecret')->with(45);
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());

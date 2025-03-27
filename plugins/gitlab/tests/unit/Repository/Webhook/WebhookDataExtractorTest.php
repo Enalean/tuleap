@@ -223,7 +223,7 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesPostPushWebhookData(): void
     {
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('|_ Webhook of type Push Hook received.');
 
@@ -276,7 +276,7 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesPostMergeRequestWebhookData(): void
     {
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('|_ Webhook of type Merge Request Hook received.');
 
@@ -315,7 +315,7 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesTagPushRequestWebhookData(): void
     {
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('|_ Webhook of type Tag Push Hook received.');
 

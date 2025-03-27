@@ -36,7 +36,7 @@ final class LastAccessUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $commit_info = $this->createMock(CommitInfo::class);
         $commit_info->method('getDate')->willReturn('2017-06-06 11:59:45 +0000 (Tue, 06 Jun 2017)');
 
-        $dao->expects(self::once())->method('updateLastCommitDate')->with(10, 1496750385);
+        $dao->expects($this->once())->method('updateLastCommitDate')->with(10, 1496750385);
 
         $last_access_updater->updateLastCommitDate($repository, $commit_info);
     }

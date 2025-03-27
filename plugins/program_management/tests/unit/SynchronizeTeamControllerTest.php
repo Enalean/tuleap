@@ -167,7 +167,7 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getUnixNameLowerCase')->willReturn('guinea-pig');
         $project->method('getIconUnicodeCodepoint')->willReturn('🐹');
 
-        $project->expects(self::once())
+        $project->expects($this->once())
             ->method('usesService')
             ->with(ProgramService::SERVICE_SHORTNAME)
             ->willReturn($is_program_management_used);

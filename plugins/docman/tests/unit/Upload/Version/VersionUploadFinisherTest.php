@@ -130,7 +130,7 @@ final class VersionUploadFinisherTest extends TestCase
         $item->method('getGroupId')->willReturn(101);
         $item->method('getId')->willReturn(20);
         $item->method('getParentId')->willReturn(3);
-        $item->expects(self::once())->method('setCurrentVersion');
+        $item->expects($this->once())->method('setCurrentVersion');
         $item->method('accept')->willReturn(true);
 
         $this->item_factory->method('getItemFromDb')->willReturn($item);
@@ -138,9 +138,9 @@ final class VersionUploadFinisherTest extends TestCase
 
         $created_docman_version = $root->url() . '/created_version';
         touch($created_docman_version);
-        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_version);
+        $this->file_storage->expects($this->once())->method('copy')->willReturn($created_docman_version);
 
-        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
+        $this->version_factory->expects($this->once())->method('create')->willReturn(true);
 
         $user = UserTestBuilder::buildWithDefaults();
         $this->user_manager->method('getUserByID')->willReturn($user);
@@ -153,8 +153,8 @@ final class VersionUploadFinisherTest extends TestCase
         $this->adder->method('addNotificationEvents');
         $this->adder->method('addLogEvents');
 
-        $this->on_going_upload_dao->expects(self::once())->method('deleteByVersionID');
-        $this->item_factory->expects(self::once())->method('update')->willReturn(true);
+        $this->on_going_upload_dao->expects($this->once())->method('deleteByVersionID');
+        $this->item_factory->expects($this->once())->method('update')->willReturn(true);
 
         $this->approval_table_retriever->method('hasApprovalTable')->willReturn(true);
 
@@ -163,7 +163,7 @@ final class VersionUploadFinisherTest extends TestCase
 
         $this->approval_table_update_checker->method('checkAvailableUpdateAction')->with('copy')->willReturn(true);
 
-        $this->approval_table_updater->expects(self::once())->method('updateApprovalTable')->with($item, $user, 'copy');
+        $this->approval_table_updater->expects($this->once())->method('updateApprovalTable')->with($item, $user, 'copy');
 
         $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
@@ -228,9 +228,9 @@ final class VersionUploadFinisherTest extends TestCase
 
         $created_docman_version = $root->url() . '/created_version';
         touch($created_docman_version);
-        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_version);
+        $this->file_storage->expects($this->once())->method('copy')->willReturn($created_docman_version);
 
-        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
+        $this->version_factory->expects($this->once())->method('create')->willReturn(true);
 
         $user = UserTestBuilder::buildWithDefaults();
         $this->user_manager->method('getUserByID')->willReturn($user);
@@ -243,8 +243,8 @@ final class VersionUploadFinisherTest extends TestCase
         $this->adder->method('addNotificationEvents');
         $this->adder->method('addLogEvents');
 
-        $this->on_going_upload_dao->expects(self::once())->method('deleteByVersionID');
-        $this->item_factory->expects(self::once())->method('update')->willReturn(true);
+        $this->on_going_upload_dao->expects($this->once())->method('deleteByVersionID');
+        $this->item_factory->expects($this->once())->method('update')->willReturn(true);
 
         $this->approval_table_retriever->method('hasApprovalTable')->willReturn(false);
 
@@ -318,9 +318,9 @@ final class VersionUploadFinisherTest extends TestCase
 
         $created_docman_version = $root->url() . '/created_version';
         touch($created_docman_version);
-        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_version);
+        $this->file_storage->expects($this->once())->method('copy')->willReturn($created_docman_version);
 
-        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
+        $this->version_factory->expects($this->once())->method('create')->willReturn(true);
 
         $user = UserTestBuilder::buildWithDefaults();
         $this->user_manager->method('getUserByID')->willReturn($user);
@@ -333,8 +333,8 @@ final class VersionUploadFinisherTest extends TestCase
         $this->adder->method('addNotificationEvents');
         $this->adder->method('addLogEvents');
 
-        $this->on_going_upload_dao->expects(self::once())->method('deleteByVersionID');
-        $this->item_factory->expects(self::once())->method('update')->willReturn(true);
+        $this->on_going_upload_dao->expects($this->once())->method('deleteByVersionID');
+        $this->item_factory->expects($this->once())->method('update')->willReturn(true);
 
         $this->approval_table_retriever->method('hasApprovalTable')->willReturn(true);
 

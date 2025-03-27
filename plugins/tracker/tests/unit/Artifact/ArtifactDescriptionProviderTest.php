@@ -47,7 +47,7 @@ final class ArtifactDescriptionProviderTest extends TestCase
 
     public function testGetDescriptionReturnNullIfNoFieldInSemantic(): void
     {
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn(null);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn(null);
 
         self::assertEquals('', $this->provider->getDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
@@ -55,9 +55,9 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetDescriptionReturnNullIfUserCannotReadTheField(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(false);
+        $field->expects($this->once())->method('userCanRead')->willReturn(false);
 
         self::assertEquals('', $this->provider->getDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
@@ -65,12 +65,12 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetDescriptionReturnNullIfThereIsNoLastChangeset(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->expects($this->once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->createMock(Artifact::class);
-        $artifact->expects(self::once())->method('getLastChangeset')->willReturn(null);
+        $artifact->expects($this->once())->method('getLastChangeset')->willReturn(null);
 
         self::assertEquals('', $this->provider->getDescription($artifact));
     }
@@ -78,9 +78,9 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetDescriptionReturnNullIfNoValueForField(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->expects($this->once())->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1);
 
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
@@ -93,9 +93,9 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetDescriptionReturnTheDescriptionAsPlainText(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->expects($this->once())->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1);
 
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
@@ -108,7 +108,7 @@ final class ArtifactDescriptionProviderTest extends TestCase
 
     public function testGetPostProcessedDescriptionReturnEmptyStringIfNoFieldInSemantic(): void
     {
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn(null);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn(null);
 
         self::assertEquals('', $this->provider->getPostProcessedDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
@@ -116,9 +116,9 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetPostProcessedDescriptionReturnEmptyStringIfUserCannotReadTheField(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(false);
+        $field->expects($this->once())->method('userCanRead')->willReturn(false);
 
         self::assertEquals('', $this->provider->getPostProcessedDescription(ArtifactTestBuilder::anArtifact(1)->build()));
     }
@@ -126,12 +126,12 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetPostProcessedDescriptionReturnEmptyStringIfThereIsNoLastChangeset(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->expects($this->once())->method('userCanRead')->willReturn(true);
 
         $artifact = $this->createMock(Artifact::class);
-        $artifact->expects(self::once())->method('getLastChangeset')->willReturn(null);
+        $artifact->expects($this->once())->method('getLastChangeset')->willReturn(null);
 
         self::assertEquals('', $this->provider->getPostProcessedDescription($artifact));
     }
@@ -139,9 +139,9 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetPostProcessedDescriptionReturnEmptyStringIfNoValueForField(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->expects($this->once())->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1);
 
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
@@ -154,9 +154,9 @@ final class ArtifactDescriptionProviderTest extends TestCase
     public function testGetPostProcessedDescriptionReturnTheDescriptionAsFormatHTML(): void
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->semantic_description->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
-        $field->expects(self::once())->method('userCanRead')->willReturn(true);
+        $field->expects($this->once())->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1);
 
         $tracker = TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build();

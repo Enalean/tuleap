@@ -41,7 +41,7 @@ final class VisitRecorderTest extends TestCase
 
     public function testVisitOfAnAuthenticatedUserIsSaved(): void
     {
-        $this->dao->expects(self::once())->method('save');
+        $this->dao->expects($this->once())->method('save');
 
         $user     = UserTestBuilder::anActiveUser()->withId(102)->build();
         $artifact = ArtifactTestBuilder::anArtifact(1003)->build();

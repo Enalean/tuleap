@@ -93,7 +93,7 @@ class LicenseAgreementControllersHelperTest extends TestCase
     {
         $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
         $header_renderer = $this->createMock(TemplateRenderer::class);
-        $header_renderer->expects(self::once())->method('renderToPage')->with('toolbar-presenter', self::anything());
+        $header_renderer->expects($this->once())->method('renderToPage')->with('toolbar-presenter', self::anything());
         $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/templates/frs');
         }))->willReturn($header_renderer);

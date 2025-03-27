@@ -40,7 +40,7 @@ final class JenkinsTuleapPluginHookTokenGeneratorDBStoreTest extends TestCase
             new DateInterval('PT30S')
         );
 
-        $dao->expects(self::once())->method('create')->with(self::anything(), 40)->willReturn(963);
+        $dao->expects($this->once())->method('create')->with(self::anything(), 40)->willReturn(963);
 
         $token = $token_generator->generateTriggerToken(
             new \DateTimeImmutable('@10'),

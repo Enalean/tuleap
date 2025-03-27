@@ -55,13 +55,13 @@ class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $last_changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $target_tracker = $this->createMock(\Tracker::class);
 
-        $target_tracker->expects(self::once())->method('getId')->willReturn($target_tracker_id);
+        $target_tracker->expects($this->once())->method('getId')->willReturn($target_tracker_id);
 
-        $artifact->expects(self::once())->method('getId')->willReturn($artifact_id);
-        $artifact->expects(self::once())->method('getAnArtifactLinkField')->with($user)->willReturn($art_link_field);
-        $artifact->expects(self::once())->method('getLastChangeset')->willReturn($last_changeset);
+        $artifact->expects($this->once())->method('getId')->willReturn($artifact_id);
+        $artifact->expects($this->once())->method('getAnArtifactLinkField')->with($user)->willReturn($art_link_field);
+        $artifact->expects($this->once())->method('getLastChangeset')->willReturn($last_changeset);
 
-        $this->dao->expects(self::once())->method('searchReverseLinksByIdAndSourceTrackerId')
+        $this->dao->expects($this->once())->method('searchReverseLinksByIdAndSourceTrackerId')
             ->with($artifact_id, $target_tracker_id)
             ->willReturn([
                 ['artifact_id' => 83],
@@ -73,9 +73,9 @@ class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $art_93  = $this->createMock(Artifact::class);
         $art_103 = $this->createMock(Artifact::class);
 
-        $art_83->expects(self::once())->method('userCanView')->with($user)->willReturn(true);
-        $art_93->expects(self::once())->method('userCanView')->with($user)->willReturn(false);
-        $art_103->expects(self::once())->method('userCanView')->with($user)->willReturn(true);
+        $art_83->expects($this->once())->method('userCanView')->with($user)->willReturn(true);
+        $art_93->expects($this->once())->method('userCanView')->with($user)->willReturn(false);
+        $art_103->expects($this->once())->method('userCanView')->with($user)->willReturn(true);
 
         $this->tracker_artifact_factory->expects(self::exactly(3))
             ->method('getArtifactById')

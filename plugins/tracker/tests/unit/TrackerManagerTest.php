@@ -111,7 +111,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessArtifact(): void
     {
-        $this->artifact->expects(self::once())->method('process');
+        $this->artifact->expects($this->once())->method('process');
         $this->tracker->expects(self::never())->method('process');
         $this->formElement->expects(self::never())->method('process');
         $this->report->expects(self::never())->method('process');
@@ -126,7 +126,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testProcessReport(): void
     {
         $this->artifact->expects(self::never())->method('process');
-        $this->report->expects(self::once())->method('process');
+        $this->report->expects($this->once())->method('process');
         $this->tracker->expects(self::never())->method('process');
         $this->formElement->expects(self::never())->method('process');
 
@@ -140,9 +140,9 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->artifact->expects(self::never())->method('process');
         $this->report->expects(self::never())->method('process');
-        $this->tracker->expects(self::once())->method('process');
+        $this->tracker->expects($this->once())->method('process');
         $this->formElement->expects(self::never())->method('process');
-        $this->tracker->expects(self::once())->method('userCanView')->willReturn(true);
+        $this->tracker->expects($this->once())->method('userCanView')->willReturn(true);
 
         $request_artifact = HTTPRequestBuilder::get()->build();
         $this->url->method('getDispatchableFromRequest')->willReturn($this->tracker);
@@ -155,9 +155,9 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->report->expects(self::never())->method('process');
         $this->tracker->expects(self::never())->method('process'); //user can't view the tracker. so don't process the request in tracker
         $this->formElement->expects(self::never())->method('process');
-        $this->tracker->expects(self::once())->method('userCanView')->willReturn(false);
+        $this->tracker->expects($this->once())->method('userCanView')->willReturn(false);
         $GLOBALS['Response']->expects(self::atLeastOnce())->method('addFeedback')->with('error', self::anything());
-        $GLOBALS['Response']->expects(self::once())->method('redirect');
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         $request_artifact = HTTPRequestBuilder::get()->build();
 
@@ -170,10 +170,10 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->expects(self::never())->method('process');
         $this->report->expects(self::never())->method('process');
         $this->tracker->expects(self::never())->method('process');
-        $this->formElement->expects(self::once())->method('process');
+        $this->formElement->expects($this->once())->method('process');
 
         $request_artifact = HTTPRequestBuilder::get()->withParam('formElement', '4')->withParam('group_id', '5')->build();
-        $this->tracker->expects(self::once())->method('userCanView')->willReturn(true);
+        $this->tracker->expects($this->once())->method('userCanView')->willReturn(true);
         $this->url->method('getDispatchableFromRequest')->willReturn($this->formElement);
         $this->tm->process($request_artifact, $this->user);
     }
@@ -188,9 +188,9 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'displayAllTrackers',
         ]);
         $project = ProjectTestBuilder::aProject()->build();
-        $tm->expects(self::once())->method('getProject')->with(5)->willReturn($project);
+        $tm->expects($this->once())->method('getProject')->with(5)->willReturn($project);
         $tm->method('checkServiceEnabled')->with($project, $request_artifact)->willReturn(true);
-        $tm->expects(self::once())->method('displayAllTrackers')->with($project, $this->user);
+        $tm->expects($this->once())->method('displayAllTrackers')->with($project, $this->user);
 
         $this->artifact->expects(self::never())->method('process');
         $this->report->expects(self::never())->method('process');
@@ -228,7 +228,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $tf = $this->createMock(\TrackerFactory::class);
-        $tf->expects(self::once())->method('duplicate');
+        $tf->expects($this->once())->method('duplicate');
         $tm->method('getTrackerFactory')->willReturn($tf);
 
         $r1 = new Reference(101, 'bug', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
@@ -236,7 +236,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $r3 = new Reference(103, 'task', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
 
         $rm = $this->createMock(\ReferenceManager::class);
-        $rm->expects(self::once())->method('getReferencesByGroupId')->with($source_project_id)->willReturn([$r1, $r2, $r3]);
+        $rm->expects($this->once())->method('getReferencesByGroupId')->with($source_project_id)->willReturn([$r1, $r2, $r3]);
         $tm->method('getReferenceManager')->willReturn($rm);
 
         $t1 = TrackerTestBuilder::aTracker()->withShortName('bug')->build();
@@ -246,7 +246,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tf->method('getTrackersByGroupId')->with($source_project_id)->willReturn([$t1, $t2]);
 
-        $rm->expects(self::once())->method('createReference')->with($r2);
+        $rm->expects($this->once())->method('createReference')->with($r2);
 
         $tm->duplicate(
             UserTestBuilder::buildWithDefaults(),

@@ -67,7 +67,7 @@ final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\Te
         ');
 
         $this->mapping_registry->addReference('R1', $this->renderer);
-        $this->renderer->expects(self::once())->method('getId')->willReturn(456);
+        $this->renderer->expects($this->once())->method('getId')->willReturn(456);
 
         $this->assertWidgetCreateWithParams(456, 'Imported');
 
@@ -131,7 +131,7 @@ final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\Te
     private function assertWidgetCreateWithDefault(): void
     {
         $this->widget
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->willReturnCallback(static function (Codendi_Request $request) {
                 $renderer_request_date = $request->get('renderer');
@@ -146,7 +146,7 @@ final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\Te
     private function assertWidgetCreateWithParams(int $renderer_id, string $title): void
     {
         $this->widget
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->willReturnCallback(static function (Codendi_Request $request) use ($renderer_id, $title) {
                 $renderer_request_date = $request->get('renderer');

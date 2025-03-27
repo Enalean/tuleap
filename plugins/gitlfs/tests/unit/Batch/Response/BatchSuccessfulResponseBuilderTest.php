@@ -63,7 +63,7 @@ final class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
     public function testResponseForUploadRequestIsBuilt(): void
     {
         $this->token_creator->method('createActionAuthorizationToken')->willReturn($this->createStub(SplitToken::class));
-        $this->prometheus->expects(self::once())->method('increment');
+        $this->prometheus->expects($this->once())->method('increment');
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $operation    = $this->createStub(BatchRequestOperation::class);
@@ -102,7 +102,7 @@ final class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
     public function testResponseForDownloadRequestIsBuilt(): void
     {
         $this->token_creator->method('createActionAuthorizationToken')->willReturn($this->createStub(SplitToken::class));
-        $this->prometheus->expects(self::once())->method('increment');
+        $this->prometheus->expects($this->once())->method('increment');
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $operation    = $this->createStub(BatchRequestOperation::class);
@@ -171,7 +171,7 @@ final class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
     public function testBuildingResponseWithAFileWithASizeBiggerThanMaxSizeIsRejected(): void
     {
         $this->token_creator->method('createActionAuthorizationToken')->willReturn($this->createStub(SplitToken::class));
-        $this->prometheus->expects(self::once())->method('increment');
+        $this->prometheus->expects($this->once())->method('increment');
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $operation    = new BatchRequestOperation(BatchRequestOperation::UPLOAD_OPERATION);

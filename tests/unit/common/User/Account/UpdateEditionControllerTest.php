@@ -66,7 +66,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['user_csv_dateformat', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $user->method('setPreference')->willReturnMap([
             ['user_edition_default_format', 'html', true],
@@ -116,7 +116,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['user_csv_dateformat', 'day_month_year'],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $user
             ->expects(self::never())
@@ -165,7 +165,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['user_csv_dateformat', 'day_month_year'],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $user
             ->expects(self::never())
@@ -214,7 +214,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['user_csv_dateformat', 'day_month_year'],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $user
             ->expects(self::never())

@@ -38,7 +38,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);
 
-        $request->expects(self::once())->method('withMethod')->with('PATCH')->willReturnSelf();
+        $request->expects($this->once())->method('withMethod')->with('PATCH')->willReturnSelf();
 
         $method_overrider->process($request, new AlwaysSuccessfulRequestHandler($response_factory));
     }

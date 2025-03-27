@@ -220,7 +220,7 @@ final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
             ->willReturn($links_fields);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedFormElementsByType')
             ->with(
                 $this->tracker,

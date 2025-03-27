@@ -124,7 +124,7 @@ final class EmailNotificationTaskTest extends TestCase
         $attachment2 = new MailAttachment('text/plain', 'another.txt', 'Ipsum');
 
         $mail_sender = $this->createMock(MailSender::class);
-        $mail_sender->expects(self::once())->method('send')->with(
+        $mail_sender->expects($this->once())->method('send')->with(
             $this->changeset,
             [ // recipients
                 'a_user',

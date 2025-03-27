@@ -120,12 +120,12 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $now = new DateTimeImmutable();
 
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateLastPushDateForIntegration')
             ->with(1, $now->getTimestamp());
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('Last update date successfully updated for GitLab repository #1');
         $this->logger
@@ -133,7 +133,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error');
 
         $this->post_push_webhook_action_processor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('process')
             ->with($this->gitlab_repository_integration, $webhook_data, $now);
 
@@ -162,12 +162,12 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $now = new DateTimeImmutable();
 
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateLastPushDateForIntegration')
             ->with(1, $now->getTimestamp());
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('Last update date successfully updated for GitLab repository #1');
 
@@ -178,7 +178,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('process');
 
         $this->post_merge_request_webhook_action_processor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('process')
             ->with($this->gitlab_repository_integration, $merge_request_webhook_data);
 
@@ -218,7 +218,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('updateLastPushDateForIntegration');
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error')
             ->with('The provided webhook type WHATEVER is unknown');
 

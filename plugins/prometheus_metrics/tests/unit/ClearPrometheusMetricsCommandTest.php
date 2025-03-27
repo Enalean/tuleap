@@ -31,7 +31,7 @@ final class ClearPrometheusMetricsCommandTest extends \Tuleap\Test\PHPUnit\TestC
         $storage = $this->createMock(FlushableStorage::class);
         $command = new ClearPrometheusMetricsCommand($storage);
 
-        $storage->expects(self::once())->method('flush');
+        $storage->expects($this->once())->method('flush');
 
         $command_tester = new CommandTester($command);
         $command_tester->execute([]);

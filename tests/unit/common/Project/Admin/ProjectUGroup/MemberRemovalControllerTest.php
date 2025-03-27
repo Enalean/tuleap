@@ -62,7 +62,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout                 = $this->createMock(BaseLayout::class);
         $this->project_member_remover = $this->createMock(ProjectMemberRemover::class);
         $this->csrf                   = $this->createMock(\CSRFSynchronizerToken::class);
-        $this->csrf->expects(self::once())->method('check');
+        $this->csrf->expects($this->once())->method('check');
         $this->controller = new MemberRemovalController(
             $this->project_retriever,
             $this->administrator_checker,
@@ -79,7 +79,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_admin = UserTestBuilder::aUser()->build();
         $this->http_request->method('getCurrentUser')->willReturn($project_admin);
         $this->administrator_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserIsProjectAdministrator')
             ->with($project_admin, $project);
 
@@ -90,7 +90,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('101')
             ->willReturn($project);
@@ -127,7 +127,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('101')
             ->willReturn($project);
@@ -167,7 +167,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('101')
             ->willReturn($project);
@@ -197,7 +197,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         });
         $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
 
-        $this->project_member_remover->expects(self::once())->method('removeUserFromProject')->with(101, 303);
+        $this->project_member_remover->expects($this->once())->method('removeUserFromProject')->with(101, 303);
 
         $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
@@ -208,7 +208,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('101')
             ->willReturn($project);

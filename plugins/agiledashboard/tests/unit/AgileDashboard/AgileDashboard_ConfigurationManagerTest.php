@@ -72,7 +72,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
     public function testDuplicateProjectConfiguration(): void
     {
         $config_dao = $this->createMock(ConfigurationDao::class);
-        $config_dao->expects(self::once())->method('duplicate');
+        $config_dao->expects($this->once())->method('duplicate');
 
         $milestones_in_sidebar_config_duplicator = DuplicateMilestonesInSidebarConfigStub::build();
 
@@ -91,7 +91,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
     public function testUpdateConfigurationWithMilestoneInSidebar(): void
     {
         $config_dao = $this->createMock(ConfigurationDao::class);
-        $config_dao->expects(self::once())->method('updateConfiguration');
+        $config_dao->expects($this->once())->method('updateConfiguration');
 
 
         $milestones_in_sidebar_config = UpdateMilestonesInSidebarConfigStub::build();
@@ -112,7 +112,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
     public function testUpdateConfigurationWithoutMilestoneInSidebar(): void
     {
         $config_dao = $this->createMock(ConfigurationDao::class);
-        $config_dao->expects(self::once())->method('updateConfiguration');
+        $config_dao->expects($this->once())->method('updateConfiguration');
 
 
         $milestones_in_sidebar_config = UpdateMilestonesInSidebarConfigStub::build();

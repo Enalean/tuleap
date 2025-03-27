@@ -150,7 +150,7 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->plugin_manager->method('isPluginAllowedForProject')->with($this->plugin, 101)->willReturn(true);
 
-        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
+        $this->project_access_checker->expects($this->once())->method('checkUserCanAccessProject');
 
         $children = $this->webDAVRoot->getChildren();
         self::assertCount(1, $children);
@@ -228,7 +228,7 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->plugin_manager->method('isPluginAllowedForProject')->with($this->plugin, 101)->willReturn(true);
 
-        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->with($this->user, $project);
+        $this->project_access_checker->expects($this->once())->method('checkUserCanAccessProject')->with($this->user, $project);
 
         self::assertEquals('project1', $this->webDAVRoot->getChild('project1')->getName());
     }

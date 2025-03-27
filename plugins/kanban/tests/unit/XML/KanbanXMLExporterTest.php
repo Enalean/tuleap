@@ -75,7 +75,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_element = new \SimpleXMLElement($xml_data);
 
         $xml_validator = $this->createMock(XML_RNGValidator::class);
-        $xml_validator->expects(self::once())->method('validate');
+        $xml_validator->expects($this->once())->method('validate');
 
         $kanban_export = new KanbanXMLExporter(
             $kanban_factory,
@@ -119,7 +119,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_element = new \SimpleXMLElement($xml_data);
 
         $xml_validator = $this->createMock(XML_RNGValidator::class);
-        $xml_validator->expects(self::once())->method('validate');
+        $xml_validator->expects($this->once())->method('validate');
 
         $kanban_export = new KanbanXMLExporter(
             $kanban_factory,

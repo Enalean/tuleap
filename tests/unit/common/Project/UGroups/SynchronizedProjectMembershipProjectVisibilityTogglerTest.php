@@ -46,7 +46,7 @@ final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \T
         $project = new Project(['group_id' => 101]);
 
         if ($should_enable) {
-            $this->dao->expects(self::once())->method('enable')->with($project);
+            $this->dao->expects($this->once())->method('enable')->with($project);
         } else {
             $this->dao->expects(self::never())->method('enable');
         }

@@ -63,8 +63,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
             [666, 'unexisting_preference', $empty_dar],
             [666, 'existing_preference', $dar],
         ]);
-        $dao->expects(self::once())->method('set')->with(666, 'existing_preference', '456');
-        $dao->expects(self::once())->method('delete')->with(666, 'existing_preference');
+        $dao->expects($this->once())->method('set')->with(666, 'existing_preference', '456');
+        $dao->expects($this->once())->method('delete')->with(666, 'existing_preference');
 
         $user = $this->getMockBuilder(PFUser::class)->disableOriginalConstructor()->onlyMethods(['getPreferencesDao', 'getId'])->getMock();
         $user->method('getPreferencesDao')->willReturn($dao);
@@ -291,7 +291,7 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetLanguageShouldUserLanguageFactoryIfNotDefined(): void
     {
         $langFactory = $this->createMock(\BaseLanguageFactory::class);
-        $langFactory->expects(self::once())->method('getBaseLanguage')->with('fr_BE');
+        $langFactory->expects($this->once())->method('getBaseLanguage')->with('fr_BE');
 
         $user = new PFUser(['language_id' => 'fr_BE']);
         $user->setLanguageFactory($langFactory);

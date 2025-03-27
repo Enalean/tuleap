@@ -156,7 +156,7 @@ final class InvitationCleanerTest extends TestCase
             $this->invitation_instrumentation,
         );
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
+        $this->invitation_instrumentation->expects($this->once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 
@@ -201,7 +201,7 @@ final class InvitationCleanerTest extends TestCase
             $this->invitation_instrumentation,
         );
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
+        $this->invitation_instrumentation->expects($this->once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 
@@ -242,7 +242,7 @@ final class InvitationCleanerTest extends TestCase
             $this->invitation_instrumentation,
         );
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
+        $this->invitation_instrumentation->expects($this->once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 
@@ -279,7 +279,7 @@ final class InvitationCleanerTest extends TestCase
             $this->invitation_instrumentation,
         );
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
+        $this->invitation_instrumentation->expects($this->once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 

@@ -191,7 +191,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
         $semantic = $this->createMock(SemanticProgress::class);
         $semantic->method('getComputationMethod')->willReturn($this->createMock(IComputeProgression::class));
         $this->progress_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->willReturn($semantic);
 
@@ -208,7 +208,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
         $duration->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date, $duration)));
 

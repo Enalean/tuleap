@@ -50,7 +50,7 @@ final class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($non_existing_item_path), 0777, true);
         touch($non_existing_item_path);
 
-        $dao->expects(self::once())->method('deleteUnusableFiles');
+        $dao->expects($this->once())->method('deleteUnusableFiles');
 
         $cleaner = new FileUploadCleaner($path_allocator, $dao);
 

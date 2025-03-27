@@ -54,7 +54,7 @@ final class PlanningTrackerBacklogCheckerTest extends TestCase
 
     public function testItReturnsFalseIfNoRootPlanningInProject(): void
     {
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn(false);
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn(false);
 
         self::assertFalse($this->checker->isTrackerBacklogOfProjectRootPlanning(
             $this->tracker,
@@ -71,7 +71,7 @@ final class PlanningTrackerBacklogCheckerTest extends TestCase
             )
             ->build();
 
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn($planning);
 
         self::assertFalse($this->checker->isTrackerBacklogOfProjectRootPlanning(
             $this->tracker,
@@ -88,7 +88,7 @@ final class PlanningTrackerBacklogCheckerTest extends TestCase
             )
             ->build();
 
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn($planning);
 
         self::assertTrue($this->checker->isTrackerBacklogOfProjectRootPlanning(
             $this->tracker,

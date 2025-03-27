@@ -62,7 +62,7 @@ final class WebhookRequestSenderTest extends TestCase
 
         $webhook_factory->method('getWebhooksForRepository')->willReturn([$web_hook_01, $web_hook_02]);
 
-        $webhook_emitter->expects(self::once())->method('emit');
+        $webhook_emitter->expects($this->once())->method('emit');
 
         $sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
         self::assertTrue($logger->hasInfoRecords());

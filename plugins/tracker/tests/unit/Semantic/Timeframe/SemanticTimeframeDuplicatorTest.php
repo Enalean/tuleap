@@ -39,7 +39,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDoesNotDuplicateIfThereIsNoExistingConfig(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn(null);
@@ -54,7 +54,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDoesNotDuplicateIfThereIsNoStartDateFieldAndNoImpliedFromTracker(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn(['start_date_field_id' => null, 'duration_field_id' => null, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
@@ -69,7 +69,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDoesNotDuplicateIfThereIsNoStartDateFieldInMapping(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
@@ -84,7 +84,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDoesNotDuplicateIfThereIsNoDurationFieldAndNoEndDateFieldInMapping(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => 103, 'implied_from_tracker_id' => null]);
@@ -99,13 +99,13 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDuplicatesAllTheThingsWithDurationField(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(2, 1001, 1002, null, null);
 
@@ -122,13 +122,13 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDuplicatesAllTheThingsWithEndDateField(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn(['start_date_field_id' => 101, 'duration_field_id' => null, 'end_date_field_id' => 103, 'implied_from_tracker_id' => null]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(2, 1001, null, 1003, null);
 
@@ -159,7 +159,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
         ?int $from_implied_from_tracker_id,
     ): void {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn([
@@ -170,7 +170,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             ]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(2, null, null, null, 50);
 
@@ -215,7 +215,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             });
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(600, null, null, null, 500);
 
@@ -235,7 +235,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDuplicatesEmptySemanticWhenDuplicatingWholeProjectWithImpliedFromTrackerIdNotFoundInTrackerMapping(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(60)
             ->willReturn([
@@ -246,7 +246,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             ]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(600, null, null, null, null);
 
@@ -265,7 +265,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDoesNothingWhenAskingToDuplicateFromFieldsWhenThisIsNotConfigured(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(101)
             ->willReturn([
@@ -287,7 +287,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDuplicatesWhenAskingToDuplicateFromFieldsWhenThisIsConfigured(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(101)
             ->willReturn([
@@ -298,7 +298,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             ]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(201, 1001, null, 3001, null);
 

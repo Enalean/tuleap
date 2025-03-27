@@ -47,7 +47,7 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
         $selected_option = 0;
 
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(false);
@@ -60,7 +60,7 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
         $selected_option = 0;
 
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
@@ -77,7 +77,7 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
         $selected_option = -1;
 
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);

@@ -32,7 +32,7 @@ final class CachedProjectPresentersBuilderTest extends TestCase
     {
         $builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectPresenters')
             ->willReturn([
                 $this->createMock(ProjectPresenter::class),

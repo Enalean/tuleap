@@ -54,7 +54,7 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
         }
 
         $this->priority_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveListOfArtifactsBefore')
             ->with([111], 45, '101', 101)
             ->willThrowException(new Tracker_Artifact_Exception_CannotRankWithMyself(45));

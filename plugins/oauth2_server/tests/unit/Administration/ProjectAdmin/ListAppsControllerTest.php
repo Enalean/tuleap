@@ -70,10 +70,10 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $request   = HTTPRequestBuilder::get()->build();
         $layout    = LayoutBuilder::build();
         $presenter = AdminOAuth2AppsPresenter::forProjectAdministration($project, [], $this->csrf_token, null);
-        $this->presenter_builder->expects(self::once())->method('buildProjectAdministration')
+        $this->presenter_builder->expects($this->once())->method('buildProjectAdministration')
             ->with($this->csrf_token, $project)
             ->willReturn($presenter);
-        $this->renderer->expects(self::once())->method('renderToPage')
+        $this->renderer->expects($this->once())->method('renderToPage')
             ->with('project-admin', $presenter);
 
         $this->controller->process($request, $layout, ['project_id' => '102']);

@@ -58,7 +58,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->build();
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('102')
             ->willReturn($project);
@@ -67,18 +67,18 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = UserTestBuilder::buildWithDefaults();
         $request->method('getCurrentUser')->willReturn($current_user);
         $this->administrator_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserIsProjectAdministrator')
             ->with($current_user, $project);
         $response = $this->createMock(BaseLayout::class);
         $this->data_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildFromRequest')
             ->with($request, $project, self::anything(), $response)
             ->willThrowException(new InvalidServicePOSTDataException());
 
-        $response->expects(self::once())->method('addFeedback');
-        $response->expects(self::once())->method('redirect');
+        $response->expects($this->once())->method('addFeedback');
+        $response->expects($this->once())->method('redirect');
         $this->controller->process($request, $response, ['project_id' => '102']);
     }
 }

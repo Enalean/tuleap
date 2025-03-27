@@ -46,8 +46,8 @@ final class EnableGitGcTest extends TestCase
 
     public function testItEnablesGitGc(): void
     {
-        $this->response->expects(self::once())->method('info')->with('Enabling git gc');
-        $this->dao->expects(self::once())->method('enableGitGc');
+        $this->response->expects($this->once())->method('info')->with('Enabling git gc');
+        $this->dao->expects($this->once())->method('enableGitGc');
 
         $this->command->execute();
     }
@@ -55,7 +55,7 @@ final class EnableGitGcTest extends TestCase
     public function testItExecutesTheNextCommand(): void
     {
         $next = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
-        $next->expects(self::once())->method('execute');
+        $next->expects($this->once())->method('execute');
 
         $this->command->setNextCommand($next);
 

@@ -103,7 +103,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertExplicitBacklogIsUsed();
 
         $this->artifacts_in_explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllTopBacklogItemsForProjectSortedByRank')
             ->with(101)
             ->willReturn([]);
@@ -122,7 +122,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertExplicitBacklogIsUsed();
 
         $this->artifacts_in_explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllTopBacklogItemsForProjectSortedByRank')
             ->with(101)
             ->willReturn([

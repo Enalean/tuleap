@@ -79,7 +79,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->tracker_dao->method('searchByGroupId')->willReturn(false);
         $this->current_user->method('getProjects')->willReturn([]);
 
-        $this->default_templates_collection_builder->expects(self::once())->method('build')
+        $this->default_templates_collection_builder->expects($this->once())->method('build')
             ->willReturn(new DefaultTemplatesCollection());
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
@@ -104,7 +104,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->tracker_dao->method('searchByGroupId')->willReturn(false);
         $this->current_user->method('getProjects')->willReturn([]);
 
-        $this->default_templates_collection_builder->expects(self::once())->method('build')
+        $this->default_templates_collection_builder->expects($this->once())->method('build')
             ->willReturn(new DefaultTemplatesCollection());
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
@@ -130,7 +130,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->pending_jira_dao->method('searchByProjectId')->willReturn([]);
         $this->current_user->method('getProjects')->willReturn([]);
 
-        $this->default_templates_collection_builder->expects(self::once())->method('build')
+        $this->default_templates_collection_builder->expects($this->once())->method('build')
             ->willReturn(new DefaultTemplatesCollection());
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
@@ -171,7 +171,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 '/path/to/xml'
             )
         );
-        $this->default_templates_collection_builder->expects(self::once())->method('build')->willReturn($collection);
+        $this->default_templates_collection_builder->expects($this->once())->method('build')->willReturn($collection);
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
@@ -197,7 +197,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withId(101)->withPublicName('My project name')->build();
         $this->project_manager->method('getSiteTemplates')->willReturn([$project]);
 
-        $this->default_templates_collection_builder->expects(self::once())->method('build')
+        $this->default_templates_collection_builder->expects($this->once())->method('build')
             ->willReturn(new DefaultTemplatesCollection());
 
         $tracker_user_not_admin = $this->createMock(Tracker::class);

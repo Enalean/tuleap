@@ -69,34 +69,34 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessEnablesSynchronizedProjectMembership(): void
     {
-        $this->csrf->expects(self::once())->method('check');
+        $this->csrf->expects($this->once())->method('check');
         $project = ProjectTestBuilder::aProject()->withId(104)->build();
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('104')
             ->willReturn($project);
         $variables = ['project_id' => '104'];
         $this->request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('get')
             ->with('activation')
             ->willReturn('on');
         $user = UserTestBuilder::buildWithDefaults();
         $this->request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($user);
         $this->administrator_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserIsProjectAdministrator')
             ->with($user, $project);
 
-        $this->dao->expects(self::once())->method('enable');
+        $this->dao->expects($this->once())->method('enable');
         $this->dao->expects(self::never())->method('disable');
 
         $this->layout->method('addFeedback');
-        $this->layout->expects(self::once())->method('redirect')
+        $this->layout->expects($this->once())->method('redirect')
             ->with('/project/admin/ugroup.php?group_id=104');
 
         $this->controller->process($this->request, $this->layout, $variables);
@@ -104,34 +104,34 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessDisablesSynchronizedProjectMembership(): void
     {
-        $this->csrf->expects(self::once())->method('check');
+        $this->csrf->expects($this->once())->method('check');
         $project = ProjectTestBuilder::aProject()->withId(104)->build();
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('104')
             ->willReturn($project);
         $variables = ['project_id' => '104'];
         $this->request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('get')
             ->with('activation')
             ->willReturn(false);
         $user = UserTestBuilder::buildWithDefaults();
         $this->request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($user);
         $this->administrator_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserIsProjectAdministrator')
             ->with($user, $project);
 
-        $this->dao->expects(self::once())->method('disable');
+        $this->dao->expects($this->once())->method('disable');
         $this->dao->expects(self::never())->method('enable');
 
         $this->layout->method('addFeedback');
-        $this->layout->expects(self::once())->method('redirect')
+        $this->layout->expects($this->once())->method('redirect')
             ->with('/project/admin/ugroup.php?group_id=104');
 
         $this->controller->process($this->request, $this->layout, $variables);

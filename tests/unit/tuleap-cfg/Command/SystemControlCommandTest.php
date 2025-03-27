@@ -67,7 +67,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStartsNginxWithSystemD(): void
     {
-        $this->process->expects(self::once())->method('run');
+        $this->process->expects($this->once())->method('run');
         $this->process->method('isSuccessful')->willReturn(true);
         $this->process->method('getExitCode')->willReturn(0);
 
@@ -174,7 +174,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStopsApache(): void
     {
-        $this->process->expects(self::once())->method('run');
+        $this->process->expects($this->once())->method('run');
         $this->process->method('isSuccessful')->willReturn(true);
         $this->process->method('getExitCode')->willReturn(0);
 

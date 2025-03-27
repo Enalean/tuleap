@@ -51,7 +51,7 @@ final class RegenerateConfigurationCommandTest extends TestCase
         $project_1 = ProjectTestBuilder::aProject()->withId(999)->build();
         $project_2 = ProjectTestBuilder::aProject()->withId(888)->build();
         $this->project_manager->method('getProjectsByStatus')->with(Project::STATUS_ACTIVE)->willReturn([$project_1, $project_2]);
-        $this->event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with(['999', '888']);
+        $this->event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with(['999', '888']);
 
         $command_tester->execute(['--all' => true, 'project_ids' => ['102', '103']]);
         self::assertSame(0, $command_tester->getStatusCode());
@@ -71,7 +71,7 @@ final class RegenerateConfigurationCommandTest extends TestCase
                 103 => $project_2,
                 104 => $project_3,
             });
-        $this->event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with(['102', '103']);
+        $this->event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with(['102', '103']);
 
         $command_tester->execute(['project_ids' => ['102', '103']]);
         self::assertSame(0, $command_tester->getStatusCode());
