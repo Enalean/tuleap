@@ -22,7 +22,6 @@ import type { TemplateResult } from "lit";
 import { html } from "lit";
 import { USER_INTERFACE_EMPHASIS_COLORS } from "@tuleap/core-constants";
 import type { UserInterfaceEmphasisColorName } from "@tuleap/core-constants";
-import "@tuleap/tlp-button";
 import "./tlp-button.scss";
 
 type ButtonProps = {

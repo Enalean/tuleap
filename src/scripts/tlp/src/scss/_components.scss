@@ -26,7 +26,7 @@
     $assets-base-path: "../"
 );
 @use "pkg:@tuleap/tlp-badge";
-@use "pkg:@tuleap/tlp-button";
+@use "pkg:@tuleap/tlp-styles/components/buttons";
 @use "./components/button-bar";
 @use "./components/pagination";
 @use "./components/panes";

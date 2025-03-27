@@ -20,8 +20,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
-import "@tuleap/tlp-modal";
-import "@tuleap/tlp-button";
 import "./ModalWrapper.js";
 import "./modal.scss";
 import { USER_INTERFACE_COLORS, type UserInterfaceColorName } from "@tuleap/core-constants";

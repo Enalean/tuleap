@@ -26,9 +26,6 @@ dependencies:
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../tracker/scripts/lib/rest-api-types
-  '@tuleap/tlp-button':
-    specifier: workspace:*
-    version: link:../../lib/frontend/tlp-button
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-fetch

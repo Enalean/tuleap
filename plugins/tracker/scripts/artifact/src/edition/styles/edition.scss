@@ -20,4 +20,5 @@
 @use "pkg:@tuleap/tlp-styles/components/selects" with (
     $assets-base-path: "@tuleap/tlp-styles/"
 );
+@use "pkg:@tuleap/tlp-styles/components/buttons";
 @use "pkg:@tuleap/plugin-tracker-link-field";

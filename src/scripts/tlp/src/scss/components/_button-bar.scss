@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/tlp-button" as buttons;
+@use "pkg:@tuleap/tlp-styles/components/buttons" as buttons;
 
 .tlp-button-bar {
     display: flex;
