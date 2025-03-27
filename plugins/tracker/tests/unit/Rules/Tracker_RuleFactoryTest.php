@@ -21,8 +21,6 @@
 
 namespace Tuleap\Tracker\Rule;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
@@ -34,45 +32,20 @@ use Tracker_Rule_List_Dao;
 use Tracker_Rule_List_Factory;
 use Tracker_RuleDao;
 use Tracker_RuleFactory;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var string
-     */
-    private $xmlstr;
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $f1;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $f2;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $f3;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $f4;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $f5;
+    private string $xmlstr;
+    private SimpleXMLElement $xml;
+    private Tracker $tracker;
+    private Tracker_FormElement_Field_List $f1;
+    private Tracker_FormElement_Field_List $f2;
+    private Tracker_FormElement_Field_List $f3;
+    private Tracker_FormElement_Field_List $f4;
+    private Tracker_FormElement_Field_List $f5;
 
     protected function setUp(): void
     {
@@ -82,18 +55,12 @@ class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     </rules>
 XML;
         $this->xml     = new SimpleXMLElement($this->xmlstr);
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(888);
-        $this->f1 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->f1->shouldReceive('getId')->andReturn(102);
-        $this->f2 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->f2->shouldReceive('getId')->andReturn(103);
-        $this->f3 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->f3->shouldReceive('getId')->andReturn(104);
-        $this->f4 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->f4->shouldReceive('getId')->andReturn(105);
-        $this->f5 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->f5->shouldReceive('getId')->andReturn(106);
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(888)->build();
+        $this->f1      = ListFieldBuilder::aListField(102)->build();
+        $this->f2      = ListFieldBuilder::aListField(103)->build();
+        $this->f3      = ListFieldBuilder::aListField(104)->build();
+        $this->f4      = ListFieldBuilder::aListField(105)->build();
+        $this->f5      = ListFieldBuilder::aListField(106)->build();
     }
 
     public function testImportListRules()
@@ -121,7 +88,7 @@ XML;
             'F28-V1' => $this->f3,
         ];
 
-        $tracker_rule_dao = Mockery::mock(Tracker_RuleDao::class);
+        $tracker_rule_dao = $this->createMock(Tracker_RuleDao::class);
         $rule_factory     = new Tracker_RuleFactory($tracker_rule_dao);
         $rules            = $rule_factory->getInstanceFromXML($this->xml, $array_xml_mapping, $this->tracker);
 
@@ -167,7 +134,7 @@ XML;
             'F30' => $this->f4,
         ];
 
-        $tracker_rule_dao = Mockery::mock(Tracker_RuleDao::class);
+        $tracker_rule_dao = $this->createMock(Tracker_RuleDao::class);
         $rule_factory     = new Tracker_RuleFactory($tracker_rule_dao);
         $rules            = $rule_factory->getInstanceFromXML($this->xml, $array_xml_mapping, $this->tracker);
 
@@ -194,30 +161,24 @@ XML;
         $to_tracker_id   = 53;
         $field_mapping   = [];
 
-        $rule_list_factory = Mockery::mock(Tracker_Rule_List_Factory::class);
-        $rule_date_factory = Mockery::mock(Tracker_Rule_Date_Factory::class);
-        $rule_factory      = Mockery::mock(Tracker_RuleFactory::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $rule_list_factory = $this->createMock(Tracker_Rule_List_Factory::class);
+        $rule_date_factory = $this->createMock(Tracker_Rule_Date_Factory::class);
+        $rule_factory      = $this->createPartialMock(Tracker_RuleFactory::class, ['getListFactory', 'getDateFactory']);
 
-        $rule_factory->shouldReceive('getListFactory')->andReturn($rule_list_factory);
-        $rule_factory->shouldReceive('getDateFactory')->andReturn($rule_date_factory);
+        $rule_factory->method('getListFactory')->willReturn($rule_list_factory);
+        $rule_factory->method('getDateFactory')->willReturn($rule_date_factory);
 
-        $rule_list_factory->shouldReceive('duplicate')->withArgs(
-            [$from_tracker_id, $to_tracker_id, $field_mapping]
-        )->once();
-        $rule_date_factory->shouldReceive('duplicate')->withArgs(
-            [$from_tracker_id, $to_tracker_id, $field_mapping]
-        )->once();
+        $rule_list_factory->expects($this->once())->method('duplicate')->with($from_tracker_id, $to_tracker_id, $field_mapping);
+        $rule_date_factory->expects($this->once())->method('duplicate')->with($from_tracker_id, $to_tracker_id, $field_mapping);
 
         $rule_factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
     public function testGetListOrDateFactoriesReturnNewInstancesWhenNotSet()
     {
-        $list_dao = Mockery::mock(Tracker_Rule_List_Dao::class);
-        $date_dao = Mockery::mock(Tracker_Rule_Date_Dao::class);
-        $rule_dao = Mockery::mock(Tracker_RuleDao::class);
+        $list_dao = $this->createMock(Tracker_Rule_List_Dao::class);
+        $date_dao = $this->createMock(Tracker_Rule_Date_Dao::class);
+        $rule_dao = $this->createMock(Tracker_RuleDao::class);
 
         $factory = new Tracker_RuleFactory($rule_dao);
         $factory->setListDao($list_dao);
@@ -229,13 +190,13 @@ XML;
 
     public function testSaveObjectCallsDateAndListFactoryInsertMethods()
     {
-        $rule_dao = Mockery::mock(Tracker_RuleDao::class);
+        $rule_dao = $this->createMock(Tracker_RuleDao::class);
 
-        $list = Mockery::mock(Tracker_Rule_List::class);
-        $list->shouldReceive('setTrackerId')->withArgs([888])->once();
+        $list = $this->createMock(Tracker_Rule_List::class);
+        $list->expects($this->once())->method('setTrackerId')->with(888);
 
-        $date = Mockery::mock(Tracker_Rule_Date::class);
-        $date->shouldReceive('setTrackerId')->withArgs([888])->once();
+        $date = $this->createMock(Tracker_Rule_Date::class);
+        $date->expects($this->once())->method('setTrackerId')->with(888);
 
         $list_rules = [
             $list,
@@ -249,11 +210,11 @@ XML;
             'date_rules' => $date_rules,
         ];
 
-        $date_factory = Mockery::mock(Tracker_Rule_Date_Factory::class);
-        $date_factory->shouldReceive('insert')->withArgs([$date])->once();
+        $date_factory = $this->createMock(Tracker_Rule_Date_Factory::class);
+        $date_factory->expects($this->once())->method('insert')->with($date);
 
-        $list_factory = Mockery::mock(Tracker_Rule_List_Factory::class);
-        $list_factory->shouldReceive('insert')->withArgs([$list])->once();
+        $list_factory = $this->createMock(Tracker_Rule_List_Factory::class);
+        $list_factory->expects($this->once())->method('insert')->with($list);
 
         $factory = new Tracker_RuleFactory($rule_dao);
         $factory->setListFactory($list_factory);
@@ -264,9 +225,9 @@ XML;
 
     public function testSaveObjectCallsDateInsertMethodWhenNoListRulesAreInArray()
     {
-        $rule_dao = Mockery::mock(Tracker_RuleDao::class);
-        $date     = Mockery::mock(Tracker_Rule_Date::class);
-        $date->shouldReceive('setTrackerId')->withArgs([888])->once();
+        $rule_dao = $this->createMock(Tracker_RuleDao::class);
+        $date     = $this->createMock(Tracker_Rule_Date::class);
+        $date->expects($this->once())->method('setTrackerId')->with(888);
 
         $date_rules = [
             $date,
@@ -275,8 +236,8 @@ XML;
             'date_rules' => $date_rules,
         ];
 
-        $date_factory = Mockery::mock(Tracker_Rule_Date_Factory::class);
-        $date_factory->shouldReceive('insert')->with($date)->once();
+        $date_factory = $this->createMock(Tracker_Rule_Date_Factory::class);
+        $date_factory->expects($this->once())->method('insert')->with($date);
 
         $factory = new Tracker_RuleFactory($rule_dao);
         $factory->setDateFactory($date_factory);
@@ -286,9 +247,9 @@ XML;
 
     public function testSaveObjectCallsListInsertMethodWhenNoDateRulesAreInArray()
     {
-        $rule_dao = Mockery::mock(Tracker_RuleDao::class);
-        $list     = Mockery::mock(Tracker_Rule_List::class);
-        $list->shouldReceive('setTrackerId')->withArgs([888])->once();
+        $rule_dao = $this->createMock(Tracker_RuleDao::class);
+        $list     = $this->createMock(Tracker_Rule_List::class);
+        $list->expects($this->once())->method('setTrackerId')->with(888);
 
         $list_rules = [
             $list,
@@ -298,8 +259,8 @@ XML;
             'list_rules' => $list_rules,
         ];
 
-        $list_factory = Mockery::mock(Tracker_Rule_List_Factory::class);
-        $list_factory->shouldReceive('insert')->with($list)->once();
+        $list_factory = $this->createMock(Tracker_Rule_List_Factory::class);
+        $list_factory->expects($this->once())->method('insert')->with($list);
 
         $factory = new Tracker_RuleFactory($rule_dao);
         $factory->setListFactory($list_factory);

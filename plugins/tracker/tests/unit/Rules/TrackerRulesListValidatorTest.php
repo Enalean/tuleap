@@ -21,100 +21,69 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Rule;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElementFactory;
 use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var TrackerRulesListValidator
-     */
-    private $tracker_rules_list_validator;
+    private TrackerRulesListValidator $tracker_rules_list_validator;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $formelement_factory;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
+    private Tracker $tracker;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_List
-     */
-    private $source_field;
+    private Tracker_FormElement_Field_List&MockObject $source_field;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_List
-     */
-    private $target_field;
+    private Tracker_FormElement_Field_List&MockObject $target_field;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind;
+    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind_2;
+    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind_2;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind_3;
+    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind_3;
 
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind_4;
+    private Tracker_FormElement_Field_List_Bind_Static $bind_4;
 
-    /**
-     * @var array
-     */
-    private $list_rules;
+    private array $list_rules;
 
     public function setUp(): void
     {
-        $this->formelement_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->tracker             = \Mockery::mock(\Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(110);
+        $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->tracker             = TrackerTestBuilder::aTracker()->withId(110)->build();
 
-        $this->bind   = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_2 = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_3 = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_4 = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind   = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind_2 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind_3 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind_4 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
 
-        $this->source_field = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->source_field->shouldReceive('getID')->andReturns(123);
-        $this->source_field->shouldReceive('getLabel')->andReturns('aaaaa');
-        $this->source_field->shouldReceive('getBind')->andReturns($this->bind);
+        $this->source_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->source_field->method('getID')->willReturn(123);
+        $this->source_field->method('getLabel')->willReturn('aaaaa');
+        $this->source_field->method('getBind')->willReturn($this->bind);
 
-        $this->target_field = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->target_field->shouldReceive('getID')->andReturns(789);
-        $this->target_field->shouldReceive('getLabel')->andReturns('bbbbb');
-        $this->target_field->shouldReceive('getBind')->andReturns($this->bind_2);
+        $this->target_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->target_field->method('getID')->willReturn(789);
+        $this->target_field->method('getLabel')->willReturn('bbbbb');
+        $this->target_field->method('getBind')->willReturn($this->bind_2);
 
-        $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs([123])->andReturns($this->source_field);
-        $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs([789])->andReturns($this->target_field);
-        $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs([666])->andReturns(null);
+        $this->bind->method('formatArtifactValue')->willReturn('Champ1');
+        $this->bind_2->method('formatArtifactValue')->willReturn('Champ2');
+        $this->bind_3->method('formatArtifactValue')->willReturn('Champ3');
+        $this->bind_4->method('formatArtifactValue')->willReturn('Champ4');
 
-        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
-        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('Champ2');
-        $this->bind_3->shouldReceive('formatArtifactValue')->andReturns('Champ3');
-        $this->bind_4->shouldReceive('formatArtifactValue')->andReturns('Champ4');
-
-        $this->source_field->shouldReceive('setHasErrors')->withArgs([true]);
-        $this->target_field->shouldReceive('setHasErrors')->withArgs([true]);
+        $this->source_field->method('setHasErrors')->with(true);
+        $this->target_field->method('setHasErrors')->with(true);
 
         $this->tracker_rules_list_validator = new TrackerRulesListValidator($this->formelement_factory, new \Psr\Log\NullLogger());
 
@@ -149,41 +118,50 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->list_rules = [$rule_1, $rule_2, $rule_3, $rule_4, $rule_5, $rule_6, $rule_7];
 
-        $field_1 = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $field_1->shouldReceive('getBind')->andReturn($this->bind);
-        $field_1->shouldReceive('getID')->andReturn('101');
-        $field_1->shouldReceive('getLabel')->andReturn('f_1');
-        $field_1->shouldReceive('getAllValues')->andReturn(null);
-        $field_1->shouldReceive('setHasErrors')->withArgs([true]);
+        $field_1 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_1->method('getBind')->willReturn($this->bind);
+        $field_1->method('getID')->willReturn('101');
+        $field_1->method('getLabel')->willReturn('f_1');
+        $field_1->method('getAllValues')->willReturn(null);
+        $field_1->method('setHasErrors')->with(true);
 
-        $field_2 = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $field_2->shouldReceive('getBind')->andReturn($this->bind_2);
-        $field_2->shouldReceive('getID')->andReturn('102');
-        $field_2->shouldReceive('getLabel')->andReturn('f_2');
-        $field_2->shouldReceive('getAllValues')->andReturn(null);
-        $field_2->shouldReceive('setHasErrors')->withArgs([true]);
+        $field_2 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_2->method('getBind')->willReturn($this->bind_2);
+        $field_2->method('getID')->willReturn('102');
+        $field_2->method('getLabel')->willReturn('f_2');
+        $field_2->method('getAllValues')->willReturn(null);
+        $field_2->method('setHasErrors')->with(true);
 
-        $field_3 = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $field_3->shouldReceive('getBind')->andReturn($this->bind_3);
-        $field_3->shouldReceive('getID')->andReturn('103');
-        $field_3->shouldReceive('getLabel')->andReturn('f_3');
-        $field_3->shouldReceive('getAllValues')->andReturn(null);
-        $field_3->shouldReceive('setHasErrors')->withArgs([true]);
+        $field_3 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_3->method('getBind')->willReturn($this->bind_3);
+        $field_3->method('getID')->willReturn('103');
+        $field_3->method('getLabel')->willReturn('f_3');
+        $field_3->method('getAllValues')->willReturn(null);
+        $field_3->method('setHasErrors')->with(true);
 
-        $field_4 = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $field_4->shouldReceive('getBind')->andReturn($this->bind_4);
-        $field_4->shouldReceive('getID')->andReturn('104');
-        $field_4->shouldReceive('getLabel')->andReturn('f_4');
-        $field_4->shouldReceive('getAllValues')->andReturn(null);
-        $field_4->shouldReceive('setHasErrors')->withArgs([true]);
+        $field_4 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_4->method('getBind')->willReturn($this->bind_4);
+        $field_4->method('getID')->willReturn('104');
+        $field_4->method('getLabel')->willReturn('f_4');
+        $field_4->method('getAllValues')->willReturn(null);
+        $field_4->method('setHasErrors')->with(true);
 
-        $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs(['101'])->andReturn($field_1);
-        $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs(['102'])->andReturn($field_2);
-        $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs(['103'])->andReturn($field_3);
-        $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs(['104'])->andReturn($field_4);
+        $this->formelement_factory
+            ->method('getFormElementListById')
+            ->willReturnCallback(
+                fn (int $id) => match ($id) {
+                    101 => $field_1,
+                    102 => $field_2,
+                    103 => $field_3,
+                    104 => $field_4,
+                    123 => $this->source_field,
+                    789 => $this->target_field,
+                    666 => null,
+                }
+            );
 
-        $rule_date_factory = Mockery::mock(Tracker_Rule_Date_Factory::class);
-        $rule_date_factory->shouldReceive('searchByTrackerId')->andReturn([]);
+        $rule_date_factory = $this->createMock(Tracker_Rule_Date_Factory::class);
+        $rule_date_factory->method('searchByTrackerId')->willReturn([]);
     }
 
     public function tearDown(): void
@@ -320,8 +298,8 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfAFieldIsEmpty(): void
     {
-        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
-        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('');
+        $this->bind->method('formatArtifactValue')->willReturn('Champ1');
+        $this->bind_2->method('formatArtifactValue')->willReturn('');
 
         $value_field_list  = [
             123 => 456,
@@ -341,8 +319,8 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesValidWithEmptyTargetsValue(): void
     {
-        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
-        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('');
+        $this->bind->method('formatArtifactValue')->willReturn('Champ1');
+        $this->bind_2->method('formatArtifactValue')->willReturn('');
 
         $value_field_list  = [
             123 => 456,
@@ -362,8 +340,8 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfAFieldIsNoneValue(): void
     {
-        $this->bind->shouldReceive('formatArtifactValue')->andReturns('Champ1');
-        $this->bind_2->shouldReceive('formatArtifactValue')->andReturns('');
+        $this->bind->method('formatArtifactValue')->willReturn('Champ1');
+        $this->bind_2->method('formatArtifactValue')->willReturn('');
 
         $value_field_list = [
             123 => 456,
