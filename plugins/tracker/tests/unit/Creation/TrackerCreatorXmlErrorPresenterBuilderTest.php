@@ -23,18 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
 use XML_ParseError;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerCreatorXmlErrorPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TrackerCreatorXmlErrorDisplayer
-     */
-    private $displayer;
+    private TrackerCreatorXmlErrorPresenterBuilder $displayer;
 
     protected function setUp(): void
     {
@@ -55,7 +51,7 @@ class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $expected[1][2]   = [$error_invalid, $same_line_error];
         $expected[10][20] = [$error_required];
 
-        $this->assertEquals($expected, $this->displayer->buildErrors($errors));
+        self::assertEquals($expected, $this->displayer->buildErrors($errors));
     }
 
     public function testItBuildAStringOfXmlLinesAndBreaksOnTheFirstErrorSeen(): void
@@ -123,6 +119,6 @@ class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
         $built_string = $this->displayer->buildErrorLineDiff($xml_file, $errors);
 
-        $this->assertEquals($expected_text, $built_string);
+        self::assertEquals($expected_text, $built_string);
     }
 }
