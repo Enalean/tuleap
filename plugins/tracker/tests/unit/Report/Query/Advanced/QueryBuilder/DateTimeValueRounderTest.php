@@ -19,16 +19,11 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateTimeValueRounderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $previous_timezone;
-    /** @var DateTimeValueRounder */
-    private $date_time_value_rounder;
+    private string $previous_timezone;
+    private DateTimeValueRounder $date_time_value_rounder;
 
     protected function setUp(): void
     {

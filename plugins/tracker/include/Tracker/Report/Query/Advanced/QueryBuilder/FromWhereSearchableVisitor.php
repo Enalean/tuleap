@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker;
-use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -33,7 +33,7 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
  */
 final class FromWhereSearchableVisitor implements SearchableVisitor
 {
-    public function __construct(private readonly Tracker_FormElementFactory $form_element_factory)
+    public function __construct(private readonly RetrieveUsedFields $form_element_factory)
     {
     }
 

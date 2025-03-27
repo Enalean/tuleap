@@ -23,35 +23,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_Report_CriteriaFactory;
 use Tracker_Report_Renderer;
+use Tracker_Report_RendererFactory;
+use Tracker_ReportFactory;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_ReportFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
+    private Tracker_ReportFactory&MockObject $report_factory;
 
-    /**
-     * @var Mockery\Mock
-     */
-    private $report_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Report_RendererFactory
-     */
-    private $renderer_factory;
+    private Tracker_Report_RendererFactory&MockObject $renderer_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->report_factory = \Mockery::mock(\Tracker_ReportFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $criteria_factory     = \Mockery::spy(\Tracker_Report_CriteriaFactory::class);
-        $this->report_factory->shouldReceive('getCriteriaFactory')->andReturns($criteria_factory);
-        $this->renderer_factory = \Mockery::spy(\Tracker_Report_RendererFactory::class);
-        $this->report_factory->shouldReceive('getRendererFactory')->andReturns($this->renderer_factory);
+        $this->report_factory = $this->createPartialMock(Tracker_ReportFactory::class, ['getCriteriaFactory', 'getRendererFactory']);
+        $criteria_factory     = $this->createMock(Tracker_Report_CriteriaFactory::class);
+        $criteria_factory->method('getInstanceFromXML')->willReturn(null);
+        $this->report_factory->method('getCriteriaFactory')->willReturn($criteria_factory);
+        $this->renderer_factory = $this->createMock(Tracker_Report_RendererFactory::class);
+        $this->report_factory->method('getRendererFactory')->willReturn($this->renderer_factory);
     }
 
     protected function tearDown(): void
@@ -65,6 +61,8 @@ final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testImport(): void
     {
+        $this->renderer_factory->method('getInstanceFromXML')->willReturn(null);
+
         $xml                   = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TestTracker-1.xml'));
         $reports               = [];
         $reports_xml_mapping   = [];
@@ -89,8 +87,8 @@ final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testImportWithRendererID(): void
     {
-        $renderer = Mockery::mock(Tracker_Report_Renderer::class);
-        $this->renderer_factory->shouldReceive('getInstanceFromXML')->andReturn($renderer);
+        $renderer = $this->createMock(Tracker_Report_Renderer::class);
+        $this->renderer_factory->method('getInstanceFromXML')->willReturn($renderer);
 
         $xml                   = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/tracker_with_renderer_id.xml'));
         $reports               = [];

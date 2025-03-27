@@ -20,84 +20,69 @@
 
 namespace Tuleap\Tracker\Report;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_Report_Renderer_Table;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private Tracker_Report_Renderer_Table&MockObject $tracker_report_renderer_table;
 
-    /**
-     * @var Mockery\MockInterface|Tracker_Report_Renderer_Table
-     */
-    private $tracker_report_renderer_table;
+    private array $matchings_ids;
 
-    /**
-     * @var array
-     */
-    private $matchings_ids;
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElement_Field_ArtifactId
-     */
-    private $form_elements_1;
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElement_Field_ArtifactId
-     */
-    private $form_elements_2;
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElement_Field_ArtifactId
-     */
-    private $form_elements_3;
+    private Tracker_FormElement_Field_ArtifactId&MockObject $form_elements_1;
 
-    /**
-     * @var array
-     */
-    private $columns;
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml;
+    private Tracker_FormElement_Field_ArtifactId&MockObject $form_elements_2;
+
+    private Tracker_FormElement_Field_ArtifactId&MockObject $form_elements_3;
+
+    private array $columns;
+
+    private SimpleXMLElement $xml;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->tracker_report_renderer_table = \Mockery::mock(Tracker_Report_Renderer_Table::class)->makePartial();
+        $this->tracker_report_renderer_table = $this->createPartialMock(Tracker_Report_Renderer_Table::class, [
+            'getSort',
+            'getColumns',
+            'sortHasUsedField',
+        ]);
 
 
         $this->matchings_ids = [
             'last_changeset_id' => '98,99,100',
         ];
 
-        $this->form_elements_1 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
-        $this->form_elements_2 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
-        $this->form_elements_3 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
+        $this->form_elements_1 = $this->createMock(Tracker_FormElement_Field_ArtifactId::class);
+        $this->form_elements_2 = $this->createMock(Tracker_FormElement_Field_ArtifactId::class);
+        $this->form_elements_3 = $this->createMock(Tracker_FormElement_Field_ArtifactId::class);
 
-        $this->form_elements_1->shouldReceive('getId')->andReturn(101);
-        $this->form_elements_2->shouldReceive('getId')->andReturn(102);
-        $this->form_elements_3->shouldReceive('getId')->andReturn(103);
+        $this->form_elements_1->method('getId')->willReturn(101);
+        $this->form_elements_2->method('getId')->willReturn(102);
+        $this->form_elements_3->method('getId')->willReturn(103);
 
-        $this->form_elements_1->shouldReceive('isUsed')->andReturn(true);
-        $this->form_elements_2->shouldReceive('isUsed')->andReturn(true);
-        $this->form_elements_3->shouldReceive('isUsed')->andReturn(true);
+        $this->form_elements_1->method('isUsed')->willReturn(true);
+        $this->form_elements_2->method('isUsed')->willReturn(true);
+        $this->form_elements_3->method('isUsed')->willReturn(true);
 
-        $this->form_elements_1->shouldReceive('isMultiple')->andReturn(false);
-        $this->form_elements_2->shouldReceive('isMultiple')->andReturn(false);
-        $this->form_elements_3->shouldReceive('isMultiple')->andReturn(false);
+        $this->form_elements_1->method('isMultiple')->willReturn(false);
+        $this->form_elements_2->method('isMultiple')->willReturn(false);
+        $this->form_elements_3->method('isMultiple')->willReturn(false);
 
-        $this->form_elements_1->shouldReceive('getQuerySelect')->andReturn('a.id AS `artifact_id`');
-        $this->form_elements_1->shouldReceive('getQueryFrom')->andReturn('');
+        $this->form_elements_1->method('getQuerySelect')->willReturn('a.id AS `artifact_id`');
+        $this->form_elements_1->method('getQueryFrom')->willReturn('');
 
-        $this->form_elements_2->shouldReceive('getQuerySelect')->andReturn('a.id AS `artifact_id`');
-        $this->form_elements_2->shouldReceive('getQueryFrom')->andReturn('');
+        $this->form_elements_2->method('getQuerySelect')->willReturn('a.id AS `artifact_id`');
+        $this->form_elements_2->method('getQueryFrom')->willReturn('');
 
-        $this->form_elements_3->shouldReceive('getQuerySelect')->andReturn('a.id AS `artifact_id`');
-        $this->form_elements_3->shouldReceive('getQueryFrom')->andReturn('');
+        $this->form_elements_3->method('getQuerySelect')->willReturn('a.id AS `artifact_id`');
+        $this->form_elements_3->method('getQueryFrom')->willReturn('');
 
-        $this->form_elements_1->shouldReceive('getQueryOrderby')->andReturn('artifact_id');
+        $this->form_elements_1->method('getQueryOrderby')->willReturn('artifact_id');
 
         $this->columns = [
             '101' => [
@@ -114,14 +99,14 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->tracker_report_renderer_table->shouldReceive('sortHasUsedField')->andReturn(true);
+        $this->tracker_report_renderer_table->method('sortHasUsedField')->willReturn(true);
 
         $this->xml = new SimpleXMLElement('<field/>');
     }
 
     public function testOrderNotDefinedWhenNoSortDefined(): void
     {
-        $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn([]);
+        $this->tracker_report_renderer_table->method('getSort')->willReturn([]);
 
         self::assertSame(
             [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,99,100) '],
@@ -129,7 +114,7 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItAddOnlyNatureInReportXmlExport()
+    public function testItAddOnlyNatureInReportXmlExport(): void
     {
         $field_info = [
             'field_id'       => 10,
@@ -138,14 +123,14 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping = $this->mapFieldWithNature(10, '_is_child', null);
 
-        $this->tracker_report_renderer_table->shouldReceive('getColumns')->andReturn($mapping['field']);
-        $this->tracker_report_renderer_table->shouldReceive('getSort');
+        $this->tracker_report_renderer_table->method('getColumns')->willReturn($mapping['field']);
+        $this->tracker_report_renderer_table->method('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
         $this->assertEquals('_is_child', (string) $this->xml->columns->field['artlink-nature']);
     }
 
-    public function testItAddOnlyFormatInReportXmlExport()
+    public function testItAddOnlyFormatInReportXmlExport(): void
     {
         $field_info = [
             'field_id'              => 11,
@@ -154,14 +139,14 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping = $this->mapFieldWithNature(11, null, '#%id');
 
-        $this->tracker_report_renderer_table->shouldReceive('getColumns')->andReturn($mapping['field']);
-        $this->tracker_report_renderer_table->shouldReceive('getSort');
+        $this->tracker_report_renderer_table->method('getColumns')->willReturn($mapping['field']);
+        $this->tracker_report_renderer_table->method('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
         $this->assertEquals('#%id', (string) $this->xml->columns->field['artlink-nature-format']);
     }
 
-    public function testItAddBothNatureAndFormatInTrackerReports()
+    public function testItAddBothNatureAndFormatInTrackerReports(): void
     {
         $field_info = [
             'field_id'              => 12,
@@ -171,15 +156,15 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping = $this->mapFieldWithNature(12, '_is_child', '#%id');
 
-        $this->tracker_report_renderer_table->shouldReceive('getColumns')->andReturn($mapping['field']);
-        $this->tracker_report_renderer_table->shouldReceive('getSort');
+        $this->tracker_report_renderer_table->method('getColumns')->willReturn($mapping['field']);
+        $this->tracker_report_renderer_table->method('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
         $this->assertEquals('_is_child', (string) $this->xml->columns->field['artlink-nature']);
         $this->assertEquals('#%id', (string) $this->xml->columns->field['artlink-nature-format']);
     }
 
-    public function testItNeverAddNatureInTrackerReportsWithoutNature()
+    public function testItNeverAddNatureInTrackerReportsWithoutNature(): void
     {
         $field_info = [
             'field_id' => 13,
@@ -187,19 +172,16 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping = $this->mapFieldWithNature(13, null, null);
 
-        $this->tracker_report_renderer_table->shouldReceive('getColumns')->andReturn($mapping['field']);
-        $this->tracker_report_renderer_table->shouldReceive('getSort');
+        $this->tracker_report_renderer_table->method('getColumns')->willReturn($mapping['field']);
+        $this->tracker_report_renderer_table->method('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
         $this->assertEquals(null, (string) $this->xml->columns);
     }
 
-    private function mapFieldWithNature($id, $nature, $format)
+    private function mapFieldWithNature(int $id, ?string $nature, ?string $format): array
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_String::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getId')->andReturn($id);
+        $field                              = StringFieldBuilder::aStringField($id)->build();
         $xml_mapping['F' . $field->getId()] = $field->getId();
 
         $field_mapping = [

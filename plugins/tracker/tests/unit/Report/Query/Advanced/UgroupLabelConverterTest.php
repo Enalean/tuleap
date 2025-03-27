@@ -20,46 +20,52 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use BaseLanguage;
+use BaseLanguageFactory;
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UgroupLabelConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use LegacyTabTranslationsSupport;
 
-    /** @var  UgroupLabelConverter */
-    private $ugroup_label_converter;
-    /** @var  \BaseLanguageFactory */
-    private $base_language_factory;
-    /** @var  \BaseLanguage */
-    private $english_base_language;
-    /** @var  \BaseLanguage */
-    private $french_base_language;
+    private UgroupLabelConverter $ugroup_label_converter;
+    private BaseLanguageFactory&MockObject $base_language_factory;
+    private BaseLanguage&MockObject $english_base_language;
+    private BaseLanguage&MockObject $french_base_language;
 
     protected function setUp(): void
     {
-        $this->english_base_language = \Mockery::spy(\BaseLanguage::class);
-        $this->french_base_language  = \Mockery::spy(\BaseLanguage::class);
-        $this->base_language_factory = \Mockery::spy(\BaseLanguageFactory::class);
-        $this->base_language_factory->shouldReceive('getBaseLanguage')->with('en_US')->andReturns($this->english_base_language);
-        $this->base_language_factory->shouldReceive('getBaseLanguage')->with('fr_FR')->andReturns($this->french_base_language);
+        $this->english_base_language = $this->createMock(\BaseLanguage::class);
+        $this->french_base_language  = $this->createMock(\BaseLanguage::class);
+        $this->base_language_factory = $this->createMock(\BaseLanguageFactory::class);
+        $this->base_language_factory->method('getBaseLanguage')
+            ->willReturnCallback(fn (string $locale) => match ($locale) {
+                'en_US' => $this->english_base_language,
+                'fr_FR' => $this->french_base_language,
+            });
 
-        $this->english_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_project_members')->andReturns('Project members');
-        $this->english_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_project_admins')->andReturns('Project administrators');
-        $this->english_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_authenticated_users')->andReturns('Registered and restricted users');
-        $this->english_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_registered_users')->andReturns('Registered users');
-        $this->english_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_file_manager_admin_name_key')->andReturns('file_manager_admins');
-        $this->english_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_wiki_admin_name_key')->andReturns('wiki_admins');
+        $this->english_base_language->method('getText')
+            ->willReturnCallback(static fn (string $pagename, string $category) => match ($category) {
+                'ugroup_project_members' => 'Project members',
+                'ugroup_project_admins' => 'Project administrators',
+                'ugroup_authenticated_users' => 'Registered and restricted users',
+                'ugroup_registered_users' => 'Registered users',
+                'ugroup_file_manager_admin_name_key' => 'file_manager_admins',
+                'ugroup_wiki_admin_name_key' => 'wiki_admins',
+            });
 
-        $this->french_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_project_members')->andReturns('Membres du projet');
-        $this->french_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_project_admins')->andReturns('Administrateurs du projet');
-        $this->french_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_authenticated_users')->andReturns('Utilisateurs enregistrés + restreints');
-        $this->french_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_registered_users')->andReturns('Utilisateurs enregistrés');
-        $this->french_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_file_manager_admin_name_key')->andReturns('admins_gestionnaire_fichier');
-        $this->french_base_language->shouldReceive('getText')->with('project_ugroup', 'ugroup_wiki_admin_name_key')->andReturns('admins_wiki');
+        $this->french_base_language->method('getText')
+            ->willReturnCallback(static fn (string $pagename, string $category) => match ($category) {
+                'project_ugroup', 'ugroup_project_members' => 'Membres du projet',
+                'ugroup_project_admins' => 'Administrateurs du projet',
+                'ugroup_authenticated_users' => 'Utilisateurs enregistrés + restreints',
+                'ugroup_registered_users' => 'Utilisateurs enregistrés',
+                'ugroup_file_manager_admin_name_key' => 'admins_gestionnaire_fichier',
+                'ugroup_wiki_admin_name_key' => 'admins_wiki',
+            });
     }
 
     protected function tearDown(): void

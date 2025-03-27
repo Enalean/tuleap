@@ -19,7 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualExpression;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -30,14 +29,12 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBu
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForTextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItUsesTheComparisonInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery(): void
     {
         $comparison = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
         $field_id   = 101;
-        $field      = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $field->shouldReceive('getId')->andReturn($field_id);
+        $field      = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field->method('getId')->willReturn($field_id);
 
         $db = $this->createMock(EasyDB::class);
         $db->method('escapeLikeValue')->willReturnArgument(0);

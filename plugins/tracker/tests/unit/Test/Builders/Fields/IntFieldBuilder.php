@@ -30,6 +30,7 @@ final class IntFieldBuilder
     private string $label                       = 'Initial effort';
     private bool $read_permission               = false;
     private ?\PFUser $user_with_read_permission = null;
+    private bool $use_it                        = true;
     private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
@@ -45,6 +46,13 @@ final class IntFieldBuilder
     public function withName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function unused(): self
+    {
+        $this->use_it = false;
+
         return $this;
     }
 
@@ -77,7 +85,7 @@ final class IntFieldBuilder
             $this->name,
             $this->label,
             '',
-            true,
+            $this->use_it,
             'P',
             false,
             '',

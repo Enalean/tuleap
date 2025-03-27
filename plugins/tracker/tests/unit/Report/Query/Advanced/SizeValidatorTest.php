@@ -19,7 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -29,12 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SizeValidatorVisitor
-     */
-    private $validator;
+    private SizeValidatorVisitor $validator;
 
     protected function setUp(): void
     {
@@ -43,9 +37,13 @@ final class SizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowAnExceptionIfDeptDoesNotExceedLimit(): void
     {
-        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
-        $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
-        $expression    = new AndExpression($subexpression, $tail);
+        $subexpression = $this->createMock(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
+        $subexpression->method('acceptTermVisitor');
+
+        $tail = $this->createMock(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
+        $tail->method('acceptLogicalVisitor');
+
+        $expression = new AndExpression($subexpression, $tail);
 
         $expression->acceptLogicalVisitor($this->validator, new SizeValidatorParameters(0));
 
