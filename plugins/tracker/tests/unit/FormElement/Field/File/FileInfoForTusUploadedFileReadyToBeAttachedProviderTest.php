@@ -22,157 +22,91 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_File;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
-use Tuleap\Tus\TusFileInformation;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Upload\FileAlreadyUploadedInformation;
+use Tuleap\Upload\FileBeingUploadedInformation;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|FileBeingUploadedInformationProvider
-     */
-    private $file_information_provider;
-    /**
-     * @var Mockery\MockInterface|FileOngoingUploadDao
-     */
-    private $ongoing_upload_dao;
-    /**
-     * @var Mockery\MockInterface|PFUser
-     */
-    private $current_user;
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElement_Field_File
-     */
-    private $field;
-    /**
-     * @var AttachmentForTusUploadCreator
-     */
-    private $provider;
+    private FileBeingUploadedInformationProvider&MockObject $file_information_provider;
+    private FileOngoingUploadDao&MockObject $ongoing_upload_dao;
+    private PFUser $current_user;
+    private Tracker_FormElement_Field_File $field;
+    private FileInfoForTusUploadedFileReadyToBeAttachedProvider|AttachmentForTusUploadCreator $provider;
 
     public function setUp(): void
     {
-        $this->current_user              = Mockery::mock(PFUser::class);
-        $this->field                     = Mockery::mock(Tracker_FormElement_Field_File::class);
-        $this->ongoing_upload_dao        = Mockery::mock(FileOngoingUploadDao::class);
-        $this->file_information_provider = Mockery::mock(FileBeingUploadedInformationProvider::class);
+        $this->current_user              = UserTestBuilder::buildWithId(101);
+        $this->field                     = FileFieldBuilder::aFileField(1000)->build();
+        $this->ongoing_upload_dao        = $this->createMock(FileOngoingUploadDao::class);
+        $this->file_information_provider = $this->createMock(FileBeingUploadedInformationProvider::class);
 
         $this->provider = new FileInfoForTusUploadedFileReadyToBeAttachedProvider(
             $this->file_information_provider,
             $this->ongoing_upload_dao
         );
-
-        $this->current_user->shouldReceive(['getId' => 101]);
     }
 
     public function testItReturnsNullIfUploadedFileCannotBeFound(): void
     {
-        $this->file_information_provider
-            ->shouldReceive('getFileInformationByIdForUser')
-            ->with(42, $this->current_user)
-            ->andReturn(null);
+        $this->file_information_provider->method('getFileInformationByIdForUser')->with(42, $this->current_user)->willReturn(null);
 
-        $this->assertNull(
-            $this->provider->getFileInfo(42, $this->current_user, $this->field)
-        );
+        self::assertNull($this->provider->getFileInfo(42, $this->current_user, $this->field));
     }
 
     public function testItReturnsNullIfFileIsNotComplete(): void
     {
-        $file_information = Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive(
-            [
-                'getLength' => 123,
-                'getOffset' => 42,
-            ]
-        );
-        $this->file_information_provider
-            ->shouldReceive('getFileInformationByIdForUser')
-            ->with(42, $this->current_user)
-            ->andReturn($file_information);
+        $this->file_information_provider->method('getFileInformationByIdForUser')->with(42, $this->current_user)
+            ->willReturn(new FileBeingUploadedInformation(42, '', 123, 42));
 
-        $attachment = $this->provider->getFileInfo(42, $this->current_user, $this->field);
-        $this->assertNull($attachment);
+        self::assertNull($this->provider->getFileInfo(42, $this->current_user, $this->field));
     }
 
     public function testItReturnsNullIfDataIsInconsistent(): void
     {
-        $file_information = Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive(
-            [
-                'getLength' => 123,
-                'getOffset' => 123,
-                'getID'     => 42,
-            ]
-        );
-        $this->file_information_provider
-            ->shouldReceive('getFileInformationByIdForUser')
-            ->with(42, $this->current_user)
-            ->andReturn($file_information);
+        $this->file_information_provider->method('getFileInformationByIdForUser')->with(42, $this->current_user)
+            ->willReturn(new FileAlreadyUploadedInformation(42, '', 123));
 
-        $this->ongoing_upload_dao->shouldReceive(['searchFileOngoingUploadById' => null]);
+        $this->ongoing_upload_dao->method('searchFileOngoingUploadById')->willReturn(null);
 
-        $attachment = $this->provider->getFileInfo(42, $this->current_user, $this->field);
-        $this->assertNull($attachment);
+        self::assertNull($this->provider->getFileInfo(42, $this->current_user, $this->field));
     }
 
     public function testItReturnsNullIfFieldIdForFileIsNotTheSameThanTheCurrentOne(): void
     {
-        $file_information = Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive(
-            [
-                'getLength' => 123,
-                'getOffset' => 123,
-                'getID'     => 42,
-            ]
-        );
-        $this->file_information_provider
-            ->shouldReceive('getFileInformationByIdForUser')
-            ->with(42, $this->current_user)
-            ->andReturn($file_information);
+        $this->file_information_provider->method('getFileInformationByIdForUser')->with(42, $this->current_user)
+            ->willReturn(new FileAlreadyUploadedInformation(42, '', 123));
 
-        $this->field->shouldReceive(['getId' => 1000]);
-        $this->ongoing_upload_dao->shouldReceive(['searchFileOngoingUploadById' => ['field_id' => 1001]]);
+        $this->ongoing_upload_dao->method('searchFileOngoingUploadById')->willReturn(['field_id' => 1001]);
 
-        $attachment = $this->provider->getFileInfo(42, $this->current_user, $this->field);
-        $this->assertNull($attachment);
+        self::assertNull($this->provider->getFileInfo(42, $this->current_user, $this->field));
     }
 
     public function testItReturnsAttachmentAndDeleteFromUploadingTable(): void
     {
-        $file_information = Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive(
-            [
-                'getLength' => 123,
-                'getOffset' => 123,
-                'getID'     => 42,
-            ]
-        );
-        $this->file_information_provider
-            ->shouldReceive('getFileInformationByIdForUser')
-            ->with(42, $this->current_user)
-            ->andReturn($file_information);
+        $this->file_information_provider->method('getFileInformationByIdForUser')->with(42, $this->current_user)
+            ->willReturn(new FileAlreadyUploadedInformation(42, '', 123));
 
-        $this->field->shouldReceive(['getId' => 1001]);
-        $this->ongoing_upload_dao->shouldReceive('searchFileOngoingUploadById')->andReturn(
-            [
-                'id'           => 42,
-                'field_id'     => 1001,
-                'submitted_by' => 101,
-                'filetype'     => 'text/plain',
-                'filename'     => 'readme.mkd',
-                'description'  => '',
-                'filesize'     => 123,
-            ]
-        );
+        $this->field->id = 1001;
+        $this->ongoing_upload_dao->method('searchFileOngoingUploadById')->willReturn([
+            'id'           => 42,
+            'field_id'     => 1001,
+            'submitted_by' => 101,
+            'filetype'     => 'text/plain',
+            'filename'     => 'readme.mkd',
+            'description'  => '',
+            'filesize'     => 123,
+        ]);
 
-        $attachment = $this->provider->getFileInfo(42, $this->current_user, $this->field);
-        $this->assertEquals(42, $attachment->getId());
+        self::assertEquals(42, $this->provider->getFileInfo(42, $this->current_user, $this->field)->getId());
     }
 }

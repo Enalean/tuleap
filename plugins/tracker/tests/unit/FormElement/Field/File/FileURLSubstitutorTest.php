@@ -22,57 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FileURLSubstitutorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FileURLSubstitutorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testEmptyString(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             '',
-            (new FileURLSubstitutor())->substituteURLsInHTML('', \Mockery::mock(CreatedFileURLMapping::class))
+            (new FileURLSubstitutor())->substituteURLsInHTML('', new CreatedFileURLMapping())
         );
     }
 
     public function testEmptyMapping(): void
     {
-        $url_mapping = \Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping
-            ->shouldReceive('isEmpty')
-            ->andReturn(true)
-            ->once();
-
-        $this->assertEquals(
+        self::assertEquals(
             '<img src="/path/to/file.png">',
             (new FileURLSubstitutor())->substituteURLsInHTML(
                 '<img src="/path/to/file.png">',
-                $url_mapping
+                new CreatedFileURLMapping()
             )
         );
     }
 
     public function testSubstitution(): void
     {
-        $url_mapping = \Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping
-            ->shouldReceive('isEmpty')
-            ->andReturn(false)
-            ->once();
-        $url_mapping
-            ->shouldReceive('get')
-            ->with('/path/to/file1.png')
-            ->andReturn('/new/path/to/file1.png')
-            ->once();
-        $url_mapping
-            ->shouldReceive('get')
-            ->with('/path/to/file2.png')
-            ->andReturn('/new/path/to/file2.png')
-            ->once();
+        $url_mapping = new CreatedFileURLMapping();
+        $url_mapping->add('/path/to/file1.png', '/new/path/to/file1.png');
+        $url_mapping->add('/path/to/file2.png', '/new/path/to/file2.png');
 
-        $this->assertEquals(
+        self::assertEquals(
             '<ul><li><img src="/new/path/to/file1.png"></li><li><img src="/new/path/to/file2.png"></li></ul>',
             (new FileURLSubstitutor())->substituteURLsInHTML(
                 '<ul><li><img src="/path/to/file1.png"></li><li><img src="/path/to/file2.png"></li></ul>',
@@ -83,23 +64,10 @@ class FileURLSubstitutorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNoSubstitutionForUnknownPath(): void
     {
-        $url_mapping = \Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping
-            ->shouldReceive('isEmpty')
-            ->andReturn(false)
-            ->once();
-        $url_mapping
-            ->shouldReceive('get')
-            ->with('/path/to/file1.png')
-            ->andReturn(null)
-            ->once();
-        $url_mapping
-            ->shouldReceive('get')
-            ->with('/path/to/file2.png')
-            ->andReturn(null)
-            ->once();
+        $url_mapping = new CreatedFileURLMapping();
+        $url_mapping->add('dummy', 'dummy');
 
-        $this->assertEquals(
+        self::assertEquals(
             '<ul><li><img src="/path/to/file1.png"></li><li><img src="/path/to/file2.png"></li></ul>',
             (new FileURLSubstitutor())->substituteURLsInHTML(
                 '<ul><li><img src="/path/to/file1.png"></li><li><img src="/path/to/file2.png"></li></ul>',
@@ -110,17 +78,11 @@ class FileURLSubstitutorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNoSubstitutionForInvalidHTML(): void
     {
-        $url_mapping = \Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping
-            ->shouldReceive('isEmpty')
-            ->andReturn(false)
-            ->once();
-        $url_mapping
-            ->shouldReceive('get')
-            ->with('/path/to/file1.png')
-            ->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects(self::once())->method('isEmpty')->willReturn(false);
+        $url_mapping->expects(self::never())->method('get')->with('/path/to/file1.png');
 
-        $this->assertEquals(
+        self::assertEquals(
             '<p><img src="/path/to/file1.png"',
             (new FileURLSubstitutor())->substituteURLsInHTML(
                 '<p><img src="/path/to/file1.png"',
