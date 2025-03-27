@@ -15,6 +15,7 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:^",
+    "@tuleap/tlp-popovers": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue2-dompurify-html": "workspace:*",
     "@tuleap/vue2-gettext-composition-helper": "workspace:^",

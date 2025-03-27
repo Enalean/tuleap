@@ -19,15 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import * as tlp_popovers from "@tuleap/tlp-popovers";
 import WrongColorPopover from "./WrongColorPopover.vue";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
 
 describe("WrongColorPopover", () => {
     it("initiates a popover to inform user that the chosen color is wrong", async () => {
-        const tlpCreatePopover = jest.spyOn(tlp, "createPopover").mockImplementation();
+        const tlpCreatePopover = jest.spyOn(tlp_popovers, "createPopover").mockImplementation();
 
         const wrapper = shallowMount(WrongColorPopover, {
             localVue: await createTaskboardLocalVue(),

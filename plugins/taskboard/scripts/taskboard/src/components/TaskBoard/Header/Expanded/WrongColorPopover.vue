@@ -33,7 +33,7 @@
         >
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <span tag="h1" class="tlp-popover-title">
+                <span class="tlp-popover-title">
                     {{ $gettext("Incompatible usage of color") }}
                 </span>
             </div>
@@ -45,50 +45,44 @@
         </section>
     </div>
 </template>
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useState } from "vuex-composition-helpers";
+import { createPopover } from "@tuleap/tlp-popovers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import type { State } from "../../../../store/type";
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref } from "vue-property-decorator";
-import { createPopover } from "tlp";
-import { State } from "vuex-class";
+const gettext_provider = useGettext();
 
-@Component
-export default class TaskBoardHeaderCell extends Vue {
-    @Prop({ required: true })
-    readonly color!: string;
+const props = defineProps<{ color: string }>();
 
-    @State
-    readonly admin_url!: string;
+const { admin_url } = useState<State>(["admin_url"]);
 
-    @Ref() trigger!: HTMLElement;
-    @Ref() container!: HTMLElement;
+const trigger = ref<HTMLElement>();
+const container = ref<HTMLElement>();
 
-    mounted(): void {
-        if (this.trigger && this.container) {
-            createPopover(this.trigger, this.container);
-        }
+onMounted(() => {
+    if (trigger.value && container.value) {
+        createPopover(trigger.value, container.value);
     }
+});
 
-    get legacy_palette_message(): string {
-        return this.$gettextInterpolate(
-            this.$gettext(
-                "The column is configured to use a color (%{ color }) from the legacy palette.",
-            ),
-            {
-                color: `<span class="taskboard-header-wrong-color-preview"><span class="taskboard-header-wrong-color-preview-color" style="background: ${this.color};"></span>
-                <code>${this.color}</code></span>`,
-            },
-            true,
-        );
-    }
+const legacy_palette_message = computed(() =>
+    gettext_provider.interpolate(
+        gettext_provider.$gettext(
+            "The column is configured to use a color (%{ color }) from the legacy palette.",
+        ),
+        {
+            color: `<span class="taskboard-header-wrong-color-preview"><span class="taskboard-header-wrong-color-preview-color" style="background: ${props.color};"></span><code>${props.color}</code></span>`,
+        },
+        true,
+    ),
+);
 
-    get adjust_configuration_message(): string {
-        return this.$gettextInterpolate(
-            this.$gettext(
-                'Please <a href="%{ admin_url }">adjust configuration</a> to use a suitable color.',
-            ),
-            { admin_url: this.admin_url },
-        );
-    }
-}
+const adjust_configuration_message = gettext_provider.interpolate(
+    gettext_provider.$gettext(
+        `Please <a href="%{ admin_url }">adjust configuration</a> to use a suitable color.`,
+    ),
+    { admin_url: admin_url.value },
+);
 </script>
