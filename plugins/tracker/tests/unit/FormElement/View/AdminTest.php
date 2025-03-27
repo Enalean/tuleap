@@ -17,35 +17,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_View_AdminTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\Tracker\FormElement\View;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_String;
+use Tracker_FormElement_View_Admin;
+use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class AdminTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName(): void
     {
         $admin  = $this->givenAnAdminWithOriginalProjectAndTracker('Tuleap', 'Bugs');
         $result = $admin->fetchCustomHelpForShared();
-        $this->assertMatchesRegularExpression('%Bugs%', $result);
-        $this->assertMatchesRegularExpression('%Tuleap%', $result);
-        $this->assertMatchesRegularExpression('%<a href="' . TRACKER_BASE_URL . '/\?tracker=101&func=admin-formElement-update-view&formElement=666"%', $result);
+        self::assertMatchesRegularExpression('%Bugs%', $result);
+        self::assertMatchesRegularExpression('%Tuleap%', $result);
+        self::assertMatchesRegularExpression('%<a href="' . TRACKER_BASE_URL . '/\?tracker=101&func=admin-formElement-update-view&formElement=666"%', $result);
     }
 
-    public function givenAnAdminWithOriginalProjectAndTracker(string $projectName, string $trackerName): Tracker_FormElement_View_Admin
+    public function givenAnAdminWithOriginalProjectAndTracker(string $project_name, string $tracker_name): Tracker_FormElement_View_Admin
     {
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getPublicName')->andReturns($projectName);
+        $project = ProjectTestBuilder::aProject()->withPublicName($project_name)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName($tracker_name)->withProject($project)->build();
 
-        $tracker = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getName')->andReturns($trackerName);
-        $tracker->shouldReceive('getId')->andReturns(101);
-        $tracker->shouldReceive('getProject')->andReturns($project);
-
-        $original = Mockery::mock(Tracker_FormElement_Field_String::class, [666, null, null, null, null, null, null, null, null, null, null, null])->makePartial()->shouldAllowMockingProtectedMethods();
-        $original->shouldReceive('getTracker')->andReturn($tracker);
-
-        $element = Mockery::mock(Tracker_FormElement_Field_String::class, [null, null, null, null, null, null, null, null, null, null, null, $original])->makePartial()->shouldAllowMockingProtectedMethods();
+        $original = StringFieldBuilder::aStringField(666)->inTracker($tracker)->build();
+        $element  = StringFieldBuilder::aStringField(667)->withOriginalField($original)->build();
 
         return new Tracker_FormElement_View_Admin($element, []);
     }
@@ -55,48 +58,27 @@ final class Tracker_FormElement_View_AdminTest extends \Tuleap\Test\PHPUnit\Test
         $element = $this->givenAnElementWithManyCopies();
         $admin   = new Tracker_FormElement_View_Admin($element, []);
         $content = $admin->fetchSharedUsage();
-        $this->assertMatchesRegularExpression('/Canard/', $content);
-        $this->assertMatchesRegularExpression('/Saucisse/', $content);
+        self::assertMatchesRegularExpression('/Canard/', $content);
+        self::assertMatchesRegularExpression('/Saucisse/', $content);
     }
 
-    private function givenAnElementWithManyCopies()
+    private function givenAnElementWithManyCopies(): Tracker_FormElement_Field_String
     {
-        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $factory = $this->createMock(Tracker_FormElementFactory::class);
 
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getPublicName')->andReturns('Project');
+        $project = ProjectTestBuilder::aProject()->withPublicName('Project')->build();
 
-        $element = $this->getStringFileWithId(1, null);
-        $element->shouldReceive('getFormElementFactory')->andReturn($factory)->once();
+        $element = StringFieldBuilder::aStringField(1)->build();
+        $element->setFormElementFactory($factory);
 
-        $tracker1 = \Mockery::spy(\Tracker::class);
-        $tracker1->shouldReceive('getId')->andReturns('123');
-        $tracker1->shouldReceive('getName')->andReturns('Canard');
-        $tracker1->shouldReceive('getProject')->andReturns($project);
-        $copy1 = $this->getStringFileWithId(10, $element);
-        $copy2 = $this->getStringFileWithId(20, $element);
-        $copy1->shouldReceive('getTracker')->andReturn($tracker1);
-        $copy2->shouldReceive('getTracker')->andReturn($tracker1);
+        $tracker1 = TrackerTestBuilder::aTracker()->withId(123)->withName('Canard')->withProject($project)->build();
+        $copy1    = StringFieldBuilder::aStringField(10)->withOriginalField($element)->inTracker($tracker1)->build();
+        $copy2    = StringFieldBuilder::aStringField(20)->withOriginalField($element)->inTracker($tracker1)->build();
 
-        $tracker3 = \Mockery::spy(\Tracker::class);
-        $tracker3->shouldReceive('getId')->andReturns('124');
-        $tracker3->shouldReceive('getName')->andReturns('Saucisse');
-        $tracker3->shouldReceive('getProject')->andReturns($project);
-        $copy3 = $this->getStringFileWithId(30, $element);
-        $copy3->shouldReceive('getTracker')->andReturn($tracker3);
+        $tracker3 = TrackerTestBuilder::aTracker()->withId(124)->withName('Saucisse')->withProject($project)->build();
+        $copy3    = StringFieldBuilder::aStringField(30)->withOriginalField($element)->inTracker($tracker3)->build();
 
-        $factory->shouldReceive('getSharedTargets')->with($element)->andReturns([$copy1, $copy2, $copy3]);
+        $factory->method('getSharedTargets')->with($element)->willReturn([$copy1, $copy2, $copy3]);
         return $element;
-    }
-
-    /**
-     * @return \Mockery\Mock |Tracker_FormElement_Field_String
-     */
-    private function getStringFileWithId(int $id, ?Tracker_FormElement_Field_String $original_field)
-    {
-        return Mockery::mock(
-            Tracker_FormElement_Field_String::class,
-            [$id, null, null, null, null, null, null, null, null, null, null, $original_field]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
     }
 }
