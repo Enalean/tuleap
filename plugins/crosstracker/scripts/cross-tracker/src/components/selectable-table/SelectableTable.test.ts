@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, afterEach } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
@@ -32,22 +32,17 @@ import {
     EMITTER,
     GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
-    QUERY_STATE,
-    RETRIEVE_ARTIFACTS_TABLE,
     WIDGET_ID,
+    RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
-import type {
-    ArtifactsTableWithTotal,
-    RetrieveArtifactsTable,
-} from "../../domain/RetrieveArtifactsTable";
+import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable";
 import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "../EmptyState.vue";
-import type { QueryState } from "../../domain/QueryState";
 import SelectableCell from "./SelectableCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
@@ -65,9 +60,8 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
-    let query_state: QueryState;
     let is_xslx_export_allowed: boolean;
-    let writing_query: Query;
+    let query: Query;
     let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
 
@@ -76,10 +70,9 @@ describe(`SelectableTable`, () => {
     };
 
     beforeEach(() => {
-        query_state = "query-saved";
         is_xslx_export_allowed = true;
 
-        writing_query = {
+        query = {
             id: "",
             tql_query: `SELECT start_date WHERE start_date != ''`,
             title: "",
@@ -113,7 +106,6 @@ describe(`SelectableTable`, () => {
                         "date-with-time",
                     ),
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
-                    [QUERY_STATE.valueOf()]: ref(query_state),
                     [WIDGET_ID.valueOf()]: 15,
                     [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xslx_export_allowed),
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
@@ -123,7 +115,7 @@ describe(`SelectableTable`, () => {
                 },
             },
             props: {
-                writing_query,
+                query,
             },
         });
     };
@@ -207,106 +199,6 @@ describe(`SelectableTable`, () => {
 
             expect(dispatched_fault_events).toHaveLength(1);
             expect(dispatched_fault_events[0].fault.isArtifactsRetrieval()).toBe(true);
-        });
-    });
-    describe("loadArtifact()", () => {
-        let initial_content_with_total: ArtifactsTableWithTotal;
-        let query_content_with_total: ArtifactsTableWithTotal;
-        beforeEach(() => {
-            const initial_content = new ArtifactsTableBuilder()
-                .withColumn(DATE_COLUMN_NAME)
-                .withColumn(NUMERIC_COLUMN_NAME)
-                .withArtifactRow(
-                    new ArtifactRowBuilder()
-                        .addCell(DATE_COLUMN_NAME, {
-                            type: DATE_CELL,
-                            value: Option.fromValue("2021-09-26T07:40:03+09:00"),
-                            with_time: true,
-                        })
-                        .addCell(NUMERIC_COLUMN_NAME, {
-                            type: NUMERIC_CELL,
-                            value: Option.fromValue(74),
-                        })
-                        .build(),
-                )
-                .withArtifactRow(
-                    new ArtifactRowBuilder()
-                        .addCell(DATE_COLUMN_NAME, {
-                            type: DATE_CELL,
-                            value: Option.fromValue("2025-09-19T13:54:07+10:00"),
-                            with_time: true,
-                        })
-                        .addCell(NUMERIC_COLUMN_NAME, {
-                            type: NUMERIC_CELL,
-                            value: Option.fromValue(3),
-                        })
-                        .build(),
-                )
-                .build();
-
-            const query_content = new ArtifactsTableBuilder()
-                .withColumn(TEXT_COLUMN_NAME)
-                .withArtifactRow(
-                    new ArtifactRowBuilder()
-                        .addCell(TEXT_COLUMN_NAME, {
-                            type: TEXT_CELL,
-                            value: "not hehehe",
-                        })
-                        .build(),
-                )
-                .withArtifactRow(
-                    new ArtifactRowBuilder()
-                        .addCell(TEXT_COLUMN_NAME, {
-                            type: TEXT_CELL,
-                            value: "hehe",
-                        })
-                        .build(),
-                )
-                .build();
-
-            initial_content_with_total = {
-                table: initial_content,
-                total: 2,
-            };
-
-            query_content_with_total = {
-                table: query_content,
-                total: 1,
-            };
-        });
-        it("returns the current query content, if the current query is not saved", async () => {
-            const table_retriever = RetrieveArtifactsTableStub.withContent(
-                query_content_with_total,
-                initial_content_with_total,
-                [initial_content_with_total.table],
-            );
-            query_state = "result-preview";
-            const wrapper = getWrapper(table_retriever);
-
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(
-                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
-            ).toContain(TEXT_COLUMN_NAME);
-            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(2);
-        });
-        it("returns the saved query, if the current query is saved", async () => {
-            const table_retriever = RetrieveArtifactsTableStub.withContent(
-                query_content_with_total,
-                initial_content_with_total,
-                [initial_content_with_total.table],
-            );
-
-            const wrapper = getWrapper(table_retriever);
-
-            await vi.runOnlyPendingTimersAsync();
-
-            const headers = wrapper
-                .findAll("[data-test=column-header]")
-                .map((header) => header.text());
-            expect(headers).toContain(DATE_COLUMN_NAME);
-            expect(headers).toContain(NUMERIC_COLUMN_NAME);
-            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(4);
         });
     });
     describe("Empty state", () => {

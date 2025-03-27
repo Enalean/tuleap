@@ -152,12 +152,12 @@ describe("ReadQuery", () => {
             expect(dispatched_fault_events[0].fault.isQueryRetrieval()).toBe(true);
         });
 
-        it("Force edit mode when widget has no query", async () => {
+        it("Force creation mode when widget has no query", async () => {
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync([]));
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.query_state).toBe("edit-query");
+            expect(wrapper.emitted()).toHaveProperty("switch-to-create-query-pane");
         });
 
         it("Does not emit a SWITCH_QUERY_EVENT when there are no queries", () => {
@@ -357,7 +357,6 @@ describe("ReadQuery", () => {
             await vi.runOnlyPendingTimersAsync();
             emitter.emit(QUERY_DELETED_EVENT, { deleted_query: query });
 
-            expect(wrapper.vm.query_state).toBe("edit-query");
             expect(wrapper.emitted("switch-to-create-query-pane")).toBeDefined();
             expect(dispatched_switch_query_events).toHaveLength(1);
         });
