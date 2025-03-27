@@ -18,6 +18,7 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-styles": "workspace:^",
     "dompurify": "^3.2.4",
     "lit-html": "^2.8.0"
   },

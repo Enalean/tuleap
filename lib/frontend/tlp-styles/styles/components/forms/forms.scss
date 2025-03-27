@@ -18,10 +18,11 @@
  */
 
 @use "sass:math";
+@use "./form-element" as element;
 
-$assets-base-path: "../../" !default;
+$assets-base-path: "../../../" !default;
 
-@use "./form-element" as element with (
+@use "./selects" with (
     $assets-base-path: $assets-base-path
 );
 
@@ -221,70 +222,6 @@ $assets-base-path: "../../" !default;
     &.tlp-textarea-large {
         padding: 12px element.$tlp-form-element-large-padding-horizontal;
         font-size: element.$tlp-form-element-large-font-size;
-    }
-}
-
-.tlp-select {
-    @extend %-tlp-form-element;
-
-    height: var(--tlp-form-element-height);
-    padding: 0
-        calc(
-            var(--tlp-form-element-padding-horizontal) * 2 +
-                var(--tlp-form-element-select-background-size)
-        )
-        0 var(--tlp-form-element-padding-horizontal);
-    background: var(--tlp-form-element-background) asset-url("images/field-double-arrows.svg")
-        no-repeat;
-    background-position: right var(--tlp-form-element-padding-horizontal) center;
-    -moz-appearance: none; // stylelint-disable-line property-no-vendor-prefix
-    -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
-    appearance: none;
-
-    &.tlp-select-small {
-        height: var(--tlp-form-element-small-height);
-        padding: 0
-            calc(
-                #{element.$tlp-form-element-small-padding-horizontal} * 2 + #{element.$tlp-form-element-select-small-background-size}
-            )
-            0 element.$tlp-form-element-small-padding-horizontal;
-        background: var(--tlp-form-element-background)
-            asset-url("images/field-double-arrows-small.svg") no-repeat;
-        background-position: right element.$tlp-form-element-small-padding-horizontal center;
-        font-size: var(--tlp-form-element-small-font-size);
-    }
-
-    &.tlp-select-large {
-        height: element.$tlp-form-element-large-height;
-        padding: 0
-            calc(
-                #{element.$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
-            )
-            0 element.$tlp-form-element-large-padding-horizontal;
-        background-position: right element.$tlp-form-element-large-padding-horizontal center;
-        font-size: element.$tlp-form-element-large-font-size;
-    }
-
-    &::-ms-expand {
-        display: none;
-    }
-
-    &[multiple] {
-        height: auto;
-        padding: 8px var(--tlp-form-element-padding-horizontal);
-        background: var(--tlp-form-element-background);
-
-        &.tlp-select-small {
-            padding: 6px element.$tlp-form-element-small-padding-horizontal;
-        }
-
-        &.tlp-select-large {
-            padding: 12px element.$tlp-form-element-large-padding-horizontal;
-        }
-    }
-
-    &.tlp-select-adjusted {
-        width: auto;
     }
 }
 

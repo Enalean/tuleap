@@ -1,0 +1,85 @@
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:math";
+@use "./form-element" as element;
+
+$assets-base-path: "../../../" !default;
+
+@function asset-url($file_path) {
+    @return url(#{$assets-base-path + $file_path});
+}
+
+.tlp-select {
+    @include element.tlp-form-element;
+
+    height: var(--tlp-form-element-height);
+    padding: 0
+        calc(
+            var(--tlp-form-element-padding-horizontal) * 2 +
+                var(--tlp-form-element-select-background-size)
+        )
+        0 var(--tlp-form-element-padding-horizontal);
+    background: var(--tlp-form-element-background) asset-url("images/field-double-arrows.svg")
+        no-repeat;
+    background-position: right var(--tlp-form-element-padding-horizontal) center;
+    appearance: none;
+
+    &.tlp-select-small {
+        height: var(--tlp-form-element-small-height);
+        padding: 0
+            calc(
+                #{element.$tlp-form-element-small-padding-horizontal} * 2 + #{element.$tlp-form-element-select-small-background-size}
+            )
+            0 element.$tlp-form-element-small-padding-horizontal;
+        background: var(--tlp-form-element-background)
+            asset-url("images/field-double-arrows-small.svg") no-repeat;
+        background-position: right element.$tlp-form-element-small-padding-horizontal center;
+        font-size: var(--tlp-form-element-small-font-size);
+    }
+
+    &.tlp-select-large {
+        height: element.$tlp-form-element-large-height;
+        padding: 0
+            calc(
+                #{element.$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
+            )
+            0 element.$tlp-form-element-large-padding-horizontal;
+        background-position: right element.$tlp-form-element-large-padding-horizontal center;
+        font-size: element.$tlp-form-element-large-font-size;
+    }
+
+    &[multiple] {
+        height: auto;
+        padding: 8px var(--tlp-form-element-padding-horizontal);
+        background: var(--tlp-form-element-background);
+
+        &.tlp-select-small {
+            padding: 6px element.$tlp-form-element-small-padding-horizontal;
+        }
+
+        &.tlp-select-large {
+            padding: 12px element.$tlp-form-element-large-padding-horizontal;
+        }
+    }
+
+    &.tlp-select-adjusted {
+        width: auto;
+    }
+}

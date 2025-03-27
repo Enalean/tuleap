@@ -44,6 +44,9 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-styles':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-styles
   dompurify:
     specifier: ^3.2.4
     version: 3.2.4
