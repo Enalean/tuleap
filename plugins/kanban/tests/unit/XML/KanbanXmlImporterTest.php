@@ -133,7 +133,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = $this->createMock(\TrackerXmlFieldsMapping::class);
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
-        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', 50, true)->willReturn(9);
+        $this->kanban_manager->expects($this->once())->method('createKanban')->with('My personal kanban', 50, true)->willReturn(9);
         $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
 
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
@@ -175,7 +175,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = $this->createMock(\TrackerXmlFieldsMapping::class);
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
-        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', false, 50)->willReturn(9);
+        $this->kanban_manager->expects($this->once())->method('createKanban')->with('My personal kanban', false, 50)->willReturn(9);
         $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
 
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
@@ -211,7 +211,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
 
-        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', false, 50)->willReturn(9);
+        $this->kanban_manager->expects($this->once())->method('createKanban')->with('My personal kanban', false, 50)->willReturn(9);
 
         $this->kanban_xml_importer->import(
             $xml,

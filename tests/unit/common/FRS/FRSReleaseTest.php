@@ -103,7 +103,7 @@ class FRSReleaseTest extends TestCase
         $p = new Project(['group_id' => 101]);
 
         $pm = $this->createMock(ProjectManager::class);
-        $pm->expects(self::once())->method('getProject')->with(123)->willReturn($p);
+        $pm->expects($this->once())->method('getProject')->with(123)->willReturn($p);
 
         $r->method('_getProjectManager')->willReturn($pm);
 
@@ -121,12 +121,12 @@ class FRSReleaseTest extends TestCase
         $pkg = new FRSPackage(['group_id' => 123]);
 
         $pf = $this->createMock(FRSPackageFactory::class);
-        $pf->expects(self::once())->method('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->willReturn($pkg);
+        $pf->expects($this->once())->method('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->willReturn($pkg);
         $r->method('_getFRSPackageFactory')->willReturn($pf);
 
         $p  = new Project(['group_id' => 101]);
         $pm = $this->createMock(ProjectManager::class);
-        $pm->expects(self::once())->method('getProject')->with(123)->willReturn($p);
+        $pm->expects($this->once())->method('getProject')->with(123)->willReturn($p);
         $r->method('_getProjectManager')->willReturn($pm);
 
         self::assertSame($p, $r->getProject());
@@ -142,7 +142,7 @@ class FRSReleaseTest extends TestCase
         $pkg = new FRSPackage(['group_id' => 123]);
 
         $pf = $this->createMock(FRSPackageFactory::class);
-        $pf->expects(self::once())->method('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->willReturn($pkg);
+        $pf->expects($this->once())->method('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->willReturn($pkg);
         $r->method('_getFRSPackageFactory')->willReturn($pf);
 
         self::assertSame($r->getGroupID(), 123);

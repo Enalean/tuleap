@@ -208,11 +208,11 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
     public function testItDisplayAdminProgram(): void
     {
-        $this->template_renderer->expects(self::once())
+        $this->template_renderer->expects($this->once())
             ->method('renderToPage')
             ->with('admin', self::isInstanceOf(ProgramAdminPresenter::class));
 
-        $this->breadcrumbs_builder->expects(self::once())->method('build');
+        $this->breadcrumbs_builder->expects($this->once())->method('build');
 
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
@@ -229,7 +229,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $project->method('getUnixNameLowerCase')->willReturn('a-project');
         $project->method('getUrl')->willReturn('/a-project/');
         $project->method('getIconUnicodeCodepoint')->willReturn('');
-        $project->expects(self::once())
+        $project->expects($this->once())
             ->method('usesService')
             ->with(ProgramService::SERVICE_SHORTNAME)
             ->willReturn($is_service_active);

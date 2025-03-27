@@ -70,7 +70,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
             ->withParam('warning-threshold', '25')
             ->build();
 
-        $this->token->expects(self::once())->method('check');
+        $this->token->expects($this->once())->method('check');
         $matcher = $this->exactly(2);
 
         $this->config_dao->expects($matcher)
@@ -118,7 +118,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
             ->withParam('warning-threshold', '25')
             ->build();
 
-        $this->token->expects(self::once())->method('check');
+        $this->token->expects($this->once())->method('check');
 
         $this->config_dao->expects(self::never())
             ->method('save');
@@ -155,7 +155,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
             ->withParam('warning-threshold', 'not-valid')
             ->build();
 
-        $this->token->expects(self::once())->method('check');
+        $this->token->expects($this->once())->method('check');
 
         $this->config_dao
             ->expects(self::never())

@@ -115,9 +115,9 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
 
-        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
-        $this->immutable_tag_creator->expects(self::once())->method('save');
-        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
+        $this->hook_config_updater->expects($this->once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects($this->once())->method('save');
+        $this->access_file_creator->expects($this->once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
@@ -162,9 +162,9 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
 
-        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
-        $this->immutable_tag_creator->expects(self::once())->method('save');
-        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
+        $this->hook_config_updater->expects($this->once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects($this->once())->method('save');
+        $this->access_file_creator->expects($this->once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
@@ -209,8 +209,8 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
 
-        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
-        $this->immutable_tag_creator->expects(self::once())->method('save');
+        $this->hook_config_updater->expects($this->once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects($this->once())->method('save');
         $this->access_file_creator->expects(self::never())->method('create');
 
         $this->updater->update($this->repository, $settings);
@@ -251,9 +251,9 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
 
-        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
-        $this->immutable_tag_creator->expects(self::once())->method('save');
-        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
+        $this->hook_config_updater->expects($this->once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects($this->once())->method('save');
+        $this->access_file_creator->expects($this->once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
@@ -293,9 +293,9 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
 
-        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
-        $this->immutable_tag_creator->expects(self::once())->method('save');
-        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
+        $this->hook_config_updater->expects($this->once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects($this->once())->method('save');
+        $this->access_file_creator->expects($this->once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         self::assertTrue($this->repository->hasDefaultPermissions());
         $this->updater->update($this->repository, $settings);

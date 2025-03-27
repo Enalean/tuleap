@@ -113,7 +113,7 @@ final class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $filter = $this->createMock(FilterInterface::class);
         $filter->method('getFilteredChainIdentifier')->willReturn(STREAM_FILTER_READ);
-        $filter->expects(self::once())->method('filterDetachedEvent');
+        $filter->expects($this->once())->method('filterDetachedEvent');
 
         $source_resource = fopen('php://memory', 'rb+');
         StreamFilter::prependFilter($source_resource, $filter);
@@ -124,7 +124,7 @@ final class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $filter = $this->createMock(FilterInterface::class);
         $filter->method('getFilteredChainIdentifier')->willReturn(STREAM_FILTER_READ);
-        $filter->expects(self::once())->method('filterDetachedEvent');
+        $filter->expects($this->once())->method('filterDetachedEvent');
 
         $source_resource = fopen('php://memory', 'rb+');
         $handle          = StreamFilter::prependFilter($source_resource, $filter);

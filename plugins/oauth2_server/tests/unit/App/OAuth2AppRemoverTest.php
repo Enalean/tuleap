@@ -43,9 +43,9 @@ final class OAuth2AppRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough()
         );
 
-        $app_dao->expects(self::once())->method('delete')->with(12);
-        $auth_code_dao->expects(self::once())->method('deleteAuthorizationCodeByAppID')->with(12);
-        $authorization_dao->expects(self::once())->method('deleteAuthorizationByAppID')->with(12);
+        $app_dao->expects($this->once())->method('delete')->with(12);
+        $auth_code_dao->expects($this->once())->method('deleteAuthorizationCodeByAppID')->with(12);
+        $authorization_dao->expects($this->once())->method('deleteAuthorizationByAppID')->with(12);
 
         $app_remover->deleteAppByID(12);
     }

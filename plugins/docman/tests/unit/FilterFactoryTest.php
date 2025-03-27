@@ -68,10 +68,10 @@ final class FilterFactoryTest extends TestCase
         ]);
 
         $filterFactory->method('getFilterFactory')->willReturn($dstFilterFactory);
-        $filterFactory->expects(self::once())->method('cloneFilterValues');
+        $filterFactory->expects($this->once())->method('cloneFilterValues');
 
-        $dstFilterFactory->expects(self::once())->method('createFromMetadata');
-        $dstFilterFactory->expects(self::once())->method('createFilter');
+        $dstFilterFactory->expects($this->once())->method('createFromMetadata');
+        $dstFilterFactory->expects($this->once())->method('createFilter');
 
         $filterFactory->cloneFilter($srcFilter, $dstReport, $metadataMapping);
     }

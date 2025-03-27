@@ -69,7 +69,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('create');
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
-        $this->widget_dao->expects(self::once())->method('createLine')->with(10001, ProjectDashboardController::DASHBOARD_TYPE, 1);
+        $this->widget_dao->expects($this->once())->method('createLine')->with(10001, ProjectDashboardController::DASHBOARD_TYPE, 1);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -107,7 +107,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
         $this->widget_dao->method('createLine')->willReturn(12);
-        $this->widget_dao->expects(self::once())->method('createColumn')->with(12, 1);
+        $this->widget_dao->expects($this->once())->method('createColumn')->with(12, 1);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -141,13 +141,13 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $widget = $this->createMock(\Widget::class);
         $widget->method('getId')->willReturn('projectmembers');
-        $widget->expects(self::once())->method('setOwner')->with(101, ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
+        $widget->expects($this->once())->method('setOwner')->with(101, ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         $widget->method('isUnique');
         $widget->method('create');
 
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
-        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
+        $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -185,7 +185,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('create');
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
-        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
+        $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -402,7 +402,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('create');
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectheartbeat')->willReturn($widget);
 
-        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
+        $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -604,7 +604,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
             }
         });
 
-        $this->widget_dao->expects(self::once())->method('adjustLayoutAccordinglyToNumberOfWidgets')->with(2, 12);
+        $this->widget_dao->expects($this->once())->method('adjustLayoutAccordinglyToNumberOfWidgets')->with(2, 12);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -678,7 +678,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
             }
         });
 
-        $this->widget_dao->expects(self::once())->method('updateLayout')->with(12, 'two-columns-small-big');
+        $this->widget_dao->expects($this->once())->method('updateLayout')->with(12, 'two-columns-small-big');
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -752,7 +752,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         });
 
         $this->widget_dao->expects(self::never())->method('updateLayout');
-        $this->widget_dao->expects(self::once())->method('adjustLayoutAccordinglyToNumberOfWidgets');
+        $this->widget_dao->expects($this->once())->method('adjustLayoutAccordinglyToNumberOfWidgets');
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -793,7 +793,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $widget = $this->createMock(\Widget::class);
         $widget->method('getId')->willReturn('projectrss');
-        $widget->expects(self::once())->method('create')->with(self::callback(function (\Codendi_Request $request) {
+        $widget->expects($this->once())->method('create')->with(self::callback(function (\Codendi_Request $request) {
             if (
                 $request->get('rss') &&
                 $request->getInArray('rss', 'title') === 'Da feed' &&
@@ -808,7 +808,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectrss')->willReturn($widget);
 
-        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectrss', 35, 122, 1);
+        $this->widget_dao->expects($this->once())->method('insertWidgetInColumnWithRank')->with('projectrss', 35, 122, 1);
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 

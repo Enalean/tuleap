@@ -87,7 +87,7 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
         $this->app_dao->expects(self::never())->method('create');
@@ -108,10 +108,10 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleCreatesProjectAppAndRedirects(array $body): void
     {
         $request = $this->buildProjectAdminRequest()->withParsedBody($body);
-        $this->app_dao->expects(self::once())->method('create')
+        $this->app_dao->expects($this->once())->method('create')
             ->with(self::isInstanceOf(NewOAuth2App::class))
             ->willReturn(1);
-        $this->client_secret_store->expects(self::once())->method('storeLastGeneratedClientSecret')
+        $this->client_secret_store->expects($this->once())->method('storeLastGeneratedClientSecret')
             ->with(1, self::isInstanceOf(SplitTokenVerificationString::class));
 
         $response = $this->controller->handle($request);
@@ -123,10 +123,10 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleCreatesSiteAppAndRedirects(array $body): void
     {
         $request = $this->buildSiteAdminRequest()->withParsedBody($body);
-        $this->app_dao->expects(self::once())->method('create')
+        $this->app_dao->expects($this->once())->method('create')
             ->with(self::isInstanceOf(NewOAuth2App::class))
             ->willReturn(1);
-        $this->client_secret_store->expects(self::once())->method('storeLastGeneratedClientSecret')
+        $this->client_secret_store->expects($this->once())->method('storeLastGeneratedClientSecret')
             ->with(1, self::isInstanceOf(SplitTokenVerificationString::class));
 
         $response = $this->controller->handle($request);

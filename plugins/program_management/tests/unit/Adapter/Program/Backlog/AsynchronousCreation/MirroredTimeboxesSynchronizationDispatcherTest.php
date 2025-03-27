@@ -63,7 +63,7 @@ final class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\
         $queue = $this->createMock(PersistentQueue::class);
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 
-        $queue->expects(self::once())
+        $queue->expects($this->once())
             ->method('pushSinglePersistentMessage')
             ->with(
                 'tuleap.program_management.team.synchronize',

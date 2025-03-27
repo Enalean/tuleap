@@ -62,7 +62,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $project_id     = 104;
         $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, 'My PR', 'a description', TimelineComment::FORMAT_TEXT);
 
-        $this->pull_request_is_mergeable_checker->expects(self::once())->method('checkUserCanMerge')->willThrowException(new RestException(403, 'Forbidden'));
+        $this->pull_request_is_mergeable_checker->expects($this->once())->method('checkUserCanMerge')->willThrowException(new RestException(403, 'Forbidden'));
         $this->factory->expects(self::never())->method('updateTitle');
         $this->factory->expects(self::never())->method('updateDescription');
 
@@ -78,8 +78,8 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, 'My PR', 'a description', TimelineComment::FORMAT_TEXT);
 
         $this->pull_request_is_mergeable_checker->expects(self::never())->method('checkUserCanMerge');
-        $this->factory->expects(self::once())->method('updateTitle');
-        $this->factory->expects(self::once())->method('updateDescription');
+        $this->factory->expects($this->once())->method('updateTitle');
+        $this->factory->expects($this->once())->method('updateDescription');
 
         $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
     }
@@ -101,8 +101,8 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $project_id     = 104;
         $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, 'My PR', 'a description', TimelineComment::FORMAT_TEXT);
 
-        $this->factory->expects(self::once())->method('updateTitle');
-        $this->factory->expects(self::once())->method('updateDescription');
+        $this->factory->expects($this->once())->method('updateTitle');
+        $this->factory->expects($this->once())->method('updateDescription');
 
         $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
     }
@@ -113,8 +113,8 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $project_id     = 104;
         $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, 'My PR', '', TimelineComment::FORMAT_TEXT);
 
-        $this->factory->expects(self::once())->method('updateTitle');
-        $this->factory->expects(self::once())->method('updateDescription');
+        $this->factory->expects($this->once())->method('updateTitle');
+        $this->factory->expects($this->once())->method('updateDescription');
 
         $this->info_updater->patchInfo($user, $this->pullrequest, $project_id, $representation);
     }
@@ -125,8 +125,8 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $project_id     = 104;
         $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, 'My PR', 'a description', null);
 
-        $this->factory->expects(self::once())->method('updateTitle');
-        $this->factory->expects(self::once())->method('updateDescription')->with(
+        $this->factory->expects($this->once())->method('updateTitle');
+        $this->factory->expects($this->once())->method('updateDescription')->with(
             $user,
             $this->pullrequest,
             $project_id,

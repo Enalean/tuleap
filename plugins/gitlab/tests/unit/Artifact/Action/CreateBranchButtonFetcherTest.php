@@ -77,29 +77,29 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->willReturn($project);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTracker')
             ->willReturn($tracker);
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->with($project)
             ->willReturn(true);
 
         $user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isMember')
             ->with(101)
             ->willReturn(true);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanView')
             ->with($user)
             ->willReturn(true);
@@ -109,12 +109,12 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ->willReturn('89');
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTitle')
             ->willReturn('This \is a :feature');
 
         $this->representation_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllIntegrationsRepresentationsInProjectWithConfiguredToken')
             ->with($project)
             ->willReturn([
@@ -163,29 +163,29 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->willReturn($project);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTracker')
             ->willReturn($tracker);
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->with($project)
             ->willReturn(true);
 
         $user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isMember')
             ->with(101)
             ->willReturn(true);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanView')
             ->with($user)
             ->willReturn(true);
@@ -196,12 +196,12 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ->willReturn('89');
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTitle')
             ->willReturn(null);
 
         $this->representation_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllIntegrationsRepresentationsInProjectWithConfiguredToken')
             ->with($project)
             ->willReturn([
@@ -250,17 +250,17 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->willReturn($project);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTracker')
             ->willReturn($tracker);
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->with($project)
             ->willReturn(false);
@@ -278,23 +278,23 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->willReturn($project);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTracker')
             ->willReturn($tracker);
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->with($project)
             ->willReturn(true);
 
         $user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isMember')
             ->with(101)
             ->willReturn(false);
@@ -312,29 +312,29 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->willReturn($project);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTracker')
             ->willReturn($tracker);
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->with($project)
             ->willReturn(true);
 
         $user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isMember')
             ->with(101)
             ->willReturn(true);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanView')
             ->with($user)
             ->willReturn(false);
@@ -352,35 +352,35 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProject')
             ->willReturn($project);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTracker')
             ->willReturn($tracker);
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->with($project)
             ->willReturn(true);
 
         $user
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isMember')
             ->with(101)
             ->willReturn(true);
 
         $artifact
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanView')
             ->with($user)
             ->willReturn(true);
 
         $this->representation_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAllIntegrationsRepresentationsInProjectWithConfiguredToken')
             ->with($project)
             ->willReturn([]);

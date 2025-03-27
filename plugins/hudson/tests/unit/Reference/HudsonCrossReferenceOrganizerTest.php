@@ -78,7 +78,7 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $ref_job   = CrossReferencePresenterBuilder::get(1)->withType('hudson_job')->withValue('MyJob')->withProjectId(101)->build();
 
         $this->organizer_by_nature
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCrossReferencePresenters')
             ->willReturn([$ref_build, $ref_job]);
 

@@ -72,11 +72,11 @@ final class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUni
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->withAccessPublic()->withUsedService(Service::WIKI)->build();
 
-        $this->wiki_permissions_manager->expects(self::once())->method('getWikiServicePermissions')->with($project)->willReturn([ProjectUGroup::REGISTERED]);
+        $this->wiki_permissions_manager->expects($this->once())->method('getWikiServicePermissions')->with($project)->willReturn([ProjectUGroup::REGISTERED]);
 
         $selected_ugroup_id = null;
         $this->ugroup_manager->method('getUGroup')->willReturn(null);
-        $this->wiki_permissions_manager->expects(self::once())->method('getWikiAdminsGroups')->willReturn([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN]);
+        $this->wiki_permissions_manager->expects($this->once())->method('getWikiAdminsGroups')->willReturn([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN]);
 
         $this->renderer->method('renderToString');
 

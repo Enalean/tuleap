@@ -335,15 +335,15 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->willReturn(false);
 
         $project_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addProjectMember')
             ->with($just_created_user, $project, $from_user);
 
         $invitation_instrumentation
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('incrementProjectInvitation');
         $project_history_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addHistory');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -402,10 +402,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->method('addProjectMember');
 
         $invitation_instrumentation
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('incrementProjectInvitation');
         $project_history_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addHistory');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -459,15 +459,15 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->willReturn(true);
 
         $project_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addProjectMember')
             ->with($just_created_user, $project, $from_user);
 
         $invitation_instrumentation
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('incrementProjectInvitation');
         $project_history_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addHistory');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -517,7 +517,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
 
         $project_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addProjectMember')
             ->with($just_created_user, $project, $from_user)
             ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($just_created_user, $project));
@@ -527,7 +527,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->method('incrementProjectInvitation');
 
         $email_notifier
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('informThatCannotAddRestrictedUserToProjectNotAllowingRestricted')
             ->with($from_user, $just_created_user, $project);
 

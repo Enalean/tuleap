@@ -102,7 +102,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         );
 
         $this->status_value_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFirstClosedValueUserCanRead')
             ->willReturn(
                 ListStaticValueBuilder::aStaticValue('done')->withId(5)->build()
@@ -137,7 +137,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         );
 
         $this->status_value_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFirstOpenValueUserCanRead')
             ->willReturn(
                 ListStaticValueBuilder::aStaticValue('on going')->withId(2)->build()
@@ -167,7 +167,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $user    = UserTestBuilder::aUser()->build();
 
         $this->formelement_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedFieldByNameForUser')
             ->willReturn(null);
 

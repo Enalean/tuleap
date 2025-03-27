@@ -199,7 +199,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($a_ref);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
@@ -244,7 +244,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($a_ref);
 
@@ -511,7 +511,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->gitlab_merge_request_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 14)
             ->willReturn($john_snow_merge_request);
@@ -527,12 +527,12 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $author->method('getAvatarUrl')->willReturn('my_avatar');
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUserByEmail')
             ->willReturn($author);
 
         $this->user_helper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getDisplayNameFromUser')
             ->with($author)
             ->willReturn('John');
@@ -548,7 +548,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
@@ -588,7 +588,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->gitlab_merge_request_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 14)
             ->willReturn($john_snow_merge_request);
@@ -600,7 +600,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->build();
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUserByEmail')
             ->willReturn(null);
 
@@ -618,7 +618,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
@@ -658,7 +658,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->gitlab_merge_request_reference_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 14)
             ->willReturn($john_snow_merge_request);
@@ -687,7 +687,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
@@ -729,7 +729,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->gitlab_tag_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabTagInRepositoryWithTagName')
             ->with($integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
@@ -745,7 +745,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
@@ -786,7 +786,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ['repository_name' => 'root/project01', 'branch_name' => 'dev'],
         );
 
-        $this->gitlab_branch_factory->expects(self::once())
+        $this->gitlab_branch_factory->expects($this->once())
             ->method('getGitlabBranchInRepositoryWithBranchName')
             ->with($integration, 'dev')
             ->willReturn($gitlab_branch);
@@ -801,7 +801,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
         $user->method('getLocale')->willReturn('en_US');
 
-        $this->gitlab_branch_cross_reference_enhancer->expects(self::once())
+        $this->gitlab_branch_cross_reference_enhancer->expects($this->once())
             ->method('getCrossReferencePresenterWithBranchInformation')
             ->with($a_ref, $gitlab_branch, $user)
             ->willReturn($a_ref);
@@ -812,7 +812,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
@@ -874,7 +874,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with($a_ref, 'thenightwatch/root/project01/repo01');
 

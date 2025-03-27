@@ -79,7 +79,7 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
 
         $this->project           = $this->createConfiguredMock(Project::class, ['getID' => '101']);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
-        $this->project_retriever->expects(self::once())->method('getProjectFromId')
+        $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
@@ -101,16 +101,16 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
     {
         $this->request->set('default_agreement', '5');
 
-        $this->helper->expects(self::once())->method('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper->expects($this->once())->method('assertCanAccess')->with($this->project, $this->current_user);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $custom_agreement = new LicenseAgreement(5, 'some title', 'some content');
         $this->factory->method('getLicenseAgreementById')->with($this->project, 5)->willReturn($custom_agreement);
 
-        $this->factory->expects(self::once())->method('setProjectDefault')->with($this->project, $custom_agreement);
+        $this->factory->expects($this->once())->method('setProjectDefault')->with($this->project, $custom_agreement);
 
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -125,9 +125,9 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
         $license = new NoLicenseToApprove();
         $this->factory->method('getLicenseAgreementById')->with($this->project, NoLicenseToApprove::ID)->willReturn($license);
 
-        $this->factory->expects(self::once())->method('setProjectDefault')->with($this->project, $license);
+        $this->factory->expects($this->once())->method('setProjectDefault')->with($this->project, $license);
 
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -142,9 +142,9 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
         $license = new DefaultLicenseAgreement();
         $this->factory->method('getLicenseAgreementById')->with($this->project, DefaultLicenseAgreement::ID)->willReturn($license);
 
-        $this->factory->expects(self::once())->method('setProjectDefault')->with($this->project, $license);
+        $this->factory->expects($this->once())->method('setProjectDefault')->with($this->project, $license);
 
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }

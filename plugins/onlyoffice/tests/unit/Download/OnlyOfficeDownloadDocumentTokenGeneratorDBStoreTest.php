@@ -49,7 +49,7 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStoreTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
         $item = new \Docman_Item(['item_id' => 258]);
 
-        $dao->expects(self::once())->method('create')->with($user->getId(), $item->getId(), self::anything(), 20)->willReturn(147);
+        $dao->expects($this->once())->method('create')->with($user->getId(), $item->getId(), self::anything(), 20)->willReturn(147);
 
         $token = $token_generator->generateDownloadToken(
             $user,

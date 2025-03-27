@@ -111,7 +111,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $admin = UserTestBuilder::buildWithDefaults();
 
         $this->dynamic_member_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addUser')
             ->with($project, $ugroup, $user, $admin);
 
@@ -151,13 +151,13 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getId')->willReturn(24);
         $ugroup->method('exists')->willReturn(true);
         $this->detector
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isSynchronizedWithProjectMembers')
             ->with($project)
             ->willReturn(false);
 
         $this->static_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addUserToStaticGroup')
             ->with(168, 24, 217);
         $this->project_member_adder->expects(self::never())->method('addProjectMemberWithFeedback');
@@ -183,13 +183,13 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getId')->willReturn(24);
         $ugroup->method('exists')->willReturn(true);
         $this->detector
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isSynchronizedWithProjectMembers')
             ->with($project)
             ->willReturn(true);
 
         $this->static_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addUserToStaticGroup')
             ->with(168, 24, 217);
         $this->project_member_adder->expects(self::never())->method('addProjectMemberWithFeedback');
@@ -215,7 +215,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getId')->willReturn(24);
         $ugroup->method('exists')->willReturn(true);
         $this->detector
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isSynchronizedWithProjectMembers')
             ->with($project)
             ->willReturn(true);
@@ -223,11 +223,11 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_admin = UserTestBuilder::buildWithDefaults();
 
         $this->static_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addUserToStaticGroup')
             ->with(168, 24, 217);
         $this->project_member_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addProjectMemberWithFeedback')
             ->with($user, $project, $project_admin);
 

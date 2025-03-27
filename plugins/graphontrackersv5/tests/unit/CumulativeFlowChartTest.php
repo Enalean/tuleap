@@ -53,7 +53,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetColumns(): void
     {
-        $this->report->expects(self::once())->method('getCriteria')->willReturn([]);
+        $this->report->expects($this->once())->method('getCriteria')->willReturn([]);
 
         $all_columns       = [
             100 => [
@@ -120,7 +120,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $criterion->method('getField')->willReturn($criterion_field);
 
-        $this->report->expects(self::once())->method('getCriteria')->willReturn([$criterion]);
+        $this->report->expects($this->once())->method('getCriteria')->willReturn([$criterion]);
 
         $all_columns = [
             100 => [
@@ -200,7 +200,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $criterion->method('getField')->willReturn($criterion_field);
 
-        $this->report->expects(self::once())->method('getCriteria')->willReturn([$criterion]);
+        $this->report->expects($this->once())->method('getCriteria')->willReturn([$criterion]);
 
         $all_columns = [
             101 => [

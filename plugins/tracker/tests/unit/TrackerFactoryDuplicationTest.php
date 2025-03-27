@@ -79,14 +79,14 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping_registry = new MappingRegistry([]);
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with(999, $mapping_registry, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', [])
             ->willReturn(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
-        $this->hierarchy_factory->expects(self::once())->method('duplicate');
+        $this->hierarchy_factory->expects($this->once())->method('duplicate');
 
-        $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
+        $this->semantic_timeframe_duplicator->expects($this->once())->method('duplicateSemanticTimeframeForAllTrackers');
 
         $this->tracker_factory->duplicate(
             UserTestBuilder::buildWithDefaults(),
@@ -136,8 +136,8 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
                 567 => ['tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping, 'report_mapping' => []],
             });
 
-        $this->formelement_factory->expects(self::once())->method('fixOriginalFieldIdsAfterDuplication')->with($to_project_id, $from_project_id, $full_field_mapping);
-        $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
+        $this->formelement_factory->expects($this->once())->method('fixOriginalFieldIdsAfterDuplication')->with($to_project_id, $from_project_id, $full_field_mapping);
+        $this->semantic_timeframe_duplicator->expects($this->once())->method('duplicateSemanticTimeframeForAllTrackers');
 
         $this->tracker_factory->duplicate(
             UserTestBuilder::buildWithDefaults(),
@@ -182,14 +182,14 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $t_new = TrackerTestBuilder::aTracker()->withId(555)->build();
 
-        $this->tracker_factory->expects(self::once())
+        $this->tracker_factory->expects($this->once())
             ->method('create')
             ->with(999, $mapping_registry, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', [])
             ->willReturn(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
-        $this->trigger_rules_manager->expects(self::once())->method('duplicate');
+        $this->trigger_rules_manager->expects($this->once())->method('duplicate');
 
-        $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
+        $this->semantic_timeframe_duplicator->expects($this->once())->method('duplicateSemanticTimeframeForAllTrackers');
 
         $this->tracker_factory->duplicate(
             UserTestBuilder::buildWithDefaults(),
@@ -214,14 +214,14 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_tracker = TrackerTestBuilder::aTracker()->withId(555)->build();
 
         $mapping_registry = new MappingRegistry([]);
-        $this->tracker_factory->expects(self::once())
+        $this->tracker_factory->expects($this->once())
             ->method('create')
             ->with(999, $mapping_registry, 1234, 'User Stories', 'User Stories', 'user_stories', 'inca-silver', [])
             ->willReturn(['tracker' => $new_tracker, 'field_mapping' => [], 'report_mapping' => []]);
 
-        $this->hierarchy_factory->expects(self::once())->method('duplicate');
+        $this->hierarchy_factory->expects($this->once())->method('duplicate');
 
-        $this->semantic_timeframe_duplicator->expects(self::once())
+        $this->semantic_timeframe_duplicator->expects($this->once())
             ->method('duplicateSemanticTimeframeForAllTrackers')
             ->with([], [1234 => 555]);
 

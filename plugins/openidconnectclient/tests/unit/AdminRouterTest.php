@@ -43,8 +43,8 @@ final class AdminRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $request    = HTTPRequestBuilder::get()->withUser($user)->build();
 
         $response = $this->createMock(\Tuleap\Layout\BaseLayout::class);
-        $response->expects(self::once())->method('addFeedback');
-        $response->expects(self::once())->method('redirect');
+        $response->expects($this->once())->method('addFeedback');
+        $response->expects($this->once())->method('redirect');
 
         $router = new AdminRouter($controller, $csrf_token);
         $router->process($request, $response, []);

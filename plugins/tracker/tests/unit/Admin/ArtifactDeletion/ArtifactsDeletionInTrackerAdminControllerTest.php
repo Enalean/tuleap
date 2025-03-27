@@ -69,8 +69,8 @@ final class ArtifactsDeletionInTrackerAdminControllerTest extends TestCase
     {
         $user    = UserTestBuilder::anActiveUser()->build();
         $tracker = $this->createMock(Tracker::class);
-        $tracker->expects(self::once())->method('getId')->willReturn(self::TRACKER_ID);
-        $tracker->expects(self::once())->method('userIsAdmin')->with($user)->willReturn(false);
+        $tracker->expects($this->once())->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->expects($this->once())->method('userIsAdmin')->with($user)->willReturn(false);
 
         $controller = new ArtifactsDeletionInTrackerAdminController(
             RetrieveTrackerStub::withTrackers($tracker),
@@ -94,16 +94,16 @@ final class ArtifactsDeletionInTrackerAdminControllerTest extends TestCase
         $user    = UserTestBuilder::anActiveUser()->build();
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(self::TRACKER_ID);
-        $tracker->expects(self::once())->method('userIsAdmin')->with($user)->willReturn(true);
-        $tracker->expects(self::once())->method('displayAdminItemHeaderBurningParrot');
-        $tracker->expects(self::once())->method('displayFooter');
+        $tracker->expects($this->once())->method('userIsAdmin')->with($user)->willReturn(true);
+        $tracker->expects($this->once())->method('displayAdminItemHeaderBurningParrot');
+        $tracker->expects($this->once())->method('displayFooter');
 
         $url_to_deletion_confirmation = ArtifactsConfirmDeletionInTrackerAdminUrlBuilder::fromTracker($tracker);
         $deletion_limit               = 10;
         $deletion_count               = 2;
 
         $template_renderer = $this->createMock(\TemplateRenderer::class);
-        $template_renderer->expects(self::once())->method('renderToPage')->with(
+        $template_renderer->expects($this->once())->method('renderToPage')->with(
             'admin-artifacts-deletion',
             new ArtifactsDeletionInTrackerAdminPresenter(
                 $url_to_deletion_confirmation->getCSRFSynchronizerToken(),

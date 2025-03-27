@@ -67,7 +67,7 @@ final class ServicesPresenterBuilderTest extends TestCase
                                          ->withLabel('Tracker')
                                          ->build();
 
-        $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
+        $this->service_manager->expects($this->once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
         $service_presenter = $this->buildPresenter();
         self::assertCount(1, $service_presenter->services);
@@ -82,7 +82,7 @@ final class ServicesPresenterBuilderTest extends TestCase
                                          ->withLabel('Tracker')
                                          ->build();
 
-        $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
+        $this->service_manager->expects($this->once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
         $this->event_manager = EventDispatcherStub::withCallback(function (AddMissingService|HideServiceInUserInterfaceEvent|ServiceDisabledCollector $event) {
             if ($event instanceof ServiceDisabledCollector) {
@@ -102,7 +102,7 @@ final class ServicesPresenterBuilderTest extends TestCase
                                          ->withLabel('Tracker')
                                          ->build();
 
-        $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$tracker_service]);
+        $this->service_manager->expects($this->once())->method('getListOfAllowedServicesForProject')->willReturn([$tracker_service]);
 
         $extra_service = ServiceBuilder::aProjectDefinedService($this->project)
                         ->withShortName('plugin_mediawiki_standalone')

@@ -64,17 +64,17 @@ final class SystemEventProcessorMutexTest extends TestCase
 
     public function testItExecuteCallable(): void
     {
-        $this->mutex->expects(self::once())->method('checkCurrentUserProcessOwner');
+        $this->mutex->expects($this->once())->method('checkCurrentUserProcessOwner');
 
         $this->db_connexion->expects(self::never())->method('reconnectAfterALongRunningProcess');
-        $this->object->expects(self::once())->method('execute');
+        $this->object->expects($this->once())->method('execute');
 
         $this->mutex->execute();
     }
 
     public function testItStopsIfCurrentUserIsNotTheOneThatShouldRun(): void
     {
-        $this->mutex->expects(self::once())->method('checkCurrentUserProcessOwner')->willThrowException(new Exception());
+        $this->mutex->expects($this->once())->method('checkCurrentUserProcessOwner')->willThrowException(new Exception());
 
         self::expectException(Exception::class);
         $this->object->expects(self::never())->method('execute');
@@ -84,10 +84,10 @@ final class SystemEventProcessorMutexTest extends TestCase
 
     public function testWaitAndExecuteReconnectsToTheDatabase(): void
     {
-        $this->mutex->expects(self::once())->method('checkCurrentUserProcessOwner');
+        $this->mutex->expects($this->once())->method('checkCurrentUserProcessOwner');
 
-        $this->db_connexion->expects(self::once())->method('reconnectAfterALongRunningProcess');
-        $this->object->expects(self::once())->method('execute');
+        $this->db_connexion->expects($this->once())->method('reconnectAfterALongRunningProcess');
+        $this->object->expects($this->once())->method('execute');
 
         $this->mutex->waitAndExecute();
     }

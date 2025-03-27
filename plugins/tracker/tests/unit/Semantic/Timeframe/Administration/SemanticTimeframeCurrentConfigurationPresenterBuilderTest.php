@@ -71,14 +71,14 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
         $another_tracker->expects(self::any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
 
         $this->dao->expects(self::never())->method('getSemanticsImpliedFromGivenTracker');
-        $this->dao->expects(self::once())->method('searchByTrackerId')->with(self::CURRENT_TRACKER_ID)->willReturn([
+        $this->dao->expects($this->once())->method('searchByTrackerId')->with(self::CURRENT_TRACKER_ID)->willReturn([
             'start_date_field_id' => null,
             'duration_field_id' => null,
             'end_date_field_id' => null,
             'implied_from_tracker_id' => self::ANOTHER_TRACKER_ID,
         ]);
 
-        $this->tracker_factory->expects(self::once())->method('getTrackerById')->with(self::ANOTHER_TRACKER_ID)->willReturn($another_tracker);
+        $this->tracker_factory->expects($this->once())->method('getTrackerById')->with(self::ANOTHER_TRACKER_ID)->willReturn($another_tracker);
 
         $builder = new SemanticTimeframeCurrentConfigurationPresenterBuilder(
             $this->current_tracker,
@@ -112,8 +112,8 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
 
     public function testItBuildsAPresenterWithAListOfTrackerImplyingTheirSemanticsTimeframe(): void
     {
-        $this->start_date_field->expects(self::once())->method('getLabel')->willReturn('Start date');
-        $this->duration_field->expects(self::once())->method('getLabel')->willReturn('Duration');
+        $this->start_date_field->expects($this->once())->method('getLabel')->willReturn('Start date');
+        $this->duration_field->expects($this->once())->method('getLabel')->willReturn('Duration');
 
         $this->current_tracker->expects(self::any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
 
@@ -122,7 +122,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
         $another_tracker->expects(self::any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
 
         $this->dao->expects(self::never())->method('searchByTrackerId');
-        $this->dao->expects(self::once())->method('getSemanticsImpliedFromGivenTracker')->with(self::CURRENT_TRACKER_ID)->willReturn(
+        $this->dao->expects($this->once())->method('getSemanticsImpliedFromGivenTracker')->with(self::CURRENT_TRACKER_ID)->willReturn(
             [
                 [
                     'tracker_id' => self::ANOTHER_TRACKER_ID,
@@ -131,7 +131,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
             ]
         );
 
-        $this->tracker_factory->expects(self::once())->method('getTrackerById')->with(self::ANOTHER_TRACKER_ID)->willReturn($another_tracker);
+        $this->tracker_factory->expects($this->once())->method('getTrackerById')->with(self::ANOTHER_TRACKER_ID)->willReturn($another_tracker);
 
         $builder = new SemanticTimeframeCurrentConfigurationPresenterBuilder(
             $this->current_tracker,

@@ -84,7 +84,7 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $this->url_verification->method('userCanAccessProject');
 
-        $frs_file->expects(self::once())->method('LogDownload');
+        $frs_file->expects($this->once())->method('LogDownload');
 
         $response = $controller->handle($server_request);
 

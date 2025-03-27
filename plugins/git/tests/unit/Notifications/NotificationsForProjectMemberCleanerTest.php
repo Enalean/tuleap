@@ -83,9 +83,9 @@ final class NotificationsForProjectMemberCleanerTest extends TestCase
     {
         $this->user->method('isMember')->with($this->project->getID())->willReturn(false);
 
-        $this->mails_to_notify_manager->expects(self::once())->method('removeMailByRepository')->with($this->unreadable_repository, 'jdoe@example.com');
+        $this->mails_to_notify_manager->expects($this->once())->method('removeMailByRepository')->with($this->unreadable_repository, 'jdoe@example.com');
 
-        $this->users_to_notify_dao->expects(self::once())->method('delete')->with($this->unreadable_repository->getId(), $this->user->getId());
+        $this->users_to_notify_dao->expects($this->once())->method('delete')->with($this->unreadable_repository->getId(), $this->user->getId());
 
         $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
     }

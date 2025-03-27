@@ -257,7 +257,7 @@ final class ArtifactCloserTest extends TestCase
     {
         $this->mockArtifactIsOpen();
         $this->mockNoDoneValue();
-        $this->status_value_retriever->expects(self::once())
+        $this->status_value_retriever->expects($this->once())
             ->method('getFirstClosedValueUserCanRead')
             ->with($this->workflow_user, $this->artifact)
             ->willThrowException(new SemanticStatusClosedValueNotFoundException());
@@ -297,7 +297,7 @@ final class ArtifactCloserTest extends TestCase
     {
         $this->status_field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
 
-        $this->done_value_retriever->expects(self::once())
+        $this->done_value_retriever->expects($this->once())
             ->method('getFirstDoneValueUserCanRead')
             ->with($this->artifact, $this->workflow_user)
             ->willReturn($this->getDoneValue());
@@ -305,7 +305,7 @@ final class ArtifactCloserTest extends TestCase
 
     private function mockNoDoneValue(): void
     {
-        $this->done_value_retriever->expects(self::once())
+        $this->done_value_retriever->expects($this->once())
             ->method('getFirstDoneValueUserCanRead')
             ->with($this->artifact, $this->workflow_user)
             ->willThrowException(new SemanticDoneValueNotFoundException());
@@ -315,7 +315,7 @@ final class ArtifactCloserTest extends TestCase
     {
         $this->status_field->method('getFieldData')->willReturn(self::CLOSED_BIND_VALUE_ID);
 
-        $this->status_value_retriever->expects(self::once())
+        $this->status_value_retriever->expects($this->once())
             ->method('getFirstClosedValueUserCanRead')
             ->with($this->workflow_user, $this->artifact)
             ->willReturn($this->getDoneValue());

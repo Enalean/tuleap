@@ -134,7 +134,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timetracking_enabler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
@@ -150,12 +150,12 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveReaders')
             ->with($tracker_mapping, [3]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveWriters')
             ->with($tracker_mapping, [4]);
 
@@ -165,7 +165,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($user);
 
         $this->time_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addTime')
             ->with(
                 123,
@@ -223,7 +223,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timetracking_enabler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
@@ -239,12 +239,12 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveReaders')
             ->with($tracker_mapping, [3]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveWriters')
             ->with($tracker_mapping, [4]);
 
@@ -254,7 +254,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($user);
 
         $this->time_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addTime')
             ->with(
                 123,
@@ -307,7 +307,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timetracking_enabler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
@@ -322,12 +322,12 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveReaders')
             ->with($tracker_mapping, [3]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveWriters')
             ->with($tracker_mapping, [4]);
 
@@ -378,20 +378,20 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timetracking_enabler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
         $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
         $this->ugroup_manager
-            ->expects(self::once())->method('getUGroupByName')
+            ->expects($this->once())->method('getUGroupByName')
             ->with($this->project, 'project_members')
             ->willReturn($ugroup_project_members);
 
         $this->timetracking_ugroup_saver->expects(self::never())->method('saveReaders');
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveWriters')
             ->with($tracker_mapping, [4]);
 
@@ -455,7 +455,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->timetracking_enabler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
@@ -470,12 +470,12 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveReaders')
             ->with($tracker_mapping, [3]);
 
         $this->timetracking_ugroup_saver
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveWriters')
             ->with($tracker_mapping, [4]);
 
@@ -487,7 +487,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockLogInfo();
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('warning')
             ->with('Could not find any ugroup named unkown_ugroup, skipping.');
 

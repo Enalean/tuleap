@@ -78,8 +78,8 @@ final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $authorization_grant_id    = 3;
         $generated_access_token_id = 1;
 
-        $this->access_token_dao->expects(self::once())->method('create')->willReturn($generated_access_token_id);
-        $this->scope_saver->expects(self::once())->method('saveScopes');
+        $this->access_token_dao->expects($this->once())->method('create')->willReturn($generated_access_token_id);
+        $this->scope_saver->expects($this->once())->method('saveScopes');
 
         $access_token = $this->token_creator->issueAccessToken(
             $current_time,

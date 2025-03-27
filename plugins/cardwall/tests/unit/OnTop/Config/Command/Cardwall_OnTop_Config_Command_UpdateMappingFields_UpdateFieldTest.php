@@ -103,7 +103,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
                 'field_id'            => 321,
             ]
         ));
-        $this->dao->expects(self::once())->method('save')->with($this->tracker_id, 69, 322);
+        $this->dao->expects($this->once())->method('save')->with($this->tracker_id, 69, 322);
         $this->command->execute($request);
     }
 }

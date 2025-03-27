@@ -91,7 +91,7 @@ final class BurndownCommonDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-11-01'), 5);
 
-        $this->cache_checker->expects(self::once())->method('isBurndownUnderCalculationBasedOnServerTimezone')->willReturn(true);
+        $this->cache_checker->expects($this->once())->method('isBurndownUnderCalculationBasedOnServerTimezone')->willReturn(true);
         $should_calculate_burndown = $this->common_data_builder->getBurndownCalculationStatus($this->artifact, $this->user, $date_period, 0, 'EN_en');
 
         self:assertTrue($should_calculate_burndown);

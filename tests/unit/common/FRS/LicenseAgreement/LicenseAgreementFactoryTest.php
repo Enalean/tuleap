@@ -61,7 +61,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testItUpdatePackageWithNoLicenseAgreement(): void
     {
-        $this->dao->expects(self::once())->method('resetLicenseAgreementForPackage')->with($this->package);
+        $this->dao->expects($this->once())->method('resetLicenseAgreementForPackage')->with($this->package);
 
         $this->factory->updateLicenseAgreementForPackage($this->project, $this->package, -1);
         self::assertFalse($this->package->getApproveLicense());
@@ -78,8 +78,8 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testItUpdatesPackageWithACustomLicenseAgreement(): void
     {
-        $this->dao->expects(self::once())->method('isLicenseAgreementValidForProject')->with($this->project, 5)->willReturn(true);
-        $this->dao->expects(self::once())->method('saveLicenseAgreementForPackage')->with($this->package, 5);
+        $this->dao->expects($this->once())->method('isLicenseAgreementValidForProject')->with($this->project, 5)->willReturn(true);
+        $this->dao->expects($this->once())->method('saveLicenseAgreementForPackage')->with($this->package, 5);
 
         $this->factory->updateLicenseAgreementForPackage($this->project, $this->package, 5);
         self::assertTrue($this->package->getApproveLicense());
@@ -87,7 +87,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testItUpdatesPackageWithDefaultLicenseAgreement(): void
     {
-        $this->dao->expects(self::once())->method('resetLicenseAgreementForPackage')->with($this->package);
+        $this->dao->expects($this->once())->method('resetLicenseAgreementForPackage')->with($this->package);
 
         $this->factory->updateLicenseAgreementForPackage($this->project, $this->package, 0);
         self::assertTrue($this->package->getApproveLicense());
@@ -95,7 +95,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testItRaisesAnExceptionIfSubmittedLicenseIdIsNotValidForProject(): void
     {
-        $this->dao->expects(self::once())->method('isLicenseAgreementValidForProject')->with($this->project, 5)->willReturn(false);
+        $this->dao->expects($this->once())->method('isLicenseAgreementValidForProject')->with($this->project, 5)->willReturn(false);
 
         self::expectException(InvalidLicenseAgreementException::class);
 
@@ -106,7 +106,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         ForgeConfig::set('sys_frs_license_mandatory', true);
 
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(false);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(false);
 
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         self::assertEquals(new DefaultLicenseAgreement(), $license);
@@ -116,7 +116,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         ForgeConfig::set('sys_frs_license_mandatory', false);
 
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(false);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(false);
 
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         self::assertEquals(new NoLicenseToApprove(), $license);
@@ -125,7 +125,7 @@ class LicenseAgreementFactoryTest extends TestCase
     public function testItReturnsCustomLicenseAsDefault(): void
     {
         $this->dao->method('getById')->willReturn(['id' => 5, 'title' => 'foo', 'content' => 'bar']);
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(5);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(5);
 
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         self::assertEquals(new LicenseAgreement(5, 'foo', 'bar'), $license);
@@ -134,7 +134,7 @@ class LicenseAgreementFactoryTest extends TestCase
     public function testItReturnsDefaultLicenseAgreementIfALicenseWasSetButInvalid(): void
     {
         $this->dao->method('getById')->willReturn(false);
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(5);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(5);
 
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         self::assertEquals(new DefaultLicenseAgreement(), $license);
@@ -142,7 +142,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testItReturnsNoLicenseToApproveWhenItsTheSelectedDefault(): void
     {
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(NoLicenseToApprove::ID);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(NoLicenseToApprove::ID);
 
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         self::assertEquals(new NoLicenseToApprove(), $license);
@@ -150,7 +150,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testItReturnsDefaultLicenseWhenItsTheSelectedDefault(): void
     {
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(DefaultLicenseAgreement::ID);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(DefaultLicenseAgreement::ID);
 
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         self::assertEquals(new DefaultLicenseAgreement(), $license);
@@ -160,7 +160,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         ForgeConfig::set('sys_frs_license_mandatory', true);
 
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(NoLicenseToApprove::ID);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($this->project)->willReturn(NoLicenseToApprove::ID);
 
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         self::assertEquals(new DefaultLicenseAgreement(), $license);
@@ -170,7 +170,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $license = new LicenseAgreement(5, 'title', 'content');
 
-        $this->dao->expects(self::once())->method('delete')->with($license);
+        $this->dao->expects($this->once())->method('delete')->with($license);
         $this->dao->method('canBeDeleted')->with($this->project, $license)->willReturn(true);
 
         $this->factory->delete($this->project, $license);
@@ -215,8 +215,8 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $template_project = new Project(['group_id' => 150]);
 
-        $this->dao->expects(self::once())->method('getProjectLicenseAgreements')->with($template_project)->willReturn([]);
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(false);
+        $this->dao->expects($this->once())->method('getProjectLicenseAgreements')->with($template_project)->willReturn([]);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(false);
 
         $this->dao->expects(self::never())->method('save');
 
@@ -232,9 +232,9 @@ class LicenseAgreementFactoryTest extends TestCase
                 ['id' => 5, 'title' => 'some title', 'content' => 'and content'],
             ]
         );
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(5);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(5);
 
-        $this->dao->expects(self::once())->method('create')
+        $this->dao->expects($this->once())->method('create')
             ->with(
                 $this->project,
                 self::callback(
@@ -246,7 +246,7 @@ class LicenseAgreementFactoryTest extends TestCase
             )
             ->willReturn(12);
 
-        $this->dao->expects(self::once())->method('setProjectDefault')
+        $this->dao->expects($this->once())->method('setProjectDefault')
             ->with(
                 $this->project,
                 self::callback(
@@ -268,9 +268,9 @@ class LicenseAgreementFactoryTest extends TestCase
                 ['id' => 5, 'title' => 'some title', 'content' => 'and content'],
             ]
         );
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(NoLicenseToApprove::ID);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(NoLicenseToApprove::ID);
 
-        $this->dao->expects(self::once())->method('create')
+        $this->dao->expects($this->once())->method('create')
             ->with(
                 $this->project,
                 self::callback(
@@ -282,7 +282,7 @@ class LicenseAgreementFactoryTest extends TestCase
             )
             ->willReturn(12);
 
-        $this->dao->expects(self::once())->method('setProjectDefault')
+        $this->dao->expects($this->once())->method('setProjectDefault')
             ->with(
                 $this->project,
                 self::callback(
@@ -304,7 +304,7 @@ class LicenseAgreementFactoryTest extends TestCase
                 ['id' => 5, 'title' => 'some title', 'content' => 'and content'],
             ]
         );
-        $this->dao->expects(self::once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(5);
+        $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(5);
         $this->dao->method('create')->willReturn(12);
         $this->dao->method('setProjectDefault');
 
@@ -335,8 +335,8 @@ class LicenseAgreementFactoryTest extends TestCase
         });
 
         $this->dao->method('isLicenseAgreementValidForProject')->with($this->project, 12)->willReturn(true);
-        $this->dao->expects(self::once())->method('saveLicenseAgreementForPackage')->with($packages[1001], 12);
-        $this->dao->expects(self::once())->method('resetLicenseAgreementForPackage')->with($packages[1002]);
+        $this->dao->expects($this->once())->method('saveLicenseAgreementForPackage')->with($packages[1001], 12);
+        $this->dao->expects($this->once())->method('resetLicenseAgreementForPackage')->with($packages[1002]);
 
         $this->factory->duplicate($frs_package_factory, $this->project, $template_project, [350 => 1001, 470 => 1002]);
     }

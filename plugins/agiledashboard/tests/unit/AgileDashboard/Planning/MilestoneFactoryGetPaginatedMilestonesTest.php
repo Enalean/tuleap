@@ -176,10 +176,10 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         $this->top_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
             ->withMilestoneTracker($milestone_tracker)
             ->build();
-        $this->milestone_dao->expects(self::once())->method('searchPaginatedTopMilestones')
+        $this->milestone_dao->expects($this->once())->method('searchPaginatedTopMilestones')
             ->with(15, $this->top_milestone_request)
             ->willReturn([['id' => 24], ['id' => 25]]);
-        $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
+        $this->milestone_dao->expects($this->once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(24, $milestone_tracker);
         $second_artifact = $this->anArtifact(25, $milestone_tracker);
@@ -214,10 +214,10 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     public function testItReturnsSubMilestonesFilteredByStatus(): void
     {
-        $this->milestone_dao->expects(self::once())->method('searchPaginatedSubMilestones')
+        $this->milestone_dao->expects($this->once())->method('searchPaginatedSubMilestones')
             ->with(121, $this->sub_milestone_request)
             ->willReturn([['id' => 138], ['id' => 139]]);
-        $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
+        $this->milestone_dao->expects($this->once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(138, $this->sub_milestone_tracker);
         $second_artifact = $this->anArtifact(139, $this->sub_milestone_tracker);
@@ -272,10 +272,10 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
             new StatusOpen()
         );
 
-        $this->milestone_dao->expects(self::once())->method('searchPaginatedSiblingTopMilestones')
+        $this->milestone_dao->expects($this->once())->method('searchPaginatedSiblingTopMilestones')
             ->with(93, $top_milestone_tracker_id, $this->sibling_milestone_request)
             ->willReturn([['id' => 138], ['id' => 139]]);
-        $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
+        $this->milestone_dao->expects($this->once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(138, $top_milestone_tracker);
         $second_artifact = $this->anArtifact(139, $top_milestone_tracker);
@@ -321,10 +321,10 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         );
         $this->reference_milestone->setAncestors([$parent_milestone]);
 
-        $this->milestone_dao->expects(self::once())->method('searchPaginatedSiblingMilestones')
+        $this->milestone_dao->expects($this->once())->method('searchPaginatedSiblingMilestones')
             ->with(121, $this->sibling_milestone_request)
             ->willReturn([['id' => 138], ['id' => 139]]);
-        $this->milestone_dao->expects(self::once())->method('foundRows')->willReturn(2);
+        $this->milestone_dao->expects($this->once())->method('foundRows')->willReturn(2);
 
         $first_artifact  = $this->anArtifact(138, $this->sub_milestone_tracker);
         $second_artifact = $this->anArtifact(139, $this->sub_milestone_tracker);

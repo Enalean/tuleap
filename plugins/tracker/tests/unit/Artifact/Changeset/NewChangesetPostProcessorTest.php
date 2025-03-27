@@ -100,7 +100,7 @@ final class NewChangesetPostProcessorTest extends TestCase
             $this->comment_creation
         );
 
-        $this->changeset_comment_index->expects(self::once())->method('indexNewChangesetComment');
+        $this->changeset_comment_index->expects($this->once())->method('indexNewChangesetComment');
 
         $this->postProcessCreation(
             $new_changeset_created,

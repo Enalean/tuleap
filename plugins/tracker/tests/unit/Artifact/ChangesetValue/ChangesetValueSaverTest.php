@@ -76,7 +76,7 @@ final class ChangesetValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_data[self::FIELD_ID] = self::FIELD_VALUE;
         $this->field->method('userCanUpdate')->willReturn(true);
 
-        $this->field->expects(self::once())
+        $this->field->expects($this->once())
             ->method('saveNewChangeset')
             ->with(
                 self::isInstanceOf(Artifact::class),
@@ -98,7 +98,7 @@ final class ChangesetValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field->method('userCanUpdate')->willReturn(false);
         $this->workflow->method('bypassPermissions')->willReturn(true);
 
-        $this->field->expects(self::once())
+        $this->field->expects($this->once())
             ->method('saveNewChangeset')
             ->with(
                 self::isInstanceOf(Artifact::class),
@@ -120,7 +120,7 @@ final class ChangesetValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field->method('userCanUpdate')->willReturn(false);
         $this->workflow->method('bypassPermissions')->willReturn(false);
 
-        $this->field->expects(self::once())
+        $this->field->expects($this->once())
             ->method('saveNewChangeset')
             ->with(
                 self::isInstanceOf(Artifact::class),
@@ -138,7 +138,7 @@ final class ChangesetValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSavesFieldThatWasNotSubmittedWithNullValue(): void
     {
-        $this->field->expects(self::once())
+        $this->field->expects($this->once())
             ->method('saveNewChangeset')
             ->with(
                 self::isInstanceOf(Artifact::class),

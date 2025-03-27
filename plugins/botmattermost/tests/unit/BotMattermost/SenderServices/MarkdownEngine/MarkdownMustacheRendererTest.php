@@ -30,7 +30,7 @@ final class MarkdownMustacheRendererTest extends TestCase
     {
         $template_cache = $this->createMock(TemplateCache::class);
         $template_cache
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPath');
 
         $renderer = new MarkdownMustacheRenderer(

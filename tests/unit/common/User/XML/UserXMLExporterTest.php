@@ -108,7 +108,7 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'language_id' => 'en']);
 
-        $this->collection->expects(self::once())->method('add')->with($user);
+        $this->collection->expects($this->once())->method('add')->with($user);
 
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
     }
@@ -118,7 +118,7 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
         $this->user_manager->method('getUserById')->with(101)->willReturn($user);
 
-        $this->collection->expects(self::once())->method('add')->with($user);
+        $this->collection->expects($this->once())->method('add')->with($user);
 
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
     }

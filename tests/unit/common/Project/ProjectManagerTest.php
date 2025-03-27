@@ -228,7 +228,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusSuspended()->build();
 
         $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
-        $this->project_dao->expects(self::once())->method('updateStatus')->willReturn(true);
+        $this->project_dao->expects($this->once())->method('updateStatus')->willReturn(true);
         $this->project_manager_test_version->method('removeProjectFromCache')->with($project);
 
         $this->project_manager_test_version->updateStatus($project, 'A');
@@ -239,8 +239,8 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusSuspended()->build();
 
         $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
-        $this->project_dao->expects(self::once())->method('updateStatus')->willReturn(false);
-        $this->project_manager_test_version->expects(self::once())->method('removeProjectFromCache')->with($project);
+        $this->project_dao->expects($this->once())->method('updateStatus')->willReturn(false);
+        $this->project_manager_test_version->expects($this->once())->method('removeProjectFromCache')->with($project);
 
         $GLOBALS['Response']->method('addFeedback');
 

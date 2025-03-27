@@ -253,7 +253,7 @@ final class MilestoneResourceValidatorTest extends TestCase
     {
         $milestone          = $this->mockMilestoneWithArtifactLinks();
         $resource_validator = $this->getMockedValidator();
-        $resource_validator->expects(self::once())->method('validateArtifactsFromBodyContentWithClosedItems')
+        $resource_validator->expects($this->once())->method('validateArtifactsFromBodyContentWithClosedItems')
             ->with([210], $milestone, $this->user);
 
         $resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent(

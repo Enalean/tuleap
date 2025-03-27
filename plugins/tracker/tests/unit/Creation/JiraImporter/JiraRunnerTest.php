@@ -131,10 +131,10 @@ final class JiraRunnerTest extends TestCase
         );
 
         $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($user);
-        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
+        $this->key_factory->expects($this->once())->method('getEncryptionKey')->willReturn($encryption_key);
 
         $tracker = TrackerTestBuilder::aTracker()->build();
-        $this->creator->expects(self::once())->method('createFromJira')
+        $this->creator->expects($this->once())->method('createFromJira')
             ->with(
                 $project,
                 'Bugs',
@@ -153,12 +153,12 @@ final class JiraRunnerTest extends TestCase
             )
             ->willReturn($tracker);
 
-        $this->success_notifier->expects(self::once())->method('warnUserAboutSuccess')
+        $this->success_notifier->expects($this->once())->method('warnUserAboutSuccess')
             ->with($import, $tracker, $this->jira_user_on_tuleap_cache);
 
-        $this->dao->expects(self::once())->method('deleteById')->with(123);
+        $this->dao->expects($this->once())->method('deleteById')->with(123);
 
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
     }
@@ -173,9 +173,9 @@ final class JiraRunnerTest extends TestCase
 
         $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($this->anonymous_user);
 
-        $this->dao->expects(self::once())->method('deleteById')->with(123);
+        $this->dao->expects($this->once())->method('deleteById')->with(123);
 
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
         self::assertTrue($this->logger->hasErrorThatContains('Unable to log in as the user who originated the event'));
@@ -192,15 +192,15 @@ final class JiraRunnerTest extends TestCase
 
         $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($user);
 
-        $this->key_factory->expects(self::once())->method('getEncryptionKey')
+        $this->key_factory->expects($this->once())->method('getEncryptionKey')
             ->willThrowException(new CannotPerformIOOperationException(''));
 
-        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+        $this->error_notifier->expects($this->once())->method('warnUserAboutError')
             ->with($import, 'Unable to access to the token to do the import.');
 
-        $this->dao->expects(self::once())->method('deleteById')->with(123);
+        $this->dao->expects($this->once())->method('deleteById')->with(123);
 
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
         self::assertTrue($this->logger->hasErrorThatContains('Unable to access to the token to do the import.'));
@@ -223,14 +223,14 @@ final class JiraRunnerTest extends TestCase
 
         $this->user_manager->method('forceLogin')->with('Whalter White')->willReturn($user);
 
-        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
+        $this->key_factory->expects($this->once())->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+        $this->error_notifier->expects($this->once())->method('warnUserAboutError')
             ->with($import, 'Unable to access to the token to do the import.');
 
-        $this->dao->expects(self::once())->method('deleteById')->with(123);
+        $this->dao->expects($this->once())->method('deleteById')->with(123);
 
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
         self::assertTrue($this->logger->hasErrorThatContains('The ciphertext cannot be decrypted'));
@@ -260,17 +260,17 @@ final class JiraRunnerTest extends TestCase
 
         $this->user_manager->method('forceLogin')->with('Whalter_White')->willReturn($user);
 
-        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
+        $this->key_factory->expects($this->once())->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $this->creator->expects(self::once())->method('createFromJira')
+        $this->creator->expects($this->once())->method('createFromJira')
             ->willThrowException(JiraConnectionException::credentialsValuesAreInvalid());
 
-        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+        $this->error_notifier->expects($this->once())->method('warnUserAboutError')
             ->with($import, 'Can not connect to Jira server, please check your Jira credentials.');
 
-        $this->dao->expects(self::once())->method('deleteById')->with(123);
+        $this->dao->expects($this->once())->method('deleteById')->with(123);
 
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
         self::assertTrue($this->logger->hasErrorThatContains('Can not connect to Jira server, please check your Jira credentials.'));
@@ -299,17 +299,17 @@ final class JiraRunnerTest extends TestCase
 
         $this->user_manager->method('forceLogin')->with('Whalter_White')->willReturn($user);
 
-        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
+        $this->key_factory->expects($this->once())->method('getEncryptionKey')->willReturn($encryption_key);
 
-        $this->creator->expects(self::once())->method('createFromJira')
+        $this->creator->expects($this->once())->method('createFromJira')
             ->willThrowException(new ParseExceptionWithErrors('', [], []));
 
-        $this->error_notifier->expects(self::once())->method('warnUserAboutError')
+        $this->error_notifier->expects($this->once())->method('warnUserAboutError')
             ->with($import, 'Unable to parse the XML used to import from Jira.');
 
-        $this->dao->expects(self::once())->method('deleteById')->with(123);
+        $this->dao->expects($this->once())->method('deleteById')->with(123);
 
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->runner->processAsyncJiraImport($import);
         self::assertTrue($this->logger->hasErrorThatContains('Unable to parse the XML used to import from Jira.'));

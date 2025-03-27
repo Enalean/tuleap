@@ -109,8 +109,8 @@ final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository->method('getId')->willReturn(1);
         $this->repository->method('getSystemBackupPath')->willReturn('');
         $this->repository->method('getBackupFileName')->willReturn('');
-        $this->repository->expects(self::once())->method('setDeletionDate');
-        $this->dao->expects(self::once())->method('markAsDeleted');
+        $this->repository->expects($this->once())->method('setDeletionDate');
+        $this->dao->expects($this->once())->method('markAsDeleted');
 
         $this->repository_deleter->markAsDeleted($this->repository);
     }

@@ -56,10 +56,10 @@ final class XMLImporterTest extends TestCase
             EOS
         );
 
-        $rng_validator->expects(self::once())->method('validate');
+        $rng_validator->expects($this->once())->method('validate');
 
         $parent_item = new Docman_Item();
-        $item_factory->expects(self::once())->method('getRoot')->with(113)->willReturn($parent_item);
+        $item_factory->expects($this->once())->method('getRoot')->with(113)->willReturn($parent_item);
 
         $node_importer->expects(self::exactly(2))->method('import')
             ->with(
@@ -91,9 +91,9 @@ final class XMLImporterTest extends TestCase
             EOS
         );
 
-        $rng_validator->expects(self::once())->method('validate');
+        $rng_validator->expects($this->once())->method('validate');
 
-        $item_factory->expects(self::once())->method('getRoot')->with(113)->willReturn(null);
+        $item_factory->expects($this->once())->method('getRoot')->with(113)->willReturn(null);
         $node_importer->expects(self::never())->method('import');
 
         $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
@@ -117,7 +117,7 @@ final class XMLImporterTest extends TestCase
             EOS
         );
 
-        $rng_validator->expects(self::once())->method('validate')
+        $rng_validator->expects($this->once())->method('validate')
             ->willThrowException(new ParseExceptionWithErrors('', [], []));
 
         self::expectException(XML_ParseException::class);

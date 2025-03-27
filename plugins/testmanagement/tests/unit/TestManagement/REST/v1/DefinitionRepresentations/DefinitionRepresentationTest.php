@@ -48,7 +48,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = $this->createMock(\Tracker_Artifact_ChangesetValue_Text::class);
         $value->method('getText')->willReturn('description');
-        $artifact->expects(self::once())->method('getValue')->with($field, null)->willReturn($value);
+        $artifact->expects($this->once())->method('getValue')->with($field, null)->willReturn($value);
 
         $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $form_element_factory->method('getSelectboxFieldByNameForUser');
@@ -65,7 +65,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
-        $purifier->expects(self::once())->method('purifyHTMLWithReferences')->willReturn('description');
+        $purifier->expects($this->once())->method('purifyHTMLWithReferences')->willReturn('description');
         $commonmark_interpreter = $this->createMock(ContentInterpretor::class);
         $priority_manager       = $this->createStub(\Tracker_Artifact_PriorityManager::class);
         $priority_manager->method('getGlobalRank')->willReturn(1);

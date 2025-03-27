@@ -144,7 +144,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItCheckCSRFToken(): void
     {
-        $this->csrf_token->expects(self::once())->method('check')->with(DisplayAccountInformationController::URL);
+        $this->csrf_token->expects($this->once())->method('check')->with(DisplayAccountInformationController::URL);
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -174,7 +174,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->csrf_token->method('check');
 
-        $this->user_manager->expects(self::once())->method('updateDb')->with(
+        $this->user_manager->expects($this->once())->method('updateDb')->with(
             self::callback(
                 static function (\PFUser $user) {
                     return $user->getRealName() === 'Franck Zappa';
@@ -182,7 +182,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             )
         )->willReturn(true);
 
-        $this->avatar_generator->expects(self::once())->method('generate');
+        $this->avatar_generator->expects($this->once())->method('generate');
 
         $has_been_redirected = false;
         try {
@@ -208,7 +208,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->user->setHasCustomAvatar(true);
 
-        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
+        $this->user_manager->expects($this->once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getRealName() === 'Franck Zappa';
         }))->willReturn(true);
 
@@ -320,8 +320,8 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItUpdatesEmail(): void
     {
         $this->csrf_token->method('check');
-        $this->email_updater->expects(self::once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
-        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
+        $this->email_updater->expects($this->once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
+        $this->user_manager->expects($this->once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getEmailNew() === 'bob@example.com' && $user->getConfirmHash() != '';
         }))->willReturn(true);
 
@@ -370,8 +370,8 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItUpdatesEmailWithoutUpdatingRealname(): void
     {
         $this->csrf_token->method('check');
-        $this->email_updater->expects(self::once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
-        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
+        $this->email_updater->expects($this->once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
+        $this->user_manager->expects($this->once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getEmailNew() === 'bob@example.com';
         }))->willReturn(true);
 
@@ -421,7 +421,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->csrf_token->method('check');
         $this->email_updater->method('sendEmailChangeConfirm')->willThrowException(new EmailNotSentException());
-        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
+        $this->user_manager->expects($this->once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getEmailNew() === 'bob@example.com';
         }))->willReturn(true);
 
@@ -492,7 +492,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItUpdatesTimezone(): void
     {
         $this->csrf_token->method('check');
-        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
+        $this->user_manager->expects($this->once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getTimezone() === 'Europe/Berlin';
         }))->willReturn(true);
 
@@ -541,7 +541,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->csrf_token->method('check');
 
-        $this->email_updater->expects(self::once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
+        $this->email_updater->expects($this->once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
         $this->user_manager->method('updateDb')->willReturnCallback(
             function (PFUser $user): bool {
                 if (
@@ -556,7 +556,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             }
         );
 
-        $this->avatar_generator->expects(self::once())->method('generate');
+        $this->avatar_generator->expects($this->once())->method('generate');
 
         $has_been_redirected = false;
         try {

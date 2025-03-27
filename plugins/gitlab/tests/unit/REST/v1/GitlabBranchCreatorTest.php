@@ -98,7 +98,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = $this->buildMockUser();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(
@@ -106,7 +106,7 @@ final class GitlabBranchCreatorTest extends TestCase
             );
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(true);
 
@@ -114,13 +114,13 @@ final class GitlabBranchCreatorTest extends TestCase
 
         $credentials = $this->createMock(Credentials::class);
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn($credentials);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with(
                 $credentials,
@@ -141,7 +141,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->build();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(null);
@@ -160,7 +160,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->build();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(
@@ -168,7 +168,7 @@ final class GitlabBranchCreatorTest extends TestCase
             );
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(false);
 
@@ -186,7 +186,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->withoutMemberOfProjects()->build();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(
@@ -194,7 +194,7 @@ final class GitlabBranchCreatorTest extends TestCase
             );
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(true);
 
@@ -212,7 +212,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = $this->buildMockUser();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(
@@ -220,12 +220,12 @@ final class GitlabBranchCreatorTest extends TestCase
             );
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(true);
 
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(1)
             ->willReturn(null);
@@ -244,7 +244,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = $this->buildMockUser();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(
@@ -252,7 +252,7 @@ final class GitlabBranchCreatorTest extends TestCase
             );
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(true);
 
@@ -272,7 +272,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = $this->buildMockUser();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(
@@ -280,13 +280,13 @@ final class GitlabBranchCreatorTest extends TestCase
             );
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(true);
 
         $integration = $this->buildMockIntegration();
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn(null);
@@ -306,7 +306,7 @@ final class GitlabBranchCreatorTest extends TestCase
         $user = $this->buildMockUser();
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
             ->willReturn(
@@ -314,7 +314,7 @@ final class GitlabBranchCreatorTest extends TestCase
             );
 
         $this->availability_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(true);
 
@@ -322,13 +322,13 @@ final class GitlabBranchCreatorTest extends TestCase
 
         $credentials = $this->createMock(Credentials::class);
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn($credentials);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('postUrl')
             ->with(
                 $credentials,
@@ -421,7 +421,7 @@ final class GitlabBranchCreatorTest extends TestCase
         );
 
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(1)
             ->willReturn($integration);
@@ -441,7 +441,7 @@ final class GitlabBranchCreatorTest extends TestCase
         );
 
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(1)
             ->willReturn($integration);

@@ -83,16 +83,16 @@ final class MilestoneElementMoverTest extends TestCase
         $expected_result = $valid_to_add;
 
 
-        $this->resources_patcher->expects(self::once())->method('startTransaction');
-        $this->resources_patcher->expects(self::once())->method('removeArtifactFromSource')
+        $this->resources_patcher->expects($this->once())->method('startTransaction');
+        $this->resources_patcher->expects($this->once())->method('removeArtifactFromSource')
             ->with($user, $add)
             ->willReturn($valid_to_add);
 
-        $this->milestone_validator->expects(self::once())->method('validateArtifactIdsCanBeAddedToBacklog')->willReturn($valid_to_add);
+        $this->milestone_validator->expects($this->once())->method('validateArtifactIdsCanBeAddedToBacklog')->willReturn($valid_to_add);
 
         $milestone->expects(self::exactly(2))->method('getArtifact')->willReturn($artifact);
 
-        $this->artifact_link_updater->expects(self::once())->method('updateArtifactLinks')
+        $this->artifact_link_updater->expects($this->once())->method('updateArtifactLinks')
             ->with(
                 $user,
                 $milestone->getArtifact(),
@@ -100,7 +100,7 @@ final class MilestoneElementMoverTest extends TestCase
                 [],
                 Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
             );
-        $this->resources_patcher->expects(self::once())->method('commit');
+        $this->resources_patcher->expects($this->once())->method('commit');
 
         $result = $this->mover->moveElement($user, $add, $milestone);
 
@@ -122,13 +122,13 @@ final class MilestoneElementMoverTest extends TestCase
         );
         $add       = ['id' => 112];
 
-        $this->resources_patcher->expects(self::once())->method('removeArtifactFromSource')->willReturn([$add]);
+        $this->resources_patcher->expects($this->once())->method('removeArtifactFromSource')->willReturn([$add]);
 
         $this->tracker_artifact_factory->expects(self::exactly(2))->method('getArtifactById')->with($add)->willReturn($artifact);
 
-        $this->artifact_link_updater->expects(self::once())->method('updateArtifactLinks');
-        $this->milestone_parent_linker->expects(self::once())->method('linkToMilestoneParent');
-        $this->explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifact_link_updater->expects($this->once())->method('updateArtifactLinks');
+        $this->milestone_parent_linker->expects($this->once())->method('linkToMilestoneParent');
+        $this->explicit_backlog_dao->expects($this->once())->method('removeItemsFromExplicitBacklogOfProject');
 
         $this->mover->moveElementToMilestoneContent($milestone, $user, $add);
     }

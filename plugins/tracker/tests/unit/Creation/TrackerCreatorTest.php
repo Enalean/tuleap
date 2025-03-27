@@ -63,7 +63,7 @@ final class TrackerCreatorTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
         $tracker = TrackerTestBuilder::aTracker()->build();
-        $this->tracker_xml_import->expects(self::once())->method('createFromXMLFileWithInfo')->with(
+        $this->tracker_xml_import->expects($this->once())->method('createFromXMLFileWithInfo')->with(
             $project,
             '/var/tmp/tracker_import',
             'Tracker Name',
@@ -92,7 +92,7 @@ final class TrackerCreatorTest extends TestCase
         $from_tracker = TrackerTestBuilder::aTracker()->withProject($from_project)->withId(101)->build();
         $to_tracker   = TrackerTestBuilder::aTracker()->withId(201)->build();
 
-        $this->tracker_factory->expects(self::once())->method('create')->with(
+        $this->tracker_factory->expects($this->once())->method('create')->with(
             $to_project->getId(),
             self::isInstanceOf(MappingRegistry::class),
             '101',
@@ -101,11 +101,11 @@ final class TrackerCreatorTest extends TestCase
             'tracker-shortname',
             'peggy-pink',
         )->willReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
-        $this->creation_data_checker->expects(self::once())->method('checkAtTrackerDuplication');
+        $this->creation_data_checker->expects($this->once())->method('checkAtTrackerDuplication');
 
-        $this->tracker_factory->expects(self::once())->method('getTrackerById')->with(101)->willReturn($from_tracker);
+        $this->tracker_factory->expects($this->once())->method('getTrackerById')->with(101)->willReturn($from_tracker);
 
-        $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateInSameProject')
+        $this->semantic_timeframe_duplicator->expects($this->once())->method('duplicateInSameProject')
             ->with(101, 201, ['F101' => 1001, 'F102' => 1002]);
 
         $created_tracker = $this->creator->duplicateTracker(
@@ -124,8 +124,8 @@ final class TrackerCreatorTest extends TestCase
     public function testItThrowExceptionWhenTrackerDuplicationFails(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(110)->build();
-        $this->creation_data_checker->expects(self::once())->method('checkAtTrackerDuplication');
-        $this->tracker_factory->expects(self::once())->method('create')->with(
+        $this->creation_data_checker->expects($this->once())->method('checkAtTrackerDuplication');
+        $this->tracker_factory->expects($this->once())->method('create')->with(
             $project->getId(),
             self::isInstanceOf(MappingRegistry::class),
             '101',
@@ -157,7 +157,7 @@ final class TrackerCreatorTest extends TestCase
         $from_tracker = TrackerTestBuilder::aTracker()->withId(101)->withProject($from_project)->build();
         $to_tracker   = TrackerTestBuilder::aTracker()->withId(201)->build();
 
-        $this->tracker_factory->expects(self::once())->method('create')->with(
+        $this->tracker_factory->expects($this->once())->method('create')->with(
             $to_project->getId(),
             self::isInstanceOf(MappingRegistry::class),
             '101',
@@ -166,7 +166,7 @@ final class TrackerCreatorTest extends TestCase
             'tracker-shortname',
             'peggy-pink',
         )->willReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
-        $this->creation_data_checker->expects(self::once())->method('checkAtTrackerDuplication');
+        $this->creation_data_checker->expects($this->once())->method('checkAtTrackerDuplication');
 
         $this->tracker_factory->method('getTrackerById')->willReturnCallback(static fn(int $id) => match ($id) {
             101 => $from_tracker,
@@ -174,7 +174,7 @@ final class TrackerCreatorTest extends TestCase
         });
 
         $this->semantic_timeframe_duplicator->expects(self::never())->method('duplicateInSameProject');
-        $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateBasedOnFieldConfiguration');
+        $this->semantic_timeframe_duplicator->expects($this->once())->method('duplicateBasedOnFieldConfiguration');
 
         $this->creator->duplicateTracker(
             $to_project,

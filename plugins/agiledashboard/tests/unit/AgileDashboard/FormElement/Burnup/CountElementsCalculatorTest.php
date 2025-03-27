@@ -119,7 +119,7 @@ final class CountElementsCalculatorTest extends TestCase
 
     private function mockEpicUserStoriesAndTasks(int $artifact_id, int $timestamp): void
     {
-        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
+        $this->burnup_dao->expects($this->once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->willReturn([['id' => 2]]);
 
@@ -220,7 +220,7 @@ final class CountElementsCalculatorTest extends TestCase
         //This use case deal with the fact that epics and tasks can be planned into a Release.
         //So the tasks 01 must not be counted twice.
 
-        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
+        $this->burnup_dao->expects($this->once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->willReturn([
                 ['id' => 2],
@@ -304,7 +304,7 @@ final class CountElementsCalculatorTest extends TestCase
                 [$this->task_tracker, []],
             ]);
 
-        $epic_status_semantic->expects(self::once())->method('isOpenAtGivenChangeset')
+        $epic_status_semantic->expects($this->once())->method('isOpenAtGivenChangeset')
             ->with($changeset_epic)
             ->willReturn(true);
 
@@ -317,7 +317,7 @@ final class CountElementsCalculatorTest extends TestCase
 
     private function mockUserStoriesWithoutArtLinkField(int $artifact_id, int $timestamp): void
     {
-        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
+        $this->burnup_dao->expects($this->once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->willReturn([
                 ['id' => 2],
@@ -393,7 +393,7 @@ final class CountElementsCalculatorTest extends TestCase
 
     private function mockUserStoriesWithoutChildren(int $artifact_id, int $timestamp): void
     {
-        $this->burnup_dao->expects(self::once())->method('searchLinkedArtifactsAtGivenTimestamp')
+        $this->burnup_dao->expects($this->once())->method('searchLinkedArtifactsAtGivenTimestamp')
             ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->willReturn([
                 ['id' => 2],

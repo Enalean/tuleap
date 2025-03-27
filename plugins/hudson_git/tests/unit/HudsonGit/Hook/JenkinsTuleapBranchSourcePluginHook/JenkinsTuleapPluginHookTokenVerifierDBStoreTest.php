@@ -67,8 +67,8 @@ final class JenkinsTuleapPluginHookTokenVerifierDBStoreTest extends TestCase
             )
         );
 
-        $this->dao->expects(self::once())->method('searchTokenVerification')->willReturn(['verifier' => $this->hasher->computeHash($verification_string)]);
-        $this->dao->expects(self::once())->method('deleteTokenByID');
+        $this->dao->expects($this->once())->method('searchTokenVerification')->willReturn(['verifier' => $this->hasher->computeHash($verification_string)]);
+        $this->dao->expects($this->once())->method('deleteTokenByID');
 
         self::assertTrue($this->verifier->isTriggerTokenValid($token, new \DateTimeImmutable('@10')));
     }
@@ -89,7 +89,7 @@ final class JenkinsTuleapPluginHookTokenVerifierDBStoreTest extends TestCase
             )
         );
 
-        $this->dao->expects(self::once())->method('searchTokenVerification')->willReturn(null);
+        $this->dao->expects($this->once())->method('searchTokenVerification')->willReturn(null);
 
         self::assertFalse($this->verifier->isTriggerTokenValid($token, new \DateTimeImmutable('@10')));
     }
@@ -105,7 +105,7 @@ final class JenkinsTuleapPluginHookTokenVerifierDBStoreTest extends TestCase
             )
         );
 
-        $this->dao->expects(self::once())->method('searchTokenVerification')->willReturn(['verifier' => 'somethingelse']);
+        $this->dao->expects($this->once())->method('searchTokenVerification')->willReturn(['verifier' => 'somethingelse']);
 
         self::assertFalse($this->verifier->isTriggerTokenValid($token, new \DateTimeImmutable('@10')));
     }

@@ -97,7 +97,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
         $handler->method('handle')->willReturn($expected_response);
 
         $request = $this->buildServerRequest('Bearer FooToken');
-        $request->expects(self::once())
+        $request->expects($this->once())
             ->method('withAttribute')
             ->with(OAuth2ResourceServerMiddleware::class, self::isInstanceOf(GrantedAuthorization::class))
             ->willReturn($request);

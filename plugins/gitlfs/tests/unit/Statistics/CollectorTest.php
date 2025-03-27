@@ -38,7 +38,7 @@ final class CollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable('17-12-2018');
         $statistics_retriever->method('getProjectDiskUsage')->willReturn(123456);
 
-        $disk_usage_dao->expects(self::once())->method('addGroup');
+        $disk_usage_dao->expects($this->once())->method('addGroup');
 
         $collector->proceedToDiskUsageCollection($params, $current_time);
 

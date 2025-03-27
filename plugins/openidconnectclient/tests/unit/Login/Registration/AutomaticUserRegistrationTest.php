@@ -42,7 +42,7 @@ final class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesAnAccount(): void
     {
         $user_manager = $this->createMock(\UserManager::class);
-        $user_manager->expects(self::once())->method('createAccount');
+        $user_manager->expects($this->once())->method('createAccount');
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
         $automatic_user_registration->register(['email' => 'user@example.com']);
@@ -62,7 +62,7 @@ final class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set(AutomaticUserRegistration::CONFIG_LDAP_ATTRIBUTE, 'email');
 
         $user_manager = $this->createMock(\UserManager::class);
-        $user_manager->expects(self::once())->method('createAccount')->willReturnCallback(static fn (\PFUser $user) => $user);
+        $user_manager->expects($this->once())->method('createAccount')->willReturnCallback(static fn (\PFUser $user) => $user);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
         $user                        = $automatic_user_registration->register(['email' => 'user@example.com']);
@@ -85,7 +85,7 @@ final class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanCreateAccountDefaultsToEmail(): void
     {
         $user_manager = $this->createMock(\UserManager::class);
-        $user_manager->expects(self::once())->method('getAllUsersByEmail')->with('user@example.com')->willReturn([]);
+        $user_manager->expects($this->once())->method('getAllUsersByEmail')->with('user@example.com')->willReturn([]);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
         self::assertTrue($automatic_user_registration->canCreateAccount(['email' => 'user@example.com']));
@@ -105,7 +105,7 @@ final class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set(AutomaticUserRegistration::CONFIG_LDAP_ATTRIBUTE, 'preferred_name');
 
         $user_manager = $this->createMock(\UserManager::class);
-        $user_manager->expects(self::once())->method('getAllUsersByLdapID')->with('alice')->willReturn([]);
+        $user_manager->expects($this->once())->method('getAllUsersByLdapID')->with('alice')->willReturn([]);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
         self::assertTrue($automatic_user_registration->canCreateAccount(['preferred_name' => 'alice']));

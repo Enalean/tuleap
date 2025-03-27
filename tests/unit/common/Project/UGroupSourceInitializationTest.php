@@ -39,13 +39,13 @@ final class UGroupSourceInitializationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItQueriesTheDatabaseWhenDefaultValueIsFalse(): void
     {
-        $this->ugroup->expects(self::once())->method('getUgroupBindingSource');
+        $this->ugroup->expects($this->once())->method('getUgroupBindingSource');
         $this->ugroup->isBound();
     }
 
     public function testItQueriesTheDatabaseOnlyOnce(): void
     {
-        $this->ugroup->expects(self::once())->method('getUgroupBindingSource');
+        $this->ugroup->expects($this->once())->method('getUgroupBindingSource');
         $this->ugroup->isBound();
         $this->ugroup->isBound();
     }

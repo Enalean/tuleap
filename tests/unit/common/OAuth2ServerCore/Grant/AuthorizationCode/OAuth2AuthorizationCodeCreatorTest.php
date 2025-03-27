@@ -78,10 +78,10 @@ final class OAuth2AuthorizationCodeCreatorTest extends \Tuleap\Test\PHPUnit\Test
     {
         $current_time = new \DateTimeImmutable('@10');
 
-        $this->dao->expects(self::once())->method('create')
+        $this->dao->expects($this->once())->method('create')
             ->with(12, 102, self::anything(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS, 'pkce_code_chall', 'oidc_nonce')
             ->willReturn(1);
-        $this->scope_saver->expects(self::once())->method('saveScopes');
+        $this->scope_saver->expects($this->once())->method('saveScopes');
 
         $auth_code = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,

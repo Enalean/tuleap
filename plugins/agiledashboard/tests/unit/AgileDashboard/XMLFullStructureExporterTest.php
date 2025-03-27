@@ -47,7 +47,7 @@ class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs
 
     public function testItAsksToPluginToExportStuffForTheGivenProject(): void
     {
-        $this->router->expects(self::once())->method('route');
+        $this->router->expects($this->once())->method('route');
 
         $this->event_manager
             ->expects(self::atLeast(1))
@@ -63,7 +63,7 @@ class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs
 
     public function testAgileDashboardExportsItself(): void
     {
-        $this->router->expects(self::once())->method('route');
+        $this->router->expects($this->once())->method('route');
 
         $this->event_manager
             ->method('processEvent')

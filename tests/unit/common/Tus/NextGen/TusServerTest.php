@@ -131,7 +131,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_information->method('getOffset')->willReturn($upload_offset);
         $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
-        $data_writer->expects(self::once())->method('writeChunk')
+        $data_writer->expects($this->once())->method('writeChunk')
             ->with(
                 $file_information,
                 $upload_offset,
@@ -142,10 +142,10 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             )->willReturn(strlen($body_content));
         if ($has_finisher) {
-            $finisher_data_store->expects(self::once())->method('finishUpload')->with($upload_request, $file_information);
+            $finisher_data_store->expects($this->once())->method('finishUpload')->with($upload_request, $file_information);
         }
-        $locker->expects(self::once())->method('lock')->willReturn(true);
-        $locker->expects(self::once())->method('unlock');
+        $locker->expects($this->once())->method('lock')->willReturn(true);
+        $locker->expects($this->once())->method('unlock');
 
         $response = $server->handle($upload_request);
 
@@ -342,7 +342,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->file_information_provider->method('getFileInformation')->willReturn($this->createMock(TusFileInformation::class));
 
-        $terminater->expects(self::once())->method('terminateUpload');
+        $terminater->expects($this->once())->method('terminateUpload');
 
         $response = $server->handle($incoming_request);
 

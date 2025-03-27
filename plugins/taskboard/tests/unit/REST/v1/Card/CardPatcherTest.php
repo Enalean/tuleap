@@ -68,7 +68,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfNoField(): void
     {
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn(null);
@@ -86,7 +86,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
@@ -134,7 +134,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn('1001');
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
@@ -157,13 +157,13 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn('1001');
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('update')
             ->with($this->user, $this->artifact, [$expected_value]);
 

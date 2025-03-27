@@ -100,7 +100,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
             ])
             ->build();
 
-        $this->router->expects(self::once())->method('renderAction')->with($this->planning_controller, 'edit', $request);
+        $this->router->expects($this->once())->method('renderAction')->with($this->planning_controller, 'edit', $request);
         $this->router->route($request);
     }
 
@@ -128,12 +128,12 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->planning_milestone_factory->method('getLastMilestoneCreated')->willReturn($last_milestone);
 
         $this->milestone_controller_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getMilestoneController')
             ->willReturn($this->createMock(Planning_MilestoneController::class));
 
         $show_called = false;
-        $this->router->expects(self::once())->method('renderAction');
+        $this->router->expects($this->once())->method('renderAction');
         $this->router->method('executeAction')->willReturnCallback(
             function (MVC2_Controller $controller, $action) use (&$show_called) {
                 if ($action !== 'show') {
@@ -159,11 +159,11 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $last_milestone->method('getArtifact');
         $this->planning_milestone_factory->method('getLastMilestoneCreated')->willReturn($last_milestone);
 
-        $this->milestone_controller_factory->expects(self::once())
+        $this->milestone_controller_factory->expects($this->once())
             ->method('getMilestoneController')
             ->willReturn($this->createMock(Planning_MilestoneController::class));
 
-        $this->router->expects(self::once())->method('renderAction');
+        $this->router->expects($this->once())->method('renderAction');
         $this->router->expects(self::never())->method('executeAction');
 
         $this->router->routeShowPlanning($request);

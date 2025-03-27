@@ -153,7 +153,7 @@ final class GitXMLExporterTest extends TestCase
             $default_branch_retriever,
         );
 
-        $event_manager->expects(self::once())->method('processEvent');
+        $event_manager->expects($this->once())->method('processEvent');
 
         $data           = '<?xml version="1.0" encoding="UTF-8"?>
                  <projects />';

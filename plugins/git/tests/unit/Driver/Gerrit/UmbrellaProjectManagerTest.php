@@ -101,7 +101,7 @@ final class UmbrellaProjectManagerTest extends TestCase
     {
         $this->project_manager->method('getParentProject')->with($this->project->getID())->willReturn(null);
 
-        $this->driver->expects(self::once())->method('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name);
+        $this->driver->expects($this->once())->method('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name);
         $this->driver->method('resetProjectInheritance');
         $this->membership_manager->method('createArrayOfGroupsForServer');
 
@@ -173,7 +173,7 @@ final class UmbrellaProjectManagerTest extends TestCase
                 (int) $this->project->getID()        => $this->parent_project,
                 (int) $this->parent_project->getID() => null,
             });
-        $this->driver->expects(self::once())->method('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName());
+        $this->driver->expects($this->once())->method('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName());
         $this->driver->method('createProjectWithPermissionsOnly');
         $this->driver->method('resetProjectInheritance');
         $this->membership_manager->method('createArrayOfGroupsForServer');

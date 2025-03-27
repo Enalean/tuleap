@@ -59,7 +59,7 @@ final class WebDAVFRSFileTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDeleteFailWithUserNotAdmin(): void
     {
         $utils = $this->createMock(WebDAVUtils::class);
-        $utils->expects(self::once())->method('userCanWrite')->with($this->user, $this->project->getID())->willReturn(false);
+        $utils->expects($this->once())->method('userCanWrite')->with($this->user, $this->project->getID())->willReturn(false);
         $webDAVFile = new WebDAVFRSFile($this->user, $this->project, new \FRSFile(['file_id' => 4]), $utils);
 
         $this->expectException(Forbidden::class);
@@ -76,7 +76,7 @@ final class WebDAVFRSFileTest extends \Tuleap\Test\PHPUnit\TestCase
         $frsff->method('delete_file')->willReturn(0);
         $utils = $this->createMock(WebDAVUtils::class);
         $utils->method('getFileFactory')->willReturn($frsff);
-        $utils->expects(self::once())->method('userCanWrite')->with($this->user, $this->project->getID())->willReturn(true);
+        $utils->expects($this->once())->method('userCanWrite')->with($this->user, $this->project->getID())->willReturn(true);
         $project = $this->createMock(Project::class);
         $project->method('getGroupId')->willReturn(102);
 
@@ -96,7 +96,7 @@ final class WebDAVFRSFileTest extends \Tuleap\Test\PHPUnit\TestCase
         $frsff->method('delete_file')->willReturn(1);
         $utils = $this->createMock(WebDAVUtils::class);
         $utils->method('getFileFactory')->willReturn($frsff);
-        $utils->expects(self::once())->method('userCanWrite')->with($this->user, $this->project->getID())->willReturn(true);
+        $utils->expects($this->once())->method('userCanWrite')->with($this->user, $this->project->getID())->willReturn(true);
         $project = $this->createMock(Project::class);
         $project->method('getGroupId')->willReturn(102);
 

@@ -93,7 +93,7 @@ final class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->secret_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getWebhookSecretForRepository')
             ->with($this->gitlab_repository_integration)
             ->willReturn(new ConcealedString('anotherSecret'));
@@ -120,7 +120,7 @@ final class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->secret_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getWebhookSecretForRepository')
             ->with($this->gitlab_repository_integration)
             ->willReturn(new ConcealedString('secret'));

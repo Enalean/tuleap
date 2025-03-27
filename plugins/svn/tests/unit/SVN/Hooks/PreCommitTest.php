@@ -390,8 +390,8 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $reference_manager = $this->createMock(ReferenceManager::class);
 
-        $this->repository->expects(self::once())->method('getProject')->willReturn($project);
-        $reference_manager->expects(self::once())
+        $this->repository->expects($this->once())->method('getProject')->willReturn($project);
+        $reference_manager->expects($this->once())
             ->method('stringContainsReferences')
             ->with('Commit message without reference', self::anything())
             ->willReturn(false);

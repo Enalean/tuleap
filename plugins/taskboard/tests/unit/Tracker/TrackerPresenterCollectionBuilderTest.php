@@ -91,7 +91,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
     public function testBuildCollectionReturnsEmptyArrayWhenNoTrackers(): void
     {
         $this->trackers_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackersForMilestone')
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([]));
@@ -106,7 +106,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
             TrackerTestBuilder::aTracker()->withId(27)->build()
         );
         $this->trackers_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackersForMilestone')
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([$taskboard_tracker]));
@@ -114,7 +114,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->mockSemanticTitle($taskboard_tracker, true, false);
         $this->mockSemanticContributor($taskboard_tracker, true, true);
         $this->add_in_place_tracker_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveAddInPlace')
             ->with($taskboard_tracker, $this->user, self::isInstanceOf(MappedFieldsCollection::class))
             ->willReturn(null);
@@ -147,7 +147,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         );
 
         $this->trackers_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackersForMilestone')
             ->with($this->milestone)
             ->willReturn(
@@ -261,7 +261,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
     ): MockObject&Tracker_FormElement_Field_Selectbox {
         $sb_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
         $sb_field->method('getId')->willReturn($field_id);
-        $sb_field->expects(self::once())
+        $sb_field->expects($this->once())
             ->method('userCanUpdate')
             ->with($user)
             ->willReturn($can_user_update);

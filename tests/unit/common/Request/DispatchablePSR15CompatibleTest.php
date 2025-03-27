@@ -74,7 +74,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
             }
         };
 
-        $emitter->expects(self::once())->method('emit')->with(self::callback(
+        $emitter->expects($this->once())->method('emit')->with(self::callback(
             static function (ResponseInterface $response): bool {
                 return $response->getHeaderLine('middleware') === 'OK' &&
                     $response->getHeaderLine('dispatchable_got_front_controller_param') === 'front_controller_param';

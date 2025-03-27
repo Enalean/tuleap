@@ -62,7 +62,7 @@ final class TransitionReplicatorTest extends TestCase
         $this->post_actions_mapper    = new PostActionsMapper();
 
         $event_manager = $this->createMock(EventManager::class);
-        $event_manager->expects(self::once())->method('processEvent');
+        $event_manager->expects($this->once())->method('processEvent');
 
         $this->transition_replicator = new TransitionReplicator(
             $this->condition_factory,

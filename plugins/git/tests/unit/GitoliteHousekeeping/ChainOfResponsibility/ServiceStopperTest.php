@@ -46,8 +46,8 @@ final class ServiceStopperTest extends TestCase
 
     public function testItStopsTheService(): void
     {
-        $this->response->expects(self::once())->method('info')->with('Stopping service');
-        $this->backend_service->expects(self::once())->method('stop');
+        $this->response->expects($this->once())->method('info')->with('Stopping service');
+        $this->backend_service->expects($this->once())->method('stop');
 
         $this->command->execute();
     }
@@ -55,7 +55,7 @@ final class ServiceStopperTest extends TestCase
     public function testItExecutesTheNextCommand(): void
     {
         $next = $this->createMock(Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
-        $next->expects(self::once())->method('execute');
+        $next->expects($this->once())->method('execute');
 
         $this->command->setNextCommand($next);
 

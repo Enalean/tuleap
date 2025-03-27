@@ -51,7 +51,7 @@ final class DocmanFileDownloadCORSTest extends TestCase
         $request = (new NullServerRequest())->withMethod('GET');
 
         $request_handler = $this->createMock(RequestHandlerInterface::class);
-        $request_handler->expects(self::once())->method('handle')->willReturn($response_factory->createResponse());
+        $request_handler->expects($this->once())->method('handle')->willReturn($response_factory->createResponse());
 
         $response = $file_download_cors_middleware->process($request, $request_handler);
         self::assertEquals(['OPTIONS', 'GET'], $response->getHeader('Access-Control-Allow-Methods'));

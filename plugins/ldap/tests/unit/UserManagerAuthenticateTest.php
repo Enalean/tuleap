@@ -129,10 +129,10 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_sync->method('getSyncAttributes')->willReturn([]);
         $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->ldap->expects(self::once())->method('authenticate')->with($this->username, $this->password)->willReturn(true);
+        $this->ldap->expects($this->once())->method('authenticate')->with($this->username, $this->password)->willReturn(true);
 
-        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
-        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
+        $this->user_manager->expects($this->once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects($this->once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -151,13 +151,13 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_sync->method('getSyncAttributes')->willReturn([]);
         $this->ldap->method('authenticate')->willReturn(true);
 
-        $this->ldap->expects(self::once())
+        $this->ldap->expects($this->once())
             ->method('searchLogin')
             ->with($this->username, self::anything())
             ->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
-        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
+        $this->user_manager->expects($this->once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects($this->once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -169,13 +169,13 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ldap->method('authenticate')->willReturn(true);
 
         $this->ldap
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchLogin')
             ->with(self::anything(), $attributes)
             ->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
-        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
+        $this->user_manager->expects($this->once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects($this->once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -187,13 +187,13 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ldap->method('authenticate')->willReturn(true);
         $this->ldap->method('authenticate')->willReturn(true);
 
-        $this->ldap->expects(self::once())
+        $this->ldap->expects($this->once())
             ->method('searchLogin')
             ->with(self::anything(), ['mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'])
             ->willReturn($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->expects(self::once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
-        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
+        $this->user_manager->expects($this->once())->method('getUserByLdapId')->willReturn($this->createMock(PFUser::class));
+        $this->ldap_user_manager->expects($this->once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -205,12 +205,12 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
 
         $this->user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUserByLdapId')
             ->with('ed1234')
             ->willReturn($this->createMock(PFUser::class));
 
-        $this->ldap_user_manager->expects(self::once())->method('synchronizeUser');
+        $this->ldap_user_manager->expects($this->once())->method('synchronizeUser');
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -265,7 +265,7 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ldap->method('searchLogin')->willReturn($this->john_mc_lane_result_iterator);
         $this->user_manager->method('getUserByLdapId')->willReturn(null);
 
-        $this->ldap_user_manager->expects(self::once())->method('createAccountFromLdap')->with(self::anything());
+        $this->ldap_user_manager->expects($this->once())->method('createAccountFromLdap')->with(self::anything());
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
@@ -280,7 +280,7 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ldap_user_manager->method('createAccountFromLdap')->willReturn($expected_user);
         $this->ldap_user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('synchronizeUser')
             ->with($expected_user, self::anything(), $this->password);
 
@@ -297,7 +297,7 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->method('getUserByLdapId')->willReturn($expected_user);
 
         $this->ldap_user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('synchronizeUser')
             ->with($expected_user, self::anything(), $this->password);
 

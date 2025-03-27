@@ -238,7 +238,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columnIsFound();
         $this->mockCanUserUpdateField(true);
 
-        $this->artifact_updater->expects(self::once())
+        $this->artifact_updater->expects($this->once())
             ->method('update')
             ->willThrowException(new \Tracker_FormElement_InvalidFieldException());
 
@@ -253,7 +253,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columnIsFound();
         $this->mockCanUserUpdateField(true);
 
-        $this->artifact_updater->expects(self::once())
+        $this->artifact_updater->expects($this->once())
             ->method('update')
             ->willThrowException(new \Tracker_FormElement_InvalidFieldValueException());
         $this->expectException(RestException::class);
@@ -285,7 +285,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columnIsFound();
         $this->mockCanUserUpdateField(true);
 
-        $this->artifact_updater->expects(self::once())
+        $this->artifact_updater->expects($this->once())
             ->method('update')
             ->willThrowException(new \Tracker_NoChangeException(40, 'user_story #40'));
 
@@ -298,7 +298,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columnIsFound();
         $this->mockCanUserUpdateField(true);
 
-        $this->artifact_updater->expects(self::once())
+        $this->artifact_updater->expects($this->once())
             ->method('update')
             ->willThrowException(new \Tracker_Exception());
 
@@ -313,7 +313,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columnIsFound();
         $this->mockCanUserUpdateField(true);
 
-        $this->artifact_updater->expects(self::once())
+        $this->artifact_updater->expects($this->once())
             ->method('update')
             ->with(
                 $this->current_user,
@@ -363,7 +363,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function artifactsAreValid(): void
     {
-        $this->add_validator->expects(self::once())
+        $this->add_validator->expects($this->once())
             ->method('validateArtifacts')
             ->with($this->swimlane_artifact, $this->artifact_to_add, $this->current_user);
     }

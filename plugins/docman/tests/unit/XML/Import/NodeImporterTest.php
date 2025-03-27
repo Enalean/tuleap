@@ -89,13 +89,13 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->willThrowException(new CannotInstantiateItemWeHaveJustCreatedInDBException());
-        $this->logger->expects(self::once())->method('error')->with('An error occurred while creating in DB the item: ' . $node->properties->title);
+        $this->logger->expects($this->once())->method('error')->with('An error occurred while creating in DB the item: ' . $node->properties->title);
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -120,13 +120,13 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->willThrowException(new InvalidDateException());
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -151,13 +151,13 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->willThrowException(new UnknownItemTypeException(''));
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -182,13 +182,13 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
             ->willThrowException(new UserNotFoundException());
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -213,10 +213,10 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing empty: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing empty: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
@@ -244,10 +244,10 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing link: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing link: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
@@ -273,10 +273,10 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing folder: My folder');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing folder: My folder');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->folder_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
@@ -302,10 +302,10 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
@@ -331,10 +331,10 @@ final class NodeImporterTest extends TestCase
             new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
+        $this->properties_extractor->expects($this->once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger->expects(self::once())->method('debug')->with('Importing embeddedfile: My document');
-        $this->item_importer->expects(self::once())->method('import')
+        $this->logger->expects($this->once())->method('debug')->with('Importing embeddedfile: My document');
+        $this->item_importer->expects($this->once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);

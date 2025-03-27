@@ -78,7 +78,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSavesDashboard(): void
     {
         $this->dao->method('searchByProjectIdAndName')->with(self::PROJECT_ID, 'new_dashboard')->willReturn([]);
-        $this->dao->expects(self::once())->method('save')->with(self::PROJECT_ID, 'new_dashboard');
+        $this->dao->expects($this->once())->method('save')->with(self::PROJECT_ID, 'new_dashboard');
 
         $this->getSaver()->save($this->admin_user, $this->project, 'new_dashboard');
     }
@@ -119,7 +119,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'project_id' => self::PROJECT_ID,
             'name'       => 'existing_dashboard',
         ]);
-        $this->dao->expects(self::once())->method('delete');
+        $this->dao->expects($this->once())->method('delete');
 
         $this->getSaver()->delete($this->admin_user, $this->project, self::DASHBOARD_ID);
 

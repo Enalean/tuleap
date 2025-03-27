@@ -142,7 +142,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];
 
-        $this->template_renderer->expects(self::once())
+        $this->template_renderer->expects($this->once())
             ->method('renderToPage')
             ->with('program-backlog', self::isInstanceOf(ProgramBacklogPresenter::class));
 
@@ -169,7 +169,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];
 
-        $this->template_renderer->expects(self::once())
+        $this->template_renderer->expects($this->once())
             ->method('renderToPage')
             ->with('program-backlog', self::isInstanceOf(ProgramBacklogPresenter::class));
 
@@ -201,7 +201,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $project->method('getPublicName')->willReturn('test_project');
         $project->method('getUnixNameLowerCase')->willReturn('test_project');
         $project->method('getIconUnicodeCodepoint')->willReturn('');
-        $project->expects(self::once())
+        $project->expects($this->once())
             ->method('usesService')
             ->with(ProgramService::SERVICE_SHORTNAME)
             ->willReturn($is_service_active);

@@ -29,7 +29,7 @@ final class RevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
         $dao  = $this->createMock(LostPasswordDAO::class);
-        $dao->expects(self::once())->method('deleteTokensByUserId')->with(101);
+        $dao->expects($this->once())->method('deleteTokensByUserId')->with(101);
 
         $token_revoker = new Revoker($dao);
         $token_revoker->revokeTokens($user);

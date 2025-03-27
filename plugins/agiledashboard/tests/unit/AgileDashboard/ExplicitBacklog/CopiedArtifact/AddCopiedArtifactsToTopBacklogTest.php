@@ -103,7 +103,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
         $this->mockProjectUsesExplicitBacklog();
         $this->mockArtifactIsInBacklog(self::SOURCE_ARTIFACT_ID);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('addArtifactToProjectBacklog');
 
         $this->adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithOneLevelContent(),
@@ -118,7 +118,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
         $this->mockProjectUsesExplicitBacklog();
         $this->mockArtifactIsInMilestone(self::SOURCE_ARTIFACT_ID);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('addArtifactToProjectBacklog');
 
         $this->adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithOneLevelContent(),
@@ -164,7 +164,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
     private function mockProjectDoesNotUseExplicitBacklog(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->willReturn(false);
     }
@@ -172,7 +172,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
     private function mockProjectUsesExplicitBacklog(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->willReturn(true);
     }
@@ -180,13 +180,13 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
     private function mockArtifactIsNotPlanned(int $artifact_id): void
     {
         $this->artifacts_in_explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactInTopBacklogOfProject')
             ->with($artifact_id, 101)
             ->willReturn(false);
 
         $this->planned_artifact_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with($artifact_id, 101)
             ->willReturn(false);
@@ -195,7 +195,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
     private function mockArtifactIsInBacklog(int $artifact_id): void
     {
         $this->artifacts_in_explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactInTopBacklogOfProject')
             ->with($artifact_id, 101)
             ->willReturn(true);
@@ -204,13 +204,13 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
     private function mockArtifactIsInMilestone(int $artifact_id): void
     {
         $this->artifacts_in_explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactInTopBacklogOfProject')
             ->with($artifact_id, 101)
             ->willReturn(false);
 
         $this->planned_artifact_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with($artifact_id, 101)
             ->willReturn(true);

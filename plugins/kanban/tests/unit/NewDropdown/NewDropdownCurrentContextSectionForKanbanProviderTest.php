@@ -70,7 +70,7 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
     public function testItReturnsNullIfKanbanDoesNotExist(): void
     {
         $this->kanban_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getKanban')
             ->with($this->user, 101)
             ->willThrowException(new KanbanNotFoundException());
@@ -83,7 +83,7 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
     public function testItReturnsNullIfUserCannotAccessToTheKanban(): void
     {
         $this->kanban_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getKanban')
             ->with($this->user, 101)
             ->willThrowException(new KanbanCannotAccessException());
@@ -98,13 +98,13 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
         $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getKanban')
             ->with($this->user, 101)
             ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
             ->willThrowException(new \Tuleap\Kanban\KanbanSemanticStatusNotDefinedException());
@@ -119,13 +119,13 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
         $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getKanban')
             ->with($this->user, 101)
             ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
             ->willThrowException(new \Tuleap\Kanban\KanbanTrackerNotDefinedException());
@@ -140,13 +140,13 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
         $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getKanban')
             ->with($this->user, 101)
             ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban)
             ->willThrowException(new KanbanUserCantAddArtifactException());
@@ -161,13 +161,13 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
         $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getKanban')
             ->with($this->user, 101)
             ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban);
 
@@ -186,13 +186,13 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
         $kanban = $this->buildKanbanMock();
 
         $this->kanban_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getKanban')
             ->with($this->user, 101)
             ->willReturn($kanban);
 
         $this->kanban_actions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban);
 

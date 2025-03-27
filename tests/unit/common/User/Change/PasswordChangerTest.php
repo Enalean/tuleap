@@ -46,17 +46,17 @@ final class PasswordChangerTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough()
         );
 
-        $user->expects(self::once())->method('setPassword');
-        $session_manager->expects(self::once())->method('destroyAllSessionsButTheCurrentOne');
-        $revoker->expects(self::once())->method('revokeTokens');
-        $event_dispatcher->expects(self::once())->method('dispatch')->with(
+        $user->expects($this->once())->method('setPassword');
+        $session_manager->expects($this->once())->method('destroyAllSessionsButTheCurrentOne');
+        $revoker->expects($this->once())->method('revokeTokens');
+        $event_dispatcher->expects($this->once())->method('dispatch')->with(
             self::callback(
                 function (PasswordUserPostUpdateEvent $event) use ($user): bool {
                     return $event->getUser() === $user;
                 }
             )
         );
-        $user_manager->expects(self::once())->method('updateDb')->willReturn(true);
+        $user_manager->expects($this->once())->method('updateDb')->willReturn(true);
 
         $password_changer->changePassword($user, new ConcealedString('new_password'));
     }

@@ -55,7 +55,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
 
     public function testItInjectAndInformUserAboutUpdatingProgramItem(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             $this->stringContains('update')
         );
@@ -69,7 +69,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
 
     public function testItInjectAndInformUserAboutCreatingProgramIncrement(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             $this->stringContains('create')
         );
@@ -83,7 +83,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
 
     public function testItInjectAndInformUserAboutCreatingIncrementIteration(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             $this->stringContains('create')
         );
@@ -116,7 +116,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
 
     public function testItInjectsAndInformsUserAboutUpdatingIteration(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
             \Feedback::INFO,
             $this->stringContains('update')
         );

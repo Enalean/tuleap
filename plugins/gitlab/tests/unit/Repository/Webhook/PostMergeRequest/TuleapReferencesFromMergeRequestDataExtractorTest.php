@@ -36,7 +36,7 @@ final class TuleapReferencesFromMergeRequestDataExtractorTest extends \Tuleap\Te
 
         $collection = WebhookTuleapReferenceCollection::empty();
         $reference_parser
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('extractCollectionOfTuleapReferences')
             ->with('title description')
             ->willReturn($collection);

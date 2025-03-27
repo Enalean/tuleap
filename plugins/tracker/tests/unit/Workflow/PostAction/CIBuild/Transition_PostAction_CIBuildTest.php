@@ -182,7 +182,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDisplayInfoFeedbackIfLaunchSucceed(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
         $this->post_action_ci_build->after($this->changeset);
     }
 
@@ -193,7 +193,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
             new Jenkins_ClientUnableToLaunchBuildException($error_message)
         );
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error', $error_message);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', $error_message);
         $this->post_action_ci_build->after($this->changeset);
     }
 

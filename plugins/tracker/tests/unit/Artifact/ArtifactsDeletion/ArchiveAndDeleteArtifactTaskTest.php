@@ -59,7 +59,7 @@ final class ArchiveAndDeleteArtifactTaskTest extends TestCase
         $field_content_indexer->method('askForDeletionOfIndexedFieldsFromArtifact');
         $comments_indexer->method('askForDeletionOfIndexedCommentsFromArtifact');
 
-        $db_connection->expects(self::once())->method('reconnectAfterALongRunningProcess');
+        $db_connection->expects($this->once())->method('reconnectAfterALongRunningProcess');
 
         $project_id = 102;
         $task->archive($artifact, $user, DeletionContext::regularDeletion($project_id));

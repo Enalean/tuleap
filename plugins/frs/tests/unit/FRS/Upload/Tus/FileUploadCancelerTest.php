@@ -47,7 +47,7 @@ class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($item_path), 0777, true);
         touch($path_allocator->getPathForItemBeingUploaded($file_information));
 
-        $dao->expects(self::once())->method('deleteByItemID');
+        $dao->expects($this->once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
         self::assertFileDoesNotExist($item_path);
@@ -65,7 +65,7 @@ class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);
         $item_path        = $path_allocator->getPathForItemBeingUploaded($file_information);
 
-        $dao->expects(self::once())->method('deleteByItemID');
+        $dao->expects($this->once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
         self::assertFileDoesNotExist($item_path);

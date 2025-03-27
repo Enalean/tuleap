@@ -138,7 +138,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksCSRFToken(): void
     {
-        $this->csrf_token->expects(self::once())->method('check')->with('/account/security');
+        $this->csrf_token->expects($this->once())->method('check')->with('/account/security');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -170,7 +170,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_status_manager->method('checkStatus');
         $this->csrf_token->method('check');
 
-        $this->password_verifier->expects(self::once())->method('verifyPassword')->with(
+        $this->password_verifier->expects($this->once())->method('verifyPassword')->with(
             $this->user,
             self::callback(
                 static function (ConcealedString $password): bool {
@@ -320,13 +320,13 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->csrf_token->method('check');
 
         $this->password_verifier->method('verifyPassword')->willReturn(true);
-        $this->password_sanity_checker->expects(self::once())->method('check')->with(self::callback(
+        $this->password_sanity_checker->expects($this->once())->method('check')->with(self::callback(
             static function (ConcealedString $str): bool {
                 return $str->isIdenticalTo(new ConcealedString('the_new_password'));
             }
         ))->willReturn(true);
 
-        $this->password_changer->expects(self::once())->method('changePassword');
+        $this->password_changer->expects($this->once())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(

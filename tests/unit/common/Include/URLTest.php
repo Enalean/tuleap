@@ -162,7 +162,7 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
         $rule = $this->createMock(\Rule_ProjectName::class);
         $url->method('getProjectNameRule')->willReturn($rule);
         $rule->method('containsIllegalChars')->willReturn(false);
-        $dao->expects(self::once())->method('searchByUnixGroupName')->with('test.svn')->willReturn($exists);
+        $dao->expects($this->once())->method('searchByUnixGroupName')->with('test.svn')->willReturn($exists);
 
         $url->method('getProjectDao')->willReturn($dao);
         self::assertEquals(1, $url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'));

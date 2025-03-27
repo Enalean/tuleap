@@ -100,7 +100,7 @@ final class MembershipManagerListGroupsCacheTest extends TestCase
 
     public function testItFetchesGroupsFromDriverOnlyOncePerServer(): void
     {
-        $this->driver->expects(self::once())->method('getAllGroups')->willReturn([]);
+        $this->driver->expects($this->once())->method('getAllGroups')->willReturn([]);
         $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
         $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
     }

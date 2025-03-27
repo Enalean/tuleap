@@ -91,7 +91,7 @@ final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->permissions_manager->method('disableRestrictedAccess');
 
-        $this->project_manager->expects(self::once())->method('disableAllowRestrictedForAll');
+        $this->project_manager->expects($this->once())->method('disableAllowRestrictedForAll');
         $this->forge_properties_manager->updateAccess(ForgeAccess::RESTRICTED, ForgeAccess::ANONYMOUS);
     }
 }

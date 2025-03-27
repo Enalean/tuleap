@@ -68,7 +68,7 @@ final class ActionAuthorizationRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
         ]);
 
-        $dao->expects(self::once())->method('deleteByExpirationDate');
+        $dao->expects($this->once())->method('deleteByExpirationDate');
         $filesystem->expects(self::exactly(3))->method('deleteDirectory');
 
         $remover->deleteExpired($current_time);

@@ -109,7 +109,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             ->build();
         $descendant_items_collection->push($artifact);
 
-        $backlog->expects(self::once())->method('getArtifacts')->willReturn($descendant_items_collection);
+        $backlog->expects($this->once())->method('getArtifacts')->willReturn($descendant_items_collection);
 
         $open_and_closed_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
         $open_closed_item           = new BacklogItem(ArtifactTestBuilder::anArtifact(8)->build(), false);
@@ -131,9 +131,9 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
         );
 
-        $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
-        $this->dao->expects(self::once())->method('getArtifactsSemantics')->willReturn([]);
-        $this->milestone_factory->expects(self::once())->method('getSubMilestoneIds')->willReturn([]);
+        $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
+        $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([]);
+        $this->milestone_factory->expects($this->once())->method('getSubMilestoneIds')->willReturn([]);
 
         $open_and_closed_content = $this->collection_factory->getOpenAndClosedCollection(
             $user,
@@ -176,7 +176,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $descendant_items_collection->push($artifact);
         $descendant_items_collection->setTotalAvaialableSize(1);
 
-        $backlog->expects(self::once())->method('getArtifacts')->willReturn($descendant_items_collection);
+        $backlog->expects($this->once())->method('getArtifacts')->willReturn($descendant_items_collection);
 
         $open_closed_and_inconsistent_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
         $open_closed_inconsistent_item           = new BacklogItem(ArtifactTestBuilder::anArtifact(9)->build(), true);
@@ -198,11 +198,11 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $sorted_collection
         );
 
-        $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
-        $this->dao->expects(self::once())->method('getArtifactsSemantics')->willReturn([]);
-        $this->milestone_factory->expects(self::once())->method('getSubMilestoneIds')->willReturn([]);
+        $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
+        $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([]);
+        $this->milestone_factory->expects($this->once())->method('getSubMilestoneIds')->willReturn([]);
 
-        $this->artifact_priority_dao->expects(self::once())->method('getGlobalRanks')->willReturn([
+        $this->artifact_priority_dao->expects($this->once())->method('getGlobalRanks')->willReturn([
             [
                 'artifact_id' => 9,
                 'rank'        => 1,
@@ -241,13 +241,13 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $open_unplanned_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $open_unplanned_collection->push(ArtifactTestBuilder::anArtifact(8)->build());
 
-        $backlog->expects(self::once())->method('getOpenUnplannedArtifacts')->willReturn($open_unplanned_collection);
+        $backlog->expects($this->once())->method('getOpenUnplannedArtifacts')->willReturn($open_unplanned_collection);
 
-        $this->milestone_factory->expects(self::once())->method('getSubMilestoneIds')->willReturn($all_possible_artifacts);
+        $this->milestone_factory->expects($this->once())->method('getSubMilestoneIds')->willReturn($all_possible_artifacts);
 
-        $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
-        $this->artifact_factory->expects(self::once())->method('getChildrenCount')->willReturn([9 => 0]);
-        $this->dao->expects(self::once())->method('getArtifactsSemantics')->willReturn([]);
+        $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
+        $this->artifact_factory->expects($this->once())->method('getChildrenCount')->willReturn([9 => 0]);
+        $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([]);
 
         $top_backlog_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
         $project                = ProjectTestBuilder::aProject()->withId(102)->build();
@@ -264,9 +264,9 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $planning = PlanningBuilder::aPlanning(101)
             ->withMilestoneTracker(TrackerTestBuilder::aTracker()->withId(45)->build())
             ->build();
-        $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([$planning]);
+        $this->planning_factory->expects($this->once())->method('getPlannings')->willReturn([$planning]);
 
-        $this->artifact_factory->expects(self::once())->method('getArtifactIdsLinkedToTrackers')->willReturn([8]);
+        $this->artifact_factory->expects($this->once())->method('getArtifactIdsLinkedToTrackers')->willReturn([8]);
 
         $unassigned_open_collection = $this->collection_factory->getUnassignedOpenCollection(
             $user,
@@ -297,31 +297,31 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $top_backlog_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $top_backlog_collection->push($artifact);
 
-        $backlog->expects(self::once())->method('getUnplannedArtifacts')->willReturn($top_backlog_collection);
+        $backlog->expects($this->once())->method('getUnplannedArtifacts')->willReturn($top_backlog_collection);
 
         $this->backlog_item_builder->method('getCollection')->willReturn(new AgileDashboard_Milestone_Backlog_BacklogItemCollection());
 
-        $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
-        $this->dao->expects(self::once())->method('getArtifactsSemantics')->willReturn([
+        $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
+        $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([
             ['id' => 23, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
         ]);
-        $this->collection_factory->expects(self::once())->method('userCanReadBacklogTitleField')->willReturn(true);
-        $this->collection_factory->expects(self::once())->method('userCanReadBacklogStatusField')->willReturn(true);
+        $this->collection_factory->expects($this->once())->method('userCanReadBacklogTitleField')->willReturn(true);
+        $this->collection_factory->expects($this->once())->method('userCanReadBacklogStatusField')->willReturn(true);
 
         $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
         $field->method('getComputedValue')->willReturn(65);
-        $this->collection_factory->expects(self::once())->method('getInitialEffortField')->willReturn($field);
-        $this->collection_factory->expects(self::once())->method('userCanReadInitialEffortField')->willReturn(true);
+        $this->collection_factory->expects($this->once())->method('getInitialEffortField')->willReturn($field);
+        $this->collection_factory->expects($this->once())->method('userCanReadInitialEffortField')->willReturn(true);
 
-        $this->artifact_factory->expects(self::once())->method('getTitleFromRowAsText')->willReturn('title');
+        $this->artifact_factory->expects($this->once())->method('getTitleFromRowAsText')->willReturn('title');
 
-        $this->remaining_effort_value_retriever->expects(self::once())->method('getRemainingEffortValue')->willReturn(12.6);
+        $this->remaining_effort_value_retriever->expects($this->once())->method('getRemainingEffortValue')->willReturn(12.6);
 
         $item_presenter = $this->getItemPresenter($artifact);
 
         $this->backlog_item_builder->method('getItem')->willReturn($item_presenter);
 
-        $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([]);
+        $this->planning_factory->expects($this->once())->method('getPlannings')->willReturn([]);
 
         $unassigned_collection = $this->collection_factory->getUnassignedCollection(
             $user,
@@ -352,31 +352,31 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $top_backlog_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $top_backlog_collection->push($artifact);
 
-        $backlog->expects(self::once())->method('getUnplannedArtifacts')->willReturn($top_backlog_collection);
+        $backlog->expects($this->once())->method('getUnplannedArtifacts')->willReturn($top_backlog_collection);
 
         $this->backlog_item_builder->method('getCollection')->willReturn(new AgileDashboard_Milestone_Backlog_BacklogItemCollection());
 
-        $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
-        $this->dao->expects(self::once())->method('getArtifactsSemantics')->willReturn([
+        $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
+        $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([
             ['id' => 23, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
         ]);
-        $this->collection_factory->expects(self::once())->method('userCanReadBacklogTitleField')->willReturn(false);
-        $this->collection_factory->expects(self::once())->method('userCanReadBacklogStatusField')->willReturn(false);
+        $this->collection_factory->expects($this->once())->method('userCanReadBacklogTitleField')->willReturn(false);
+        $this->collection_factory->expects($this->once())->method('userCanReadBacklogStatusField')->willReturn(false);
 
         $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
         $field->method('getComputedValue')->willReturn(65);
         $this->collection_factory->expects(self::never())->method('getInitialEffortField');
-        $this->collection_factory->expects(self::once())->method('userCanReadInitialEffortField')->willReturn(false);
+        $this->collection_factory->expects($this->once())->method('userCanReadInitialEffortField')->willReturn(false);
 
-        $this->artifact_factory->expects(self::once())->method('getTitleFromRowAsText')->willReturn('title');
+        $this->artifact_factory->expects($this->once())->method('getTitleFromRowAsText')->willReturn('title');
 
-        $this->remaining_effort_value_retriever->expects(self::once())->method('getRemainingEffortValue')->willReturn(12.6);
+        $this->remaining_effort_value_retriever->expects($this->once())->method('getRemainingEffortValue')->willReturn(12.6);
 
         $item_presenter = $this->getItemPresenter($artifact);
 
         $this->backlog_item_builder->method('getItem')->willReturn($item_presenter);
 
-        $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([]);
+        $this->planning_factory->expects($this->once())->method('getPlannings')->willReturn([]);
 
         $unassigned_collection = $this->collection_factory->getUnassignedCollection(
             $user,
@@ -392,14 +392,14 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
     {
         $user      = UserTestBuilder::buildWithDefaults();
         $milestone = $this->createMock(Planning_Milestone::class);
-        $milestone->expects(self::once())->method('getGroupId')->willReturn(101);
+        $milestone->expects($this->once())->method('getGroupId')->willReturn(101);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('getOpenTopBacklogItemsForProjectSortedByRank')
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('getOpenTopBacklogItemsForProjectSortedByRank')
             ->willReturn([
                 ['artifact_id' => 9],
                 ['artifact_id' => 10],
             ]);
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('foundRows')->willReturn(2);
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('foundRows')->willReturn(2);
 
         $artifact_9  = ArtifactTestBuilder::anArtifact(9)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
         $artifact_10 = ArtifactTestBuilder::anArtifact(10)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
@@ -415,9 +415,9 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             }
         });
 
-        $this->artifact_factory->expects(self::once())->method('getParents')->willReturn([]);
-        $this->artifact_factory->expects(self::once())->method('getChildrenCount')->willReturn([]);
-        $this->dao->expects(self::once())->method('getArtifactsSemantics')->willReturn([]);
+        $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
+        $this->artifact_factory->expects($this->once())->method('getChildrenCount')->willReturn([]);
+        $this->dao->expects($this->once())->method('getArtifactsSemantics')->willReturn([]);
 
         $backlog_item_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
         $backlog_item            = new BacklogItem($artifact_9, false);
@@ -475,7 +475,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $top_backlog_collection->push($artifact_10);
         $top_backlog_collection->push($artifact_11);
 
-        $backlog->expects(self::once())->method('getUnplannedArtifacts')->willReturn($top_backlog_collection);
+        $backlog->expects($this->once())->method('getUnplannedArtifacts')->willReturn($top_backlog_collection);
 
         $this->backlog_item_builder->expects(self::exactly(4))->method('getItem')->willReturnOnConsecutiveCalls(
             $item_presenter_artifact_10,
@@ -484,7 +484,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             $item_presenter_artifact_11,
         );
 
-        $backlog->expects(self::once())->method('getArtifacts')->willReturn($items_collection);
+        $backlog->expects($this->once())->method('getArtifacts')->willReturn($items_collection);
 
         $this->artifact_factory->expects(self::exactly(2))->method('getParents')->willReturn([10 => $parent_can_be_seen, 11 => $parent_cannot_be_seen]);
         $this->artifact_factory->expects(self::exactly(2))->method('setTitles');

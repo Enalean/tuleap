@@ -49,7 +49,7 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone_tracker = TrackerTestBuilder::aTracker()->build();
         $milestone         = $this->mockMilestone($planning, $milestone_tracker);
         $this->config_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOnTopConfigByPlanning')
             ->with($planning)
             ->willReturn(null);
@@ -70,7 +70,7 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone         = $this->mockMilestone($planning, $milestone_tracker);
         $empty_config      = $this->mockConfig($planning);
         $empty_config
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackers')
             ->willReturn([]);
 
@@ -92,7 +92,7 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_tracker    = $this->buildTracker(98);
         $config            = $this->mockConfig($planning);
         $config
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackers')
             ->willReturn([$first_tracker, $second_tracker]);
 
@@ -109,7 +109,7 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $config = $this->createMock(Cardwall_OnTop_Config::class);
         $this->config_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOnTopConfigByPlanning')
             ->with($planning)
             ->willReturn($config);

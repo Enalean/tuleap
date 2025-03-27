@@ -32,7 +32,7 @@ final class AddToTopBacklogPostActionValueTest extends \Tuleap\Test\PHPUnit\Test
         $value = new AddToTopBacklogPostActionValue();
 
         $visitor = $this->createMock(PostActionVisitor::class);
-        $visitor->expects(self::once())->method('visitExternalPostActionValue');
+        $visitor->expects($this->once())->method('visitExternalPostActionValue');
 
         $value->accept($visitor);
     }

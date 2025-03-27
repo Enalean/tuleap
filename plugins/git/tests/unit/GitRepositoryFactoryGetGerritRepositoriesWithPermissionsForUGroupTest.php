@@ -71,7 +71,7 @@ final class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTes
     public function testItCallsDaoWithArguments(): void
     {
         $ugroups = [404, 416, 115];
-        $this->dao->expects(self::once())->method('searchGerritRepositoriesWithPermissionsForUGroupAndProject')
+        $this->dao->expects($this->once())->method('searchGerritRepositoriesWithPermissionsForUGroupAndProject')
             ->with($this->project_id, $ugroups)
             ->willReturn([]);
 

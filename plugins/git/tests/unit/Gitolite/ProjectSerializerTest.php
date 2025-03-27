@@ -160,7 +160,7 @@ final class ProjectSerializerTest extends TestCase
         $repo2->setNamespace('');
 
         // List all repo
-        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+        $this->repository_factory->expects($this->once())->method('getAllRepositoriesOfProject')
             ->with($prj)->willReturn([$repo, $repo2]);
 
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
@@ -206,7 +206,7 @@ final class ProjectSerializerTest extends TestCase
         $repo2->setRemoteServerId(1);
 
         // List all repo
-        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+        $this->repository_factory->expects($this->once())->method('getAllRepositoriesOfProject')
             ->with($prj)->willReturn([$repo, $repo2]);
 
         $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')
@@ -246,7 +246,7 @@ final class ProjectSerializerTest extends TestCase
         $repo2->setNamespace('');
 
         // List all repo
-        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+        $this->repository_factory->expects($this->once())->method('getAllRepositoriesOfProject')
             ->with($project)->willReturn([$repo, $repo2]);
 
         // Ensure file is correct
@@ -302,7 +302,7 @@ EOS;
         $repo2->setNamespace('');
 
         // List all repo
-        $this->repository_factory->expects(self::once())->method('getAllRepositoriesOfProject')
+        $this->repository_factory->expects($this->once())->method('getAllRepositoriesOfProject')
             ->with($prj)->willReturn([$repo, $repo2]);
 
         $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);

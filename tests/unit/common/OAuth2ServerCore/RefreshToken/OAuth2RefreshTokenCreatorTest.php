@@ -81,10 +81,10 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable('@10');
         $auth_code    = $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]);
 
-        $this->refresh_token_dao->expects(self::once())->method('create')
+        $this->refresh_token_dao->expects($this->once())->method('create')
             ->with($auth_code->getID(), self::isString(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
             ->willReturn(2);
-        $this->scope_saver->expects(self::once())->method('saveScopes');
+        $this->scope_saver->expects($this->once())->method('saveScopes');
 
         $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode(
             $current_time,
@@ -99,10 +99,10 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time  = new \DateTimeImmutable('@10');
         $refresh_token = OAuth2RefreshToken::createWithASetOfScopes(12, [OAuth2OfflineAccessScope::fromItself()]);
 
-        $this->refresh_token_dao->expects(self::once())->method('create')
+        $this->refresh_token_dao->expects($this->once())->method('create')
             ->with($refresh_token->getAssociatedAuthorizationCodeID(), self::isString(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
             ->willReturn(3);
-        $this->scope_saver->expects(self::once())->method('saveScopes');
+        $this->scope_saver->expects($this->once())->method('saveScopes');
 
         $new_refresh_token_identifier = $this->refresh_token_creator->issueRefreshTokenIdentifierFromExistingRefreshToken(
             $current_time,

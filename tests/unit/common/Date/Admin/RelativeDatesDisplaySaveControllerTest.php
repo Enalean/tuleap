@@ -70,7 +70,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
             ->withParam('relative-dates-display', DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP)
             ->build();
 
-        $this->config_dao->expects(self::once())->method('save');
+        $this->config_dao->expects($this->once())->method('save');
         $this->preferences_dao->expects(self::never())->method('deletePreferenceForAllUsers');
 
         self::expectException(LayoutInspectorRedirection::class);
@@ -87,8 +87,8 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
             ->withParam('relative-dates-force-preference', 'true')
             ->build();
 
-        $this->config_dao->expects(self::once())->method('save');
-        $this->preferences_dao->expects(self::once())->method('deletePreferenceForAllUsers');
+        $this->config_dao->expects($this->once())->method('save');
+        $this->preferences_dao->expects($this->once())->method('deletePreferenceForAllUsers');
 
         self::expectException(LayoutInspectorRedirection::class);
         $this->controller->process($request, $layout, []);

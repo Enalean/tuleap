@@ -60,7 +60,7 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
     public function testItAddsActiveUsers(): void
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
-        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($user, $this->an_active_project, $this->project_admin);
+        $this->add_project_member->expects($this->once())->method('addProjectMember')->with($user, $this->an_active_project, $this->project_admin);
 
         $GLOBALS['Response']->expects(self::never())->method('addFeedback');
 
@@ -72,7 +72,7 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
         $this->add_project_member->method('addProjectMember')->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $this->an_active_project));
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
     }
@@ -82,7 +82,7 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
         $this->add_project_member->method('addProjectMember')->willThrowException(new AlreadyProjectMemberException());
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
     }

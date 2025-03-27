@@ -77,7 +77,7 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'description' => 'to talk to',
         ]);
 
-        $this->dao->expects(self::once())->method('updateForgeUGroup')->with(45, 'people', 'to eat')->willReturn(true);
+        $this->dao->expects($this->once())->method('updateForgeUGroup')->with(45, 'people', 'to eat')->willReturn(true);
 
         $update = $this->manager->updateUserGroup($ugroup);
         self::assertTrue($update);
@@ -94,7 +94,7 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'description' => 'to talk to',
         ]);
 
-        $this->dao->expects(self::once())->method('updateForgeUGroup')->with(45, 'people', 'to eat')->willThrowException(
+        $this->dao->expects($this->once())->method('updateForgeUGroup')->with(45, 'people', 'to eat')->willThrowException(
             new User_UserGroupNameInvalidException()
         );
 

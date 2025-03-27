@@ -161,7 +161,7 @@ final class MigrationHandlerTest extends TestCase
         $this->server_factory->method('getAvailableServersForProject')->willReturn([1 => $this->repository]);
         $this->project_creator_status->method('getStatus');
 
-        $this->git_system_event_manager->expects(self::once())->method('queueMigrateToGerrit');
+        $this->git_system_event_manager->expects($this->once())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
@@ -178,7 +178,7 @@ final class MigrationHandlerTest extends TestCase
         $this->server_factory->method('getAvailableServersForProject')->willReturn([1 => $this->repository]);
         $this->project_creator_status->method('getStatus');
 
-        $this->git_system_event_manager->expects(self::once())->method('queueMigrateToGerrit');
+        $this->git_system_event_manager->expects($this->once())->method('queueMigrateToGerrit');
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
@@ -223,7 +223,7 @@ final class MigrationHandlerTest extends TestCase
         $disconnect_option = '';
 
         $this->server_factory->method('getServerById');
-        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectReadOnly');
 
@@ -246,7 +246,7 @@ final class MigrationHandlerTest extends TestCase
         $this->server_factory->method('getServerById')->willReturn($server);
         $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectReadOnly');
 
@@ -271,9 +271,9 @@ final class MigrationHandlerTest extends TestCase
         $this->server_factory->method('getServerById')->willReturn($server);
         $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
         $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectDeletion');
-        $this->git_system_event_manager->expects(self::once())->method('queueRemoteProjectReadOnly');
+        $this->git_system_event_manager->expects($this->once())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
@@ -296,8 +296,8 @@ final class MigrationHandlerTest extends TestCase
         $this->server_factory->method('getServerById')->willReturn($server);
         $this->driver_factory->method('getDriver')->with($server)->willReturn($driver);
 
-        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryUpdate');
-        $this->git_system_event_manager->expects(self::once())->method('queueRemoteProjectDeletion');
+        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryUpdate');
+        $this->git_system_event_manager->expects($this->once())->method('queueRemoteProjectDeletion');
         $this->git_system_event_manager->expects(self::never())->method('queueRemoteProjectReadOnly');
 
         $this->handler->disconnect($repository, $disconnect_option);

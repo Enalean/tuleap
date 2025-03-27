@@ -73,8 +73,8 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends TestCa
     {
         $request = new HTTPRequest();
         $request->set('custom_mapping', ['13' => '1', '42' => 0, '69' => 0]);
-        $this->dao->expects(self::once())->method('delete')->with($this->tracker_id, 69)->willReturn(true);
-        $this->value_dao->expects(self::once())->method('delete')->with($this->tracker_id, 69);
+        $this->dao->expects($this->once())->method('delete')->with($this->tracker_id, 69)->willReturn(true);
+        $this->value_dao->expects($this->once())->method('delete')->with($this->tracker_id, 69);
         $this->command->execute($request);
     }
 }

@@ -56,8 +56,8 @@ final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDeletesAJenkinsServer(): void
     {
-        $this->project_job_dao->expects(self::once())->method('deleteLogsOfServer');
-        $this->jenkins_server_dao->expects(self::once())->method('deleteJenkinsServer');
+        $this->project_job_dao->expects($this->once())->method('deleteLogsOfServer');
+        $this->jenkins_server_dao->expects($this->once())->method('deleteJenkinsServer');
 
         $this->deleter->deleteServer('uuid');
     }

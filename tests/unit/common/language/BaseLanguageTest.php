@@ -185,19 +185,19 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $l1 = $this->createPartialMock(BaseLanguage::class, [
             'loadAllTabFiles',
         ]);
-        $l1->expects(self::once())->method('loadAllTabFiles')->with(ForgeConfig::get('sys_incdir') . '/en_US', self::anything());
+        $l1->expects($this->once())->method('loadAllTabFiles')->with(ForgeConfig::get('sys_incdir') . '/en_US', self::anything());
         $l1->loadCoreSiteContent('en_US', $result);
 
         $l2 = $this->createPartialMock(BaseLanguage::class, [
             'loadAllTabFiles',
         ]);
-        $l2->expects(self::once())->method('loadAllTabFiles')->with(ForgeConfig::get('sys_custom_incdir') . '/en_US', self::anything());
+        $l2->expects($this->once())->method('loadAllTabFiles')->with(ForgeConfig::get('sys_custom_incdir') . '/en_US', self::anything());
         $l2->loadCustomSiteContent('en_US', $result);
 
         $l3 = $this->createPartialMock(BaseLanguage::class, [
             'loadAllTabFiles',
         ]);
-        $l3->expects(self::once())->method('loadAllTabFiles')->with(
+        $l3->expects($this->once())->method('loadAllTabFiles')->with(
             ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US',
             self::anything()
         );
@@ -206,7 +206,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $l4 = $this->createPartialMock(BaseLanguage::class, [
             'loadAllTabFiles',
         ]);
-        $l4->expects(self::once())->method('loadAllTabFiles')->with(
+        $l4->expects($this->once())->method('loadAllTabFiles')->with(
             ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US',
             self::anything()
         );

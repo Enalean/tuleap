@@ -56,20 +56,20 @@ final class RejectNonProjectAdministratorMiddlewareTest extends \Tuleap\Test\PHP
     {
         $handler          = $this->createMock(RequestHandlerInterface::class);
         $enriched_request = null;
-        $handler->expects(self::once())->method('handle')
+        $handler->expects($this->once())->method('handle')
             ->with(self::callback(function ($argument) use (&$enriched_request) {
                 $enriched_request = $argument;
 
                 return true;
             }));
         $user = UserTestBuilder::aUser()->build();
-        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
 
         $project = new \Project(['group_id' => 102]);
         $request = (new NullServerRequest())->withAttribute(\Project::class, $project);
 
         $this->checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserIsProjectAdministrator')
             ->with($user, $project);
 

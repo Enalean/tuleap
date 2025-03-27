@@ -70,7 +70,7 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfServerAlreadyDefined(): void
     {
-        $this->git_jenkins_administration_server_dao->expects(self::once())
+        $this->git_jenkins_administration_server_dao->expects($this->once())
             ->method('isJenkinsServerAlreadyDefinedInProject')
             ->with(101, 'https://url')
             ->willReturn(true);
@@ -88,12 +88,12 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsAJenkinsServerInProjectWithoutAToken(): void
     {
-        $this->git_jenkins_administration_server_dao->expects(self::once())
+        $this->git_jenkins_administration_server_dao->expects($this->once())
             ->method('isJenkinsServerAlreadyDefinedInProject')
             ->with(101, 'https://url')
             ->willReturn(false);
 
-        $this->git_jenkins_administration_server_dao->expects(self::once())->method('addJenkinsServer');
+        $this->git_jenkins_administration_server_dao->expects($this->once())->method('addJenkinsServer');
 
         $this->adder->addServerInProject(
             $this->project,
@@ -104,12 +104,12 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsAJenkinsServerInProjectWithAToken(): void
     {
-        $this->git_jenkins_administration_server_dao->expects(self::once())
+        $this->git_jenkins_administration_server_dao->expects($this->once())
             ->method('isJenkinsServerAlreadyDefinedInProject')
             ->with(101, 'https://url')
             ->willReturn(false);
 
-        $this->git_jenkins_administration_server_dao->expects(self::once())->method('addJenkinsServer');
+        $this->git_jenkins_administration_server_dao->expects($this->once())->method('addJenkinsServer');
 
         $this->adder->addServerInProject(
             $this->project,

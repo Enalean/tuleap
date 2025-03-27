@@ -51,7 +51,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $ctrl           = $this->createMock(Docman_Controller::class);
         $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->expects(self::once())->method('log')->with('error', 'Cannot delete a version on something that is not a file.');
+        $ctrl->feedback->expects($this->once())->method('log')->with('error', 'Cannot delete a version on something that is not a file.');
 
         // Setup of the test
         $actions = $this->createPartialMock(Docman_Actions::class, [
@@ -64,9 +64,9 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
 
         $item = new Docman_Folder();
         $if   = $this->createMock(Docman_ItemFactory::class);
-        $if->expects(self::once())->method('getItemFromDb')->with(344)->willReturn($item);
+        $if->expects($this->once())->method('getItemFromDb')->with(344)->willReturn($item);
         $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
+        $actions->expects($this->once())->method('_getItemFactory')->with(102)->willReturn($if);
 
         $event_manager = $this->createMock(EventManager::class);
         $event_manager->method('processEvent');
@@ -83,7 +83,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $ctrl           = $this->createMock(Docman_Controller::class);
         $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->expects(self::once())->method('log')->with('info', 'Version 1 (label 5) successfully deleted');
+        $ctrl->feedback->expects($this->once())->method('log')->with('info', 'Version 1 (label 5) successfully deleted');
 
         // Setup of the test
         $actions = $this->createPartialMock(Docman_Actions::class, [
@@ -102,7 +102,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $if = $this->createMock(Docman_ItemFactory::class);
         $if->method('getItemFromDb')->with(344)->willReturn($item);
         $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
+        $actions->expects($this->once())->method('_getItemFactory')->with(102)->willReturn($if);
 
         $v1 = new Docman_Version(['number' => 0, 'label' => 'label 4']);
         $v2 = new Docman_Version(['number' => 1, 'label' => 'label 5']);
@@ -125,7 +125,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $ctrl           = $this->createMock(Docman_Controller::class);
         $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->expects(self::once())->method('log')->with('error', 'Cannot delete last version of a file. If you want to continue, please delete the document itself.');
+        $ctrl->feedback->expects($this->once())->method('log')->with('error', 'Cannot delete last version of a file. If you want to continue, please delete the document itself.');
 
         // Setup of the test
         $actions = $this->createPartialMock(Docman_Actions::class, [
@@ -143,7 +143,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $if = $this->createMock(Docman_ItemFactory::class);
         $if->method('getItemFromDb')->with(344)->willReturn($item);
         $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
+        $actions->expects($this->once())->method('_getItemFactory')->with(102)->willReturn($if);
 
         $vf = $this->createMock(Docman_VersionFactory::class);
         $vf->method('getAllVersionForItem')->willReturn([new Docman_Version()]);
@@ -164,7 +164,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $ctrl           = $this->createMock(Docman_Controller::class);
         $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->expects(self::once())->method('log')->with('error', 'Cannot delete a version that doesn\'t exist.');
+        $ctrl->feedback->expects($this->once())->method('log')->with('error', 'Cannot delete a version that doesn\'t exist.');
 
         // Setup of the test
         $actions = $this->createPartialMock(Docman_Actions::class, [
@@ -181,7 +181,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $if = $this->createMock(Docman_ItemFactory::class);
         $if->method('getItemFromDb')->with(344)->willReturn($item);
         $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
+        $actions->expects($this->once())->method('_getItemFactory')->with(102)->willReturn($if);
 
         $v1 = new Docman_Version(['number' => 0, 'label' => 'label 4']);
         $v2 = new Docman_Version(['number' => 2, 'label' => 'label 5']);
@@ -301,7 +301,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $user1                = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
         $user2                = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
         $user3                = UserTestBuilder::aUser()->withId(133)->withUserName('Charlie')->build();
-        $controller->feedback->expects(self::once())->method('log')->with('info', 'Removed monitoring for user(s) "Carol"');
+        $controller->feedback->expects($this->once())->method('log')->with('info', 'Removed monitoring for user(s) "Carol"');
         $notificationsManager             = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
         $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getUserManagerInstance']);
@@ -419,7 +419,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
         $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(false);
-        $notificationsManager->expects(self::once())->method('addUser')->willReturn(true);
+        $notificationsManager->expects($this->once())->method('addUser')->willReturn(true);
         $actions->update_monitoring($params);
     }
 
@@ -428,7 +428,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $controller           = $this->createMock(Docman_Controller::class);
         $controller->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         $user                 = UserTestBuilder::anActiveUser()->withId(123)->withUserName('Carol')->build();
-        $controller->feedback->expects(self::once())->method('log')->with('info', 'Monitoring for user(s) "Carol" has been added');
+        $controller->feedback->expects($this->once())->method('log')->with('info', 'Monitoring for user(s) "Carol" has been added');
         $notificationsManager             = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
         $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getDocmanPermissionsManagerInstance']);
@@ -440,8 +440,8 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
         $params['listeners_users_to_add'] = [$user];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->expects(self::once())->method('userExists')->willReturn(false);
-        $notificationsManager->expects(self::once())->method('addUser')->willReturn(true);
+        $notificationsManager->expects($this->once())->method('userExists')->willReturn(false);
+        $notificationsManager->expects($this->once())->method('addUser')->willReturn(true);
         $actions->update_monitoring($params);
     }
 }

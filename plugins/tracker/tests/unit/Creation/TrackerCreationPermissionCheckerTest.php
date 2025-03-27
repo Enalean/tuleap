@@ -56,7 +56,7 @@ final class TrackerCreationPermissionCheckerTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withUsedService('plugin_tracker')->build();
         $user    = UserTestBuilder::buildWithDefaults();
 
-        $this->permissions_checker->expects(self::once())->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
+        $this->permissions_checker->expects($this->once())->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($project, $user)->willReturn(false);
 
         $this->expectException(ForbiddenException::class);

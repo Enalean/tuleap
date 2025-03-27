@@ -206,7 +206,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEnablePlugin(): void
     {
-        $this->dao->expects(self::once())->method('enablePlugin')->with(123);
+        $this->dao->expects($this->once())->method('enablePlugin')->with(123);
 
         $plugin = new class (123) extends Plugin {
             public bool $post_enable_called = false;
@@ -259,7 +259,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('searchById')
             ->with(123)
             ->willReturn(\TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '1']));
-        $this->dao->expects(self::once())->method('disablePlugin')->with(123);
+        $this->dao->expects($this->once())->method('disablePlugin')->with(123);
 
         $factory = $this->getMockBuilder(\PluginFactory::class)
             ->setConstructorArgs([$this->dao, $this->restrictor])

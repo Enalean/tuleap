@@ -58,7 +58,7 @@ final class EventSubjectToNotificationAsynchronousQueueDispatcherTest extends \T
 
         $queue = $this->createMock(PersistentQueue::class);
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
-        $queue->expects(self::once())->method('pushSinglePersistentMessage');
+        $queue->expects($this->once())->method('pushSinglePersistentMessage');
         $returned_event = $this->dispatcher->dispatch($event);
 
         self::assertSame($event, $returned_event);

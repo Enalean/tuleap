@@ -177,7 +177,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $utils->method('getDocmanItemFactory')->willReturn(null);
         $tree->method('getUtils')->willReturn($utils);
 
-        $node->expects(self::once())->method('setName');
+        $node->expects($this->once())->method('setName');
         $node->expects(self::never())->method('move');
 
         $tree->move('project1/package1/release1', 'project1/package1/release2');

@@ -99,7 +99,7 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->bind_default_value_dao->shouldReceive('save')->never();
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
 
         $this->updater->updateFormElementType(
             $form_element,
@@ -127,7 +127,7 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->bind_default_value_dao->shouldReceive('save')->once()->with(self::SIMPLE_LIST_ELEMENT_ID, []);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
 
         $this->updater->updateFormElementType(
             $form_element,
@@ -206,7 +206,7 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->bind_default_value_dao->shouldReceive('save')->never();
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
 
         $this->updater->updateFormElementType(
             $form_element,

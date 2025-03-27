@@ -112,7 +112,7 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsPullRequestsWithTheGivenLabel(): void
     {
         $this->label_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchPullRequestsByLabels')
             ->with($this->project_id, $this->label_ids, 50, 0)
             ->willReturn(\TestHelper::argListToDar([
@@ -127,7 +127,7 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->html_url_builder->method('getPullRequestOverviewUrl');
 
         $this->item_collection->expects(self::exactly(2))->method('add');
-        $this->item_collection->expects(self::once())->method('setTotalSize')->with(99);
+        $this->item_collection->expects($this->once())->method('setTotalSize')->with(99);
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);

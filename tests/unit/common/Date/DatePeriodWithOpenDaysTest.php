@@ -375,7 +375,7 @@ class DatePeriodWithOpenDaysTest extends \Tuleap\Test\PHPUnit\TestCase
         if ($expected_error_message === null) {
             $logger->expects(self::never())->method('warning');
         } else {
-            $logger->expects(self::once())->method('warning')->with($expected_error_message);
+            $logger->expects($this->once())->method('warning')->with($expected_error_message);
         }
 
         $start_date_timestamp = (new DateTime($start_date))->getTimestamp();

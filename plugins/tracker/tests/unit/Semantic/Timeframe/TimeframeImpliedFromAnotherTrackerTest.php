@@ -93,7 +93,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesNotExportToRESTWhenUserCannotViewTheTargetTracker(): void
     {
         $user = UserTestBuilder::anActiveUser()->build();
-        $this->implied_from_tracker->expects(self::once())->method('userCanView')->willReturn(false);
+        $this->implied_from_tracker->expects($this->once())->method('userCanView')->willReturn(false);
 
         self::assertNull(
             $this->timeframe->exportToREST($user)
@@ -103,7 +103,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     public function testItExportsToREST(): void
     {
         $user = UserTestBuilder::anActiveUser()->build();
-        $this->implied_from_tracker->expects(self::once())->method('userCanView')->willReturn(true);
+        $this->implied_from_tracker->expects($this->once())->method('userCanView')->willReturn(true);
 
         self::assertEquals(
             new SemanticTimeframeImpliedFromAnotherTrackerRepresentation(self::RELEASE_TRACKER_ID),
@@ -114,7 +114,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     public function testFieldIsUsedWhenItIsAnArtLinkFieldComingFromCurrentTracker(): void
     {
         $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $a_field->expects(self::once())->method('getTrackerId')->willReturn(10);
+        $a_field->expects($this->once())->method('getTrackerId')->willReturn(10);
 
         self::assertTrue($this->timeframe->isFieldUsed($a_field));
     }
@@ -122,7 +122,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     public function testFieldIsUsedWhenItIsAnArtLinkFieldComingFromTheTrackerWeUseTheSemantic(): void
     {
         $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $a_field->expects(self::once())->method('getTrackerId')->willReturn(self::RELEASE_TRACKER_ID);
+        $a_field->expects($this->once())->method('getTrackerId')->willReturn(self::RELEASE_TRACKER_ID);
 
         self::assertTrue($this->timeframe->isFieldUsed($a_field));
     }
@@ -137,9 +137,9 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     public function testFieldIsNotUsedWhenItIsAnArtLinkFieldComingFromATrackerDifferentThanTheCurrentOneAndTheTargetOne(): void
     {
         $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $a_field->expects(self::once())->method('getTrackerId')->willReturn(16);
+        $a_field->expects($this->once())->method('getTrackerId')->willReturn(16);
 
-        $this->implied_from_tracker->expects(self::once())->method('getId')->willReturn(12);
+        $this->implied_from_tracker->expects($this->once())->method('getId')->willReturn(12);
 
         self::assertFalse($this->timeframe->isFieldUsed($a_field));
     }
@@ -152,7 +152,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     public function testItSaves(): void
     {
         $dao = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
-        $dao->expects(self::once())->method('save')->with(10, null, null, null, 150)->willReturn(true);
+        $dao->expects($this->once())->method('save')->with(10, null, null, null, 150)->willReturn(true);
 
         self::assertTrue(
             $this->timeframe->save($this->tracker, $dao)
@@ -168,7 +168,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
         $artifact->method('getLastChangeset')->willReturn($changeset);
         $changeset->method('getArtifact')->willReturn($artifact);
 
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([]);
@@ -192,7 +192,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     {
         $user     = UserTestBuilder::anActiveUser()->build();
         $artifact = $this->getMockedArtifact(73);
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([
@@ -233,12 +233,12 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
         $linking_artifact->method('getLastChangeset')->willReturn($changeset2);
         $changeset2->method('getArtifact')->willReturn($linking_artifact);
 
-        $this->timeframe_calculator->expects(self::once())
+        $this->timeframe_calculator->expects($this->once())
             ->method('buildDatePeriodWithoutWeekendForChangeset')
             ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
             ->willReturn(DatePeriodWithOpenDays::buildFromDuration(1622557210, 10));
 
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([
@@ -260,7 +260,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     {
         $user     = UserTestBuilder::anActiveUser()->build();
         $artifact = $this->getMockedArtifact(73);
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([]);
@@ -288,7 +288,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     {
         $user     = UserTestBuilder::anActiveUser()->build();
         $artifact = $this->getMockedArtifact(73);
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([
@@ -329,12 +329,12 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
         $linking_artifact->method('getLastChangeset')->willReturn($changeset2);
         $changeset2->method('getArtifact')->willReturn($linking_artifact);
 
-        $this->timeframe_calculator->expects(self::once())
+        $this->timeframe_calculator->expects($this->once())
             ->method('buildDatePeriodWithoutWeekendForChangesetForREST')
             ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
             ->willReturn(DatePeriodWithOpenDays::buildFromDuration(1622557210, 10));
 
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([
@@ -356,7 +356,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     {
         $user     = UserTestBuilder::anActiveUser()->build();
         $artifact = $this->getMockedArtifact(73);
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([]);
@@ -382,7 +382,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
     {
         $user     = UserTestBuilder::anActiveUser()->build();
         $artifact = $this->getMockedArtifact(73);
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([
@@ -422,12 +422,12 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
         $linking_artifact->method('getLastChangeset')->willReturn($changeset2);
         $changeset2->method('getArtifact')->willReturn($linking_artifact);
 
-        $this->timeframe_calculator->expects(self::once())
+        $this->timeframe_calculator->expects($this->once())
             ->method('buildDatePeriodWithoutWeekendForChangesetChartRendering')
             ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
             ->willReturn(DatePeriodWithOpenDays::buildFromDuration(1622557210, 10));
 
-        $this->links_retriever->expects(self::once())
+        $this->links_retriever->expects($this->once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->willReturn([

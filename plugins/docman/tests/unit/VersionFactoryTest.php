@@ -81,7 +81,7 @@ final class VersionFactoryTest extends TestCase
             'purgeDeletedVersion',
         ]);
         $versionFactory->method('_getVersionDao')->willReturn($dao);
-        $versionFactory->expects(self::once())->method('purgeDeletedVersion');
+        $versionFactory->expects($this->once())->method('purgeDeletedVersion');
 
         self::assertTrue($versionFactory->purgeDeletedVersions(1234567890));
     }
@@ -104,7 +104,7 @@ final class VersionFactoryTest extends TestCase
             'path'      => $this->tmp_tuleap_dir . '/noFile',
         ]);
 
-        $versionFactory->expects(self::once())->method('archiveBeforePurge')->with($version);
+        $versionFactory->expects($this->once())->method('archiveBeforePurge')->with($version);
         self::assertFalse($versionFactory->purgeDeletedVersion($version));
     }
 
@@ -132,7 +132,7 @@ final class VersionFactoryTest extends TestCase
             'path'      => $this->tmp_tuleap_dir . '/fileToPurge_txt',
         ]);
         fopen($version->getPath(), 'w');
-        $versionFactory->expects(self::once())->method('archiveBeforePurge')->with($version)->willReturn(true);
+        $versionFactory->expects($this->once())->method('archiveBeforePurge')->with($version)->willReturn(true);
 
         self::assertTrue($versionFactory->purgeDeletedVersion($version));
         self::assertFalse(file_exists($version->getPath()));
@@ -187,7 +187,7 @@ final class VersionFactoryTest extends TestCase
 
         $file = new Docman_File(['group_id' => 114]);
         $if   = $this->createMock(Docman_ItemFactory::class);
-        $if->expects(self::once())->method('getItemFromDb')->with(1664, ['ignore_deleted' => true])->willReturn($file);
+        $if->expects($this->once())->method('getItemFromDb')->with(1664, ['ignore_deleted' => true])->willReturn($file);
         $versionFactory->method('_getItemFactory')->willReturn($if);
 
         $user = UserTestBuilder::buildWithDefaults();
@@ -206,7 +206,7 @@ final class VersionFactoryTest extends TestCase
             ]
         );
         $versionFactory->method('_getEventManager')->willReturn($em);
-        $dao->expects(self::once())->method('restore')->with(1664, 2)->willReturn(true);
+        $dao->expects($this->once())->method('restore')->with(1664, 2)->willReturn(true);
 
         $version = new Docman_Version(['item_id' => 1664, 'number' => 2]);
 

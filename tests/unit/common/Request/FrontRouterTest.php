@@ -117,8 +117,8 @@ final class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_URI']    = '/stuff';
 
         $this->route_collector->method('collect');
-        $this->error_rendering->expects(self::once())->method('rendersError')->with(self::anything(), self::anything(), 404, self::anything(), self::anything());
-        $this->request_instrumentation->expects(self::once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
+        $this->error_rendering->expects($this->once())->method('rendersError')->with(self::anything(), self::anything(), 404, self::anything(), self::anything());
+        $this->request_instrumentation->expects($this->once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
 
         $this->request->method('isAjax')->willReturn(false);
 
@@ -134,14 +134,14 @@ final class FrontRouterTest extends TestCase
         $this->request->method('isAjax')->willReturn(false);
 
         $this->route_collector->method('collect');
-        $this->error_rendering->expects(self::once())->method('rendersError')->with(
+        $this->error_rendering->expects($this->once())->method('rendersError')->with(
             self::anything(),
             self::anything(),
             404,
             self::anything(),
             self::anything()
         );
-        $this->request_instrumentation->expects(self::once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
+        $this->request_instrumentation->expects($this->once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
 
         $this->router->route($this->request);
     }
@@ -154,14 +154,14 @@ final class FrontRouterTest extends TestCase
         $this->request->method('isAjax')->willReturn(true);
 
         $this->route_collector->method('collect');
-        $this->error_rendering->expects(self::once())->method('rendersError')->with(
+        $this->error_rendering->expects($this->once())->method('rendersError')->with(
             self::anything(),
             self::anything(),
             404,
             self::anything(),
             self::anything()
         );
-        $this->request_instrumentation->expects(self::once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
+        $this->request_instrumentation->expects($this->once())->method('increment')->with(404, self::isInstanceOf(DetectedBrowser::class));
 
         $this->router->route($this->request);
     }
@@ -170,8 +170,8 @@ final class FrontRouterTest extends TestCase
     {
         $handler = $this->createMock(DispatchableWithRequestNoAuthz::class);
 
-        $handler->expects(self::once())->method('process');
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $handler->expects($this->once())->method('process');
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $this->url_verification_factory->method('getURLVerification')->willReturn($this->createMock(URLVerification::class));
 
@@ -193,11 +193,11 @@ final class FrontRouterTest extends TestCase
     {
         $handler = $this->createMock(DispatchableWithRequest::class);
 
-        $handler->expects(self::once())->method('process')->with($this->request, $this->layout, []);
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $handler->expects($this->once())->method('process')->with($this->request, $this->layout, []);
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $url_verification = $this->createMock(URLVerification::class);
-        $url_verification->expects(self::once())->method('assertValidUrl')->with(self::anything(), $this->request, null);
+        $url_verification->expects($this->once())->method('assertValidUrl')->with(self::anything(), $this->request, null);
         $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
         $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
@@ -217,9 +217,9 @@ final class FrontRouterTest extends TestCase
     public function testItRaisesAnErrorWhenHandlerThrows(): void
     {
         $url_verification = $this->createMock(URLVerification::class);
-        $url_verification->expects(self::once())->method('assertValidUrl')->with(self::anything(), $this->request, null);
+        $url_verification->expects($this->once())->method('assertValidUrl')->with(self::anything(), $this->request, null);
         $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r): true {
             $r->get('/stuff', function (): DispatchableWithRequest {
@@ -236,7 +236,7 @@ final class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->error_rendering->expects(self::once())->method('rendersErrorWithException')->with(
+        $this->error_rendering->expects($this->once())->method('rendersErrorWithException')->with(
             self::anything(),
             self::anything(),
             500,
@@ -253,14 +253,14 @@ final class FrontRouterTest extends TestCase
     {
         $this->request->method('isAjax')->willReturn(false);
 
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $this->route_collector->method('collect');
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/does_not_exist';
 
-        $this->error_rendering->expects(self::once())->method('rendersError')->with(
+        $this->error_rendering->expects($this->once())->method('rendersError')->with(
             self::anything(),
             self::anything(),
             404,
@@ -295,10 +295,10 @@ final class FrontRouterTest extends TestCase
                 $this->variables = $variables;
             }
         };
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $url_verification = $this->createMock(URLVerification::class);
-        $url_verification->expects(self::once())->method('assertValidUrl')->with(self::anything(), $this->request, $project);
+        $url_verification->expects($this->once())->method('assertValidUrl')->with(self::anything(), $this->request, $project);
         $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
 
         $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r) use ($handler) {
@@ -332,7 +332,7 @@ final class FrontRouterTest extends TestCase
                 $this->variables = $variables;
             }
         };
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $url_verification = $this->createMock(URLVerification::class);
         $url_verification->method('assertValidUrl');
@@ -372,7 +372,7 @@ final class FrontRouterTest extends TestCase
             }
         };
 
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $url_verification = $this->createMock(URLVerification::class);
         $url_verification->method('assertValidUrl');
@@ -397,8 +397,8 @@ final class FrontRouterTest extends TestCase
     public function testItInstantiatePluginsWhenRoutingAPluginRoute(): void
     {
         $controller = $this->createMock(DispatchableWithRequest::class);
-        $controller->expects(self::once())->method('process');
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $controller->expects($this->once())->method('process');
+        $this->request_instrumentation->expects($this->once())->method('increment');
 
         $this->plugin_manager->method('getPluginByName')->with('foobar')->willReturn(
             new class ($controller) extends Plugin {
@@ -443,7 +443,7 @@ final class FrontRouterTest extends TestCase
 
     public function testItRoutesToRouteCollectorWithParams(): void
     {
-        $this->request_instrumentation->expects(self::once())->method('increment');
+        $this->request_instrumentation->expects($this->once())->method('increment');
         $url_verification = $this->createMock(URLVerification::class);
         $url_verification->method('assertValidUrl');
         $this->url_verification_factory->method('getURLVerification')->willReturn($url_verification);
@@ -525,7 +525,7 @@ final class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request_instrumentation->expects(self::once())->method('increment')->with($status_code, self::isInstanceOf(DetectedBrowser::class));
+        $this->request_instrumentation->expects($this->once())->method('increment')->with($status_code, self::isInstanceOf(DetectedBrowser::class));
 
         $this->router->route($this->request);
     }
@@ -554,13 +554,13 @@ final class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request_instrumentation->expects(self::once())->method('increment')->with(
+        $this->request_instrumentation->expects($this->once())->method('increment')->with(
             409,
             self::isInstanceOf(DetectedBrowser::class)
         );
 
         $this->error_rendering
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('rendersErrorWithException')
             ->with(
                 self::anything(),
@@ -599,13 +599,13 @@ final class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request_instrumentation->expects(self::once())->method('increment')->with(
+        $this->request_instrumentation->expects($this->once())->method('increment')->with(
             500,
             self::isInstanceOf(DetectedBrowser::class)
         );
 
         $this->error_rendering
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('rendersErrorWithException')
             ->with(
                 self::anything(),

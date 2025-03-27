@@ -44,7 +44,7 @@ final class RecipientUsersRetrieverTest extends TestCase
         $recipient_row_01 = ['email' => 'a@example.com'];
         $recipient_row_02 = ['email' => 'B@example.com'];
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRecipientsWithAdditionalCommunityMailingsSubscribers')
             ->willReturn([
                 $recipient_row_01,
@@ -65,7 +65,7 @@ final class RecipientUsersRetrieverTest extends TestCase
         $recipient_row_01 = ['email' => 'a@example.com'];
         $recipient_row_02 = ['email' => 'B@example.com'];
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRecipientsWithSiteUpdatesSubscribers')
             ->willReturn([
                 $recipient_row_01,
@@ -86,7 +86,7 @@ final class RecipientUsersRetrieverTest extends TestCase
         $recipient_row_01 = ['email' => 'a@example.com'];
         $recipient_row_02 = ['email' => 'B@example.com'];
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRecipientsAllUsers')
             ->willReturn([
                 $recipient_row_01,
@@ -107,7 +107,7 @@ final class RecipientUsersRetrieverTest extends TestCase
         $recipient_row_01 = ['email' => 'a@example.com'];
         $recipient_row_02 = ['email' => 'B@example.com'];
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRecipientsWithProjectAdministrators')
             ->willReturn([
                 $recipient_row_01,
@@ -128,7 +128,7 @@ final class RecipientUsersRetrieverTest extends TestCase
         $recipient_row_01 = ['email' => 'a@example.com'];
         $recipient_row_02 = ['email' => 'B@example.com'];
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRecipientsWithPlatformAdministrators')
             ->willReturn([
                 $recipient_row_01,
@@ -149,7 +149,7 @@ final class RecipientUsersRetrieverTest extends TestCase
         $recipient_row_01 = ['email' => 'a@example.com'];
         $recipient_row_02 = ['email' => 'B@example.com'];
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRecipientsWithProjectDevelopers')
             ->willReturn([
                 $recipient_row_01,

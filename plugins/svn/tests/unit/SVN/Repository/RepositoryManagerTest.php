@@ -87,11 +87,11 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsRepositoryFromAPublicPath(): void
     {
-        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('projectname');
-        $this->request->expects(self::once())->method('get')->willReturn('projectname/repositoryname');
-        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
+        $this->project->expects($this->once())->method('getUnixNameMixedCase')->willReturn('projectname');
+        $this->request->expects($this->once())->method('get')->willReturn('projectname/repositoryname');
+        $this->request->expects($this->once())->method('getProject')->willReturn($this->project);
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRepositoryByName')
             ->with($this->project, 'repositoryname')
             ->willReturn(
@@ -105,8 +105,8 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->project->expects(self::once())->method('getID')->willReturn(101);
-        $this->project->expects(self::once())->method('isError')->willReturn(false);
+        $this->project->expects($this->once())->method('getID')->willReturn(101);
+        $this->project->expects($this->once())->method('isError')->willReturn(false);
 
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
         self::assertEquals($repository->getName(), 'repositoryname');
@@ -114,14 +114,14 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenRepositoryNameNotFound(): void
     {
-        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('projectname');
-        $this->request->expects(self::once())->method('get')->willReturn('projectname/repositoryko');
-        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
+        $this->project->expects($this->once())->method('getUnixNameMixedCase')->willReturn('projectname');
+        $this->request->expects($this->once())->method('get')->willReturn('projectname/repositoryko');
+        $this->request->expects($this->once())->method('getProject')->willReturn($this->project);
 
-        $this->project->expects(self::once())->method('getID')->willReturn(101);
-        $this->project->expects(self::once())->method('isError')->willReturn(false);
+        $this->project->expects($this->once())->method('getID')->willReturn(101);
+        $this->project->expects($this->once())->method('isError')->willReturn(false);
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRepositoryByName')
             ->with($this->project, 'repositoryko')
             ->willReturn(false);
@@ -132,9 +132,9 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenProjectNameNotFound(): void
     {
-        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('projectname');
-        $this->request->expects(self::once())->method('get')->willReturn('falsyproject/repositoryname');
-        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
+        $this->project->expects($this->once())->method('getUnixNameMixedCase')->willReturn('projectname');
+        $this->request->expects($this->once())->method('get')->willReturn('falsyproject/repositoryname');
+        $this->request->expects($this->once())->method('getProject')->willReturn($this->project);
 
         $this->expectException(CannotFindRepositoryException::class);
         $this->manager->getRepositoryFromPublicPath($this->request);
@@ -142,11 +142,11 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsRepositoryFromAPublicPathWithLegacyAndNoMoreValidUnixName(): void
     {
-        $this->project->expects(self::once())->method('getUnixNameMixedCase')->willReturn('0abcd');
-        $this->request->expects(self::once())->method('get')->willReturn('0abcd/repositoryname');
-        $this->request->expects(self::once())->method('getProject')->willReturn($this->project);
+        $this->project->expects($this->once())->method('getUnixNameMixedCase')->willReturn('0abcd');
+        $this->request->expects($this->once())->method('get')->willReturn('0abcd/repositoryname');
+        $this->request->expects($this->once())->method('getProject')->willReturn($this->project);
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('searchRepositoryByName')
             ->with($this->project, 'repositoryname')
             ->willReturn(
@@ -160,8 +160,8 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->project->expects(self::once())->method('getID')->willReturn(101);
-        $this->project->expects(self::once())->method('isError')->willReturn(false);
+        $this->project->expects($this->once())->method('getID')->willReturn(101);
+        $this->project->expects($this->once())->method('isError')->willReturn(false);
 
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
         self::assertEquals($repository->getName(), 'repositoryname');

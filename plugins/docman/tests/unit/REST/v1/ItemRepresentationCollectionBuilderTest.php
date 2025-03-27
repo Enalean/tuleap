@@ -68,7 +68,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
         $this->item_version_factory        = $this->createMock(Docman_VersionFactory::class);
         $this->event_manager               = $this->createMock(EventManager::class);
         $event_adder                       = $this->createMock(DocmanItemsEventAdder::class);
-        $event_adder->expects(self::once())->method('addLogEvents');
+        $event_adder->expects($this->once())->method('addLogEvents');
         $this->dao                                    = $this->createMock(Docman_ItemDao::class);
         $this->item_representation_collection_builder = new ItemRepresentationCollectionBuilder(
             $this->item_factory,

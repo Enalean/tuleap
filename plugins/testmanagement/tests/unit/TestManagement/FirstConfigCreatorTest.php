@@ -111,14 +111,14 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->testmanagement_trackers_configurator->expects(self::exactly(4))->method('configureTestmanagementTracker');
 
-        $this->testmanagement_trackers_configurator->expects(self::once())->method('getTrackersConfiguration')->willReturn(
+        $this->testmanagement_trackers_configurator->expects($this->once())->method('getTrackersConfiguration')->willReturn(
             $this->getNewTrackersConfiguration()
         );
 
-        $this->tracker_checker->expects(self::once())->method('checkTrackers');
+        $this->tracker_checker->expects($this->once())->method('checkTrackers');
 
         $this->config
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setProjectConfiguration')
             ->with(
                 $this->project,
@@ -168,7 +168,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->testmanagement_trackers_creator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createTrackerFromXML')
             ->willReturn($this->new_campaign_tracker);
 
@@ -182,10 +182,10 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ['bug', 667, new TestmanagementConfigTracker('bug', 'bug', 667)],
             ]);
 
-        $this->tracker_checker->expects(self::once())->method('checkTrackers');
+        $this->tracker_checker->expects($this->once())->method('checkTrackers');
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackersConfiguration')
             ->willReturn(
                 $this->getNewTrackersConfiguration()
@@ -223,16 +223,16 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('configureTestmanagementTracker');
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackersConfiguration')
             ->willReturn(
                 $this->getNewTrackersConfiguration()
             );
 
-        $this->tracker_checker->expects(self::once())->method('checkTrackers');
+        $this->tracker_checker->expects($this->once())->method('checkTrackers');
 
         $this->config
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setProjectConfiguration')
             ->with(
                 $this->project,
@@ -271,13 +271,13 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('configureTestmanagementTracker');
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackersConfiguration')
             ->willReturn(
                 $this->getNewTrackersConfiguration()
             );
 
-        $this->tracker_checker->expects(self::once())->method('checkTrackers');
+        $this->tracker_checker->expects($this->once())->method('checkTrackers');
 
         $this->config->method('setProjectConfiguration');
 
@@ -364,7 +364,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('configureTestmanagementTracker');
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackersConfiguration')
             ->willReturn(
                 $this->getNewTrackersConfiguration()

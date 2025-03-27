@@ -108,7 +108,7 @@ final class ApprovalTableNotificationCycleTest extends TestCase
             'sendNotifTableApproved',
             'notifyNextReviewer',
         ]);
-        $cycle->expects(self::once())->method('sendNotifTableApproved')->willReturn(true);
+        $cycle->expects($this->once())->method('sendNotifTableApproved')->willReturn(true);
         $cycle->expects(self::never())->method('notifyNextReviewer');
         $cycle->reviewerApprove(new Docman_ApprovalReviewer(), true, '');
     }

@@ -109,12 +109,12 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         $computed_field_remaining_effort = $this->createMock(\Tracker_FormElement_Field_Computed::class);
 
         $computed_field_total_effort
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
         $computed_field_remaining_effort
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
             ->willReturn(true);
@@ -304,7 +304,7 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $this->dao->expects(self::once())->method('save')->with(113, 1001, 1002, null)->willReturn(true);
+        $this->dao->expects($this->once())->method('save')->with(113, 1001, 1002, null)->willReturn(true);
 
         $method->saveSemanticForTracker($tracker);
     }
@@ -321,7 +321,7 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $this->dao->expects(self::once())->method('delete')->with(113)->willReturn(true);
+        $this->dao->expects($this->once())->method('delete')->with(113)->willReturn(true);
 
         $this->assertTrue(
             $method->deleteSemanticForTracker($tracker)

@@ -57,7 +57,7 @@ final class UpdateCategoriesProcessorTest extends TestCase
         $csrf = $this->createMock(CSRFSynchronizerToken::class);
 
         $csrf
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('check');
 
         $exception = new class extends ProjectCategoriesException
@@ -69,7 +69,7 @@ final class UpdateCategoriesProcessorTest extends TestCase
         };
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency')
             ->willThrowException($exception);
 
@@ -91,18 +91,18 @@ final class UpdateCategoriesProcessorTest extends TestCase
         $csrf = $this->createMock(CSRFSynchronizerToken::class);
 
         $csrf
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('check');
 
         $category_collection = CategoryCollection::buildFromWebPayload([]);
         $project             = ProjectTestBuilder::aProject()->build();
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency');
 
         $this->updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('update')
             ->with(
                 $project,

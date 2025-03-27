@@ -73,7 +73,7 @@ final class SystemCheckTest extends TestCase
     {
         $this->retriever->method('getActiveProjectUnixNamesThatUseDocman')->willReturn(['project_01']);
 
-        $this->backend->expects(self::once())->method('changeOwnerGroupMode');
+        $this->backend->expects($this->once())->method('changeOwnerGroupMode');
         $this->system_check->process();
 
         self::assertTrue(is_dir($this->root_dir_path . '/project_01'));

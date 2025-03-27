@@ -49,10 +49,10 @@ final class JiraTrackersListControllerTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $project_manager = $this->createMock(ProjectManager::class);
-        $project_manager->expects(self::once())->method('getValidProjectByShortNameOrId')->willReturn($project);
+        $project_manager->expects($this->once())->method('getValidProjectByShortNameOrId')->willReturn($project);
 
         $permission_checker = $this->createMock(TrackerCreationPermissionChecker::class);
-        $permission_checker->expects(self::once())->method('checkANewTrackerCanBeCreated')->with($project, $user);
+        $permission_checker->expects($this->once())->method('checkANewTrackerCanBeCreated')->with($project, $user);
 
         $this->project_builder = $this->createMock(JiraTrackerBuilder::class);
         $this->wrapper_builder = $this->createMock(ClientWrapperBuilder::class);

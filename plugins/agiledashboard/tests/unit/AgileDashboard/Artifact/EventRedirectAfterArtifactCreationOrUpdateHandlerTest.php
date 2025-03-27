@@ -119,7 +119,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->build();
 
         $this->artifact_linker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
@@ -133,7 +133,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             );
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPlanning')
             ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
@@ -142,13 +142,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $milestone->method('getArtifact')->willReturn($this->createMock(Artifact::class));
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
             ->willReturn($milestone);
 
         $this->pane_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getListOfPaneInfo')
             ->willReturn(
                 [
@@ -201,7 +201,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->build();
 
         $this->artifact_linker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
@@ -215,7 +215,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             );
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPlanning')
             ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
@@ -224,13 +224,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $milestone->method('getArtifact')->willReturn($this->createMock(Artifact::class));
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
             ->willReturn($milestone);
 
         $this->pane_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getListOfPaneInfo')
             ->willReturn([
                 $this->createConfiguredMock(
@@ -268,7 +268,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->build();
 
         $this->artifact_linker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
@@ -282,7 +282,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             );
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPlanning')
             ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
@@ -291,7 +291,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $milestone->method('getArtifact')->willReturn(null);
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
             ->willReturn($milestone);
@@ -322,7 +322,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->build();
 
         $this->artifact_linker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
@@ -336,13 +336,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             );
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPlanning')
             ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
             ->willThrowException(new NotFoundException(self::PLANNING_ID));
@@ -372,7 +372,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->build();
 
         $this->artifact_linker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
@@ -386,7 +386,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             );
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPlanning')
             ->with($this->user, self::PLANNING_ID)
             ->willReturn(null);
@@ -415,7 +415,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->build();
 
         $this->artifact_linker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
@@ -429,7 +429,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             );
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPlanning')
             ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
@@ -458,7 +458,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $last_milestone_artifact = ArtifactTestBuilder::anArtifact(111)->build();
 
         $this->artifact_linker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
@@ -473,7 +473,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->willReturn($last_milestone_artifact);
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPlanning')
             ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);

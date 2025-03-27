@@ -43,7 +43,7 @@ class RoleAssignmentsHistoryEntryAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ProjectUGroupTestBuilder::aCustomUserGroup(105)->withName('Developers')->build()
         )->build();
 
-        $dao->expects(self::once())->method('groupAddHistory')->with(
+        $dao->expects($this->once())->method('groupAddHistory')->with(
             $history_key,
             'ugroup_project_members_name_key,Developers',
             $project_id

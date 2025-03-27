@@ -125,7 +125,7 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ugroup = $this->getEmptyStaticUGroup();
         $this->detector
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isSynchronizedWithProjectMembers')
             ->with($ugroup->getProject())
             ->willReturn(true);
@@ -139,7 +139,7 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ugroup = $this->getEmptyBoundStaticUGroup();
         $this->detector
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isSynchronizedWithProjectMembers')
             ->willReturn(true);
 
@@ -152,7 +152,7 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ugroup = $this->getEmptyStaticUGroup();
         $this->detector
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isSynchronizedWithProjectMembers')
             ->willReturn(false);
 

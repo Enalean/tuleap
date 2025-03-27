@@ -154,7 +154,7 @@ final class GitActionsFetchConfigTest extends TestCase
         $this->factory->method('getRepositoryById')->willReturn(null);
         $repo_id = 458;
 
-        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(404);
+        $GLOBALS['Response']->expects($this->once())->method('sendStatusCode')->with(404);
 
         $this->actions->fetchGitConfig($repo_id, $this->user, $this->project);
     }
@@ -163,7 +163,7 @@ final class GitActionsFetchConfigTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId($this->project_id + 1)->build();
 
-        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(403);
+        $GLOBALS['Response']->expects($this->once())->method('sendStatusCode')->with(403);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $project);
     }
@@ -173,7 +173,7 @@ final class GitActionsFetchConfigTest extends TestCase
         $this->user->method('isAdmin')->with($this->project_id)->willReturn(false);
         $this->git_permissions_manager->method('userIsGitAdmin')->willReturn(false);
         $this->repo->setRemoteServerId(1);
-        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(401);
+        $GLOBALS['Response']->expects($this->once())->method('sendStatusCode')->with(401);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
@@ -181,7 +181,7 @@ final class GitActionsFetchConfigTest extends TestCase
     public function testItReturnsAnErrorIfRepoIsNotMigratedToGerrit(): void
     {
         $this->user->method('isAdmin')->with($this->project_id)->willReturn(true);
-        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(500);
+        $GLOBALS['Response']->expects($this->once())->method('sendStatusCode')->with(500);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
@@ -192,7 +192,7 @@ final class GitActionsFetchConfigTest extends TestCase
         $this->repo->setRemoteServerId(1);
         $this->project_creator->method('getGerritConfig')->willThrowException(new Git_Driver_Gerrit_Exception());
         $this->project_creator->method('removeTemporaryDirectory');
-        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(500);
+        $GLOBALS['Response']->expects($this->once())->method('sendStatusCode')->with(500);
         $this->driver->method('getGerritProjectName');
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);

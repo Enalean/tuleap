@@ -128,7 +128,7 @@ final class ArtifactLinkerTest extends TestCase
     {
         $this->epic->expects(self::never())->method('linkArtifact');
         $this->release->expects(self::never())->method('linkArtifact');
-        $this->product->expects(self::once())->method('linkArtifact')->with($this->epic_id, $this->user);
+        $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
         $this->corp->expects(self::never())->method('linkArtifact');
 
         $request = HTTPRequestBuilder::get()
@@ -141,7 +141,7 @@ final class ArtifactLinkerTest extends TestCase
 
     public function testItLinksTheThemeWithCorpWhenCorpIsParentOfProduct(): void
     {
-        $this->corp->expects(self::once())->method('linkArtifact')->with($this->theme_id, $this->user);
+        $this->corp->expects($this->once())->method('linkArtifact')->with($this->theme_id, $this->user);
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
             ->withParam('child_milestone', $this->product_id)
@@ -155,8 +155,8 @@ final class ArtifactLinkerTest extends TestCase
         $sprint_tracker = TrackerTestBuilder::aTracker()->build();
         $this->getArtifact(9001, $sprint_tracker, [$this->release, $this->product]);
 
-        $this->product->expects(self::once())->method('linkArtifact')->with($this->epic_id, $this->user);
-        $this->release->expects(self::once())->method('linkArtifact')->with($this->epic_id, $this->user);
+        $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
+        $this->release->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -169,7 +169,7 @@ final class ArtifactLinkerTest extends TestCase
     public function testItDoesntLinkTheEpicWithCorpPlanningWhenCorpPlanningDoesntManageEpics(): void
     {
         $this->corp->expects(self::never())->method('linkArtifact');
-        $this->product->expects(self::once())->method('linkArtifact')->with($this->epic_id, $this->user);
+        $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
             ->withParam('child_milestone', $this->release_id)
@@ -202,7 +202,7 @@ final class ArtifactLinkerTest extends TestCase
 
     public function testItReturnsTheLatestMilestoneThatHasBeenLinkedWithLinkArtifactId(): void
     {
-        $this->product->expects(self::once())->method('linkArtifact')->with($this->epic_id, $this->user);
+        $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -215,7 +215,7 @@ final class ArtifactLinkerTest extends TestCase
 
     public function testItReturnsTheLatestMilestoneThatHasBeenLinkedWithChildMilestone(): void
     {
-        $this->product->expects(self::once())->method('linkArtifact')->with($this->epic_id, $this->user);
+        $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -233,11 +233,11 @@ final class ArtifactLinkerTest extends TestCase
             ->withParam('link-to-milestone', 1)
             ->build();
 
-        $this->release->expects(self::once())
+        $this->release->expects($this->once())
             ->method('linkArtifact')
             ->with($this->epic_id, $this->user);
 
-        $this->product->expects(self::once())
+        $this->product->expects($this->once())
             ->method('linkArtifact')
             ->with($this->epic_id, $this->user);
 

@@ -315,7 +315,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $tracker->shouldReceive('hasBlockingError')->andReturns(false);
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning');    // expected warning about wrong separator
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('warning');    // expected warning about wrong separator
         $tracker->isValidCSV($lines, $separator);
     }
 

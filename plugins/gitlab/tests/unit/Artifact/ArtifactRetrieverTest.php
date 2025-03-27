@@ -38,7 +38,7 @@ class ArtifactRetrieverTest extends TestCase
         $reference          = new WebhookTuleapReference(10, null);
 
         $artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with(10)
             ->willReturn(null);
@@ -57,7 +57,7 @@ class ArtifactRetrieverTest extends TestCase
 
         $expected_artifact = new Artifact(10, 1, $submitted_by, 10050, false);
         $artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with(10)
             ->willReturn($expected_artifact);

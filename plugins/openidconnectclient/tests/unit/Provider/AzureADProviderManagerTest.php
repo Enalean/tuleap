@@ -36,7 +36,7 @@ final class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $azure_provider_dao     = $this->createMock(AzureADProviderDao::class);
         $azure_provider_manager = new AzureADProviderManager($azure_provider_dao);
 
-        $azure_provider_dao->expects(self::once())->method('create')->willReturn(1);
+        $azure_provider_dao->expects($this->once())->method('create')->willReturn(1);
 
         $tenant_setup = AzureADTenantSetup::common();
 
@@ -86,7 +86,7 @@ final class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID($tenant_setup, 'tenant id')
         );
 
-        $generic_provider_dao->expects(self::once())->method('save');
+        $generic_provider_dao->expects($this->once())->method('save');
         $generic_provider_manager->updateAzureADProvider($provider);
     }
 }

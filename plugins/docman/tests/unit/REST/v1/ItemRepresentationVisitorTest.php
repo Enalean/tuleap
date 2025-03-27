@@ -57,7 +57,7 @@ final class ItemRepresentationVisitorTest extends TestCase
         $this->docman_version_factory      = $this->createMock(Docman_VersionFactory::class);
         $this->event_manager               = $this->createMock(EventManager::class);
         $event_adder                       = $this->createMock(DocmanItemsEventAdder::class);
-        $event_adder->expects(self::once())->method('addLogEvents');
+        $event_adder->expects($this->once())->method('addLogEvents');
         $this->item_visitor = new ItemRepresentationVisitor(
             $this->item_representation_builder,
             $this->docman_version_factory,
@@ -73,7 +73,7 @@ final class ItemRepresentationVisitorTest extends TestCase
         $item   = new Docman_Folder();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation')->with(
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation')->with(
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_FOLDER,
@@ -103,7 +103,7 @@ final class ItemRepresentationVisitorTest extends TestCase
             true
         );
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
         $this->item_visitor->visitFolder($folder, $params);
     }
@@ -112,11 +112,11 @@ final class ItemRepresentationVisitorTest extends TestCase
     {
         $item = new Docman_Wiki(['wiki_page' => 'A wiki page', 'group_id' => 102]);
 
-        $this->item_factory->expects(self::once())->method('getIdInWikiOfWikiPageItem')->with('A wiki page', 102)->willReturn(10);
+        $this->item_factory->expects($this->once())->method('getIdInWikiOfWikiPageItem')->with('A wiki page', 102)->willReturn(10);
 
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
         $this->item_visitor->visitWiki($item, $params);
     }
@@ -126,7 +126,7 @@ final class ItemRepresentationVisitorTest extends TestCase
         $item   = new Docman_Link(['link_url' => '']);
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
         $this->link_version_factory->expects(self::never())->method('getLatestVersion');
 
@@ -143,11 +143,11 @@ final class ItemRepresentationVisitorTest extends TestCase
         $item->setCurrentVersion($version);
         $params = ['current_user' => UserTestBuilder::buildWithDefaults(), 'is_a_direct_access' => true];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
-        $this->link_version_factory->expects(self::once())->method('getLatestVersion');
+        $this->link_version_factory->expects($this->once())->method('getLatestVersion');
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->item_visitor->visitLink($item, $params);
     }
@@ -157,9 +157,9 @@ final class ItemRepresentationVisitorTest extends TestCase
         $item   = new Docman_File();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
-        $this->docman_version_factory->expects(self::once())->method('getCurrentVersionForItem');
+        $this->docman_version_factory->expects($this->once())->method('getCurrentVersionForItem');
 
         $this->item_visitor->visitFile($item, $params);
     }
@@ -169,9 +169,9 @@ final class ItemRepresentationVisitorTest extends TestCase
         $item   = new Docman_EmbeddedFile();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
-        $this->docman_version_factory->expects(self::once())->method('getCurrentVersionForItem');
+        $this->docman_version_factory->expects($this->once())->method('getCurrentVersionForItem');
 
         $this->event_manager->expects(self::never())->method('processEvent');
 
@@ -186,11 +186,11 @@ final class ItemRepresentationVisitorTest extends TestCase
 
         $params = ['current_user' => UserTestBuilder::buildWithDefaults(), 'is_a_direct_access' => true];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
-        $this->docman_version_factory->expects(self::once())->method('getCurrentVersionForItem');
+        $this->docman_version_factory->expects($this->once())->method('getCurrentVersionForItem');
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->item_visitor->visitEmbeddedFile($item, $params);
     }
@@ -200,7 +200,7 @@ final class ItemRepresentationVisitorTest extends TestCase
         $item   = new Docman_Empty();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
+        $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
         $this->item_visitor->visitEmpty($item, $params);
     }

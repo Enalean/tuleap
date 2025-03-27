@@ -51,7 +51,7 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfConfigurationDisablesTheFeature(): void
     {
-        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(false);
+        $this->configuration->expects($this->once())->method('canBuddiesBeInvited')->willReturn(false);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
@@ -60,7 +60,7 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfNoEmailIsGiven(): void
     {
-        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
+        $this->configuration->expects($this->once())->method('canBuddiesBeInvited')->willReturn(true);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
@@ -69,7 +69,7 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfOneOfTheEmailIsNotValid(): void
     {
-        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
+        $this->configuration->expects($this->once())->method('canBuddiesBeInvited')->willReturn(true);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
@@ -78,8 +78,8 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfUserReachedLimit(): void
     {
-        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
-        $this->limit_checker->expects(self::once())->method('checkForNewInvitations')->willThrowException(
+        $this->configuration->expects($this->once())->method('canBuddiesBeInvited')->willReturn(true);
+        $this->limit_checker->expects($this->once())->method('checkForNewInvitations')->willThrowException(
             new InvitationSenderGateKeeperException()
         );
 
@@ -90,8 +90,8 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotRaiseAnExceptionIfEverythingIsOk(): void
     {
-        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
-        $this->limit_checker->expects(self::once())->method('checkForNewInvitations');
+        $this->configuration->expects($this->once())->method('canBuddiesBeInvited')->willReturn(true);
+        $this->limit_checker->expects($this->once())->method('checkForNewInvitations');
 
         $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ['john@example.com', 'doe@example.com']);
     }

@@ -74,7 +74,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
@@ -94,7 +94,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
@@ -123,7 +123,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with(
                 self::callback(function (CrossReferencePresenter $presenter): bool {
@@ -152,7 +152,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
@@ -175,7 +175,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with(
                 self::callback(function (CrossReferencePresenter $presenter): bool {

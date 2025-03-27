@@ -57,7 +57,7 @@ final class MeilisearchHandlerTest extends TestCase
         $item_2 = new PlaintextItemToIndex('type_2', 102, 'content', ['A' => 'A']);
 
         $this->metadata_dao->expects(self::exactly(2))->method('saveItemMetadata')->willReturn('uuid1', 'uuid2');
-        $this->client_index->expects(self::once())->method('addDocuments');
+        $this->client_index->expects($this->once())->method('addDocuments');
 
         $this->handler->indexItems($item_1, $item_2);
     }
@@ -68,8 +68,8 @@ final class MeilisearchHandlerTest extends TestCase
         $item_2 = new PlaintextItemToIndex('type_2', 102, '', ['A' => 'B']);
 
         $this->metadata_dao->expects(self::exactly(2))->method('searchMatchingEntries')->willReturnOnConsecutiveCalls([], ['uuid2']);
-        $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs')->with(['uuid2']);
-        $this->client_index->expects(self::once())->method('deleteDocuments');
+        $this->metadata_dao->expects($this->once())->method('deleteIndexedItemsFromIDs')->with(['uuid2']);
+        $this->client_index->expects($this->once())->method('deleteDocuments');
 
         $this->handler->indexItems($item_1, $item_2);
     }
@@ -78,8 +78,8 @@ final class MeilisearchHandlerTest extends TestCase
     {
         $this->metadata_dao->method('searchMatchingEntries')->willReturn(['uuid1', 'uuid2']);
 
-        $this->client_index->expects(self::once())->method('deleteDocuments');
-        $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs');
+        $this->client_index->expects($this->once())->method('deleteDocuments');
+        $this->metadata_dao->expects($this->once())->method('deleteIndexedItemsFromIDs');
 
         $this->handler->deleteIndexedItems(new IndexedItemsToRemove('type', ['A' => 'A']));
     }
@@ -88,8 +88,8 @@ final class MeilisearchHandlerTest extends TestCase
     {
         $this->metadata_dao->method('searchMatchingEntriesByProjectID')->willReturn(['uuid1', 'uuid2']);
 
-        $this->client_index->expects(self::once())->method('deleteDocuments');
-        $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs');
+        $this->client_index->expects($this->once())->method('deleteDocuments');
+        $this->metadata_dao->expects($this->once())->method('deleteIndexedItemsFromIDs');
 
         $this->handler->deleteIndexedItemsPerProjectID(102);
     }

@@ -86,9 +86,9 @@ final class MembershipManagerBindedUGroupsTest extends TestCase
     {
         $gerrit_ugroup_name = 'mozilla/developers';
         $gerrit_source_name = 'mozilla/coders';
-        $this->driver->expects(self::once())->method('addIncludedGroup')->with($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name);
+        $this->driver->expects($this->once())->method('addIncludedGroup')->with($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name);
 
-        $this->membership_manager->expects(self::once())->method('createGroupForServer')
+        $this->membership_manager->expects($this->once())->method('createGroupForServer')
             ->with($this->remote_server, $this->source)
             ->willReturn('mozilla/coders');
         $this->driver->method('removeAllGroupMembers');
@@ -100,7 +100,7 @@ final class MembershipManagerBindedUGroupsTest extends TestCase
     {
         $this->membership_manager->method('createGroupForServer')->willReturn('mozilla/coders');
 
-        $this->driver->expects(self::once())->method('removeAllGroupMembers')->with($this->remote_server, 'mozilla/developers');
+        $this->driver->expects($this->once())->method('removeAllGroupMembers')->with($this->remote_server, 'mozilla/developers');
         $this->driver->method('addIncludedGroup');
 
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
@@ -112,7 +112,7 @@ final class MembershipManagerBindedUGroupsTest extends TestCase
 
         $this->ugroup->setSourceGroup($this->source);
 
-        $this->driver->expects(self::once())->method('removeAllIncludedGroups')->with($this->remote_server, 'mozilla/developers');
+        $this->driver->expects($this->once())->method('removeAllIncludedGroups')->with($this->remote_server, 'mozilla/developers');
         $this->driver->method('removeAllGroupMembers');
         $this->driver->method('addIncludedGroup');
 
@@ -121,7 +121,7 @@ final class MembershipManagerBindedUGroupsTest extends TestCase
 
     public function testItReliesOnCreateGroupForSourceGroupCreation(): void
     {
-        $this->membership_manager->expects(self::once())->method('createGroupForServer')->with($this->remote_server, $this->source);
+        $this->membership_manager->expects($this->once())->method('createGroupForServer')->with($this->remote_server, $this->source);
         $this->driver->method('removeAllGroupMembers');
         $this->driver->method('addIncludedGroup');
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
@@ -133,7 +133,7 @@ final class MembershipManagerBindedUGroupsTest extends TestCase
         $ugroup  = ProjectUGroupTestBuilder::aCustomUserGroup(112)->withProject($project)->withName('developers')->build();
 
         $gerrit_ugroup_name = 'mozilla/developers';
-        $this->driver->expects(self::once())->method('removeAllIncludedGroups')->with($this->remote_server, $gerrit_ugroup_name);
+        $this->driver->expects($this->once())->method('removeAllIncludedGroups')->with($this->remote_server, $gerrit_ugroup_name);
 
         $this->membership_manager->removeUGroupBinding($ugroup);
     }
@@ -152,7 +152,7 @@ final class MembershipManagerBindedUGroupsTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withUnixName('mozilla')->build();
         $ugroup  = ProjectUGroupTestBuilder::aCustomUserGroup(112)->withProject($project)->withName('developers')->withSourceGroup($source_ugroup)->build();
 
-        $this->driver->expects(self::once())->method('addUserToGroup')->with($this->remote_server, $gerrit_user, 'mozilla/developers');
+        $this->driver->expects($this->once())->method('addUserToGroup')->with($this->remote_server, $gerrit_user, 'mozilla/developers');
         $this->driver->method('removeAllIncludedGroups');
         $this->driver->method('flushGerritCacheAccounts');
 

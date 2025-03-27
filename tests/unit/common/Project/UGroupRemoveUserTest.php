@@ -53,7 +53,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
         $ugroup->method('exists')->willReturn(true);
 
-        $ugroup->expects(self::once())->method('removeUserFromStaticGroup')->with($group_id, $ugroup_id, $this->user_id);
+        $ugroup->expects($this->once())->method('removeUserFromStaticGroup')->with($group_id, $ugroup_id, $this->user_id);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -83,7 +83,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
             ->setConstructorArgs([['ugroup_id' => $ugroup_id, 'group_id' => $group_id]])
             ->onlyMethods(['removeUserFromDynamicGroup'])
             ->getMock();
-        $ugroup->expects(self::once())->method('removeUserFromDynamicGroup')->with($this->user, $this->project_administrator);
+        $ugroup->expects($this->once())->method('removeUserFromDynamicGroup')->with($this->user, $this->project_administrator);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }

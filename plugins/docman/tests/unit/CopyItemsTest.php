@@ -92,14 +92,14 @@ final class CopyItemsTest extends TestCase
         // - apply perms
         $dPm = $this->createMock(Docman_PermissionsManager::class);
         $dPm->expects(self::never())->method('setDefaultItemPermissions');
-        $dPm->expects(self::once())->method('cloneItemPermissions')->with($item_to_clone->getId(), $new_id, $dstGroupId);
+        $dPm->expects($this->once())->method('cloneItemPermissions')->with($item_to_clone->getId(), $new_id, $dstGroupId);
         $cloneItemsVisitor->method('_getPermissionsManager')->willReturn($dPm);
 
         $newMdvFactory = $this->createMock(Docman_MetadataValueFactory::class);
-        $cloneItemsVisitor->expects(self::once())->method('_getMetadataValueFactory')->willReturn($newMdvFactory);
+        $cloneItemsVisitor->expects($this->once())->method('_getMetadataValueFactory')->willReturn($newMdvFactory);
 
         $oldMdFactory = $this->createMock(Docman_MetadataFactory::class);
-        $oldMdFactory->expects(self::once())->method('appendItemMetadataList');
+        $oldMdFactory->expects($this->once())->method('appendItemMetadataList');
         $cloneItemsVisitor->method('_getMetadataFactory')->willReturn($oldMdFactory);
 
         $settingsBo = $this->createMock(Docman_SettingsBo::class);

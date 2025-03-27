@@ -172,8 +172,8 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         });
 
         $this->widget_dao->expects(self::exactly(2))->method('duplicateWidget');
-        $widget_instance_01->expects(self::once())->method('cloneContent');
-        $widget_instance_02->expects(self::once())->method('cloneContent');
+        $widget_instance_01->expects($this->once())->method('cloneContent');
+        $widget_instance_02->expects($this->once())->method('cloneContent');
         $matcher = $this->exactly(2);
 
         $this->checker->expects($matcher)->method('isWidgetDisabled')->willReturnCallback(function (...$parameters) use ($matcher, $widget_instance_01, $widget_instance_02) {
@@ -225,8 +225,8 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->widget_dao->expects(self::once())->method('duplicateWidget');
-        $widget_instance_01->expects(self::once())->method('cloneContent');
+        $this->widget_dao->expects($this->once())->method('duplicateWidget');
+        $widget_instance_01->expects($this->once())->method('cloneContent');
         $widget_instance_02->expects(self::never())->method('cloneContent');
         $matcher = $this->exactly(2);
 

@@ -41,13 +41,13 @@ final class UGroupManagerUpdateUgroupBindingDaoTest extends \Tuleap\Test\PHPUnit
 
     public function testItCallsDaoToRemoveABinding(): void
     {
-        $this->dao->expects(self::once())->method('updateUgroupBinding')->with(12, null);
+        $this->dao->expects($this->once())->method('updateUgroupBinding')->with(12, null);
         $this->ugroup_manager->updateUgroupBinding(12);
     }
 
     public function testItCallsDaoToAddABinding(): void
     {
-        $this->dao->expects(self::once())->method('updateUgroupBinding')->with(12, 24);
+        $this->dao->expects($this->once())->method('updateUgroupBinding')->with(12, 24);
         $this->ugroup_manager->updateUgroupBinding(12, 24);
     }
 }

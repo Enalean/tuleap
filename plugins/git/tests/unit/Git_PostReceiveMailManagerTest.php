@@ -48,8 +48,8 @@ final class Git_PostReceiveMailManagerTest extends TestCase
 
         $prm->dao->method('removeNotification')->willReturn(true);
 
-        $repo->expects(self::once())->method('loadNotifiedMails');
-        $backend->expects(self::once())->method('changeRepositoryMailingList');
+        $repo->expects($this->once())->method('loadNotifiedMails');
+        $backend->expects($this->once())->method('changeRepositoryMailingList');
 
         $prm->removeMailByRepository($repo, 'codendiadm@codendi.org');
     }

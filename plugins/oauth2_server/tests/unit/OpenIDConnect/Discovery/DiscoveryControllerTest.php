@@ -56,7 +56,7 @@ final class DiscoveryControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsAJSONObject(): void
     {
-        $this->representation_builder->expects(self::once())->method('build')
+        $this->representation_builder->expects($this->once())->method('build')
             ->willReturn(new ConfigurationResponseRepresentation(['en-US'], ['openid']));
         $response = $this->controller->handle(new NullServerRequest());
 

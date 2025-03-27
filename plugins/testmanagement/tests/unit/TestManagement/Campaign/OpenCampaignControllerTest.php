@@ -82,15 +82,15 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
         $this->campaign_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getById')
             ->with(3)
             ->willReturn($campaign);
 
-        $this->status_updater->expects(self::once())->method('openCampaign');
+        $this->status_updater->expects($this->once())->method('openCampaign');
 
-        $layout->expects(self::once())->method('addFeedback');
-        $layout->expects(self::once())->method('redirect');
+        $layout->expects($this->once())->method('addFeedback');
+        $layout->expects($this->once())->method('redirect');
 
         $this->controller->process(
             $request,
@@ -123,15 +123,15 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
         $this->campaign_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getById')
             ->with(3)
             ->willReturn($campaign);
 
         $this->status_updater->method('openCampaign')->willThrowException(new NoPossibleValueException());
 
-        $layout->expects(self::once())->method('addFeedback')->with('error', 'The campaign cannot be open : No possible value found regarding your configuration. Please check your transition and field dependencies.');
-        $layout->expects(self::once())->method('redirect');
+        $layout->expects($this->once())->method('addFeedback')->with('error', 'The campaign cannot be open : No possible value found regarding your configuration. Please check your transition and field dependencies.');
+        $layout->expects($this->once())->method('redirect');
 
         $this->controller->process(
             $request,
@@ -152,7 +152,7 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->campaign_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getById')
             ->with(3)
             ->willThrowException(

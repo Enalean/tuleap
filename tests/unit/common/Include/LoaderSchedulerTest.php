@@ -53,9 +53,9 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
     {
         session_save_path($this->getTmpDir());
 
-        $this->cookie_manager->expects(self::once())->method('isCookie')->willReturn(true);
-        $this->cookie_manager->expects(self::once())->method('getCookie')->willReturn('test_value');
-        $this->plugin_loader->expects(self::once())->method('loadPlugins');
+        $this->cookie_manager->expects($this->once())->method('isCookie')->willReturn(true);
+        $this->cookie_manager->expects($this->once())->method('getCookie')->willReturn('test_value');
+        $this->plugin_loader->expects($this->once())->method('loadPlugins');
 
         $this->loader_scheduler->loadPluginsThenStartSession(false, []);
 
@@ -65,7 +65,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
     public function testSessionIsNotLoadedWhenItsAScript(): void
     {
         $this->cookie_manager->expects(self::never())->method('isCookie');
-        $this->plugin_loader->expects(self::once())->method('loadPlugins');
+        $this->plugin_loader->expects($this->once())->method('loadPlugins');
 
         $this->loader_scheduler->loadPluginsThenStartSession(true, []);
     }
@@ -73,7 +73,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
     public function testSessionIsNotLoadedWhenAFastCgiParamIsSetToDisableIt(): void
     {
         $this->cookie_manager->expects(self::never())->method('isCookie');
-        $this->plugin_loader->expects(self::once())->method('loadPlugins');
+        $this->plugin_loader->expects($this->once())->method('loadPlugins');
 
         $this->loader_scheduler->loadPluginsThenStartSession(false, ['TULEAP_DISABLE_AUTO_SESSION_START' => 'true']);
     }

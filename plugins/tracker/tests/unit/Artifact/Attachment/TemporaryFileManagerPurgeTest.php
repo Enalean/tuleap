@@ -74,8 +74,8 @@ final class TemporaryFileManagerPurgeTest extends TestCase
     public function testItPurgesOldFiles(): void
     {
         $ten_days_ago = $_SERVER['REQUEST_TIME'] - 10 * 3600 * 24;
-        $this->dao->expects(self::once())->method('delete')->with(1);
-        $this->dao->expects(self::once())->method('searchTemporaryFilesOlderThan')->with($_SERVER['REQUEST_TIME'] - 3 * 3600 * 24)->willReturn(
+        $this->dao->expects($this->once())->method('delete')->with(1);
+        $this->dao->expects($this->once())->method('searchTemporaryFilesOlderThan')->with($_SERVER['REQUEST_TIME'] - 3 * 3600 * 24)->willReturn(
             TestHelper::argListToDar([
                 [
                     'id'            => 1,

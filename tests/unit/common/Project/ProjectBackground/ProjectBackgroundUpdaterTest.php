@@ -39,7 +39,7 @@ final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatesAProjectBackground(): void
     {
-        $this->project_background_dao->expects(self::once())->method('setBackgroundByProjectID');
+        $this->project_background_dao->expects($this->once())->method('setBackgroundByProjectID');
 
         $this->project_background_updater->updateProjectBackground(
             $this->buildPermission(),
@@ -49,7 +49,7 @@ final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeletesAProjectBackground(): void
     {
-        $this->project_background_dao->expects(self::once())->method('deleteBackgroundByProjectID');
+        $this->project_background_dao->expects($this->once())->method('deleteBackgroundByProjectID');
 
         $this->project_background_updater->deleteProjectBackground($this->buildPermission());
     }

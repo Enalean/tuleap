@@ -58,7 +58,7 @@ final class GitForkRepositoriesTest extends TestCase
 
         $git = $this->createPartialMock(Git::class, ['addView']);
         $git->setRequest($request);
-        $git->expects(self::once())->method('addView')->with('forkRepositories');
+        $git->expects($this->once())->method('addView')->with('forkRepositories');
 
         $factory = $this->createMock(GitRepositoryFactory::class);
         $factory->method('getRepositoryById')->willReturn(GitRepositoryTestBuilder::aProjectRepository()->build());

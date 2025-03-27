@@ -107,7 +107,7 @@ final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase
 
         $this->user->method('getAuthorizedKeysArray')->willReturn($new_keys);
 
-        $this->user_account_manager->expects(self::once())->method('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user);
+        $this->user_account_manager->expects($this->once())->method('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user);
 
         $event->process();
         self::assertFalse($this->logger->hasErrorRecords());
@@ -131,7 +131,7 @@ final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase
 
         $this->user->method('getAuthorizedKeysArray')->willReturn($new_keys);
 
-        $this->user_account_manager->expects(self::once())->method('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user);
+        $this->user_account_manager->expects($this->once())->method('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user);
 
         $event->process();
         self::assertFalse($this->logger->hasErrorRecords());

@@ -39,7 +39,7 @@ final class GettextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $gettext_collector = $this->createMock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $gettext_collector->expects(self::once())->method('collectEntry')->with('gettext', 'whatever | toto', $entries);
+        $gettext_collector->expects($this->once())->method('collectEntry')->with('gettext', 'whatever | toto', $entries);
 
         $extractor = new GettextExtractor(new \Mustache_Parser(), new \Mustache_Tokenizer(), $gettext_collector);
         $extractor->extract('{{# gettext }}whatever | toto{{/ gettext }}', $entries);
@@ -50,7 +50,7 @@ final class GettextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $gettext_collector = $this->createMock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $gettext_collector->expects(self::once())->method('collectEntry')->with('gettext', 'whatever | toto', $entries);
+        $gettext_collector->expects($this->once())->method('collectEntry')->with('gettext', 'whatever | toto', $entries);
 
         $extractor = new GettextExtractor(new \Mustache_Parser(), new \Mustache_Tokenizer(), $gettext_collector);
         $extractor->extract('{{# foo }}{{# gettext }}whatever | toto{{/ gettext }}{{/ foo }}', $entries);
@@ -61,7 +61,7 @@ final class GettextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $gettext_collector = $this->createMock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $gettext_collector->expects(self::once())->method('collectEntry')->with('gettext', 'whatever | toto', $entries);
+        $gettext_collector->expects($this->once())->method('collectEntry')->with('gettext', 'whatever | toto', $entries);
 
         $extractor = new GettextExtractor(new \Mustache_Parser(), new \Mustache_Tokenizer(), $gettext_collector);
         $extractor->extract('{{^ foo }}{{# gettext }}whatever | toto{{/ gettext }}{{/ foo }}', $entries);
@@ -72,7 +72,7 @@ final class GettextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $gettext_collector = $this->createMock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $gettext_collector->expects(self::once())->method('collectEntry')->with('gettext', 'whatever {{# gettext }}toto{{/ gettext }}', $entries);
+        $gettext_collector->expects($this->once())->method('collectEntry')->with('gettext', 'whatever {{# gettext }}toto{{/ gettext }}', $entries);
 
         $extractor = new GettextExtractor(new \Mustache_Parser(), new \Mustache_Tokenizer(), $gettext_collector);
         $extractor->extract('{{# gettext }}whatever {{# gettext }}toto{{/ gettext }}{{/ gettext }}', $entries);

@@ -175,7 +175,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new GitlabRequestException(400, 'not a valid token'));
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error');
 
         $this->expectException(I18NRestException::class);
@@ -225,7 +225,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new GitlabResponseAPIException('error'));
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error');
 
         $this->expectException(I18NRestException::class);
@@ -273,7 +273,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($expected_credentials, 123);
 
         $this->webhook_creator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateWebhookInGitlabProject')
             ->with($expected_credentials, $repository)
             ->willThrowException(new GitlabRequestException(400, 'error at creation'));
@@ -283,7 +283,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('insertToken');
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error');
 
         $this->expectException(I18NRestException::class);
@@ -331,12 +331,12 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($expected_credentials, 123);
 
         $this->webhook_creator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateWebhookInGitlabProject')
             ->with($expected_credentials, $repository);
 
         $this->token_inserter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertToken')
             ->with($repository, $token);
 

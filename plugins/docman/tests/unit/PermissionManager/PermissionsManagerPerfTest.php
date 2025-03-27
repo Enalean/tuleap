@@ -101,7 +101,7 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
 
         // one _isUserDocmanAdmin call
-        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(true);
+        $this->permissions_manager->expects($this->once())->method('_isUserDocmanAdmin')->willReturn(true);
 
         // no userHasPerms call
         $pm = $this->createMock(PermissionsManager::class);
@@ -127,11 +127,11 @@ final class PermissionsManagerPerfTest extends TestCase
         $itemId = 78903;
 
         // one _isUserDocmanAdmin call
-        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
+        $this->permissions_manager->expects($this->once())->method('_isUserDocmanAdmin')->willReturn(false);
 
         // 1 userHasPerm call
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::once())->method('userHasPermission')->willReturn(true);
+        $pm->expects($this->once())->method('userHasPermission')->willReturn(true);
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         // test manage
@@ -156,11 +156,11 @@ final class PermissionsManagerPerfTest extends TestCase
 
         $itemId = 78903;
 
-        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
+        $this->permissions_manager->expects($this->once())->method('_isUserDocmanAdmin')->willReturn(false);
 
         // 2 userHasPerm call
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::once())->method('userHasPermission')->willReturn(true);
+        $pm->expects($this->once())->method('userHasPermission')->willReturn(true);
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         // test write
@@ -173,7 +173,7 @@ final class PermissionsManagerPerfTest extends TestCase
     public function testOnReadTestManageRightGivesReadAndWriteRights(): void
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
-        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
+        $this->permissions_manager->expects($this->once())->method('_isUserDocmanAdmin')->willReturn(false);
 
         // user is not super admin
         $user = $this->createMock(PFUser::class);
@@ -205,7 +205,7 @@ final class PermissionsManagerPerfTest extends TestCase
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
         // user is not docman admin
-        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
+        $this->permissions_manager->expects($this->once())->method('_isUserDocmanAdmin')->willReturn(false);
         // user is not super admin
         $user = $this->createMock(PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
@@ -240,7 +240,7 @@ final class PermissionsManagerPerfTest extends TestCase
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
         // user is not docman admin
-        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
+        $this->permissions_manager->expects($this->once())->method('_isUserDocmanAdmin')->willReturn(false);
         // user is not super admin
         $user = $this->createMock(PFUser::class);
         $user->method('isSuperUser')->willReturn(false);

@@ -115,13 +115,13 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->with($this->user, 101)
             ->willReturn($artifact);
 
         $this->response
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addFeedback')
             ->with(
                 \Feedback::INFO,

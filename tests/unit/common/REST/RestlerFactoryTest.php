@@ -40,8 +40,8 @@ final class RestlerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_cache_directory = vfsStream::setup()->url();
         $restler_cache->method('getAndInitiateCacheDirectory')->willReturn($expected_cache_directory);
-        $core_resource_injector->expects(self::once())->method('populate');
-        $event_manager->expects(self::once())->method('processEvent')->with(Event::REST_RESOURCES, self::anything());
+        $core_resource_injector->expects($this->once())->method('populate');
+        $event_manager->expects($this->once())->method('processEvent')->with(Event::REST_RESOURCES, self::anything());
 
         $restler = $restler_factory->buildRestler(147);
 

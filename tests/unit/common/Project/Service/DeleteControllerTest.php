@@ -72,10 +72,10 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_template_project = ProjectTestBuilder::aProject()->withId(Project::DEFAULT_TEMPLATE_PROJECT_ID)->build();
 
         $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
         $this->request = $this->createMock(HTTPRequest::class);
         $this->request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($this->project_admin);
         $this->layout = $this->createMock(BaseLayout::class);
@@ -103,8 +103,8 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->administrator_checker->method('checkUserIsProjectAdministrator')
             ->with($this->project_admin, $this->project);
 
-        $this->layout->expects(self::once())->method('addFeedback')->with(Feedback::INFO, self::anything());
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('addFeedback')->with(Feedback::INFO, self::anything());
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '120']);
     }
@@ -116,7 +116,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->service_dao->method('delete')->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID, $this->service_id);
-        $this->service_dao->expects(self::once())->method('deleteFromAllProjects')->with('homepage');
+        $this->service_dao->expects($this->once())->method('deleteFromAllProjects')->with('homepage');
         $this->project_retriever->method('getProjectFromId')
             ->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID)
             ->willReturn($this->default_template_project);
@@ -124,7 +124,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project_admin, $this->default_template_project);
 
         $this->layout->expects(self::exactly(2))->method('addFeedback')->with(Feedback::INFO, self::anything());
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => (string) Project::DEFAULT_TEMPLATE_PROJECT_ID]);
     }
@@ -142,8 +142,8 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->administrator_checker->method('checkUserIsProjectAdministrator')
             ->with($this->project_admin, $this->project);
 
-        $this->layout->expects(self::once())->method('addFeedback')->with(Feedback::ERROR, self::anything());
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('addFeedback')->with(Feedback::ERROR, self::anything());
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '120']);
     }

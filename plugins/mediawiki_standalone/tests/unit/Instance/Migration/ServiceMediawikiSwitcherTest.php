@@ -69,10 +69,10 @@ final class ServiceMediawikiSwitcherTest extends TestCase
         $dao->expects(self::exactly(1))
             ->method('updateServiceUsageByShortName')
             ->with($project, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('saveBasicInformation')
             ->with(self::STANDALONE_SERVICE_ID, 'label', '', '', null, self::LEGACY_SERVICE_RANK, 0, 0);
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('updateServiceUsageByServiceID')
             ->with($project, self::STANDALONE_SERVICE_ID, 1);
 
@@ -105,7 +105,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
             );
 
 
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('updateServiceUsageByServiceID')
             ->with($project, self::STANDALONE_SERVICE_ID, 1);
 
@@ -125,7 +125,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
                 },
             );
 
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('create')
             ->with(
                 self::PROJECT_ID,
@@ -165,7 +165,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
         $dao->expects(self::exactly(1))
             ->method('updateServiceUsageByShortName')
             ->with($project, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('create')
             ->with(
                 self::PROJECT_ID,

@@ -59,18 +59,18 @@ final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
     {
         $project = $this->createMock(Project::class);
         $project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getID')
             ->willReturn('101');
 
         $project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
 
         $this->plugin_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isPluginAllowedForProject')
             ->with($this->gitlab_plugin, 101)
             ->willReturn(true);
@@ -85,7 +85,7 @@ final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
         $project = $this->createMock(Project::class);
 
         $project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(false);
@@ -103,18 +103,18 @@ final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
     {
         $project = $this->createMock(Project::class);
         $project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getID')
             ->willReturn('101');
 
         $project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
             ->willReturn(true);
 
         $this->plugin_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isPluginAllowedForProject')
             ->with($this->gitlab_plugin, 101)
             ->willReturn(false);

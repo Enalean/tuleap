@@ -54,7 +54,7 @@ final class MetadataListOfValuesElementDaoTest extends TestCase
                       '  , love.`rank` = 15' .
                       "  , love.status = '" . $status . "'" .
                       ' WHERE love.value_id = ' . $valueId;
-        $dao->expects(self::once())->method('update')->with($sql_update)->willReturn(true);
+        $dao->expects($this->once())->method('update')->with($sql_update)->willReturn(true);
 
         $val = $dao->updateElement($metadataId, $valueId, $name, $description, $rank, $status);
         self::assertTrue($val);
@@ -71,7 +71,7 @@ final class MetadataListOfValuesElementDaoTest extends TestCase
         ]);
         $dao->da    = $this->createMock(LegacyDataAccessInterface::class);
         $sql_update = "UPDATE plugin_docman_metadata_love AS love SET status = 'D' WHERE value_id IN (  SELECT value_id   FROM plugin_docman_metadata_love_md AS lovemd   WHERE lovemd.field_id = " . $metadataId . '     AND lovemd.value_id > 100  )';
-        $dao->expects(self::once())->method('update')->with($sql_update)->willReturn(true);
+        $dao->expects($this->once())->method('update')->with($sql_update)->willReturn(true);
 
         $val = $dao->deleteByMetadataId($metadataId);
         self::assertTrue($val);

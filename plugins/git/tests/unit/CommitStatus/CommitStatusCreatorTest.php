@@ -51,7 +51,7 @@ final class CommitStatusCreatorTest extends TestCase
         $this->git_exec->method('doesObjectExists')->willReturn(true);
         $this->git_exec->method('getObjectType')->willReturn('commit');
 
-        $this->dao->expects(self::once())->method('create');
+        $this->dao->expects($this->once())->method('create');
 
         $this->commit_status_creator->createCommitStatus(
             $this->repository,

@@ -413,7 +413,7 @@ final class Docman_PermissionsManagerTest extends TestCase
 
         // Start Test
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::once())->method('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->willReturn(false);
+        $pm->expects($this->once())->method('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->willReturn(false);
 
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
@@ -774,10 +774,10 @@ final class Docman_PermissionsManagerTest extends TestCase
         $pm  = $this->createMock(PermissionsManager::class);
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
 
-        $pm->expects(self::once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn(null);
+        $pm->expects($this->once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn(null);
         $dao->expects(self::never())->method('getUgroupMembers');
-        $this->permissions_manager->expects(self::once())->method('getDao')->willReturn($dao);
-        $this->permissions_manager->expects(self::once())->method('_getPermissionManagerInstance')->willReturn($pm);
+        $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
+        $this->permissions_manager->expects($this->once())->method('_getPermissionManagerInstance')->willReturn($pm);
         self::assertEquals([], $this->permissions_manager->getDocmanManagerUsers(1, $this->project));
     }
 
@@ -785,7 +785,7 @@ final class Docman_PermissionsManagerTest extends TestCase
     {
         $dar = [['ugroup_id' => 101]];
         $pm  = $this->createMock(PermissionsManager::class);
-        $this->permissions_manager->expects(self::once())->method('_getPermissionManagerInstance')->willReturn($pm);
+        $this->permissions_manager->expects($this->once())->method('_getPermissionManagerInstance')->willReturn($pm);
         $dao     = $this->createMock(Docman_PermissionsManagerDao::class);
         $members = [
             [
@@ -798,9 +798,9 @@ final class Docman_PermissionsManagerTest extends TestCase
             ],
         ];
         $dao->method('getUgroupMembers')->with(101)->willReturn($members);
-        $this->permissions_manager->expects(self::once())->method('getDao')->willReturn($dao);
+        $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
 
-        $pm->expects(self::once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn($dar);
+        $pm->expects($this->once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn($dar);
         $userArray = [
             'john.doe@example.com' => 'en_US',
             'jane.doe@example.com' => 'fr_FR',
@@ -812,13 +812,13 @@ final class Docman_PermissionsManagerTest extends TestCase
     {
         $dar = [['ugroup_id' => 101]];
         $pm  = $this->createMock(PermissionsManager::class);
-        $this->permissions_manager->expects(self::once())->method('_getPermissionManagerInstance')->willReturn($pm);
+        $this->permissions_manager->expects($this->once())->method('_getPermissionManagerInstance')->willReturn($pm);
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
         $dao->method('getUgroupMembers')->with(101)->willReturn([]);
         $dao->method('getDocmanAdminUgroups')->with($this->project)->willReturn([]);
-        $this->permissions_manager->expects(self::once())->method('getDao')->willReturn($dao);
+        $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
 
-        $pm->expects(self::once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn($dar);
+        $pm->expects($this->once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn($dar);
         self::assertEquals([], $this->permissions_manager->getDocmanManagerUsers(1, $this->project));
     }
 
@@ -830,7 +830,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
         $this->permissions_manager->method('getDao')->willReturn($dao);
 
-        $pm->expects(self::once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn($dar);
+        $pm->expects($this->once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn($dar);
         $dao->expects(self::never())->method('getUgroupMembers');
         self::assertEquals([], $this->permissions_manager->getDocmanManagerUsers(1, $this->project));
     }
@@ -840,7 +840,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
         $this->permissions_manager->method('getDao')->willReturn($dao);
 
-        $dao->expects(self::once())->method('getDocmanAdminUgroups')->willReturn(null);
+        $dao->expects($this->once())->method('getDocmanAdminUgroups')->willReturn(null);
         $dao->expects(self::never())->method('getUgroupMembers');
         self::assertEquals([], $this->permissions_manager->getDocmanAdminUsers($this->project));
     }
@@ -860,9 +860,9 @@ final class Docman_PermissionsManagerTest extends TestCase
             ],
         ];
         $dao->method('getUgroupMembers')->with(101)->willReturn($members);
-        $this->permissions_manager->expects(self::once())->method('getDao')->willReturn($dao);
+        $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
 
-        $dao->expects(self::once())->method('getDocmanAdminUgroups')->willReturn($dar);
+        $dao->expects($this->once())->method('getDocmanAdminUgroups')->willReturn($dar);
         $userArray = [
             'john.doe@example.com' => 'en_US',
             'jane.doe@example.com' => 'fr_FR',
@@ -875,9 +875,9 @@ final class Docman_PermissionsManagerTest extends TestCase
         $dar = [['ugroup_id' => 101]];
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
         $dao->method('getUgroupMembers')->with(101)->willReturn([]);
-        $this->permissions_manager->expects(self::once())->method('getDao')->willReturn($dao);
+        $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
 
-        $dao->expects(self::once())->method('getDocmanAdminUgroups')->willReturn($dar);
+        $dao->expects($this->once())->method('getDocmanAdminUgroups')->willReturn($dar);
         self::assertEquals([], $this->permissions_manager->getDocmanAdminUsers($this->project));
     }
 
@@ -885,9 +885,9 @@ final class Docman_PermissionsManagerTest extends TestCase
     {
         $dar = [['ugroup_id' => 100]];
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
-        $this->permissions_manager->expects(self::once())->method('getDao')->willReturn($dao);
+        $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
 
-        $dao->expects(self::once())->method('getDocmanAdminUgroups')->willReturn($dar);
+        $dao->expects($this->once())->method('getDocmanAdminUgroups')->willReturn($dar);
         $dao->expects(self::never())->method('getUgroupMembers');
         self::assertEquals([], $this->permissions_manager->getDocmanAdminUsers($this->project));
     }
@@ -897,7 +897,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
         $this->permissions_manager->method('getDao')->willReturn($dao);
 
-        $dao->expects(self::once())->method('getProjectAdminMembers')->willReturn(null);
+        $dao->expects($this->once())->method('getProjectAdminMembers')->willReturn(null);
         self::assertEquals([], $this->permissions_manager->getProjectAdminUsers($this->project));
     }
 
@@ -914,9 +914,9 @@ final class Docman_PermissionsManagerTest extends TestCase
                 'language_id' => 'fr_FR',
             ],
         ];
-        $this->permissions_manager->expects(self::once())->method('getDao')->willReturn($dao);
+        $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
 
-        $dao->expects(self::once())->method('getProjectAdminMembers')->willReturn($dar);
+        $dao->expects($this->once())->method('getProjectAdminMembers')->willReturn($dar);
         $userArray = [
             'john.doe@example.com' => 'en_US',
             'jane.doe@example.com' => 'fr_FR',

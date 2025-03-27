@@ -96,7 +96,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
-        $this->artifact_link_updater->expects(self::once())
+        $this->artifact_link_updater->expects($this->once())
             ->method('updateArtifactLinks')
             ->with(
                 self::isInstanceOf(\PFUser::class),

@@ -64,7 +64,7 @@ class SystemEventManagerTest extends TestCase
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('rowCount')->willReturn(0);
         $dar->method('isError');
-        $seDao->expects(self::once())->method('searchWithParam')
+        $seDao->expects($this->once())->method('searchWithParam')
             ->with('head', 102, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
             ->willReturn($dar);
 
@@ -83,7 +83,7 @@ class SystemEventManagerTest extends TestCase
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('rowCount')->willReturn(1);
         $dar->method('isError');
-        $seDao->expects(self::once())->method('searchWithParam')
+        $seDao->expects($this->once())->method('searchWithParam')
             ->with('head', 102, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
             ->willReturn($dar);
 
@@ -104,7 +104,7 @@ class SystemEventManagerTest extends TestCase
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('rowCount')->willReturn(0);
         $dar->method('isError')->willReturn(false);
-        $seDao->expects(self::once())->method('searchWithParam')
+        $seDao->expects($this->once())->method('searchWithParam')
             ->with('tail', 'titi', [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
             ->willReturn($dar);
 
@@ -121,7 +121,7 @@ class SystemEventManagerTest extends TestCase
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('rowCount')->willReturn(1);
         $dar->method('isError');
-        $seDao->expects(self::once())->method('searchWithParam')
+        $seDao->expects($this->once())->method('searchWithParam')
             ->with('tail', 'titi', [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
             ->willReturn($dar);
 
@@ -139,7 +139,7 @@ class SystemEventManagerTest extends TestCase
         ]);
         $system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnOnConsecutiveCalls(false, true);
 
-        $system_event_manager->expects(self::once())->method('createEvent');
+        $system_event_manager->expects($this->once())->method('createEvent');
 
         $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);
         $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);

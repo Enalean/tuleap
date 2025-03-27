@@ -58,15 +58,15 @@ final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $foobar_scope    = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
         $typevalue_scope = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
 
-        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+        $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->with($user, $app_id)
             ->willReturn(null);
-        $this->authorization_dao->expects(self::once())->method('create')
+        $this->authorization_dao->expects($this->once())->method('create')
             ->with($user, $app_id)
             ->willReturn(17);
-        $this->scope_dao->expects(self::once())->method('deleteForAuthorization')
+        $this->scope_dao->expects($this->once())->method('deleteForAuthorization')
             ->with(17);
-        $this->scope_dao->expects(self::once())->method('createMany')
+        $this->scope_dao->expects($this->once())->method('createMany')
             ->with(17, $foobar_scope, $typevalue_scope);
 
         $this->creator->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
@@ -79,13 +79,13 @@ final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $foobar_scope    = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
         $typevalue_scope = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
 
-        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+        $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->with($user, $app_id)
             ->willReturn(17);
         $this->authorization_dao->expects(self::never())->method('create');
-        $this->scope_dao->expects(self::once())->method('deleteForAuthorization')
+        $this->scope_dao->expects($this->once())->method('deleteForAuthorization')
             ->with(17);
-        $this->scope_dao->expects(self::once())->method('createMany')
+        $this->scope_dao->expects($this->once())->method('createMany')
             ->with(17, $foobar_scope, $typevalue_scope);
 
         $this->creator->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));

@@ -131,16 +131,16 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             'activate-scrum' => '1',
         ])->build();
         $this->configuration_dao->method('isScrumActivated')->willReturn(true);
-        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->explicit_backlog_updater->expects($this->once())->method('updateScrumConfiguration');
         $this->configuration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateConfiguration')
             ->with(self::PROJECT_ID, true);
 
         if ($existing_config) {
-            $this->update_sidebar_config->expects(self::once())->method('activateMilestonesInSidebar');
+            $this->update_sidebar_config->expects($this->once())->method('activateMilestonesInSidebar');
         } else {
-            $this->update_sidebar_config->expects(self::once())->method('deactivateMilestonesInSidebar');
+            $this->update_sidebar_config->expects($this->once())->method('deactivateMilestonesInSidebar');
         }
 
         $this->update(
@@ -166,16 +166,16 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             'should-sidebar-display-last-milestones' => $submitted_value,
         ])->build();
         $this->configuration_dao->method('isScrumActivated')->willReturn(true);
-        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->explicit_backlog_updater->expects($this->once())->method('updateScrumConfiguration');
         $this->configuration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateConfiguration')
             ->with(self::PROJECT_ID, true);
 
         if ($submitted_value === '0') {
-            $this->update_sidebar_config->expects(self::once())->method('deactivateMilestonesInSidebar');
+            $this->update_sidebar_config->expects($this->once())->method('deactivateMilestonesInSidebar');
         } else {
-            $this->update_sidebar_config->expects(self::once())->method('activateMilestonesInSidebar');
+            $this->update_sidebar_config->expects($this->once())->method('activateMilestonesInSidebar');
         }
 
         $this->update(

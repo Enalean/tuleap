@@ -41,7 +41,7 @@ final class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $upload_path_allocator = new UploadPathAllocator();
 
         $finisher = $this->createMock(FileUploadFinisher::class);
-        $finisher->expects(self::once())
+        $finisher->expects($this->once())
             ->method('finishUploadFile')
             ->with(self::callback(
                 static function (TusFileInformation $file_information) {

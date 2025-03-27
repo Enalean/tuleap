@@ -79,7 +79,7 @@ final class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\
         );
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn(null);
@@ -118,13 +118,13 @@ final class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->with($integration)
             ->willReturn($credentials);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUrl')
             ->with($credentials, '/users/10')
             ->willReturn(['name' => 'John', 'email' => 'john@thewall.fr']);

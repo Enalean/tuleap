@@ -123,7 +123,7 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(false);
         $this->burnup_cache_dao->method('getCachedDaysTimestamps')->willReturn([]);
 
-        $this->cache_generator->expects(self::once())->method('forceBurnupCacheGeneration');
+        $this->cache_generator->expects($this->once())->method('forceBurnupCacheGeneration');
         $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
         self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
@@ -147,7 +147,7 @@ final class BurnupCacheCheckerTest extends TestCase
     {
         $this->chart_value_checker->method('hasStartDate')->willReturn(true);
         $this->count_elements_mode_checker->method('burnupMustUseCountElementsMode')->willReturn(true);
-        $this->count_elements_cache_dao->expects(self::once())->method('getCachedDaysTimestamps')->willReturn($this->expected_days);
+        $this->count_elements_cache_dao->expects($this->once())->method('getCachedDaysTimestamps')->willReturn($this->expected_days);
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->willReturn(false);
         $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
@@ -162,7 +162,7 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(false);
         $this->count_elements_cache_dao->method('getCachedDaysTimestamps')->willReturn([]);
 
-        $this->cache_generator->expects(self::once())->method('forceBurnupCacheGeneration');
+        $this->cache_generator->expects($this->once())->method('forceBurnupCacheGeneration');
         $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
         self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));

@@ -98,7 +98,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         };
         $this->addListeners($plugin);
 
-        $this->user_manager->expects(self::once())->method('getUserByUserName');
+        $this->user_manager->expects($this->once())->method('getUserByUserName');
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
 
@@ -225,7 +225,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_expiration_checker->method('checkPasswordLifetime');
 
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->login_manager->validateAndSetCurrentUser($user);
     }
@@ -244,8 +244,8 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
 
-        $this->password_expiration_checker->expects(self::once())->method('checkPasswordLifetime')->with($user);
-        $this->user_manager->expects(self::once())->method('setCurrentUser');
+        $this->password_expiration_checker->expects($this->once())->method('checkPasswordLifetime')->with($user);
+        $this->user_manager->expects($this->once())->method('setCurrentUser');
 
         $this->login_manager->validateAndSetCurrentUser($user);
     }
@@ -318,7 +318,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfUserHasEnablePasswordlessOnly(): void
     {
-        $this->user_manager->expects(self::once())->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->build());
+        $this->user_manager->expects($this->once())->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->build());
         $this->user_manager->method('isPasswordlessOnly')->willReturn(true);
         self::expectException(User_InvalidPasswordWithUserException::class);
 

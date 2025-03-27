@@ -83,7 +83,7 @@ final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
             EOS
         );
 
-        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')->with(52)->willReturn(false);
+        $this->dao->expects($this->once())->method('isTrackerEnabledPrivateComment')->with(52)->willReturn(false);
 
         self::assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
     }
@@ -100,7 +100,7 @@ final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
             EOS
         );
 
-        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')->with(52)->willReturn(true);
+        $this->dao->expects($this->once())->method('isTrackerEnabledPrivateComment')->with(52)->willReturn(true);
 
         self::assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
     }
@@ -118,10 +118,10 @@ final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
             EOS
         );
 
-        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')
+        $this->dao->expects($this->once())->method('isTrackerEnabledPrivateComment')
             ->with(52)
             ->willReturn(true);
-        $this->ugroup_manager->expects(self::once())
+        $this->ugroup_manager->expects($this->once())
             ->method('getUGroupByName')
             ->with($this->project, 'my_group')
             ->willReturn(null);
@@ -144,11 +144,11 @@ final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
 
         $ugroup_expected = ProjectUGroupTestBuilder::aCustomUserGroup(452)->withName('my_group')->build();
 
-        $this->dao->expects(self::once())->method('isTrackerEnabledPrivateComment')
+        $this->dao->expects($this->once())->method('isTrackerEnabledPrivateComment')
             ->with(52)
             ->willReturn(true);
 
-        $this->ugroup_manager->expects(self::once())
+        $this->ugroup_manager->expects($this->once())
             ->method('getUGroupByName')
             ->with($this->project, 'my_group')
             ->willReturn($ugroup_expected);

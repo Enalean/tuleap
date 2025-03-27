@@ -45,7 +45,7 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
         ]);
         $rm  = $this->createMock(\ReferenceManager::class);
         $val = 'bugtest #123';
-        $rm->expects(self::once())->method('insertReferences')->willReturn($val);
+        $rm->expects($this->once())->method('insertReferences')->willReturn($val);
         $p->method('getReferenceManager')->willReturn($rm);
 
         self::assertEquals('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));

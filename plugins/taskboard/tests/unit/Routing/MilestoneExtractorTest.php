@@ -54,7 +54,7 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNotFoundExceptionWhenMilestoneDoesNotExist(): void
     {
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
             ->willReturn(null);
@@ -71,7 +71,7 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone = $this->buildMockMilestone($project);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
             ->willReturn($milestone);
@@ -88,13 +88,13 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone = $this->buildMockMilestone($project);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
             ->willReturn($milestone);
 
         $this->checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkMilestoneIsAllowed')
             ->with($milestone)
             ->willThrowException(new MilestoneIsNotAllowedException());
@@ -111,13 +111,13 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone = $this->buildMockMilestone($project);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 1)
             ->willReturn($milestone);
 
         $this->checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkMilestoneIsAllowed')
             ->with($milestone);
 

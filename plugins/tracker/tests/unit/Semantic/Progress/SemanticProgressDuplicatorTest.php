@@ -39,7 +39,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotDuplicateIfThereIsNoExistingConfig(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn(null);
@@ -65,7 +65,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ?string $link_type,
     ): void {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn([
@@ -87,7 +87,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesEffortBasedSemantics(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn([
@@ -97,7 +97,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(2, 1001, 1002, null);
 
@@ -114,7 +114,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesLinksCountBasedSemantics(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(1)
             ->willReturn([
@@ -124,7 +124,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with(2, null, null, '_is_child');
 

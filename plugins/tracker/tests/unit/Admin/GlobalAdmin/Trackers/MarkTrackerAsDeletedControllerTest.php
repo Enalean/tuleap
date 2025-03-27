@@ -114,7 +114,7 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
     public function testItThrowsExceptionIfTrackerCannotBeFound(): void
     {
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn(null);
 
@@ -132,7 +132,7 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         $tracker = TrackerTestBuilder::aTracker()->withDeletionDate((new \DateTimeImmutable())->getTimestamp())->build();
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
 
@@ -150,13 +150,13 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         $tracker = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
 
         $this->permissions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
             ->willReturn(false);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
 
@@ -182,18 +182,18 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         );
 
         $this->permissions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
             ->willReturn(true);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
 
         $this->csrf
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('check');
 
         $this->expectException(ForbiddenException::class);
@@ -210,22 +210,22 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
             ->willReturn(true);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
 
         $this->csrf
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('check');
 
         $this->field_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
             ->willReturn(true);
@@ -244,28 +244,28 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
             ->willReturn(true);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
 
         $this->csrf
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('check');
 
         $this->field_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
             ->willReturn(false);
 
         $this->triggers_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTrackerImplicatedInTriggers')
             ->with(102)
             ->willReturn(true);
@@ -284,45 +284,45 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
             ->willReturn(true);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
 
         $this->csrf
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('check');
 
         $this->field_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
             ->willReturn(false);
 
         $this->triggers_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTrackerImplicatedInTriggers')
             ->with(102)
             ->willReturn(false);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('markAsDeleted')
             ->with(102)
             ->willReturn(false);
 
         $layout = $this->createMock(BaseLayout::class);
         $layout
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addFeedback')
             ->with(Feedback::ERROR, self::anything());
 
-        $layout->expects(self::once())->method('redirect');
+        $layout->expects($this->once())->method('redirect');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
@@ -336,57 +336,57 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         $tracker = $this->buildMockTracker();
 
         $this->permissions_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->with($this->project, $this->user)
             ->willReturn(true);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
 
         $this->csrf
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('check');
 
         $this->field_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesTrackerHaveSourceSharedFields')
             ->with(102)
             ->willReturn(false);
 
         $this->triggers_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTrackerImplicatedInTriggers')
             ->with(102)
             ->willReturn(false);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('markAsDeleted')
             ->with(102)
             ->willReturn(true);
 
         $this->event_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('processEvent')
             ->with('tracker_event_delete_tracker', ['tracker_id' => 102]);
 
         $reference = $this->createMock(Reference::class);
         $this->reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('loadReferenceFromKeywordAndNumArgs')
             ->with('story', 42, 1)
             ->willReturn($reference);
         $this->reference_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteReference')
             ->with($reference)
             ->willReturn(true);
 
         $GLOBALS['Language']
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getText')
             ->with('project_reference', 't_r_deleted')
             ->willReturn('Corresponding Reference Pattern Deleted');
@@ -409,7 +409,7 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
                 }
             });
 
-        $layout->expects(self::once())->method('redirect');
+        $layout->expects($this->once())->method('redirect');
 
         $this->project_history_dao->method('addHistory');
 

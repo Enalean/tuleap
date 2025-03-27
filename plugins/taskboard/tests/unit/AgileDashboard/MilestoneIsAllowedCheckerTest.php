@@ -63,7 +63,7 @@ final class MilestoneIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfProjectIsNotAllowedToUseThePlugin(): void
     {
         $this->plugin_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isPluginAllowedForProject')
             ->with($this->plugin, 102)
             ->willReturn(false);
@@ -76,13 +76,13 @@ final class MilestoneIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfCardwallOnTopIsNotEnabled(): void
     {
         $this->plugin_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isPluginAllowedForProject')
             ->with($this->plugin, 102)
             ->willReturn(true);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isEnabled')
             ->with(42)
             ->willReturn(false);
@@ -95,19 +95,19 @@ final class MilestoneIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesExceptionIfTaskboardIsNotAllowed(): void
     {
         $this->plugin_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isPluginAllowedForProject')
             ->with($this->plugin, 102)
             ->willReturn(true);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isEnabled')
             ->with(42)
             ->willReturn(true);
 
         $this->usage
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTaskboardAllowed')
             ->willReturn(false);
 
@@ -119,19 +119,19 @@ final class MilestoneIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotRaisesExceptionIfTaskboardIsAllowed(): void
     {
         $this->plugin_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isPluginAllowedForProject')
             ->with($this->plugin, 102)
             ->willReturn(true);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isEnabled')
             ->with(42)
             ->willReturn(true);
 
         $this->usage
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTaskboardAllowed')
             ->willReturn(true);
 

@@ -80,7 +80,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
                 ArtifactTestBuilder::anArtifact(154)->build(),
             );
             $milestones = new PaginatedMilestones([$milestone, $milestone], 2);
-            $this->milestone_factory->expects(self::once())->method('getPaginatedTopMilestones')->willReturn($milestones);
+            $this->milestone_factory->expects($this->once())->method('getPaginatedTopMilestones')->willReturn($milestones);
 
             $first_representation  = $this->createMock(MilestoneRepresentation::class);
             $second_representation = $this->createMock(MilestoneRepresentation::class);
@@ -88,7 +88,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
                 [$first_representation, $second_representation],
                 2
             );
-            $this->milestone_representation_builder->expects(self::once())->method('buildRepresentationsFromCollection')
+            $this->milestone_representation_builder->expects($this->once())->method('buildRepresentationsFromCollection')
                 ->with($milestones, $user, $representation_type)
                 ->willReturn($representations);
 
@@ -122,7 +122,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             $user    = UserTestBuilder::aUser()->build();
             $project = ProjectTestBuilder::aProject()->build();
             $query   = '';
-            $this->milestone_factory->expects(self::once())->method('getPaginatedTopMilestones')
+            $this->milestone_factory->expects($this->once())->method('getPaginatedTopMilestones')
                 ->willThrowException(new Planning_NoPlanningsException());
 
             $representations = $this->controller->get(

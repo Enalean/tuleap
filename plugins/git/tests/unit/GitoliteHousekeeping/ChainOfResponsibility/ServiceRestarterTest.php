@@ -45,9 +45,9 @@ final class ServiceRestarterTest extends TestCase
 
     public function testItRestartsTheServiceAndEndsWithSuccess(): void
     {
-        $this->response->expects(self::once())->method('info')->with('Restarting service');
-        $this->backend_service->expects(self::once())->method('start');
-        $this->response->expects(self::once())->method('success');
+        $this->response->expects($this->once())->method('info')->with('Restarting service');
+        $this->backend_service->expects($this->once())->method('start');
+        $this->response->expects($this->once())->method('success');
 
         $this->command->execute();
     }

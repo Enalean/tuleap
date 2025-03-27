@@ -124,7 +124,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
         );
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
@@ -158,7 +158,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
             ->willThrowException($this->createMock(Project_AccessException::class));
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
@@ -192,7 +192,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
             ->willThrowException(new UserCannotReadGitRepositoryException());
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
@@ -230,7 +230,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
             ->willReturn(null);
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
@@ -284,7 +284,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
             ->willReturn('John Doe');
 
         $by_nature_organizer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with(
                 self::callback(

@@ -60,7 +60,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
     public function testCreateSuccessfulResponseRedirectsToRedirectURIWithAuthorizationCode(): void
     {
         $auth_code = 'auth_code_identifier';
-        $this->authorization_code_creator->expects(self::once())->method('createAuthorizationCodeIdentifier')->willReturn(
+        $this->authorization_code_creator->expects($this->once())->method('createAuthorizationCodeIdentifier')->willReturn(
             new ConcealedString($auth_code)
         );
 
@@ -82,7 +82,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
     public function testCreateSuccessfulResponseRedirectsWithStateWhenNotNull(): void
     {
         $auth_code = 'auth_code_identifier';
-        $this->authorization_code_creator->expects(self::once())->method('createAuthorizationCodeIdentifier')->willReturn(
+        $this->authorization_code_creator->expects($this->once())->method('createAuthorizationCodeIdentifier')->willReturn(
             new ConcealedString($auth_code)
         );
 
@@ -131,7 +131,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testCreateRedirectToLoginResponse(): void
     {
-        $this->url_redirect->expects(self::once())->method('buildReturnToLogin')
+        $this->url_redirect->expects($this->once())->method('buildReturnToLogin')
             ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1'])->willReturn('/login');
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
@@ -142,7 +142,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testCreateRedirectToLoginResponseAndLoginValueFromPromptToAvoidAnInfiniteRedirectionLoop(): void
     {
-        $this->url_redirect->expects(self::once())->method('buildReturnToLogin')
+        $this->url_redirect->expects($this->once())->method('buildReturnToLogin')
             ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1&prompt=consent'])->willReturn('/login');
         $request  = new NullServerRequest();
         $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));

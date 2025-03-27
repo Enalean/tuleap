@@ -46,8 +46,8 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $dao->method('getReferenceByPullRequestId')->willReturn(
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_OK]
         );
-        $dao->expects(self::once())->method('updateStatusByPullRequestId');
-        $executor_source->expects(self::once())->method('pushForce');
+        $dao->expects($this->once())->method('updateStatusByPullRequestId');
+        $executor_source->expects($this->once())->method('pushForce');
 
         $reference_updater->updatePullRequestReference(
             $pull_request,
@@ -163,8 +163,8 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_NOT_YET_CREATED]
         );
         $namespace_checker->method('isAvailable')->willReturn(true);
-        $dao->expects(self::once())->method('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN);
-        $executor_source->expects(self::once())->method('pushForce')->willThrowException($this->createMock(\Git_Command_Exception::class));
+        $dao->expects($this->once())->method('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN);
+        $executor_source->expects($this->once())->method('pushForce')->willThrowException($this->createMock(\Git_Command_Exception::class));
 
         $this->expectException(\Git_Command_Exception::class);
 
@@ -197,9 +197,9 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_NOT_YET_CREATED]
         );
         $namespace_checker->method('isAvailable')->willReturn(false, true);
-        $dao->expects(self::once())->method('updateGitReferenceToNextAvailableOne');
-        $dao->expects(self::once())->method('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_OK);
-        $executor_source->expects(self::once())->method('pushForce');
+        $dao->expects($this->once())->method('updateGitReferenceToNextAvailableOne');
+        $dao->expects($this->once())->method('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_OK);
+        $executor_source->expects($this->once())->method('pushForce');
 
         $reference_updater->updatePullRequestReference(
             $pull_request,

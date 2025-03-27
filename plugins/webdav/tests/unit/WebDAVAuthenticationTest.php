@@ -82,7 +82,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVAuthentication->method('getUser')->willReturn($user);
 
         $end_of_execution_exception = new \Exception();
-        $this->headers_sender->expects(self::once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
+        $this->headers_sender->expects($this->once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
 
         $this->expectExceptionObject($end_of_execution_exception);
         $webDAVAuthentication->authenticate();
@@ -102,7 +102,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVAuthentication->method('getUser')->willReturn($user);
 
         $end_of_execution_exception = new \Exception();
-        $this->headers_sender->expects(self::once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
+        $this->headers_sender->expects($this->once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
 
         $this->expectExceptionObject($end_of_execution_exception);
 
@@ -124,7 +124,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVAuthentication->method('getUser')->willReturn($user);
 
         $end_of_execution_exception = new \Exception();
-        $this->headers_sender->expects(self::once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
+        $this->headers_sender->expects($this->once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
 
         $this->expectExceptionObject($end_of_execution_exception);
 
@@ -148,7 +148,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVAuthentication->method('getUser')->willReturn($user);
 
         $end_of_execution_exception = new \Exception();
-        $this->headers_sender->expects(self::once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
+        $this->headers_sender->expects($this->once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
 
         $this->expectExceptionObject($end_of_execution_exception);
 
@@ -170,7 +170,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVAuthentication->method('getUser')->willReturn($user);
 
         $end_of_execution_exception = new \Exception();
-        $this->headers_sender->expects(self::once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
+        $this->headers_sender->expects($this->once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
 
         $this->expectExceptionObject($end_of_execution_exception);
 
@@ -224,7 +224,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->access_key_authenticator->method('getUser')->willThrowException(new HTTPBasicAuthUserAccessKeyMisusageException('wrong_username', $user));
 
         $end_of_execution_exception = new \Exception();
-        $this->headers_sender->expects(self::once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
+        $this->headers_sender->expects($this->once())->method('sendHeaders')->willThrowException($end_of_execution_exception);
 
         $this->expectExceptionObject($end_of_execution_exception);
 

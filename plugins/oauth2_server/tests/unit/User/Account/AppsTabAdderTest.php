@@ -31,7 +31,7 @@ final class AppsTabAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddTabs(): void
     {
         $collection = $this->createMock(AccountTabPresenterCollection::class);
-        $collection->expects(self::once())->method('add')
+        $collection->expects($this->once())->method('add')
             ->with(self::isString(), self::isInstanceOf(AccountTabPresenter::class));
         $collection->method('getCurrentHref');
 

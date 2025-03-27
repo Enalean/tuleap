@@ -65,7 +65,7 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
 
         $sem = $this->createMock(\SystemEventManager::class);
-        $sem->expects(self::once())->method('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '105', SystemEvent::PRIORITY_MEDIUM);
+        $sem->expects($this->once())->method('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '105', SystemEvent::PRIORITY_MEDIUM);
         $lum->method('getSystemEventManager')->willReturn($sem);
 
         $lum->addUserToRename($user);
@@ -85,7 +85,7 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
 
         $sem = $this->createMock(\SystemEventManager::class);
-        $sem->expects(self::once())->method('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '101' . SystemEvent::PARAMETER_SEPARATOR . '102' . SystemEvent::PARAMETER_SEPARATOR . '103', SystemEvent::PRIORITY_MEDIUM);
+        $sem->expects($this->once())->method('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '101' . SystemEvent::PARAMETER_SEPARATOR . '102' . SystemEvent::PARAMETER_SEPARATOR . '103', SystemEvent::PRIORITY_MEDIUM);
         $lum->method('getSystemEventManager')->willReturn($sem);
 
         $lum->addUserToRename($user1);

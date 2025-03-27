@@ -313,7 +313,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
 
     public function testItValidatesArtifactLinkField(): void
     {
-        $this->artifact_link_validator->expects(self::once())->method('isValid')->willReturn(true);
+        $this->artifact_link_validator->expects($this->once())->method('isValid')->willReturn(true);
 
         $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link_field->method('getId')->willReturn(101);

@@ -114,7 +114,7 @@ final class CreateBacklogControllerTest extends TestCase
         $project->addUsedServices([\AgileDashboardPlugin::PLUGIN_SHORTNAME, $this->createStub(AgileDashboardService::class)]);
 
         $first_scrum_creator = $this->createMock(AgileDashboard_FirstScrumCreator::class);
-        $first_scrum_creator->expects(self::once())->method('createFirstScrum')->willReturn(NewFeedback::success('yay!'));
+        $first_scrum_creator->expects($this->once())->method('createFirstScrum')->willReturn(NewFeedback::success('yay!'));
 
         $feedback_serializer = FeedbackSerializerStub::buildSelf();
 

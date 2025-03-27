@@ -79,7 +79,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->user_manager->method('updateDb');
 
-        $this->csrf_token->expects(self::once())->method('check')->with('/account/security');
+        $this->csrf_token->expects($this->once())->method('check')->with('/account/security');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -93,7 +93,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->csrf_token->method('check');
 
-        $this->user_manager->expects(self::once())->method('updateDb')->willReturnCallback(static function (PFUser $user): bool {
+        $this->user_manager->expects($this->once())->method('updateDb')->willReturnCallback(static function (PFUser $user): bool {
             return $user->getStickyLogin() === 1;
         });
 
@@ -109,7 +109,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->csrf_token->method('check');
 
-        $this->user_manager->expects(self::once())->method('updateDb')->willReturnCallback(static function (PFUser $user): bool {
+        $this->user_manager->expects($this->once())->method('updateDb')->willReturnCallback(static function (PFUser $user): bool {
             return $user->getStickyLogin() === 0;
         });
 

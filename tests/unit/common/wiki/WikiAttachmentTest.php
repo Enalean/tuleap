@@ -133,7 +133,7 @@ class WikiAttachmentTest extends TestCase
 
         $dao = $this->createMock(WikiAttachmentDao::class);
         $wa->method('getDao')->willReturn($dao);
-        $dao->expects(self::once())->method('setPurgeDate')->willReturn(true);
+        $dao->expects($this->once())->method('setPurgeDate')->willReturn(true);
 
         self::assertTrue($wa->purgeAttachment());
         self::assertFalse($wa->exist());
@@ -152,7 +152,7 @@ class WikiAttachmentTest extends TestCase
 
         $dao = $this->createMock(WikiAttachmentDao::class);
         $wa->method('getDao')->willReturn($dao);
-        $dao->expects(self::once())->method('setPurgeDate')->willReturn(false);
+        $dao->expects($this->once())->method('setPurgeDate')->willReturn(false);
 
         self::assertFalse($wa->purgeAttachment());
         self::assertFalse($wa->exist());
@@ -165,7 +165,7 @@ class WikiAttachmentTest extends TestCase
 
         $dao = $this->createMock(WikiAttachmentDao::class);
         $wa->method('getDao')->willReturn($dao);
-        $dao->expects(self::once())->method('delete')->willReturn(true);
+        $dao->expects($this->once())->method('delete')->willReturn(true);
         self::assertTrue($wa->deleteAttachment());
     }
 
@@ -187,7 +187,7 @@ class WikiAttachmentTest extends TestCase
 
         $dao = $this->createMock(WikiAttachmentDao::class);
         $wa->method('getDao')->willReturn($dao);
-        $dao->expects(self::once())->method('delete')->willReturn(false);
+        $dao->expects($this->once())->method('delete')->willReturn(false);
         self::assertFalse($wa->deleteAttachment());
     }
 

@@ -52,7 +52,7 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
 
     public function testItReturnsMergeOfLabelsBindStatic(): void
     {
-        $this->dao->expects(self::once())->method('searchByFieldId')->willReturn(TestHelper::argListToDar([
+        $this->dao->expects($this->once())->method('searchByFieldId')->willReturn(TestHelper::argListToDar([
             ['label' => 'my label'],
         ]));
 
@@ -67,7 +67,7 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
 
     public function testItReturnsMergeOfLabelsBindUsers(): void
     {
-        $this->dao->expects(self::once())->method('searchByFieldId')->willReturn(TestHelper::argListToDar([
+        $this->dao->expects($this->once())->method('searchByFieldId')->willReturn(TestHelper::argListToDar([
             ['label' => 'my label'],
         ]));
 

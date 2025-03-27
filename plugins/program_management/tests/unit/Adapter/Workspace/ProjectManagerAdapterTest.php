@@ -34,7 +34,7 @@ final class ProjectManagerAdapterTest extends TestCase
     {
         $project         = ProjectTestBuilder::aProject()->withId(101)->build();
         $project_manager = $this->createMock(\ProjectManager::class);
-        $project_manager->expects(self::once())
+        $project_manager->expects($this->once())
             ->method('getProject')
             ->with(101)
             ->willReturn($project);

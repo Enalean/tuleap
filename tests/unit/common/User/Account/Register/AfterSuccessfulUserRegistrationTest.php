@@ -47,12 +47,12 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
         $admin_register_mail_builder = $this->createMock(\TuleapRegisterMail::class);
 
         $mail = $this->createMock(\Codendi_Mail::class);
-        $mail->expects(self::once())
+        $mail->expects($this->once())
             ->method('send')
             ->willReturn(true);
 
         $admin_register_mail_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getMail')
             ->willReturn($mail);
 
@@ -146,12 +146,12 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
         $admin_register_mail_builder = $this->createMock(\TuleapRegisterMail::class);
 
         $mail = $this->createMock(\Codendi_Mail::class);
-        $mail->expects(self::once())
+        $mail->expects($this->once())
             ->method('send')
             ->willReturn(true);
 
         $user_register_mail_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getMail')
             ->willReturn($mail);
 
@@ -199,12 +199,12 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
         $admin_register_mail_builder = $this->createMock(\TuleapRegisterMail::class);
 
         $mail = $this->createMock(\Codendi_Mail::class);
-        $mail->expects(self::once())
+        $mail->expects($this->once())
             ->method('send')
             ->willReturn(false);
 
         $user_register_mail_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getMail')
             ->willReturn($mail);
 

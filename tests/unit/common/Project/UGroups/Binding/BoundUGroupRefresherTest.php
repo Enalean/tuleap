@@ -50,7 +50,7 @@ final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = ProjectUGroupTestBuilder::aCustomUserGroup(371)->build();
 
         $this->ugroup_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isUpdateUsersAllowed')
             ->with(371)
             ->willReturn(false);
@@ -58,7 +58,7 @@ final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Language']->method('getText')
             ->willReturn('Error message');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')
             ->with('warning', 'Error message');
 
         self::expectException(\Exception::class);
@@ -73,17 +73,17 @@ final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = ProjectUGroupTestBuilder::aCustomUserGroup(371)->build();
 
         $this->ugroup_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isUpdateUsersAllowed')
             ->with(371)
             ->willReturn(true);
         $this->ugroup_user_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('resetUgroupUserList')
             ->with(371)
             ->willReturn(true);
         $this->ugroup_user_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('cloneUgroup')
             ->with(149, 371)
             ->willReturn(true);

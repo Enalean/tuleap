@@ -41,7 +41,7 @@ final class ProjectAfterArchiveImportActivationTest extends TestCase
     {
         $project_dao = $this->createMock(\ProjectDao::class);
         $project_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateStatus')
             ->with(self::PROJECT_ID, \Project::STATUS_PENDING);
 
@@ -74,7 +74,7 @@ final class ProjectAfterArchiveImportActivationTest extends TestCase
 
         $project_dao = $this->createMock(\ProjectDao::class);
         $project_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateStatus')
             ->with(self::PROJECT_ID, \Project::STATUS_PENDING);
 

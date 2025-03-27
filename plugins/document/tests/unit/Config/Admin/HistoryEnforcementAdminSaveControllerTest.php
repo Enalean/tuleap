@@ -70,10 +70,10 @@ final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUn
             ->withParam('is-changelog-proposed-after-dnd', '1')
             ->build();
 
-        $this->token->expects(self::once())->method('check');
+        $this->token->expects($this->once())->method('check');
 
         $this->config_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('saveBool')
             ->with(HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND, true);
 

@@ -50,7 +50,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
         $expected_top_backlog_change = new TopBacklogChange([400, 401], [], false, null);
 
         $this->top_backlog_change_processor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('processTopBacklogChangeForAProgram')
             ->with(
                 self::anything(),

@@ -63,21 +63,21 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->done_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSelectedValues')
             ->willReturn([
                 ['value_id' => '462'],
             ]);
 
         $this->status_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->willReturn(TestHelper::arrayToDar([
                 'field_id' => '712',
             ]));
 
         $this->done_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addForTracker')
             ->with(201, [6228]);
 
@@ -99,7 +99,7 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->done_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSelectedValues')
             ->willReturn([]);
 
@@ -124,14 +124,14 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->done_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSelectedValues')
             ->willReturn([
                 ['value_id' => '462'],
             ]);
 
         $this->status_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->willReturn(TestHelper::emptyDar());
 
@@ -155,14 +155,14 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->done_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSelectedValues')
             ->willReturn([
                 ['value_id' => '463'],
             ]);
 
         $this->status_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->willReturn(TestHelper::arrayToDar([
                 'field_id' => '712',

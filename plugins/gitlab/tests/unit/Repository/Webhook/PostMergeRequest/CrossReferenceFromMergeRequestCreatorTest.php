@@ -96,7 +96,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             ->method('insertCrossReference');
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('0 Tuleap references found in merge request 2');
 
@@ -149,7 +149,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
                 }
             );
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error')
             ->with(
                 'No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'
@@ -205,7 +205,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             );
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('error')
             ->with('Tuleap artifact #42 not found, no cross-reference will be added.');
 

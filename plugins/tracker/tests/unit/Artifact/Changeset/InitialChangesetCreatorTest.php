@@ -122,15 +122,15 @@ final class InitialChangesetCreatorTest extends TestCase
     public function testItCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset(): void
     {
         $this->setFields([]);
-        $this->workflow->expects(self::once())->method('before');
-        $this->workflow->expects(self::once())->method('checkGlobalRules');
+        $this->workflow->expects($this->once())->method('before');
+        $this->workflow->expects($this->once())->method('checkGlobalRules');
 
-        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
-        $this->workflow->expects(self::once())->method('validate');
+        $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects($this->once())->method('validate');
 
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(5667);
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(5667);
 
-        $this->workflow->expects(self::once())->method('after')->with($this->fields_data, self::anything(), null);
+        $this->workflow->expects($this->once())->method('after')->with($this->fields_data, self::anything(), null);
 
         $this->create();
     }
@@ -138,12 +138,12 @@ final class InitialChangesetCreatorTest extends TestCase
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails(): void
     {
         $this->setFields([]);
-        $this->workflow->expects(self::once())->method('validate');
-        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
-        $this->workflow->expects(self::once())->method('before');
-        $this->workflow->expects(self::once())->method('checkGlobalRules');
+        $this->workflow->expects($this->once())->method('validate');
+        $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects($this->once())->method('before');
+        $this->workflow->expects($this->once())->method('checkGlobalRules');
 
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willThrowException(
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willThrowException(
             new Tracker_Artifact_Exception_CannotCreateNewChangeset()
         );
 
@@ -156,12 +156,12 @@ final class InitialChangesetCreatorTest extends TestCase
     {
         $this->setFields([]);
         $this->artifact_saver = SaveArtifactStub::withFailure();
-        $this->workflow->expects(self::once())->method('validate');
-        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
-        $this->workflow->expects(self::once())->method('before');
-        $this->workflow->expects(self::once())->method('checkGlobalRules');
+        $this->workflow->expects($this->once())->method('validate');
+        $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects($this->once())->method('before');
+        $this->workflow->expects($this->once())->method('checkGlobalRules');
 
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(123);
 
         $this->workflow->expects(self::never())->method('after');
 
@@ -182,7 +182,7 @@ final class InitialChangesetCreatorTest extends TestCase
             new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition)
         );
 
-        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
         $this->workflow->expects(self::never())->method('after');
         $this->changeset_saver->expects(self::never())->method('saveChangeset');
         $creation = $this->create();
@@ -192,24 +192,24 @@ final class InitialChangesetCreatorTest extends TestCase
 
     public function testItSavesTheDefaultValueWhenFieldIsSubmittedButCannotSubmit(): void
     {
-        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
-        $this->workflow->expects(self::once())->method('validate');
-        $this->workflow->expects(self::once())->method('before');
-        $this->workflow->expects(self::once())->method('checkGlobalRules');
-        $this->workflow->expects(self::once())->method('bypassPermissions')->willReturn(true);
-        $this->workflow->expects(self::once())->method('after');
+        $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects($this->once())->method('validate');
+        $this->workflow->expects($this->once())->method('before');
+        $this->workflow->expects($this->once())->method('checkGlobalRules');
+        $this->workflow->expects($this->once())->method('bypassPermissions')->willReturn(true);
+        $this->workflow->expects($this->once())->method('after');
 
 
         $this->setFields([$this->field]);
 
         $this->field->method('userCanSubmit')->willReturn(false);
         $this->field->method('getDefaultValue')->willReturn('default value');
-        $this->field->expects(self::once())->method('postSaveNewChangeset');
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
+        $this->field->expects($this->once())->method('postSaveNewChangeset');
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->expects(self::once())->method('saveNewChangeset')->willReturn(
+        $this->field->expects($this->once())->method('saveNewChangeset')->willReturn(
             self::anything(),
             self::anything(),
             self::anything(),
@@ -225,22 +225,22 @@ final class InitialChangesetCreatorTest extends TestCase
 
     public function testItIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit(): void
     {
-        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
-        $this->workflow->expects(self::once())->method('validate');
-        $this->workflow->expects(self::once())->method('before');
-        $this->workflow->expects(self::once())->method('checkGlobalRules');
-        $this->workflow->expects(self::once())->method('after');
+        $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects($this->once())->method('validate');
+        $this->workflow->expects($this->once())->method('before');
+        $this->workflow->expects($this->once())->method('checkGlobalRules');
+        $this->workflow->expects($this->once())->method('after');
 
         $this->setFields([$this->field]);
 
         $this->field->method('userCanSubmit')->willReturn(true);
         $this->field->method('getDefaultValue')->willReturn('default value');
-        $this->field->expects(self::once())->method('postSaveNewChangeset');
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
+        $this->field->expects($this->once())->method('postSaveNewChangeset');
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->expects(self::once())->method('saveNewChangeset')->with(
+        $this->field->expects($this->once())->method('saveNewChangeset')->with(
             self::anything(),
             self::anything(),
             self::anything(),
@@ -256,23 +256,23 @@ final class InitialChangesetCreatorTest extends TestCase
 
     public function testItBypassPermsWhenWorkflowBypassPerms(): void
     {
-        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
-        $this->workflow->expects(self::once())->method('validate');
-        $this->workflow->expects(self::once())->method('before');
-        $this->workflow->expects(self::once())->method('checkGlobalRules');
-        $this->workflow->expects(self::once())->method('after');
+        $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects($this->once())->method('validate');
+        $this->workflow->expects($this->once())->method('before');
+        $this->workflow->expects($this->once())->method('checkGlobalRules');
+        $this->workflow->expects($this->once())->method('after');
 
         $this->setFields([$this->field]);
 
         $this->field->method('userCanSubmit')->willReturn(false);
         $this->field->method('getDefaultValue')->willReturn('default value');
         $this->workflow->method('bypassPermissions')->with($this->field)->willReturn(true);
-        $this->field->expects(self::once())->method('postSaveNewChangeset');
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
+        $this->field->expects($this->once())->method('postSaveNewChangeset');
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->expects(self::once())->method('saveNewChangeset')->with(
+        $this->field->expects($this->once())->method('saveNewChangeset')->with(
             self::anything(),
             self::anything(),
             self::anything(),
@@ -289,7 +289,7 @@ final class InitialChangesetCreatorTest extends TestCase
     public function testItBypassPermissionsWhenWorkflowIsDisabled(): void
     {
         $this->workflow->method('isDisabled')->willReturn(true);
-        $this->workflow->expects(self::once())->method('after');
+        $this->workflow->expects($this->once())->method('after');
         $this->workflow->expects(self::never())->method('validate');
         $this->workflow->expects(self::never())->method('before');
         $this->workflow->expects(self::never())->method('checkGlobalRules');
@@ -298,12 +298,12 @@ final class InitialChangesetCreatorTest extends TestCase
 
         $this->field->method('userCanSubmit')->willReturn(true);
         $this->field->method('getDefaultValue')->willReturn('default value');
-        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
+        $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->expects(self::once())->method('postSaveNewChangeset');
-        $this->field->expects(self::once())->method('saveNewChangeset')->with(
+        $this->field->expects($this->once())->method('postSaveNewChangeset');
+        $this->field->expects($this->once())->method('saveNewChangeset')->with(
             self::anything(),
             self::anything(),
             self::anything(),

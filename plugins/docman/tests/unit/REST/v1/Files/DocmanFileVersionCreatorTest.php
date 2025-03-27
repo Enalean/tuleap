@@ -76,7 +76,7 @@ final class DocmanFileVersionCreatorTest extends TestCase
 
         $version_id        = 1;
         $version_to_upload = new VersionToUpload($version_id);
-        $this->creator->expects(self::once())->method('create')->willReturn($version_to_upload);
+        $this->creator->expects($this->once())->method('create')->willReturn($version_to_upload);
 
         $this->lock_factory->expects(self::never())->method('itemIsLocked');
 
@@ -102,11 +102,11 @@ final class DocmanFileVersionCreatorTest extends TestCase
         $representation->file_size = 5;
         $date                      = new DateTimeImmutable();
 
-        $this->lock_factory->expects(self::once())->method('itemIsLocked')->with($item)->willReturn(true);
+        $this->lock_factory->expects($this->once())->method('itemIsLocked')->with($item)->willReturn(true);
 
         $version_id        = 1;
         $version_to_upload = new VersionToUpload($version_id);
-        $this->creator->expects(self::once())->method('create')->willReturn($version_to_upload);
+        $this->creator->expects($this->once())->method('create')->willReturn($version_to_upload);
 
         $created_version_representation = $this->version_creator->createVersionFromEmpty(
             $item,

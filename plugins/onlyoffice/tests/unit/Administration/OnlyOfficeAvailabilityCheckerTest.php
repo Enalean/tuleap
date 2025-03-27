@@ -48,7 +48,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $logger->expects(self::once())
+        $logger->expects($this->once())
             ->method('debug')
             ->with('No document server with existing secret key has been defined');
 
@@ -66,7 +66,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $logger->expects(self::once())
+        $logger->expects($this->once())
             ->method('debug')
             ->with('No document server with existing secret key has been defined');
 

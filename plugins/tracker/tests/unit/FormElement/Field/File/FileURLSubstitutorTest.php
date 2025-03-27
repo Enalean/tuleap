@@ -79,7 +79,7 @@ final class FileURLSubstitutorTest extends TestCase
     public function testNoSubstitutionForInvalidHTML(): void
     {
         $url_mapping = $this->createMock(CreatedFileURLMapping::class);
-        $url_mapping->expects(self::once())->method('isEmpty')->willReturn(false);
+        $url_mapping->expects($this->once())->method('isEmpty')->willReturn(false);
         $url_mapping->expects(self::never())->method('get')->with('/path/to/file1.png');
 
         self::assertEquals(

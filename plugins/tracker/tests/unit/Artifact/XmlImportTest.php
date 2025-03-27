@@ -157,7 +157,7 @@ final class XmlImportTest extends TestCase
         ];
 
         $this->artifact_creator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createFirstChangeset')
             ->willReturnCallback(
                 fn(
@@ -209,12 +209,12 @@ final class XmlImportTest extends TestCase
             )
             ->willReturnOnConsecutiveCalls($changeset_2, $changeset_3);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($artifact);
 
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, 'summary')->willReturn($this->tracker_formelement_field_string);
         $this->formelement_factory->method('getFormElementByName')->willReturn([]);
 
-        $this->external_field_extractor->expects(self::once())->method('extractExternalFieldsFromArtifact');
+        $this->external_field_extractor->expects($this->once())->method('extractExternalFieldsFromArtifact');
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -238,7 +238,7 @@ final class XmlImportTest extends TestCase
         $xml_input         = simplexml_load_string($xml_field_mapping);
 
         $this->artifact_creator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createFirstChangeset')
             ->with(
                 $artifact,
@@ -266,7 +266,7 @@ final class XmlImportTest extends TestCase
             )
             ->willReturnOnConsecutiveCalls([$ugroup_2], [$ugroup_3]);
 
-        $this->new_changeset_creator->expects(self::once())->method('create')
+        $this->new_changeset_creator->expects($this->once())->method('create')
             ->with(
                 self::callback(function (NewChangeset $new_changeset) use ($artifact, $ugroup_2) {
                     if ($new_changeset->getArtifact() !== $artifact) {
@@ -300,12 +300,12 @@ final class XmlImportTest extends TestCase
             )
             ->willReturn($changeset_2);
 
-        $this->artifact_creator->expects(self::once())->method('createBare')->willReturn($artifact);
+        $this->artifact_creator->expects($this->once())->method('createBare')->willReturn($artifact);
 
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, 'summary')->willReturn($this->tracker_formelement_field_string);
         $this->formelement_factory->method('getFormElementByName')->willReturn([]);
 
-        $this->external_field_extractor->expects(self::once())->method('extractExternalFieldsFromArtifact');
+        $this->external_field_extractor->expects($this->once())->method('extractExternalFieldsFromArtifact');
 
         $this->importer->importFromXML(
             $this->tracker,

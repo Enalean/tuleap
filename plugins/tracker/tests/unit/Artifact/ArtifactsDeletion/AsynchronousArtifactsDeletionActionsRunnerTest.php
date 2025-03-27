@@ -62,8 +62,8 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\
     {
         $this->queue_factory->expects(self::never())->method('getPersistentQueue');
         $task = $this->createMock(ArchiveAndDeleteArtifactTask::class);
-        $task->expects(self::once())->method('archive');
-        $this->task_builder->expects(self::once())->method('build')->willReturn($task);
+        $task->expects($this->once())->method('archive');
+        $this->task_builder->expects($this->once())->method('build')->willReturn($task);
 
         $artifact = ArtifactTestBuilder::anArtifact(1234)->build();
 

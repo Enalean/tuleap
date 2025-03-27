@@ -97,10 +97,10 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         //The plugin factory
         $plugin_factory = $this->createMock(\PluginFactory::class);
-        $plugin_factory->expects(self::once())->method('enablePlugin');
+        $plugin_factory->expects($this->once())->method('enablePlugin');
 
         $site_cache = $this->createMock(\SiteCache::class);
-        $site_cache->expects(self::once())->method('invalidatePluginBasedCaches');
+        $site_cache->expects($this->once())->method('invalidatePluginBasedCaches');
 
         //The plugins manager
         $pm = new PluginManager(
@@ -120,10 +120,10 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         //The plugin factory
         $plugin_factory = $this->createMock(\PluginFactory::class);
-        $plugin_factory->expects(self::once())->method('disablePlugin');
+        $plugin_factory->expects($this->once())->method('disablePlugin');
 
         $site_cache = $this->createMock(\SiteCache::class);
-        $site_cache->expects(self::once())->method('invalidatePluginBasedCaches');
+        $site_cache->expects($this->once())->method('invalidatePluginBasedCaches');
 
         //The plugins manager
         $pm = new PluginManager(
@@ -151,7 +151,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         //The plugin factory
         $plugin_factory = $this->createMock(\PluginFactory::class);
-        $plugin_factory->expects(self::once())->method('createPlugin')->with('New_Plugin')->willReturn($plugin);
+        $plugin_factory->expects($this->once())->method('createPlugin')->with('New_Plugin')->willReturn($plugin);
         $plugin_factory->method('instantiatePlugin')->willReturn($plugin);
         $plugin_factory->method('isPluginInstalled');
 
@@ -160,7 +160,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $forgeupgrade_config = $this->createMock(\ForgeUpgradeConfig::class);
-        $forgeupgrade_config->expects(self::once())->method('recordOnlyPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin/db');
+        $forgeupgrade_config->expects($this->once())->method('recordOnlyPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin/db');
 
         //The plugins manager
         $pm = new PluginManager(
@@ -198,7 +198,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         //The plugin factory
         $plugin_factory = $this->createMock(\PluginFactory::class);
-        $plugin_factory->expects(self::once())->method('getPluginByName');
+        $plugin_factory->expects($this->once())->method('getPluginByName');
 
         //The plugins manager
         $pm = new PluginManager(

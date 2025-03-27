@@ -95,16 +95,16 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanWrite')
             ->willReturn(true);
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addNotificationEvents');
 
         $result = $post_handler->handle($item_request, $post_representation);
@@ -172,7 +172,7 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanWrite')
             ->willReturn(false);
 
@@ -214,16 +214,16 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanWrite')
             ->willReturn(true);
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addNotificationEvents');
 
         $result = $post_handler->handle($item_request, $post_representation);
@@ -291,7 +291,7 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanWrite')
             ->willReturn(false);
 
@@ -331,16 +331,16 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanWrite')
             ->willReturn(true);
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addNotificationEvents');
 
         $this->expectException(RestException::class);
@@ -371,16 +371,16 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanWrite')
             ->willReturn(true);
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addNotificationEvents');
 
         $this->expectException(RestException::class);

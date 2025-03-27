@@ -69,9 +69,9 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             200
         );
 
-        $this->job_dao->expects(self::once())->method('create')->willReturn(1);
-        $this->job_dao->expects(self::once())->method('logTriggeredJobs');
-        $this->job_dao->expects(self::once())->method('logBranchSource');
+        $this->job_dao->expects($this->once())->method('create')->willReturn(1);
+        $this->job_dao->expects($this->once())->method('logTriggeredJobs');
+        $this->job_dao->expects($this->once())->method('logBranchSource');
 
         $this->creator->createForRepository($log);
     }
@@ -85,8 +85,8 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->job_dao->expects(self::once())->method('create')->willReturn(1);
-        $this->job_dao->expects(self::once())->method('logTriggeredJobs');
+        $this->job_dao->expects($this->once())->method('create')->willReturn(1);
+        $this->job_dao->expects($this->once())->method('logTriggeredJobs');
         $this->job_dao->expects(self::never())->method('logBranchSource');
 
         $this->creator->createForRepository($log);
@@ -101,9 +101,9 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             200
         );
 
-        $this->job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->job_dao->expects($this->once())->method('create')->willReturn(1);
         $this->job_dao->expects(self::never())->method('logTriggeredJobs');
-        $this->job_dao->expects(self::once())->method('logBranchSource');
+        $this->job_dao->expects($this->once())->method('logBranchSource');
 
         $this->creator->createForRepository($log);
     }
@@ -147,9 +147,9 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             200
         );
 
-        $this->project_job_dao->expects(self::once())->method('create')->willReturn(1);
-        $this->project_job_dao->expects(self::once())->method('logTriggeredJobs');
-        $this->project_job_dao->expects(self::once())->method('logBranchSource');
+        $this->project_job_dao->expects($this->once())->method('create')->willReturn(1);
+        $this->project_job_dao->expects($this->once())->method('logTriggeredJobs');
+        $this->project_job_dao->expects($this->once())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
     }
@@ -175,8 +175,8 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->project_job_dao->expects(self::once())->method('create')->willReturn(1);
-        $this->project_job_dao->expects(self::once())->method('logTriggeredJobs');
+        $this->project_job_dao->expects($this->once())->method('create')->willReturn(1);
+        $this->project_job_dao->expects($this->once())->method('logTriggeredJobs');
         $this->project_job_dao->expects(self::never())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
@@ -203,9 +203,9 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             200
         );
 
-        $this->project_job_dao->expects(self::once())->method('create')->willReturn(1);
+        $this->project_job_dao->expects($this->once())->method('create')->willReturn(1);
         $this->project_job_dao->expects(self::never())->method('logTriggeredJobs');
-        $this->project_job_dao->expects(self::once())->method('logBranchSource');
+        $this->project_job_dao->expects($this->once())->method('logBranchSource');
 
         $this->creator->createForProject($jenkins_server, $log);
     }

@@ -102,7 +102,7 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
             $pull_request->getId(),
             GitPullRequestReference::STATUS_BROKEN
         );
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
@@ -152,7 +152,7 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
 
         touch(\ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . GitPullRequestReferenceBulkConverter::STOP_CONVERSION_FILE);
 
-        $this->logger->expects(self::once())->method('info');
+        $this->logger->expects($this->once())->method('info');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }

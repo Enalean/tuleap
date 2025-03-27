@@ -51,7 +51,7 @@ final class GitRepositoryFactoryTest extends TestCase
 
     public function testGetRepositoryFromFullPath(): void
     {
-        $this->dao->expects(self::once())->method('searchProjectRepositoryByPath')
+        $this->dao->expects($this->once())->method('searchProjectRepositoryByPath')
             ->with(101, 'garden/u/manuel/grou/ping/diskinstaller.git')->willReturn([]);
 
         $this->factory->getFromFullPath('/data/tuleap/gitolite/repositories/garden/u/manuel/grou/ping/diskinstaller.git');
@@ -59,7 +59,7 @@ final class GitRepositoryFactoryTest extends TestCase
 
     public function testGetRepositoryFromFullPathAndGitRoot(): void
     {
-        $this->dao->expects(self::once())->method('searchProjectRepositoryByPath')
+        $this->dao->expects($this->once())->method('searchProjectRepositoryByPath')
             ->with(101, 'garden/diskinstaller.git')->willReturn([]);
 
         $this->factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');

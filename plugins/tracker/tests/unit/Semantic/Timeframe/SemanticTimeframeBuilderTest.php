@@ -53,7 +53,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsANotConfiguredSemantic(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
             ->willReturn(null);
@@ -68,7 +68,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsASemanticWithEndDate(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
             ->willReturn([
@@ -99,7 +99,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsASemanticWithDuration(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
             ->willReturn([
@@ -113,13 +113,13 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedDateFieldById')
             ->with($this->story_tracker, 101)
             ->willReturn($start_date_field);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedFieldByIdAndType')
             ->with($this->story_tracker, 104, ['int', 'float', 'computed'])
             ->willReturn($duration_field);
@@ -134,7 +134,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsANotConfiguredSemanticIfThereIsNoDurationNorEndDateField(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
             ->willReturn([
@@ -147,7 +147,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedDateFieldById')
             ->with($this->story_tracker, 101)
             ->willReturn($start_date_field);
@@ -159,7 +159,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldReturnANotConfiguredSemanticIfTrackerDoesNotExist(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
             ->willReturn([
@@ -170,7 +170,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(123)
             ->willReturn(null);
@@ -214,7 +214,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with($implied_from_tracker_id)
             ->willReturn(
@@ -225,13 +225,13 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedDateFieldById')
             ->with($implied_from_tracker, 101)
             ->willReturn($start_date_field);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedFieldByIdAndType')
             ->with($implied_from_tracker, 104, ['int', 'float', 'computed'])
             ->willReturn($duration_field);
@@ -285,7 +285,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with($release_tracker_id)
             ->willReturn($release_tracker);
@@ -358,13 +358,13 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedDateFieldById')
             ->with($epic_tracker, 101)
             ->willReturn($start_date_field);
 
         $this->form_element_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUsedFieldByIdAndType')
             ->with($epic_tracker, 102, ['int', 'float', 'computed'])
             ->willReturn($duration_field);
@@ -384,7 +384,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $implied_from_tracker_id = 123;
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByTrackerId')
             ->with(self::STORY_TRACKER_ID)
             ->willReturn(
@@ -404,7 +404,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with($implied_from_tracker_id)
             ->willReturn(

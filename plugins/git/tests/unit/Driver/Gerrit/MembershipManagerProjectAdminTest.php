@@ -92,7 +92,7 @@ final class MembershipManagerProjectAdminTest extends TestCase
 
     public function testItProcessesTheListOfGerritServersWhenWeModifyProjectAdminGroup(): void
     {
-        $this->remote_server_factory->expects(self::once())->method('getServersForUGroup')
+        $this->remote_server_factory->expects($this->once())->method('getServersForUGroup')
             ->with($this->admin_ugroup)
             ->willReturn([$this->remote_server]);
         $this->driver->method('addUserToGroup');
@@ -106,8 +106,8 @@ final class MembershipManagerProjectAdminTest extends TestCase
         $this->remote_server_factory->method('getServersForUGroup')->willReturn([$this->remote_server]);
 
         $gerrit_project_project_admins_group_name = self::PROJECT_NAME . '/' . 'project_admins';
-        $this->driver->expects(self::once())->method('addUserToGroup')->with($this->remote_server, $this->gerrit_user, $gerrit_project_project_admins_group_name);
-        $this->driver->expects(self::once())->method('flushGerritCacheAccounts');
+        $this->driver->expects($this->once())->method('addUserToGroup')->with($this->remote_server, $this->gerrit_user, $gerrit_project_project_admins_group_name);
+        $this->driver->expects($this->once())->method('flushGerritCacheAccounts');
 
         $this->membership_manager->addUserToGroup($this->user, $this->admin_ugroup);
     }

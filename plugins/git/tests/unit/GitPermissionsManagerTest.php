@@ -63,8 +63,8 @@ final class GitPermissionsManagerTest extends TestCase
     public function testWhenSwitchingFromAnonymousToRegularItUpdatesAllProjectsThatWereUsingAnonymous(): void
     {
         $this->git_permissions_dao->method('getAllProjectsWithAnonymousRepositories')->willReturn([['group_id' => 101], ['group_id' => 104]]);
-        $this->git_permissions_dao->expects(self::once())->method('updateAllAnonymousAccessToRegistered');
-        $this->git_system_event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with([101, 104]);
+        $this->git_permissions_dao->expects($this->once())->method('updateAllAnonymousAccessToRegistered');
+        $this->git_system_event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with([101, 104]);
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::ANONYMOUS, ForgeAccess::REGULAR);
     }
@@ -93,8 +93,8 @@ final class GitPermissionsManagerTest extends TestCase
     {
         $this->git_permissions_dao->method('getAllProjectsWithAnonymousRepositories')->willReturn([['group_id' => 101], ['group_id' => 104]]);
 
-        $this->git_system_event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with([101, 104]);
-        $this->git_permissions_dao->expects(self::once())->method('updateAllAnonymousAccessToRegistered');
+        $this->git_system_event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with([101, 104]);
+        $this->git_permissions_dao->expects($this->once())->method('updateAllAnonymousAccessToRegistered');
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::ANONYMOUS, ForgeAccess::RESTRICTED);
     }
@@ -103,8 +103,8 @@ final class GitPermissionsManagerTest extends TestCase
     {
         $this->git_permissions_dao->method('getAllProjectsWithUnrestrictedRepositories')->willReturn([['group_id' => 102], ['group_id' => 107]]);
 
-        $this->git_system_event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with([102, 107]);
-        $this->git_permissions_dao->expects(self::once())->method('updateAllAuthenticatedAccessToRegistered');
+        $this->git_system_event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with([102, 107]);
+        $this->git_permissions_dao->expects($this->once())->method('updateAllAuthenticatedAccessToRegistered');
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::RESTRICTED, ForgeAccess::ANONYMOUS);
     }
@@ -113,8 +113,8 @@ final class GitPermissionsManagerTest extends TestCase
     {
         $this->git_permissions_dao->method('getAllProjectsWithUnrestrictedRepositories')->willReturn([['group_id' => 102], ['group_id' => 107]]);
 
-        $this->git_system_event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with([102, 107]);
-        $this->git_permissions_dao->expects(self::once())->method('updateAllAuthenticatedAccessToRegistered');
+        $this->git_system_event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with([102, 107]);
+        $this->git_permissions_dao->expects($this->once())->method('updateAllAuthenticatedAccessToRegistered');
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::RESTRICTED, ForgeAccess::REGULAR);
     }
@@ -142,8 +142,8 @@ final class GitPermissionsManagerTest extends TestCase
 
     public function testWhenSwitchingFromPublicToPrivateItSetsProjectMembersForAllPublicRepositories(): void
     {
-        $this->git_permissions_dao->expects(self::once())->method('disableAnonymousRegisteredAuthenticated')->with(102);
-        $this->git_system_event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with([102]);
+        $this->git_permissions_dao->expects($this->once())->method('disableAnonymousRegisteredAuthenticated')->with(102);
+        $this->git_system_event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with([102]);
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE);
     }
@@ -174,16 +174,16 @@ final class GitPermissionsManagerTest extends TestCase
 
     public function testWhenSwitchingFromUnrestrictedToPublicItRemoveAccessToAuthenticated(): void
     {
-        $this->git_permissions_dao->expects(self::once())->method('disableAuthenticated')->with(102);
-        $this->git_system_event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with([102]);
+        $this->git_permissions_dao->expects($this->once())->method('disableAuthenticated')->with(102);
+        $this->git_system_event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with([102]);
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PUBLIC);
     }
 
     public function testWhenSwitchingFromUnrestrictedToPrivateItSetsProjectMembersForAllPublicRepositories(): void
     {
-        $this->git_permissions_dao->expects(self::once())->method('disableAnonymousRegisteredAuthenticated')->with(102);
-        $this->git_system_event_manager->expects(self::once())->method('queueProjectsConfigurationUpdate')->with([102]);
+        $this->git_permissions_dao->expects($this->once())->method('disableAnonymousRegisteredAuthenticated')->with(102);
+        $this->git_system_event_manager->expects($this->once())->method('queueProjectsConfigurationUpdate')->with([102]);
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE);
     }

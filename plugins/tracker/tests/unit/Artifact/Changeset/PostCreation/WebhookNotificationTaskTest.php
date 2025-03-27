@@ -55,7 +55,7 @@ final class WebhookNotificationTaskTest extends TestCase
 
         $webhook_notification_task = new WebhookNotificationTask($logger, $emitter, $factory, $builder);
 
-        $emitter->expects(self::once())->method('emit')
+        $emitter->expects($this->once())->method('emit')
             ->with(self::isInstanceOf(ArtifactPayload::class), $webhook_1, $webhook_2);
 
         $webhook_notification_task->execute($changeset, new PostCreationTaskConfiguration(true, []));

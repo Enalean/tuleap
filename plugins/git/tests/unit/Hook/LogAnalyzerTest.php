@@ -53,7 +53,7 @@ final class LogAnalyzerTest extends TestCase
 
     public function testItUpdatesBranch(): void
     {
-        $this->git_exec->expects(self::once())->method('revListInChronologicalOrder')->with('d8f1e57', '469eaa9')->willReturn(['469eaa9']);
+        $this->git_exec->expects($this->once())->method('revListInChronologicalOrder')->with('d8f1e57', '469eaa9')->willReturn(['469eaa9']);
         $this->git_exec->method('getObjectType');
 
         $push_details = $this->log_analyzer->getPushDetails(
@@ -70,7 +70,7 @@ final class LogAnalyzerTest extends TestCase
 
     public function testItCreatesBranch(): void
     {
-        $this->git_exec->expects(self::once())->method('revListSinceStart')->with('refs/heads/master', '469eaa9')->willReturn(['469eaa9']);
+        $this->git_exec->expects($this->once())->method('revListSinceStart')->with('refs/heads/master', '469eaa9')->willReturn(['469eaa9']);
         $this->git_exec->method('getObjectType');
 
         $push_details = $this->log_analyzer->getPushDetails(
@@ -103,7 +103,7 @@ final class LogAnalyzerTest extends TestCase
     public function testItTakesNewRevHashToIdentifyRevTypeOnUpdate(): void
     {
         $this->git_exec->method('revListInChronologicalOrder')->willReturn(['469eaa9']);
-        $this->git_exec->expects(self::once())->method('getObjectType')->with('469eaa9')->willReturn(
+        $this->git_exec->expects($this->once())->method('getObjectType')->with('469eaa9')->willReturn(
             PushDetails::OBJECT_TYPE_COMMIT
         );
 
@@ -120,7 +120,7 @@ final class LogAnalyzerTest extends TestCase
     public function testItTakesNewRevHashToIdentifyRevTypeOnCreate(): void
     {
         $this->git_exec->method('revListSinceStart')->willReturn(['469eaa9']);
-        $this->git_exec->expects(self::once())->method('getObjectType')->with('469eaa9')->willReturn(
+        $this->git_exec->expects($this->once())->method('getObjectType')->with('469eaa9')->willReturn(
             PushDetails::OBJECT_TYPE_COMMIT
         );
 
@@ -136,7 +136,7 @@ final class LogAnalyzerTest extends TestCase
 
     public function testItTakesOldRevHashToIdentifyRevTypeOnDelete(): void
     {
-        $this->git_exec->expects(self::once())->method('getObjectType')->with('469eaa9')->willReturn(
+        $this->git_exec->expects($this->once())->method('getObjectType')->with('469eaa9')->willReturn(
             PushDetails::OBJECT_TYPE_COMMIT
         );
 

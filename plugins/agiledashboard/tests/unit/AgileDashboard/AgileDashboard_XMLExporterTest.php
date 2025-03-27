@@ -64,32 +64,32 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesASimpleXMlElement(): void
     {
-        $this->explicit_backlog_xml_exporter->expects(self::once())->method('exportExplicitBacklogConfiguration');
+        $this->explicit_backlog_xml_exporter->expects($this->once())->method('exportExplicitBacklogConfiguration');
         $this->explicit_backlog_xml_exporter->expects(self::never())->method('exportExplicitBacklogContent');
-        $this->planning_xml_exporter->expects(self::once())->method('exportPlannings');
+        $this->planning_xml_exporter->expects($this->once())->method('exportPlannings');
 
-        $this->xml_validator->expects(self::once())->method('validate');
+        $this->xml_validator->expects($this->once())->method('validate');
 
         $this->exporter->export($this->project, $this->xml_tree, []);
     }
 
     public function testItUpdatesASimpleXMlElementWithExplicitBacklogContentInFullExport(): void
     {
-        $this->explicit_backlog_xml_exporter->expects(self::once())->method('exportExplicitBacklogConfiguration');
-        $this->explicit_backlog_xml_exporter->expects(self::once())->method('exportExplicitBacklogContent');
-        $this->planning_xml_exporter->expects(self::once())->method('exportPlannings');
+        $this->explicit_backlog_xml_exporter->expects($this->once())->method('exportExplicitBacklogConfiguration');
+        $this->explicit_backlog_xml_exporter->expects($this->once())->method('exportExplicitBacklogContent');
+        $this->planning_xml_exporter->expects($this->once())->method('exportPlannings');
 
-        $this->xml_validator->expects(self::once())->method('validate');
+        $this->xml_validator->expects($this->once())->method('validate');
 
         $this->exporter->exportFull($this->project, $this->xml_tree, []);
     }
 
     public function testItThrowsAnExceptionIfXmlGeneratedIsNotValid(): void
     {
-        $this->explicit_backlog_xml_exporter->expects(self::once())->method('exportExplicitBacklogConfiguration');
-        $this->planning_xml_exporter->expects(self::once())->method('exportPlannings');
+        $this->explicit_backlog_xml_exporter->expects($this->once())->method('exportExplicitBacklogConfiguration');
+        $this->planning_xml_exporter->expects($this->once())->method('exportPlannings');
 
-        $this->xml_validator->expects(self::once())->method('validate')->willThrowException(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
+        $this->xml_validator->expects($this->once())->method('validate')->willThrowException(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
 
         $this->expectException(XML_ParseException::class);
 

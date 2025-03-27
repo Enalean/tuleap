@@ -73,7 +73,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
         );
 
         $this->create_branch_prefix_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchCreateBranchPrefixForIntegration')
             ->with(18)
             ->willReturn('dev-');

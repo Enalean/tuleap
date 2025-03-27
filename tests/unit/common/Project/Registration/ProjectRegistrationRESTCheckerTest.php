@@ -71,11 +71,11 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency');
 
         $this->submitted_fields_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkFieldConsistency');
 
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
@@ -94,11 +94,11 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, \Project::ACCESS_PRIVATE);
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency');
 
         $this->submitted_fields_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkFieldConsistency');
 
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
@@ -117,11 +117,11 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, \Project::ACCESS_PRIVATE);
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency');
 
         $this->submitted_fields_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkFieldConsistency');
 
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
@@ -138,7 +138,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency')
             ->willThrowException(
                 new class extends ProjectCategoriesException
@@ -151,7 +151,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
             );
 
         $this->submitted_fields_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkFieldConsistency');
 
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
@@ -170,7 +170,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency');
 
         $submitted_fields_collection_consistency_checker = new class ($this->createMock(DescriptionFieldsFactory::class)) extends ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
@@ -215,7 +215,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, \Project::ACCESS_PRIVATE);
 
         $this->category_collection_consistency_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkCollectionConsistency')
             ->willThrowException(
                 new class extends ProjectCategoriesException

@@ -47,7 +47,7 @@ final class UserFinderGetUgroupsTest extends TestCase
         $repository_id   = 12;
         $permission_type = Git::PERM_READ;
 
-        $this->permissions_manager->expects(self::once())->method('getAuthorizedUgroups')
+        $this->permissions_manager->expects($this->once())->method('getAuthorizedUgroups')
             ->with($repository_id, $permission_type, false)
             ->willReturn(TestHelper::emptyDar());
 
@@ -80,7 +80,7 @@ final class UserFinderGetUgroupsTest extends TestCase
 
     public function testItDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup(): void
     {
-        $this->permissions_manager->expects(self::once())->method('getAuthorizedUgroups')
+        $this->permissions_manager->expects($this->once())->method('getAuthorizedUgroups')
             ->with(self::anything(), self::anything(), false)
             ->willReturn(TestHelper::emptyDar());
 

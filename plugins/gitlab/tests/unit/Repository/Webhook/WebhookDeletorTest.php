@@ -77,7 +77,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn(null);
@@ -107,7 +107,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn([]);
@@ -141,7 +141,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn(['gitlab_webhook_id' => 6]);
@@ -155,7 +155,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('deleteUrl');
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteGitlabRepositoryWebhook');
 
         $this->logger
@@ -179,7 +179,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn(['gitlab_webhook_id' => 6]);
@@ -192,7 +192,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteGitlabRepositoryWebhook')
             ->with(1);
 
@@ -202,7 +202,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('Deleting previous hook for the_full_url');
 
@@ -223,7 +223,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn(['gitlab_webhook_id' => 6]);
@@ -236,7 +236,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteGitlabRepositoryWebhook')
             ->with(1);
 
@@ -246,17 +246,17 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(true);
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne')
             ->with(6);
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('info')
             ->with('Deleting previous hook for the_full_url');
 
         $this->logger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('warning')
             ->with(
                 'The webhook is used by another integrations (it may come from old integration). ' .
@@ -280,13 +280,13 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabRepositoryWebhook')
             ->with(1)
             ->willReturn(['gitlab_webhook_id' => 6]);
 
         $this->gitlab_api_client
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteUrl')
             ->with(
                 $this->credentials,

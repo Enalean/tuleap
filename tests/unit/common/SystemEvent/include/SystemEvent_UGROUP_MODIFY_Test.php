@@ -69,7 +69,7 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         $evt->expects(self::never())->method('getProject')->with('1')->willReturn($project);
         $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with('Could not process binding to this user group (2)');
+        $evt->expects($this->once())->method('error')->with('Could not process binding to this user group (2)');
 
         // Launch the event
         self::assertFalse($evt->process());
@@ -113,10 +113,10 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $evt->method('getProject')->with(1)->willReturn($project);
 
         $scheduler = $this->createMock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
-        $scheduler->expects(self::once())->method('scheduleUpdateOfProjectAccessFiles');
+        $scheduler->expects($this->once())->method('scheduleUpdateOfProjectAccessFiles');
         $evt->injectDependencies($scheduler);
 
-        $evt->expects(self::once())->method('done');
+        $evt->expects($this->once())->method('done');
         $evt->expects(self::never())->method('error');
 
         // Launch the event
@@ -173,7 +173,7 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $scheduler->expects(self::exactly(3))->method('scheduleUpdateOfProjectAccessFiles');
         $evt->injectDependencies($scheduler);
 
-        $evt->expects(self::once())->method('done');
+        $evt->expects($this->once())->method('done');
         $evt->expects(self::never())->method('error');
 
         // Launch the event

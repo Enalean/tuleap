@@ -103,7 +103,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooks(): void
     {
-        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
+        $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => true],
         );
 
@@ -121,16 +121,16 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             200,
             ''
         );
-        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
+        $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
 
-        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects($this->once())->method('createForRepository');
         $this->log_creator->expects(self::never())->method('createForProject');
 
         $this->logger->method('debug');
         $this->logger->expects(self::never())->method('error');
 
-        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([]);
+        $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([]);
 
         $date_time = new DateTimeImmutable();
 
@@ -143,7 +143,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooksWithoutCommitReference(): void
     {
-        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
+        $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => false],
         );
 
@@ -161,15 +161,15 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             200,
             ''
         );
-        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
+        $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects($this->once())->method('createForRepository');
         $this->log_creator->expects(self::never())->method('createForProject');
 
         $this->logger->method('debug');
         $this->logger->expects(self::never())->method('error');
 
-        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([]);
+        $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([]);
 
         $date_time = new DateTimeImmutable();
 
@@ -182,7 +182,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersEachTransportsInRepositoryHooks(): void
     {
-        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
+        $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => true],
         );
 
@@ -210,15 +210,15 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             200,
             ''
         );
-        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
+        $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects($this->once())->method('createForRepository');
         $this->log_creator->expects(self::never())->method('createForProject');
 
         $this->logger->method('debug');
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
 
-        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([]);
+        $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([]);
 
         $date_time = new DateTimeImmutable();
 
@@ -231,10 +231,10 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersProjectHooks(): void
     {
-        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(null);
+        $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(null);
 
         $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'https://example.com/jenkins', null, $this->project);
-        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
+        $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
 
@@ -249,10 +249,10 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             200,
             ''
         );
-        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
+        $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
         $this->log_creator->expects(self::never())->method('createForRepository');
-        $this->log_creator->expects(self::once())->method('createForProject');
+        $this->log_creator->expects($this->once())->method('createForProject');
 
         $this->logger->method('debug');
         $this->logger->expects(self::never())->method('error');
@@ -268,10 +268,10 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersEachTransportsInProjectHooks(): void
     {
-        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(null);
+        $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(null);
 
         $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'https://example.com/jenkins', null, $this->project);
-        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
+        $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
 
@@ -299,13 +299,13 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             200,
             ''
         );
-        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
+        $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
         $this->log_creator->expects(self::never())->method('createForRepository');
-        $this->log_creator->expects(self::once())->method('createForProject');
+        $this->log_creator->expects($this->once())->method('createForProject');
 
         $this->logger->method('debug');
-        $this->logger->expects(self::once())->method('error');
+        $this->logger->expects($this->once())->method('error');
 
         $date_time = new DateTimeImmutable();
 
@@ -318,12 +318,12 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotTriggerTheProjectHookIfItHasAlreadyBeenTriggeredByRepository(): void
     {
-        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
+        $this->dao->expects($this->once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => false],
         );
 
         $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'https://example.com/jenkins', null, $this->project);
-        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
+        $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
 
@@ -338,9 +338,9 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             200,
             ''
         );
-        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
+        $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects($this->once())->method('createForRepository');
         $this->log_creator->expects(self::never())->method('createForProject');
 
         $this->logger->method('debug');

@@ -1040,7 +1040,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasAZeroValue(): void
     {
-        $this->logger->expects(self::once())->method('warning');
+        $this->logger->expects($this->once())->method('warning');
 
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_0');
         self::assertCount(3, $this->xml->artifact->changeset);
@@ -1101,7 +1101,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasALabelWithAComma(): void
     {
-        $this->logger->expects(self::once())->method('warning');
+        $this->logger->expects($this->once())->method('warning');
 
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_a_comma_in_a_label');
         self::assertCount(3, $this->xml->artifact->changeset);

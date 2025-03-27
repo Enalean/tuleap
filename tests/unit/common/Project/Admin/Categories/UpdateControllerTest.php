@@ -60,11 +60,11 @@ final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with('42')
             ->willReturn($this->project);
-        $this->administrator_checker->expects(self::once())->method('checkUserIsProjectAdministrator');
+        $this->administrator_checker->expects($this->once())->method('checkUserIsProjectAdministrator');
 
         $this->controller = new UpdateController(
             $this->project_retriever,

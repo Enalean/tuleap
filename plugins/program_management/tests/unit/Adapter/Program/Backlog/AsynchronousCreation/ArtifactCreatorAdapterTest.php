@@ -122,7 +122,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesAnArtifact(): void
     {
-        $this->creator->expects(self::once())
+        $this->creator->expects($this->once())
             ->method('create')
             ->willReturnCallback(
                 static fn (

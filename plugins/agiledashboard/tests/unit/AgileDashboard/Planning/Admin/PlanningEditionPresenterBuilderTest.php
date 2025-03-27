@@ -100,7 +100,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
         $this->tracker_form_element_factory->method('getFormElementsByType')
             ->willReturn([$burnup]);
 
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')
             ->willReturn($this->planning);
         $this->event_manager->addClosureOnEvent(
             RootPlanningEditionEvent::NAME,
@@ -178,7 +178,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $this->tracker_form_element_factory->method('getFormElementsByType')->willReturn([]);
-        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($this->planning);
+        $this->planning_factory->expects($this->once())->method('getRootPlanning')->willReturn($this->planning);
 
         $presenter = $this->buildPresenter();
 
@@ -189,13 +189,13 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
     {
         $milestone_tracker = TrackerTestBuilder::aTracker()->build();
         $backlog_tracker   = TrackerTestBuilder::aTracker()->build();
-        $this->scrum_planning_filter->expects(self::once())->method('getPlanningTrackersFiltered')
+        $this->scrum_planning_filter->expects($this->once())->method('getPlanningTrackersFiltered')
             ->willReturn([$milestone_tracker]);
-        $this->planning_factory->expects(self::once())->method('getAvailableBacklogTrackers')
+        $this->planning_factory->expects($this->once())->method('getAvailableBacklogTrackers')
             ->willReturn([$backlog_tracker]);
-        $this->scrum_planning_filter->expects(self::once())->method('getBacklogTrackersFiltered')
+        $this->scrum_planning_filter->expects($this->once())->method('getBacklogTrackersFiltered')
             ->willReturn([$backlog_tracker]);
-        $this->planning_permissions_manager->expects(self::once())->method('getPlanningPermissionForm')
+        $this->planning_permissions_manager->expects($this->once())->method('getPlanningPermissionForm')
             ->willReturn('Planning priority change permission form');
     }
 

@@ -53,7 +53,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
     public function testItReturnsNullIfNoFieldIsDefined(): void
     {
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn(null);
@@ -69,7 +69,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
             ->willReturn(false);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
@@ -85,13 +85,13 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
     public function testItTellsIfUserCanUpdateTheField(): void
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
-        $field->expects(self::once())
+        $field->expects($this->once())
             ->method('userCanUpdate')
             ->with($this->user)
             ->willReturn(true);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
@@ -112,13 +112,13 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
             ->willReturn(true);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRemainingEffortValue')
             ->with($this->user, $this->artifact)
             ->willReturn(3.14);
@@ -131,19 +131,19 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
     public function testItGivesANullValueIfValueIsNotNumeric(): void
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
-        $field->expects(self::once())
+        $field->expects($this->once())
             ->method('userCanUpdate')
             ->with($this->user)
             ->willReturn(true);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
             ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRemainingEffortValue')
             ->with($this->user, $this->artifact)
             ->willReturn(null);

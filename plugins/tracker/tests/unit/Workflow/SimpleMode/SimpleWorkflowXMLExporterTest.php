@@ -43,10 +43,10 @@ final class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $workflow = $this->createMock(Workflow::class);
 
-        $workflow->expects(self::once())->method('getFieldId')->willReturn(114);
-        $workflow->expects(self::once())->method('isUsed')->willReturn(true);
-        $workflow->expects(self::once())->method('getId')->willReturn('999');
-        $dao->expects(self::once())->method('searchStatesForWorkflow')->with(999)->willReturn([
+        $workflow->expects($this->once())->method('getFieldId')->willReturn(114);
+        $workflow->expects($this->once())->method('isUsed')->willReturn(true);
+        $workflow->expects($this->once())->method('getId')->willReturn('999');
+        $dao->expects($this->once())->method('searchStatesForWorkflow')->with(999)->willReturn([
             ['to_id' => 200],
             ['to_id' => 201],
         ]);
@@ -68,8 +68,8 @@ final class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $post_action_02,
         ]);
 
-        $post_action_01->expects(self::once())->method('exportToXML');
-        $post_action_02->expects(self::once())->method('exportToXML');
+        $post_action_01->expects($this->once())->method('exportToXML');
+        $post_action_02->expects($this->once())->method('exportToXML');
 
         $conditions_collection_01 = $this->createMock(Workflow_Transition_ConditionsCollection::class);
         $conditions_collection_02 = $this->createMock(Workflow_Transition_ConditionsCollection::class);
@@ -77,8 +77,8 @@ final class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $transition_01->method('getConditions')->willReturn($conditions_collection_01);
         $transition_03->method('getConditions')->willReturn($conditions_collection_02);
 
-        $conditions_collection_01->expects(self::once())->method('exportToXML');
-        $conditions_collection_02->expects(self::once())->method('exportToXML');
+        $conditions_collection_01->expects($this->once())->method('exportToXML');
+        $conditions_collection_02->expects($this->once())->method('exportToXML');
 
         $state_factory->method('getStateFromValueId')
             ->willReturnCallback(static fn (Workflow $workflow, int $value_id) => match ($value_id) {

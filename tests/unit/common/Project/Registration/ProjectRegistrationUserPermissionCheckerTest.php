@@ -104,7 +104,7 @@ final class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PH
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, '5');
 
-        $this->project_dao->expects(self::once())->method('countByStatus')->with(Project::STATUS_PENDING)->willReturn(5);
+        $this->project_dao->expects($this->once())->method('countByStatus')->with(Project::STATUS_PENDING)->willReturn(5);
 
         $this->expectException(MaxNumberOfProjectReachedForPlatformException::class);
 
@@ -117,7 +117,7 @@ final class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PH
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, '5');
 
-        $this->project_dao->expects(self::once())->method('countByStatus')->with(Project::STATUS_PENDING)->willReturn(4);
+        $this->project_dao->expects($this->once())->method('countByStatus')->with(Project::STATUS_PENDING)->willReturn(4);
 
         $this->permission_checker->checkUserCreateAProject($this->user);
     }
@@ -128,7 +128,7 @@ final class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PH
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, '5');
 
-        $this->project_dao->expects(self::once())->method('countByStatusAndUser')->with(110, Project::STATUS_PENDING)->willReturn(5);
+        $this->project_dao->expects($this->once())->method('countByStatusAndUser')->with(110, Project::STATUS_PENDING)->willReturn(5);
 
         $this->expectException(MaxNumberOfProjectReachedForUserException::class);
         $this->permission_checker->checkUserCreateAProject($this->user);
@@ -140,7 +140,7 @@ final class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PH
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, '5');
 
-        $this->project_dao->expects(self::once())->method('countByStatusAndUser')->with(110, Project::STATUS_PENDING)->willReturn(4);
+        $this->project_dao->expects($this->once())->method('countByStatusAndUser')->with(110, Project::STATUS_PENDING)->willReturn(4);
 
         $this->permission_checker->checkUserCreateAProject($this->user);
     }

@@ -106,7 +106,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                 ],
             ]
         );
-        $this->value_dao->expects(self::once())->method('deleteAllFieldValues');
+        $this->value_dao->expects($this->once())->method('deleteAllFieldValues');
         $this->value_dao->expects(self::exactly(3))->method('save');
         $this->command->execute($request);
     }
@@ -127,8 +127,8 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                 ],
             ]
         );
-        $this->value_dao->expects(self::once())->method('deleteAllFieldValues');
-        $this->value_dao->expects(self::once())->method('save');
+        $this->value_dao->expects($this->once())->method('deleteAllFieldValues');
+        $this->value_dao->expects($this->once())->method('save');
         $this->command->execute($request);
     }
 

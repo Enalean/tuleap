@@ -27,7 +27,7 @@ final class URLVerificationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetUrlVerificationNoPluginResponse(): void
     {
         $event_manager = $this->createMock(EventManager::class);
-        $event_manager->expects(self::once())->method('processEvent')->with('url_verification_instance', self::anything());
+        $event_manager->expects($this->once())->method('processEvent')->with('url_verification_instance', self::anything());
 
         $urlVerif = new URLVerificationFactory($event_manager);
 
@@ -40,7 +40,7 @@ final class URLVerificationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $event_manager = $this->createMock(EventManager::class);
-        $event_manager->expects(self::once())->method('processEvent')
+        $event_manager->expects($this->once())->method('processEvent')
             ->with('url_verification_instance', self::callback(function (array &$args) use ($url_verification_instance) {
                 $args['url_verification'] = $url_verification_instance;
                 return true;

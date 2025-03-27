@@ -95,7 +95,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             $this->action_branch_handler,
         );
 
-        $this->action_branch_handler->expects(self::once())->method('parseBranchReference');
+        $this->action_branch_handler->expects($this->once())->method('parseBranchReference');
     }
 
     public function testItProcessesActionsForPostPushWebhookWithoutAnyCloseArtifactKeyword(): void
@@ -158,8 +158,8 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 }
             );
 
-        $this->reference_manager->expects(self::once())->method('insertCrossReference');
-        $this->commit_tuleap_reference_dao->expects(self::once())->method('saveGitlabCommitInfo')
+        $this->reference_manager->expects($this->once())->method('insertCrossReference');
+        $this->commit_tuleap_reference_dao->expects($this->once())->method('saveGitlabCommitInfo')
             ->with(
                 1,
                 'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -171,11 +171,11 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             );
 
         $this->commenter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('handleArtifactClosure');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
@@ -223,7 +223,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::once())->method('retrieveTuleapReference')
+        $this->tuleap_reference_retriever->expects($this->once())->method('retrieveTuleapReference')
             ->with(123)
             ->willReturn(
                 new Reference(
@@ -239,8 +239,8 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 )
             );
 
-        $this->reference_manager->expects(self::once())->method('insertCrossReference');
-        $this->commit_tuleap_reference_dao->expects(self::once())->method('saveGitlabCommitInfo')
+        $this->reference_manager->expects($this->once())->method('insertCrossReference');
+        $this->commit_tuleap_reference_dao->expects($this->once())->method('saveGitlabCommitInfo')
             ->with(
                 1,
                 'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -252,11 +252,11 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             );
 
         $this->commenter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('handleArtifactClosure');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
@@ -299,7 +299,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::once())->method('retrieveTuleapReference')
+        $this->tuleap_reference_retriever->expects($this->once())->method('retrieveTuleapReference')
             ->with(123)
             ->willThrowException(new TuleapReferencedArtifactNotFoundException(123));
 
@@ -354,7 +354,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::once())->method('retrieveTuleapReference')
+        $this->tuleap_reference_retriever->expects($this->once())->method('retrieveTuleapReference')
             ->with(123)
             ->willThrowException(new TuleapReferenceNotFoundException());
 

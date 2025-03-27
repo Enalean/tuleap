@@ -71,7 +71,7 @@ class AsynchronousActionsRunnerTest extends TestCase
         );
 
         $configuration = new PostCreationTaskConfiguration(true, [$this->existing_user]);
-        $this->actions_runner->expects(self::once())->method('processAsyncPostCreationActions')->with(
+        $this->actions_runner->expects($this->once())->method('processAsyncPostCreationActions')->with(
             $changeset,
             $configuration
         );

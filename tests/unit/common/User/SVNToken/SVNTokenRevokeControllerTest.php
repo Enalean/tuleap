@@ -65,7 +65,7 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksCSRFToken(): void
     {
-        $this->csrf_token->expects(self::once())->method('check')->with('/account/keys-tokens');
+        $this->csrf_token->expects($this->once())->method('check')->with('/account/keys-tokens');
         $this->svn_token_handler->method('deleteSVNTokensForUser');
 
         $this->expectException(LayoutInspectorRedirection::class);
@@ -83,7 +83,7 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->withId(120)->build();
         $this->csrf_token->method('check');
 
-        $this->svn_token_handler->expects(self::once())->method('deleteSVNTokensForUser')->with($user, ['2', '5']);
+        $this->svn_token_handler->expects($this->once())->method('deleteSVNTokensForUser')->with($user, ['2', '5']);
 
         $layout_inspector = new LayoutInspector();
         $redirect_url     = null;

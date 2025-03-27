@@ -69,7 +69,7 @@ final class CrossReferencesExtractorTest extends TestCase
 
     public function testItGetsEachRevisionContent(): void
     {
-        $this->git_exec_repo->expects(self::once())->method('catFile')->with('469eaa9');
+        $this->git_exec_repo->expects($this->once())->method('catFile')->with('469eaa9');
         $this->reference_manager->method('extractCrossRef');
 
         $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
@@ -79,7 +79,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('whatever');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with(self::anything(), self::anything(), self::anything(), self::anything(), 350);
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with(self::anything(), self::anything(), self::anything(), self::anything(), 350);
 
         $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
@@ -88,7 +88,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('whatever');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with(self::anything(), self::anything(), Git::REFERENCE_NATURE, self::anything(), self::anything());
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with(self::anything(), self::anything(), Git::REFERENCE_NATURE, self::anything(), self::anything());
 
         $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
@@ -97,7 +97,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('bla bla bla');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with('bla bla bla', self::anything(), self::anything(), self::anything(), self::anything());
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with('bla bla bla', self::anything(), self::anything(), self::anything(), self::anything());
 
         $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
@@ -106,7 +106,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with(self::anything(), self::anything(), self::anything(), 101, self::anything());
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with(self::anything(), self::anything(), self::anything(), 101, self::anything());
 
         $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
@@ -115,7 +115,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with(self::anything(), 'dev/469eaa9', self::anything(), self::anything(), self::anything());
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with(self::anything(), 'dev/469eaa9', self::anything(), self::anything(), self::anything());
 
         $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
@@ -124,7 +124,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with(self::anything(), 'arch/x86_64/dev/469eaa9', self::anything(), self::anything(), self::anything());
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with(self::anything(), 'arch/x86_64/dev/469eaa9', self::anything(), self::anything(), self::anything());
 
         $push_details = new PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
         $this->post_receive->extractCommitReference($push_details, '469eaa9');
@@ -134,7 +134,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('This tags art #123');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with(
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with(
             'This tags art #123',
             'dev/v1',
             Git::TAG_REFERENCE_NATURE,
@@ -158,7 +158,7 @@ final class CrossReferencesExtractorTest extends TestCase
     {
         $this->git_exec_repo->method('catFile')->willReturn('This tags art #123');
 
-        $this->reference_manager->expects(self::once())->method('extractCrossRef')->with(
+        $this->reference_manager->expects($this->once())->method('extractCrossRef')->with(
             'This tags art #123',
             'dev/v1',
             Git::TAG_REFERENCE_NATURE,

@@ -99,7 +99,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             $foobar_scope,
             $typevalue_scope
         );
-        $this->presenter_builder->expects(self::once())->method('build')
+        $this->presenter_builder->expects($this->once())->method('build')
             ->willReturn(
                 new AuthorizationFormPresenter(
                     $form_data,

@@ -180,7 +180,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateComments')]
     public function testItSavesCommentAndExtractsCrossReferences(CommentCreation $comment): void
     {
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('createNewVersion')
             ->with(
                 self::CHANGESET_ID,
@@ -190,7 +190,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 0,
                 $comment->getFormat()->value
             )->willReturn(6903);
-        $this->reference_manager->expects(self::once())->method('extractCrossRef');
+        $this->reference_manager->expects($this->once())->method('extractCrossRef');
         $this->ugroup_inserter->method('insertUGroupsOnPrivateComment');
 
         $this->create($comment);
@@ -221,7 +221,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment_id = 7905;
         $this->dao->method('createNewVersion')->willReturn($comment_id);
         $this->reference_manager->method('extractCrossRef');
-        $this->ugroup_inserter->expects(self::once())
+        $this->ugroup_inserter->expects($this->once())
             ->method('insertUGroupsOnPrivateComment')
             ->with($comment_id, $this->user_groups_that_are_allowed_to_see);
 

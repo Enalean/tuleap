@@ -74,7 +74,7 @@ final class AsynchronousJiraRunnerTest extends TestCase
             )
         );
 
-        $this->dao->expects(self::once())->method('searchById')->with(123)->willReturn(false);
+        $this->dao->expects($this->once())->method('searchById')->with(123)->willReturn(false);
 
         $this->async_runner->process($event);
         self::assertTrue($this->logger->hasErrorThatContains('Not able to process an event tuleap.tracker.creation.jira, the pending jira import #123 can not be found.'));
@@ -90,9 +90,9 @@ final class AsynchronousJiraRunnerTest extends TestCase
             )
         );
 
-        $this->dao->expects(self::once())->method('searchById')->with(123)->willReturn(['data_from_db']);
+        $this->dao->expects($this->once())->method('searchById')->with(123)->willReturn(['data_from_db']);
 
-        $this->builder->expects(self::once())->method('buildFromRow')->with(['data_from_db'])
+        $this->builder->expects($this->once())->method('buildFromRow')->with(['data_from_db'])
             ->willThrowException(new UnableToBuildPendingJiraImportException('Project is not active'));
 
         $this->async_runner->process($event);
@@ -109,12 +109,12 @@ final class AsynchronousJiraRunnerTest extends TestCase
             )
         );
 
-        $this->dao->expects(self::once())->method('searchById')->with(123)->willReturn(['data_from_db']);
+        $this->dao->expects($this->once())->method('searchById')->with(123)->willReturn(['data_from_db']);
 
         $import = $this->createStub(PendingJiraImport::class);
-        $this->builder->expects(self::once())->method('buildFromRow')->with(['data_from_db'])->willReturn($import);
+        $this->builder->expects($this->once())->method('buildFromRow')->with(['data_from_db'])->willReturn($import);
 
-        $this->jira_runner->expects(self::once())->method('processAsyncJiraImport')->with($import);
+        $this->jira_runner->expects($this->once())->method('processAsyncJiraImport')->with($import);
 
         $this->async_runner->process($event);
     }

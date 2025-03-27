@@ -37,8 +37,8 @@ final class RedisInitializerTest extends TestCase
             'connect',
             'auth',
         ]);
-        $redis->expects(self::once())->method('connect')->willReturn(true);
-        $redis->expects(self::once())->method('auth')->with('pwd')->willReturn(true);
+        $redis->expects($this->once())->method('connect')->willReturn(true);
+        $redis->expects($this->once())->method('auth')->with('pwd')->willReturn(true);
 
         $initializer->init($redis);
     }
@@ -78,7 +78,7 @@ final class RedisInitializerTest extends TestCase
         ]);
         $redis->method('connect')->willReturn(true);
         $redis->method('auth')->willReturn(false);
-        $redis->expects(self::once())->method('getLastError')->willReturn($password);
+        $redis->expects($this->once())->method('getLastError')->willReturn($password);
 
         self::expectException(RedisConnectionException::class);
 

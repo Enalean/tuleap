@@ -72,7 +72,7 @@ final class UpdateProjectAccessFileSystemEventTest extends TestCase
         $project = $this->createMock(Project::class);
         $this->project_manager->method('getProject')->with(self::PROJECT_ID)->willReturn($project);
 
-        $this->event_dispatcher->expects(self::once())
+        $this->event_dispatcher->expects($this->once())
             ->method('dispatch')
             ->with(self::isInstanceOf(UpdateProjectAccessFilesEvent::class));
 

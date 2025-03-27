@@ -92,7 +92,7 @@ final class MilestoneReportCriterionProviderTest extends TestCase
 
         $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(false);
 
-        $this->uplanned_criterion_provider->expects(self::once())->method('formatUnplannedAsSelectboxOption')->willReturn('');
+        $this->uplanned_criterion_provider->expects($this->once())->method('formatUnplannedAsSelectboxOption')->willReturn('');
 
         self::assertMatchesRegularExpression('/<select name="additional_criteria\[agiledashboard_milestone]"/', $this->provider->getCriterion($this->task_tracker, $this->user));
     }
@@ -103,7 +103,7 @@ final class MilestoneReportCriterionProviderTest extends TestCase
 
         $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(false);
 
-        $this->options_provider->expects(self::once())->method('getSelectboxOptions')->with($this->task_tracker, '104', $this->user);
+        $this->options_provider->expects($this->once())->method('getSelectboxOptions')->with($this->task_tracker, '104', $this->user);
 
         $this->provider->getCriterion($this->task_tracker, $this->user);
     }
@@ -114,7 +114,7 @@ final class MilestoneReportCriterionProviderTest extends TestCase
 
         $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(true);
 
-        $this->options_provider->expects(self::once())->method('getSelectboxOptions')->with($this->task_tracker, '-1', $this->user);
+        $this->options_provider->expects($this->once())->method('getSelectboxOptions')->with($this->task_tracker, '-1', $this->user);
 
         $this->provider->getCriterion($this->task_tracker, $this->user);
     }

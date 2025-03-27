@@ -84,7 +84,7 @@ final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
 
     public function testItCreateMilestoneFromArtifact(): void
     {
-        $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn($this->release_planning);
+        $this->planning_factory->expects($this->once())->method('getPlanningByPlanningTracker')->willReturn($this->release_planning);
         $this->assertEqualToReleaseMilestone($this->milestone_factory->getMilestoneFromArtifact($this->user, $this->release_artifact));
     }
 
@@ -100,7 +100,7 @@ final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
 
     public function testItReturnsNullWhenThereIsNoPlanningForTheTracker(): void
     {
-        $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn(null);
+        $this->planning_factory->expects($this->once())->method('getPlanningByPlanningTracker')->willReturn(null);
         self::assertNull($this->milestone_factory->getMilestoneFromArtifact($this->user, $this->task_artifact));
     }
 }

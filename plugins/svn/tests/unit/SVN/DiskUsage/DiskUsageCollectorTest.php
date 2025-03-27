@@ -40,12 +40,12 @@ final class DiskUsageCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project      = ProjectTestBuilder::aProject()->withId(102)->build();
         $collect_date = new DateTimeImmutable();
 
-        $retriever->expects(self::once())
+        $retriever->expects($this->once())
             ->method('getDiskUsageForProject')
             ->with($project)
             ->willReturn(156);
 
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('addGroup')
             ->with(
                 102,
@@ -68,12 +68,12 @@ final class DiskUsageCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project      = ProjectTestBuilder::aProject()->withId(102)->build();
         $collect_date = new DateTimeImmutable();
 
-        $retriever->expects(self::once())
+        $retriever->expects($this->once())
             ->method('getDiskUsageForProject')
             ->with($project)
             ->willReturn(156);
 
-        $dao->expects(self::once())
+        $dao->expects($this->once())
             ->method('addGroup')
             ->with(
                 102,
@@ -82,7 +82,7 @@ final class DiskUsageCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $collect_date->getTimestamp()
             );
 
-        $dao->expects(self::once())->method('updateGroup')->with($project, $collect_date, 'svn', '0');
+        $dao->expects($this->once())->method('updateGroup')->with($project, $collect_date, 'svn', '0');
 
         $retriever->method('hasCoreStatistics')->willReturn(true);
 

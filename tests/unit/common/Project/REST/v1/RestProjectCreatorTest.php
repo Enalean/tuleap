@@ -304,7 +304,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $project_creation_data
         )->willReturn(Result::ok($new_project));
 
-        $this->template_dao->expects(self::once())->method('saveTemplate')->with($new_project, ScrumTemplate::NAME);
+        $this->template_dao->expects($this->once())->method('saveTemplate')->with($new_project, ScrumTemplate::NAME);
 
         $creator->create(
             $this->project_post_representation,

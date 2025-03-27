@@ -55,7 +55,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
             'tracker_id'          => 69,
             'field_id'            => 321,
         ]));
-        $this->value_dao->expects(self::once())->method('deleteAllFieldValues')->with($this->tracker_id, 69, 321, 11);
+        $this->value_dao->expects($this->once())->method('deleteAllFieldValues')->with($this->tracker_id, 69, 321, 11);
         $matcher = self::exactly(2);
         $this->value_dao->expects($matcher)
             ->method('save')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -102,7 +102,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
             ]
         ));
         $this->dao->method('save')->willReturn(true);
-        $this->value_dao->expects(self::once())->method('delete')->with($this->tracker_id, 69);
+        $this->value_dao->expects($this->once())->method('delete')->with($this->tracker_id, 69);
         $this->value_dao->expects(self::never())->method('deleteAllFieldValues');
         $this->value_dao->expects(self::never())->method('save');
         $this->command->execute($request);

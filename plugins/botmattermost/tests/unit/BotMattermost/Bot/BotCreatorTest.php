@@ -48,7 +48,7 @@ final class BotCreatorTest extends TestCase
     public function testItCreatesBot(): void
     {
         $this->bot_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save');
 
         $this->bot_creator->createSystemBot(
@@ -106,7 +106,7 @@ final class BotCreatorTest extends TestCase
     public function testItCreatesBotIfOptionalAvatarURLIsMissing(): void
     {
         $this->bot_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save');
 
         $this->bot_creator->createSystemBot(

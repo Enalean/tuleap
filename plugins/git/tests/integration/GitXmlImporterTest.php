@@ -313,7 +313,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             ->method('forbidArtifactClosureForRepository');
 
         $this->configure_artifact_closure
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('allowArtifactClosureForRepository');
 
         $this->importer->import(
@@ -336,7 +336,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         XML;
 
         $this->configure_artifact_closure
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('forbidArtifactClosureForRepository');
 
         $this->configure_artifact_closure
@@ -590,7 +590,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         XML;
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
 
-        $this->fine_grained_updater->expects(self::once())->method('enableRepository');
+        $this->fine_grained_updater->expects($this->once())->method('enableRepository');
         $this->regexp_fine_grained_enabler->expects(self::never())->method('enableForRepository');
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel');
 
@@ -614,8 +614,8 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
 
-        $this->fine_grained_updater->expects(self::once())->method('enableRepository');
-        $this->regexp_fine_grained_enabler->expects(self::once())->method('enableForRepository');
+        $this->fine_grained_updater->expects($this->once())->method('enableRepository');
+        $this->regexp_fine_grained_enabler->expects($this->once())->method('enableForRepository');
 
         $this->import(new SimpleXMLElement($xml));
     }
@@ -636,7 +636,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->ugroup_dao->method('searchByGroupIdAndName')->willReturn([]);
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(false);
 
-        $this->fine_grained_updater->expects(self::once())->method('enableRepository');
+        $this->fine_grained_updater->expects($this->once())->method('enableRepository');
         $this->regexp_fine_grained_enabler->expects(self::never())->method('enableForRepository');
 
         $this->import(new SimpleXMLElement($xml));
@@ -660,7 +660,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
 
         $this->fine_grained_updater->expects(self::never())->method('enableRepository');
-        $this->regexp_fine_grained_enabler->expects(self::once())->method('enableForRepository');
+        $this->regexp_fine_grained_enabler->expects($this->once())->method('enableForRepository');
 
         $this->import(new SimpleXMLElement($xml));
     }
@@ -694,8 +694,8 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
         $this->fine_grained_factory->method('getFineGrainedPermissionFromXML')->willReturn($representation);
 
-        $this->fine_grained_saver->expects(self::once())->method('saveBranchPermission');
-        $this->fine_grained_saver->expects(self::once())->method('saveTagPermission');
+        $this->fine_grained_saver->expects($this->once())->method('saveBranchPermission');
+        $this->fine_grained_saver->expects($this->once())->method('saveTagPermission');
         $this->fine_grained_updater->method('enableRepository');
 
         $this->import(new SimpleXMLElement($xml));
@@ -731,8 +731,8 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->regexp_fine_grained_retriever->method('areRegexpActivatedAtSiteLevel')->willReturn(true);
         $this->fine_grained_factory->method('getFineGrainedPermissionFromXML')->willReturn($representation, false, $representation);
 
-        $this->fine_grained_saver->expects(self::once())->method('saveBranchPermission');
-        $this->fine_grained_saver->expects(self::once())->method('saveTagPermission');
+        $this->fine_grained_saver->expects($this->once())->method('saveBranchPermission');
+        $this->fine_grained_saver->expects($this->once())->method('saveTagPermission');
         $this->fine_grained_updater->method('enableRepository');
 
         $this->import(new SimpleXMLElement($xml));
@@ -779,7 +779,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
             ->willReturnOnConsecutiveCalls($representation_01, $representation_02, $representation_01);
 
         $this->fine_grained_saver->expects(self::exactly(2))->method('saveBranchPermission');
-        $this->fine_grained_saver->expects(self::once())->method('saveTagPermission');
+        $this->fine_grained_saver->expects($this->once())->method('saveTagPermission');
         $this->fine_grained_updater->method('enableRepository');
         $this->regexp_fine_grained_enabler->method('enableForRepository');
 
@@ -806,7 +806,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         XML;
 
         $this->user_finder->expects(self::atLeastOnce())->method('getUser')->willReturn(UserTestBuilder::buildWithId(102));
-        $this->git_dao->expects(self::once())->method('logGitPush');
+        $this->git_dao->expects($this->once())->method('logGitPush');
         $this->import(new SimpleXMLElement($xml));
         self::assertEquals(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
     }

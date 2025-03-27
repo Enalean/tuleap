@@ -82,9 +82,9 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function initDao(): void
     {
-        $this->dao->expects(self::once())->method('setLogger');
-        $this->dao->expects(self::once())->method('getDeletedDatabasesCount')->willReturn('x');
-        $this->dao->expects(self::once())->method('getDeletedTablesCount')->willReturn('x');
+        $this->dao->expects($this->once())->method('setLogger');
+        $this->dao->expects($this->once())->method('getDeletedDatabasesCount')->willReturn('x');
+        $this->dao->expects($this->once())->method('getDeletedTablesCount')->willReturn('x');
     }
 
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateTwoPurgeWhenEmpty(): void
@@ -117,8 +117,8 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->dao->expects(self::once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
-        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
+        $this->dao->expects($this->once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
+        $this->dao->expects($this->once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
         $this->data_dir->expects(self::exactly(2))
             ->method('getMediawikiDir')
@@ -164,7 +164,7 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
             103 => $project_3,
         });
 
-        $this->dao->expects(self::once())->method('getMediawikiDatabasesInUsedServices')
+        $this->dao->expects($this->once())->method('getMediawikiDatabasesInUsedServices')
             ->willReturn(
                 [
                     [
@@ -182,12 +182,12 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->dao->expects(self::once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
-        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
+        $this->dao->expects($this->once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
+        $this->dao->expects($this->once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
-        $this->data_dir->expects(self::once())->method('getMediawikiDir')->with($project_3)->willReturn('path/to/mediawiki_103');
+        $this->data_dir->expects($this->once())->method('getMediawikiDir')->with($project_3)->willReturn('path/to/mediawiki_103');
 
-        $this->dao->expects(self::once())->method('desactivateService')->with(103, false);
+        $this->dao->expects($this->once())->method('desactivateService')->with(103, false);
 
         $this->media_wiki_dao->expects(self::exactly(3))
             ->method('getMediawikiPagesNumberOfAProject')
@@ -196,7 +196,7 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project_2, $project_3 => ['result' => 0],
             });
 
-        $this->dao->expects(self::once())->method('purge');
+        $this->dao->expects($this->once())->method('purge');
 
         $this->clean_unused->purge(false, [], true, null);
 
@@ -220,8 +220,8 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
             103 => $project_3,
         });
 
-        $this->dao->expects(self::once())->method('getMediawikiDatabasesInUsedServices')->willReturn([]);
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())->method('getMediawikiDatabasesInUsedServices')->willReturn([]);
+        $this->dao->expects($this->once())
             ->method('getMediawikiDatabaseInUnusedServices')
             ->willReturn(
                 [
@@ -231,17 +231,17 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                 ]
             );
-        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
+        $this->dao->expects($this->once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
         $path = 'path/to/mediawiki_103';
 
-        $this->data_dir->expects(self::once())->method('getMediawikiDir')->with($project_3)->willReturn($path);
+        $this->data_dir->expects($this->once())->method('getMediawikiDir')->with($project_3)->willReturn($path);
         $this->backend->method('recurseDeleteInDir')->with($path);
 
-        $this->media_wiki_dao->expects(self::once())
+        $this->media_wiki_dao->expects($this->once())
             ->method('getMediawikiPagesNumberOfAProject')->with($project_3)->willReturn(['result' => 0]);
 
-        $this->dao->expects(self::once())->method('purge');
+        $this->dao->expects($this->once())->method('purge');
 
         $this->clean_unused->purge(false, [103], false, null);
 
@@ -264,7 +264,7 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
             103 => $project_3,
         });
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('getMediawikiDatabasesInUsedServices')
             ->willReturn(
                 [
@@ -283,12 +283,12 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->dao->expects(self::once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
-        $this->dao->expects(self::once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
+        $this->dao->expects($this->once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
+        $this->dao->expects($this->once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
-        $this->data_dir->expects(self::once())->method('getMediawikiDir')->with($project_3)->willReturn('path/to/mediawiki_103');
+        $this->data_dir->expects($this->once())->method('getMediawikiDir')->with($project_3)->willReturn('path/to/mediawiki_103');
 
-        $this->dao->expects(self::once())->method('desactivateService')->with(103, false);
+        $this->dao->expects($this->once())->method('desactivateService')->with(103, false);
 
         $this->media_wiki_dao->expects(self::exactly(3))
             ->method('getMediawikiPagesNumberOfAProject')
@@ -297,7 +297,7 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project_2, $project_3 => ['result' => 0],
             });
 
-        $this->dao->expects(self::once())->method('purge');
+        $this->dao->expects($this->once())->method('purge');
 
         $this->clean_unused->purge(false, [], true, 3);
 

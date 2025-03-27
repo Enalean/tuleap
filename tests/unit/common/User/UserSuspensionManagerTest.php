@@ -162,8 +162,8 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->dao->expects(self::once())->method('suspendInactiveAccounts')->with($last_valid_access);
-        $this->dao->expects(self::once())->method('suspendExpiredAccounts')->with($test_date);
+        $this->dao->expects($this->once())->method('suspendInactiveAccounts')->with($last_valid_access);
+        $this->dao->expects($this->once())->method('suspendExpiredAccounts')->with($test_date);
 
         $this->user_suspension_manager->checkUserAccountValidity($test_date);
     }

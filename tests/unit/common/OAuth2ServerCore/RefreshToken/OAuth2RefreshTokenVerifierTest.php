@@ -88,7 +88,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'app_id'                => $app->getId(),
             ]
         );
-        $this->dao->expects(self::once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
+        $this->dao->expects($this->once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([OAuth2TestScope::fromItself()]);
 
@@ -142,7 +142,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
-        $this->auth_code_revoker->expects(self::once())->method('revokeByAuthCodeId')->with(12);
+        $this->auth_code_revoker->expects($this->once())->method('revokeByAuthCodeId')->with(12);
 
         $this->expectException(OAuth2RefreshTokenReusedException::class);
         $this->verifier->getRefreshToken($this->buildApp(), $refresh_token);
@@ -182,7 +182,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'app_id'                => $app->getId(),
             ]
         );
-        $this->dao->expects(self::once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
+        $this->dao->expects($this->once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([]);
 
@@ -205,7 +205,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'app_id'                => $app->getId() + 999,
             ]
         );
-        $this->dao->expects(self::once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
+        $this->dao->expects($this->once())->method('markRefreshTokenAsUsed')->with($refresh_token->getID());
         $this->hasher->method('verifyHash')->willReturn(true);
         $this->scope_retriever->method('getScopesBySplitToken')->willReturn([]);
 

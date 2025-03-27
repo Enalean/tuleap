@@ -101,14 +101,14 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfARepositoryWithSameNameAlreadyIntegratedInProject(): void
     {
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
             ->with(101, 12569, 'https://example.com/root/project01')
             ->willReturn(false);
 
 
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
             ->willReturn(true);
 
@@ -129,7 +129,7 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfRepositoryIsAlreadyIntegratedInProject(): void
     {
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
             ->with(101, 12569, 'https://example.com/root/project01')
             ->willReturn(true);
@@ -153,30 +153,30 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $configuration = GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
 
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
             ->willReturn(false);
 
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
             ->with(101, 12569, 'https://example.com/root/project01')
             ->willReturn(false);
 
         $integration = $this->buildGitlabRepositoryIntegration();
         $this->repository_integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createRepositoryIntegration')
             ->with($this->gitlab_project, $this->project, $configuration)
             ->willReturn($integration);
 
         $this->webhook_creator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateWebhookInGitlabProject')
             ->with($this->credentials, $integration);
 
         $this->token_inserter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('insertToken')
             ->with($integration, $this->credentials->getApiToken()->getToken());
 

@@ -54,7 +54,7 @@ final class Cardwall_OnTop_Config_Command_CreateColumnTest extends TestCase // p
     {
         $request = new HTTPRequest();
         $request->set('new_column', 'On Going');
-        $this->dao->expects(self::once())->method('create')->with($this->tracker_id, 'On Going');
+        $this->dao->expects($this->once())->method('create')->with($this->tracker_id, 'On Going');
         $this->command->execute($request);
     }
 }

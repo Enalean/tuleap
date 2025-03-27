@@ -76,13 +76,13 @@ final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $request = $this->createMock(HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($this->admin_user);
-        $request->expects(self::once())->method('get')->with('url')->willReturn('https://example.com');
+        $request->expects($this->once())->method('get')->with('url')->willReturn('https://example.com');
 
         $this->csrf_token->method('check');
         $this->custom_link_updater->method('updateReleaseNoteLink');
 
-        $this->layout->expects(self::once())->method('addFeedback');
-        $this->layout->expects(self::once())->method('redirect');
+        $this->layout->expects($this->once())->method('addFeedback');
+        $this->layout->expects($this->once())->method('redirect');
 
         $this->post_admin_release_note_controller->process($request, $this->layout, []);
     }

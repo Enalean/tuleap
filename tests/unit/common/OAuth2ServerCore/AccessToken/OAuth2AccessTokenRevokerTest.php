@@ -70,9 +70,9 @@ final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTheAccessTokenIsNotAssociatedToTheApp(): void
     {
-        $this->access_token_unserializer->expects(self::once())->method('getSplitToken')
+        $this->access_token_unserializer->expects($this->once())->method('getSplitToken')
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->expects(self::once())->method('searchAccessTokenByApp')
+        $this->dao->expects($this->once())->method('searchAccessTokenByApp')
             ->willReturn(null);
 
         $this->expectException(OAuth2AccessTokenNotFoundException::class);
@@ -81,11 +81,11 @@ final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTheAccessTokenIsInvalid(): void
     {
-        $this->access_token_unserializer->expects(self::once())->method('getSplitToken')
+        $this->access_token_unserializer->expects($this->once())->method('getSplitToken')
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->expects(self::once())->method('searchAccessTokenByApp')
+        $this->dao->expects($this->once())->method('searchAccessTokenByApp')
             ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->expects(self::once())->method('verifyHash')->willReturn(false);
+        $this->hasher->expects($this->once())->method('verifyHash')->willReturn(false);
 
         $this->expectException(InvalidOAuth2AccessTokenException::class);
         $this->revoker->revokeGrantOfAccessToken($this->buildApp(), new ConcealedString('token_identifier'));
@@ -93,12 +93,12 @@ final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRevokeGrantOfAccessToken(): void
     {
-        $this->access_token_unserializer->expects(self::once())->method('getSplitToken')
+        $this->access_token_unserializer->expects($this->once())->method('getSplitToken')
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->expects(self::once())->method('searchAccessTokenByApp')
+        $this->dao->expects($this->once())->method('searchAccessTokenByApp')
             ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->expects(self::once())->method('verifyHash')->willReturn(true);
-        $this->authorization_code_revoker->expects(self::once())->method('revokeByAuthCodeId')
+        $this->hasher->expects($this->once())->method('verifyHash')->willReturn(true);
+        $this->authorization_code_revoker->expects($this->once())->method('revokeByAuthCodeId')
             ->with(89);
 
         $this->revoker->revokeGrantOfAccessToken($this->buildApp(), new ConcealedString('token_identifier'));

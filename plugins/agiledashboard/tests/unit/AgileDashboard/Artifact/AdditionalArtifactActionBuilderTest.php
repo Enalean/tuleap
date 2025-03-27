@@ -99,7 +99,7 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsNullIfProjectDoesNotUseExplicitBacklog(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(false);
@@ -110,14 +110,14 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsNullIfProjectDoesNotHaveARootPlanning(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
         $this->event_dispatcher->method('dispatch');
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRootPlanning')
             ->with($this->user, 101)
             ->willReturn(false);
@@ -128,7 +128,7 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsNullScrumAccessIsBlockedForThisProject(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
@@ -149,20 +149,20 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsNullIfArtifactNotInBacklogTrackerOfRootPlanning(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
         $this->event_dispatcher->method('dispatch');
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRootPlanning')
             ->with($this->user, 101)
             ->willReturn($this->root_planning);
 
         $this->planning_tracker_backlog_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTrackerBacklogOfProjectPlanning')
             ->willReturn(false);
 
@@ -172,25 +172,25 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsNullIfUserCannotChangePriorityOnTopLevelPlanning(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
         $this->event_dispatcher->method('dispatch');
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRootPlanning')
             ->with($this->user, 101)
             ->willReturn($this->root_planning);
 
         $this->planning_tracker_backlog_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTrackerBacklogOfProjectPlanning')
             ->willReturn(true);
 
         $this->planning_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userHasPermissionOnPlanning')
             ->with('1', '101', $this->user, 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE')
             ->willReturn(false);
@@ -201,31 +201,31 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsNullIfArtifactIsPlannedInASubMilestone(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
         $this->event_dispatcher->method('dispatch');
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRootPlanning')
             ->with($this->user, 101)
             ->willReturn($this->root_planning);
 
         $this->planning_tracker_backlog_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTrackerBacklogOfProjectPlanning')
             ->willReturn(true);
 
         $this->planning_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userHasPermissionOnPlanning')
             ->with('1', '101', $this->user, 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE')
             ->willReturn(true);
 
         $this->planned_artifact_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with(205, 101)
             ->willReturn(true);
@@ -236,37 +236,37 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItReturnsTheLinkToAddOrRemoveInTopBacklog(): void
     {
         $this->explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
         $this->event_dispatcher->method('dispatch');
 
         $this->planning_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRootPlanning')
             ->with($this->user, 101)
             ->willReturn($this->root_planning);
 
         $this->planning_tracker_backlog_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isTrackerBacklogOfProjectPlanning')
             ->willReturn(true);
 
         $this->planning_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userHasPermissionOnPlanning')
             ->with('1', '101', $this->user, 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE')
             ->willReturn(true);
 
         $this->planned_artifact_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with(205, 101)
             ->willReturn(false);
 
         $this->artifacts_explicit_backlog_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isArtifactInTopBacklogOfProject');
 
         $this->assertInstanceOf(

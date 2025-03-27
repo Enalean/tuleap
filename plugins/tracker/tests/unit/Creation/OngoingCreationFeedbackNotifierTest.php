@@ -56,8 +56,8 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
 
     public function testItDoesNotInformAnythingIfThereIsNoOngoingMigrations(): void
     {
-        $this->tv3_migration_manager->expects(self::once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
-        $this->pending_jira_import_dao->expects(self::once())->method('searchByProjectId')->willReturn([]);
+        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
+        $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')->willReturn([]);
 
         $this->response->expects(self::never())->method('addFeedback');
 
@@ -66,12 +66,12 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
 
     public function testItInformsTv3Migrations(): void
     {
-        $this->tv3_migration_manager->expects(self::once())->method('thereAreMigrationsOngoingForProject')->willReturn(true);
-        $this->pending_jira_import_dao->expects(self::once())->method('searchByProjectId')->willReturn([]);
+        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(true);
+        $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')->willReturn([]);
 
-        $this->project->expects(self::once())->method('getTruncatedEmailsUsage')->willReturn(false);
+        $this->project->expects($this->once())->method('getTruncatedEmailsUsage')->willReturn(false);
 
-        $this->response->expects(self::once())->method('addFeedback')
+        $this->response->expects($this->once())->method('addFeedback')
             ->with('info', 'Some migrations are being processed. Your new trackers will appear as soon as the migrations are completed.');
 
         $this->feedback_notifier->informUserOfOngoingMigrations($this->project, $this->response);
@@ -79,10 +79,10 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
 
     public function testItInformsTv3MigrationsAndUntruncatedEmails(): void
     {
-        $this->tv3_migration_manager->expects(self::once())->method('thereAreMigrationsOngoingForProject')->willReturn(true);
-        $this->pending_jira_import_dao->expects(self::once())->method('searchByProjectId')->willReturn([]);
+        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(true);
+        $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')->willReturn([]);
 
-        $this->project->expects(self::once())->method('getTruncatedEmailsUsage')->willReturn(true);
+        $this->project->expects($this->once())->method('getTruncatedEmailsUsage')->willReturn(true);
 
         $this->response->expects(self::exactly(2))->method('addFeedback')
             ->with('info', self::callback(static fn(string $message) => in_array($message, [
@@ -95,13 +95,13 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
 
     public function testItInformsPendingJiraImport(): void
     {
-        $this->tv3_migration_manager->expects(self::once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
-        $this->pending_jira_import_dao->expects(self::once())->method('searchByProjectId')
+        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
+        $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')
             ->willReturn([
                 ['tracker_shortname' => 'bug'],
             ]);
 
-        $this->response->expects(self::once())->method('addFeedback')
+        $this->response->expects($this->once())->method('addFeedback')
             ->with('info', 'A tracker creation from Jira is being processed for bug. Your new tracker will appear as soon as the import is completed.');
 
         $this->feedback_notifier->informUserOfOngoingMigrations($this->project, $this->response);
@@ -109,14 +109,14 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
 
     public function testItInformsManyPendingJiraImports(): void
     {
-        $this->tv3_migration_manager->expects(self::once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
-        $this->pending_jira_import_dao->expects(self::once())->method('searchByProjectId')
+        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
+        $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')
             ->willReturn([
                 ['tracker_shortname' => 'bug'],
                 ['tracker_shortname' => 'story'],
             ]);
 
-        $this->response->expects(self::once())->method('addFeedback')
+        $this->response->expects($this->once())->method('addFeedback')
             ->with('info', 'Some tracker creations from Jira are being processed for bug, story. Your new trackers will appear as soon as the import is completed.');
 
         $this->feedback_notifier->informUserOfOngoingMigrations($this->project, $this->response);

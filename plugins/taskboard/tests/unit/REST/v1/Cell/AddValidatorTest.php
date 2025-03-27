@@ -46,7 +46,7 @@ final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testValidateThrowsWhenArtifactToAddIsNotSoloItemAndHasNoParent(): void
     {
         $artifact_to_add = $this->mockArtifact(456);
-        $artifact_to_add->expects(self::once())
+        $artifact_to_add->expects($this->once())
             ->method('getParent')
             ->willReturn(null);
 
@@ -60,7 +60,7 @@ final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_to_add = $this->mockArtifact(456);
         $other_parent    = ArtifactTestBuilder::anArtifact(42)->build();
         $artifact_to_add
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getParent')
             ->willReturn($other_parent);
 
@@ -97,7 +97,7 @@ final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockArtifactWithParent(int $id): MockObject&Artifact
     {
         $artifact = $this->mockArtifact($id);
-        $artifact->expects(self::once())
+        $artifact->expects($this->once())
             ->method('getParent')
             ->willReturn($this->swimlane_artifact);
         return $artifact;

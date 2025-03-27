@@ -47,17 +47,17 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemoveUgroupBinding(): void
     {
-        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding');
-        $GLOBALS['Language']->expects(self::once())->method('getText')
+        $this->ugroup_manager->expects($this->once())->method('updateUgroupBinding');
+        $GLOBALS['Language']->expects($this->once())->method('getText')
             ->with('project_ugroup_binding', 'binding_removed');
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback');
 
         self::assertTrue($this->binding->removeBinding(200));
     }
 
     public function testUpdateUGroupBinding(): void
     {
-        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding');
+        $this->ugroup_manager->expects($this->once())->method('updateUgroupBinding');
 
         $this->binding->updateUgroupBinding(200, 300);
     }
@@ -88,7 +88,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
             'group_id'  => 185,
         ];
 
-        $this->ugroup_manager->expects(self::once())->method('searchUGroupByBindingSource')
+        $this->ugroup_manager->expects($this->once())->method('searchUGroupByBindingSource')
             ->with(200)
             ->willReturn([$first_row, $second_row]);
 
@@ -110,7 +110,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCheckUGroupValidityDelegates(): void
     {
-        $this->ugroup_manager->expects(self::once())->method('checkUGroupValidityByGroupId')
+        $this->ugroup_manager->expects($this->once())->method('checkUGroupValidityByGroupId')
             ->with(105, 200)
             ->willReturn(true);
 
@@ -123,7 +123,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_bound_ugroup = ['ugroup_id' => 500, 'source_id' => 200];
 
         $project = ProjectTestBuilder::aProject()->build();
-        $this->ugroup_manager->expects(self::once())->method('searchBindedUgroupsInProject')
+        $this->ugroup_manager->expects($this->once())->method('searchBindedUgroupsInProject')
             ->with($project)
             ->willReturn([$first_bound_ugroup, $second_bound_ugroup]);
         $this->binding = $this->getMockBuilder(UGroupBinding::class)
@@ -152,7 +152,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
             'getUGroupsByBindingSource',
             'reloadUgroupBinding',
         ]);
-        $this->binding->expects(self::once())->method('getUGroupsByBindingSource')
+        $this->binding->expects($this->once())->method('getUGroupsByBindingSource')
             ->with(200)
             ->willReturn($bound_ugroups);
 
@@ -170,7 +170,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->binding->method('getUGroupsByBindingSource')
             ->willReturn([300 => [], 400 => []]);
 
-        $this->binding->expects(self::once())->method('reloadUgroupBinding')
+        $this->binding->expects($this->once())->method('reloadUgroupBinding')
             ->with(300, 200)
             ->willThrowException(new \Exception());
 

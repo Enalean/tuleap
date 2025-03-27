@@ -55,7 +55,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('hasRemotesSetUp')->willReturn(true);
 
         $this->collection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('add');
 
         $this->builder->addTabs($this->collection);
@@ -69,7 +69,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('hasRemotesSetUp')->willReturn(true);
 
         $this->collection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('add');
 
         $this->builder->addTabs($this->collection);
@@ -83,7 +83,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('hasRemotesSetUp')->willReturn(false);
 
         $this->collection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('add');
 
         $this->builder->addTabs($this->collection);

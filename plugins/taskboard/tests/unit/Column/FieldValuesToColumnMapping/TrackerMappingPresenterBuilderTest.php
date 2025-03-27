@@ -96,7 +96,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testNoTrackers(): void
     {
-        $this->trackers_retriever->expects(self::once())
+        $this->trackers_retriever->expects($this->once())
             ->method('getTrackersForMilestone')
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([]));
@@ -110,7 +110,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             TrackerTestBuilder::aTracker()->withId(79)->build(),
             TrackerTestBuilder::aTracker()->withId(self::USER_STORIES_TRACKER_ID)->build()
         );
-        $this->trackers_retriever->expects(self::once())
+        $this->trackers_retriever->expects($this->once())
             ->method('getTrackersForMilestone')
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([$taskboard_tracker]));
@@ -137,7 +137,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             TrackerTestBuilder::aTracker()->withId(79)->build(),
             TrackerTestBuilder::aTracker()->withId(self::USER_STORIES_TRACKER_ID)->build()
         );
-        $this->trackers_retriever->expects(self::once())
+        $this->trackers_retriever->expects($this->once())
             ->method('getTrackersForMilestone')
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([$taskboard_tracker]));
@@ -173,7 +173,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $milestone_tracker,
             TrackerTestBuilder::aTracker()->withId(self::TASKS_TRACKER_ID)->build()
         );
-        $this->trackers_retriever->expects(self::once())
+        $this->trackers_retriever->expects($this->once())
             ->method('getTrackersForMilestone')
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([$first_taskboard_tracker, $second_taskboard_tracker]));

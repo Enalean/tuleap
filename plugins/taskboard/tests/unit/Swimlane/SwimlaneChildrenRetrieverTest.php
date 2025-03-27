@@ -40,7 +40,7 @@ final class SwimlaneChildrenRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_linked_artifact  = ArtifactTestBuilder::anArtifact(123)->build();
         $second_linked_artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $swimlane_artifact      = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $swimlane_artifact->expects(self::once())
+        $swimlane_artifact->expects($this->once())
             ->method('getLinkedArtifacts')
             ->willReturn([$first_linked_artifact, $second_linked_artifact]);
 

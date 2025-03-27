@@ -51,7 +51,7 @@ final class SSHKeyMassDumperTest extends GitoliteTestCase
         $invalid_keys_collector = new InvalidKeysCollector();
         $this->user_manager->method('getUsersWithSshKey')->willReturn([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
 
-        $this->git_exec->expects(self::once())->method('push');
+        $this->git_exec->expects($this->once())->method('push');
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));

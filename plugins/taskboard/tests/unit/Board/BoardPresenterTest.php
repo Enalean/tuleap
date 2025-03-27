@@ -53,7 +53,7 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testConstructSetsUserIsAdminFlag(): void
     {
         $user = $this->createMock(\PFUser::class);
-        $user->expects(self::once())
+        $user->expects($this->once())
             ->method('isAdmin')
             ->with(101)
             ->willReturn(true);
@@ -68,7 +68,7 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testConstructSetsTheHiddenItemsDisplayedFlag(): void
     {
         $user = $this->mockNonAdminUser();
-        $user->expects(self::once())
+        $user->expects($this->once())
             ->method('getPreference')
             ->with('plugin_taskboard_hide_closed_items_89')
             ->willReturn('1');
@@ -148,7 +148,7 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockNonAdminUser(): MockObject&\PFUser
     {
         $user = $this->createMock(\PFUser::class);
-        $user->expects(self::once())
+        $user->expects($this->once())
             ->method('isAdmin')
             ->with(101)
             ->willReturn(false);

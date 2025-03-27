@@ -50,7 +50,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $gitlab_repository = $this->createMock(GitlabRepositoryIntegration::class);
         $gitlab_repository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getGitlabServerUrl')
             ->willReturn('https://www.example.com/');
 

@@ -67,7 +67,7 @@ final class BacklogTrackerRemovalCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItReturnsIfRemovedTrackerDoesNotHaveAAddToTopBacklogWorkflowAction(): void
     {
-        $this->add_to_top_backlog_post_action_dao->expects(self::once())
+        $this->add_to_top_backlog_post_action_dao->expects($this->once())
             ->method('getTrackersThatHaveAtLeastOneAddToTopBacklogPostAction')
             ->willReturn([]);
 
@@ -76,7 +76,7 @@ final class BacklogTrackerRemovalCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItThrowsAnExceptionIfRemovedTrackerHasAtLeastOneAddToTopBacklogWorkflowAction(): void
     {
-        $this->add_to_top_backlog_post_action_dao->expects(self::once())
+        $this->add_to_top_backlog_post_action_dao->expects($this->once())
             ->method('getTrackersThatHaveAtLeastOneAddToTopBacklogPostAction')
             ->with([2, 3])
             ->willReturn([

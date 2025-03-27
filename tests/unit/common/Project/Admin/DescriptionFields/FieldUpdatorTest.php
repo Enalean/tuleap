@@ -120,7 +120,7 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createGroupDescription')
             ->with($group_id, 1, 'My field 1 content')
             ->willReturn(false);

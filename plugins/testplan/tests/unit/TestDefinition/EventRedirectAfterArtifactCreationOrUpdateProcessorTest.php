@@ -107,7 +107,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with('123')
             ->willReturn(null);
@@ -134,13 +134,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateArtifactLinks')
             ->with(
                 $this->user,
@@ -173,13 +173,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateArtifactLinks')
             ->with(
                 $this->user,
@@ -190,7 +190,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
             )
             ->willThrowException(new \Tracker_Exception());
         $GLOBALS['Response']
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addFeedback')
             ->with('warning', 'Unable to link the backlog item to the new artifact');
 
@@ -223,13 +223,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateArtifactLinks')
             ->with(
                 $this->user,
@@ -268,7 +268,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with('123')
             ->willReturn($backlog_item);
@@ -304,13 +304,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateArtifactLinks')
             ->with(
                 $this->user,
@@ -348,13 +348,13 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getArtifactById')
             ->with('123')
             ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('updateArtifactLinks')
             ->with(
                 $this->user,

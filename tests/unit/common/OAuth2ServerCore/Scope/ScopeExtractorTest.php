@@ -50,7 +50,7 @@ final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExtractScopesThrowsWhenScopeHasUnknownIdentifier(): void
     {
-        $this->scope_builder->expects(self::once())->method('buildAuthenticationScopeFromScopeIdentifier')
+        $this->scope_builder->expects($this->once())->method('buildAuthenticationScopeFromScopeIdentifier')
             ->with(
                 self::callback(
                     static function (AuthenticationScopeIdentifier $scope_identifier): bool {

@@ -111,7 +111,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $sub_milestone->method('getArtifact')
             ->willReturn($linked_artifact);
 
-        $this->milestone_factory->expects(self::once())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
+        $this->milestone_factory->expects($this->once())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
         $this->milestone_factory
             ->method('getSubMilestones')
             ->with($this->user, $this->milestone)
@@ -272,7 +272,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $sub_milestone->method('getArtifact')
             ->willReturn($linked_artifact);
 
-        $this->milestone_factory->expects(self::once())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
+        $this->milestone_factory->expects($this->once())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
         $this->milestone_factory
             ->method('getSubMilestones')
             ->with($this->user, $this->milestone)
@@ -391,7 +391,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $sub_milestone->method('getArtifact')
             ->willReturn($linked_artifact);
 
-        $this->milestone_factory->expects(self::once())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
+        $this->milestone_factory->expects($this->once())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
         $this->milestone_factory
             ->method('getSubMilestones')
             ->with($this->user, $this->milestone)

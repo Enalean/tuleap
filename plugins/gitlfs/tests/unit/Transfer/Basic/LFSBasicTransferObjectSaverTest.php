@@ -87,10 +87,10 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
             }
         );
 
-        $this->db_connection->expects(self::once())->method('reconnectAfterALongRunningProcess');
+        $this->db_connection->expects($this->once())->method('reconnectAfterALongRunningProcess');
 
-        $this->filesystem->expects(self::once())->method('move')->with($temporary_save_path, $ready_path);
-        $this->filesystem->expects(self::once())->method('delete')->with($temporary_save_path);
+        $this->filesystem->expects($this->once())->method('move')->with($temporary_save_path, $ready_path);
+        $this->filesystem->expects($this->once())->method('delete')->with($temporary_save_path);
 
         $object_saver->saveObject($this->createStub(\GitRepository::class), $lfs_object, $input_resource);
     }
@@ -183,7 +183,7 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->db_connection->method('reconnectAfterALongRunningProcess');
-        $this->filesystem->expects(self::once())->method('delete')->with($temporary_save_path);
+        $this->filesystem->expects($this->once())->method('delete')->with($temporary_save_path);
 
         $object_saver->saveObject($this->createStub(\GitRepository::class), $lfs_object, $input_resource);
     }
@@ -234,7 +234,7 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
             }
         );
 
-        $this->filesystem->expects(self::once())->method('delete')->with($temporary_save_path);
+        $this->filesystem->expects($this->once())->method('delete')->with($temporary_save_path);
         $this->db_connection->method('reconnectAfterALongRunningProcess');
 
         $this->expectException($excepted_exception);

@@ -75,9 +75,9 @@ final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->method('getUsedFields')->willReturn([$string_field, $file_field]);
         $this->form_element_factory->method('isFieldAFileField')->willReturnOnConsecutiveCalls(false, true);
 
-        $file_field->expects(self::once())->method('postSaveNewChangeset');
-        $string_field->expects(self::once())->method('postSaveNewChangeset');
-        $this->workflow->expects(self::once())->method('after');
+        $file_field->expects($this->once())->method('postSaveNewChangeset');
+        $string_field->expects($this->once())->method('postSaveNewChangeset');
+        $this->workflow->expects($this->once())->method('after');
 
         self::assertTrue($this->handle());
     }

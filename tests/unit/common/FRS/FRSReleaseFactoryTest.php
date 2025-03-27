@@ -93,11 +93,11 @@ class FRSReleaseFactoryTest extends TestCase
     protected function userCanReadWhenNoPermsOnRelease($canReadPackage): MockObject&FRSReleaseFactory
     {
         $this->frs_release_factory->method('userCanAdmin')->willReturn(false);
-        $this->permission_manager->expects(self::once())->method('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->willReturn(false);
+        $this->permission_manager->expects($this->once())->method('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->willReturn(false);
         $this->frs_release_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
 
         $frs_package_factory = $this->createMock(FRSPackageFactory::class);
-        $frs_package_factory->expects(self::once())->method('userCanRead')->with($this->group_id, $this->package_id, null)->willReturn($canReadPackage);
+        $frs_package_factory->expects($this->once())->method('userCanRead')->with($this->group_id, $this->package_id, null)->willReturn($canReadPackage);
         $this->frs_release_factory->method('_getFRSPackageFactory')->willReturn($frs_package_factory);
 
         $this->user->method('isAnonymous');
@@ -123,13 +123,13 @@ class FRSReleaseFactoryTest extends TestCase
 
     protected function userCanReadWithSpecificPerms($can_read_release): void
     {
-        $this->user->expects(self::once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
+        $this->user->expects($this->once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
         $this->user->method('isAnonymous');
         $this->user->method('isSuperUser');
         $this->user->method('isMember');
         $this->user->method('isRestricted');
-        $this->permission_manager->expects(self::once())->method('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->willReturn(true);
-        $this->permission_manager->expects(self::once())->method('userHasPermission')->with($this->release_id, 'RELEASE_READ', [1, 2, 76])->willReturn($can_read_release);
+        $this->permission_manager->expects($this->once())->method('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->willReturn(true);
+        $this->permission_manager->expects($this->once())->method('userHasPermission')->with($this->release_id, 'RELEASE_READ', [1, 2, 76])->willReturn($can_read_release);
         $this->frs_release_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
         $this->frs_release_factory->method('userCanAdmin');
     }

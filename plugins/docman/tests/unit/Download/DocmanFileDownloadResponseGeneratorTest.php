@@ -172,7 +172,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         $this->docman_file->setCurrentVersion($version);
         touch($path);
 
-        $version->expects(self::once())->method('preDownload');
+        $version->expects($this->once())->method('preDownload');
 
         $response_generator->generateResponse(
             new NullServerRequest(),

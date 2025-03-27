@@ -138,7 +138,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfRoadmapNotFound(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn([]);
@@ -152,7 +152,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfProjectNotFound(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -166,7 +166,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->willThrowException($this->createMock(Project_AccessProjectNotFoundException::class));
 
@@ -179,7 +179,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test403IfUserCannotAccessProject(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -193,7 +193,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->willThrowException($this->createMock(Project_AccessException::class));
 
@@ -206,7 +206,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfTrackerNotFound(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -223,7 +223,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([self::TRACKER_ID]);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $this->expectException(RestException::class);
@@ -235,7 +235,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfTrackerIsNotActive(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -252,7 +252,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([self::TRACKER_ID]);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject');
 
         $tracker = $this->createMock(Tracker::class);
@@ -269,7 +269,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfTrackerIsNotAccessibleForUser(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -287,7 +287,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -305,7 +305,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test400IfTrackerDoesNotHaveTitleField(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -323,7 +323,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -342,7 +342,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test400IfTitleFieldIsNotReadable(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -359,7 +359,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([self::TRACKER_ID]);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -381,7 +381,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test400IfTimeframeIsNotDefined(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -399,7 +399,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -413,7 +413,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('getTitleField')->willReturn($title_field);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($tracker)
             ->willReturn(new SemanticTimeframe($tracker, new TimeframeNotConfigured()));
@@ -427,7 +427,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test400IfStartDateIsNotReadable(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -445,7 +445,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -465,7 +465,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($tracker)
             ->willReturn(
@@ -487,7 +487,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test400IfEndDateIsNotReadable(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -505,7 +505,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -525,7 +525,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($tracker)
             ->willReturn(
@@ -547,7 +547,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test400IfDurationIsNotReadable(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -565,7 +565,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -585,7 +585,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSemantic')
             ->with($tracker)
             ->willReturn(
@@ -607,7 +607,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAPaginatedListOfReadableTaskRepresentation(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -624,7 +624,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([self::TRACKER_ID]);
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -675,7 +675,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifacts = [$task_201, $task_202, $task_203, $task_204];
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByListOfTrackerIds')
             ->with([self::TRACKER_ID], 0, 10)
             ->willReturn(
@@ -683,7 +683,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->tasks_filter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('filterOutOfDateArtifacts')
             ->willReturn([$task_201, $task_202, $task_203]);
 
@@ -746,7 +746,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAPaginatedListOfReadableTaskRepresentationFromReport(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -764,7 +764,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -815,7 +815,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifacts = [$task_201, $task_202, $task_203, $task_204];
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByListOfArtifactIds')
             ->with([201, 202], 0, 10)
             ->willReturn(
@@ -823,7 +823,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->tasks_filter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('filterOutOfDateArtifacts')
             ->willReturn([$task_201, $task_202, $task_203]);
 
@@ -893,7 +893,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExcludesArtifactsThatAreChildOfAnArtifactOfTheSameTracker(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -911,7 +911,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -959,7 +959,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifacts = [$task_201, $task_202];
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByListOfTrackerIds')
             ->with([self::TRACKER_ID], 0, 10)
             ->willReturn(
@@ -967,7 +967,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->tasks_filter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('filterOutOfDateArtifacts')
             ->willReturn([$task_201, $task_202]);
 
@@ -1010,7 +1010,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAPaginatedListOfReadableTaskRepresentationBelongingToDifferentTrackers(): void
     {
         $this->dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn(
@@ -1031,7 +1031,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->url_verification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
@@ -1085,7 +1085,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifacts = [$task_201, $task_203];
         $this->artifact_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getPaginatedArtifactsByListOfTrackerIds')
             ->with([self::TRACKER_ID, self::ANOTHER_TRACKER_ID], 0, 10)
             ->willReturn(
@@ -1093,7 +1093,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->tasks_filter
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('filterOutOfDateArtifacts')
             ->willReturn([$task_201, $task_203]);
 

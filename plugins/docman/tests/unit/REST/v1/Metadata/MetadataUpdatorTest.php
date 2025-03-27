@@ -120,13 +120,13 @@ final class MetadataUpdatorTest extends TestCase
 
         $current_user = UserTestBuilder::buildWithDefaults();
 
-        $this->event_processor->expects(self::once())->method('raiseUpdateEvent')
+        $this->event_processor->expects($this->once())->method('raiseUpdateEvent')
             ->with($item, $current_user, 'old user name', 'new user name', 'owner');
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->item_factory->expects(self::once())->method('update');
+        $this->item_factory->expects($this->once())->method('update');
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
 
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
@@ -169,7 +169,7 @@ final class MetadataUpdatorTest extends TestCase
         $current_user = UserTestBuilder::buildWithDefaults();
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->item_factory->expects(self::once())->method('update');
+        $this->item_factory->expects($this->once())->method('update');
 
         $project_configured_metadata = new Docman_Metadata();
 
@@ -178,12 +178,12 @@ final class MetadataUpdatorTest extends TestCase
             $custom_metadata_representation->value,
             PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS
         );
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildMetadataToUpdate')
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')
             ->willReturn([$metadata_to_update_representation]);
 
         $this->item_factory->expects(self::never())->method('getItemFromDb');
         $this->document_on_going_retriever->expects(self::never())->method('isThereAlreadyAnUploadOngoing');
-        $this->metadata_value_updator->expects(self::once())->method('updateMetadata')
+        $this->metadata_value_updator->expects($this->once())->method('updateMetadata')
             ->with($metadata_to_update_representation->getMetadata(), 10, $metadata_to_update_representation->getValue());
 
         $this->mockStatusAndObsolescenceDateMetadataAreUsed();
@@ -224,7 +224,7 @@ final class MetadataUpdatorTest extends TestCase
         $current_user = UserTestBuilder::buildWithDefaults();
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->item_factory->expects(self::once())->method('update');
+        $this->item_factory->expects($this->once())->method('update');
 
         $project_configured_metadata = new Docman_Metadata();
 
@@ -233,13 +233,13 @@ final class MetadataUpdatorTest extends TestCase
             $custom_metadata_representation->value,
             PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS
         );
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildMetadataToUpdate')
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')
             ->willReturn([$metadata_to_update_representation]);
 
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->metadata_value_updator->expects(self::once())->method('updateMetadata')
+        $this->metadata_value_updator->expects($this->once())->method('updateMetadata')
             ->with($metadata_to_update_representation->getMetadata(), 10, $metadata_to_update_representation->getValue());
 
         $this->mockStatusAndObsolescenceDateMetadataAreUsed();
@@ -307,7 +307,7 @@ final class MetadataUpdatorTest extends TestCase
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
 
         self::expectException(RuntimeException::class);
 
@@ -346,13 +346,13 @@ final class MetadataUpdatorTest extends TestCase
 
         $current_user = UserTestBuilder::buildWithDefaults();
 
-        $this->event_processor->expects(self::once())->method('raiseUpdateEvent')
+        $this->event_processor->expects($this->once())->method('raiseUpdateEvent')
             ->with($item, $current_user, PLUGIN_DOCMAN_ITEM_STATUS_APPROVED, PLUGIN_DOCMAN_ITEM_STATUS_DRAFT, 'status');
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->item_factory->expects(self::once())->method('update');
+        $this->item_factory->expects($this->once())->method('update');
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
 
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
@@ -394,9 +394,9 @@ final class MetadataUpdatorTest extends TestCase
             ->with($item, $current_user, self::anything(), self::anything(), 'status');
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->item_factory->expects(self::once())->method('update');
+        $this->item_factory->expects($this->once())->method('update');
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
 
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
@@ -438,7 +438,7 @@ final class MetadataUpdatorTest extends TestCase
             ->with($item, $current_user, self::anything(), self::anything(), 'status');
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->item_factory->expects(self::once())->method('update')
+        $this->item_factory->expects($this->once())->method('update')
             ->with([
                 'id'          => 10,
                 'title'       => 'title',
@@ -446,7 +446,7 @@ final class MetadataUpdatorTest extends TestCase
                 'user_id'     => $old_user_id,
             ]);
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
 
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
@@ -607,7 +607,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->method('update');
         $project = ProjectTestBuilder::aProject()->withId(109)->build();
 
-        $this->event_processor->expects(self::once())->method('raiseUpdateEvent');
+        $this->event_processor->expects($this->once())->method('raiseUpdateEvent');
 
         $this->recursive_updator->method('updateRecursiveMetadataOnFolderAndItems');
         $this->recursive_updator->expects(self::never())->method('updateRecursiveMetadataOnFolder');
@@ -615,7 +615,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
 
         $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
@@ -654,7 +654,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
 
         $this->mockStatusAndObsolescenceDateMetadataAreUnused();
 
@@ -685,7 +685,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->method('update');
         $project = ProjectTestBuilder::aProject()->withId(109)->build();
 
-        $this->event_processor->expects(self::once())->method('raiseUpdateEvent');
+        $this->event_processor->expects($this->once())->method('raiseUpdateEvent');
 
         $this->recursive_updator->expects(self::never())->method('updateRecursiveMetadataOnFolderAndItems');
         $this->recursive_updator->method('updateRecursiveMetadataOnFolder');
@@ -693,7 +693,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
 
         $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
@@ -724,7 +724,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->method('update');
         $project = ProjectTestBuilder::aProject()->build();
 
-        $this->event_processor->expects(self::once())->method('raiseUpdateEvent');
+        $this->event_processor->expects($this->once())->method('raiseUpdateEvent');
 
         $this->recursive_updator->expects(self::never())->method('updateRecursiveMetadataOnFolderAndItems');
         $this->recursive_updator->expects(self::never())->method('updateRecursiveMetadataOnFolder');
@@ -732,7 +732,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->representation_retriever->expects(self::once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
+        $this->representation_retriever->expects($this->once())->method('checkAndBuildFolderMetadataToUpdate')->willReturn([]);
 
         $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 

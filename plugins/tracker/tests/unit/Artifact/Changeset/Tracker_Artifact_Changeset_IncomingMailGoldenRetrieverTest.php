@@ -114,7 +114,7 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends T
 
     public function testItCachesResultsToSaveTheRainForestAndKittens(): void
     {
-        $this->dao->expects(self::once())->method('searchByArtifactId')->with(123)->willReturn(TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => self::RAW_MAIL_CREATION], ['changeset_id' => 2, 'raw_mail' => self::RAW_MAIL_UPDATE]));
+        $this->dao->expects($this->once())->method('searchByArtifactId')->with(123)->willReturn(TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => self::RAW_MAIL_CREATION], ['changeset_id' => 2, 'raw_mail' => self::RAW_MAIL_UPDATE]));
 
         $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_mail);
         $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_mail);

@@ -65,7 +65,7 @@ final class MediawikiLanguageManagerTest extends TestCase
         ForgeConfig::set('sys_supported_languages', 'it_IT');
         $this->dao->method('getUsedLanguageForProject')->willReturn(false);
 
-        $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
+        $this->dao->expects($this->once())->method('updateLanguageOption')->with(123, 'it_IT');
 
         self::assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
     }
@@ -75,7 +75,7 @@ final class MediawikiLanguageManagerTest extends TestCase
         ForgeConfig::set('sys_supported_languages', 'it_IT');
         $this->dao->method('getUsedLanguageForProject')->willReturn(['language' => null]);
 
-        $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
+        $this->dao->expects($this->once())->method('updateLanguageOption')->with(123, 'it_IT');
 
         self::assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
     }
@@ -85,7 +85,7 @@ final class MediawikiLanguageManagerTest extends TestCase
         ForgeConfig::set('sys_supported_languages', 'it_IT');
         $this->dao->method('getUsedLanguageForProject')->willReturn(false);
 
-        $this->dao->expects(self::once())->method('updateLanguageOption')->with(123, 'it_IT');
+        $this->dao->expects($this->once())->method('updateLanguageOption')->with(123, 'it_IT');
 
         $this->language_manager->getUsedLanguageForProject($this->project);
     }

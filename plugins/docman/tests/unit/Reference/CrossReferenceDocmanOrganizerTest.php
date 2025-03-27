@@ -102,7 +102,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
-        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($a_ref);
+        $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
     }
@@ -133,7 +133,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::once())
+        $by_nature_organizer->expects($this->once())
             ->method('moveCrossReferenceToSection')
             ->with(self::callback(
                 static fn(CrossReferencePresenter $presenter) => (

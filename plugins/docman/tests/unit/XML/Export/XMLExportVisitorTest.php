@@ -78,7 +78,7 @@ final class XMLExportVisitorTest extends TestCase
         $empty = new Docman_Empty(['title' => 'My document', 'description' => 'desc', 'item_id' => 42]);
         $xml   = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
-        $this->perms_exporter->expects(self::once())->method('exportPermissions');
+        $this->perms_exporter->expects($this->once())->method('exportPermissions');
 
         $this->visitor->export($xml, $empty);
 
@@ -122,7 +122,7 @@ final class XMLExportVisitorTest extends TestCase
         $link = new Docman_Link(['title' => 'My document', 'item_id' => 42, 'link_url' => 'https://example.test']);
         $xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
-        $this->perms_exporter->expects(self::once())->method('exportPermissions');
+        $this->perms_exporter->expects($this->once())->method('exportPermissions');
 
         $this->visitor->export($xml, $link);
 
@@ -138,9 +138,9 @@ final class XMLExportVisitorTest extends TestCase
         $file = new Docman_File(['title' => 'My document', 'item_id' => 42]);
         $xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
-        $this->perms_exporter->expects(self::once())->method('exportPermissions');
+        $this->perms_exporter->expects($this->once())->method('exportPermissions');
 
-        $this->version_factory->expects(self::once())->method('getAllVersionForItem')->willReturn([
+        $this->version_factory->expects($this->once())->method('getAllVersionForItem')->willReturn([
             new Docman_Version(
                 [
                     'id'       => 241,
@@ -214,9 +214,9 @@ final class XMLExportVisitorTest extends TestCase
         $file = new Docman_File(['title' => 'My document', 'item_id' => 42]);
         $xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
-        $this->perms_exporter->expects(self::once())->method('exportPermissions');
+        $this->perms_exporter->expects($this->once())->method('exportPermissions');
 
-        $this->version_factory->expects(self::once())->method('getAllVersionForItem')->willReturn([]);
+        $this->version_factory->expects($this->once())->method('getAllVersionForItem')->willReturn([]);
         $this->archive->expects(self::never())->method('addFile');
 
         $this->visitor->export($xml, $file);
@@ -246,9 +246,9 @@ final class XMLExportVisitorTest extends TestCase
         $embedded_file = new Docman_EmbeddedFile(['title' => 'My document', 'item_id' => 42]);
         $xml           = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
-        $this->perms_exporter->expects(self::once())->method('exportPermissions');
+        $this->perms_exporter->expects($this->once())->method('exportPermissions');
 
-        $this->version_factory->expects(self::once())->method('getAllVersionForItem')->willReturn([
+        $this->version_factory->expects($this->once())->method('getAllVersionForItem')->willReturn([
             new Docman_Version(
                 [
                     'id'       => 241,
@@ -360,9 +360,9 @@ final class XMLExportVisitorTest extends TestCase
         $embedded_file = new Docman_EmbeddedFile(['title' => 'My document', 'item_id' => 42, 'user_id' => 103]);
         $xml           = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><docman />');
 
-        $this->perms_exporter->expects(self::once())->method('exportPermissions');
+        $this->perms_exporter->expects($this->once())->method('exportPermissions');
 
-        $this->version_factory->expects(self::once())->method('getAllVersionForItem')->willReturn([
+        $this->version_factory->expects($this->once())->method('getAllVersionForItem')->willReturn([
             new Docman_Version([
                 'id'       => 241,
                 'path'     => '/titi',

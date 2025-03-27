@@ -201,7 +201,7 @@ final class XMLImportFieldStrategyAttachmentTest extends TestCase
             ->with(self::callback(static fn(string $id) => $id === 'F123' || $id === 'F456'))
             ->willReturn(false);
 
-        $this->files_importer->expects(self::once())->method('markAsImported')->with('F456');
+        $this->files_importer->expects($this->once())->method('markAsImported')->with('F456');
 
         self::assertEquals(
             [

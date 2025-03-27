@@ -107,8 +107,8 @@ final class SubmissionPermissionVerifierTest extends TestCase
 
     public function testUserCanSubmitAnArtifactAndPermissionsAreCached(): void
     {
-        $this->tracker->expects(self::once())->method('userCanView')->willReturn(true);
-        $this->form_element_factory->expects(self::once())->method('getUsedFields')->willReturn([$this->submitable_field, $this->readonly_field]);
+        $this->tracker->expects($this->once())->method('userCanView')->willReturn(true);
+        $this->form_element_factory->expects($this->once())->method('getUsedFields')->willReturn([$this->submitable_field, $this->readonly_field]);
         $this->event_manager->method('dispatch')->willReturn(new CanSubmitNewArtifact($this->user, $this->tracker));
         self::assertTrue($this->verifier->canUserSubmitArtifact($this->user, $this->tracker));
         self::assertTrue($this->verifier->canUserSubmitArtifact($this->user, $this->tracker));

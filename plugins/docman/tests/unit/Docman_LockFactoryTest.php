@@ -52,8 +52,8 @@ final class Docman_LockFactoryTest extends TestCase // phpcs:ignore Squiz.Classe
     public function testUserShouldBeAbleToLockADocument(): void
     {
         $this->dao->method('searchLocksForProjectByItemId')->willReturn([]);
-        $this->dao->expects(self::once())->method('addLock');
-        $this->docman_log->expects(self::once())->method('log');
+        $this->dao->expects($this->once())->method('addLock');
+        $this->docman_log->expects($this->once())->method('log');
 
         $this->lock_factory->lock($this->item, $this->user);
     }
@@ -72,8 +72,8 @@ final class Docman_LockFactoryTest extends TestCase // phpcs:ignore Squiz.Classe
     public function testUserShouldBeAbleToUnLockADocument(): void
     {
         $this->dao->method('searchLocksForProjectByItemId')->willReturn([['item_id' => 1]]);
-        $this->dao->expects(self::once())->method('delLock');
-        $this->docman_log->expects(self::once())->method('log');
+        $this->dao->expects($this->once())->method('delLock');
+        $this->docman_log->expects($this->once())->method('log');
 
         $this->lock_factory->unlock($this->item, $this->user);
     }

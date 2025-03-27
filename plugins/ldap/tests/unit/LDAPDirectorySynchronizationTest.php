@@ -146,7 +146,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
             ])->getMock();
 
         $um = $this->createMock(UserManager::class);
-        $um->expects(self::once())
+        $um->expects($this->once())
             ->method('updateDb')
             ->with(
                 self::callback(function (PFUser $user): bool {
@@ -165,7 +165,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
         $sync->method('getLdapSyncNotificationManager')->willReturn($syncNotifManager);
 
         $clm = $this->createMock(\LDAP_CleanUpManager::class);
-        $clm->expects(self::once())->method('addUserDeletionForecastDate');
+        $clm->expects($this->once())->method('addUserDeletionForecastDate');
         $sync->method('getCleanUpManager')->willReturn($clm);
 
         $syncReminderManager = $this->createMock(\LDAP_SyncReminderNotificationManager::class);
@@ -197,7 +197,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $ldap = $this->createMock(\LDAP::class);
         $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
-        $ldap->expects(self::once())->method('search')->willReturn($lri);
+        $ldap->expects($this->once())->method('search')->willReturn($lri);
         $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
         $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
@@ -216,7 +216,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
         $sync->method('getUserManager')->willReturn($um);
 
         $lum = $this->createMock(\LDAP_UserManager::class);
-        $lum->expects(self::once())->method('updateLdapUid')->with(self::isInstanceOf(PFUser::class), 'mis_1234');
+        $lum->expects($this->once())->method('updateLdapUid')->with(self::isInstanceOf(PFUser::class), 'mis_1234');
         $sync->method('getLdapUserManager')->willReturn($lum);
 
         $syncNotifManager = $this->createMock(\LDAP_SyncNotificationManager::class);
@@ -226,7 +226,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
         $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
         $lus = $this->createMock(\LDAP_UserSync::class);
-        $lus->expects(self::once())->method('sync')->willReturn(false);
+        $lus->expects($this->once())->method('sync')->willReturn(false);
         $lus->method('getSyncAttributes')->willReturn([]);
         $sync->method('getLdapUserSync')->willReturn($lus);
 
@@ -245,7 +245,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $ldap = $this->createMock(\LDAP::class);
         $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
-        $ldap->expects(self::once())->method('search')->willReturn($lri);
+        $ldap->expects($this->once())->method('search')->willReturn($lri);
         $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
         $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
@@ -260,7 +260,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
             ])->getMock();
 
         $um = $this->createMock(\UserManager::class);
-        $um->expects(self::once())->method('updateDb');
+        $um->expects($this->once())->method('updateDb');
         $sync->method('getUserManager')->willReturn($um);
 
         $lum = $this->createMock(\LDAP_UserManager::class);
@@ -274,7 +274,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
         $sync->method('getLdapSyncReminderNotificationManager')->willReturn($syncReminderManager);
 
         $lus = $this->createMock(\LDAP_UserSync::class);
-        $lus->expects(self::once())->method('sync')->willReturn(true);
+        $lus->expects($this->once())->method('sync')->willReturn(true);
         $lus->method('getSyncAttributes')->willReturn([]);
         $sync->method('getLdapUserSync')->willReturn($lus);
 
@@ -298,7 +298,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $ldap = $this->createMock(\LDAP::class);
         $ldap->method('getErrno')->willReturn(LDAP::ERR_SUCCESS);
-        $ldap->expects(self::once())->method('search')->willReturn($lri);
+        $ldap->expects($this->once())->method('search')->willReturn($lri);
         $ldap->method('getLDAPParam')->willReturn('ou=People,dc=example,dc=com ; ou=Intranet,dc=example,dc=com ; ou=Extranet,dc=example,dc=com');
 
         $sync = $this->getMockBuilder(\LDAP_DirectorySynchronization::class)
@@ -321,7 +321,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
         $sync->method('getLdapUserManager')->willReturn($lum);
 
         $lus = $this->createMock(\LDAP_UserSync::class);
-        $lus->expects(self::once())->method('sync')->willReturn(false);
+        $lus->expects($this->once())->method('sync')->willReturn(false);
         $lus->method('getSyncAttributes')->willReturn([]);
         $sync->method('getLdapUserSync')->willReturn($lus);
 
@@ -376,7 +376,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
         $sync->method('getLdapUserManager')->willReturn($lum);
 
         $lus = $this->createMock(\LDAP_UserSync::class);
-        $lus->expects(self::once())->method('sync')->willReturn(false);
+        $lus->expects($this->once())->method('sync')->willReturn(false);
         $lus->method('getSyncAttributes')->willReturn([]);
         $sync->method('getLdapUserSync')->willReturn($lus);
 

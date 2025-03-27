@@ -68,7 +68,7 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testTraverseVisitorAsAnExternalAction(): void
     {
         $visitor = $this->createMock(Visitor::class);
-        $visitor->expects(self::once())->method('visitExternalActions');
+        $visitor->expects($this->once())->method('visitExternalActions');
 
         $this->getPostAction()->accept($visitor);
     }

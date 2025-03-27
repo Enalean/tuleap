@@ -52,17 +52,17 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
         $status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getId')
             ->willReturn(156);
         $status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFieldData')
             ->willReturn(1);
 
         $tracker_campaign = $this->createMock(Tracker::class);
         $tracker_campaign
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getStatusField')
             ->willReturn($status_field);
 
@@ -75,17 +75,17 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
 
-        $csrf_token->expects(self::once())->method('check');
+        $csrf_token->expects($this->once())->method('check');
 
         $this->status_value_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFirstOpenValueUserCanRead')
             ->willReturn(
                 ListStaticValueBuilder::aStaticValue('open')->withId(1)->build()
             );
 
         $artifact_campaign
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createNewChangeset')
             ->with(
                 [156 => 1],
@@ -107,17 +107,17 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
         $status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getId')
             ->willReturn(156);
         $status_field
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFieldData')
             ->willReturn(2);
 
         $tracker_campaign = $this->createMock(Tracker::class);
         $tracker_campaign
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getStatusField')
             ->willReturn($status_field);
 
@@ -130,17 +130,17 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoJobConfiguration()
         );
 
-        $csrf_token->expects(self::once())->method('check');
+        $csrf_token->expects($this->once())->method('check');
 
         $this->status_value_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFirstClosedValueUserCanRead')
             ->willReturn(
                 ListStaticValueBuilder::aStaticValue('closed')->withId(2)->build()
             );
 
         $artifact_campaign
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createNewChangeset')
             ->with(
                 [156 => 2],
@@ -162,7 +162,7 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker_campaign = $this->createMock(Tracker::class);
         $tracker_campaign
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getStatusField')
             ->willReturn(null);
 

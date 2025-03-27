@@ -261,7 +261,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($credentials);
 
         $this->webhook_creator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateWebhookInGitlabProject')
             ->with($credentials, $repository);
 

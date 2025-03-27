@@ -54,7 +54,7 @@ final class ProjectRegistrationPermissionsCheckerTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->permission_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserCreateAProject')
             ->with($user)
             ->willThrowException(
@@ -87,7 +87,7 @@ final class ProjectRegistrationPermissionsCheckerTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->permission_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserCreateAProject')
             ->with($user);
 

@@ -112,7 +112,7 @@ final class GitRepositoryManagerForkTest extends TestCase
 
     public function testItForkInRepositoryBackendIfEverythingIsClean(): void
     {
-        $this->backend->expects(self::once())->method('fork')->willReturn(667);
+        $this->backend->expects($this->once())->method('fork')->willReturn(667);
         $this->manager->method('isRepositoryNameAlreadyUsed')->willReturn(false);
 
         $this->fine_grained_permission_replicator->method('replicateDefaultPermissionsFromProject');
@@ -134,7 +134,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->method('groupAddHistory');
         $this->event_manager->method('processEvent');
 
-        $this->git_system_event_manager->expects(self::once())->method('queueRepositoryFork')
+        $this->git_system_event_manager->expects($this->once())->method('queueRepositoryFork')
             ->with($this->repository, self::callback(static fn(GitRepository $repository) => $repository->getId() === 667));
 
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
@@ -149,7 +149,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->method('formatValueForRepository');
         $this->project_history_dao->method('groupAddHistory');
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
         $this->git_system_event_manager->method('queueRepositoryFork');
 
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
@@ -198,7 +198,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->method('formatValueForRepository');
         $this->project_history_dao->method('groupAddHistory');
 
-        $this->backend->expects(self::once())->method('fork');
+        $this->backend->expects($this->once())->method('fork');
         $this->manager->forkRepositories([$this->repository], $this->project, $this->user, $path, null, $this->forkPermissions);
     }
 
@@ -269,7 +269,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->method('formatValueForRepository');
         $this->project_history_dao->method('groupAddHistory');
 
-        $this->backend->expects(self::once())->method('fork');
+        $this->backend->expects($this->once())->method('fork');
         $this->manager->forkRepositories([$this->repository], $this->project, $this->user, '', null, $this->forkPermissions);
     }
 
@@ -311,7 +311,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->user->setUserGroupData([['group_id' => $project_id, 'admin_flags' => 'A']]);
         $to_project = ProjectTestBuilder::aProject()->withId($project_id)->build();
 
-        $this->backend->expects(self::once())->method('fork');
+        $this->backend->expects($this->once())->method('fork');
 
         $this->manager->method('isRepositoryNameAlreadyUsed')->willReturn(false);
 
@@ -329,7 +329,7 @@ final class GitRepositoryManagerForkTest extends TestCase
 
     public function testForkShouldNotCloneAnyNonExistentRepositories(): void
     {
-        $this->backend->expects(self::once())->method('fork');
+        $this->backend->expects($this->once())->method('fork');
 
         $repo = $this->givenARepository(123);
         $this->backend->method('userCanRead')->willReturn(true);
@@ -389,9 +389,9 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->method('isNameValid')->willReturn(true);
         $repo2->setName('megaRepoGit');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning', 'Got an unexpected error while forking ' . $repo2->getName() . ': ' . $errorMessage);
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('warning', 'Got an unexpected error while forking ' . $repo2->getName() . ': ' . $errorMessage);
 
-        $this->backend->expects(self::once())->method('fork')->willThrowException(new Exception($errorMessage));
+        $this->backend->expects($this->once())->method('fork')->willThrowException(new Exception($errorMessage));
 
         $this->forkRepositories([$repo2]);
     }

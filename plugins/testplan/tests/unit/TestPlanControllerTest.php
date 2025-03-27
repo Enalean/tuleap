@@ -113,7 +113,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfMilestoneCannotBeFound(): void
     {
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
             ->willReturn(null);
@@ -126,7 +126,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfNoMilestone(): void
     {
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
             ->willReturn($this->createMock(\Planning_NoMilestone::class));
@@ -139,7 +139,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfVirtualTopMilestone(): void
     {
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
             ->willReturn($this->createMock(\Planning_VirtualTopMilestone::class));
@@ -158,7 +158,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone->method('getProject')->willReturn($another_project);
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
             ->willReturn($milestone);
@@ -177,7 +177,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $my_project = $this->createMock(Project::class);
         $my_project->method('getUnixNameMixedCase')->willReturn('my-project');
         $my_project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getService')
             ->with('plugin_agiledashboard')
             ->willReturn(null);
@@ -186,7 +186,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone->method('getProject')->willReturn($my_project);
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
             ->willReturn($milestone);
@@ -205,7 +205,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $my_project = $this->createMock(Project::class);
         $my_project->method('getUnixNameMixedCase')->willReturn('my-project');
         $my_project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getService')
             ->with('plugin_agiledashboard')
             ->willReturn($this->createMock(\Service::class));
@@ -215,7 +215,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone->method('getProject')->willReturn($my_project);
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
             ->willReturn($milestone);
@@ -238,7 +238,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $my_project = $this->createMock(Project::class);
         $my_project->method('getUnixNameMixedCase')->willReturn('my-project');
         $my_project
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getService')
             ->with('plugin_agiledashboard')
             ->willReturn($service);
@@ -252,12 +252,12 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone->method('getPromotedMilestoneId')->willReturn('myid');
 
         $this->milestone_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
             ->willReturn($milestone);
 
-        $this->visit_recorder->expects(self::once())->method('record');
+        $this->visit_recorder->expects($this->once())->method('record');
 
         $this->renderer->method('renderToPage')->with('test-plan', self::isInstanceOf(TestPlanPresenter::class));
 

@@ -64,9 +64,9 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = $this->createMock(HTTPRequest::class);
         $layout  = $this->createMock(BaseLayout::class);
-        $layout->expects(self::once())->method('addCssAsset');
-        $this->presenter_builder->expects(self::once())->method('build')->with($project);
-        $this->renderer->expects(self::once())->method('renderToPage');
+        $layout->expects($this->once())->method('addCssAsset');
+        $this->presenter_builder->expects($this->once())->method('build')->with($project);
+        $this->renderer->expects($this->once())->method('renderToPage');
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }

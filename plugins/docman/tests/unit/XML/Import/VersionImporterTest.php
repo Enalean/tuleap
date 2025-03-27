@@ -105,7 +105,7 @@ final class VersionImporterTest extends TestCase
 
     public function testItRaisesExceptionWhenFileCannotBeCopiedOnFilesystem(): void
     {
-        $this->docman_file_storage->expects(self::once())->method('copy')
+        $this->docman_file_storage->expects($this->once())->method('copy')
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
             ->willReturn(false);
 
@@ -121,11 +121,11 @@ final class VersionImporterTest extends TestCase
         $file_path    = $created_file->url();
         self::assertFileExists($file_path);
 
-        $this->docman_file_storage->expects(self::once())->method('copy')
+        $this->docman_file_storage->expects($this->once())->method('copy')
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
             ->willReturn($file_path);
 
-        $this->version_factory->expects(self::once())->method('create')->with([
+        $this->version_factory->expects($this->once())->method('create')->with([
             'item_id'   => 13,
             'number'    => 1,
             'user_id'   => 101,
@@ -155,11 +155,11 @@ final class VersionImporterTest extends TestCase
         $file_path    = $created_file->url();
         $this->assertFileExists($file_path);
 
-        $this->docman_file_storage->expects(self::once())->method('copy')
+        $this->docman_file_storage->expects($this->once())->method('copy')
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
             ->willReturn($file_path);
 
-        $this->version_factory->expects(self::once())->method('create')->with([
+        $this->version_factory->expects($this->once())->method('create')->with([
             'item_id'   => 13,
             'number'    => 1,
             'user_id'   => 101,
@@ -185,7 +185,7 @@ final class VersionImporterTest extends TestCase
 
         $this->docman_file_storage->method('copy')->willReturn($file_path);
 
-        $this->version_factory->expects(self::once())->method('create')->with([
+        $this->version_factory->expects($this->once())->method('create')->with([
             'item_id'   => 13,
             'number'    => 1,
             'user_id'   => 101,
@@ -220,11 +220,11 @@ final class VersionImporterTest extends TestCase
         $file_path    = $created_file->url();
         self::assertFileExists($file_path);
 
-        $this->docman_file_storage->expects(self::once())->method('copy')
+        $this->docman_file_storage->expects($this->once())->method('copy')
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
             ->willReturn($file_path);
 
-        $this->version_factory->expects(self::once())->method('create')->with([
+        $this->version_factory->expects($this->once())->method('create')->with([
             'item_id'   => 13,
             'number'    => 1,
             'user_id'   => 101,
@@ -260,11 +260,11 @@ final class VersionImporterTest extends TestCase
         $file_path    = $created_file->url();
         self::assertFileExists($file_path);
 
-        $this->docman_file_storage->expects(self::once())->method('copy')
+        $this->docman_file_storage->expects($this->once())->method('copy')
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
             ->willReturn($file_path);
 
-        $this->version_factory->expects(self::once())->method('create')->with([
+        $this->version_factory->expects($this->once())->method('create')->with([
             'item_id'   => 13,
             'number'    => 1,
             'user_id'   => 101,

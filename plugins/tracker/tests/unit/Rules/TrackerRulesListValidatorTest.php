@@ -240,7 +240,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testValidateListRulesReturnErrorIfTargetValueIsNotProvidedAtArtifactCreation(): void
     {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb()');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb()');
 
         $value_field_list = [
             123 => 457,

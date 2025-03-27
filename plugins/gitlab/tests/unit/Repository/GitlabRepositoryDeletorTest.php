@@ -150,7 +150,7 @@ final class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfUserIsNotGitAdministrator(): void
     {
         $this->git_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsGitAdmin')
             ->with($this->user, $this->project)
             ->willReturn(false);
@@ -166,7 +166,7 @@ final class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDeletesAllIntegrationData(): void
     {
         $this->git_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsGitAdmin')
             ->with($this->user, $this->project)
             ->willReturn(true);
@@ -174,38 +174,38 @@ final class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCredentials')
             ->willReturn($credentials);
 
         $this->webhook_deletor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteGitlabWebhookFromGitlabRepository')
             ->with($credentials, $this->gitlab_repository_integration);
 
         $this->repository_integration_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteIntegration');
         $this->integration_api_token_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteIntegrationToken');
 
         $this->commit_tuleap_reference_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteCommitsInIntegration')
             ->with('root/repo01', 1, 101);
 
         $this->merge_request_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteAllMergeRequestInIntegration');
         $this->tag_info_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteTagsInIntegration');
         $this->branch_info_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteBranchesInIntegration');
         $this->branch_prefix_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('deleteIntegrationPrefix');
 
         $this->deletor->deleteRepositoryIntegration(

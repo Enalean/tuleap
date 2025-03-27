@@ -176,7 +176,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
         $project = $this->getProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
 
-        $this->template_renderer->expects(self::once())
+        $this->template_renderer->expects($this->once())
             ->method('renderToPage')
             ->with('plan-iterations', self::isInstanceOf(DisplayPlanIterationsPresenter::class));
         $this->processController();
@@ -192,7 +192,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
         $project->method('getUnixNameLowerCase')->willReturn('guinea-pig');
         $project->method('getIconUnicodeCodepoint')->willReturn('🐹');
 
-        $project->expects(self::once())
+        $project->expects($this->once())
             ->method('usesService')
             ->with(ProgramService::SERVICE_SHORTNAME)
             ->willReturn($is_program_management_used);

@@ -51,7 +51,7 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->factory->expects(self::once())->method('getAuthorizedScopes')
+        $this->factory->expects($this->once())->method('getAuthorizedScopes')
             ->with($user, $app)
             ->willReturn($saved_scopes);
         self::assertSame(

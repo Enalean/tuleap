@@ -480,7 +480,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
         $workflow_factory->method('getWorkflowByTrackerId')->willReturn(null);
 
         $webhook_xml_exporter = $this->createMock(WebhookXMLExporter::class);
-        $webhook_xml_exporter->expects(self::once())->method('exportTrackerWebhooksInXML');
+        $webhook_xml_exporter->expects($this->once())->method('exportTrackerWebhooksInXML');
 
         $move_action_allowed_dao = $this->createMock(MoveActionAllowedDAO::class);
         $move_action_allowed_dao->method('isMoveActionAllowedInTracker')->willReturn(true);

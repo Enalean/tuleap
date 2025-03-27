@@ -62,9 +62,9 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
         $requests_tracker   = $this->getMockedTracker(15);
         $current_tracker    = $this->getMockedTracker($current_tracker_id);
 
-        $current_tracker->expects(self::once())->method('getGroupId')->willReturn($current_project_id);
+        $current_tracker->expects($this->once())->method('getGroupId')->willReturn($current_project_id);
 
-        $this->tracker_factory->expects(self::once())
+        $this->tracker_factory->expects($this->once())
             ->method('getTrackersByGroupId')
             ->with($current_project_id)
             ->willReturn(

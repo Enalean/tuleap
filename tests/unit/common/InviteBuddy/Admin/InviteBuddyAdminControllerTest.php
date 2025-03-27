@@ -88,12 +88,12 @@ final class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->configuration->method('canSiteAdminConfigureTheFeature')->willReturn(true);
 
         $this->configuration
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getNbMaxInvitationsByDay')
             ->willReturn(42);
 
         $this->admin_page_renderer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('renderANoFramedPresenter')
             ->with(
                 'Invitations',

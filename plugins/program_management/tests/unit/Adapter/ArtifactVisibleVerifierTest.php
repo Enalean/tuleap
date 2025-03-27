@@ -65,7 +65,7 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testArtifactIsVisible(): void
     {
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->willReturn($artifact);
         self::assertTrue($this->isArtifactVisible());
@@ -73,7 +73,7 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testArtifactIsNotVisible(): void
     {
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->willReturn(null);
         self::assertFalse($this->isArtifactVisible());
@@ -91,7 +91,7 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsFalseIfFeatureArtifactCannotBeFoundOrUserCantViewIt(): void
     {
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactByIdUserCanView')
             ->willReturn(null);
 
@@ -125,7 +125,7 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueWithBypassAndArtifactFromTheSameProgram(): void
     {
         $artifact = $this->buildFeatureArtifact();
-        $this->artifact_factory->expects(self::once())
+        $this->artifact_factory->expects($this->once())
             ->method('getArtifactById')
             ->with(self::ARTIFACT_ID)
             ->willReturn($artifact);

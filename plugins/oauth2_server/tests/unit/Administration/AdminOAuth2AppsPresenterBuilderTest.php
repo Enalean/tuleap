@@ -59,7 +59,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     ): void {
         $project    = ProjectTestBuilder::aProject()->withId(102)->build();
         $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
-        $this->app_factory->expects(self::once())->method('getAppsForProject')
+        $this->app_factory->expects($this->once())->method('getAppsForProject')
             ->with($project)
             ->willReturn(
                 [
@@ -67,7 +67,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
                     new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, $project),
                 ]
             );
-        $this->client_secret_store->expects(self::once())->method('getLastGeneratedClientSecret')->willReturn(
+        $this->client_secret_store->expects($this->once())->method('getLastGeneratedClientSecret')->willReturn(
             $last_generated_client_secret
         );
 
@@ -89,14 +89,14 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter,
     ): void {
         $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
-        $this->app_factory->expects(self::once())->method('getSiteLevelApps')
+        $this->app_factory->expects($this->once())->method('getSiteLevelApps')
             ->willReturn(
                 [
                     new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, null),
                     new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, null),
                 ]
             );
-        $this->client_secret_store->expects(self::once())->method('getLastGeneratedClientSecret')->willReturn(
+        $this->client_secret_store->expects($this->once())->method('getLastGeneratedClientSecret')->willReturn(
             $last_generated_client_secret
         );
 

@@ -74,9 +74,9 @@ final class FromJiraTrackerCreatorTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->creation_data_checker->expects(self::once())->method('checkAtProjectCreation');
+        $this->creation_data_checker->expects($this->once())->method('checkAtProjectCreation');
 
-        $this->platform_configuration_retriever->expects(self::once())->method('getJiraPlatformConfiguration')
+        $this->platform_configuration_retriever->expects($this->once())->method('getJiraPlatformConfiguration')
             ->with($jira_client, $this->logger)
             ->willReturn(new PlatformConfiguration());
 
@@ -97,8 +97,8 @@ final class FromJiraTrackerCreatorTest extends TestCase
         $jira_exporter = $this->createMock(JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter::class);
         $creator->method('getJiraExporter')->willReturn($jira_exporter);
 
-        $jira_exporter->expects(self::once())->method('exportIssuesToXml')->willReturn(new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
-        $this->tracker_xml_import->expects(self::once())->method('import')->willReturn([1]);
+        $jira_exporter->expects($this->once())->method('exportIssuesToXml')->willReturn(new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
+        $this->tracker_xml_import->expects($this->once())->method('import')->willReturn([1]);
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn(TrackerTestBuilder::aTracker()->build());
 
         $creator->createFromJira(
@@ -119,11 +119,11 @@ final class FromJiraTrackerCreatorTest extends TestCase
     public function testItDoesNotDuplicateATrackerFromJiraIfUserIsNotJiraAdmin(): void
     {
         $jira_client = $this->createMock(JiraClient::class);
-        $jira_client->expects(self::once())->method('getUrl')->willReturn(['id' => '10005', 'name' => 'Story', 'subtask' => false]);
+        $jira_client->expects($this->once())->method('getUrl')->willReturn(['id' => '10005', 'name' => 'Story', 'subtask' => false]);
 
-        $this->creation_data_checker->expects(self::once())->method('checkAtProjectCreation');
+        $this->creation_data_checker->expects($this->once())->method('checkAtProjectCreation');
 
-        $this->platform_configuration_retriever->expects(self::once())->method('getJiraPlatformConfiguration')
+        $this->platform_configuration_retriever->expects($this->once())->method('getJiraPlatformConfiguration')
             ->with($jira_client, $this->logger)
             ->willReturn(new PlatformConfiguration());
 

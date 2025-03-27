@@ -93,10 +93,10 @@ class FRSFileFactoryTest extends TestCase
         ]);
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
-        $ff->expects(self::once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
-        $ff->expects(self::once())->method('cleanStaging')->willReturn(true);
-        $ff->expects(self::once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
+        $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
+        $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
+        $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
+        $ff->expects($this->once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
 
         self::assertTrue($ff->moveFiles(1287504083, $backend));
     }
@@ -111,10 +111,10 @@ class FRSFileFactoryTest extends TestCase
         ]);
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(false);
-        $ff->expects(self::once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
-        $ff->expects(self::once())->method('cleanStaging')->willReturn(true);
-        $ff->expects(self::once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
+        $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(false);
+        $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
+        $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
+        $ff->expects($this->once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
 
         self::assertFalse($ff->moveFiles(1287504083, $backend));
     }
@@ -129,10 +129,10 @@ class FRSFileFactoryTest extends TestCase
         ]);
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
-        $ff->expects(self::once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(false);
-        $ff->expects(self::once())->method('cleanStaging')->willReturn(true);
-        $ff->expects(self::once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
+        $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
+        $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(false);
+        $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
+        $ff->expects($this->once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
 
         self::assertFalse($ff->moveFiles(1287504083, $backend));
     }
@@ -147,10 +147,10 @@ class FRSFileFactoryTest extends TestCase
         ]);
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
-        $ff->expects(self::once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
-        $ff->expects(self::once())->method('cleanStaging')->willReturn(false);
-        $ff->expects(self::once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
+        $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
+        $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
+        $ff->expects($this->once())->method('cleanStaging')->willReturn(false);
+        $ff->expects($this->once())->method('restoreDeletedFiles')->with($backend)->willReturn(true);
 
         self::assertFalse($ff->moveFiles(1287504083, $backend));
     }
@@ -165,10 +165,10 @@ class FRSFileFactoryTest extends TestCase
         ]);
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
-        $ff->expects(self::once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
-        $ff->expects(self::once())->method('cleanStaging')->willReturn(true);
-        $ff->expects(self::once())->method('restoreDeletedFiles')->with($backend)->willReturn(false);
+        $ff->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
+        $ff->expects($this->once())->method('purgeFiles')->with(1287504083, $backend)->willReturn(true);
+        $ff->expects($this->once())->method('cleanStaging')->willReturn(true);
+        $ff->expects($this->once())->method('restoreDeletedFiles')->with($backend)->willReturn(false);
 
         self::assertFalse($ff->moveFiles(1287504083, $backend));
     }
@@ -188,7 +188,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('restoreDeletedFiles')->willReturn(true);
 
         $backend = $this->createMock(BackendSystem::class);
-        $backend->expects(self::once())->method('log')->with('Error while doing things', Backend::LOG_ERROR);
+        $backend->expects($this->once())->method('log')->with('Error while doing things', Backend::LOG_ERROR);
 
         self::assertFalse($ff->moveFiles(1287504083, $backend));
     }
@@ -235,7 +235,7 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn($filepath);
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('setFileInDeletedList')->with(12)->willReturn(true);
+        $dao->expects($this->once())->method('setFileInDeletedList')->with(12)->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
 
@@ -267,8 +267,8 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn($filepath);
 
         $dao = $this->createMock(FRSFileDao::class); // Mark as deleted
-        $dao->expects(self::once())->method('setFileInDeletedList')->with(12)->willReturn(true); // Mark as purged
-        $dao->expects(self::once())->method('setPurgeDate')->with(12, $_SERVER['REQUEST_TIME'])->willReturn(true);
+        $dao->expects($this->once())->method('setFileInDeletedList')->with(12)->willReturn(true); // Mark as purged
+        $dao->expects($this->once())->method('setPurgeDate')->with(12, $_SERVER['REQUEST_TIME'])->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
         $matcher = $this->exactly(2);
@@ -307,7 +307,7 @@ class FRSFileFactoryTest extends TestCase
         touch(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/barfoo.doc');
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('setFileInDeletedList')->with(12)->willReturn(true);
+        $dao->expects($this->once())->method('setFileInDeletedList')->with(12)->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
 
@@ -331,7 +331,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('moveDeletedFileToStagingArea')->with(
+        $ff->expects($this->once())->method('moveDeletedFileToStagingArea')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
             }),
@@ -350,11 +350,11 @@ class FRSFileFactoryTest extends TestCase
         $ff->setLogger($this->createMock(LoggerInterface::class));
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('searchStagingCandidates')->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
+        $dao->expects($this->once())->method('searchStagingCandidates')->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('moveDeletedFileToStagingArea')->with(
+        $ff->expects($this->once())->method('moveDeletedFileToStagingArea')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
             }),
@@ -367,7 +367,7 @@ class FRSFileFactoryTest extends TestCase
     public function testPurgeFilesWithNoFiles()
     {
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('searchFilesToPurge')->with(1287504083)->willReturn(TestHelper::emptyDar());
+        $dao->expects($this->once())->method('searchFilesToPurge')->with(1287504083)->willReturn(TestHelper::emptyDar());
 
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
@@ -384,7 +384,7 @@ class FRSFileFactoryTest extends TestCase
     public function testPurgeFilesWithOneFile()
     {
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('searchFilesToPurge')->with(1287504083)->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
+        $dao->expects($this->once())->method('searchFilesToPurge')->with(1287504083)->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
 
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
@@ -394,7 +394,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('purgeFile')->with(
+        $ff->expects($this->once())->method('purgeFile')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
             }),
@@ -424,12 +424,12 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('setPurgeDate')->with(12, self::anything())->willReturn(true);
+        $dao->expects($this->once())->method('setPurgeDate')->with(12, self::anything())->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
         $backend = $this->createMock(BackendSystem::class);
         $backend->expects(self::never())->method('log');
-        $ff->expects(self::once())->method('archiveBeforePurge')->with(
+        $ff->expects($this->once())->method('archiveBeforePurge')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
             }),
@@ -460,12 +460,12 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('setPurgeDate')->with(12, self::anything())->willReturn(false);
+        $dao->expects($this->once())->method('setPurgeDate')->with(12, self::anything())->willReturn(false);
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $ff->method('archiveBeforePurge')->willReturn(true);
 
         $backend = $this->createMock(BackendSystem::class);
-        $backend->expects(self::once())->method('log')->with('File ' . $filepath . ' not purged, Set purge date in DB fail', 'error');
+        $backend->expects($this->once())->method('log')->with('File ' . $filepath . ' not purged, Set purge date in DB fail', 'error');
         self::assertFalse($ff->purgeFile($file, $backend));
 
         self::assertFalse(is_file($filepath), 'File should be deleted');
@@ -493,7 +493,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('archiveBeforePurge')->willReturn(false);
 
         $backend = $this->createMock(BackendSystem::class);
-        $backend->expects(self::once())->method('log')->with('File ' . $filepath . ' not purged, unlink failed', 'error');
+        $backend->expects($this->once())->method('log')->with('File ' . $filepath . ' not purged, unlink failed', 'error');
         self::assertFalse($ff->purgeFile($file, $backend));
     }
 
@@ -514,11 +514,11 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('setPurgeDate')->with(12, self::anything())->willReturn(true);
+        $dao->expects($this->once())->method('setPurgeDate')->with(12, self::anything())->willReturn(true);
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
         $backend = $this->createMock(BackendSystem::class);
-        $backend->expects(self::once())->method('log')->with('File ' . $filepath . ' not found on file system, automatically marked as purged', LogLevel::WARNING);
+        $backend->expects($this->once())->method('log')->with('File ' . $filepath . ' not found on file system, automatically marked as purged', LogLevel::WARNING);
         self::assertTrue($ff->purgeFile($file, $backend));
         $ff->expects(self::never())->method('archiveBeforePurge');
     }
@@ -578,7 +578,7 @@ class FRSFileFactoryTest extends TestCase
         self::assertTrue(is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/'));
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('restoreFile')->willReturn(true);
+        $dao->expects($this->once())->method('restoreFile')->willReturn(true);
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
 
@@ -662,7 +662,7 @@ class FRSFileFactoryTest extends TestCase
         $backend->method('chgrp')->willReturn(true);
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('restoreFile')->willReturn(true);
+        $dao->expects($this->once())->method('restoreFile')->willReturn(true);
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
 
         $user = $this->createMock(\PFUser::class);
@@ -708,7 +708,7 @@ class FRSFileFactoryTest extends TestCase
         self::assertTrue(is_dir(dirname(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p3_r1/')));
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('restoreFile')->willReturn(false);
+        $dao->expects($this->once())->method('restoreFile')->willReturn(false);
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
         $backend->method('chgrp')->willReturn(true);
@@ -750,7 +750,7 @@ class FRSFileFactoryTest extends TestCase
         $releaseFactory->method('getFRSReleaseFromDb')->willReturn($release);
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('cancelRestore');
+        $dao->expects($this->once())->method('cancelRestore');
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
         $file = $this->createMock(FRSFile::class);
         $file->method('getReleaseID');
@@ -770,7 +770,7 @@ class FRSFileFactoryTest extends TestCase
         $refFile = new FRSFile(['file_id' => 12]);
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('searchFilesToRestore')->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
+        $dao->expects($this->once())->method('searchFilesToRestore')->willReturn(TestHelper::arrayToDar(['file_id' => 12]));
 
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
@@ -779,7 +779,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::once())->method('restoreFile')->with(
+        $ff->expects($this->once())->method('restoreFile')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
             }),
@@ -811,7 +811,7 @@ class FRSFileFactoryTest extends TestCase
         $refFile = new FRSFile(['file_id' => 12]);
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('searchFilesToRestore')->willReturn($this->createConfiguredMock(DataAccessResult::class, ['isError' => true]));
+        $dao->expects($this->once())->method('searchFilesToRestore')->willReturn($this->createConfiguredMock(DataAccessResult::class, ['isError' => true]));
 
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
@@ -830,7 +830,7 @@ class FRSFileFactoryTest extends TestCase
         $refFile = new FRSFile(['file_id' => 12]);
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::once())->method('searchFilesToRestore')->willReturn(TestHelper::emptyDar());
+        $dao->expects($this->once())->method('searchFilesToRestore')->willReturn(TestHelper::emptyDar());
 
         $ff = $this->createPartialMock(FRSFileFactory::class, [
             '_getFRSFileDao',
@@ -886,7 +886,7 @@ class FRSFileFactoryTest extends TestCase
 
         // Try to release a file named toto.txt in the same release
         $p = $this->createMock(Project::class);
-        $p->expects(self::once())->method('getUnixName')->with(false)->willReturn('prj');
+        $p->expects($this->once())->method('getUnixName')->with(false)->willReturn('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -913,7 +913,7 @@ class FRSFileFactoryTest extends TestCase
 
         // Try to release a file named toto.txt in the same release
         $p = $this->createMock(Project::class);
-        $p->expects(self::once())->method('getUnixName')->with(false)->willReturn('prj');
+        $p->expects($this->once())->method('getUnixName')->with(false)->willReturn('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -938,7 +938,7 @@ class FRSFileFactoryTest extends TestCase
 
         // Try to release a file named 'toto zataz.txt' in the same release
         $p = $this->createMock(Project::class);
-        $p->expects(self::once())->method('getUnixName')->with(false)->willReturn('prj');
+        $p->expects($this->once())->method('getUnixName')->with(false)->willReturn('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1391,9 +1391,9 @@ class FRSFileFactoryTest extends TestCase
         $fileFactory->setLogger($this->createMock(LoggerInterface::class));
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
-        $fileFactory->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
-        $releaseFactory->expects(self::once())->method('deleteProjectReleases')->willReturn(true);
-        $packageFactory->expects(self::once())->method('deleteProjectPackages')->willReturn(false);
+        $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
+        $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(true);
+        $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(false);
         $backend = $this->createMock(BackendSystem::class);
         self::assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
@@ -1412,9 +1412,9 @@ class FRSFileFactoryTest extends TestCase
         $fileFactory->setLogger($this->createMock(LoggerInterface::class));
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
-        $fileFactory->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
-        $releaseFactory->expects(self::once())->method('deleteProjectReleases')->willReturn(false);
-        $packageFactory->expects(self::once())->method('deleteProjectPackages')->willReturn(true);
+        $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
+        $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(false);
+        $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(true);
         $backend = $this->createMock(BackendSystem::class);
         self::assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
@@ -1433,9 +1433,9 @@ class FRSFileFactoryTest extends TestCase
         $fileFactory->setLogger($this->createMock(LoggerInterface::class));
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
-        $fileFactory->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(false);
-        $releaseFactory->expects(self::once())->method('deleteProjectReleases')->willReturn(true);
-        $packageFactory->expects(self::once())->method('deleteProjectPackages')->willReturn(true);
+        $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(false);
+        $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(true);
+        $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(true);
         $backend = $this->createMock(BackendSystem::class);
         self::assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
@@ -1454,9 +1454,9 @@ class FRSFileFactoryTest extends TestCase
         $fileFactory->setLogger($this->createMock(LoggerInterface::class));
         $fileFactory->method('_getFRSReleaseFactory')->willReturn($releaseFactory);
 
-        $fileFactory->expects(self::once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
-        $releaseFactory->expects(self::once())->method('deleteProjectReleases')->willReturn(true);
-        $packageFactory->expects(self::once())->method('deleteProjectPackages')->willReturn(true);
+        $fileFactory->expects($this->once())->method('moveDeletedFilesToStagingArea')->willReturn(true);
+        $releaseFactory->expects($this->once())->method('deleteProjectReleases')->willReturn(true);
+        $packageFactory->expects($this->once())->method('deleteProjectPackages')->willReturn(true);
         $backend = $this->createMock(BackendSystem::class);
         self::assertTrue($fileFactory->deleteProjectFRS(1, $backend));
     }

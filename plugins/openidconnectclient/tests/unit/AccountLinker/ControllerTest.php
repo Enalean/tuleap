@@ -73,17 +73,17 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
 
         $user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('login')
             ->willReturn(UserTestBuilder::buildWithDefaults());
         $user_mapping_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create');
         $unlinked_account_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeById');
         $controller
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('redirectAfterLogin');
 
         $request = HTTPRequestBuilder::get()
@@ -131,7 +131,7 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
 
         $user_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('login')
             ->willReturn(UserTestBuilder::anAnonymousUser()->build());
         $user_mapping_manager
@@ -141,7 +141,7 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('removeById');
         $controller
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('showIndex');
 
         $request = HTTPRequestBuilder::get()

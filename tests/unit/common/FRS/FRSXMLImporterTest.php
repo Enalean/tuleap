@@ -200,7 +200,7 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
 XML;
         $xml_element            = new SimpleXMLElement($xml);
         $expected_package_array = $this->getDefaultPackage('empty_package');
-        $this->package_dao->expects(self::once())->method('createFromArray')->with($expected_package_array);
+        $this->package_dao->expects($this->once())->method('createFromArray')->with($expected_package_array);
 
         $this->permissions_manager->method('savePermissions');
 
@@ -284,7 +284,7 @@ XML;
             'release_date' => strtotime('2015-12-03T14:55:00'),
             'released_by' => $user_id,
         ];
-        $this->release_dao->expects(self::once())->method('createFromArray')->with($expected_release_array);
+        $this->release_dao->expects($this->once())->method('createFromArray')->with($expected_release_array);
 
         $this->permissions_manager->method('savePermissions');
 
@@ -376,7 +376,7 @@ XML;
         ];
 
         $expected_package_array = $this->getDefaultPackage('package');
-        $this->package_dao->expects(self::once())->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
+        $this->package_dao->expects($this->once())->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
         $this->package_dao->method('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->willReturn(TestHelper::arrayToDar($package_array_with_id));
 
         $release_id             = 8665;
@@ -391,7 +391,7 @@ XML;
             'release_date' => strtotime('2015-12-03T14:55:00'),
             'released_by' => $user_id,
         ];
-        $this->release_dao->expects(self::once())->method('createFromArray')->with($expected_release_array)->willReturn($release_id);
+        $this->release_dao->expects($this->once())->method('createFromArray')->with($expected_release_array)->willReturn($release_id);
 
         $release_array_with_group             = $expected_release_array;
         $release_array_with_group['group_id'] = 123;
@@ -420,7 +420,7 @@ XML;
             'comment' => 'one file to rule them all',
         ];
 
-        $this->file_dao->expects(self::once())->method('createFromArray')->with($expected_file_array)->willReturn($file_id);
+        $this->file_dao->expects($this->once())->method('createFromArray')->with($expected_file_array)->willReturn($file_id);
 
         $expected_file_array_with_id       = $expected_file_array;
         $expected_file_array_with_id['id'] = $file_id;
@@ -482,7 +482,7 @@ XML;
         ];
 
         $expected_package_array = $this->getDefaultPackage('package');
-        $this->package_dao->expects(self::once())->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
+        $this->package_dao->expects($this->once())->method('createFromArray')->with($expected_package_array)->willReturn($package_id);
         $this->package_dao->method('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->willReturn(TestHelper::arrayToDar($package_array_with_id));
 
         $release_id             = 8665;
@@ -497,7 +497,7 @@ XML;
             'release_date' => strtotime('2015-12-03T14:55:00'),
             'released_by' => $user_id,
         ];
-        $this->release_dao->expects(self::once())->method('createFromArray')->with($expected_release_array)->willReturn($release_id);
+        $this->release_dao->expects($this->once())->method('createFromArray')->with($expected_release_array)->willReturn($release_id);
 
         $release_array_with_group             = $expected_release_array;
         $release_array_with_group['group_id'] = 123;

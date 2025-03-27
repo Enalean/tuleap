@@ -55,7 +55,7 @@ final class LinkVersionDataUpdatorTest extends TestCase
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
             'link_url'  => $version_data['link_url'],
         ];
-        $this->item_factory->expects(self::once())->method('update')->with($row);
+        $this->item_factory->expects($this->once())->method('update')->with($row);
 
         $link = new Docman_Link(['link_url' => '']);
         $this->item_factory->method('getItemFromDb')->with($empty->getId())->willReturn($link);

@@ -111,7 +111,7 @@ final class MasschangeUpdaterTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(123);
         $tracker->method('userIsAdmin')->willReturn(true);
-        $tracker->expects(self::once())->method('augmentDataFromRequest');
+        $tracker->expects($this->once())->method('augmentDataFromRequest');
 
         $new_values = [1 => 'Value01'];
 
@@ -150,7 +150,7 @@ final class MasschangeUpdaterTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(123);
         $tracker->method('userIsAdmin')->willReturn(true);
-        $tracker->expects(self::once())->method('augmentDataFromRequest');
+        $tracker->expects($this->once())->method('augmentDataFromRequest');
 
         $new_values = [1 => 'Value01'];
 
@@ -208,7 +208,7 @@ final class MasschangeUpdaterTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(123);
         $tracker->method('userIsAdmin')->willReturn(true);
-        $tracker->expects(self::once())->method('augmentDataFromRequest')->with(
+        $tracker->expects($this->once())->method('augmentDataFromRequest')->with(
             self::callback(
                 static fn(
                     array $data,

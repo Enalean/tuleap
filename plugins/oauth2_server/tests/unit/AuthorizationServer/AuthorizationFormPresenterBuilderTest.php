@@ -59,8 +59,8 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
             }
         };
         $foobar_scope      = $this->createMock(AuthenticationScope::class);
-        $foobar_scope->expects(self::once())->method('getDefinition')->willReturn($foobar_definition);
-        $foobar_scope->expects(self::once())->method('getIdentifier')->willReturn($foobar_identifier);
+        $foobar_scope->expects($this->once())->method('getDefinition')->willReturn($foobar_definition);
+        $foobar_scope->expects($this->once())->method('getIdentifier')->willReturn($foobar_identifier);
         $typevalue_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
         $typevalue_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
             public function getName(): string
@@ -74,8 +74,8 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
             }
         };
         $typevalue_scope      = $this->createMock(AuthenticationScope::class);
-        $typevalue_scope->expects(self::once())->method('getDefinition')->willReturn($typevalue_definition);
-        $typevalue_scope->expects(self::once())->method('getIdentifier')->willReturn($typevalue_identifier);
+        $typevalue_scope->expects($this->once())->method('getDefinition')->willReturn($typevalue_definition);
+        $typevalue_scope->expects($this->once())->method('getIdentifier')->willReturn($typevalue_identifier);
         $redirect_uri        = 'https://example.com';
         $state_value         = 'xyz';
         $pkce_code_challenge = 'pkce_code_challenge';

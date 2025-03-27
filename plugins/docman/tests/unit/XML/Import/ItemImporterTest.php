@@ -49,11 +49,11 @@ final class ItemImporterTest extends TestCase
 
         $created_item = new Docman_Item(['item_id' => 14]);
 
-        $item_factory->expects(self::once())->method('createWithoutOrdering')
+        $item_factory->expects($this->once())->method('createWithoutOrdering')
             ->with('My document', 'The description', 13, 100, 0, 101, 3, '', $create_date, $update_date, null, 'https://example.test')
             ->willReturn($created_item);
 
-        $permission_importer->expects(self::once())->method('importPermissions')->with($parent_item, $created_item, $node);
+        $permission_importer->expects($this->once())->method('importPermissions')->with($parent_item, $created_item, $node);
 
         $importer = new ItemImporter($permission_importer, $item_factory);
         $importer->import($node, $node_importer, $post_importer, $parent_item, $properties);

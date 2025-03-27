@@ -73,13 +73,13 @@ final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testProcessRendersSomething(): void
     {
-        $this->admin_page_renderer->expects(self::once())->method('renderAPresenter');
+        $this->admin_page_renderer->expects($this->once())->method('renderAPresenter');
 
         $user = $this->createMock(\PFUser::class);
         $user->method('isSuperUser')->willReturn(true);
         $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->presenter_builder->expects(self::once())->method('buildSiteAdministration')
+        $this->presenter_builder->expects($this->once())->method('buildSiteAdministration')
             ->with($this->csrf_token)
             ->willReturn(AdminOAuth2AppsPresenter::forSiteAdministration([], $this->csrf_token, null));
 

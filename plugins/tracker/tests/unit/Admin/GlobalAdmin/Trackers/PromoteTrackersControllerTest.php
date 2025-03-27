@@ -186,7 +186,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItPromotesTheTracker(): void
     {
         $this->perms_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->willReturn(true);
 
@@ -231,7 +231,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesPromotion(): void
     {
         $this->perms_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->willReturn(true);
 
@@ -244,7 +244,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId(13)
             ->build();
         $this->tracker_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getTrackerById')
             ->with(13)
             ->willReturn($tracker);

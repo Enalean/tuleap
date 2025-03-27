@@ -133,7 +133,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->project_manager->method('getValidProjectByShortNameOrId')->willReturn($this->project);
 
-        $this->event_manager->expects(self::once())->method('processEvent')->with(Event::IMPORT_XML_PROJECT, self::callback(function ($args) {
+        $this->event_manager->expects($this->once())->method('processEvent')->with(Event::IMPORT_XML_PROJECT, self::callback(function ($args) {
             return $args['logger'] === $this->logger &&
                    $args['project'] === $this->project &&
                    $args['extraction_path'] === '' &&
@@ -148,7 +148,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAsksProjectManagerForTheProject(): void
     {
-        $this->project_manager->expects(self::once())->method('getValidProjectByShortNameOrId')->with(122)->willReturn($this->project);
+        $this->project_manager->expects($this->once())->method('getValidProjectByShortNameOrId')->with(122)->willReturn($this->project);
         $this->event_manager->method('processEvent');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
@@ -238,7 +238,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ug01->expects(self::exactly(3))->method('addUser');
         $ug01->method('getId')->willReturn(555);
-        $ug02->expects(self::once())->method('addUser');
+        $ug02->expects($this->once())->method('addUser');
         $ug02->method('getId')->willReturn(556);
         $ug03->expects(self::never())->method('addUser');
         $ug03->method('getId')->willReturn(557);
@@ -327,10 +327,10 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ug01 = $this->createMock(\ProjectUGroup::class);
         $this->ugroup_manager->method('getById')->with(555)->willReturn($ug01);
-        $ug01->expects(self::once())->method('addUser');
+        $ug01->expects($this->once())->method('addUser');
         $ug01->method('getId')->willReturn(555);
 
-        $this->sync_members->expects(self::once())->method('enable')->with($this->project);
+        $this->sync_members->expects($this->once())->method('enable')->with($this->project);
 
         $this->event_manager->method('processEvent');
 

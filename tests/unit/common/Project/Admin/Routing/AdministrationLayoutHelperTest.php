@@ -61,22 +61,22 @@ final class AdministrationLayoutHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $current_user = UserTestBuilder::buildWithDefaults();
         $request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentUser')
             ->willReturn($current_user);
 
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_retriever
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getProjectFromId')
             ->with($project_id)
             ->willReturn($project);
         $this->administrator_checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkUserIsProjectAdministrator')
             ->with($current_user, $project);
         $this->header_displayer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('displayBurningParrotNavigation')
             ->with($page_title, $project, $current_pane_shortname);
         $this->footer_displayer->method('display');

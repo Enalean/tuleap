@@ -77,9 +77,9 @@ final class GitTest extends TestCase
         $factory->method('getRepositoryById')->willReturn($repository);
         $git->setFactory($factory);
 
-        $git->expects(self::once())->method('addAction')->with('deleteRepository', self::anything());
-        $git->expects(self::once())->method('definePermittedActions');
-        $git->expects(self::once())->method('addView')->with('index');
+        $git->expects($this->once())->method('addAction')->with('deleteRepository', self::anything());
+        $git->expects($this->once())->method('definePermittedActions');
+        $git->expects($this->once())->method('addView')->with('index');
 
         $git->request();
     }
@@ -90,7 +90,7 @@ final class GitTest extends TestCase
         $request         = new HTTPRequest();
         $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
-        $git->expects(self::once())->method('_doDispatchForkRepositories');
+        $git->expects($this->once())->method('_doDispatchForkRepositories');
 
         $factory = $this->createMock(GitRepositoryFactory::class);
         $git->setFactory($factory);
@@ -134,7 +134,7 @@ final class GitTest extends TestCase
         $user->method('isMember')->willReturn(true);
         $git->user = $user;
 
-        $git->expects(self::once())->method('_doDispatchForkCrossProject');
+        $git->expects($this->once())->method('_doDispatchForkCrossProject');
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
     }
 }

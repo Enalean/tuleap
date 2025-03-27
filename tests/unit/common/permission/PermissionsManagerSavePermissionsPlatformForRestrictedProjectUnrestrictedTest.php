@@ -58,7 +58,7 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
     protected function expectPermissionsOnce($ugroup): void
     {
         $this->permissions_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addPermission')
             ->with($this->permission_type, $this->object_id, $ugroup)
             ->willReturn(true);

@@ -109,9 +109,9 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCa
         $field_2->method('validateField')->willReturn(true);
         $external_field->method('validateField')->willReturn(true);
 
-        $field_1->expects(self::once())->method('getId')->willReturn(1);
-        $field_2->expects(self::once())->method('getId')->willReturn(2);
-        $external_field->expects(self::once())->method('getId')->willReturn(3);
+        $field_1->expects($this->once())->method('getId')->willReturn(1);
+        $field_2->expects($this->once())->method('getId')->willReturn(2);
+        $external_field->expects($this->once())->method('getId')->willReturn(3);
 
         $this->formelement_factory->method('getUsedFieldByName')->with(111, self::anything())
             ->willReturnCallback(static fn(int $tracker_id, string $name) => match ($name) {

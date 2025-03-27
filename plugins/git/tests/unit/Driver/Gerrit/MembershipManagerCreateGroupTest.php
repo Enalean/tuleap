@@ -115,7 +115,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
     public function testItCreateGroupOnAllGerritServersTheProjectUses(): void
     {
         $this->ugroup->method('getMembers')->willReturn([]);
-        $this->remote_server_factory->expects(self::once())->method('getServersForProject')
+        $this->remote_server_factory->expects($this->once())->method('getServersForProject')
             ->with($this->project)
             ->willReturn([$this->remote_server]);
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
@@ -125,7 +125,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
     {
         $this->ugroup->method('getMembers')->willReturn([]);
         $this->driver->method('doesTheGroupExist')->willReturn(false);
-        $this->driver->expects(self::once())->method('createGroup')
+        $this->driver->expects($this->once())->method('createGroup')
             ->with($this->remote_server, 'w3c/coders', 'w3c/project_admins')
             ->willReturn('w3c/coders');
 
@@ -136,7 +136,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
     public function testItAddGroupMembersOnCreation(): void
     {
         $this->driver->method('doesTheGroupExist')->willReturn(false);
-        $this->driver->expects(self::once())->method('createGroup')->with($this->remote_server, 'w3c/coders', 'w3c/project_admins')->willReturn('w3c/coders');
+        $this->driver->expects($this->once())->method('createGroup')->with($this->remote_server, 'w3c/coders', 'w3c/project_admins')->willReturn('w3c/coders');
 
         $mary = UserTestBuilder::buildWithId(112);
         $bob  = UserTestBuilder::buildWithId(125);
@@ -164,7 +164,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
         $this->driver->method('doesTheGroupExist')->willReturn(false);
         $this->driver->method('createGroup');
 
-        $this->dao->expects(self::once())->method('addReference')->with(1236, 25698, 666);
+        $this->dao->expects($this->once())->method('addReference')->with(1236, 25698, 666);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }
@@ -172,7 +172,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
     public function testItDoesntCreateAGroupThatAlreadyExist(): void
     {
         $this->ugroup->method('getMembers')->willReturn([]);
-        $this->driver->expects(self::once())->method('doesTheGroupExist')
+        $this->driver->expects($this->once())->method('doesTheGroupExist')
             ->with($this->remote_server, 'w3c/coders')
             ->willReturn(true);
 
@@ -297,7 +297,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
                     throw new Exception('whatever');
                 }
             });
-        $this->dao->expects(self::once())->method('addReference')->with(self::anything(), self::anything(), 667);
+        $this->dao->expects($this->once())->method('addReference')->with(self::anything(), self::anything(), 667);
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }
@@ -323,7 +323,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
     public function testItCreatesGroupForSpecialProjectMembersGroup(): void
     {
         $this->driver->method('doesTheGroupExist')->willReturn(false);
-        $this->driver->expects(self::once())->method('createGroup');
+        $this->driver->expects($this->once())->method('createGroup');
 
         $ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_MEMBERS)
             ->withName(ProjectUGroup::PROJECT_MEMBERS_NAME)
@@ -337,7 +337,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
     public function testItCreatesGroupForSpecialProjectAdminsGroup(): void
     {
         $this->driver->method('doesTheGroupExist')->willReturn(false);
-        $this->driver->expects(self::once())->method('createGroup');
+        $this->driver->expects($this->once())->method('createGroup');
 
         $ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_ADMIN)
             ->withName(ProjectUGroup::PROJECT_ADMIN_NAME)
@@ -359,7 +359,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
             ->build();
 
         $this->driver->method('doesTheGroupExist')->willReturn(false);
-        $this->driver->expects(self::once())->method('createGroup')->with($this->remote_server, 'w3c/coders', 'w3c/project_admins');
+        $this->driver->expects($this->once())->method('createGroup')->with($this->remote_server, 'w3c/coders', 'w3c/project_admins');
         $this->membership_manager->method('addUGroupBinding')->with($ugroup, $source_group);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);

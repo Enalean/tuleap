@@ -100,11 +100,11 @@ final class BurnupDataBuilderTest extends TestCase
         $user        = UserTestBuilder::buildWithDefaults();
         $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->expects(self::once())->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->expects($this->once())->method('getDatePeriod')
             ->with($artifact, $user)
             ->willReturn($date_period);
 
-        $this->burnup_cache_checker->expects(self::once())->method('isBurnupUnderCalculation')
+        $this->burnup_cache_checker->expects($this->once())->method('isBurnupUnderCalculation')
             ->with($artifact, self::anything(), $user)
             ->willReturn(false);
 
@@ -126,11 +126,11 @@ final class BurnupDataBuilderTest extends TestCase
         $user        = UserTestBuilder::buildWithDefaults();
         $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->expects(self::once())->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->expects($this->once())->method('getDatePeriod')
             ->with($artifact, $user)
             ->willReturn($date_period);
 
-        $this->burnup_cache_checker->expects(self::once())->method('isBurnupUnderCalculation')
+        $this->burnup_cache_checker->expects($this->once())->method('isBurnupUnderCalculation')
             ->with($artifact, self::anything(), $user)
             ->willReturn(false);
 
@@ -159,11 +159,11 @@ final class BurnupDataBuilderTest extends TestCase
         $user        = UserTestBuilder::buildWithDefaults();
         $date_period = DatePeriodWithOpenDays::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->expects(self::once())->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->expects($this->once())->method('getDatePeriod')
             ->with($artifact, $user)
             ->willReturn($date_period);
 
-        $this->burnup_cache_checker->expects(self::once())->method('isBurnupUnderCalculation')
+        $this->burnup_cache_checker->expects($this->once())->method('isBurnupUnderCalculation')
             ->with($artifact, self::anything(), $user)
             ->willReturn(true);
 
@@ -184,11 +184,11 @@ final class BurnupDataBuilderTest extends TestCase
         $start_date  = (new DateTime())->setTime(0, 0);
         $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date->getTimestamp(), 3);
 
-        $this->chart_configuration_value_retriever->expects(self::once())->method('getDatePeriod')
+        $this->chart_configuration_value_retriever->expects($this->once())->method('getDatePeriod')
             ->with($artifact, $user)
             ->willReturn($date_period);
 
-        $this->burnup_cache_checker->expects(self::once())->method('isBurnupUnderCalculation')
+        $this->burnup_cache_checker->expects($this->once())->method('isBurnupUnderCalculation')
             ->with($artifact, self::anything(), $user)
             ->willReturn(false);
 

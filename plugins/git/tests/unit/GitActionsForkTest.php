@@ -125,7 +125,7 @@ final class GitActionsForkTest extends TestCase
         $redirect_url    = '/stuff';
         $forkPermissions = [];
 
-        $this->manager->expects(self::once())->method('forkRepositories')->with($repositories, $to_project, $user, $namespace, $scope, $forkPermissions);
+        $this->manager->expects($this->once())->method('forkRepositories')->with($repositories, $to_project, $user, $namespace, $scope, $forkPermissions);
 
         $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url, $forkPermissions);
     }

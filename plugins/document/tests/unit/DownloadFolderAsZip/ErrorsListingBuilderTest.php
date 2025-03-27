@@ -45,7 +45,7 @@ final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsAnErrorsFileAtTheRootOfTheArchive(): void
     {
         $zip = $this->createMock(ZipStream::class);
-        $zip->expects(self::once())
+        $zip->expects($this->once())
             ->method('addFile')
             ->with('TULEAP_ERRORS.txt', self::isString());
         $this->builder->addBadFilePath('/my folder/my file.jpg');
@@ -56,7 +56,7 @@ final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItWritesPathsOfBadFilesInTheErrorsFile(): void
     {
         $zip = $this->createMock(ZipStream::class);
-        $zip->expects(self::once())
+        $zip->expects($this->once())
             ->method('addFile')
             ->willReturnCallback(function (string $filename, string $contents): void {
                 self::assertStringContainsString('/my folder/my file.jpg', $contents);

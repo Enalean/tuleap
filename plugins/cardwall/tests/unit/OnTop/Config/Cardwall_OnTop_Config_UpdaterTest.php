@@ -39,8 +39,8 @@ final class Cardwall_OnTop_Config_UpdaterTest extends TestCase // phpcs:ignore S
         $updater->addCommand($c1);
         $updater->addCommand($c2);
 
-        $c1->expects(self::once())->method('execute')->with($request);
-        $c2->expects(self::once())->method('execute')->with($request);
+        $c1->expects($this->once())->method('execute')->with($request);
+        $c2->expects($this->once())->method('execute')->with($request);
 
         $updater->process($request);
     }

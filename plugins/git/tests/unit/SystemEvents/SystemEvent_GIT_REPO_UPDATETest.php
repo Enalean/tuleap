@@ -65,7 +65,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
 
     public function testItGetsTheRepositoryFromTheFactory(): void
     {
-        $this->repository_factory->expects(self::once())->method('getRepositoryById')
+        $this->repository_factory->expects($this->once())->method('getRepositoryById')
             ->with($this->repository_id)
             ->willReturn($this->repository);
         $this->backend->method('updateRepoConf');
@@ -77,7 +77,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
     public function testItDelegatesToBackendRepositoryCreation(): void
     {
         $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
-        $this->backend->expects(self::once())->method('updateRepoConf');
+        $this->backend->expects($this->once())->method('updateRepoConf');
         $this->event->method('error');
         $this->event->process();
     }
@@ -85,8 +85,8 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
     public function testItMarksTheEventAsDone(): void
     {
         $this->repository_factory->method('getRepositoryById')->willReturn($this->repository);
-        $this->backend->expects(self::once())->method('updateRepoConf')->willReturn(true);
-        $this->event->expects(self::once())->method('done');
+        $this->backend->expects($this->once())->method('updateRepoConf')->willReturn(true);
+        $this->event->expects($this->once())->method('done');
         $this->event->process();
     }
 
@@ -94,7 +94,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
     {
         $this->repository_factory->method('getRepositoryById')->willReturn(null);
         $this->repository_factory->method('getDeletedRepository');
-        $this->event->expects(self::once())->method('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?');
+        $this->event->expects($this->once())->method('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?');
         $this->event->process();
     }
 
@@ -103,7 +103,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
         $this->repository_factory->method('getRepositoryById')->willReturn(null);
         $this->repository_factory->method('getDeletedRepository')->willReturn($this->repository);
 
-        $this->event->expects(self::once())->method('done')->with('Unable to update a repository marked as deleted');
+        $this->event->expects($this->once())->method('done')->with('Unable to update a repository marked as deleted');
 
         $this->event->process();
     }
@@ -118,7 +118,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
         $this->backend->method('getDriver')->willReturn($driver);
         $this->backend->method('updateRepoConf')->willReturn(true);
         $this->backend->method('getGitRootPath');
-        $this->event->expects(self::once())->method('done');
+        $this->event->expects($this->once())->method('done');
 
         $this->event->process();
 
@@ -139,7 +139,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
             static fn() => throw new CannotExecuteDefaultBranchUpdateException('Something wrong happened')
         );
 
-        $this->event->expects(self::once())->method('error');
+        $this->event->expects($this->once())->method('error');
 
         $this->event->process();
     }

@@ -38,8 +38,8 @@ final class ActionsRunnerTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
         $configuration = new PostCreationTaskConfiguration(true, []);
-        $task_1->expects(self::once())->method('execute')->with($changeset, $configuration);
-        $task_2->expects(self::once())->method('execute')->with($changeset, $configuration);
+        $task_1->expects($this->once())->method('execute')->with($changeset, $configuration);
+        $task_2->expects($this->once())->method('execute')->with($changeset, $configuration);
 
         $actions_runner->processSyncPostCreationActions($changeset, $configuration);
     }
@@ -56,7 +56,7 @@ final class ActionsRunnerTest extends TestCase
 
         $configuration = new PostCreationTaskConfiguration(true, []);
 
-        $task_1->expects(self::once())->method('execute')->with($changeset, $configuration);
+        $task_1->expects($this->once())->method('execute')->with($changeset, $configuration);
         $task_2->expects(self::never())->method('execute');
 
         $actions_runner->processSyncPostCreationActions($changeset, $configuration);
@@ -74,8 +74,8 @@ final class ActionsRunnerTest extends TestCase
 
         $configuration = new PostCreationTaskConfiguration(true, []);
 
-        $task_1->expects(self::once())->method('execute')->with($changeset, $configuration);
-        $task_2->expects(self::once())->method('execute')->with($changeset, $configuration);
+        $task_1->expects($this->once())->method('execute')->with($changeset, $configuration);
+        $task_2->expects($this->once())->method('execute')->with($changeset, $configuration);
 
         $actions_runner->processAsyncPostCreationActions($changeset, $configuration);
     }

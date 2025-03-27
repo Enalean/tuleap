@@ -126,12 +126,12 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_agent'   => 'old_user_agent',
         ]);
 
-        $this->session_dao->expects(self::once())->method('updateUserAgentByID');
+        $this->session_dao->expects($this->once())->method('updateUserAgentByID');
         $user = $this->createMock(\PFUser::class);
         $this->user_manager->method('getUserById')->with($user_id)->willReturn($user);
 
-        $user->expects(self::once())->method('setSessionId')->with($session_id);
-        $user->expects(self::once())->method('setSessionHash')->with("$session_id.$session_token");
+        $user->expects($this->once())->method('setSessionId')->with($session_id);
+        $user->expects($this->once())->method('setSessionHash')->with("$session_id.$session_token");
         $session_user = $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
         self::assertSame($user, $session_user);
     }
@@ -165,8 +165,8 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->random_number_generator->method('getNumber')->willReturn($random_token);
 
         $user->method('getId')->willReturn(101);
-        $user->expects(self::once())->method('setSessionId')->with($session_id);
-        $user->expects(self::once())->method('setSessionHash')->with("$session_id.$random_token");
+        $user->expects($this->once())->method('setSessionId')->with($session_id);
+        $user->expects($this->once())->method('setSessionHash')->with("$session_id.$random_token");
 
         $request->method('getIPAddress')->willReturn('ip');
         $request->method('getFromServer')->willReturn(null);

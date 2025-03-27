@@ -117,18 +117,18 @@ final class DocumentUploadFinisherTest extends TestCase
             'status'            => 'approved',
             'obsolescence_date' => '2020-03-06',
         ]);
-        $this->on_going_upload_dao->expects(self::once())->method('deleteByItemID');
-        $this->item_factory->expects(self::once())->method('create')->willReturn(true);
+        $this->on_going_upload_dao->expects($this->once())->method('deleteByItemID');
+        $this->item_factory->expects($this->once())->method('create')->willReturn(true);
         $created_docman_file = $root->url() . '/created_file';
         touch($created_docman_file);
-        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_file);
-        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
+        $this->file_storage->expects($this->once())->method('copy')->willReturn($created_docman_file);
+        $this->version_factory->expects($this->once())->method('create')->willReturn(true);
         $this->version_factory->method('getCurrentVersionForItem')->willReturn(new Docman_Version());
         $this->event_manager->method('processEvent');
         $this->user_manager->method('getUserByID')->willReturn(UserTestBuilder::buildWithDefaults());
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProjectById')->willReturn($project);
-        $this->event_adder->expects(self::once())->method('addNotificationEvents')->with($project);
+        $this->event_adder->expects($this->once())->method('addNotificationEvents')->with($project);
         $this->event_adder->method('addLogEvents');
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);

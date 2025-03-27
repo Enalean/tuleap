@@ -110,7 +110,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     public function testItSwitchesTheBackendToGerrit(): void
     {
         $this->server_factory->method('getServer')->with($this->repository)->willReturn($this->gerrit_server);
-        $this->dao->expects(self::once())->method('switchToGerrit')->with($this->repository_id, $this->remote_server_id);
+        $this->dao->expects($this->once())->method('switchToGerrit')->with($this->repository_id, $this->remote_server_id);
         $this->event->method('error');
         $this->event->process();
     }
@@ -118,7 +118,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     public function testItCallsDoneAndReturnsTrue(): void
     {
         $this->server_factory->method('getServer')->with($this->repository)->willReturn($this->gerrit_server);
-        $this->event->expects(self::once())->method('done');
+        $this->event->expects($this->once())->method('done');
         $this->project_creator->method('createGerritProject');
         self::assertTrue($this->event->process());
     }
@@ -126,7 +126,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     public function testItUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit(): void
     {
         $this->server_factory->method('getServer')->with($this->repository)->willReturn($this->gerrit_server);
-        $this->gitolite_backend->expects(self::once())->method('updateRepoConf');
+        $this->gitolite_backend->expects($this->once())->method('updateRepoConf');
         $this->event->method('done');
         $this->project_creator->method('createGerritProject');
         self::assertTrue($this->event->process());
@@ -137,7 +137,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
         $this->server_factory->method('getServer')->with($this->repository)->willReturn($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
         $this->project_creator->method('createGerritProject')->willReturn($remote_project);
-        $this->event->expects(self::once())->method('done')->with("Created project $remote_project on https://gerrit.example.com:8888/");
+        $this->event->expects($this->once())->method('done')->with("Created project $remote_project on https://gerrit.example.com:8888/");
         $this->event->process();
     }
 
@@ -145,7 +145,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     {
         $this->server_factory->method('getServer')->with($this->repository)->willReturn($this->gerrit_server);
         $this->project_creator->method('createGerritProject')->willThrowException(new Exception('failure detail'));
-        $this->event->expects(self::once())->method('error')->with('failure detail');
+        $this->event->expects($this->once())->method('error')->with('failure detail');
         $this->event->process();
         self::assertTrue($this->logger->hasError('An error occured while processing event: ' . $this->event->verbalizeParameters(null)));
     }
@@ -154,7 +154,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     {
         $this->server_factory->method('getServer')->with($this->repository)->willReturn($this->gerrit_server);
         $this->project_creator->method('createGerritProject')->willThrowException(new Git_Driver_Gerrit_Exception('failure detail'));
-        $this->event->expects(self::once())->method('error')->with('gerrit: failure detail');
+        $this->event->expects($this->once())->method('error')->with('gerrit: failure detail');
         $this->event->process();
         self::assertTrue($this->logger->hasError('Gerrit failure: ' . $this->event->verbalizeParameters(null)));
     }
@@ -163,7 +163,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     {
         $e = new Exception('failure detail');
         $this->server_factory->method('getServer')->willThrowException($e);
-        $this->event->expects(self::once())->method('error')->with('failure detail');
+        $this->event->expects($this->once())->method('error')->with('failure detail');
         $this->event->process();
         self::assertTrue($this->logger->hasError('An error occured while processing event: ' . $this->event->verbalizeParameters(null)));
     }
@@ -171,7 +171,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist(): void
     {
         $this->event->setParameters("$this->deleted_repository_id::$this->remote_server_id");
-        $this->event->expects(self::once())->method('error')->with('Unable to find repository, perhaps it was deleted in the mean time?');
+        $this->event->expects($this->once())->method('error')->with('Unable to find repository, perhaps it was deleted in the mean time?');
         $this->event->process();
     }
 
@@ -179,7 +179,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     {
         $this->server_factory->method('getServer')->with($this->repository)->willReturn($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        $this->project_creator->expects(self::once())->method('createGerritProject')->with($this->gerrit_server, $this->repository, 'true');
+        $this->project_creator->expects($this->once())->method('createGerritProject')->with($this->gerrit_server, $this->repository, 'true');
         $this->event->method('error');
         $this->event->process();
     }

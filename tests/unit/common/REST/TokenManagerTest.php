@@ -92,14 +92,14 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->method('getUserById')->with($this->user_id)->willReturn($this->user);
 
         $this->token_dao->method('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->willReturn(\TestHelper::arrayToDar([]));
-        $this->token_dao->expects(self::once())->method('deleteToken')->with($this->token_value)->willReturn(true);
+        $this->token_dao->expects($this->once())->method('deleteToken')->with($this->token_value)->willReturn(true);
 
         $this->token_manager->expireToken($this->token);
     }
 
     public function testItExpiresAllTokensForAUser(): void
     {
-        $this->token_dao->expects(self::once())->method('deleteAllTokensForUser')->with($this->user_id);
+        $this->token_dao->expects($this->once())->method('deleteAllTokensForUser')->with($this->user_id);
 
         $this->token_manager->expireAllTokensForUser($this->user);
     }
@@ -116,7 +116,7 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsATokenToDatabase(): void
     {
-        $this->token_dao->expects(self::once())->method('addTokenForUserId')->with($this->user_id, self::anything(), self::anything())->willReturn(true);
+        $this->token_dao->expects($this->once())->method('addTokenForUserId')->with($this->user_id, self::anything(), self::anything())->willReturn(true);
 
         $this->assertNotNull($this->token_manager->generateTokenForUser($this->user));
     }

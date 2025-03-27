@@ -69,8 +69,8 @@ final class ArtifactChangesetSaverTest extends TestCase
         $import_config = new TrackerNoXMLImportLoggedConfig();
         $time          = new DateTimeImmutable();
 
-        $this->changeset_dao->expects(self::once())->method('create')->willReturn(1234);
-        $this->tracker_artifact_dao->expects(self::once())->method('updateLastChangsetId');
+        $this->changeset_dao->expects($this->once())->method('create')->willReturn(1234);
+        $this->tracker_artifact_dao->expects($this->once())->method('updateLastChangsetId');
         $this->changeset_from_xml_dao->expects(self::never())->method('saveChangesetIsCreatedFromXml');
 
         $this->saver->saveChangeset($this->artifact, $this->user, $time->getTimestamp(), $import_config);
@@ -81,9 +81,9 @@ final class ArtifactChangesetSaverTest extends TestCase
         $time          = new DateTimeImmutable();
         $import_config = new TrackerXmlImportConfig($this->user, $time, MoveImportConfig::buildForRegularImport(), false);
 
-        $this->changeset_dao->expects(self::once())->method('create')->willReturn(1234);
-        $this->tracker_artifact_dao->expects(self::once())->method('updateLastChangsetId');
-        $this->changeset_from_xml_dao->expects(self::once())->method('saveChangesetIsCreatedFromXml');
+        $this->changeset_dao->expects($this->once())->method('create')->willReturn(1234);
+        $this->tracker_artifact_dao->expects($this->once())->method('updateLastChangsetId');
+        $this->changeset_from_xml_dao->expects($this->once())->method('saveChangesetIsCreatedFromXml');
 
         $this->saver->saveChangeset($this->artifact, $this->user, $time->getTimestamp(), $import_config);
     }

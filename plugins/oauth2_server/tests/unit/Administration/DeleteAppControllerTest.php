@@ -77,7 +77,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
         $this->app_remover->expects(self::never())->method('deleteAppByID');
@@ -97,10 +97,10 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '12']);
         $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(true);
-        $this->app_remover->expects(self::once())->method('deleteAppByID')->with(12);
+        $this->app_remover->expects($this->once())->method('deleteAppByID')->with(12);
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
 
@@ -111,10 +111,10 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = $this->buildSiteAdminRequest()->withParsedBody(['app_id' => '12']);
         $this->project_verifier->method('isASiteLevelApp')->willReturn(true);
-        $this->app_remover->expects(self::once())->method('deleteAppByID')->with(12);
+        $this->app_remover->expects($this->once())->method('deleteAppByID')->with(12);
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->expects(self::once())->method('createResponseForUser')
+        $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
 

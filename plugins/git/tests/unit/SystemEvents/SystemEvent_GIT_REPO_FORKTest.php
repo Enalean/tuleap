@@ -67,15 +67,15 @@ final class SystemEvent_GIT_REPO_FORKTest extends TestCase
             $this->old_repository_id => $this->old_repository,
             $this->new_repository_id => $this->new_repository,
         });
-        $this->backend->expects(self::once())->method('forkOnFilesystem')->with(self::anything(), $this->new_repository);
-        $this->event->expects(self::once())->method('done');
+        $this->backend->expects($this->once())->method('forkOnFilesystem')->with(self::anything(), $this->new_repository);
+        $this->event->expects($this->once())->method('done');
         $this->event->process();
     }
 
     public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist(): void
     {
         $this->repository_factory->method('getRepositoryById')->willReturn(null);
-        $this->event->expects(self::once())->method('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?');
+        $this->event->expects($this->once())->method('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?');
         $this->event->process();
     }
 }

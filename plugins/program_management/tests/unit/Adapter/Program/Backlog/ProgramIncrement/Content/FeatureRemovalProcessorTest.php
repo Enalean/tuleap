@@ -98,7 +98,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $feature_removal = $this->buildFeatureRemoval();
-        $this->artifact_link_updater->expects(self::once())
+        $this->artifact_link_updater->expects($this->once())
             ->method('updateArtifactLinks')
             ->with(
                 self::isInstanceOf(\PFUser::class),

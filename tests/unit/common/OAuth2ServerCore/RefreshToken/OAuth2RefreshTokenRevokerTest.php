@@ -68,9 +68,9 @@ final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTheRefreshTokenIsNotAssociatedToTheApp(): void
     {
-        $this->refresh_token_unserializer->expects(self::once())->method('getSplitToken')
+        $this->refresh_token_unserializer->expects($this->once())->method('getSplitToken')
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->expects(self::once())->method('searchRefreshTokenByApp')
+        $this->dao->expects($this->once())->method('searchRefreshTokenByApp')
             ->willReturn(null);
 
         $this->expectException(OAuth2RefreshTokenNotFoundException::class);
@@ -79,11 +79,11 @@ final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTheRefreshTokenIsInvalid(): void
     {
-        $this->refresh_token_unserializer->expects(self::once())->method('getSplitToken')
+        $this->refresh_token_unserializer->expects($this->once())->method('getSplitToken')
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->expects(self::once())->method('searchRefreshTokenByApp')
+        $this->dao->expects($this->once())->method('searchRefreshTokenByApp')
             ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->expects(self::once())->method('verifyHash')->willReturn(false);
+        $this->hasher->expects($this->once())->method('verifyHash')->willReturn(false);
 
         $this->expectException(InvalidOAuth2RefreshTokenException::class);
         $this->revoker->revokeGrantOfRefreshToken($this->buildApp(), new ConcealedString('token_identifier'));
@@ -91,12 +91,12 @@ final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRevokeGrantOfRefreshToken(): void
     {
-        $this->refresh_token_unserializer->expects(self::once())->method('getSplitToken')
+        $this->refresh_token_unserializer->expects($this->once())->method('getSplitToken')
             ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->expects(self::once())->method('searchRefreshTokenByApp')
+        $this->dao->expects($this->once())->method('searchRefreshTokenByApp')
             ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->expects(self::once())->method('verifyHash')->willReturn(true);
-        $this->authorization_code_revoker->expects(self::once())->method('revokeByAuthCodeId')
+        $this->hasher->expects($this->once())->method('verifyHash')->willReturn(true);
+        $this->authorization_code_revoker->expects($this->once())->method('revokeByAuthCodeId')
             ->with(89);
 
         $this->revoker->revokeGrantOfRefreshToken($this->buildApp(), new ConcealedString('token_identifier'));

@@ -346,7 +346,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private function aMockTrackerFactoryWith($project_id, $project_trackers)
     {
         $tracker_factory = $this->createMock(TrackerFactory::class);
-        $tracker_factory->expects(self::once())->method('getTrackersByGroupId')->with($project_id)->willReturn(
+        $tracker_factory->expects($this->once())->method('getTrackersByGroupId')->with($project_id)->willReturn(
             $project_trackers
         );
 

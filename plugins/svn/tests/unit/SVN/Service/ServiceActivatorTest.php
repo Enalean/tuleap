@@ -91,8 +91,8 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->svn_plugin_service->method('isUsed')->willReturn(false);
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
-        $this->data->expects(self::once())->method('forceServiceUsage')->with(106);
+        $this->data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
+        $this->data->expects($this->once())->method('forceServiceUsage')->with(106);
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -107,8 +107,8 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->svn_plugin_service->method('isUsed')->willReturn(true);
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
-        $this->data->expects(self::once())->method('forceServiceUsage')->with(106);
+        $this->data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
+        $this->data->expects($this->once())->method('forceServiceUsage')->with(106);
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -121,7 +121,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
+        $this->data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
         $this->data->expects(self::never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
@@ -151,7 +151,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->svn_plugin_service->method('isUsed')->willReturn(false);
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->data->expects(self::once())->method('unsetProjectServiceUsage')->with(101);
+        $this->data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
         $this->data->expects(self::never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
@@ -189,7 +189,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$project, []],
         ]);
 
-        $this->service_creator->expects(self::once())->method('createService');
+        $this->service_creator->expects($this->once())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
@@ -212,7 +212,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$project, []],
         ]);
 
-        $this->service_creator->expects(self::once())->method('createService');
+        $this->service_creator->expects($this->once())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }

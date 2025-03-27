@@ -103,7 +103,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
 
@@ -147,7 +147,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
 
@@ -198,7 +198,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
 
@@ -245,7 +245,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
 
@@ -289,10 +289,10 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
-        $this->theme_variant->expects(self::once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
-        $this->theme_variant->expects(self::once())->method('getAllowedVariantColors')->willReturn([ThemeVariantColor::Orange]);
+        $this->theme_variant->expects($this->once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->expects($this->once())->method('getAllowedVariantColors')->willReturn([ThemeVariantColor::Orange]);
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -344,9 +344,9 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
-        $this->theme_variant->expects(self::once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->expects($this->once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -393,7 +393,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -440,7 +440,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -487,10 +487,10 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::once())->method('delPreference')->with('display_density');
+        $user->expects($this->once())->method('delPreference')->with('display_density');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -534,7 +534,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -581,7 +581,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -632,7 +632,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -683,7 +683,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', 'absolute_first-relative_shown'],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -730,7 +730,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -777,7 +777,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
         $user->expects(self::never())->method('setPreference');
@@ -824,10 +824,10 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
         $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::once())->method('setPreference')->with('accessibility_mode', '0');
+        $user->expects($this->once())->method('setPreference')->with('accessibility_mode', '0');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -864,7 +864,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isAnonymous')->willReturn(false);
         $user->method('getLanguageID')->willReturn('fr_FR');
-        $user->expects(self::once())->method('setLanguageID')->with('en_US');
+        $user->expects($this->once())->method('setLanguageID')->with('en_US');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
             ['accessibility_mode', false],
@@ -872,12 +872,12 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ['relative_dates_display', false],
         ]);
 
-        $this->csrf_token->expects(self::once())->method('check');
+        $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::once())->method('updateDB')->willReturn(true);
+        $this->user_manager->expects($this->once())->method('updateDB')->willReturn(true);
 
-        $this->theme_variant->expects(self::once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
-        $this->theme_variant->expects(self::once())->method('getAllowedVariantColors')->willReturn([ThemeVariantColor::Orange, ThemeVariantColor::Green]);
+        $this->theme_variant->expects($this->once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->expects($this->once())->method('getAllowedVariantColors')->willReturn([ThemeVariantColor::Orange, ThemeVariantColor::Green]);
         $user
             ->method('setPreference')
             ->willReturnMap([

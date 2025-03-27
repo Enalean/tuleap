@@ -74,13 +74,13 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
     public function testItStoresTheBranchPrefix(): void
     {
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
 
         $this->git_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsGitAdmin')
             ->willReturn(true);
 
@@ -92,13 +92,13 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
     public function testItStoresTheBranchPrefixWithSomeSpecialChars(): void
     {
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
 
         $this->git_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsGitAdmin')
             ->willReturn(true);
 
@@ -111,7 +111,7 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
     public function testItThrowsAnExceptionIfIntegrationNotFoundTheBranchPrefix(): void
     {
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(null);
@@ -125,13 +125,13 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
     public function testItThrowsAnExceptionIfUserIsNotGitAdministrator(): void
     {
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
 
         $this->git_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsGitAdmin')
             ->willReturn(false);
 
@@ -144,13 +144,13 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
     public function testItThrowsAnExceptionIfBranchPrefixIsNotValid(): void
     {
         $this->integration_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
 
         $this->git_permissions_manager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsGitAdmin')
             ->willReturn(true);
 

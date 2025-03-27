@@ -55,7 +55,7 @@ class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\T
     protected function expectPermissionsOnce($ugroup): void
     {
         $this->permissions_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addPermission')
             ->with($this->permission_type, $this->object_id, $ugroup)
             ->willReturn(true);
@@ -69,17 +69,17 @@ class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\T
     public function testItSavesTheValueForStaticUGroupId(): void
     {
         $this->permissions_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('clearPermission')
             ->with($this->permission_type, $this->object_id)
             ->willReturn(true);
         $this->permissions_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addPermission')
             ->with($this->permission_type, $this->object_id, 104)
             ->willReturn(true);
         $this->permissions_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addHistory')
             ->with($this->project_id, $this->permission_type, $this->object_id);
 
@@ -89,7 +89,7 @@ class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\T
     public function testItSavesTheValueForSeveralStaticUGroupIds(): void
     {
         $this->permissions_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('clearPermission')
             ->with($this->permission_type, $this->object_id)
             ->willReturn(true);
@@ -110,7 +110,7 @@ class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\T
                 return true;
             });
         $this->permissions_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addHistory')
             ->with($this->project_id, $this->permission_type, $this->object_id)
             ->willReturn(true);

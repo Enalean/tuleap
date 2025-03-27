@@ -55,7 +55,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config->method('isConfigNeeded')->willReturn(false);
 
         $this->execution_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByExecutionTrackerId')
             ->willReturn([]);
 
@@ -76,7 +76,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config->method('isConfigNeeded')->willReturn(false);
 
         $this->execution_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByExecutionTrackerId')
             ->willReturn([]);
 
@@ -114,7 +114,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config->method('isConfigNeeded')->willReturn(false);
 
         $this->execution_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('searchByExecutionTrackerId')
             ->willReturn([
                 ['execution_artifact_id' => 123, 'definition_changeset_id' => 10001],

@@ -73,10 +73,10 @@ final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildPullRequest(PullRequest::STATUS_REVIEW);
 
-        $this->dao->expects(self::once())->method('markAsAbandoned');
-        $this->timeline_event_creator->expects(self::once())->method('storeAbandonEvent');
+        $this->dao->expects($this->once())->method('markAsAbandoned');
+        $this->timeline_event_creator->expects($this->once())->method('storeAbandonEvent');
         $this->event_dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(self::isInstanceOf(PullRequestAbandonedEvent::class));
 
@@ -108,11 +108,11 @@ final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildPullRequest(PullRequest::STATUS_REVIEW);
 
-        $this->pull_request_merger->expects(self::once())->method('doMergeIntoDestination');
-        $this->dao->expects(self::once())->method('markAsMerged');
-        $this->timeline_event_creator->expects(self::once())->method('storeMergeEvent');
+        $this->pull_request_merger->expects($this->once())->method('doMergeIntoDestination');
+        $this->dao->expects($this->once())->method('markAsMerged');
+        $this->timeline_event_creator->expects($this->once())->method('storeMergeEvent');
         $this->event_dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(self::isInstanceOf(PullRequestMergedEvent::class));
 
@@ -157,10 +157,10 @@ final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildPullRequest(PullRequest::STATUS_REVIEW);
 
-        $this->dao->expects(self::once())->method('markAsMerged');
-        $this->timeline_event_creator->expects(self::once())->method('storeMergeEvent');
+        $this->dao->expects($this->once())->method('markAsMerged');
+        $this->timeline_event_creator->expects($this->once())->method('storeMergeEvent');
         $this->event_dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(self::isInstanceOf(PullRequestMergedEvent::class));
 

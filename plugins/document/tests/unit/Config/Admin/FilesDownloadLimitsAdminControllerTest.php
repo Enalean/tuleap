@@ -67,7 +67,7 @@ final class FilesDownloadLimitsAdminControllerTest extends \Tuleap\Test\PHPUnit\
         $user->method('isSuperUser')->willReturn(true);
 
         $this->admin_page_renderer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('renderANoFramedPresenter');
 
         $this->controller->process(

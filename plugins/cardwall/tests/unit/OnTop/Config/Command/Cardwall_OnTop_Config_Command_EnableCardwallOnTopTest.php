@@ -54,7 +54,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCa
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '1');
         $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(false);
-        $this->dao->expects(self::once())->method('enable')->with($this->tracker_id);
+        $this->dao->expects($this->once())->method('enable')->with($this->tracker_id);
 
         $this->command->execute($request);
     }
@@ -74,7 +74,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCa
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '0');
         $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(true);
-        $this->dao->expects(self::once())->method('disable')->with($this->tracker_id);
+        $this->dao->expects($this->once())->method('disable')->with($this->tracker_id);
 
         $this->command->execute($request);
     }

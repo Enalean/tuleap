@@ -43,7 +43,7 @@ final class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullIfMilestoneIsNotAllowed(): void
     {
         $this->checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkMilestoneIsAllowed')
             ->with($this->milestone)
             ->willThrowException(new MilestoneIsNotAllowedException());
@@ -54,7 +54,7 @@ final class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsPaneInfo(): void
     {
         $this->checker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('checkMilestoneIsAllowed')
             ->with($this->milestone);
 

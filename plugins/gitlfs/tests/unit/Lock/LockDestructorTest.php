@@ -87,7 +87,7 @@ final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->expects(self::once())->method('deleteLock')->with($lock->getId());
+        $this->lock_dao->expects($this->once())->method('deleteLock')->with($lock->getId());
 
         $this->lock_destructor->forceDeleteLock($lock);
     }

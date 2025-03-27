@@ -56,7 +56,7 @@ final class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $this->path_allocator->method('getPathForAvailableObject')->willReturn('object/path');
 
-        $this->dao->expects(self::once())->method('deleteUnusableReferences')->with($deletion_delay);
+        $this->dao->expects($this->once())->method('deleteUnusableReferences')->with($deletion_delay);
         $this->filesystem->expects(self::exactly(2))->method('delete');
         $this->dao->expects(self::exactly(2))->method('deleteObjectByID');
 
@@ -78,7 +78,7 @@ final class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $this->path_allocator->method('getPathForAvailableObject')->willReturn('object/path');
 
-        $this->dao->expects(self::once())->method('deleteUnusableReferences')->with($deletion_delay);
+        $this->dao->expects($this->once())->method('deleteUnusableReferences')->with($deletion_delay);
         $this->filesystem->method('delete')->willThrowException(new UnableToDeleteFile());
         $this->dao->expects(self::never())->method('deleteObjectByID');
 

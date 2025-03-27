@@ -51,7 +51,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testReturnsNullIfNoFieldForStatus()
     {
-        $this->semantic->expects(self::once())->method('getField')->willReturn(null);
+        $this->semantic->expects($this->once())->method('getField')->willReturn(null);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
@@ -59,7 +59,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testReturnsNullIfUserCannotReadStatus()
     {
         $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
-        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic->expects($this->once())->method('getField')->willReturn($field);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
@@ -67,7 +67,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testReturnsNullIfNoChangesetValue()
     {
         $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
-        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic->expects($this->once())->method('getField')->willReturn($field);
 
         $this->changeset->setFieldValue($field, null);
 
@@ -77,12 +77,12 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testReturnsNullIfNoValueForField()
     {
         $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
-        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic->expects($this->once())->method('getField')->willReturn($field);
 
         $value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
         $this->changeset->setFieldValue($field, $value);
 
-        $value->expects(self::once())->method('getListValues')->willReturn([]);
+        $value->expects($this->once())->method('getListValues')->willReturn([]);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }
@@ -90,14 +90,14 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testReturnsTheFirstValue()
     {
         $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
-        $this->semantic->expects(self::once())->method('getField')->willReturn($field);
+        $this->semantic->expects($this->once())->method('getField')->willReturn($field);
 
         $value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
         $this->changeset->setFieldValue($field, $value);
 
         $todo = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $done = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value->expects(self::once())->method('getListValues')->willReturn([$todo, $done]);
+        $value->expects($this->once())->method('getListValues')->willReturn([$todo, $done]);
 
         self::assertSame($todo, $this->provider->getStatusValueForChangeset($this->changeset, $this->user));
     }

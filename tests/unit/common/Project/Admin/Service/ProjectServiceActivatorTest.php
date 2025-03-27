@@ -80,7 +80,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'document', 'is_used' => 0];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_creator->expects(self::once())->method('createService')->with(
+        $this->service_creator->expects($this->once())->method('createService')->with(
             $template_service,
             101,
             [
@@ -91,7 +91,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -140,7 +140,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -161,7 +161,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'admin', 'is_used' => 0];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_creator->expects(self::once())->method('createService')->with(
+        $this->service_creator->expects($this->once())->method('createService')->with(
             $template_service,
             101,
             [
@@ -172,7 +172,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -208,7 +208,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'tracker', 'is_used' => 0];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_dao->expects(self::once())->method('create')->with(
+        $this->service_dao->expects($this->once())->method('create')->with(
             $project->getID(),
             $service->getLabel(),
             '',
@@ -222,10 +222,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
-        $this->reference_manager->expects(self::once())->method('addSystemReferencesForService');
-        $this->reference_manager->expects(self::once())->method('updateReferenceForService');
+        $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
+        $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
         $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
@@ -246,7 +246,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'tracker', 'is_used' => 1];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_creator->expects(self::once())->method('createService')->with(
+        $this->service_creator->expects($this->once())->method('createService')->with(
             $template_service,
             101,
             [
@@ -257,7 +257,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -293,7 +293,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'svn', 'is_used' => 0];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_dao->expects(self::once())->method('create')->with(
+        $this->service_dao->expects($this->once())->method('create')->with(
             $project->getID(),
             $service->getLabel(),
             '',
@@ -307,10 +307,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
-        $this->reference_manager->expects(self::once())->method('addSystemReferencesForService');
-        $this->reference_manager->expects(self::once())->method('updateReferenceForService');
+        $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
+        $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
         $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
@@ -331,7 +331,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'svn', 'is_used' => 1];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_creator->expects(self::once())->method('createService')->with(
+        $this->service_creator->expects($this->once())->method('createService')->with(
             $template_service,
             101,
             [
@@ -342,7 +342,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -378,7 +378,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'document', 'is_used' => 0];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_dao->expects(self::once())->method('create')->with(
+        $this->service_dao->expects($this->once())->method('create')->with(
             $project->getID(),
             $service->getLabel(),
             '',
@@ -392,10 +392,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
-        $this->reference_manager->expects(self::once())->method('addSystemReferencesForService');
-        $this->reference_manager->expects(self::once())->method('updateReferenceForService');
+        $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
+        $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
         $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
@@ -428,7 +428,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->link_builder->method('substituteVariablesInLink')->willReturn('/admin/group_id=101');
 
-        $this->service_dao->expects(self::once())->method('create')->with(
+        $this->service_dao->expects($this->once())->method('create')->with(
             $project->getID(),
             $service->getLabel(),
             '',
@@ -442,10 +442,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
-        $this->reference_manager->expects(self::once())->method('addSystemReferencesForService');
-        $this->reference_manager->expects(self::once())->method('updateReferenceForService');
+        $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
+        $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
         $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
@@ -481,7 +481,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'plugin_git', 'is_used' => 0];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_dao->expects(self::once())->method('create')->with(
+        $this->service_dao->expects($this->once())->method('create')->with(
             $project->getID(),
             $service->getLabel(),
             '',
@@ -495,10 +495,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
-        $this->reference_manager->expects(self::once())->method('addSystemReferencesForService');
-        $this->reference_manager->expects(self::once())->method('updateReferenceForService');
+        $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
+        $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
         $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }

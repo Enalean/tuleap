@@ -73,7 +73,7 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ldap_user_manager->method('getUserFromLdap')->willReturn($user);
 
         $notm = $this->createMock(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class);
-        $notm->expects(self::once())->method('sendNotifications');
+        $notm->expects($this->once())->method('sendNotifications');
 
         $prjm = $this->createMock(\ProjectManager::class);
         $prjm->method('getProject')->willReturn($this->createMock(\Project::class));

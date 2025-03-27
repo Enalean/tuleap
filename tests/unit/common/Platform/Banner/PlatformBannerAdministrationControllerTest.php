@@ -64,7 +64,7 @@ final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPU
         $this->banner_retriever->method('getBanner')
             ->willReturn(new Banner('didymous Politburo', Banner::IMPORTANCE_STANDARD, null));
 
-        $this->renderer->expects(self::once())
+        $this->renderer->expects($this->once())
             ->method('renderAPresenter')
             ->with(
                 'Platform banner',

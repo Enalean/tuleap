@@ -54,7 +54,7 @@ final class PullRequestCreatorCheckerTest extends TestCase
     {
         $user = UserTestBuilder::anActiveUser()->build();
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting')
             ->willReturn(false);
 
@@ -72,7 +72,7 @@ final class PullRequestCreatorCheckerTest extends TestCase
     {
         $user = UserTestBuilder::anActiveUser()->build();
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting')
             ->willReturn(false);
 
@@ -154,7 +154,7 @@ final class PullRequestCreatorCheckerTest extends TestCase
     {
         $user = UserTestBuilder::anActiveUser()->build();
 
-        $this->dao->expects(self::once())
+        $this->dao->expects($this->once())
             ->method('isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting')
             ->willReturn(true);
 

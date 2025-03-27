@@ -125,7 +125,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('/path/to/pr');
 
-        $this->mail_builder->expects(self::once())
+        $this->mail_builder->expects($this->once())
             ->method('buildAndSendEmail')
             ->with(
                 self::anything(),

@@ -90,7 +90,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         $this->dao->method('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->willReturn([]);
-        $this->dao->expects(self::once())->method('saveFileOngoingUpload')->willReturn(12);
+        $this->dao->expects($this->once())->method('saveFileOngoingUpload')->willReturn(12);
 
         $document_to_upload = $this->creator->create(
             $this->release,

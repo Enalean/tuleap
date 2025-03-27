@@ -49,8 +49,8 @@ final class ArtifactRestUpdateConditionsCheckerTest extends \Tuleap\Test\PHPUnit
     public function testUpdateThrowsWhenThereWasAConcurrentModification(): void
     {
         $artifact = $this->createMock(Artifact::class);
-        $artifact->expects(self::once())->method('userCanUpdate')->willReturn(true);
-        $artifact->expects(self::once())->method('getLastUpdateDate')->willReturn(1500000000);
+        $artifact->expects($this->once())->method('userCanUpdate')->willReturn(true);
+        $artifact->expects($this->once())->method('getLastUpdateDate')->willReturn(1500000000);
 
         $_SERVER['HTTP_IF_UNMODIFIED_SINCE'] = '1234567890';
 

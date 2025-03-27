@@ -66,7 +66,7 @@ final class ChangesetFromXmlDisplayerTest extends TestCase
     public function testItReturnsAnEmptyStringIfUserWhoPerfomTheImportDoesNotExisit(): void
     {
         $this->dao->method('searchChangeset')->willReturn(['user_id' => 101, 'timestamp' => 123456789]);
-        $this->user_manager->expects(self::once())->method('getUserById')->willReturn(null);
+        $this->user_manager->expects($this->once())->method('getUserById')->willReturn(null);
         $this->renderer->expects(self::never())->method('renderToString');
 
         self::assertEquals('', $this->displayer->display(1234));
@@ -75,8 +75,8 @@ final class ChangesetFromXmlDisplayerTest extends TestCase
     public function testItRendersTheChangeset(): void
     {
         $this->dao->method('searchChangeset')->willReturn(['user_id' => 101, 'timestamp' => 123456789]);
-        $this->user_manager->expects(self::once())->method('getUserById')->willReturn(UserTestBuilder::aUser()->withUserName('user')->build());
-        $this->renderer->expects(self::once())->method('renderToString')->willReturn('Imported by user on 2020-04-20');
+        $this->user_manager->expects($this->once())->method('getUserById')->willReturn(UserTestBuilder::aUser()->withUserName('user')->build());
+        $this->renderer->expects($this->once())->method('renderToString')->willReturn('Imported by user on 2020-04-20');
 
         self::assertEquals('Imported by user on 2020-04-20', $this->displayer->display(1234));
     }

@@ -93,7 +93,7 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $this->user_manager->method('getCurrentUser')->willThrowException($exception);
-        $this->logger->expects(self::once())->method('debug');
+        $this->logger->expects($this->once())->method('debug');
 
         $this->expectException(InvalidAuthCredentials::class);
         $this->expectExceptionCode($expected_code);

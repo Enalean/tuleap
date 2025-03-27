@@ -77,7 +77,7 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsStatusSemanticWhenNoFreestyleMapping(): void
     {
         $field = ListFieldBuilder::aListField(133)->build();
-        $this->status_retriever->expects(self::once())
+        $this->status_retriever->expects($this->once())
             ->method('getField')
             ->with($this->user_stories_tracker)
             ->willReturn($field);

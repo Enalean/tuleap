@@ -49,7 +49,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         ]);
         $invalid_keys_collector = new InvalidKeysCollector();
 
-        $this->git_exec->expects(self::once())->method('push')->willReturn(true);
+        $this->git_exec->expects($this->once())->method('push')->willReturn(true);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
@@ -68,7 +68,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         ]);
         $invalid_keys_collector = new InvalidKeysCollector();
 
-        $this->git_exec->expects(self::once())->method('push')->willReturn(true);
+        $this->git_exec->expects($this->once())->method('push')->willReturn(true);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));

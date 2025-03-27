@@ -88,7 +88,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
         $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
 
         $this->project_retriever = $this->createMock(ProjectRetriever::class);
-        $this->project_retriever->expects(self::once())->method('getProjectFromId')
+        $this->project_retriever->expects($this->once())->method('getProjectFromId')
             ->with('101')
             ->willReturn($this->project);
 
@@ -115,7 +115,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
     public function testItRendersThePageWithCustomLicenseAgreement(): void
     {
         $content_renderer = $this->createMock(TemplateRenderer::class);
-        $content_renderer->expects(self::once())->method('renderToPage')->with('edit-license-agreement', self::anything());
+        $content_renderer->expects($this->once())->method('renderToPage')->with('edit-license-agreement', self::anything());
         $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
         }))->willReturn($content_renderer);
@@ -125,7 +125,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
 
         $license = new LicenseAgreement(1, 'some title', 'some content');
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn($license);
-        $this->factory->expects(self::once())->method('canBeDeleted')->with($this->project, $license)->willReturn(true);
+        $this->factory->expects($this->once())->method('canBeDeleted')->with($this->project, $license)->willReturn(true);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }
@@ -133,7 +133,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
     public function testItRendersTheDefaultSiteAgreementInReadOnly(): void
     {
         $content_renderer = $this->createMock(TemplateRenderer::class);
-        $content_renderer->expects(self::once())->method('renderToPage')->with('view-default-license-agreement', self::anything());
+        $content_renderer->expects($this->once())->method('renderToPage')->with('view-default-license-agreement', self::anything());
         $this->renderer_factory->method('getRenderer')->with(self::callback(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
         }))->willReturn($content_renderer);

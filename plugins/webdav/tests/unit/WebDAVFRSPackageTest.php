@@ -826,8 +826,8 @@ class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $frsrf = $this->createMock(\FRSReleaseFactory::class);
         $frsrf->method('isReleaseNameExist')->willReturn(false);
-        $frsrf->expects(self::once())->method('create')->with($refPackageToCreate)->willReturn(15);
-        $frsrf->expects(self::once())->method('setDefaultPermissions')->with(self::isInstanceOf(FRSRelease::class));
+        $frsrf->expects($this->once())->method('create')->with($refPackageToCreate)->willReturn(15);
+        $frsrf->expects($this->once())->method('setDefaultPermissions')->with(self::isInstanceOf(FRSRelease::class));
 
         $utils = $this->createMock(\WebDAVUtils::class);
         $utils->method('getReleaseFactory')->willReturn($frsrf);

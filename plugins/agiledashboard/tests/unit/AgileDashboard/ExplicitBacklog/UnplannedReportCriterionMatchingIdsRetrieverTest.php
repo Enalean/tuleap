@@ -70,7 +70,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 
     public function testItThrowsAnExceptionIfProjectIsNotInExplicitBacklog(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(false);
 
@@ -81,7 +81,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 
     public function testItReturnsTheMatchingIds(): void
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
 
@@ -100,7 +100,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 
     private function mockDataReturnedByDaos(): void
     {
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('getAllArtifactNotInTopBacklogInTracker')
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('getAllArtifactNotInTopBacklogInTracker')
             ->with(1)
             ->willReturn([
                 ['artifact_id' => 142],
@@ -109,7 +109,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
                 ['artifact_id' => 152],
             ]);
 
-        $this->planned_artifact_dao->expects(self::once())->method('gatAllPlannedArtifactsOfTheProject')
+        $this->planned_artifact_dao->expects($this->once())->method('gatAllPlannedArtifactsOfTheProject')
             ->with(101, 1)
             ->willReturn([
                 ['artifact_id' => 143],

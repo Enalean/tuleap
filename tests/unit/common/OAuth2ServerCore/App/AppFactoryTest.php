@@ -47,7 +47,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdThrowsWhenIDNotFoundInDatabase(): void
     {
-        $this->app_retriever->expects(self::once())->method('searchByClientId')->willReturn(null);
+        $this->app_retriever->expects($this->once())->method('searchByClientId')->willReturn(null);
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
 
         $this->expectException(OAuth2AppNotFoundException::class);
@@ -56,12 +56,12 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdThrowsWhenProjectNotFound(): void
     {
-        $this->app_retriever->expects(self::once())->method('searchByClientId')
+        $this->app_retriever->expects($this->once())->method('searchByClientId')
             ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 404, 'redirect_endpoint' => 'https://jenkins.example.com']
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-        $this->project_manager->expects(self::once())->method('getValidProject')
+        $this->project_manager->expects($this->once())->method('getValidProject')
             ->with(404)
             ->willThrowException(new \Project_NotFoundException());
 
@@ -71,13 +71,13 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdReturnsAnApp(): void
     {
-        $this->app_retriever->expects(self::once())->method('searchByClientId')
+        $this->app_retriever->expects($this->once())->method('searchByClientId')
             ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
         $project   = $this->createMock(\Project::class);
-        $this->project_manager->expects(self::once())->method('getValidProject')
+        $this->project_manager->expects($this->once())->method('getValidProject')
             ->with(102)
             ->willReturn($project);
 
@@ -87,7 +87,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetSiteLevelAppMatchingClientIdReturnsAnApp(): void
     {
-        $this->app_retriever->expects(self::once())->method('searchByClientId')
+        $this->app_retriever->expects($this->once())->method('searchByClientId')
             ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => null, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );

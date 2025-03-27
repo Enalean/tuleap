@@ -106,12 +106,12 @@ final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mediawiki_manager->method('getReadAccessControl')->willReturn([]);
         $this->mediawiki_manager->method('getWriteAccessControl')->willReturn([]);
 
-        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
+        $this->mediawiki_data_dir->expects($this->once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
-        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpUploads');
 
-        $this->zip->expects(self::once())->method('addFile');
+        $this->zip->expects($this->once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
@@ -139,12 +139,12 @@ final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
+        $this->mediawiki_data_dir->expects($this->once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
-        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpUploads');
 
-        $this->zip->expects(self::once())->method('addFile');
+        $this->zip->expects($this->once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
@@ -169,12 +169,12 @@ final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
+        $this->mediawiki_data_dir->expects($this->once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
-        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpUploads');
 
-        $this->zip->expects(self::once())->method('addFile');
+        $this->zip->expects($this->once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
@@ -199,12 +199,12 @@ final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->mediawiki_data_dir->expects(self::once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
+        $this->mediawiki_data_dir->expects($this->once())->method('getMediawikiDir')->willReturn(vfsStream::setup()->url());
 
-        $this->maintenance_wrapper->expects(self::once())->method('dumpBackupFull');
-        $this->maintenance_wrapper->expects(self::once())->method('dumpUploads');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpBackupFull');
+        $this->maintenance_wrapper->expects($this->once())->method('dumpUploads');
 
-        $this->zip->expects(self::once())->method('addFile');
+        $this->zip->expects($this->once())->method('addFile');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 

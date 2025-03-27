@@ -42,7 +42,7 @@ final class OAuth2AuthorizationFormResponseBuilderTest extends TestCase
     public function testItBuildsAuthorizationFormResponse(): void
     {
         $form_renderer = $this->createMock(AuthorizationFormRenderer::class);
-        $form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+        $form_renderer->expects($this->once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $form_response_builder = new OAuth2ConsentRequiredResponseBuilder(
             $form_renderer

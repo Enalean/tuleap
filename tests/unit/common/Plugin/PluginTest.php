@@ -146,7 +146,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
         $shortname = 'shortname';
         $pm        = $this->createMock(\PluginManager::class);
 
-        $pm->expects(self::once())->method('isACustomPlugin')->willReturn(false);
+        $pm->expects($this->once())->method('isACustomPlugin')->willReturn(false);
         $pm->method('getNameForPlugin')->willReturn($shortname);
         $p = $this->createPartialMock(\Plugin::class, [
             '_getPluginManager',
@@ -364,7 +364,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
             'isAllowed',
         ]);
         $plugin->method('getServiceShortname')->willReturn('fooservice');
-        $plugin->expects(self::once())->method('isAllowed')->willReturn(true);
+        $plugin->expects($this->once())->method('isAllowed')->willReturn(true);
         $services = [];
         $params   = [
             'project' => ProjectTestBuilder::aProject()->withId(101)->build(),
@@ -383,7 +383,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $plugin->method('getServiceShortname')->willReturn('fooservice');
         $plugin->setIsRestricted(true);
-        $plugin->expects(self::once())->method('isAllowed')->willReturn(true);
+        $plugin->expects($this->once())->method('isAllowed')->willReturn(true);
         $services = [];
         $params   = [
             'project' => ProjectTestBuilder::aProject()->withId(101)->build(),
@@ -401,7 +401,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
             'isAllowed',
         ]);
         $plugin->method('getServiceShortname')->willReturn('fooservice');
-        $plugin->expects(self::once())->method('isAllowed')->willReturn(false);
+        $plugin->expects($this->once())->method('isAllowed')->willReturn(false);
         $services = [];
         $params   = [
             'project' => ProjectTestBuilder::aProject()->withId(101)->build(),

@@ -28,8 +28,8 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v = new Valid();
         $v->disableFeedback();
         $r = $this->createMock(\Rule::class);
-        $r->expects(self::once())->method('isValid')->with('value');
-        $r->expects(self::once())->method('getErrorMessage')->willReturn('error');
+        $r->expects($this->once())->method('isValid')->with('value');
+        $r->expects($this->once())->method('getErrorMessage')->willReturn('error');
         $v->addRule($r);
         $v->validate('value');
     }
@@ -73,16 +73,16 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v->disableFeedback();
 
         $r1 = $this->createMock(\Rule::class);
-        $r1->expects(self::once())->method('isValid')->willReturn(true);
+        $r1->expects($this->once())->method('isValid')->willReturn(true);
         $v->addRule($r1);
 
         $r2 = $this->createMock(\Rule::class);
-        $r2->expects(self::once())->method('isValid')->willReturn(false);
+        $r2->expects($this->once())->method('isValid')->willReturn(false);
         $r2->method('getErrorMessage')->willReturn('error');
         $v->addRule($r2);
 
         $r3 = $this->createMock(\Rule::class);
-        $r3->expects(self::once())->method('isValid')->willReturn(true);
+        $r3->expects($this->once())->method('isValid')->willReturn(true);
         $v->addRule($r3);
 
         $v->validate('value');
@@ -95,7 +95,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $r = $this->createMock(\Rule::class);
         $r->method('isValid')->willReturn(false);
-        $r->expects(self::once())->method('getErrorMessage');
+        $r->expects($this->once())->method('getErrorMessage');
         $v->addRule($r);
 
         $v->validate('value');
@@ -139,7 +139,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRequiredEmptyCall(): void
     {
         $r1 = $this->createMock(\Rule::class);
-        $r1->expects(self::once())->method('isValid');
+        $r1->expects($this->once())->method('isValid');
         $r1->method('getErrorMessage')->willReturn('error');
         $v1 = new Valid();
         $v1->disableFeedback();
@@ -148,7 +148,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v1->validate('');
 
         $r2 = $this->createMock(\Rule::class);
-        $r2->expects(self::once())->method('isValid');
+        $r2->expects($this->once())->method('isValid');
         $r2->method('getErrorMessage')->willReturn('error');
         $v2 = new Valid();
         $v2->disableFeedback();
@@ -157,7 +157,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v2->validate(false);
 
         $r3 = $this->createMock(\Rule::class);
-        $r3->expects(self::once())->method('isValid');
+        $r3->expects($this->once())->method('isValid');
         $r3->method('getErrorMessage')->willReturn('error');
         $v3 = new Valid();
         $v3->disableFeedback();
@@ -208,7 +208,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFeedback(): void
     {
         $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
-        $v->expects(self::once())->method('addFeedback');
+        $v->expects($this->once())->method('addFeedback');
 
         $r = $this->createMock(\Rule::class);
         $r->method('isValid')->willReturn(false);
@@ -223,7 +223,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
         // Need to call the constructore manually
         $v->required();
-        $v->expects(self::once())->method('addFeedback')->with('error', 'error message');
+        $v->expects($this->once())->method('addFeedback')->with('error', 'error message');
 
         $r = $this->createMock(\Rule::class);
         $r->method('isValid')->willReturn(false);
@@ -236,7 +236,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFeedbackWarning(): void
     {
         $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
-        $v->expects(self::once())->method('addFeedback')->with('warning', 'error message');
+        $v->expects($this->once())->method('addFeedback')->with('warning', 'error message');
 
         $r = $this->createMock(\Rule::class);
         $r->method('isValid')->willReturn(false);
@@ -249,7 +249,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFeedbackGlobal(): void
     {
         $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
-        $v->expects(self::once())->method('addFeedback')->with('warning', 'custom message');
+        $v->expects($this->once())->method('addFeedback')->with('warning', 'custom message');
 
         $v->setErrorMessage('custom message');
 

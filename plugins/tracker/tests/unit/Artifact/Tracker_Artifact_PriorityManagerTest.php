@@ -59,66 +59,66 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
 
     public function testEnableExceptionsOnErrorProxiesToDao(): void
     {
-        $this->priority_dao->expects(self::once())->method('enableExceptionsOnError');
+        $this->priority_dao->expects($this->once())->method('enableExceptionsOnError');
         $this->priority_manager->enableExceptionsOnError();
     }
 
     public function testStartTransactionProxiesToDao(): void
     {
-        $this->priority_dao->expects(self::once())->method('startTransaction');
+        $this->priority_dao->expects($this->once())->method('startTransaction');
         $this->priority_manager->startTransaction();
     }
 
     public function testCommitProxiesToDao(): void
     {
-        $this->priority_dao->expects(self::once())->method('commit');
+        $this->priority_dao->expects($this->once())->method('commit');
         $this->priority_manager->commit();
     }
 
     public function testRollbackProxiesToDao(): void
     {
-        $this->priority_dao->expects(self::once())->method('rollBack');
+        $this->priority_dao->expects($this->once())->method('rollBack');
         $this->priority_manager->rollback();
     }
 
     public function testRemoveProxiesToDao(): void
     {
-        $this->priority_dao->expects(self::once())->method('remove')->with(58);
+        $this->priority_dao->expects($this->once())->method('remove')->with(58);
         $this->priority_manager->remove(58);
     }
 
     public function testGetGlobalRankReturnsInt(): void
     {
-        $this->priority_dao->expects(self::once())->method('getGlobalRank')->with(58)->willReturn(1994);
+        $this->priority_dao->expects($this->once())->method('getGlobalRank')->with(58)->willReturn(1994);
         self::assertEquals(1994, $this->priority_manager->getGlobalRank(58));
     }
 
     public function testGetGlobalRankReturnsNull(): void
     {
-        $this->priority_dao->expects(self::once())->method('getGlobalRank')->with(0)->willReturn(null);
+        $this->priority_dao->expects($this->once())->method('getGlobalRank')->with(0)->willReturn(null);
         self::assertNull($this->priority_manager->getGlobalRank(0));
     }
 
     public function testMoveArtifactAfterProxiesToDao(): void
     {
-        $this->priority_dao->expects(self::once())->method('moveArtifactAfter')->with(58, 123);
+        $this->priority_dao->expects($this->once())->method('moveArtifactAfter')->with(58, 123);
         $this->priority_manager->moveArtifactAfter(58, 123);
     }
 
     public function testMoveArtifactAfterWithHistoryChangeLogging(): void
     {
-        $this->priority_dao->expects(self::once())->method('moveArtifactAfter')->with(58, 123);
+        $this->priority_dao->expects($this->once())->method('moveArtifactAfter')->with(58, 123);
         $this->priority_dao->expects(self::exactly(2))->method('getGlobalRank')->with(58)->willReturnOnConsecutiveCalls(1000, 1042);
         $this->artifact_factory->method('getArtifactById')->with(58)->willReturn($this->mockMovedArtifact(58, true));
-        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithId(111));
-        $this->priority_history_dao->expects(self::once())->method('logPriorityChange');
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithId(111));
+        $this->priority_history_dao->expects($this->once())->method('logPriorityChange');
 
         $this->priority_manager->moveArtifactAfterWithHistoryChangeLogging(58, 123, 847, 102);
     }
 
     public function testMoveArtifactAfterWithHistoryChangeLoggingDoesNotLogWhenRankHasNotChanged(): void
     {
-        $this->priority_dao->expects(self::once())->method('moveArtifactAfter')->with(58, 123);
+        $this->priority_dao->expects($this->once())->method('moveArtifactAfter')->with(58, 123);
         $this->priority_dao->expects(self::exactly(2))->method('getGlobalRank')->with(58)->willReturn(1042);
         $this->priority_history_dao->expects(self::never())->method('logPriorityChange');
 
@@ -127,7 +127,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
 
     public function testMoveArtifactAfterWithHistoryChangeLoggingDoesNotLogWhenTrackerDoesNotShowPriorityChanges(): void
     {
-        $this->priority_dao->expects(self::once())->method('moveArtifactAfter')->with(58, 123);
+        $this->priority_dao->expects($this->once())->method('moveArtifactAfter')->with(58, 123);
         $this->priority_dao->expects(self::exactly(2))->method('getGlobalRank')->with(58)->willReturnOnConsecutiveCalls(1000, 1042);
         $this->artifact_factory->method('getArtifactById')->with(58)->willReturn($this->mockMovedArtifact(58, false));
         $this->priority_history_dao->expects(self::never())->method('logPriorityChange');
@@ -140,14 +140,14 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(123);
         $artifact = ArtifactTestBuilder::anArtifact($artifact_id)->inTracker($tracker)->build();
-        $tracker->expects(self::once())->method('arePriorityChangesShown')->willReturn($are_priority_changes_shown);
+        $tracker->expects($this->once())->method('arePriorityChangesShown')->willReturn($are_priority_changes_shown);
         return $artifact;
     }
 
     public function testMoveListOfArtifactsBefore(): void
     {
         $artifact_ids = [123, 789];
-        $this->priority_dao->expects(self::once())->method('getGlobalRanks')
+        $this->priority_dao->expects($this->once())->method('getGlobalRanks')
             ->with($artifact_ids)
             ->willReturn([
                 ['artifact_id' => 123, 'rank' => 1000],
@@ -157,7 +157,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
             123 => 2040,
             789 => 2041,
         });
-        $this->priority_dao->expects(self::once())->method('moveListOfArtifactsBefore')->with($artifact_ids, 456);
+        $this->priority_dao->expects($this->once())->method('moveListOfArtifactsBefore')->with($artifact_ids, 456);
         $this->artifact_factory->method('getArtifactById')->willReturnCallback(fn(int $id) => match ($id) {
             123 => $this->mockMovedArtifact(123, true),
             789 => $this->mockMovedArtifact(789, true)
@@ -171,7 +171,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
     public function testMoveListOfArtifactsBeforeDoesNotLogWhenRankHasNotChanged(): void
     {
         $artifact_ids = [123, 789];
-        $this->priority_dao->expects(self::once())->method('getGlobalRanks')
+        $this->priority_dao->expects($this->once())->method('getGlobalRanks')
             ->with($artifact_ids)
             ->willReturn([
                 ['artifact_id' => 123, 'rank' => 2040],
@@ -181,7 +181,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
             123 => 2040,
             789 => 2041,
         });
-        $this->priority_dao->expects(self::once())->method('moveListOfArtifactsBefore')->with($artifact_ids, 456);
+        $this->priority_dao->expects($this->once())->method('moveListOfArtifactsBefore')->with($artifact_ids, 456);
         $this->priority_history_dao->expects(self::never())->method('logPriorityChange');
 
         $this->priority_manager->moveListOfArtifactsBefore($artifact_ids, 456, 847, 102);
@@ -190,7 +190,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
     public function testMoveListOfArtifactsAfter(): void
     {
         $artifact_ids = [123, 789];
-        $this->priority_dao->expects(self::once())->method('getGlobalRanks')
+        $this->priority_dao->expects($this->once())->method('getGlobalRanks')
             ->with($artifact_ids)
             ->willReturn([
                 ['artifact_id' => 123, 'rank' => 1000],
@@ -200,7 +200,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
             123 => 2040,
             789 => 2041,
         });
-        $this->priority_dao->expects(self::once())->method('moveListOfArtifactsAfter')->with($artifact_ids, 456);
+        $this->priority_dao->expects($this->once())->method('moveListOfArtifactsAfter')->with($artifact_ids, 456);
         $this->artifact_factory->method('getArtifactById')->willReturnCallback(fn(int $id) => match ($id) {
             123 => $this->mockMovedArtifact(123, true),
             789 => $this->mockMovedArtifact(789, true),
@@ -214,7 +214,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
     public function testMoveListOfArtifactsAfterDoesNotLogWhenRankHasNotChanged(): void
     {
         $artifact_ids = [123, 789];
-        $this->priority_dao->expects(self::once())->method('getGlobalRanks')
+        $this->priority_dao->expects($this->once())->method('getGlobalRanks')
             ->with($artifact_ids)
             ->willReturn([
                 ['artifact_id' => 123, 'rank' => 2040],
@@ -224,7 +224,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
             123 => 2040,
             789 => 2041,
         });
-        $this->priority_dao->expects(self::once())->method('moveListOfArtifactsAfter')->with($artifact_ids, 456);
+        $this->priority_dao->expects($this->once())->method('moveListOfArtifactsAfter')->with($artifact_ids, 456);
         $this->priority_history_dao->expects(self::never())->method('logPriorityChange');
 
         $this->priority_manager->moveListOfArtifactsAfter($artifact_ids, 456, 847, 102);
@@ -232,21 +232,21 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
 
     public function testDeletePriorityReturnsTrueWhenHistoryIsUpdated(): void
     {
-        $this->priority_dao->expects(self::once())->method('remove')->with(58)->willReturn(true);
-        $this->priority_history_dao->expects(self::once())->method('deletePriorityChangesHistory')->with(58)->willReturn(true);
+        $this->priority_dao->expects($this->once())->method('remove')->with(58)->willReturn(true);
+        $this->priority_history_dao->expects($this->once())->method('deletePriorityChangesHistory')->with(58)->willReturn(true);
         self::assertTrue($this->priority_manager->deletePriority(ArtifactTestBuilder::anArtifact(58)->build()));
     }
 
     public function testDeletePriorityReturnsFalseWhenHistoryIsNotUpdated(): void
     {
-        $this->priority_dao->expects(self::once())->method('remove')->with(58)->willReturn(true);
-        $this->priority_history_dao->expects(self::once())->method('deletePriorityChangesHistory')->with(58)->willReturn(false);
+        $this->priority_dao->expects($this->once())->method('remove')->with(58)->willReturn(true);
+        $this->priority_history_dao->expects($this->once())->method('deletePriorityChangesHistory')->with(58)->willReturn(false);
         self::assertFalse($this->priority_manager->deletePriority(ArtifactTestBuilder::anArtifact(58)->build()));
     }
 
     public function testPutArtifactAtAGivenRankProxiesToDao(): void
     {
-        $this->priority_dao->expects(self::once())->method('putArtifactAtAGivenRank')->with(58, 1042);
+        $this->priority_dao->expects($this->once())->method('putArtifactAtAGivenRank')->with(58, 1042);
         $this->priority_manager->putArtifactAtAGivenRank(ArtifactTestBuilder::anArtifact(58)->build(), 1042);
     }
 }

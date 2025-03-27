@@ -80,7 +80,7 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
             ColumnTestBuilder::aColumn()->withLabel('columns')->build(),
         ]);
         $column_factory->method('getDashboardColumns')->with($tracker)->willReturn($columns);
-        $tracker_mapping_factory->expects(self::once())->method('getMappings')->with($tracker, $columns)->willReturn('whatever');
+        $tracker_mapping_factory->expects($this->once())->method('getMappings')->with($tracker, $columns)->willReturn('whatever');
 
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
         self::assertEquals('whatever', $config->getMappings());

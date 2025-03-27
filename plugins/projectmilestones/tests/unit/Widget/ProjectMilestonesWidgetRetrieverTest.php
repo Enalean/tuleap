@@ -86,7 +86,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetGoodTitleWhenThereIsProject(): void
     {
-        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
+        $this->project_access_checker->expects($this->once())->method('checkUserCanAccessProject');
         $title = $this->retriever->getTitle($this->project, $this->user);
 
         self::assertStringContainsString('MyProject Milestones', $title);
@@ -101,7 +101,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetGenericTitleWhenUserCanNotAccesProject(): void
     {
-        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
+        $this->project_access_checker->expects($this->once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
         $title = $this->retriever->getTitle($this->project, $this->user);
 
         self::assertStringContainsString('Project Milestones', $title);
@@ -110,7 +110,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     public function testGetRendererContentWhenThereIsProject(): void
     {
         $this->presenter_builder->method('getProjectMilestonePresenter')->willReturn($this->createMock(ProjectMilestonesPresenter::class));
-        $this->template_rendered->expects(self::once())->method('renderToString')->willReturn('');
+        $this->template_rendered->expects($this->once())->method('renderToString')->willReturn('');
         $this->retriever->getContent($this->project, $this->root_planning);
     }
 
@@ -132,16 +132,16 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetProjectMilestonesPreferencesWhenUserCanSeeProject(): void
     {
-        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
-        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn('');
+        $this->project_access_checker->expects($this->once())->method('checkUserCanAccessProject');
+        $this->template_rendered->expects($this->once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn('');
 
         $this->retriever->getPreferences(10, $this->project, $this->user, $this->csrf_token);
     }
 
     public function testGetProjectMilestonesPreferencesWithoutProjectWhenUserCanSeeProject(): void
     {
-        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
-        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn('');
+        $this->project_access_checker->expects($this->once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
+        $this->template_rendered->expects($this->once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn('');
 
         $this->retriever->getPreferences(10, $this->project, $this->user, $this->csrf_token);
     }

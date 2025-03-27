@@ -226,9 +226,9 @@ final class ReferenceManagerTest extends TestCase
         $group_id = 101;
         $from     = 'bug';
         $to       = 'task';
-        $ref_dao->expects(self::once())->method('updateProjectReferenceShortName')->with($group_id, $from, $to);
-        $cross_dao->expects(self::once())->method('updateTargetKeyword')->with($from, $to, $group_id);
-        $cross_dao->expects(self::once())->method('updateSourceKeyword')->with($from, $to, $group_id);
+        $ref_dao->expects($this->once())->method('updateProjectReferenceShortName')->with($group_id, $from, $to);
+        $cross_dao->expects($this->once())->method('updateTargetKeyword')->with($from, $to, $group_id);
+        $cross_dao->expects($this->once())->method('updateSourceKeyword')->with($from, $to, $group_id);
 
         $this->rm->updateProjectReferenceShortName($group_id, $from, $to);
     }

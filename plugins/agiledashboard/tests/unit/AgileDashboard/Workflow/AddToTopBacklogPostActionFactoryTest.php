@@ -75,7 +75,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
 
     public function testItBuildsThePostAction()
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
 
@@ -95,7 +95,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
 
     public function testItDoesNotBuildThePostActionIfProjectDoesNotUseExplicitTopBacklogManagement()
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(false);
 
@@ -107,7 +107,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
 
     public function testItWarmsTheCacheUpBeforeGettingThePostAction()
     {
-        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
 

@@ -78,7 +78,7 @@ final class ClientWrapperTest extends TestCase
         $client           = new PluginClient($client_interface);
 
         $this->client_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildHTTPClient')
             ->with($credentials)
             ->willReturn($client);
@@ -86,7 +86,7 @@ final class ClientWrapperTest extends TestCase
         $bare_request = $this->createMock(RequestInterface::class);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createRequest')
             ->with('DELETE', 'https://gitlab.example.com/api/v4/url')
             ->willReturn($bare_request);
@@ -94,7 +94,7 @@ final class ClientWrapperTest extends TestCase
         $request = $this->createMock(RequestInterface::class);
 
         $bare_request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('withHeader')
             ->with('Content-Type', 'application/json')
             ->willReturn($request);
@@ -104,7 +104,7 @@ final class ClientWrapperTest extends TestCase
         $response->method('getReasonPhrase')->willReturn($reason);
 
         $client_interface
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('sendRequest')
             ->with($request)
             ->willReturn($response);
@@ -126,7 +126,7 @@ final class ClientWrapperTest extends TestCase
         $client           = new PluginClient($client_interface);
 
         $this->client_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildHTTPClient')
             ->with($credentials)
             ->willReturn($client);
@@ -134,7 +134,7 @@ final class ClientWrapperTest extends TestCase
         $bare_request = $this->createMock(RequestInterface::class);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createRequest')
             ->with('DELETE', 'https://gitlab.example.com/api/v4/url')
             ->willReturn($bare_request);
@@ -142,7 +142,7 @@ final class ClientWrapperTest extends TestCase
         $request = $this->createMock(RequestInterface::class);
 
         $bare_request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('withHeader')
             ->with('Content-Type', 'application/json')
             ->willReturn($request);
@@ -150,7 +150,7 @@ final class ClientWrapperTest extends TestCase
         $response = HTTPFactoryBuilder::responseFactory()->createResponse()->withStatus($status_code, $reason);
 
         $client_interface
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('sendRequest')
             ->with($request)
             ->willReturn($response);
@@ -168,7 +168,7 @@ final class ClientWrapperTest extends TestCase
         $client           = new PluginClient($client_interface);
 
         $this->client_factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildHTTPClient')
             ->with($credentials)
             ->willReturn($client);
@@ -176,7 +176,7 @@ final class ClientWrapperTest extends TestCase
         $bare_request = $this->createMock(RequestInterface::class);
 
         $this->factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createRequest')
             ->with('DELETE', 'https://gitlab.example.com/api/v4/url')
             ->willReturn($bare_request);
@@ -184,13 +184,13 @@ final class ClientWrapperTest extends TestCase
         $request = $this->createMock(RequestInterface::class);
 
         $bare_request
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('withHeader')
             ->with('Content-Type', 'application/json')
             ->willReturn($request);
 
         $client_interface
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('sendRequest')
             ->with($request)
             ->willThrowException(new class extends \Exception implements ClientExceptionInterface {

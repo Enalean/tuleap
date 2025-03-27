@@ -77,7 +77,7 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+        $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->with($user, 17)
             ->willReturn(null);
 
@@ -90,9 +90,9 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+        $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->willReturn(12);
-        $this->scope_dao->expects(self::once())->method('searchScopes')
+        $this->scope_dao->expects($this->once())->method('searchScopes')
             ->with(12)
             ->willReturn(['foo:bar', 'type:value']);
 
@@ -106,9 +106,9 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+        $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->willReturn(12);
-        $this->scope_dao->expects(self::once())->method('searchScopes')
+        $this->scope_dao->expects($this->once())->method('searchScopes')
             ->with(12)
             ->willReturn(['flob:wobble', 'type:value']);
 

@@ -26,7 +26,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $response = $this->createPartialMock(\Response::class, [
             'setContentType',
         ]);
-        $response->expects(self::once())->method('setContentType')->with('application/json');
+        $response->expects($this->once())->method('setContentType')->with('application/json');
 
         ob_start();
         $response->sendJSON(['toto']);

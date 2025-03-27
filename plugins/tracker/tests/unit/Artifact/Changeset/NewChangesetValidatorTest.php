@@ -153,11 +153,11 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new CreatedFileURLMapping(),
         );
 
-        $this->fields_initializator->expects(self::once())->method('process');
+        $this->fields_initializator->expects($this->once())->method('process');
 
-        $this->workflow->expects(self::once())->method('validate');
-        $this->workflow->expects(self::once())->method('before');
-        $this->workflow->expects(self::once())->method('checkGlobalRules');
+        $this->workflow->expects($this->once())->method('validate');
+        $this->workflow->expects($this->once())->method('before');
+        $this->workflow->expects($this->once())->method('checkGlobalRules');
 
         $this->new_changeset_validator->validateNewChangeset(
             $new_changeset,

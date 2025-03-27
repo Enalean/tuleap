@@ -88,7 +88,7 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNothingWhenNoStatusSemantic(): void
     {
         $this->verify_mapping_exists = VerifyMappingExistsStub::withNoMapping();
-        $this->status_retriever->expects(self::once())
+        $this->status_retriever->expects($this->once())
             ->method('getField')
             ->with($this->user_stories_tracker)
             ->willReturn(null);
@@ -101,7 +101,7 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(225)->build()
         )->withStaticValues([])->build()->getField();
-        $this->status_retriever->expects(self::once())
+        $this->status_retriever->expects($this->once())
             ->method('getField')
             ->with($this->user_stories_tracker)
             ->willReturn($status_field);
@@ -114,7 +114,7 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_field = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(975)->thatIsRequired()->build()
         )->withStaticValues([564 => 'Todo', 756 => self::ON_GOING_COLUMN_LABEL])->build()->getField();
-        $this->status_retriever->expects(self::once())
+        $this->status_retriever->expects($this->once())
             ->method('getField')
             ->with($this->user_stories_tracker)
             ->willReturn($status_field);

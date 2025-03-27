@@ -206,7 +206,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
         $history_dao
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addHistory');
 
         $controller = $this->buildController(
@@ -464,7 +464,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
             ->method('addHistory');
 
         $invitation_sender
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('send')
             ->willThrowException(new UnableToSendInvitationsException());
 
@@ -656,7 +656,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
         $invitation_sender
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('send')
             ->with(
                 $from_user,
@@ -709,7 +709,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
     ): ManageProjectInvitationsController {
         $csrf_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $csrf_provider
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCSRF')
             ->willReturn($token);
 

@@ -91,7 +91,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request([]);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(false);
 
@@ -109,7 +109,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request([]);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -134,7 +134,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request([]);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -152,7 +152,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'unchanged']);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -170,11 +170,11 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'remove']);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
 
         $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(false);
@@ -189,11 +189,11 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'remove']);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
+        $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
         $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
 
         $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(true);
@@ -208,7 +208,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'add']);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 
@@ -235,7 +235,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
         $request = new Codendi_Request(['masschange-action-explicit-backlog' => 'whatever']);
 
         $this->tracker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('userIsAdmin')
             ->willReturn(true);
 

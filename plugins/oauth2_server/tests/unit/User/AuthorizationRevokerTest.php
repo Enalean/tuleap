@@ -57,7 +57,7 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesAuthorizationExistReturnsTrue(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+        $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->with($user, 13)
             ->willReturn(46);
 
@@ -67,7 +67,7 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesAuthorizationExistReturnsFalse(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+        $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->with($user, 13)
             ->willReturn(null);
 
@@ -77,8 +77,8 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRevokeAppAuthorization(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->authorization_dao->expects(self::once())->method('deleteAuthorizationByUserAndAppID')->with($user, 12);
-        $this->auth_code_dao->expects(self::once())->method('deleteAuthorizationCodeByUserAndAppID')->with($user, 12);
+        $this->authorization_dao->expects($this->once())->method('deleteAuthorizationByUserAndAppID')->with($user, 12);
+        $this->auth_code_dao->expects($this->once())->method('deleteAuthorizationCodeByUserAndAppID')->with($user, 12);
 
         $this->authorization_revoker->revokeAppAuthorization($user, 12);
     }
