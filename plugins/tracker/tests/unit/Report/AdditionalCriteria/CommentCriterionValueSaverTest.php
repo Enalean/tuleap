@@ -19,41 +19,31 @@
 
 namespace Tuleap\Tracker\Report\AdditionalCriteria;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Report_AdditionalCriterion;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentCriterionValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|null
-     */
-    private $report;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CommentDao
-     */
-    private $dao;
-    /**
-     * @var CommentCriterionValueSaver;
-     */
-    private $saver;
+    private \Tracker_Report $report;
+    private CommentDao&MockObject $dao;
+    private CommentCriterionValueSaver $saver;
 
     protected function setUp(): void
     {
-        $this->dao   = \Mockery::mock(CommentDao::class);
+        $this->dao   = $this->createMock(CommentDao::class);
         $this->saver = new CommentCriterionValueSaver($this->dao);
 
-        $this->report = \Mockery::spy(\Tracker_Report::class)->shouldReceive('getId')->andReturns(1)->getMock();
+        $this->report = ReportTestBuilder::aPublicReport()->build();
     }
 
     public function testItSavesNewValue(): void
     {
         $criterion = new Tracker_Report_AdditionalCriterion('comment', 'my text');
 
-        $this->dao->shouldReceive('save')->with(1, 'my text')->once();
-        $this->dao->shouldReceive('delete')->never();
+        $this->dao->expects($this->once())->method('save')->with(101, 'my text');
+        $this->dao->expects($this->never())->method('delete');
 
         $this->saver->saveValueForReport($this->report, $criterion);
     }
@@ -62,8 +52,8 @@ final class CommentCriterionValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $criterion = new Tracker_Report_AdditionalCriterion('comment', '');
 
-        $this->dao->shouldReceive('save')->never();
-        $this->dao->shouldReceive('delete')->with(1)->once();
+        $this->dao->expects($this->never())->method('save');
+        $this->dao->expects($this->once())->method('delete')->with(101);
 
         $this->saver->saveValueForReport($this->report, $criterion);
     }

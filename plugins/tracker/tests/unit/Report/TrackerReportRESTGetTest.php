@@ -21,43 +21,32 @@
 
 declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
 final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Report_REST
-     */
-    private $report;
-    /**
-     * @var int
-     */
-    private $tracker_id;
-
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
+    private Tracker_Report_REST $report;
+    private int $tracker_id = 444;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
+    private PFUser $current_user;
 
 
     protected function setUp(): void
     {
-        $current_user              = \Mockery::spy(\PFUser::class);
-        $permissions_manager       = \Mockery::spy(\PermissionsManager::class);
-        $dao                       = \Mockery::spy(\Tracker_ReportDao::class);
-        $tracker                   = \Mockery::spy(\Tracker::class);
-        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
 
-        $this->tracker_id = 444;
-        $tracker->shouldReceive('getId')->andReturns($this->tracker_id);
+        $this->current_user = UserTestBuilder::buildWithDefaults();
 
         $this->report = new Tracker_Report_REST(
-            $current_user,
-            $tracker,
-            $permissions_manager,
-            $dao,
+            $this->current_user,
+            TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build(),
+            $this->createMock(PermissionsManager::class),
+            $this->createMock(Tracker_ReportDao::class),
             $this->formelement_factory
         );
 
@@ -79,63 +68,73 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testItChoosesTheFormElementIdOverTheShortName(): void
     {
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_field')->andReturns(null);
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_other_field')->andReturns(null);
-        $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns(
-            \Mockery::spy(\Tracker_FormElement_Field_Integer::class)
-        );
-        $this->formelement_factory->shouldReceive('getFormElementByName')->times(2)->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
+        $this->formelement_factory->method('getFormElementById')->willReturnCallback(fn (mixed $id) => match ($id) {
+            137 => IntFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
+            default => null,
+        });
+        $this->formelement_factory
+            ->expects($this->exactly(2))
+            ->method('getFormElementByName')
+            ->willReturn(
+                IntFieldBuilder::anIntField(1001)
+                    ->withReadPermission($this->current_user, true)
+                    ->build()
+            );
 
         $this->report->getCriteria();
     }
 
     public function testItThrowExceptionIfGivenFormelementsDontExist(): void
     {
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_field')->andReturns(null);
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_other_field')->andReturns(null);
-        $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns(
-            \Mockery::spy(\Tracker_FormElement_Field::class)
-        );
-        $this->formelement_factory->shouldReceive('getFormElementByName')->times(2)->andReturn(null);
-         $this->expectException(Tracker_Report_InvalidRESTCriterionException::class);
+        $this->formelement_factory->method('getFormElementById')->willReturnCallback(fn (mixed $id) => match ($id) {
+            137 => IntFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
+            default => null,
+        });
+        $this->formelement_factory
+            ->expects($this->exactly(2))
+            ->method('getFormElementByName')
+            ->willReturn(null);
+
+        $this->expectException(Tracker_Report_InvalidRESTCriterionException::class);
 
         $this->report->getCriteria();
     }
 
     public function testItFetchesByNameIfTheFormElementByIdDoesNotExist(): void
     {
-        $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns(null)->once();
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 137)->once()->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
+        $this->formelement_factory->expects($this->exactly(3))->method('getFormElementById')->willReturn(null);
 
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_field')->andReturns(null)->once();
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 'my_field')->once()->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
-
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_other_field')->andReturns(null)->once(
-        );
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 'my_other_field')->once()->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
+        $this->formelement_factory->expects($this->exactly(3))->method('getFormElementByName')
+            ->willReturnCallback(fn (int $tracker_id, mixed $name) => match (true) {
+                $tracker_id === 444 && $name === 137 => IntFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
+                $tracker_id === 444 && $name === 'my_field' => IntFieldBuilder::anIntField(1001)->withReadPermission($this->current_user, true)->build(),
+                $tracker_id === 444 && $name === 'my_other_field' => IntFieldBuilder::anIntField(1002)->withReadPermission($this->current_user, true)->build(),
+            });
 
         $this->report->getCriteria();
     }
 
     public function testItOnlyAddsCriteriaOnFieldsUserCanSee(): void
     {
-        $field_1 = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
-        $field_2 = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
-        $field_3 = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
+        $field_1 = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field_2 = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field_3 = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_field')->andReturns($field_1);
-        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_other_field')->andReturns($field_2);
-        $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns($field_3);
+        $this->formelement_factory->method('getFormElementById')->willReturnCallback(fn (mixed $id) => match ($id) {
+            'my_field' => $field_1,
+            'my_other_field' => $field_2,
+            137 => $field_3,
+        });
 
-        $field_1->shouldReceive('userCanRead')->andReturns(false);
-        $field_2->shouldReceive('userCanRead')->andReturns(false);
-        $field_3->shouldReceive('userCanRead')->andReturns(true);
+        $field_1->method('userCanRead')->willReturn(false);
+        $field_2->method('userCanRead')->willReturn(false);
+        $field_3->method('userCanRead')->willReturn(true);
 
-        $field_1->shouldReceive('getId')->andReturns(111);
-        $field_2->shouldReceive('getId')->andReturns(222);
-        $field_3->shouldReceive('getId')->andReturns(333);
+        $field_1->method('getId')->willReturn(111);
+        $field_2->method('getId')->willReturn(222);
+        $field_3->method('getId')->willReturn(333);
 
-        $field_3->shouldReceive('setCriteriaValueFromREST')->andReturns(true);
+        $field_3->method('setCriteriaValueFromREST')->willReturn(true);
 
         $criteria = $this->report->getCriteria();
 
@@ -147,23 +146,25 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testItAddsCriteria(): void
     {
-        $integer = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
-        $integer->shouldReceive('getId')->andReturns(22);
-        $integer->shouldReceive('userCanRead')->andReturns(true);
+        $integer = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $integer->method('getId')->willReturn(22);
+        $integer->method('userCanRead')->willReturn(true);
 
-        $label = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $label->shouldReceive('getId')->andReturns(44);
-        $label->shouldReceive('userCanRead')->andReturns(true);
+        $label = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $label->method('getId')->willReturn(44);
+        $label->method('userCanRead')->willReturn(true);
 
-        $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns($integer);
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with(
-            $this->tracker_id,
-            'my_field'
-        )->andReturns($label);
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with($this->tracker_id, 'my_other_field')->andReturns(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
+        $this->formelement_factory->method('getFormElementById')->willReturnCallback(fn (mixed $id) => match ($id) {
+            137 => $integer,
+            default => null,
+        });
+        $this->formelement_factory->method('getFormElementByName')->willReturnCallback(fn (int $tracker_id, mixed $name) => match ($name) {
+            'my_field' => $label,
+            'my_other_field' => IntFieldBuilder::anIntField(1001)->withReadPermission($this->current_user, false)->build(),
+        });
 
-        $integer->shouldReceive('setCriteriaValueFromREST')->once()->andReturns(true);
-        $label->shouldReceive('setCriteriaValueFromREST')->once()->andReturns(false);
+        $integer->expects($this->once())->method('setCriteriaValueFromREST')->willReturn(true);
+        $label->expects($this->once())->method('setCriteriaValueFromREST')->willReturn(false);
 
         $criteria = $this->report->getCriteria();
 

@@ -20,10 +20,8 @@
  */
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Report_ResultJoinerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Report_ResultJoinerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItRemovesEntriesWhoseKeysAreNotPresentInOtherResult(): void
     {
         $matching_ids = [123 => 'whatever', 456 => 'whatever', 789 => 'whatever'];

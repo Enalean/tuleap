@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
@@ -32,23 +31,15 @@ use function PHPUnit\Framework\assertInstanceOf;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentFromWhereBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private CommentFromWhereBuilderFactory $factory;
 
-    /**
-     * @var CommentFromWhereBuilderFactory
-     */
-    private $factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PermissionChecker
-     */
-    private $permission_checker;
+    private PermissionChecker&MockObject $permission_checker;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->permission_checker = Mockery::mock(PermissionChecker::class);
+        $this->permission_checker = $this->createMock(PermissionChecker::class);
 
         $this->factory = new CommentFromWhereBuilderFactory(
             $this->permission_checker
@@ -57,11 +48,11 @@ final class CommentFromWhereBuilderFactoryTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItBuildsAnObjectWithPrivateChecksIfNeeded(): void
     {
-        $this->permission_checker->shouldReceive('privateCheckMustBeDoneForUser')->andReturnTrue();
+        $this->permission_checker->method('privateCheckMustBeDoneForUser')->willReturn(true);
 
         $builder = $this->factory->buildCommentFromWhereBuilderForTracker(
             UserTestBuilder::aUser()->build(),
-            Mockery::mock(Tracker::class)
+            $this->createMock(Tracker::class)
         );
 
         assertInstanceOf(CommentWithPrivateCheckFromWhereBuilder::class, $builder);
@@ -69,11 +60,11 @@ final class CommentFromWhereBuilderFactoryTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItBuildsAnObjectWithoutPrivateChecksIfNotNeeded(): void
     {
-        $this->permission_checker->shouldReceive('privateCheckMustBeDoneForUser')->andReturnFalse();
+        $this->permission_checker->method('privateCheckMustBeDoneForUser')->willReturn(false);
 
         $builder = $this->factory->buildCommentFromWhereBuilderForTracker(
             UserTestBuilder::aUser()->build(),
-            Mockery::mock(Tracker::class)
+            $this->createMock(Tracker::class)
         );
 
         assertInstanceOf(CommentWithoutPrivateCheckFromWhereBuilder::class, $builder);

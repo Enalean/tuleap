@@ -23,49 +23,61 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\CSVExport;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private \PFUser $user;
+
+    protected function setUp(): void
+    {
+        $this->user = UserTestBuilder::buildWithDefaults();
+
+        $manager = $this->createMock(\UserManager::class);
+        $manager->method('getCurrentUser')->willReturn($this->user);
+        \UserManager::setInstance($manager);
+    }
+
+    protected function tearDown(): void
+    {
+        \UserManager::clearInstance();
+    }
 
     public function testUnusedFieldsAreNotExportedInCSV(): void
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $field->shouldReceive('isUsed')->andReturnFalse();
+        $field = IntFieldBuilder::anIntField(1)->unused()->build();
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 
     public function testUserCantExportFieldHeCanNotReadInCSV(): void
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $field->shouldReceive('isUsed')->andReturnTrue();
-        $field->shouldReceive('userCanRead')->andReturnFalse();
+        $field = IntFieldBuilder::anIntField(1)->withReadPermission($this->user, false)->build();
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 
     public function testBurndownFieldIsNotExportedInCSV(): void
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class);
-        $field->shouldReceive('isUsed')->andReturnTrue();
-        $field->shouldReceive('userCanRead')->andReturnTrue();
+        $field = $this->createMock(\Tracker_FormElement_Field_Burndown::class);
+        $field->method('isUsed')->willReturn(true);
+        $field->method('userCanRead')->willReturn(true);
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 
     public function testArtifactIdIsNotExportedInCSV(): void
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactId::class);
-        $field->shouldReceive('isUsed')->andReturnTrue();
-        $field->shouldReceive('userCanRead')->andReturnTrue();
+        $field = $this->createMock(\Tracker_FormElement_Field_ArtifactId::class);
+        $field->method('isUsed')->willReturn(true);
+        $field->method('userCanRead')->willReturn(true);
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 
     public function testPerTrackerIdFieldIsExportedInCSV(): void
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_PerTrackerArtifactId::class);
-        $field->shouldReceive('isUsed')->andReturnTrue();
-        $field->shouldReceive('userCanRead')->andReturnTrue();
+        $field = $this->createMock(\Tracker_FormElement_Field_PerTrackerArtifactId::class);
+        $field->method('isUsed')->willReturn(true);
+        $field->method('userCanRead')->willReturn(true);
         $this->assertTrue(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 }

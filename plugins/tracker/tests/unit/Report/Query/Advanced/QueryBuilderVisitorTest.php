@@ -19,13 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ParagonIE\EasyDB\EasyDB;
-use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Integer;
-use Tracker_FormElement_Field_Selectbox;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
@@ -43,103 +37,47 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\CommentWithoutPrivateCheckFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var  QueryBuilderVisitor */
-    private $query_builder;
-    /**
-     * @var QueryBuilderParameters
-     */
-    private $parameters;
+    private QueryBuilderVisitor $query_builder;
+    private QueryBuilderParameters $parameters;
 
     protected function setUp(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker          = TrackerTestBuilder::aTracker()->withId(101)->build();
         $this->parameters = new QueryBuilderParameters($tracker, UserTestBuilder::buildWithDefaults());
-        $field_text       = new Tracker_FormElement_Field_Text(
-            1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-        );
-        $int_field        = new Tracker_FormElement_Field_Integer(
-            2,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-        );
-        $float_field      = new \Tracker_FormElement_Field_Float(
-            3,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-        );
-        $date_field       = new Tracker_FormElement_Field_Date(
-            4,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-        );
-        $bind             = new \Tracker_FormElement_Field_List_Bind_Static(
-            5,
-            null,
-            null,
-            null,
-            null
-        );
-        $selectbox_field  = new Tracker_FormElement_Field_Selectbox(
-            6,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-        );
 
-        $formelement_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $formelement_factory->shouldReceive('getUsedFieldByName')->with(101, 'field')->andReturn($field_text);
-        $formelement_factory->shouldReceive('getUsedFieldByName')->with(101, 'int')->andReturn($int_field);
-        $formelement_factory->shouldReceive('getUsedFieldByName')->with(101, 'float')->andReturn($float_field);
-        $formelement_factory->shouldReceive('getUsedFieldByName')->with(101, 'date')->andReturn($date_field);
-        $formelement_factory->shouldReceive('getUsedFieldByName')->with(101, 'sb')->andReturn($selectbox_field);
+        $formelement_factory = RetrieveUsedFieldsStub::withFields(
+            TextFieldBuilder::aTextField(1)
+                ->inTracker($tracker)
+                ->withName('field')
+                ->build(),
+            IntFieldBuilder::anIntField(2)
+                ->inTracker($tracker)
+                ->withName('int')
+                ->build(),
+            FloatFieldBuilder::aFloatField(3)
+                ->inTracker($tracker)
+                ->withName('float')
+                ->build(),
+            DateFieldBuilder::aDateField(4)
+                ->inTracker($tracker)
+                ->withName('date')
+                ->build(),
+            ListFieldBuilder::aListField(6)
+                ->inTracker($tracker)
+                ->withName('sb')
+                ->build(),
+        );
 
         $db = $this->createMock(EasyDB::class);
         $db->method('escapeLikeValue')->willReturnArgument(0);
@@ -172,9 +110,9 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesInAndExpressionTheExpertFromAndWhereClausesOfTheSubexpression(): void
     {
         $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
-        $comparison = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where);
+        $comparison = $this->createMock(EqualComparison::class);
+        $comparison->method('acceptTermVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where);
 
         $and_expression = new AndExpression($comparison);
 
@@ -187,12 +125,12 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where_expression = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $from_where_tail       = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
-        $comparison            = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_expression);
-        $tail = \Mockery::mock(AndOperand::class);
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_tail);
+        $comparison            = $this->createMock(EqualComparison::class);
+        $comparison->method('acceptTermVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_expression);
+        $tail = $this->createMock(AndOperand::class);
+        $tail->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_tail);
 
         $and_expression = new AndExpression($comparison, $tail);
 
@@ -205,9 +143,9 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesInAndOperandTheExpertFromAndWhereClausesOfTheSubexpression(): void
     {
         $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
-        $comparison = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where);
+        $comparison = $this->createMock(EqualComparison::class);
+        $comparison->method('acceptTermVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where);
 
         $and_operand = new AndOperand($comparison);
 
@@ -220,12 +158,12 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where_operand = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $from_where_tail    = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
-        $comparison         = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_operand);
-        $tail = \Mockery::mock(AndOperand::class);
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_tail);
+        $comparison         = $this->createMock(EqualComparison::class);
+        $comparison->method('acceptTermVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_operand);
+        $tail = $this->createMock(AndOperand::class);
+        $tail->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_tail);
 
         $and_operand = new AndOperand($comparison, $tail);
 
@@ -238,9 +176,9 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesInOrOperandTheExpertFromAndWhereClausesOfTheOperand(): void
     {
         $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
-        $expression = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where);
+        $expression = $this->createMock(AndExpression::class);
+        $expression->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where);
 
         $and_operand = new OrOperand($expression);
 
@@ -253,12 +191,12 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where_operand = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $from_where_tail    = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
-        $expression         = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_operand);
-        $tail = Mockery::mock(OrOperand::class);
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_tail);
+        $expression         = $this->createMock(AndExpression::class);
+        $expression->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_operand);
+        $tail = $this->createMock(OrOperand::class);
+        $tail->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_tail);
 
         $or_operand = new OrOperand($expression, $tail);
 
@@ -271,9 +209,9 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesInOrExpressionTheExpertFromAndWhereClausesOfTheOperand(): void
     {
         $from_where = new ParametrizedFromWhere('le_from', 'le_where', [], []);
-        $expression = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where);
+        $expression = $this->createMock(AndExpression::class);
+        $expression->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where);
 
         $or_expression = new OrExpression($expression);
 
@@ -286,12 +224,12 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where_operand = new ParametrizedFromWhere('le_from', 'le_where', [], []);
         $from_where_tail    = new ParametrizedFromWhere('le_from_tail', 'le_where_tail', [], []);
-        $expression         = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_operand);
-        $tail = Mockery::mock(OrOperand::class);
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
-            ->andReturn($from_where_tail);
+        $expression         = $this->createMock(AndExpression::class);
+        $expression->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_operand);
+        $tail = $this->createMock(OrOperand::class);
+        $tail->method('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
+            ->willReturn($from_where_tail);
 
         $or_expression = new OrExpression($expression, $tail);
 

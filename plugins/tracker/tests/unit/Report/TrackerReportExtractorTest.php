@@ -21,108 +21,114 @@
 
 namespace Tuleap\Tracker\Report;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerReportExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerReportExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const TRACKER_ID = 1;
 
-    private $tracker_id_1;
-    /**
-     * @var \Project
-     */
-    private $project;
-    /**
-     * @var \Tracker
-     */
-    private $tracker_1;
-    /**
-     * @var TrackerReportExtractor
-     */
-    private $extractor;
-    /**
-     * @var \TrackerFactory
-     */
-    private $tracker_factory;
-
-    public function setUp(): void
+    public function testItDoesNotExtractTrackerUserCanNotView(): void
     {
-        parent::setUp();
+        $project = ProjectTestBuilder::aProject()
+            ->withStatusActive()
+            ->build();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject($project)
+            ->withId(self::TRACKER_ID)
+            ->withUserCanView(false)
+            ->build();
 
-        $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->with(self::TRACKER_ID)->willReturn($tracker);
 
-        $this->extractor = new TrackerReportExtractor($this->tracker_factory);
-
-        $this->project      = \Mockery::spy(\Project::class);
-        $this->tracker_id_1 = 1;
-        $this->tracker_1    = \Mockery::spy(\Tracker::class);
-        $this->tracker_1->shouldReceive('getId')->andReturn($this->tracker_id_1);
-    }
-
-    public function testItDoesNotExtractTrackerUserCanNotView()
-    {
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($this->tracker_id_1)->andReturn($this->tracker_1);
-        $this->tracker_1->shouldReceive('userCanView')->andReturn(false);
-        $this->tracker_1->shouldReceive('isDeleted')->andReturn(false);
-        $this->tracker_1->shouldReceive('getProject')->andReturn($this->project);
-        $this->project->shouldReceive('isActive')->andReturn(true);
+        $extractor = new TrackerReportExtractor($tracker_factory);
 
         $expected_result = [];
-        $this->assertEquals(
+        self::assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers([$this->tracker_id_1])
+            $extractor->extractTrackers([self::TRACKER_ID])
         );
     }
 
-    public function testItDoesNotExtractDeletedTrackers()
+    public function testItDoesNotExtractDeletedTrackers(): void
     {
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($this->tracker_id_1)->andReturn($this->tracker_1);
-        $this->tracker_1->shouldReceive('userCanView')->andReturn(true);
-        $this->tracker_1->shouldReceive('isDeleted')->andReturn(true);
+        $project = ProjectTestBuilder::aProject()
+            ->withStatusActive()
+            ->build();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject($project)
+            ->withId(self::TRACKER_ID)
+            ->withUserCanView(true)
+            ->withDeletionDate(1234567890)
+            ->build();
+
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->with(self::TRACKER_ID)->willReturn($tracker);
+
+        $extractor = new TrackerReportExtractor($tracker_factory);
 
         $expected_result = [];
-        $this->assertEquals(
+        self::assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers([$this->tracker_id_1])
+            $extractor->extractTrackers([self::TRACKER_ID])
         );
     }
 
-    public function testItDoesNotExtractTrackerOfNonActiveProjects()
+    public function testItDoesNotExtractTrackerOfNonActiveProjects(): void
     {
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($this->tracker_id_1)->andReturn($this->tracker_1);
-        $this->tracker_1->shouldReceive('userCanView')->andReturn(true);
-        $this->tracker_1->shouldReceive('isDeleted')->andReturn(false);
-        $this->tracker_1->shouldReceive('getProject')->andReturn($this->project);
-        $this->project->shouldReceive('isActive')->andReturn(false);
+        $project = ProjectTestBuilder::aProject()
+            ->withStatusDeleted()
+            ->build();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject($project)
+            ->withId(self::TRACKER_ID)
+            ->withUserCanView(true)
+            ->build();
+
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->with(self::TRACKER_ID)->willReturn($tracker);
+
+        $extractor = new TrackerReportExtractor($tracker_factory);
 
         $expected_result = [];
-        $this->assertEquals(
+        self::assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers([$this->tracker_id_1])
+            $extractor->extractTrackers([self::TRACKER_ID])
         );
     }
 
-    public function testItThrowAnExceptionWhenTrackerIsNotFound()
+    public function testItThrowAnExceptionWhenTrackerIsNotFound(): void
     {
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($this->tracker_id_1)->andReturn(null);
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->with(self::TRACKER_ID)->willReturn(null);
 
         $this->expectException('Tuleap\Tracker\Report\TrackerNotFoundException');
-        $this->extractor->extractTrackers([$this->tracker_id_1]);
+
+        $extractor = new TrackerReportExtractor($tracker_factory);
+        $extractor->extractTrackers([self::TRACKER_ID]);
     }
 
-    public function testItExtractsTrackers()
+    public function testItExtractsTrackers(): void
     {
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($this->tracker_id_1)->andReturn($this->tracker_1);
-        $this->tracker_1->shouldReceive('userCanView')->andReturn(true);
-        $this->tracker_1->shouldReceive('isDeleted')->andReturn(false);
-        $this->tracker_1->shouldReceive('getProject')->andReturn($this->project);
-        $this->project->shouldReceive('isActive')->andReturn(true);
+        $project = ProjectTestBuilder::aProject()
+            ->withStatusActive()
+            ->build();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject($project)
+            ->withId(self::TRACKER_ID)
+            ->withUserCanView(true)
+            ->build();
 
-        $expected_result = [$this->tracker_1];
-        $this->assertEquals(
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->with(self::TRACKER_ID)->willReturn($tracker);
+        $extractor = new TrackerReportExtractor($tracker_factory);
+
+        $expected_result = [$tracker];
+        self::assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers([$this->tracker_id_1])
+            $extractor->extractTrackers([self::TRACKER_ID])
         );
     }
 }
