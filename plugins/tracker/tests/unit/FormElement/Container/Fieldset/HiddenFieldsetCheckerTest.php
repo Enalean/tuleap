@@ -18,113 +18,97 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FieldsetContainerBuilder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class HiddenFieldsetCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class HiddenFieldsetCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var HiddenFieldsetChecker
-     */
-    private $checker;
-
-    private $detector;
-    private $fields_extractor;
-    private $fieldset;
-    private $artifact;
+    private HiddenFieldsetChecker $checker;
+    private HiddenFieldsetsDetector&MockObject $detector;
+    private FieldsExtractor&MockObject $fields_extractor;
+    private Tracker_FormElement_Container_Fieldset $fieldset;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->detector         = Mockery::mock(HiddenFieldsetsDetector::class);
-        $this->fields_extractor = Mockery::mock(FieldsExtractor::class);
+        $this->detector         = $this->createMock(HiddenFieldsetsDetector::class);
+        $this->fields_extractor = $this->createMock(FieldsExtractor::class);
 
         $this->checker = new HiddenFieldsetChecker(
             $this->detector,
             $this->fields_extractor
         );
 
-        $this->fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $this->artifact = Mockery::mock(Artifact::class);
+        $this->fieldset = FieldsetContainerBuilder::aFieldset(69753)->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(14865)->build();
     }
 
-    public function testFieldsetIsHiddenIfConfiguredInState()
+    public function testFieldsetIsHiddenIfConfiguredInState(): void
     {
-        $this->detector->shouldReceive('isFieldsetHidden')
-            ->with($this->artifact, $this->fieldset)
-            ->once()
-            ->andReturnTrue();
+        $this->detector->expects(self::once())->method('isFieldsetHidden')
+            ->with($this->artifact, $this->fieldset)->willReturn(true);
 
-        $field = Mockery::mock(Tracker_FormElement_Field::class);
-        $field->shouldReceive('isRequired')->andReturnFalse();
-        $field->shouldReceive('isUsedInFieldDependency')->andReturnFalse();
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('isRequired')->willReturn(false);
+        $field->method('isUsedInFieldDependency')->willReturn(false);
 
-        $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
-            ->with($this->fieldset)
-            ->once()
-            ->andReturn([$field]);
+        $this->fields_extractor->expects(self::once())->method('extractFieldsInsideContainer')
+            ->with($this->fieldset)->willReturn([$field]);
 
-        $this->assertTrue($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
+        self::assertTrue($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
     }
 
-    public function testFieldsetIsNotHiddenIfItContainsAMandatoryField()
+    public function testFieldsetIsNotHiddenIfItContainsAMandatoryField(): void
     {
-        $this->detector->shouldReceive('isFieldsetHidden')
-            ->with($this->artifact, $this->fieldset)
-            ->once()
-            ->andReturnTrue();
+        $this->detector->expects(self::once())->method('isFieldsetHidden')
+            ->with($this->artifact, $this->fieldset)->willReturn(true);
 
-        $field = Mockery::mock(Tracker_FormElement_Field::class);
-        $field->shouldReceive('isRequired')->andReturnTrue();
-        $field->shouldReceive('isUsedInFieldDependency')->andReturnFalse();
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('isRequired')->willReturn(true);
+        $field->method('isUsedInFieldDependency')->willReturn(false);
 
-        $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
-            ->with($this->fieldset)
-            ->once()
-            ->andReturn([$field]);
+        $this->fields_extractor->expects(self::once())->method('extractFieldsInsideContainer')
+            ->with($this->fieldset)->willReturn([$field]);
 
-        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
+        self::assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
     }
 
-    public function testFieldsetIsNotHiddenIfNotConfiguredInState()
+    public function testFieldsetIsNotHiddenIfNotConfiguredInState(): void
     {
-        $this->detector->shouldReceive('isFieldsetHidden')
-            ->with($this->artifact, $this->fieldset)
-            ->once()
-            ->andReturnFalse();
+        $this->detector->expects(self::once())->method('isFieldsetHidden')
+            ->with($this->artifact, $this->fieldset)->willReturn(false);
 
-        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
+        self::assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
     }
 
-    public function testFieldsetIsNotHiddenIfContainsFieldUsedInFieldDependency()
+    public function testFieldsetIsNotHiddenIfContainsFieldUsedInFieldDependency(): void
     {
-        $this->detector->shouldReceive('isFieldsetHidden')
-            ->with($this->artifact, $this->fieldset)
-            ->once()
-            ->andReturnTrue();
+        $this->detector->expects(self::once())->method('isFieldsetHidden')
+            ->with($this->artifact, $this->fieldset)->willReturn(true);
 
-        $field = Mockery::mock(Tracker_FormElement_Field::class);
-        $field->shouldReceive('isUsedInFieldDependency')->andReturnTrue();
-        $field->shouldReceive('isRequired')->andReturnFalse();
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('isUsedInFieldDependency')->willReturn(true);
+        $field->method('isRequired')->willReturn(false);
 
-        $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
-            ->with($this->fieldset)
-            ->once()
-            ->andReturn([$field]);
+        $this->fields_extractor->expects(self::once())->method('extractFieldsInsideContainer')
+            ->with($this->fieldset)->willReturn([$field]);
 
-        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
+        self::assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
     }
 }

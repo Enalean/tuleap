@@ -18,38 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Container;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_FormElement_Container;
-use Tracker_FormElement_Container_Column;
-use Tracker_FormElement_Field;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FieldsetContainerBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FieldsExtractorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FieldsExtractor
-     */
-    private $extractor;
+    private FieldsExtractor $extractor;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->extractor = new FieldsExtractor();
     }
 
-    public function testItExtractsFieldsDirectlyInsideTheContainer()
+    public function testItExtractsFieldsDirectlyInsideTheContainer(): void
     {
-        $field_01 = Mockery::mock(Tracker_FormElement_Field::class);
-        $field_02 = Mockery::mock(Tracker_FormElement_Field::class);
+        $field_01 = IntFieldBuilder::anIntField(1)->build();
+        $field_02 = IntFieldBuilder::anIntField(2)->build();
 
-        $container = Mockery::mock(Tracker_FormElement_Container::class);
-        $container->shouldReceive('getFormElements')->andReturn([$field_01, $field_02]);
+        $container = FieldsetContainerBuilder::aFieldset(1486)->containsFormElements($field_01, $field_02)->build();
 
         self::assertSame(
             [$field_01, $field_02],
@@ -57,22 +51,17 @@ class FieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItExtractsFieldsDirectlyInsideTheContainerAndInsideContainerIntoContainer()
+    public function testItExtractsFieldsDirectlyInsideTheContainerAndInsideContainerIntoContainer(): void
     {
-        $field_01 = Mockery::mock(Tracker_FormElement_Field::class);
-        $field_02 = Mockery::mock(Tracker_FormElement_Field::class);
-        $field_03 = Mockery::mock(Tracker_FormElement_Field::class);
+        $field_01 = IntFieldBuilder::anIntField(1)->build();
+        $field_02 = IntFieldBuilder::anIntField(2)->build();
+        $field_03 = IntFieldBuilder::anIntField(3)->build();
 
-        $column_01 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_02 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_03 = Mockery::mock(Tracker_FormElement_Container_Column::class);
+        $column_02 = ColumnContainerBuilder::aColumn(12)->containsFormElements($field_02)->build();
+        $column_03 = ColumnContainerBuilder::aColumn(13)->containsFormElements($field_03)->build();
+        $column_01 = ColumnContainerBuilder::aColumn(11)->containsFormElements($column_02, $column_03)->build();
 
-        $column_01->shouldReceive('getFormElements')->andReturn([$column_02, $column_03]);
-        $column_02->shouldReceive('getFormElements')->andReturn([$field_02]);
-        $column_03->shouldReceive('getFormElements')->andReturn([$field_03]);
-
-        $container = Mockery::mock(Tracker_FormElement_Container::class);
-        $container->shouldReceive('getFormElements')->andReturn([$field_01, $column_01]);
+        $container = FieldsetContainerBuilder::aFieldset(14)->containsFormElements($field_01, $column_01)->build();
 
         self::assertSame(
             [$field_01, $field_02, $field_03],
