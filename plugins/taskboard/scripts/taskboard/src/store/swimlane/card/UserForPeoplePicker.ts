@@ -18,8 +18,6 @@
  */
 
 import type { DataFormat } from "tlp";
+import type { User } from "../../../type";
 
-export interface UserForPeoplePicker extends DataFormat {
-    avatar_url: string;
-    label: string;
-}
+export type UserForPeoplePicker = User & DataFormat;

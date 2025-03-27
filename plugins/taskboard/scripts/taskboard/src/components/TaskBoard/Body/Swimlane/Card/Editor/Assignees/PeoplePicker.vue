@@ -19,14 +19,13 @@
   -->
 
 <template>
-    <select class="tlp-input" style="width: 100%">
+    <select ref="selector" class="tlp-input" style="width: 100%">
         <option v-if="!is_multiple"></option>
     </select>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { onMounted, onBeforeUnmount, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type {
     DataFormat,
     GroupedDataFormat,
@@ -39,97 +38,106 @@ import { select2 } from "tlp";
 import $ from "jquery";
 import DOMPurify from "dompurify";
 import mustache from "mustache";
-import type { UserForPeoplePicker } from "./type";
+import type { UserForPeoplePicker } from "../../../../../../../store/swimlane/card/UserForPeoplePicker";
 
-@Component
-export default class PeoplePicker extends Vue {
-    @Prop({ required: true })
-    readonly is_multiple!: boolean;
+const { $gettext } = useGettext();
 
-    @Prop({ required: true })
-    readonly users!: UserForPeoplePicker[];
+const props = defineProps<{
+    is_multiple: boolean;
+    users: UserForPeoplePicker[];
+}>();
 
-    @Prop({ required: true })
-    readonly value!: number[];
+const emit = defineEmits<{
+    (e: "input", user_ids: number[]): void;
+}>();
 
-    select2_people_picker: Select2Plugin | null = null;
+let select2_people_picker: Select2Plugin | null = null;
 
-    mounted(): void {
-        const placeholder = this.is_multiple
-            ? { text: this.$gettext("John"), id: "0" }
-            : this.$gettext("Please choose…");
+const selector = ref<HTMLSelectElement>();
 
-        const configuration: Options = {
-            allowClear: true,
-            data: this.users,
-            multiple: this.is_multiple,
-            placeholder,
-            escapeMarkup: DOMPurify.sanitize,
-            templateResult: this.formatUser,
-            templateSelection: this.formatUserWhenSelected,
-        };
+onMounted(() => {
+    const placeholder = props.is_multiple
+        ? { text: $gettext("John"), id: "0" }
+        : $gettext("Please choose…");
 
-        this.select2_people_picker = select2(this.$el, configuration);
+    const configuration: Options = {
+        allowClear: true,
+        data: props.users,
+        multiple: props.is_multiple,
+        placeholder,
+        escapeMarkup: DOMPurify.sanitize,
+        templateResult: formatUser,
+        templateSelection: formatUserWhenSelected,
+    };
 
-        $(this.$el).on("change", this.onChange).select2("open");
+    if (!selector.value) {
+        return;
+    }
+    select2_people_picker = select2(selector.value, configuration);
+
+    $(selector.value).on("change", onChange).select2("open");
+});
+
+onBeforeUnmount(() => {
+    if (select2_people_picker !== null && selector.value) {
+        $(selector.value).off().select2("destroy");
+    }
+});
+
+function onChange(): void {
+    if (!selector.value) {
+        return;
+    }
+    let selected_ids: string[];
+    const val: string | number | string[] | undefined = $(selector.value).val();
+    if (!val) {
+        selected_ids = [];
+    } else if (typeof val === "string" || typeof val === "number") {
+        selected_ids = [`${val}`];
+    } else {
+        selected_ids = val;
     }
 
-    destroyed(): void {
-        if (this.select2_people_picker !== null) {
-            $(this.$el).off().select2("destroy");
-        }
+    const selected_ids_as_number: number[] = selected_ids.map((id) => Number(id));
+
+    emit("input", selected_ids_as_number);
+}
+
+function formatUser(user: DataFormat | GroupedDataFormat | LoadingData): string {
+    if (!isForPeoplePicker(user)) {
+        return "";
     }
 
-    onChange(): void {
-        let selected_ids: string[];
-        const val: string | number | string[] | undefined = $(this.$el).val();
-        if (!val) {
-            selected_ids = [];
-        } else if (typeof val === "string" || typeof val === "number") {
-            selected_ids = [`${val}`];
-        } else {
-            selected_ids = val;
-        }
-
-        const selected_ids_as_number: number[] = selected_ids.map((id) => Number(id));
-
-        this.$emit("input", selected_ids_as_number);
-    }
-
-    formatUser(user: DataFormat | GroupedDataFormat | LoadingData): string {
-        if (!this.isForPeoplePicker(user)) {
-            return "";
-        }
-
-        return mustache.render(
-            `<div class="select2-result-user">
-                <div class="tlp-avatar-mini select2-result-user__avatar">
-                    <img src="{{ avatar_url }}" loading="lazy">
-                </div>
-                {{ display_name }}
-            </div>`,
-            user,
-        );
-    }
-
-    isForPeoplePicker(user: IdTextPair | DataFormat | GroupedDataFormat | LoadingData): boolean {
-        return "avatar_url" in user;
-    }
-
-    formatUserWhenSelected(
-        user: IdTextPair | LoadingData | DataFormat | GroupedDataFormat,
-    ): string {
-        if (!this.isForPeoplePicker(user)) {
-            return user.text;
-        }
-
-        return mustache.render(
-            `<div class="tlp-avatar-mini">
+    return mustache.render(
+        `<div class="select2-result-user">
+            <div class="tlp-avatar-mini select2-result-user__avatar">
                 <img src="{{ avatar_url }}" loading="lazy">
             </div>
-            {{ display_name }}`,
-            user,
-        );
+            {{ display_name }}
+        </div>`,
+        user,
+    );
+}
+
+function isForPeoplePicker(
+    user: IdTextPair | DataFormat | GroupedDataFormat | LoadingData,
+): boolean {
+    return "avatar_url" in user;
+}
+
+function formatUserWhenSelected(
+    user: IdTextPair | LoadingData | DataFormat | GroupedDataFormat,
+): string {
+    if (!isForPeoplePicker(user)) {
+        return user.text;
     }
+
+    return mustache.render(
+        `<div class="tlp-avatar-mini">
+            <img src="{{ avatar_url }}" loading="lazy">
+        </div>
+        {{ display_name }}`,
+        user,
+    );
 }
 </script>

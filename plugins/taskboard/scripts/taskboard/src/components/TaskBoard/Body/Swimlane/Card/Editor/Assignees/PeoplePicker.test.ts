@@ -21,7 +21,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PeoplePicker from "./PeoplePicker.vue";
 import { createTaskboardLocalVue } from "../../../../../../../helpers/local-vue-for-test";
-import type { UserForPeoplePicker } from "../../../../../../../store/swimlane/card/type";
+import type { UserForPeoplePicker } from "../../../../../../../store/swimlane/card/UserForPeoplePicker";
 
 const mocked_jquery = {
     select2: jest.fn(),
@@ -34,7 +34,7 @@ jest.mock("jquery", () => {
     return (): Record<string, jest.SpyInstance> => mocked_jquery;
 });
 
-async function getWrapper(is_multiple = true): Promise<Wrapper<PeoplePicker>> {
+async function getWrapper(is_multiple = true): Promise<Wrapper<Vue>> {
     return shallowMount(PeoplePicker, {
         localVue: await createTaskboardLocalVue(),
         propsData: {

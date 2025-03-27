@@ -19,7 +19,7 @@
 
 import type { SwimlaneState } from "../type";
 import type { Tracker } from "../../../type";
-import type { UserForPeoplePicker } from "./type";
+import type { UserForPeoplePicker } from "./UserForPeoplePicker";
 
 export const have_possible_assignees_been_loaded_for_tracker =
     (state: SwimlaneState) =>

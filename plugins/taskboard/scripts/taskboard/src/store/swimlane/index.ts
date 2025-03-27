@@ -23,7 +23,7 @@ import * as getters from "./swimlane-getters";
 import type { SwimlaneState } from "./type";
 import type { Module } from "vuex";
 import type { RootState } from "../type";
-import type { UserForPeoplePicker } from "./card/type";
+import type { UserForPeoplePicker } from "./card/UserForPeoplePicker";
 
 const swimlane_module_default: Module<SwimlaneState, RootState> = {
     namespaced: true,

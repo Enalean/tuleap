@@ -26,9 +26,8 @@ import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-te
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../../../../store/type";
-import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
+import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/UserForPeoplePicker";
 
-jest.mock("tlp");
 jest.useFakeTimers();
 
 async function getWrapper(

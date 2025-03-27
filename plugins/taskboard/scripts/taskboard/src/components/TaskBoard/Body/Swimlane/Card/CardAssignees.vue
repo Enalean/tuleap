@@ -59,7 +59,7 @@ import { ref, watch, computed } from "vue";
 import { useNamespacedActions, useNamespacedGetters } from "vuex-composition-helpers";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { Card, Tracker, User } from "../../../../../type";
-import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
+import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/UserForPeoplePicker";
 import UserAvatar from "./UserAvatar.vue";
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
 
@@ -172,7 +172,7 @@ const users = computed((): UserForPeoplePicker[] => {
     return possible_users.value.map((user): UserForPeoplePicker => {
         const selected = props.card.assignees.some((selected_user) => selected_user.id === user.id);
 
-        return { ...user, selected };
+        return { ...user, text: user.display_name, selected };
     });
 });
 
