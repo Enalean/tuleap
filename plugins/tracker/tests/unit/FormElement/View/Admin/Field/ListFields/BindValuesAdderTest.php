@@ -22,42 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\View\Admin\Field\ListFields;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class BindValuesAdderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BindValuesAdderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_List
-     */
-    private $field;
-    /**
-     * @var BindValuesAdder
-     */
-    private $adder;
+    private Tracker_FormElement_Field_List $field;
+    private BindValuesAdder $adder;
 
     protected function setUp(): void
     {
         $this->adder = new BindValuesAdder();
-        $this->field = \Mockery::mock(\Tracker_FormElement_Field_List::class);
+        $this->field = ListFieldBuilder::aListField(145345)->build();
     }
 
     public function testItAlwaysReturnsAllValuesWithNone(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturnFalse();
-
-        $value = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $value = ListStaticValueBuilder::aStaticValue('chocolat')->build();
 
         $result = $this->adder->addNoneValue([$value]);
 
         $expected_values = [new Tracker_FormElement_Field_List_Bind_StaticValue_None(), $value];
 
-        $this->assertInstanceOf(Tracker_FormElement_Field_List_Bind_StaticValue_None::class, $expected_values[0]);
+        self::assertInstanceOf(Tracker_FormElement_Field_List_Bind_StaticValue_None::class, $expected_values[0]);
         self::assertSame($expected_values[1], $result[1]);
     }
 }

@@ -22,42 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\View\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Reference\CrossReferenceByDirectionPresenter;
 use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CrossReferenceFieldPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class CrossReferenceFieldPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsThePresenter(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $by_direction_builder = Mockery::mock(CrossReferenceByDirectionPresenterBuilder::class);
+        $by_direction_builder = $this->createMock(CrossReferenceByDirectionPresenterBuilder::class);
 
         $by_direction_presenter = new CrossReferenceByDirectionPresenter([], []);
-        $by_direction_builder->shouldReceive('build')
-            ->with('123', 'plugin_tracker_artifact', 102, $user)
-            ->andReturn($by_direction_presenter);
+        $by_direction_builder->method('build')->with('123', 'plugin_tracker_artifact', 102, $user)->willReturn($by_direction_presenter);
 
         $builder = new CrossReferenceFieldPresenterBuilder($by_direction_builder);
 
-        $artifact = Mockery::mock(Artifact::class)
-            ->shouldReceive(
-                [
-                    'getXRef'    => 'art #123',
-                    'getId'      => 123,
-                    'getTracker' => Mockery::mock(Tracker::class)
-                        ->shouldReceive(['getGroupId' => 102])
-                        ->getMock(),
-                ]
-            )->getMock();
+        $artifact = ArtifactTestBuilder::anArtifact(123)
+            ->inTracker(
+                TrackerTestBuilder::aTracker()
+                    ->withProject(ProjectTestBuilder::aProject()->withId(102)->build())
+                    ->withShortName('art')
+                    ->build()
+            )
+            ->build();
 
         $presenter = $builder->build(true, $artifact, $user);
         self::assertEquals($by_direction_presenter, $presenter->by_direction);
