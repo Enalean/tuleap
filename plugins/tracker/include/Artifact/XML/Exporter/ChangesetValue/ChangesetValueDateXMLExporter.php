@@ -30,17 +30,11 @@ use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 
 class ChangesetValueDateXMLExporter extends ChangesetValueXMLExporter
 {
-    /**
-     * @var FieldChangeDateBuilder
-     */
-    private $field_change_date_builder;
-
-    public function __construct(FieldChangeDateBuilder $field_change_date_builder)
+    public function __construct(private readonly FieldChangeDateBuilder $field_change_date_builder)
     {
-        $this->field_change_date_builder = $field_change_date_builder;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return Tracker_FormElementFactory::FIELD_DATE_TYPE;
     }
@@ -50,7 +44,7 @@ class ChangesetValueDateXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
 
         $changeset_date_time = (new DateTimeImmutable())->setTimestamp((int) $changeset_value->getTimestamp());

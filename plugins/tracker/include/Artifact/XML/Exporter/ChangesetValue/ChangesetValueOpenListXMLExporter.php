@@ -28,17 +28,11 @@ use UserXMLExporter;
 
 class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
 {
-    /**
-     * @var UserXMLExporter
-     */
-    private $user_xml_exporter;
-
-    public function __construct(UserXMLExporter $user_xml_exporter)
+    public function __construct(private readonly UserXMLExporter $user_xml_exporter)
     {
-        $this->user_xml_exporter = $user_xml_exporter;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return 'open_list';
     }
@@ -48,7 +42,7 @@ class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
@@ -78,7 +72,7 @@ class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
         }
     }
 
-    private function appendValue($value, SimpleXMLElement $field_xml, $bind_type)
+    private function appendValue($value, SimpleXMLElement $field_xml, $bind_type): void
     {
         if ($bind_type === 'users') {
             $this->appendUserValueToFieldChangeNode($value, $field_xml);
@@ -87,31 +81,31 @@ class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
         }
     }
 
-    private function appendUserValueToFieldChangeNode($value, SimpleXMLElement $field_xml)
+    private function appendUserValueToFieldChangeNode($value, SimpleXMLElement $field_xml): void
     {
         $user_id = $this->getUserIdFromValue($value);
 
         $this->user_xml_exporter->exportUserByUserId($user_id, $field_xml, 'value');
     }
 
-    private function getUserIdFromValue($value)
+    private function getUserIdFromValue($value): int
     {
         return (int) substr($value, 1);
     }
 
-    private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml)
+    private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml): void
     {
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'id']);
     }
 
-    private function appendOpenValueLabelToFieldChangeNode($value, SimpleXMLElement $field_xml)
+    private function appendOpenValueLabelToFieldChangeNode($value, SimpleXMLElement $field_xml): void
     {
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'label']);
     }
 
-    private function isValueAnOpenValue($value)
+    private function isValueAnOpenValue($value): bool
     {
         return substr($value, 0, 1) === Tracker_FormElement_Field_List_OpenValue::OPEN_PREFIX;
     }

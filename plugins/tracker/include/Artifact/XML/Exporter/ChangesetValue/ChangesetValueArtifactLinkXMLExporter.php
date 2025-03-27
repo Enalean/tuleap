@@ -30,25 +30,13 @@ use XML_SimpleXMLCDATAFactory;
 
 class ChangesetValueArtifactLinkXMLExporter extends ChangesetValueXMLExporter
 {
-    /**
-     * @var PFUser
-     */
-    private $current_user;
-
-    /**
-     * @var Tracker_XML_ChildrenCollector
-     */
-    private $children_collector;
-
     public function __construct(
-        Tracker_XML_ChildrenCollector $children_collector,
-        PFUser $current_user,
+        private readonly Tracker_XML_ChildrenCollector $children_collector,
+        private readonly PFUser $current_user,
     ) {
-        $this->children_collector = $children_collector;
-        $this->current_user       = $current_user;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return 'art_link';
     }
@@ -58,7 +46,7 @@ class ChangesetValueArtifactLinkXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $field_xml = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
@@ -70,7 +58,7 @@ class ChangesetValueArtifactLinkXMLExporter extends ChangesetValueXMLExporter
             array_walk(
                 $values,
                 function (Tracker_ArtifactLinkInfo $artifact_link_info, $index, $userdata) {
-                    $this->appendValueToFieldChangeNode($artifact_link_info, $index, $userdata);
+                    $this->appendValueToFieldChangeNode($artifact_link_info, $userdata);
                 },
                 [
                     'field_xml' => $field_xml,
@@ -83,9 +71,8 @@ class ChangesetValueArtifactLinkXMLExporter extends ChangesetValueXMLExporter
 
     private function appendValueToFieldChangeNode(
         Tracker_ArtifactLinkInfo $artifact_link_info,
-        $index,
         $userdata,
-    ) {
+    ): void {
         $field_xml = $userdata['field_xml'];
         $artifact  = $userdata['artifact'];
 
@@ -101,7 +88,7 @@ class ChangesetValueArtifactLinkXMLExporter extends ChangesetValueXMLExporter
         }
     }
 
-    private function canExportLinkedArtifact(Tracker_ArtifactLinkInfo $artifact_link_info)
+    private function canExportLinkedArtifact(Tracker_ArtifactLinkInfo $artifact_link_info): bool
     {
         return $artifact_link_info->userCanView($this->current_user);
     }

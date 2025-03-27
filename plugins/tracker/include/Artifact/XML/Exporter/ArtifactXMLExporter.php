@@ -24,23 +24,12 @@ use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class ArtifactXMLExporter
+readonly class ArtifactXMLExporter
 {
-    /**
-     * @var ChangesetXMLExporter
-     */
-    private $changeset_exporter;
-    /**
-     * @var FileInfoXMLExporter
-     */
-    private $file_info_xml_exporter;
-
     public function __construct(
-        ChangesetXMLExporter $changeset_exporter,
-        FileInfoXMLExporter $file_info_xml_exporter,
+        private ChangesetXMLExporter $changeset_exporter,
+        private FileInfoXMLExporter $file_info_xml_exporter,
     ) {
-        $this->changeset_exporter     = $changeset_exporter;
-        $this->file_info_xml_exporter = $file_info_xml_exporter;
     }
 
     /**
@@ -49,7 +38,7 @@ class ArtifactXMLExporter
     public function exportSnapshotWithoutComments(
         SimpleXMLElement $artifacts_xml,
         Tracker_Artifact_Changeset $changeset,
-    ) {
+    ): SimpleXMLElement {
         $artifact_xml = $artifacts_xml->addChild('artifact');
         $artifact_xml->addAttribute('id', $changeset->getArtifact()->getId());
         $artifact_xml->addAttribute('tracker_id', $changeset->getArtifact()->getTrackerId());
@@ -66,7 +55,7 @@ class ArtifactXMLExporter
     public function exportFullHistory(
         SimpleXMLElement $artifacts_xml,
         Artifact $artifact,
-    ) {
+    ): void {
         $artifact_xml = $artifacts_xml->addChild('artifact');
         $artifact_xml->addAttribute('id', $artifact->getId());
 

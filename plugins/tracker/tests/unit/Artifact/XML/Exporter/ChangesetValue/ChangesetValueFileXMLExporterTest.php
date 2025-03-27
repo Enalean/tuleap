@@ -34,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FileInfoXMLExporter&MockObject $file_exporter;
 

@@ -26,16 +26,10 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use XML_SimpleXMLCDATAFactory;
 
-class FieldChangeArtifactLinksBuilder
+readonly class FieldChangeArtifactLinksBuilder
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $simple_xml_cdata_factory;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $simple_xml_cdata_factory)
+    public function __construct(private XML_SimpleXMLCDATAFactory $simple_xml_cdata_factory)
     {
-        $this->simple_xml_cdata_factory = $simple_xml_cdata_factory;
     }
 
     /**

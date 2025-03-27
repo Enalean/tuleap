@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetValuePermissionsOnArtifactXMLExporter extends ChangesetValueXMLExporter
 {
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return 'permissions_on_artifact';
     }
@@ -37,7 +37,7 @@ class ChangesetValuePermissionsOnArtifactXMLExporter extends ChangesetValueXMLEx
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
@@ -49,13 +49,13 @@ class ChangesetValuePermissionsOnArtifactXMLExporter extends ChangesetValueXMLEx
         array_walk(
             $ugroup_names,
             function ($ugroup_name, $index, SimpleXMLElement $field_xml) {
-                $this->appendUgroupToFieldChangeNode($ugroup_name, $index, $field_xml);
+                $this->appendUgroupToFieldChangeNode($ugroup_name, $field_xml);
             },
             $field_change
         );
     }
 
-    private function isUsed(Tracker_Artifact_ChangesetValue $changeset_value)
+    private function isUsed(Tracker_Artifact_ChangesetValue $changeset_value): bool
     {
         $ugroup_ids = $changeset_value->getPerms();
 
@@ -68,9 +68,8 @@ class ChangesetValuePermissionsOnArtifactXMLExporter extends ChangesetValueXMLEx
 
     private function appendUgroupToFieldChangeNode(
         $ugroup_name,
-        $index,
         SimpleXMLElement $field_xml,
-    ) {
+    ): void {
         $node = $field_xml->addChild('ugroup');
         $node->addAttribute('ugroup_name', $ugroup_name);
     }

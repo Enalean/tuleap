@@ -28,26 +28,16 @@ class ChangesetXMLExporter
 {
     public const PREFIX = 'CHANGESET_';
 
-    /**
-     * @var ChangesetValuesXMLExporter
-     */
-    private $values_exporter;
-
-    /** @var UserXMLExporter */
-    private $user_xml_exporter;
-
     public function __construct(
-        ChangesetValuesXMLExporter $values_exporter,
-        UserXMLExporter $user_xml_exporter,
+        private readonly ChangesetValuesXMLExporter $values_exporter,
+        private readonly UserXMLExporter $user_xml_exporter,
     ) {
-        $this->values_exporter   = $values_exporter;
-        $this->user_xml_exporter = $user_xml_exporter;
     }
 
     public function exportWithoutComments(
         SimpleXMLElement $artifact_xml,
         Tracker_Artifact_Changeset $changeset,
-    ) {
+    ): void {
         $changeset_xml = $artifact_xml->addChild('changeset');
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
@@ -65,7 +55,7 @@ class ChangesetXMLExporter
     public function exportFullHistory(
         SimpleXMLElement $artifact_xml,
         Tracker_Artifact_Changeset $changeset,
-    ) {
+    ): void {
         $changeset_xml = $artifact_xml->addChild('changeset');
         $changeset_xml->addAttribute('id', self::PREFIX . $changeset->getId());
 

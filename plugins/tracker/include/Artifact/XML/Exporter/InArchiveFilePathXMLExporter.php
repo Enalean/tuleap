@@ -25,11 +25,7 @@ use Tuleap;
 
 class InArchiveFilePathXMLExporter implements FilePathXMLExporter
 {
-    /**
-     *
-     * @return string
-     */
-    public function getPath(Tracker_FileInfo $file_info)
+    public function getPath(Tracker_FileInfo $file_info): string
     {
         return Tuleap\Project\XML\ArchiveInterface::DATA_DIR .
             DIRECTORY_SEPARATOR .

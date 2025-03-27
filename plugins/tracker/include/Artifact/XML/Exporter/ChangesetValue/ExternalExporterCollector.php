@@ -25,16 +25,10 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue;
 use EventManager;
 use Tracker_Artifact_ChangesetValue;
 
-class ExternalExporterCollector
+readonly class ExternalExporterCollector
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    public function __construct(EventManager $event_manager)
+    public function __construct(private EventManager $event_manager)
     {
-        $this->event_manager = $event_manager;
     }
 
     public function collectExporter(Tracker_Artifact_ChangesetValue $changeset_value): ?ChangesetValueXMLExporter

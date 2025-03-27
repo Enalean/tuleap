@@ -34,22 +34,10 @@ class ChangesetValuesXMLExporter
     public const EXPORT_SNAPSHOT   = true;
     public const EXPORT_CHANGES    = false;
 
-    /**
-     * @var ChangesetValueXMLExporterVisitor
-     */
-    private $visitor;
-
-    /**
-     * @var bool
-     */
-    private $is_in_archive_context;
-
     public function __construct(
-        ChangesetValueXMLExporterVisitor $visitor,
-        $is_in_archive_context,
+        private readonly ChangesetValueXMLExporterVisitor $visitor,
+        private readonly bool $is_in_archive_context,
     ) {
-        $this->visitor               = $visitor;
-        $this->is_in_archive_context = $is_in_archive_context;
     }
 
     /**
@@ -61,7 +49,7 @@ class ChangesetValuesXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         array $changeset_values,
-    ) {
+    ): void {
         $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_SNAPSHOT);
     }
 
@@ -70,7 +58,7 @@ class ChangesetValuesXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         array $changeset_values,
-    ) {
+    ): void {
         $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_CHANGES);
     }
 
@@ -99,7 +87,7 @@ class ChangesetValuesXMLExporter
     private function exportValue(
         Tracker_Artifact_ChangesetValue $changeset_value,
         array $params,
-    ) {
+    ): void {
         if ($this->isFieldChangeExportable($changeset_value, $params[self::EXPORT_MODE_KEY])) {
             $this->visitor->export(
                 $params[self::ARTIFACT_XML_KEY],
@@ -113,7 +101,7 @@ class ChangesetValuesXMLExporter
     private function isFieldChangeExportable(
         Tracker_Artifact_ChangesetValue $changeset_value,
         $export_mode,
-    ) {
+    ): bool {
         if ($export_mode === self::EXPORT_SNAPSHOT) {
             return true;
         }
@@ -137,14 +125,14 @@ class ChangesetValuesXMLExporter
         return false;
     }
 
-    private function isFileField(Tracker_Artifact_ChangesetValue $changeset_value)
+    private function isFileField(Tracker_Artifact_ChangesetValue $changeset_value): bool
     {
         $field = $changeset_value->getField();
 
         return $field instanceof \Tracker_FormElement_Field_File;
     }
 
-    private function isComputedField(Tracker_Artifact_ChangesetValue $changeset_value)
+    private function isComputedField(Tracker_Artifact_ChangesetValue $changeset_value): bool
     {
         $field = $changeset_value->getField();
 

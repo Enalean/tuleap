@@ -25,41 +25,17 @@ use Tracker_ArtifactFactory;
 use Tracker_XML_ChildrenCollector;
 use Tracker_XML_Updater_TemporaryFileXMLUpdater;
 
-class ChildrenXMLExporter
+readonly class ChildrenXMLExporter
 {
-    /**
-     * @var Tracker_XML_ChildrenCollector
-     */
-    private $children_collector;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var ArtifactXMLExporter
-     */
-    private $artifact_xml_updater;
-
-    /**
-     * @var Tracker_XML_Updater_TemporaryFileXMLUpdater
-     */
-    private $file_xml_updater;
-
     public function __construct(
-        ArtifactXMLExporter $artifact_xml_updater,
-        Tracker_XML_Updater_TemporaryFileXMLUpdater $file_xml_updater,
-        Tracker_ArtifactFactory $artifact_factory,
-        Tracker_XML_ChildrenCollector $children_collector,
+        private ArtifactXMLExporter $artifact_xml_updater,
+        private Tracker_XML_Updater_TemporaryFileXMLUpdater $file_xml_updater,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private Tracker_XML_ChildrenCollector $children_collector,
     ) {
-        $this->file_xml_updater     = $file_xml_updater;
-        $this->artifact_xml_updater = $artifact_xml_updater;
-        $this->artifact_factory     = $artifact_factory;
-        $this->children_collector   = $children_collector;
     }
 
-    public function exportChildren(SimpleXMLElement $xml)
+    public function exportChildren(SimpleXMLElement $xml): void
     {
         while ($artifact_id = $this->children_collector->pop()) {
             $artifact = $this->artifact_factory->getArtifactById($artifact_id);

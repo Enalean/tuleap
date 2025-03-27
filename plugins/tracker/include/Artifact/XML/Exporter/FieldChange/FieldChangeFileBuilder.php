@@ -26,7 +26,7 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 
-class FieldChangeFileBuilder
+readonly class FieldChangeFileBuilder
 {
     public function build(
         SimpleXMLElement $changeset_xml,

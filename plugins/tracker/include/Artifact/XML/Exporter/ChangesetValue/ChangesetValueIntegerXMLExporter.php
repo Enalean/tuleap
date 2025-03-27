@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetValueIntegerXMLExporter extends ChangesetValueXMLExporter
 {
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return 'int';
     }
@@ -36,7 +36,7 @@ class ChangesetValueIntegerXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml

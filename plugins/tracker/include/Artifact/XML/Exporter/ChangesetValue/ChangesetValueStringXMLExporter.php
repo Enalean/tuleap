@@ -28,17 +28,11 @@ use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 
 class ChangesetValueStringXMLExporter extends ChangesetValueTextXMLExporter
 {
-    /**
-     * @var FieldChangeStringBuilder
-     */
-    private $field_change_string_builder;
-
-    public function __construct(FieldChangeStringBuilder $field_change_string_builder)
+    public function __construct(private readonly FieldChangeStringBuilder $field_change_string_builder)
     {
-        $this->field_change_string_builder = $field_change_string_builder;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return Tracker_FormElementFactory::FIELD_STRING_TYPE;
     }
@@ -48,7 +42,7 @@ class ChangesetValueStringXMLExporter extends ChangesetValueTextXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         $this->field_change_string_builder->build(
             $changeset_xml,
             $changeset_value->getField()->getName(),

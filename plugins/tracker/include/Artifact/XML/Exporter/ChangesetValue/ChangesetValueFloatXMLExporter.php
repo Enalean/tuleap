@@ -29,17 +29,11 @@ use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 
 class ChangesetValueFloatXMLExporter extends ChangesetValueXMLExporter
 {
-    /**
-     * @var FieldChangeFloatBuilder
-     */
-    private $field_change_float_builder;
-
-    public function __construct(FieldChangeFloatBuilder $field_change_float_builder)
+    public function __construct(private readonly FieldChangeFloatBuilder $field_change_float_builder)
     {
-        $this->field_change_float_builder = $field_change_float_builder;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return Tracker_FormElementFactory::FIELD_FLOAT_TYPE;
     }
@@ -49,7 +43,7 @@ class ChangesetValueFloatXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
-    ) {
+    ): void {
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Float);
 
         $this->field_change_float_builder->build(

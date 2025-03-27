@@ -28,22 +28,10 @@ use Tracker_FormElement_Field_List_BindValue;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-class FieldChangeListBuilder
+readonly class FieldChangeListBuilder
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $simple_xml_cdata_factory;
-
-    /**
-     * @var UserXMLExporter
-     */
-    private $user_xml_exporter;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $simple_xml_cdata_factory, UserXMLExporter $user_xml_exporter)
+    public function __construct(private XML_SimpleXMLCDATAFactory $simple_xml_cdata_factory, private UserXMLExporter $user_xml_exporter)
     {
-        $this->simple_xml_cdata_factory = $simple_xml_cdata_factory;
-        $this->user_xml_exporter        = $user_xml_exporter;
     }
 
     public function build(

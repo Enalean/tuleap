@@ -27,9 +27,5 @@ use Tracker_FileInfo;
  */
 interface FilePathXMLExporter
 {
-    /**
-     *
-     * @return string
-     */
-    public function getPath(Tracker_FileInfo $file_info);
+    public function getPath(Tracker_FileInfo $file_info): string;
 }
