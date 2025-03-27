@@ -21,45 +21,27 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
-use Tracker;
-use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Contributor;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_FormElement_Field_List|\Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $field;
-
-    /**
-     * @var Tracker|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Tracker_Semantic_Contributor
-     */
-    private $semantic;
+    private Tracker_Semantic_Contributor $semantic;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->tracker = Mockery::mock(\Tracker::class);
-        $this->field   = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->field->shouldReceive('getId')->andReturn(102);
-
-        $this->semantic = new Tracker_Semantic_Contributor($this->tracker, $this->field);
+        $this->semantic = new Tracker_Semantic_Contributor(
+            TrackerTestBuilder::aTracker()->build(),
+            ListFieldBuilder::aListField(102)->build(),
+        );
     }
 
-    public function testExport()
+    public function testExport(): void
     {
         $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticContributorTest.xml'));
         $root          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -73,7 +55,7 @@ class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals((string) $xml->field['REF'], (string) $root->semantic->field['REF']);
     }
 
-    public function testItDoesNotExportIfFieldIsNotExported()
+    public function testItDoesNotExportIfFieldIsNotExported(): void
     {
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = [];

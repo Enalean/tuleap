@@ -21,8 +21,6 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Semantic_Contributor;
 use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_Status;
@@ -33,38 +31,43 @@ use Tracker_SemanticFactory;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testGetInstanceFromXml()
+    public function testGetInstanceFromXml(): void
     {
         $xml_title               = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticTitleTest.xml'));
         $xml_status              = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticStatusTest.xml'));
         $xml_tooltip             = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticTooltipTest.xml'));
         $xml_contributor         = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticContributorTest.xml'));
-        $semantic_status         = Mockery::mock(Tracker_Semantic_Status::class);
-        $semantic_title          = Mockery::mock(Tracker_Semantic_Title::class);
-        $semantic_contributor    = Mockery::mock(Tracker_Semantic_Contributor::class);
-        $semantic_tooltip        = Mockery::mock(SemanticTooltip::class);
-        $semantic_status_factory = Mockery::mock(Tracker_Semantic_StatusFactory::class);
-        $semantic_status_factory->shouldReceive('getInstanceFromXML')->andReturn($semantic_status);
-        $semantic_title_factory = Mockery::mock(Tracker_Semantic_TitleFactory::class);
-        $semantic_title_factory->shouldReceive('getInstanceFromXML')->andReturn($semantic_title);
-        $semantic_tooltip_factory = Mockery::mock(SemanticTooltipFactory::class);
-        $semantic_tooltip_factory->shouldReceive('getInstanceFromXML')->andReturn($semantic_tooltip);
-        $semantic_contributor_factory = Mockery::mock(Tracker_Semantic_ContributorFactory::class);
-        $semantic_contributor_factory->shouldReceive('getInstanceFromXML')->andReturn($semantic_contributor);
+        $semantic_status         = $this->createMock(Tracker_Semantic_Status::class);
+        $semantic_title          = $this->createMock(Tracker_Semantic_Title::class);
+        $semantic_contributor    = $this->createMock(Tracker_Semantic_Contributor::class);
+        $semantic_tooltip        = $this->createMock(SemanticTooltip::class);
+        $semantic_status_factory = $this->createMock(Tracker_Semantic_StatusFactory::class);
+        $semantic_status_factory->method('getInstanceFromXML')->willReturn($semantic_status);
+        $semantic_title_factory = $this->createMock(Tracker_Semantic_TitleFactory::class);
+        $semantic_title_factory->method('getInstanceFromXML')->willReturn($semantic_title);
+        $semantic_tooltip_factory = $this->createMock(SemanticTooltipFactory::class);
+        $semantic_tooltip_factory->method('getInstanceFromXML')->willReturn($semantic_tooltip);
+        $semantic_contributor_factory = $this->createMock(Tracker_Semantic_ContributorFactory::class);
+        $semantic_contributor_factory->method('getInstanceFromXML')->willReturn($semantic_contributor);
 
-        $tsf = Mockery::mock(Tracker_SemanticFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tsf->shouldReceive('getSemanticStatusFactory')->andReturns($semantic_status_factory);
-        $tsf->shouldReceive('getSemanticTitleFactory')->andReturns($semantic_title_factory);
-        $tsf->shouldReceive('getSemanticTooltipFactory')->andReturns($semantic_tooltip_factory);
-        $tsf->shouldReceive('getSemanticContributorFactory')->andReturns($semantic_contributor_factory);
+        $tsf = $this->createPartialMock(
+            Tracker_SemanticFactory::class,
+            [
+                'getSemanticStatusFactory',
+                'getSemanticTitleFactory',
+                'getSemanticTooltipFactory',
+                'getSemanticContributorFactory',
+            ]
+        );
+        $tsf->method('getSemanticStatusFactory')->willReturn($semantic_status_factory);
+        $tsf->method('getSemanticTitleFactory')->willReturn($semantic_title_factory);
+        $tsf->method('getSemanticTooltipFactory')->willReturn($semantic_tooltip_factory);
+        $tsf->method('getSemanticContributorFactory')->willReturn($semantic_contributor_factory);
 
-        $tracker = Mockery::mock(\Tracker::class);
+        $tracker = $this->createMock(\Tracker::class);
 
         $mapping = [
             'F8'  => 108,

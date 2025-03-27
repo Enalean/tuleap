@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
@@ -33,8 +32,6 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private StatusValueProvider $provider;
     private StatusValueForChangesetProvider&MockObject $for_changeset_provider;
     private PFUser $user;
