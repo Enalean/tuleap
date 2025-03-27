@@ -31,7 +31,7 @@
                 v-bind:class="additional_classnames"
                 type="button"
                 v-bind:title="title"
-                v-on:click="collapseSwimlane(swimlane)"
+                v-on:click="collapseSwimlane(props.swimlane)"
             >
                 <i class="fa fa-minus-square" aria-hidden="true"></i>
             </button>
@@ -39,41 +39,31 @@
         <slot />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useNamespacedActions, useState, useStore } from "vuex-composition-helpers";
 import type { Swimlane } from "../../../../../type";
-import { namespace, State } from "vuex-class";
+import type { State } from "../../../../../store/type";
 
-const fullscreen = namespace("fullscreen");
-const swimlane_store = namespace("swimlane");
+const { $gettext, interpolate } = useGettext();
 
-@Component
-export default class SwimlaneHeader extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const props = defineProps<{ swimlane: Swimlane }>();
 
-    @fullscreen.Getter
-    readonly fullscreen_class!: string;
+const { collapseSwimlane } = useNamespacedActions("swimlane", ["collapseSwimlane"]);
 
-    @swimlane_store.Action
-    readonly collapseSwimlane!: (swimlane: Swimlane) => void;
+const store = useStore();
+const taskboard_cell_swimlane_header_classes = computed(
+    (): string[] => store.getters["swimlane/taskboard_cell_swimlane_header_classes"],
+);
 
-    @swimlane_store.Getter
-    readonly taskboard_cell_swimlane_header_classes!: string[];
+const { backlog_items_have_children } = useState<State>(["backlog_items_have_children"]);
 
-    @State
-    readonly backlog_items_have_children!: boolean;
+const additional_classnames = computed((): string => `tlp-swatch-${props.swimlane.card.color}`);
 
-    get additional_classnames(): string {
-        return `tlp-swatch-${this.swimlane.card.color}`;
-    }
-
-    get title(): string {
-        return this.$gettextInterpolate(this.$gettext('Collapse "%{ label }" swimlane'), {
-            label: this.swimlane.card.label,
-        });
-    }
-}
+const title = computed((): string =>
+    interpolate($gettext(`Collapse "%{ label }" swimlane`), {
+        label: props.swimlane.card.label,
+    }),
+);
 </script>
