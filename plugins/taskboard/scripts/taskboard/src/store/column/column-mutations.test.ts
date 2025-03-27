@@ -49,32 +49,6 @@ describe(`Column module mutations`, () => {
         });
     });
     describe("pointerEntersColumn", () => {
-        it("marks the column with hovering state", () => {
-            const column: ColumnDefinition = { has_hover: false } as ColumnDefinition;
-
-            const state: ColumnState = {
-                columns: [column],
-            };
-
-            mutations.pointerEntersColumn(state, column);
-            expect(state.columns[0].has_hover).toBe(true);
-        });
-    });
-
-    describe("pointerLeavesColumn", () => {
-        it("removes the hovering state", () => {
-            const column: ColumnDefinition = { has_hover: true } as ColumnDefinition;
-
-            const state: ColumnState = {
-                columns: [column],
-            };
-
-            mutations.pointerLeavesColumn(state, column);
-            expect(state.columns[0].has_hover).toBe(false);
-        });
-    });
-
-    describe("pointerEntersColumnWithCheck", () => {
         it("does nothing when the column is expanded", () => {
             const column: ColumnDefinition = {
                 has_hover: false,
@@ -85,7 +59,7 @@ describe(`Column module mutations`, () => {
                 columns: [column],
             };
 
-            mutations.pointerEntersColumnWithCheck(state, column);
+            mutations.pointerEntersColumn(state, column);
             expect(state.columns[0].has_hover).toBe(false);
         });
         it("marks the column with hovering state", () => {
@@ -98,12 +72,12 @@ describe(`Column module mutations`, () => {
                 columns: [column],
             };
 
-            mutations.pointerEntersColumnWithCheck(state, column);
+            mutations.pointerEntersColumn(state, column);
             expect(state.columns[0].has_hover).toBe(true);
         });
     });
 
-    describe("pointerLeavesColumnWithCheck", () => {
+    describe("pointerLeavesColumn", () => {
         it("does nothing when column is open", () => {
             const column: ColumnDefinition = {
                 has_hover: true,
@@ -114,7 +88,7 @@ describe(`Column module mutations`, () => {
                 columns: [column],
             };
 
-            mutations.pointerLeavesColumnWithCheck(state, { column, card_being_dragged: null });
+            mutations.pointerLeavesColumn(state, { column, card_being_dragged: null });
             expect(state.columns[0].has_hover).toBe(true);
         });
 
@@ -131,7 +105,7 @@ describe(`Column module mutations`, () => {
             };
 
             const dragged_card = {} as DraggedCard;
-            mutations.pointerLeavesColumnWithCheck(state, {
+            mutations.pointerLeavesColumn(state, {
                 column,
                 card_being_dragged: dragged_card,
             });
@@ -148,7 +122,7 @@ describe(`Column module mutations`, () => {
                 columns: [column],
             };
 
-            mutations.pointerLeavesColumnWithCheck(state, { column, card_being_dragged: null });
+            mutations.pointerLeavesColumn(state, { column, card_being_dragged: null });
             expect(state.columns[0].has_hover).toBe(false);
         });
     });
