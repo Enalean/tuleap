@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use DateTimeImmutable;
-use Mockery;
 use PFUser;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntryValueRepresentation;
@@ -40,87 +43,32 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class IssueSnapshotCollectionBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var IssueSnapshotCollectionBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ChangelogEntriesBuilder
-     */
-    private $changelog_entries_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InitialSnapshotBuilder
-     */
-    private $initial_snapshot_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ChangelogSnapshotBuilder
-     */
-    private $changelog_snapshot_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var string[]
-     */
-    private $jira_issue_api;
-
-    /**
-     * @var FieldMappingCollection
-     */
-    private $jira_field_mapping_collection;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CurrentSnapshotBuilder
-     */
-    private $current_snapshot_builder;
-
-    /**
-     * @var string
-     */
-    private $jira_base_url;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommentValuesBuilder
-     */
-    private $comment_values_builder;
-
-    /**
-     * @var array
-     */
-    private $attachment_collection;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserRetriever
-     */
-    private $jira_user_retriever;
+    private TestLogger $logger;
+    private IssueSnapshotCollectionBuilder $builder;
+    private ChangelogEntriesBuilder&MockObject $changelog_entries_builder;
+    private InitialSnapshotBuilder&MockObject $initial_snapshot_builder;
+    private ChangelogSnapshotBuilder&MockObject $changelog_snapshot_builder;
+    private PFUser $user;
+    private IssueAPIRepresentation $jira_issue_api;
+    private FieldMappingCollection $jira_field_mapping_collection;
+    private CurrentSnapshotBuilder&MockObject $current_snapshot_builder;
+    private string $jira_base_url;
+    private CommentValuesBuilder&MockObject $comment_values_builder;
+    private AttachmentCollection $attachment_collection;
+    private JiraUserRetriever&MockObject $jira_user_retriever;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->changelog_entries_builder  = Mockery::mock(ChangelogEntriesBuilder::class);
-        $this->current_snapshot_builder   = Mockery::mock(CurrentSnapshotBuilder::class);
-        $this->initial_snapshot_builder   = Mockery::mock(InitialSnapshotBuilder::class);
-        $this->changelog_snapshot_builder = Mockery::mock(ChangelogSnapshotBuilder::class);
-        $this->comment_values_builder     = Mockery::mock(CommentValuesBuilder::class);
-        $this->logger                     = Mockery::mock(LoggerInterface::class);
-        $this->jira_user_retriever        = Mockery::mock(JiraUserRetriever::class);
+        $this->changelog_entries_builder  = $this->createMock(ChangelogEntriesBuilder::class);
+        $this->current_snapshot_builder   = $this->createMock(CurrentSnapshotBuilder::class);
+        $this->initial_snapshot_builder   = $this->createMock(InitialSnapshotBuilder::class);
+        $this->changelog_snapshot_builder = $this->createMock(ChangelogSnapshotBuilder::class);
+        $this->comment_values_builder     = $this->createMock(CommentValuesBuilder::class);
+        $this->logger                     = new TestLogger();
+        $this->jira_user_retriever        = $this->createMock(JiraUserRetriever::class);
 
         $this->builder = new IssueSnapshotCollectionBuilder(
             $this->changelog_entries_builder,
@@ -132,7 +80,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jira_user_retriever
         );
 
-        $this->user           = Mockery::mock(PFUser::class);
+        $this->user           = UserTestBuilder::buildWithDefaults();
         $this->jira_issue_api = new IssueAPIRepresentation(
             'key01',
             10001,
@@ -147,40 +95,25 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void
     {
-        $this->logger->shouldReceive('debug');
-        $this->jira_user_retriever->shouldReceive('retrieveUserFromAPIData')->andReturn(
-            $this->user
-        );
-        $this->jira_user_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
+        $this->jira_user_retriever->method('retrieveUserFromAPIData')->willReturn($this->user);
+        $this->jira_user_retriever->method('retrieveJiraAuthor')->willReturn($this->user);
 
-        $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
-            ->with('key01')
-            ->andReturn(
-                $this->buildChangelogEntriesCollection()
-            );
+        $this->changelog_entries_builder->method('buildEntriesCollectionForIssue')
+            ->with('key01')->willReturn($this->buildChangelogEntriesCollection());
 
-        $this->current_snapshot_builder->shouldReceive('buildCurrentSnapshot')
-            ->once()
-            ->andReturn(
-                $this->buildCurrentSnapshot($this->user)
-            );
+        $this->current_snapshot_builder->expects(self::once())->method('buildCurrentSnapshot')
+            ->willReturn($this->buildCurrentSnapshot($this->user));
 
-        $this->initial_snapshot_builder->shouldReceive('buildInitialSnapshot')
-            ->once()
-            ->andReturn(
-                $this->buildInitialSnapshot($this->user)
-            );
+        $this->initial_snapshot_builder->expects(self::once())->method('buildInitialSnapshot')
+            ->willReturn($this->buildInitialSnapshot($this->user));
 
-        $this->changelog_snapshot_builder->shouldReceive('buildSnapshotFromChangelogEntry')->andReturn(
+        $this->changelog_snapshot_builder->method('buildSnapshotFromChangelogEntry')->willReturnOnConsecutiveCalls(
             $this->buildFirstChangelogSnapshot($this->user),
             $this->buildSecondChangelogSnapshot($this->user)
         );
 
-        $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn(
-            [
-                $this->buildCommentSnapshot(),
-            ]
-        );
+        $this->comment_values_builder->method('buildCommentCollectionForIssue')
+            ->willReturn([$this->buildCommentSnapshot()]);
 
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->jira_issue_api,
@@ -190,7 +123,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jira_base_url
         );
 
-        $this->assertCount(4, $collection);
+        self::assertCount(4, $collection);
         self::assertSame(
             [
                 1585141750,
@@ -198,42 +131,30 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 1585141870,
                 1585141930,
             ],
-            array_map(static fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
+            array_map(static fn(Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
         );
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testItSkipsInCollectionSnapshotsWithoutChangedFileds(): void
     {
-        $this->logger->shouldReceive('debug');
-        $this->jira_user_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
-            $this->user
-        );
-        $this->jira_user_retriever->shouldReceive('retrieveUserFromAPIData')->andReturn($this->user);
+        $this->jira_user_retriever->method('retrieveUserFromAPIData')->willReturn($this->user);
 
-        $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
-            ->with('key01')
-            ->andReturn(
-                $this->buildChangelogEntriesCollection()
-            );
+        $this->changelog_entries_builder->method('buildEntriesCollectionForIssue')
+            ->with('key01')->willReturn($this->buildChangelogEntriesCollection());
 
-        $this->initial_snapshot_builder->shouldReceive('buildInitialSnapshot')
-            ->once()
-            ->andReturn(
-                $this->buildInitialSnapshot($this->user)
-            );
+        $this->initial_snapshot_builder->expects(self::once())->method('buildInitialSnapshot')
+            ->willReturn($this->buildInitialSnapshot($this->user));
 
-        $this->current_snapshot_builder->shouldReceive('buildCurrentSnapshot')
-            ->once()
-            ->andReturn(
-                $this->buildCurrentSnapshotInEmptyTestCase($this->user)
-            );
+        $this->current_snapshot_builder->expects(self::once())->method('buildCurrentSnapshot')
+            ->willReturn($this->buildCurrentSnapshotInEmptyTestCase($this->user));
 
-        $this->changelog_snapshot_builder->shouldReceive('buildSnapshotFromChangelogEntry')->andReturn(
+        $this->changelog_snapshot_builder->method('buildSnapshotFromChangelogEntry')->willReturnOnConsecutiveCalls(
             $this->buildFirstChangelogSnapshot($this->user),
             $this->buildEmptySecondChangelogSnapshot($this->user)
         );
 
-        $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn([]);
+        $this->comment_values_builder->method('buildCommentCollectionForIssue')->willReturn([]);
 
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->jira_issue_api,
@@ -243,54 +164,39 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jira_base_url
         );
 
-        $this->assertCount(2, $collection);
+        self::assertCount(2, $collection);
         self::assertSame(
             [
                 1585141750,
                 1585141810,
             ],
-            array_map(static fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
+            array_map(static fn(Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
         );
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testItBuildCollectionOfSnapshotWithFieldAndCommentIfSameTimestamp(): void
     {
-        $this->logger->shouldReceive('debug');
-        $this->jira_user_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
-            $this->user
-        );
-        $this->jira_user_retriever->shouldReceive('retrieveUserFromAPIData')->andReturn($this->user);
+        $this->jira_user_retriever->method('retrieveUserFromAPIData')->willReturn($this->user);
 
-        $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
-            ->with('key01')
-            ->andReturn(
-                $this->buildChangelogEntriesCollection()
-            );
+        $this->changelog_entries_builder->method('buildEntriesCollectionForIssue')
+            ->with('key01')->willReturn($this->buildChangelogEntriesCollection());
 
-        $this->current_snapshot_builder->shouldReceive('buildCurrentSnapshot')
-            ->once()
-            ->andReturn(
-                $this->buildCurrentSnapshot($this->user)
-            );
+        $this->current_snapshot_builder->expects(self::once())->method('buildCurrentSnapshot')
+            ->willReturn($this->buildCurrentSnapshot($this->user));
 
-        $this->initial_snapshot_builder->shouldReceive('buildInitialSnapshot')
-            ->once()
-            ->andReturn(
-                $this->buildInitialSnapshot($this->user)
-            );
+        $this->initial_snapshot_builder->expects(self::once())->method('buildInitialSnapshot')
+            ->willReturn($this->buildInitialSnapshot($this->user));
 
-        $this->changelog_snapshot_builder->shouldReceive('buildSnapshotFromChangelogEntry')->andReturn(
+        $this->changelog_snapshot_builder->method('buildSnapshotFromChangelogEntry')->willReturnOnConsecutiveCalls(
             $this->buildFirstChangelogSnapshot($this->user),
             $this->buildSecondChangelogSnapshot($this->user)
         );
 
-        $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn(
-            [
-                $this->buildCommentSnapshotWithSameTimestampOfFirstChangelog(),
-            ]
-        );
+        $this->comment_values_builder->method('buildCommentCollectionForIssue')
+            ->willReturn([$this->buildCommentSnapshotWithSameTimestampOfFirstChangelog()]);
 
-        $this->jira_user_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
+        $this->jira_user_retriever->method('retrieveJiraAuthor')->willReturn($this->user);
 
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->jira_issue_api,
@@ -300,21 +206,22 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jira_base_url
         );
 
-        $this->assertCount(3, $collection);
+        self::assertCount(3, $collection);
         self::assertSame(
             [
                 1585141750,
                 1585141810,
                 1585141870,
             ],
-            array_map(static fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
+            array_map(static fn(Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
         );
 
-        $snapshot_1585141810 = array_values(array_filter($collection, fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp() === 1585141810));
+        $snapshot_1585141810 = array_values(array_filter($collection, fn(Snapshot $snapshot) => $snapshot->getDate()->getTimestamp() === 1585141810));
         self::assertCount(1, $snapshot_1585141810);
 
-        $this->assertEquals($this->buildCommentSnapshotWithSameTimestampOfFirstChangelog(), $snapshot_1585141810[0]->getCommentSnapshot());
-        $this->assertEquals($this->buildFirstChangelogSnapshot($this->user)->getAllFieldsSnapshot(), $snapshot_1585141810[0]->getAllFieldsSnapshot());
+        self::assertEquals($this->buildCommentSnapshotWithSameTimestampOfFirstChangelog(), $snapshot_1585141810[0]->getCommentSnapshot());
+        self::assertEquals($this->buildFirstChangelogSnapshot($this->user)->getAllFieldsSnapshot(), $snapshot_1585141810[0]->getAllFieldsSnapshot());
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     private function buildInitialSnapshot($user): Snapshot
@@ -471,7 +378,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
-                'accountId' => 'e12ds5123sw',
+                'accountId'   => 'e12ds5123sw',
             ]),
             new DateTimeImmutable('2020-03-25T14:12:10.823+0100'),
             'Comment 01'
@@ -483,7 +390,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
-                'accountId' => 'e12ds5123sw',
+                'accountId'   => 'e12ds5123sw',
             ]),
             new DateTimeImmutable('2020-03-25T14:10:10.823+0100'),
             'Comment 01'
@@ -495,40 +402,40 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return [
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '100',
+                    'id'      => '100',
                     'created' => '2020-03-25T14:10:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
-                            'fieldId' => 'customfield_10036',
-                            'from' => null,
+                            'fieldId'    => 'customfield_10036',
+                            'from'       => null,
                             'fromString' => null,
-                            'to' => null,
-                            'toString' => '9',
+                            'to'         => null,
+                            'toString'   => '9',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    'id' => '101',
+                    'id'      => '101',
                     'created' => '2020-03-25T14:11:10.823+0100',
-                    'items' => [
+                    'items'   => [
                         0 => [
-                            'fieldId' => 'customfield_10036',
-                            'from' => null,
+                            'fieldId'    => 'customfield_10036',
+                            'from'       => null,
                             'fromString' => '9',
-                            'to' => null,
-                            'toString' => '11',
+                            'to'         => null,
+                            'toString'   => '11',
                         ],
                     ],
-                    'author' => [
-                        'accountId' => 'e8a7dbae5',
-                        'displayName' => 'John Doe',
+                    'author'  => [
+                        'accountId'    => 'e8a7dbae5',
+                        'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com',
                     ],
                 ]
