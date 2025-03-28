@@ -24,10 +24,8 @@ use REST_TestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-/**
- * @group TestManagementTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]
 final class CampaignsTest extends TestManagementRESTTestCase
 {
     public function testGetCampaign(): void
@@ -258,9 +256,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
         $this->assertTrue($updated_campaign['is_open']);
     }
 
-    /**
-     * @depends testPatchCampaignCanReopenACampaign
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchCampaignCanReopenACampaign')]
     public function testPatchCampaignCanCloseACampaign(): void
     {
         $campaign = $this->closed_71_campaign;

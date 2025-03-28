@@ -24,10 +24,8 @@ use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 use RestBase;
 
-/**
- * @group BacklogItemsTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('BacklogItemsTest')]
 class ProjectBacklogV2Test extends RestBase
 {
     public function testOPTIONSBacklog(): void

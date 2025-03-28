@@ -19,11 +19,8 @@
  *
  */
 
-
-/**
- * @group PhpWikiTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('PhpWikiTests')]
 class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testOPTIONSId()

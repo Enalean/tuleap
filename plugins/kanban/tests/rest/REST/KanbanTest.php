@@ -22,10 +22,8 @@ namespace Tuleap\Kanban\REST;
 
 use REST_TestDataBuilder;
 
-/**
- * @group KanbanTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('KanbanTests')]
 final class KanbanTest extends TestBase
 {
     public function testOPTIONSKanban(): void
@@ -219,9 +217,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals('Do something v2', $response_json['collection'][1]['label']);
     }
 
-    /**
-     * @depends testGETBacklog
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETBacklog')]
     public function testPATCHBacklog(): void
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
@@ -244,9 +240,7 @@ final class KanbanTest extends TestBase
         );
     }
 
-    /**
-     * @depends testGETBacklog
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETBacklog')]
     public function testPATCHBacklogWithReadOnlyAdmin(): void
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
@@ -297,9 +291,7 @@ final class KanbanTest extends TestBase
         $this->assertArrayHasKey('timeinfo', $response_json['collection'][1]);
     }
 
-    /**
-     * @depends testGETItems
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETItems')]
     public function testPATCHItems(): void
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
@@ -322,9 +314,7 @@ final class KanbanTest extends TestBase
         );
     }
 
-    /**
-     * @depends testGETItems
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETItems')]
     public function testPATCHItemsWithReadOnlyAdmin(): void
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
@@ -386,9 +376,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals('Something archived v2', $response_json['collection'][1]['label']);
     }
 
-    /**
-     * @depends testGETArchive
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETArchive')]
     public function testPATCHArchive(): void
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
@@ -411,9 +399,7 @@ final class KanbanTest extends TestBase
         );
     }
 
-    /**
-     * @depends testGETArchive
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETArchive')]
     public function testPATCHArchiveWithReadOnlyAdmin(): void
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
@@ -432,9 +418,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPATCHArchive
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHArchive')]
     public function testPATCHBacklogWithAdd()
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
@@ -456,9 +440,7 @@ final class KanbanTest extends TestBase
         );
     }
 
-    /**
-     * @depends testPATCHBacklogWithAdd
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHBacklogWithAdd')]
     public function testPATCHColumnWithAddAndOrder()
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
@@ -485,9 +467,7 @@ final class KanbanTest extends TestBase
         );
     }
 
-    /**
-     * @depends testPATCHColumnWithAddAndOrder
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHColumnWithAddAndOrder')]
     public function testPATCHArchiveWithAddAndOrder()
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
@@ -513,9 +493,7 @@ final class KanbanTest extends TestBase
         );
     }
 
-    /**
-     * @depends testPATCHArchiveWithAddAndOrder
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHArchiveWithAddAndOrder')]
     public function testPOSTKanbanColumn()
     {
         $data = json_encode([
@@ -548,9 +526,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPOSTKanbanColumn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanColumn')]
     public function testPUTKanbanColumn($new_column_id)
     {
         $data = json_encode([
@@ -573,9 +549,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals($kanban['columns'][3]['id'], REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID);
     }
 
-    /**
-     * @depends testPOSTKanbanColumn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanColumn')]
     public function testPUTKanbanColumnWithReadOnlyAdmin($new_column_id): void
     {
         $data = json_encode([
@@ -593,9 +567,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPOSTKanbanColumn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanColumn')]
     public function testDELETEKanbanColumns()
     {
         $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
@@ -605,9 +577,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPOSTKanbanColumn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanColumn')]
     public function testDELETEKanbanColumnsWithReadOnlyAdmin(): void
     {
         $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
@@ -620,9 +590,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTKanbanColumn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTKanbanColumn')]
     public function testOPTIONSKanbanItems()
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'kanban_items'));
@@ -639,9 +607,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testPATCHArchiveWithAddAndOrder
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHArchiveWithAddAndOrder')]
     public function testPOSTKanbanItemsInBacklog(): void
     {
         $url = 'kanban_items/';
@@ -660,9 +626,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals('backlog', $item['in_column']);
     }
 
-    /**
-     * @depends testPATCHArchiveWithAddAndOrder
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHArchiveWithAddAndOrder')]
     public function testPOSTKanbanItemsWithReadOnlyAdmin(): void
     {
         $url = 'kanban_items/';
@@ -680,9 +644,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-        /**
-     * @depends testPOSTKanbanItemsInBacklog
-     */
+        #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanItemsInBacklog')]
     public function testPOSTKanbanItemsInColmun()
     {
         $url = 'kanban_items/';
@@ -728,9 +690,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals('backlog', $item['in_column']);
     }
 
-    /**
-     * @depends testPOSTKanbanItemsInColmun
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanItemsInColmun')]
     public function testPOSTKanbanItemsInUnknowColmun()
     {
         $url = 'kanban_items/';
@@ -746,9 +706,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPOSTKanbanItemsInUnknowColmun
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanItemsInUnknowColmun')]
     public function testOPTIONSTrackerReports()
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports'));
@@ -801,9 +759,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTTrackerReportsWithEmptyArray
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerReportsWithEmptyArray')]
     public function testPUTTrackerReportsThrowsExceptionOnReportThatDoesNotExist()
     {
         $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports';
@@ -814,9 +770,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    /**
-     * @depends testDELETEKanbanWithReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testDELETEKanbanWithReadOnlyAdmin')]
     public function testDELETEKanban()
     {
         $response = $this->getResponse($this->request_factory->createRequest('DELETE', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
@@ -824,9 +778,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTTrackerReportsThrowsExceptionOnReportThatDoesNotExist
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerReportsThrowsExceptionOnReportThatDoesNotExist')]
     public function testDELETEKanbanWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
@@ -837,9 +789,7 @@ final class KanbanTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testDELETEKanban
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testDELETEKanban')]
     public function testGETDeletedKanban()
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));

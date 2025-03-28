@@ -22,9 +22,7 @@ namespace Tuleap\SVN\REST;
 
 use RestBase;
 
-/**
- * @group SVNTests
- */
+#[\PHPUnit\Framework\Attributes\Group('SVNTests')]
 class TestBase extends RestBase
 {
     public const PROJECT_NAME  = 'svn-plugin-test';

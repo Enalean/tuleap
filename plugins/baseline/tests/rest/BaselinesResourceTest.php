@@ -138,9 +138,7 @@ final class BaselinesResourceTest extends RestBase
         $this->assertEquals(404, $delete_response->getStatusCode());
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testGetByProject(): void
     {
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
@@ -153,9 +151,7 @@ final class BaselinesResourceTest extends RestBase
         $this->assertGETByProject($response);
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testGETByProjectWithReadOnlyAdmin(): void
     {
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];

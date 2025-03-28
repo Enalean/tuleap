@@ -45,9 +45,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $this->project_admins_identifier  = $this->project_id . '_4';
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testArtidocCreation(int $root_id): int
     {
         $post_response_json = $this->createArtidoc($root_id, 'Artidoc F1 ' . $this->now);
@@ -64,9 +62,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         return $post_response_json['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testArtidocMove(int $root_id): void
     {
         $folder_source_id      = $this->createFolder($root_id, 'Folder source to contain item F2 to move. ' . $this->now)['id'];
@@ -175,9 +171,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostOtherTypeDocumentDeniedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
         $query = json_encode(
@@ -195,9 +189,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(403, $response1->getStatusCode());
     }
 
-    /**
-     * @depends testArtidocCreation
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testArtidocCreation')]
     public function testOptionsDocument(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id));
@@ -206,9 +198,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testArtidocCreation
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testArtidocCreation')]
     public function testOptionsSections(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id . '/sections'));
@@ -226,9 +216,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(['OPTIONS', 'GET', 'PUT', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testArtidocCopy(int $root_id): void
     {
         $artidoc_id   = $this->createArtidoc($root_id, 'Artidoc F6 ' . $this->now)['id'];
@@ -296,9 +284,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         }
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testAddNewSectionToArtidoc(int $root_id): void
     {
         $artidoc_id       = $this->createArtidoc($root_id, 'Test Add New Section ' . $this->now)['id'];
@@ -423,9 +409,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testDeleteSection(int $root_id): void
     {
         $artidoc_id       = $this->createArtidoc($root_id, 'Test Add New Section ' . $this->now)['id'];
@@ -457,9 +441,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testReorderSection(int $root_id): void
     {
         $artidoc_id       = $this->createArtidoc($root_id, 'Test reorder section ' . $this->now)['id'];
@@ -539,9 +521,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testDELETEArtidoc(int $root_id): void
     {
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc F5 ' . $this->now)['id'];
@@ -591,9 +571,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPUTPermissions(int $root_id): void
     {
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc Permissions ' . $this->now)['id'];
@@ -645,9 +623,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $this->assertEquals($this->project_admins_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetOneSection(int $root_id): void
     {
         $artidoc_id   = $this->createArtidoc($root_id, 'Artidoc test one section ' . $this->now)['id'];
@@ -671,9 +647,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame($document_content[0], $section_representation);
     }
 
-    /**
-     * @depends testArtidocCreation
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testArtidocCreation')]
     public function testOptionsConfiguration(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id . '/configuration'));
@@ -682,9 +656,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testArtidocCreation
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testArtidocCreation')]
     public function testPutConfiguration(int $id): void
     {
         $response = $this->getResponse(
@@ -712,9 +684,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpload(int $root_id): void
     {
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc upload attachment ' . $this->now)['id'];
@@ -746,9 +716,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertTrue(isset($upload_response_json['upload_href']));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdateFreeTextSection(int $root_id): void
     {
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc freetext ' . $this->now)['id'];
@@ -780,9 +748,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         ));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdateArtifactSection(int $root_id): void
     {
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc update requirement ' . $this->now)['id'];
@@ -822,9 +788,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(2, $document_content[0]['level']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testDeleteFreeTextSection(int $root_id): void
     {
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc delete freetext ' . $this->now)['id'];

@@ -31,9 +31,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanWikiTest extends DocmanTestExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -58,9 +56,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsForUserRESTReadOnlyAdmin(int $root_id): array
     {
         $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
@@ -84,9 +80,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testMoveWikiDocument(int $root_id): void
     {
         $response_wiki_creation = $this->getResponseByName(
@@ -130,9 +124,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheWiki(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE W RO');
@@ -149,9 +141,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowAPermissionErrorWhenTheWikiIsLockedByAnotherUser(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE W L');
@@ -169,9 +159,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteIsProceedWhenItemIsLockedAndUserIsAdmin(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE W L');
@@ -187,9 +175,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeletionOfAWikiForbiddenForRESTReadOnlyUserNotInvolvedInProject(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE W');
@@ -205,9 +191,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItDeletesAWiki(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE W');
@@ -223,9 +207,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostLocksAWiki(array $items): void
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK W');
@@ -254,9 +236,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals($document['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteLockAWiki(array $items): void
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK W');
@@ -285,9 +265,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals($document['lock_info'], null);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
     {
         $item_title = 'POST AT W';
@@ -311,9 +289,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostWikiDocument(int $root_id): void
     {
         $query = json_encode(
@@ -383,9 +359,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals('my updated page name', $response_json['wiki_properties']['page_name']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPutBasicHardcodedMetadata(array $items): void
     {
         $item_name         = 'PUT W';
@@ -445,9 +419,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals($this->test_user_1_id, $new_version['owner']['id']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsMetadata(int $id): void
     {
         $response = $this->getResponse(
@@ -459,9 +431,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptions(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id), \TestDataBuilder::ADMIN_USER_NAME);
@@ -470,9 +440,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsLock(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/lock'), \TestDataBuilder::ADMIN_USER_NAME);
@@ -481,9 +449,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testAllOptionsForRESTReadOnlyUser(int $id): void
     {
         $response = $this->getResponse(
@@ -511,9 +477,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdatePermissionsWikiDocument(int $root_id): void
     {
         $wiki_doc_id = $this->createWikiAndReturnItsId(

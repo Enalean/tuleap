@@ -21,9 +21,7 @@
 use Test\Rest\TuleapConfig;
 use Tuleap\REST\ForgeAccessSandbox;
 
-/**
- * @group UserGroupTests
- */
+#[\PHPUnit\Framework\Attributes\Group('UserGroupTests')]
 final class UsersTest extends RestBase // phpcs:ignore
 {
     use ForgeAccessSandbox;

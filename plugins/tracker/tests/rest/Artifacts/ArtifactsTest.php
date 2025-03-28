@@ -130,9 +130,7 @@ final class ArtifactsTest extends TrackerBase
         return $created_artifact_id;
     }
 
-    /**
-     * @depends testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsCreated
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsCreated')]
     public function testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsUpdated(
         int $created_artifact_id,
     ): void {

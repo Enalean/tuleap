@@ -23,6 +23,7 @@
  * @group BacklogItemsTest
  */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('BacklogItemsTest')]
 class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private $tasks;

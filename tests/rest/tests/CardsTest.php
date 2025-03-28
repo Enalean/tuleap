@@ -20,10 +20,8 @@
 
 use Tuleap\REST\CardsBase;
 
-/**
- * @group CardsTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('CardsTests')]
 class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testOPTIONSCards()

@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @group Regressions
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('Regressions')]
 class ArtifactsCreationWithWrongWorkflowTest extends RestBase
 {
     private \Test\Rest\Tracker\TrackerFactory $tracker_test_helper;

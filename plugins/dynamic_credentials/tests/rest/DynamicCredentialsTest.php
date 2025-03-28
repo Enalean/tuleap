@@ -61,10 +61,8 @@ class DynamicCredentialsTest extends \RestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPOSTNewAccountAndLogin
-     * @depends testPOSTNewAccountAndLoginFailureWithExpiredAccount
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTNewAccountAndLogin')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTNewAccountAndLoginFailureWithExpiredAccount')]
     public function testDELETEAccount()
     {
         $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME) . '?' . http_build_query([
@@ -94,9 +92,7 @@ class DynamicCredentialsTest extends \RestBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    /**
-     * @depends testDELETEAccount
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testDELETEAccount')]
     public function testCannotConnectWithDeletedAccount()
     {
         $this->ensureLoginFail(self::USERNAME, self::PASSWORD);

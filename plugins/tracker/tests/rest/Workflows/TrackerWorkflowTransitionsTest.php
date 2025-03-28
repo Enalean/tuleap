@@ -491,9 +491,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         return $transition_id;
     }
 
-    /**
-     * @depends testPUTTrackerWorkflowTransitionActions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerWorkflowTransitionActions')]
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsNotPossible(int $transition_id)
     {
         $used_field_id = $this->getAUsedFieldId(
@@ -519,9 +517,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @depends testPUTTrackerWorkflowTransitionActions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerWorkflowTransitionActions')]
     public function testPUTTrackerWorkflowTransitionHiddenFieldsetsActionsNotPossible(int $transition_id)
     {
         $used_field_id = $this->getAUsedFieldId(
@@ -547,9 +543,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @depends testPUTTrackerWorkflowTransitionActions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerWorkflowTransitionActions')]
     public function testPUTTrackerWorkflowTransitionSetFieldValueFloatAction(int $transition_id)
     {
         $used_field_id = $this->getAUsedFieldId(

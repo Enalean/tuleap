@@ -1,7 +1,12 @@
 <?xml version='1.0'?>
 <phpunit bootstrap="lib/bootstrap.php"
-         verbose="true"
-         convertDeprecationsToExceptions="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
 >
     <php>
         <ini name="date.timezone" value="Europe/Paris"/>

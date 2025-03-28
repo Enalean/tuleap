@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @group UserGroupTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('UserGroupTests')]
 class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private function getResponseWithUser2($request)
@@ -310,9 +308,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetMultipleUsersFromAStaticGroup
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetMultipleUsersFromAStaticGroup')]
     public function testPutUsersInProjectMembersAddsMembers()
     {
         $put_resource = json_encode([
@@ -388,9 +384,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
     }
 
-    /**
-     * @depends testPutUsersInProjectMembersAddsMembers
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInProjectMembersAddsMembers')]
     public function testPutUsersInProjectAdmins()
     {
         $put_resource = json_encode([
@@ -437,9 +431,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testPutUsersInProjectAdmins
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInProjectAdmins')]
     public function testPutUsersInUserGroupWithUsername()
     {
         $put_resource = json_encode(
@@ -476,9 +468,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals($response_get_json[1]['id'], 104);
     }
 
-    /**
-     * @depends testPutUsersInUserGroupWithUsername
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInUserGroupWithUsername')]
     public function testPutUsersInUserGroupWithEmail()
     {
         $put_resource = json_encode([
@@ -513,9 +503,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals($response_get_json[1]['id'], 104);
     }
 
-    /**
-     * @depends testPutUsersInUserGroupWithUsername
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInUserGroupWithUsername')]
     public function testPutUsersInUserGroupWithEmailMultipleUsers()
     {
         $put_resource = json_encode(
@@ -539,9 +527,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPutUsersInUserGroupWithEmail
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInUserGroupWithEmail')]
     public function testPutUsersInUserGroup()
     {
         $put_resource = json_encode(
@@ -580,9 +566,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals($response_get_json[2]['id'], 104);
     }
 
-    /**
-     * @depends testPutUsersInUserGroup
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInUserGroup')]
     public function testPutUsersInUserGroupWithTwoDifferentIds()
     {
         $put_resource = json_encode(
@@ -607,9 +591,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @depends testPutUsersInUserGroup
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInUserGroup')]
     public function testPutUsersInUserGroupWithUnknownKey()
     {
         $put_resource = json_encode(
@@ -634,9 +616,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @depends testPutUsersInUserGroup
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInUserGroup')]
     public function testPutUsersInUserGroupWithNonAdminUser()
     {
         $put_resource = json_encode(
@@ -659,9 +639,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPutUsersInUserGroup
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutUsersInUserGroup')]
     public function testPutUsersInUserGroupWithNonValidRepresentation()
     {
         $put_resource = json_encode(
@@ -742,9 +720,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         return $user_groups;
     }
 
-    /**
-     * @depends testGetProjectUserGroups
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProjectUserGroups')]
     public function testPutUsersInStaticUserGroupInPublicSynchronizedProjectAlsoAddsThemToProjectMembers(array $user_groups)
     {
         $developpers = $this->findDeveloppers($user_groups);

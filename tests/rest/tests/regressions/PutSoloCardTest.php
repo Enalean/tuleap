@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
 /**
  * PUT /cards/:id cannot update solo card
  *
@@ -26,9 +25,9 @@
  * error "column_id is required", after submitting this sprint.
  *
  * @see https://tuleap.net/plugins/tracker/?aid=6430
- * @group Regressions
  */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('Regressions')]
 class Regressions_PutSoloCardTest extends RestBase
 {
     public function testItEditSoloCardLabel()

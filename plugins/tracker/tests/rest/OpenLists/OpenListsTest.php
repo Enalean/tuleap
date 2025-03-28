@@ -86,9 +86,7 @@ final class OpenListsTest extends TrackerBase
         self::assertSame([], json_decode($response->getBody()->getContents(), true, 2, JSON_THROW_ON_ERROR));
     }
 
-    /**
-     * @depends testGetArtifactOpenListsValues
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetArtifactOpenListsValues')]
     public function testFiltersOnABindValue(int $bind_value_id): void
     {
         $response = $this->getResponse(

@@ -20,10 +20,8 @@
 
 use Tuleap\REST\MilestoneBase;
 
-/**
- * @group MilestonesTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
 class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var Test\Rest\Tracker\Tracker */
@@ -335,9 +333,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         $this->assertContains($this->epic_adv['id'], $another_release_content);
     }
 
-    /**
-     * @depends testPatchContentReMove
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchContentReMove')]
     public function testPatchAddAndOrder()
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
@@ -375,9 +371,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         );
     }
 
-    /**
-     * @depends testPatchBacklogBefore
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchBacklogBefore')]
     public function testPatchBacklogAddAndOrder()
     {
         $inconsistent_story['id'] = $this->stories['Created in sprint'];

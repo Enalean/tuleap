@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-/**
- * @group PlanningTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('PlanningTests')]
 class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testOptionsPlannings(): void
@@ -99,9 +97,7 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testReleasePlanningHasNoMilestone
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testReleasePlanningHasNoMilestone')]
     public function testPlanningMilestonesArePaginatedCorrectly(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', $this->getMilestonesUri() . '?limit=0'));

@@ -49,18 +49,14 @@ class ExplicitBacklogTest extends TestBase
         $this->assertEquals(200, $response_patch->getStatusCode());
     }
 
-    /**
-     * @depends testPatchATopBacklogInExplicitContextDoesNotFail
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchATopBacklogInExplicitContextDoesNotFail')]
     public function testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsAfterBeingAdded(): void
     {
         $this->assertTopBacklogContainsTheFirstStory();
         $this->assertReleaseIsEmpty();
     }
 
-    /**
-     * @depends testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsAfterBeingAdded
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsAfterBeingAdded')]
     public function testTopBacklogInExplicitBacklogContextDoesNotContainTheBacklogItemsMovedToTheRelease(): void
     {
         $this->moveStoryToRelease();
@@ -69,9 +65,7 @@ class ExplicitBacklogTest extends TestBase
         $this->assertReleaseIsNotEmpty();
     }
 
-    /**
-     * @depends testTopBacklogInExplicitBacklogContextDoesNotContainTheBacklogItemsMovedToTheRelease
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testTopBacklogInExplicitBacklogContextDoesNotContainTheBacklogItemsMovedToTheRelease')]
     public function testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsMovedFromTheRelease(): void
     {
         $this->moveStoryFromReleaseToTopBacklog();
@@ -80,9 +74,7 @@ class ExplicitBacklogTest extends TestBase
         $this->assertReleaseIsEmpty();
     }
 
-    /**
-     * @depends testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsMovedFromTheRelease
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsMovedFromTheRelease')]
     public function testTopBacklogInExplicitBacklogIsEmptyAfterRemovingTheStory(): void
     {
         $this->removeStoryFromTopBacklog();

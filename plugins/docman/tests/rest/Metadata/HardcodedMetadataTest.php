@@ -32,9 +32,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetDocumentItemsForAdmin(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -48,9 +46,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsForUserRESTReadOnlyAdmin(int $root_id): array
     {
         $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
@@ -63,9 +59,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPostFolderStatus(array $items): int
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -90,9 +84,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPostFolderStatusDeniedForUserRESTReadOnlyAdmin(array $items): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -115,9 +107,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPostEmptyWithStatusAndObsolescenceDate(array $items): int
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -142,9 +132,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPostEmptyWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(array $items): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -167,9 +155,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPostEmbeddedFileWithStatusAndObsolescenceDate(array $items): int
     {
         $folder_HM = $this->findItemByTitle($items, 'Folder HM');
@@ -196,9 +182,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPostEmbeddedFileWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(array $items): void
     {
         $folder_HM = $this->findItemByTitle($items, 'Folder HM');
@@ -223,9 +207,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostLinkWithStatusAndObsolescenceDate(int $root_id): int
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -250,9 +232,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostLinkWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(int $root_id): void
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -275,9 +255,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostWikiWithStatusAndObsolescenceDate(int $root_id): int
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -302,9 +280,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostWikiWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(int $root_id): void
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -327,9 +303,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFileDocumentWithStatusAndObsolescenceDate(int $root_id): int
     {
         $file_size = 123;
@@ -397,9 +371,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         return $file_item_response_json['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFileWithStatusThrows400IfTheDateIsNotWellFormatted(int $root_id): void
     {
         $file_size = 123;
@@ -422,9 +394,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertStringContainsString('YYYY-MM-DD', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFileWithStatusDeniedForUserRESTReadOnlyAdmin(int $root_id): void
     {
         $file_size = 123;
@@ -446,9 +416,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPutFileHardcodedMetadataWithAllHardcodedMetadata(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F');
@@ -507,9 +475,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(101, $new_version['owner']['id']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPutFileHardcodedMetadataThrows400WhenBadDateFormatForObsolescenceDate(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F OD');
@@ -540,9 +506,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPutFileHardcodedMetadataWithAllHardcodedMetadataDeniedForUserRESTReadOnlyAdmin(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F');
@@ -575,9 +539,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $updated_metadata_file_response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdmin')]
     public function testPutFolderMetadataRecursionOnAllItems(array $items): int
     {
         $folder_to_update    = $this->findItemByTitle($items, 'Folder HM');
@@ -619,9 +581,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         return $folder_to_update_id;
     }
 
-    /**
-     * @depends testPutFolderMetadataRecursionOnAllItems
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutFolderMetadataRecursionOnAllItems')]
     public function testPutFolderMetadataRecursionOnFolder($folder_to_update_id): void
     {
         $put_resource = [

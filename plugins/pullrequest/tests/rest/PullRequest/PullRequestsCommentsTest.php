@@ -23,10 +23,8 @@ namespace Tuleap\PullRequest;
 use REST_TestDataBuilder;
 use RestBase;
 
-/**
- * @group PullRequest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('PullRequest')]
 final class PullRequestsCommentsTest extends RestBase
 {
     protected function getResponseForNonMember($request)

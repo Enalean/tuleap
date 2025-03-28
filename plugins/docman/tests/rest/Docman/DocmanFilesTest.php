@@ -31,9 +31,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanFilesTest extends DocmanTestExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -58,9 +56,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
     {
         $root_folder = $this->loadRootFolderContent(
@@ -87,9 +83,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testMoveFileDocument(int $root_id): void
     {
         $file_creation_body_content = json_encode([
@@ -159,9 +153,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdatePermissionsFileDocument(int $root_id): void
     {
         $file_doc_id = $this->createANewFileAndGetItsId(
@@ -209,9 +201,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheFile(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE F RO');
@@ -228,9 +218,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowAPermissionErrorWhenTheFileIsLockedByAnotherUser(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE F L');
@@ -248,9 +236,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteIsProceedWhenFileIsLockedAndUserIsAdmin(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE F L');
@@ -266,9 +252,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($file_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItDoesNotDeletesAFileWithRESTReadOnlyUserNotInvolvedInProject(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE F');
@@ -284,9 +268,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItDeletesAFile(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE F');
@@ -302,9 +284,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($file_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testLockThrowsAndExceptionWhenUserCanNotReadTheFile(array $items): void
     {
         $locked_document   = $this->findItemByTitle($items, 'LOCK F RO');
@@ -318,9 +298,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItLocksAFile(array $items): void
     {
         $file_to_lock    = $this->findItemByTitle($items, 'LOCK F');
@@ -348,9 +326,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals($file['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostLockThrowsAndExceptionIfAnOtherUserHasLockedTheFile(array $items): void
     {
         $locked_document   = $this->findItemByTitle($items, 'LOCK F AL');
@@ -365,9 +341,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertStringContainsString('allowed', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testAdminShouldAlwaysBeAbleToUnLockAFile(array $items): void
     {
         $locked_document   = $this->findItemByTitle($items, 'LOCK F AL');
@@ -381,9 +355,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testRESTReadOnyAdminShouldNotBeAbleToUnLockAFileIfNotInvolvedInProject(array $items): void
     {
         $locked_document   = $this->findItemByTitle($items, 'LOCK F AL');
@@ -397,9 +369,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItThrowsExceptionForDeleteLockWhenUserCanNotReadTheFile(array $items): void
     {
         $locked_document   = $this->findItemByTitle($items, 'LOCK F RO');
@@ -413,9 +383,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionWithRESTReadOnlyUserDoesNotCreateAFile(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V');
@@ -449,9 +417,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $new_version_response_with_rest_read_only_user->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionItCreatesAFile(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V');
@@ -520,9 +486,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionCopyThePreviousApprovalTableStatus(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V AT C');
@@ -598,9 +562,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionResetTheApprovalTableStatus(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V AT R');
@@ -676,9 +638,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionDisableApprovalTable(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V AT E');
@@ -755,9 +715,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertGreaterThan($date_before_update_timestamp, $date_after_update_timestamp);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionItThrowsExceptionWhenUserSetApprovalTableOnItemWithoutApprovalTable(
         array $items,
     ): void {
@@ -789,9 +747,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionCanUnlockAFile(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V L');
@@ -863,9 +819,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertNull($new_version_file['lock_info']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionAdminAlwaysCanUnlockAFile(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V UL Admin');
@@ -937,9 +891,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertNull($new_version_file['lock_info']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionRegularUserCanNotUnlockFileLockedByOtherUser(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V L Admin');
@@ -996,9 +948,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals($new_version_file['lock_info'], $current_version['lock_info']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPutBasicHardcodedMetadata(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F');
@@ -1056,9 +1006,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals($this->test_user_1_id, $new_version['owner']['id']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPutFileMetadataThrowsExceptionWhenStatusIsGiven(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F Status');
@@ -1089,9 +1037,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPutFileMetadataThrowsExceptionWhenObsolescenceDateIsGiven(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F OD');
@@ -1122,9 +1068,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsId($id): void
     {
         $response = $this->getResponse(
@@ -1136,9 +1080,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsLock($id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_files/' . $id . '/lock'), \TestDataBuilder::ADMIN_USER_NAME);
@@ -1147,9 +1089,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsVersion(int $id): void
     {
         $response = $this->getResponse(
@@ -1161,9 +1101,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsMetadata(int $id): void
     {
         $response = $this->getResponse(
@@ -1175,9 +1113,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testAllAvailableOptionsWithRESTReadOnlyUser(int $id): void
     {
         $response = $this->getResponse(
@@ -1243,9 +1179,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         return $created_file_json['id'];
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testGetDocumentVersions(array $items): void
     {
         $file_with_versions = $this->findItemByTitle($items, 'POST F V');

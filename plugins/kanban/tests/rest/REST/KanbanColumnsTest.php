@@ -22,10 +22,8 @@ namespace Tuleap\Kanban\REST;
 
 use REST_TestDataBuilder;
 
-/**
- * @group KanbanTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('KanbanTests')]
 class KanbanColumnsTest extends TestBase
 {
     public function testOPTIONSKanbanColumns()

@@ -31,9 +31,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanEmptyTest extends DocmanTestExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -56,9 +54,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheEmpty(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM RO');
@@ -75,9 +71,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowAPermissionErrorWhenTheEmptyIsLockedByAnotherUser(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM L');
@@ -95,9 +89,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteIsProceedWhenItemIsLockedAndUserIsAdmin(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM L');
@@ -113,9 +105,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItDeletesAnEmptyDoc(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM');
@@ -131,9 +121,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostLocksAnEmpty(array $items): void
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK EM');
@@ -155,9 +143,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($document['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteLockAnEmpty(array $items): void
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK EM');
@@ -179,9 +165,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($document['lock_info'], null);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPutBasicHardcodedMetadata(array $items): void
     {
         $item_name         = 'PUT EM';
@@ -234,9 +218,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($this->test_user_1_id, $new_version['owner']['id']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsMetadata(int $id): void
     {
         $response = $this->getResponse(
@@ -248,9 +230,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptions(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . $id), \TestDataBuilder::ADMIN_USER_NAME);
@@ -259,9 +239,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsLock(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . $id . '/lock'), \TestDataBuilder::ADMIN_USER_NAME);
@@ -270,9 +248,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testMoveEmptyDocument(int $root_id): void
     {
         $response_empty_creation = $this->getResponseByName(
@@ -307,9 +283,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdatePermissionsEmptyDocument(int $root_id): void
     {
         $response_empty_creation = $this->getResponseByName(
@@ -343,9 +317,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostVersionEmptyToEmbeddedFile(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -400,9 +372,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($updated_item['id']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsEmbeddedFileVersion(int $id): void
     {
         $response = $this->getResponse(
@@ -414,9 +384,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostVersionEmptyToFile(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -488,9 +456,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($updated_item['id']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsFileVersion(int $id): void
     {
         $response = $this->getResponse(
@@ -502,9 +468,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostVersionEmptyToLink(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -559,9 +523,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($updated_item['id']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsLinkVersion(int $id): void
     {
         $response = $this->getResponse(
@@ -573,9 +535,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testAllOptionsRouteForUserRESTReadOnlyAdmin(int $id): void
     {
         $response = $this->getResponse(
@@ -621,9 +581,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function patchMoveAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
     {
         $response = $this->getResponse(
@@ -633,9 +591,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function deleteAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
@@ -647,9 +603,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function postLockToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
@@ -661,9 +615,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function deleteLockToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
@@ -675,9 +627,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function putMetadataToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
@@ -691,9 +641,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function putPermissionsToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
@@ -707,9 +655,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function postVersionDeniedForUserRESTReadOnlyAdmin(int $root_id): void
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);

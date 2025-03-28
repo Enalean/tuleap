@@ -25,10 +25,8 @@ use Psr\Http\Message\ResponseInterface;
 use RestBase;
 use REST_TestDataBuilder;
 
-/**
- * @group SystemEventTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('SystemEventTests')]
 final class SystemEventTest extends RestBase
 {
     public function testGET(): void

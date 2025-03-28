@@ -21,10 +21,8 @@
 
 use Tuleap\REST\ArtifactFileBase;
 
-/**
- * @group ArtifactFilesTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ArtifactFilesTest')]
 class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private static $DEFAULT_QUOTA = 67108864;
@@ -99,9 +97,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         return $file_representation['id'];
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testArtifactTemporaryFilesGetId($file_id)
     {
         $request  = $this->request_factory->createRequest('GET', 'artifact_temporary_files/' . $file_id);
@@ -115,9 +111,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($this->first_file['content'], $data);
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testPutArtifactFileId($file_id)
     {
         $second_chunk = 'with more data';
@@ -144,9 +138,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         return $file_id;
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testPutArtifactIdIsForbiddenForADifferentUser($file_id)
     {
         $second_chunk = 'with more data';
@@ -163,9 +155,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($response->getStatusCode(), 401);
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testPutArtifactIdThrowsErrorForAWrongOffset($file_id)
     {
         $second_chunk = 'with more data';
@@ -200,9 +190,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testArtifactTemporaryFilesGet($file_id)
     {
         $request  = $this->request_factory->createRequest('GET', 'artifact_temporary_files');
@@ -220,9 +208,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals(1, $response->getHeaderLine('X-PAGINATION-SIZE'));
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testOptionsArtifactTemporaryFilesId($file_id)
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artifact_temporary_files/' . $file_id));
@@ -231,9 +217,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testOptionsArtifactIdIsAllowedForADifferentUser($file_id)
     {
         $request  = $this->request_factory->createRequest('OPTIONS', 'artifact_temporary_files/' . $file_id);
@@ -241,9 +225,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testOptionsArtifactIdWithUserRESTReadOnlyAdmin($file_id)
     {
         $request  = $this->request_factory->createRequest('OPTIONS', 'artifact_temporary_files/' . $file_id);
@@ -326,9 +308,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         ];
     }
 
-    /**
-     * @depends testAttachFileToPostArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAttachFileToPostArtifact')]
     public function testAttachementHasHTMLURL(array $parameters)
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $parameters['artifact_id']));
@@ -369,9 +349,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         }
     }
 
-    /**
-     * @depends testPutArtifactFileId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutArtifactFileId')]
     public function testAttachFileToPutArtifact($file_id)
     {
         $artifact_id = $this->story_artifact_ids[1];
@@ -420,9 +398,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         return $file_id;
     }
 
-    /**
-     * @depends testAttachFileToPutArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAttachFileToPutArtifact')]
     public function testArtifactAttachedFilesGetId($file_id)
     {
         $request  = $this->request_factory->createRequest('GET', 'artifact_files/' . $file_id);
@@ -438,9 +414,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($expected, $data);
     }
 
-    /**
-     * @depends testAttachFileToPutArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAttachFileToPutArtifact')]
     public function testArtifactAttachedFilesGetIdWithUserRESTReadOnlyAdmin($file_id)
     {
         $request  = $this->request_factory->createRequest('GET', 'artifact_files/' . $file_id);
@@ -456,9 +430,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($expected, $data);
     }
 
-    /**
-     * @depends testAttachFileToPutArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAttachFileToPutArtifact')]
     public function testOptionsArtifactAttachedFilesId($file_id)
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artifact_files/' . $file_id));
@@ -467,9 +439,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testAttachFileToPutArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAttachFileToPutArtifact')]
     public function testOptionsArtifactAttachedFilesIdUserRESTReadOnlyAdmin($file_id)
     {
         $response = $this->getResponse(

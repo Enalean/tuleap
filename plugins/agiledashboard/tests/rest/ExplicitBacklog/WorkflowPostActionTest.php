@@ -36,9 +36,7 @@ class WorkflowPostActionTest extends TestBase
         $this->assertPostActionExists($transition_id);
     }
 
-    /**
-     * @depends testGetBasePostAction
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetBasePostAction')]
     public function testRemoveThePostAction()
     {
         $transition_id = $this->getTransitionId();
@@ -65,9 +63,7 @@ class WorkflowPostActionTest extends TestBase
         $this->assertEmpty($post_actions);
     }
 
-    /**
-     * @depends testRemoveThePostAction
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testRemoveThePostAction')]
     public function testCreateAddToTopBacklogPostAction(): void
     {
         $transition_id = $this->getTransitionId();

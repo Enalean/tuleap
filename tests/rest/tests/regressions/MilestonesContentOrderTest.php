@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
 /**
  * PUT /milestones/123/content doesn't change the order of elements
  * I submit a change where only the order of the elements changes, there is no
@@ -28,9 +27,9 @@
  * The problem only arises when only the order of the elements changes.
  *
  * @see https://tuleap.net/plugins/tracker/?aid=6429
- * @group Regressions
  */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('Regressions')]
 class Regressions_MilestonesContentOrderTest extends RestBase
 {
     public function testItSetsTheContentOrder()

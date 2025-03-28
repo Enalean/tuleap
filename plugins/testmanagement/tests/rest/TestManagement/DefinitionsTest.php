@@ -24,10 +24,8 @@ use REST_TestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-/**
- * @group TestManagementTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]
 final class DefinitionsTest extends TestManagementRESTTestCase
 {
     public function testGetDefinition(): void

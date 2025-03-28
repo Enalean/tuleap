@@ -24,10 +24,8 @@ use REST_TestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-/**
- * @group SVNTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('SVNTests')]
 class ProjectTest extends TestBase
 {
     public function testGETRepositories(): void

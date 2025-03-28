@@ -112,10 +112,8 @@ class RepositoryTest extends TestBase
         $this->assertArrayNotHasKey('settings', $repository);
     }
 
-    /**
-     * @depends testGETRepositoryForProjectAdmin
-     * @depends testGETRepositoryForProjectMember
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETRepositoryForProjectAdmin')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGETRepositoryForProjectMember')]
     public function testDELETERepositoryForProjectAdmin()
     {
         $response = $this->getResponse(
@@ -125,10 +123,8 @@ class RepositoryTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 202);
     }
 
-    /**
-     * @depends testGETRepositoryForProjectAdmin
-     * @depends testGETRepositoryForProjectMember
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETRepositoryForProjectAdmin')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGETRepositoryForProjectMember')]
     public function testDELETERepositoryForProjectMember()
     {
         $response = $this->getResponseWithProjectMember(
@@ -137,10 +133,8 @@ class RepositoryTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGETRepositoryForProjectAdmin
-     * @depends testGETRepositoryForProjectMember
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETRepositoryForProjectAdmin')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGETRepositoryForProjectMember')]
     public function testDELETERepositoryForRESTReadOnlyUserNotInvolvedInProject()
     {
         $response = $this->getResponse(

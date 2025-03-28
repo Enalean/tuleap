@@ -25,10 +25,8 @@ use RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-/**
- * @group PullRequest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('PullRequest')]
 final class PullRequestsLabelsTest extends RestBase
 {
     public function testOPTIONS(): void
@@ -72,9 +70,7 @@ final class PullRequestsLabelsTest extends RestBase
         $this->assertEquals([], $content['labels']);
     }
 
-    /**
-     * @depends testGETLabel
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETLabel')]
     public function testPATCHAddUnknownLabel(): void
     {
         $response = $this->getResponse(
@@ -93,9 +89,7 @@ final class PullRequestsLabelsTest extends RestBase
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
 
-    /**
-     * @depends testGETLabel
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETLabel')]
     public function testPATCHWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
@@ -112,9 +106,7 @@ final class PullRequestsLabelsTest extends RestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPATCHAddUnknownLabel
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHAddUnknownLabel')]
     public function testNewLabelIsAddedToProject()
     {
         $project_id = $this->getProjectId('test-git');
@@ -123,9 +115,7 @@ final class PullRequestsLabelsTest extends RestBase
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
 
-    /**
-     * @depends testNewLabelIsAddedToProject
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testNewLabelIsAddedToProject')]
     public function testPATCHRemoveLabel()
     {
         $response  = json_decode($this->getResponse($this->request_factory->createRequest('GET', 'pull_requests/1/labels'))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -147,9 +137,7 @@ final class PullRequestsLabelsTest extends RestBase
         $this->assertEquals([], $response['labels']);
     }
 
-    /**
-     * @depends testPATCHRemoveLabel
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHRemoveLabel')]
     public function testRemovedLabelsAreNotRemovedInProject()
     {
         $project_id = $this->getProjectId('test-git');
@@ -158,9 +146,7 @@ final class PullRequestsLabelsTest extends RestBase
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
 
-    /**
-     * @depends testRemovedLabelsAreNotRemovedInProject
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testRemovedLabelsAreNotRemovedInProject')]
     public function testPATCHAddProjectLabel()
     {
         $project_id     = $this->getProjectId('test-git');

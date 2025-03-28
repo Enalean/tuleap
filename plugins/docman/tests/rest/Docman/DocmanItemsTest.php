@@ -33,9 +33,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanItemsTest extends DocmanTestExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -73,9 +71,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         return $items;
     }
 
-    /**
-     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
     {
         $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
@@ -112,9 +108,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         return $items;
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testRegularUserCantSeeFolderHeCantRead(int $root_id): void
     {
         $response = $this->getResponseByName(
@@ -129,9 +123,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertNull($denied_folder);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOPTIONSDocmanItemsId($root_id): void
     {
         $response = $this->getResponse(
@@ -142,9 +134,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOPTIONSId($root_id): void
     {
         $response = $this->getResponse(
@@ -155,9 +145,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testAllOPTIONSDocmanItemsWithUserRESTReadOnlyAdmin($root_id): void
     {
         $response = $this->getResponse(
@@ -175,9 +163,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetId($root_id): void
     {
         $response = $this->getResponse(
@@ -192,9 +178,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertNull($item['permissions_for_groups']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetIdWithUserRESTReadOnlyAdmin($root_id): void
     {
         $response = $this->getResponse(
@@ -209,9 +193,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertIsArray($item['permissions_for_groups']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetFolderWithSize(int $root_id): void
     {
         $root_folder        = $this->loadRootFolderContent($root_id);
@@ -234,9 +216,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testGetAllItemParents(array $items): void
     {
         $embedded_2 = $this->findItemByTitle($items, 'GET EM');
@@ -249,9 +229,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($json_parents[2]['title'], 'GET FO');
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testGetAllItemParentsWithUserRESTReadOnlyAdmin(array $items): void
     {
         $embedded_2 = $this->findItemByTitle($items, 'GET EM');
@@ -268,9 +246,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($json_parents[2]['title'], 'GET FO');
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testLog(int $root_id): void
     {
         $uri = 'docman_items/' . $root_id . '/logs';

@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-/**
- * @group ArtifactsChangesets
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ArtifactsChangesets')]
 class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private $artifact_resource;

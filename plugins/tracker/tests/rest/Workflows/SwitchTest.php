@@ -52,9 +52,7 @@ class SwitchTest extends TrackerBase
         return $tracker_after_patch;
     }
 
-    /**
-     * @depends testPATCHTrackerToSwitchWorkflowInAdvancedMode
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHTrackerToSwitchWorkflowInAdvancedMode')]
     public function testPATCHTrackerToSwitchWorkflowInSimpleMode(array $tracker): void
     {
         $workflow = $tracker['workflow'];

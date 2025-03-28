@@ -244,9 +244,7 @@ class TimetrackingTest extends TimetrackingBase
         $this->assertEquals($response->getStatusCode(), 201);
     }
 
-    /**
-     * @depends testAddTimeSuccess
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAddTimeSuccess')]
     public function testGetTimeOnArtifact()
     {
         $query    = urlencode(json_encode([

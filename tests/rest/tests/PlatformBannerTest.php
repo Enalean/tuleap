@@ -22,10 +22,8 @@ namespace Tuleap\REST;
 
 use REST_TestDataBuilder;
 
-/**
- * @group ProjectTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class PlatformBannerTest extends ProjectBase
 {
     public function testOptions(): void
@@ -82,9 +80,7 @@ class PlatformBannerTest extends ProjectBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTForAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTForAdmin')]
     public function testGETBanner(): void
     {
         $response = $this->getResponseByName(
@@ -102,9 +98,7 @@ class PlatformBannerTest extends ProjectBase
         );
     }
 
-    /**
-     * @depends testGETBanner
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETBanner')]
     public function testDELETEBannerForRegularUser(): void
     {
         $response = $this->getResponseByName(
@@ -115,9 +109,7 @@ class PlatformBannerTest extends ProjectBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGETBanner
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETBanner')]
     public function testDELETEBannerForAdmin(): void
     {
         $response = $this->getResponseByName(
