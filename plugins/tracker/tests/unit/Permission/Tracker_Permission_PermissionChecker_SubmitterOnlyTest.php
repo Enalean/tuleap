@@ -21,86 +21,55 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
-     */
-    protected $user_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    protected $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    protected $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    protected $submitter;
-    /**
-     * @var int
-     */
-    protected $ugroup_id_submitter_only;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    protected $artifact;
-    /**
-     * @var \Mockery\MockInterface|ProjectAccessChecker
-     */
-    protected $project_access_checker;
-    /**
-     * @var Tracker_Permission_PermissionChecker
-     */
-    protected $permission_checker;
+    protected PFUser&MockObject $user;
+    protected PFUser&MockObject $submitter;
+    protected int $ugroup_id_submitter_only = 112;
+    protected Artifact $artifact;
+    protected ProjectAccessChecker&MockObject $project_access_checker;
+    protected Tracker_Permission_PermissionChecker $permission_checker;
 
     protected function setUp(): void
     {
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getID')->andReturns(120);
-        $project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withId(222)->withAccessPublic()->build();
 
-        $this->user_manager           = \Mockery::spy(\UserManager::class);
-        $this->project_access_checker = \Mockery::mock(ProjectAccessChecker::class);
-        $this->permission_checker     = new Tracker_Permission_PermissionChecker(
-            $this->user_manager,
+        $this->user = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(120);
+        $this->user->method('isAdmin')->willReturn(false);
+        $this->user->method('isMemberOfUGroup')->willReturn(false);
+
+        $this->submitter = $this->createMock(\PFUser::class);
+        $this->submitter->method('getId')->willReturn(250);
+        $this->submitter->method('isAdmin')->willReturn(false);
+        $this->submitter->method('isMemberOfUGroup')
+            ->with($this->ugroup_id_submitter_only, $project->getID())
+            ->willReturn(true);
+
+        $this->project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $this->project_access_checker->method('checkUserCanAccessProject');
+
+        $this->permission_checker = new Tracker_Permission_PermissionChecker(
+            RetrieveUserByIdStub::withUsers($this->user, $this->submitter),
             $this->project_access_checker,
             $this->createMock(\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker::class),
         );
 
-        $this->tracker = \Mockery::spy(\Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturns(666);
-        $this->tracker->shouldReceive('getGroupId')->andReturns(222);
-        $this->tracker->shouldReceive('getProject')->andReturns($project);
-
-        $this->ugroup_id_submitter_only = 112;
-
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturns(120);
-        $this->user->shouldReceive('isMember')->with(12)->andReturns(true);
-
-        $this->submitter = \Mockery::spy(\PFUser::class);
-        $this->submitter->shouldReceive('getId')->andReturns(250);
-        $this->submitter->shouldReceive('isMemberOfUGroup')->with($this->ugroup_id_submitter_only, 222)->andReturns(
-            true
-        );
-        $this->submitter->shouldReceive('isMember')->with(12)->andReturns(true);
-
-        $this->user_manager->shouldReceive('getUserById')->with(120)->andReturns($this->user);
-        $this->user_manager->shouldReceive('getUserById')->with(250)->andReturns($this->submitter);
-
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
-
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(666);
+        $tracker->method('getGroupId')->willReturn($project->getID());
+        $tracker->method('getProject')->willReturn($project);
+        $tracker->method('isDeleted')->willReturn(false);
+        $tracker->method('userIsAdmin')->willReturn(false);
+        $tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [
                 Tracker::PERMISSION_SUBMITTER_ONLY => [
                     0 => $this->ugroup_id_submitter_only,
@@ -108,18 +77,19 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \Tule
             ]
         );
 
-        $this->artifact->shouldReceive('getSubmittedBy')->andReturns(250);
+        $this->artifact = ArtifactTestBuilder::anArtifact(250)
+            ->inTracker($tracker)
+            ->submittedBy($this->submitter)
+            ->build();
     }
 
     public function testItDoesntSeeArtifactSubmittedByOthers(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->assertFalse($this->permission_checker->userCanView($this->user, $this->artifact));
     }
 
     public function testItSeesArtifactSubmittedByThemselves(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->assertTrue($this->permission_checker->userCanView($this->submitter, $this->artifact));
     }
 }

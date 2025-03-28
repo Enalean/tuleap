@@ -18,15 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Permission_PermissionRequestTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var array
-     */
-    private $minimal_ugroup_list;
+    private array $minimal_ugroup_list;
 
     protected function setUp(): void
     {
@@ -40,15 +37,10 @@ final class Tracker_Permission_PermissionRequestTest extends \Tuleap\Test\PHPUni
 
     public function testItHasPermissionsBasedOnGroupIds(): void
     {
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::ANONYMOUS])
-            ->andReturn(Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
-        $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::REGISTERED])
-            ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
-        $request->shouldReceive('get')
-            ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
+        $request = HTTPRequestBuilder::get()->withParams([
+            Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::ANONYMOUS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
+            Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_FULL,
+        ])->build();
 
         $set_permission_request = new Tracker_Permission_PermissionRequest([]);
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
@@ -59,15 +51,10 @@ final class Tracker_Permission_PermissionRequestTest extends \Tuleap\Test\PHPUni
 
     public function testItRevokesPermissions(): void
     {
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::ANONYMOUS])
-            ->andReturn(Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
-        $request->shouldReceive('get')
-            ->withArgs([Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::REGISTERED])
-            ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
-        $request->shouldReceive('get')
-            ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
+        $request = HTTPRequestBuilder::get()->withParams([
+            Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::ANONYMOUS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
+            Tracker_Permission_Command::PERMISSION_PREFIX . ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_FULL,
+        ])->build();
 
         $set_permission_request = new Tracker_Permission_PermissionRequest([]);
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
