@@ -19984,7 +19984,6 @@
     <MissingReturnType>
       <code><![CDATA[getBurnDownData]]></code>
       <code><![CDATA[isValidEffortField]]></code>
-      <code><![CDATA[isValidType]]></code>
     </MissingReturnType>
     <UndefinedDocblockClass>
       <code><![CDATA[Burndown_Engine]]></code>
@@ -78069,9 +78068,13 @@
   </file>
   <file src="tests/lib/Builders/TestLayout.php">
     <MissingParamType>
+      <code><![CDATA[$html_options]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$items]]></code>
       <code><![CDATA[$level]]></code>
       <code><![CDATA[$message]]></code>
       <code><![CDATA[$purify]]></code>
+      <code><![CDATA[$rank]]></code>
       <code><![CDATA[$redirect_url]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -78080,6 +78083,7 @@
       <code><![CDATA[getUser]]></code>
       <code><![CDATA[includeCalendarScripts]]></code>
       <code><![CDATA[includeFooterJavascriptFile]]></code>
+      <code><![CDATA[selectRank]]></code>
     </MissingReturnType>
   </file>
   <file src="tests/lib/Builders/UserTestBuilder.php">

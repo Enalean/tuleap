@@ -18,33 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
+use ForgeConfig;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Project;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker;
-use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElement;
 use Tracker_FormElement_StaticField_Separator;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use GlobalResponseMock;
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
+        ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
     }
 
     protected function tearDown(): void
@@ -52,35 +60,32 @@ class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($GLOBALS['HTML'], $GLOBALS['_SESSION']);
     }
 
-    public function testGetOriginalProjectAndOriginalTracker()
+    public function testGetOriginalProjectAndOriginalTracker(): void
     {
-        $project = Mockery::mock(Project::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(888);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $original = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $original->shouldReceive('getTracker')->andReturns($tracker);
+        $project  = ProjectTestBuilder::aProject()->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withId(888)->withProject($project)->build();
+        $original = ListFieldBuilder::aListField(687)->inTracker($tracker)->build();
 
-        $element = $this->GivenAFormElementWithIdAndOriginalField(null, $original);
+        $element = $this->givenAFormElementWithIdAndOriginalField(null, $original);
 
-        $this->assertEquals($tracker, $element->getOriginalTracker());
-        $this->assertEquals($project, $element->getOriginalProject());
+        self::assertEquals($tracker, $element->getOriginalTracker());
+        self::assertEquals($project, $element->getOriginalProject());
     }
 
-    public function testGetOriginalFieldIdShouldReturnTheFieldId()
+    public function testGetOriginalFieldIdShouldReturnTheFieldId(): void
     {
-        $original = $this->GivenAFormElementWithIdAndOriginalField(112, null);
-        $element  = $this->GivenAFormElementWithIdAndOriginalField(null, $original);
-        $this->assertEquals($element->getOriginalFieldId(), 112);
+        $original = $this->givenAFormElementWithIdAndOriginalField(112, null);
+        $element  = $this->givenAFormElementWithIdAndOriginalField(null, $original);
+        self::assertEquals(112, $element->getOriginalFieldId());
     }
 
-    public function testGetOriginalFieldIdShouldReturn0IfNoOriginalField()
+    public function testGetOriginalFieldIdShouldReturn0IfNoOriginalField(): void
     {
-        $element = $this->GivenAFormElementWithIdAndOriginalField(null, null);
-        $this->assertEquals($element->getOriginalFieldId(), 0);
+        $element = $this->givenAFormElementWithIdAndOriginalField(null, null);
+        self::assertEquals(0, $element->getOriginalFieldId());
     }
 
-    protected function givenAFormElementWithIdAndOriginalField($id, $originalField)
+    protected function givenAFormElementWithIdAndOriginalField(?int $id, ?Tracker_FormElement $original_field): Tracker_FormElement_StaticField_Separator
     {
         return new Tracker_FormElement_StaticField_Separator(
             $id,
@@ -94,53 +99,45 @@ class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             null,
             null,
-            $originalField
+            $original_field
         );
     }
 
-    public function testDisplayUpdateFormShouldDisplayAForm()
+    public function testDisplayUpdateFormShouldDisplayAForm(): void
     {
-        $formElement = $this->GivenAFormElementWithIdAndOriginalField(null, null);
-        $factory     = Mockery::mock(Tracker_FormElementFactory::class);
-        $factory->shouldReceive('getUsedFormElementForTracker')->andReturns([]);
-        $factory->shouldReceive('getSharedTargets');
-        $tracker = Mockery::mock(Tracker::class);
+        $form_element = $this->givenAFormElementWithIdAndOriginalField(null, null);
+        $factory      = $this->createMock(Tracker_FormElementFactory::class);
+        $factory->method('getUsedFormElementForTracker')->willReturn([]);
+        $factory->method('getSharedTargets');
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(888);
+        $tracker->method('displayAdminFormElements')->willReturn('');
+        $tracker->method('displayAdminFormElementsHeader')->willReturn('');
+        $tracker->method('displayFooter')->willReturn('');
 
-        $tracker->shouldReceive('getId')->andReturn(888);
-        $tracker->shouldReceive('displayAdminFormElementsHeader');
-        $tracker->shouldReceive('displayFooter');
-        $formElement->setTracker($tracker);
-        $formElement->setFormElementFactory($factory);
+        $form_element->setTracker($tracker);
+        $form_element->setFormElementFactory($factory);
 
-        $content = $this->WhenIDisplayAdminFormElement($formElement);
+        $content = $this->whenIDisplayAdminFormElement($form_element);
 
-        $this->assertMatchesRegularExpression('%Update%', $content);
-        $this->assertMatchesRegularExpression('%</form>%', $content);
+        self::assertMatchesRegularExpression('%Update%', $content);
+        self::assertMatchesRegularExpression('%</form>%', $content);
     }
 
-    private function whenIDisplayAdminFormElement($formElement)
+    private function whenIDisplayAdminFormElement(Tracker_FormElement $form_element): string
     {
-        $GLOBALS['HTML'] = new class {
-            public function getImagePath(): string
-            {
-                return '.';
-            }
+        $GLOBALS['HTML'] = new TestLayout(new LayoutInspector());
 
-            public function selectRank(): string
-            {
-                return '';
-            }
-        };
-
-        $tracker_manager = Mockery::mock(TrackerManager::class);
-        $user            = Mockery::mock(PFUser::class);
-        $request         = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('isAjax')->andReturn(false);
         ob_start();
-        $formElement->displayAdminFormElement($tracker_manager, $request, $user);
+        $form_element->displayAdminFormElement(
+            $this->createMock(TrackerManager::class),
+            new HTTPRequest(),
+            UserTestBuilder::buildWithDefaults(),
+        );
         $content = ob_get_contents();
         ob_end_clean();
 
+        self::assertIsString($content);
         return $content;
     }
 }
