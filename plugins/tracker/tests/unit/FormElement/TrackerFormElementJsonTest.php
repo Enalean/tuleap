@@ -18,40 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Field_String;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFormElementJsonTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementJsonTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_String
-     */
-    private $form_element;
+    private Tracker_FormElement_Field_String $form_element;
 
     protected function setUp(): void
     {
-        $this->form_element = Mockery::mock(Tracker_FormElement_Field_String::class)->makePartial();
-        $this->form_element->setId(300);
-        $this->form_element->shouldReceive('getLabel')->andReturn('My field');
-        $this->form_element->shouldReceive('getName')->andReturn('my_field');
+        $this->form_element = StringFieldBuilder::aStringField(300)->withLabel('My field')->withName('my_field')->build();
     }
 
-    public function testItHasAllFieldElementsInJsonReadyArray()
+    public function testItHasAllFieldElementsInJsonReadyArray(): void
     {
-        $this->assertEquals(
-            [
-                'id'    => 300,
-                'label' => 'My field',
-                'name'  => 'my_field',
-            ],
-            $this->form_element->fetchFormattedForJson()
-        );
+        self::assertSame([
+            'id'    => 300,
+            'name'  => 'my_field',
+            'label' => 'My field',
+        ], $this->form_element->fetchFormattedForJson());
     }
 }
