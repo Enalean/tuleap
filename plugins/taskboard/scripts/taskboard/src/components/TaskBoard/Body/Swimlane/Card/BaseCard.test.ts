@@ -29,12 +29,14 @@ import type { UpdateCardPayload } from "../../../../../store/swimlane/card/type"
 import * as scroll_helper from "../../../../../helpers/scroll-to-item";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
 
+type ExposedCard = { label: string };
+
 async function getWrapper(
     card: Card,
     slots: Slots = {},
     user_has_accessibility_mode = false,
     tracker_of_card: Tracker = { title_field: { id: 1212 } } as Tracker,
-): Promise<Wrapper<BaseCard>> {
+): Promise<Wrapper<Vue & ExposedCard>> {
     return shallowMount(BaseCard, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
@@ -191,9 +193,9 @@ describe("BaseCard", () => {
             const wrapper = await getWrapper(card);
 
             wrapper.setData({ label: "Ipsum" });
-            expect(wrapper.vm.$data.label).toBe("Ipsum");
+            expect(wrapper.vm.label).toBe("Ipsum");
             EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
-            expect(wrapper.vm.$data.label).toBe("Lorem");
+            expect(wrapper.vm.label).toBe("Lorem");
         });
 
         it(`Saves the new label when user hits enter`, async () => {
