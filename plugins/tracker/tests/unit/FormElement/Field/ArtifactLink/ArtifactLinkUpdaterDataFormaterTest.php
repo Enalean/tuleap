@@ -22,34 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ArtifactLinkUpdaterDataFormaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_ArtifactLink
-     */
-    private $artifact_link_field;
+    private Tracker&MockObject $tracker;
+    private Tracker_FormElement_Field_ArtifactLink $artifact_link_field;
 
     protected function setUp(): void
     {
-        $this->tracker             = \Mockery::mock(Tracker::class);
-        $this->artifact_link_field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $this->artifact_link_field->shouldReceive('getId')->andReturn(66);
-        $this->artifact_link_field->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getId')->willReturn(15);
+        $this->artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(66)->inTracker($this->tracker)->build();
     }
 
     public function testItAddNewValuesInNewValuesEntries(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
+        $this->tracker->expects($this->once())->method('isProjectAllowedToUseType')->willReturn(false);
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
         $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100, 101], [], '');
@@ -63,7 +58,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItRemoveOldValues(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
+        $this->tracker->expects($this->once())->method('isProjectAllowedToUseType')->willReturn(false);
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
         $formatted_value = $formater->formatFieldData($this->artifact_link_field, [], [200, 201], '');
@@ -77,7 +72,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItRemovesTypeOfArtifactLinkWhenItsNoLongerAvailableInProject(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnFalse();
+        $this->tracker->expects($this->once())->method('isProjectAllowedToUseType')->willReturn(false);
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
         $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], 'legacy_type');
@@ -91,7 +86,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItPreserveType(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->once()->andReturnTrue();
+        $this->tracker->expects($this->once())->method('isProjectAllowedToUseType')->willReturn(true);
 
         $formater        = new ArtifactLinkUpdaterDataFormater();
         $formatted_value = $formater->formatFieldData($this->artifact_link_field, [100], [], 'used_type');
