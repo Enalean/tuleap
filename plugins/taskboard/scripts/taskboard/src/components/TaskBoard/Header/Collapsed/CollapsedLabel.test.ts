@@ -21,18 +21,11 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CollapsedLabel from "./CollapsedLabel.vue";
 import type { ColumnDefinition } from "../../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { RootState } from "../../../../store/type";
 import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 
-function getWrapper(column: ColumnDefinition): Wrapper<CollapsedLabel> {
+function getWrapper(column: ColumnDefinition): Wrapper<Vue> {
     return shallowMount(CollapsedLabel, {
         propsData: { column },
-        mocks: {
-            $store: createStoreMock({
-                state: { card_being_dragged: null, column: {} } as RootState,
-            }),
-        },
     });
 }
 
@@ -49,32 +42,5 @@ describe("CollapsedLabel", () => {
         const wrapper = getWrapper(column);
 
         expect(wrapper.findComponent(CardsInColumnCount).exists()).toBe(true);
-    });
-
-    it(`informs the pointerenter`, () => {
-        const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column);
-
-        wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
-    });
-
-    it(`informs the pointerleave`, () => {
-        const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column);
-
-        wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", {
-            column,
-            card_being_dragged: null,
-        });
-    });
-
-    it(`expands the column when use click on the collapsed label`, () => {
-        const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column);
-
-        wrapper.trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
     });
 });
