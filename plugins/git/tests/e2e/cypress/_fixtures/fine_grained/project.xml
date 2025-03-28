@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="git-fined-grained" full-name="git-fined-grained" description="aa" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_git" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+    <ugroup name="Integrators" description="">
+      <members>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+    <ugroup name="Contributors" description="">
+      <members>
+        <member format="username">ARegularUser</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <dashboards>
+    <dashboard name="0 - Global Dashboard">
+    </dashboard>
+  </dashboards>
+  <git>
+    <ugroups-admin>
+      <ugroup><![CDATA[Project administrators]]></ugroup>
+      <ugroup><![CDATA[Project administrators]]></ugroup>
+    </ugroups-admin>
+    <repository name="fine-grained" description="-- Default description --" allow_artifact_closure="1" default_branch="main" bundle-path="export/repository-25.bundle">
+      <last-push-date push_date="1738252649" commits_number="1" refname="refs/heads/devel" operation_type="create" refname_type="branch">
+        <user format="username">ProjectMember</user>
+      </last-push-date>
+      <permissions>
+        <read>
+          <ugroup><![CDATA[Registered users]]></ugroup>
+        </read>
+        <fine_grained enabled="1" use_regexp="1">
+          <pattern value="*" type="branch">
+            <write>
+              <ugroup>Integrators</ugroup>
+            </write>
+            <wplus>
+              <ugroup>Nobody</ugroup>
+            </wplus>
+          </pattern>
+          <pattern value="dev/*" type="branch">
+            <write>
+              <ugroup>Contributors</ugroup>
+            </write>
+            <wplus>
+              <ugroup>Contributors</ugroup>
+            </wplus>
+          </pattern>
+          <pattern value="official/*" type="tag">
+            <write>
+              <ugroup>Integrators</ugroup>
+            </write>
+            <wplus>
+              <ugroup>Nobody</ugroup>
+            </wplus>
+          </pattern>
+          <pattern value="*" type="tag">
+            <write>
+              <ugroup>Contributors</ugroup>
+            </write>
+            <wplus>
+              <ugroup>Contributors</ugroup>
+            </wplus>
+          </pattern>
+        </fine_grained>
+      </permissions>
+    </repository>
+  </git>
+</project>

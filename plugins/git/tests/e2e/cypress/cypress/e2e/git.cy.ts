@@ -45,19 +45,12 @@ describe("Git", function () {
                 cy.log(
                     "Push some content inside repository to be sure that last commit can be displayed",
                 );
-                const uri = encodeURI(
-                    "https://ProjectAdministrator:Correct Horse Battery Staple@tuleap/plugins/git/git-dashboard/Aquali.git",
+                cy.cloneRepository(
+                    "ProjectAdministrator",
+                    "tuleap/plugins/git/git-dashboard/Aquali.git",
+                    `Aquali${now}`,
                 );
-                const command = `cd /tmp &&
-                git -c http.sslVerify=false clone ${uri} Aquali${now} &&
-                cd /tmp/Aquali${now} &&
-                git config user.name "admin" &&
-                git config user.email "admin@example.com" &&
-                echo aa >> README &&
-                git add . &&
-                git commit -m 'test commit' &&
-                git -c http.sslVerify=false push`;
-                cy.exec(command);
+                cy.pushGitCommit(`Aquali${now}`);
 
                 cy.log("Add widget to project dashboard");
                 cy.visit(`projects/git-dashboard`);
@@ -91,6 +84,7 @@ describe("Git", function () {
                 cy.get("[data-test=commit-direct-link]").first().click({ force: true });
                 cy.url().should("include", "/plugins/git/git-dashboard/Aquali");
             });
+
             it("can create a new repository and delete it", function () {
                 cy.projectAdministratorSession();
                 visitGitService();
@@ -262,6 +256,54 @@ describe("Git", function () {
                 cy.get("[data-test=submit-git-notifications]").click();
 
                 cy.get("[data-test=feedback]").contains("successfully added to notifications");
+            });
+        });
+        context("Fine grained permissions", function () {
+            it("Permissions should be respected", function () {
+                const repository_path = "tuleap/plugins/git/git-fined-grained/fine-grained";
+                const repository_name = `fine-grained-pm-${now}`;
+                cy.log("clone the repository and push commit in main branch");
+                cy.cloneRepository("ProjectMember", repository_path, repository_name);
+                cy.pushGitCommit(repository_name);
+
+                cy.log("Integrators should be able to push content in devel branch");
+                cy.pushAndRebaseGitCommitInBranch(repository_name, "devel");
+
+                cy.log("Switch from Integrator to Contributor");
+                cy.deleteClone(repository_name);
+                cy.cloneRepository("ARegularUser", repository_path, repository_name);
+
+                cy.log("Contributors should be able to push content in dev/aregularuser branch");
+                cy.pushGitCommitInBranch(repository_name, "dev/aregularuser");
+
+                cy.log("Contributors can not push content in devel branch");
+                cy.pushGitCommitInBranchWillFail(repository_name, "devel");
+
+                cy.log("Contributors should be able to delete commit in their own branch");
+                cy.deleteGitCommitInExistingBranch(repository_name, "dev/aregularuser");
+
+                cy.log("Contributors can not delete commit in main branch");
+                cy.deleteGitCommitInExistingBranchWillFail(repository_name, "main");
+
+                cy.log("reset changes");
+                const reset_changes = `cd /tmp &&
+                    cd /tmp/${repository_name} &&
+                    git reset --hard origin/main
+                `;
+                cy.exec(reset_changes);
+
+                cy.log("Contributors should be able to push tag on main branch");
+                cy.createAndPushTag(repository_name, "v1");
+
+                cy.log("Contributor can not push tags official/v1");
+                cy.deleteClone(repository_name);
+                cy.cloneRepository("ARegularUser", repository_path, repository_name);
+                cy.createAndPushTagWillFail(repository_name, "official/v1");
+
+                cy.deleteClone(repository_name);
+                cy.cloneRepository("ProjectMember", repository_path, repository_name);
+                cy.log("Integrator should be able to push tags on official v1 branch");
+                cy.createAndPushTag(repository_name, "official/v1");
             });
         });
     });
