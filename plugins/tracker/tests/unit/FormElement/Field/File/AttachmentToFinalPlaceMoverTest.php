@@ -22,23 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FileInfo;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AttachmentToFinalPlaceMoverTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class AttachmentToFinalPlaceMoverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItMovesTheFile(): void
     {
-        $fileinfo = \Mockery::mock(\Tracker_FileInfo::class);
-        $fileinfo->shouldReceive('getPath')->andReturn('/path/to/dest');
-        $fileinfo->shouldReceive('postUploadActions')->once();
-        $fileinfo->shouldReceive('delete')->never();
+        $fileinfo = $this->createMock(Tracker_FileInfo::class);
+        $fileinfo->method('getPath')->willReturn('/path/to/dest');
+        $fileinfo->expects($this->once())->method('postUploadActions');
+        $fileinfo->expects($this->never())->method('delete');
 
         $method = function (string $path_a, string $path_b): bool {
             if ($path_a !== '/path/to/file' || $path_b !== '/path/to/dest') {
-                $this->fail();
+                self::fail();
             }
             return true;
         };
@@ -49,14 +49,14 @@ class AttachmentToFinalPlaceMoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItFailsMovingTheFile(): void
     {
-        $fileinfo = \Mockery::mock(\Tracker_FileInfo::class);
-        $fileinfo->shouldReceive('getPath')->andReturn('/path/to/dest');
-        $fileinfo->shouldReceive('postUploadActions')->never();
-        $fileinfo->shouldReceive('delete')->once();
+        $fileinfo = $this->createMock(Tracker_FileInfo::class);
+        $fileinfo->method('getPath')->willReturn('/path/to/dest');
+        $fileinfo->expects($this->never())->method('postUploadActions');
+        $fileinfo->expects($this->once())->method('delete');
 
         $method = function (string $path_a, string $path_b): bool {
             if ($path_a !== '/path/to/file' || $path_b !== '/path/to/dest') {
-                $this->fail();
+                self::fail();
             }
             return false;
         };

@@ -18,27 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\String;
 
-use Mockery;
-use Tracker_FormElement_Field_String;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFormElementFieldStringRESTTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementFieldStringRESTTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testItReturnsTheValueIndexedByFieldName()
+    public function testItReturnsTheValueIndexedByFieldName(): void
     {
-        $field =  Mockery::mock(Tracker_FormElement_Field_String::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $field = StringFieldBuilder::aStringField(330)->build();
 
         $value = [
             'field_id' => 330,
             'value'    => 'My awesome content',
         ];
 
-        $this->assertEquals('My awesome content', $field->getFieldDataFromRESTValueByField($value));
+        self::assertEquals('My awesome content', $field->getFieldDataFromRESTValueByField($value));
     }
 }

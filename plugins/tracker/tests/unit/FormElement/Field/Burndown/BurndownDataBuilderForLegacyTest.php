@@ -18,98 +18,78 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Psr\Log\NullLogger;
+use Tracker_FormElement_Field_Computed;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\JsonCast;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\TimezoneRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BurndownDataBuilderForLegacyTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
-    /**
-     * @var string
-     */
-    private $original_timezone;
-    /**
-     * @var \PFUser
-     */
-    private $user;
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var BurndownDataBuilderForLegacy
-     */
-    private $burndown_data_builder;
+    private string $original_timezone;
+    private PFUser $user;
+    private Artifact $artifact;
+    private BurndownDataBuilderForLegacy $burndown_data_builder;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
 
         $timezone_retriever      = new TimezoneRetriever();
         $this->original_timezone = $timezone_retriever::getServerTimezone();
 
-        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $logger->shouldReceive('debug');
-        $logger->shouldReceive('info');
+        $field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);
+        $field_retriever->method('doesCapacityFieldExist')->willReturn(false);
 
-        $field_retriever = Mockery::mock(ChartConfigurationFieldRetriever::class);
-        $field_retriever->shouldReceive('doesCapacityFieldExist')->andReturn(false);
+        $field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $field_retriever->method('getBurndownRemainingEffortField')->willReturn($field);
+        $field->method('getCachedValue')->willReturn(1);
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
-        $field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($field);
-        $field->shouldReceive('getCachedValue')->andReturn(1);
-
-        $cache_checker = Mockery::mock(BurndownCacheGenerationChecker::class);
-        $cache_checker->shouldReceive('isBurndownUnderCalculationBasedOnServerTimezone')->andReturn(false);
+        $cache_checker = $this->createMock(BurndownCacheGenerationChecker::class);
+        $cache_checker->method('isBurndownUnderCalculationBasedOnServerTimezone')->willReturn(false);
 
         $this->burndown_data_builder = new BurndownDataBuilderForLegacy(
-            $logger,
+            new NullLogger(),
             $field_retriever,
-            Mockery::mock(ChartConfigurationValueRetriever::class),
+            $this->createStub(ChartConfigurationValueRetriever::class),
             $cache_checker,
             new BurndownRemainingEffortAdderForLegacy($field_retriever, new UserWithReadAllPermissionBuilder())
         );
 
-        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(101);
-        $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
-        $this->user = Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('toRow');
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
-
-        $language = Mockery::mock(\BaseLanguage::class);
-        $language->shouldReceive('getLanguageFromAcceptLanguage');
-        $GLOBALS['Language'] = $language;
-        $GLOBALS['Language']->shouldReceive('getText');
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
+        $this->user     = UserTestBuilder::anActiveUser()->build();
     }
 
     protected function tearDown(): void
     {
         date_default_timezone_set($this->original_timezone);
-        unset($GLOBALS['Language']);
-        parent::tearDown();
     }
 
-    public function testStartDateDoesNotShiftForUsersLocatedInUTCNegative()
+    public function testStartDateDoesNotShiftForUsersLocatedInUTCNegative(): void
     {
-        $this->user->shouldReceive('getTimezone')->andReturn('America/Los_Angeles');
+        $this->user->setTimezone('America/Los_Angeles');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
@@ -118,12 +98,12 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
         $shifted_start_date = 1541026800;
-        $this->assertEquals($user_burndown_data->getDatePeriod()->getStartDate(), $shifted_start_date);
+        self::assertEquals($shifted_start_date, $user_burndown_data->getDatePeriod()->getStartDate());
     }
 
-    public function testStartDateDoesNotShiftForUsersLocatedInUTCPositive()
+    public function testStartDateDoesNotShiftForUsersLocatedInUTCPositive(): void
     {
-        $this->user->shouldReceive('getTimezone')->andReturn('Asia/Tokyo');
+        $this->user->setTimezone('Asia/Tokyo');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
@@ -132,12 +112,12 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
         $shifted_start_date = 1541026800;
-        $this->assertEquals($user_burndown_data->getDatePeriod()->getStartDate(), $shifted_start_date);
+        self::assertEquals($shifted_start_date, $user_burndown_data->getDatePeriod()->getStartDate());
     }
 
-    public function testRemainingEffortAreNotShiftedUsersLocatedInUTCNegative()
+    public function testRemainingEffortAreNotShiftedUsersLocatedInUTCNegative(): void
     {
-        $this->user->shouldReceive('getTimezone')->andReturn('America/Los_Angeles');
+        $this->user->setTimezone('America/Los_Angeles');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
@@ -148,14 +128,14 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
-        $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
-        $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));
-        $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[2]->date, JsonCast::toDate($third_day));
+        self::assertEquals(JsonCast::toDate($start_date), $user_burndown_data->getRESTRepresentation()->points_with_date[0]->date);
+        self::assertEquals(JsonCast::toDate($second_day), $user_burndown_data->getRESTRepresentation()->points_with_date[1]->date);
+        self::assertEquals(JsonCast::toDate($third_day), $user_burndown_data->getRESTRepresentation()->points_with_date[2]->date);
     }
 
-    public function testRemainingEffortAreNotShiftedUsersLocatedInUTCPositive()
+    public function testRemainingEffortAreNotShiftedUsersLocatedInUTCPositive(): void
     {
-        $this->user->shouldReceive('getTimezone')->andReturn('Asia/Tokyo');
+        $this->user->setTimezone('Asia/Tokyo');
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
@@ -166,8 +146,8 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
-        $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
-        $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));
-        $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[2]->date, JsonCast::toDate($third_day));
+        self::assertEquals(JsonCast::toDate($start_date), $user_burndown_data->getRESTRepresentation()->points_with_date[0]->date);
+        self::assertEquals(JsonCast::toDate($second_day), $user_burndown_data->getRESTRepresentation()->points_with_date[1]->date);
+        self::assertEquals(JsonCast::toDate($third_day), $user_burndown_data->getRESTRepresentation()->points_with_date[2]->date);
     }
 }

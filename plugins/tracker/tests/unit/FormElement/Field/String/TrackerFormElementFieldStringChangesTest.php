@@ -20,44 +20,39 @@
 
 namespace Tuleap\Tracker\FormElement\Field\String;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_Artifact_ChangesetValue_String;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_String;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFormElementFieldStringChangesTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementFieldStringChangesTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_ChangesetValue_String
-     */
-    private $previous_value;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_String
-     */
-    private $field;
+    private Tracker_Artifact_ChangesetValue_Text $previous_value;
+    private Tracker_FormElement_Field_String $field;
 
     protected function setUp(): void
     {
-        $this->field          = Mockery::mock(Tracker_FormElement_Field_String::class)->makePartial();
-        $this->previous_value = Mockery::mock(Tracker_Artifact_ChangesetValue_String::class);
-        $this->previous_value->shouldReceive('getText')->andReturn('1');
+        $this->field          = StringFieldBuilder::aStringField(1456)->build();
+        $changeset            = ChangesetTestBuilder::aChangeset(654)->build();
+        $this->previous_value = ChangesetValueTextTestBuilder::aValue(1, $changeset, $this->field)->withValue('1')->build();
     }
 
-    public function testItReturnsTrueIfThereIsAChange()
+    public function testItReturnsTrueIfThereIsAChange(): void
     {
         $new_value = '1.0';
 
-        $this->assertTrue($this->field->hasChanges(Mockery::mock(Artifact::class), $this->previous_value, $new_value));
+        self::assertTrue($this->field->hasChanges(ArtifactTestBuilder::anArtifact(6546)->build(), $this->previous_value, $new_value));
     }
 
-    public function testItReturnsFalseIfThereIsNoChange()
+    public function testItReturnsFalseIfThereIsNoChange(): void
     {
         $new_value = '1';
 
-        $this->assertFalse($this->field->hasChanges(Mockery::mock(Artifact::class), $this->previous_value, $new_value));
+        self::assertFalse($this->field->hasChanges(ArtifactTestBuilder::anArtifact(6546)->build(), $this->previous_value, $new_value));
     }
 }
