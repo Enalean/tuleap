@@ -27,10 +27,8 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-/**
- * @group TrackerTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('TrackerTests')]
 class ArtifactTest extends TrackerBase
 {
     protected $project_id;
@@ -134,9 +132,7 @@ class ArtifactTest extends TrackerBase
         return $artifact_id;
     }
 
-    /**
-     * @depends testPOSTArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTArtifact')]
     public function testPUTArtifact($artifact_id)
     {
         $new_value = 'Test Release Updated';
@@ -174,9 +170,7 @@ class ArtifactTest extends TrackerBase
         return $artifact_id;
     }
 
-    /**
-     * @depends testPOSTArtifactInXMLTracker
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTArtifactInXMLTracker')]
     public function testGetArtifactInXMLTracker($artifact_id)
     {
         $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id));
@@ -193,9 +187,7 @@ class ArtifactTest extends TrackerBase
         $this->verifySloganAndStatusFieldPresenceAndValue($artifact_xml->values->item);
     }
 
-    /**
-     * @depends testPOSTArtifactInXMLTracker
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTArtifactInXMLTracker')]
     public function testGetArtifactInXMLTrackerWithValuesByField($artifact_id)
     {
         $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id . '?values_format=by_field'));
@@ -212,9 +204,7 @@ class ArtifactTest extends TrackerBase
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
     }
 
-    /**
-     * @depends testPOSTArtifactInXMLTracker
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTArtifactInXMLTracker')]
     public function testGetArtifactInXMLTrackerInBothFormat($artifact_id)
     {
         $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id . '?values_format=all'));
@@ -263,9 +253,7 @@ class ArtifactTest extends TrackerBase
         );
     }
 
-    /**
-     * @depends testGetArtifactInXMLTrackerInBothFormat
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetArtifactInXMLTrackerInBothFormat')]
     public function testPOSTArtifactInXMLTrackerWithValuesByField()
     {
         $xml = '<request><tracker><id>' . $this->tracker_id . '</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>';
@@ -281,9 +269,7 @@ class ArtifactTest extends TrackerBase
         return $artifact_id;
     }
 
-    /**
-     * @depends testPOSTArtifactInXMLTrackerWithValuesByField
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTArtifactInXMLTrackerWithValuesByField')]
     public function testGetArtifactCreatedWithValueByFieldInXMLTracker($artifact_id)
     {
         $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id . '?values_format=by_field'));

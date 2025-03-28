@@ -265,9 +265,9 @@ class PrivateCommentArtifactTest extends TrackerBase
     }
 
     /**
-     * @depends testProjectMemberCanSeeOnlyChangesetsWithCommentOrChanges
      * @param int[] $changeset_ids
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testProjectMemberCanSeeOnlyChangesetsWithCommentOrChanges')]
     public function testReverseOrderMustReturnSameChangesets(array $changeset_ids): void
     {
         $response = $this->getResponse(

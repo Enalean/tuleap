@@ -23,15 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\REST\ReadOnlyAdministrator;
 
-/**
- * @group ArtifactFilesTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ArtifactFilesTest')]
 class ArtifactFilesTest extends \ArtifactFilesTest
 {
-    /**
-     * @depends testPostArtifactFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifactFile')]
     public function testOptionsArtifactIdWithUser($file_id): void
     {
         $request  = $this->request_factory->createRequest('OPTIONS', 'artifact_temporary_files/' . $file_id);
@@ -39,9 +35,7 @@ class ArtifactFilesTest extends \ArtifactFilesTest
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testAttachFileToPutArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAttachFileToPutArtifact')]
     public function testArtifactAttachedFilesGetIdWithUser($file_id): void
     {
         $request  = $this->request_factory->createRequest('GET', 'artifact_files/' . $file_id);
@@ -57,9 +51,7 @@ class ArtifactFilesTest extends \ArtifactFilesTest
         $this->assertEquals($expected, $data);
     }
 
-    /**
-     * @depends testAttachFileToPutArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testAttachFileToPutArtifact')]
     public function testOptionsArtifactAttachedFilesIdUser($file_id): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(

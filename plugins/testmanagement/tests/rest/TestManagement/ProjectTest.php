@@ -22,10 +22,8 @@ namespace Tuleap\TestManagement;
 
 use REST_TestDataBuilder;
 
-/**
- * @group TestManagementTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]
 final class ProjectTest extends TestManagementRESTTestCase
 {
     public function testGetCampaigns(): void

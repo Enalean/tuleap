@@ -82,10 +82,8 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertNull($value_deleted);
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testGetMetadataForProject
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetMetadataForProject')]
     public function testEmptyCanManipulateMetadata(int $root_id, array $project_metadata): void
     {
         $text_metadata       = $this->findMetadataByName($project_metadata, 'text metadata');
@@ -196,10 +194,8 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testGetMetadataForProject
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetMetadataForProject')]
     public function testFileCanManipulateMetadata(int $root_id, array $project_metadata): void
     {
         $text_metadata       = $this->findMetadataByName($project_metadata, 'text metadata');
@@ -372,10 +368,8 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testGetMetadataForProject
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetMetadataForProject')]
     public function testFolderCanManipulateMetadata(int $root_id, array $project_metadata): void
     {
         $text_metadata       = $this->findMetadataByName($project_metadata, 'text metadata');

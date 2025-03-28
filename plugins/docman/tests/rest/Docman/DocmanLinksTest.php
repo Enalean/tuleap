@@ -31,9 +31,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanLinksTest extends DocmanTestExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -58,9 +56,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
     {
         $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
@@ -84,9 +80,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testMoveLinkDocument(int $root_id): void
     {
         $post_link_body = json_encode([
@@ -153,9 +147,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $delete_response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdatePermissionsLinkDocument(int $root_id): void
     {
         $link_doc_id = $this->createLinkAndReturnItsId(
@@ -197,9 +189,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheLink(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE L RO');
@@ -216,9 +206,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowAPermissionErrorWhenTheLinkIsLockedByAnotherUser(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE L L');
@@ -236,9 +224,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteIsProceedWhenItemIsLockedAndUserIsAdmin(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE L L');
@@ -254,9 +240,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeletionOfALinkIsForbiddenForRESTReadOnlyUserNotInvolvedInProject(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE L');
@@ -272,9 +256,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItDeletesALink(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE L');
@@ -290,9 +272,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostLocksALink(array $items): void
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK L');
@@ -321,9 +301,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals($document['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteLockALink(array $items): void
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK L');
@@ -352,9 +330,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals($document['lock_info'], null);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionItCreatesALink(array $items): void
     {
         $title             = 'POST L V';
@@ -395,9 +371,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionCopyThePreviousApprovalTableStatus(array $items): void
     {
         $title             = 'POST L V AT C';
@@ -425,9 +399,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasAnApprovalTable($items, $title, 'Approved');
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionResetTheApprovalTableStatus(array $items): void
     {
         $title             = 'POST L V AT R';
@@ -454,9 +426,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasAnApprovalTable($items, $title, 'Not yet');
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionDisableApprovalTable(array $items): void
     {
         $title             = 'POST L V AT E';
@@ -493,9 +463,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->checkItemHasADisabledApprovalTable($items, $title);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionItThrowsExceptionWhenUserSetApprovalTableOnItemWithoutApprovalTable(
         array $items,
     ): void {
@@ -523,9 +491,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionCanUnlockAFile(array $items): void
     {
         $item_to_update    = $this->findItemByTitle($items, 'POST L V L');
@@ -558,9 +524,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertNull($response_json['lock_info']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionAdminAlwaysCanUnlockAFile(array $items): void
     {
         $item_to_update    = $this->findItemByTitle($items, 'POST L V UL Admin');
@@ -595,9 +559,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertNull($response_json['lock_info']);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostVersionRegularUserCanNotUnlockFileLockedByOtherUser(array $items): void
     {
         $item_to_update    = $this->findItemByTitle($items, 'POST L V L Admin');
@@ -621,9 +583,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $new_version_response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPutBasicHardcodedMetadata(array $items): void
     {
         $item_to_update    = $this->findItemByTitle($items, 'PUT L');
@@ -682,9 +642,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals($this->test_user_1_id, $new_version['owner']['id']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsMetadata(int $id): void
     {
         $response = $this->getResponse(
@@ -696,9 +654,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptions(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_links/' . $id), \TestDataBuilder::ADMIN_USER_NAME);
@@ -707,9 +663,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsLock(int $id): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_links/' . $id . '/lock'), \TestDataBuilder::ADMIN_USER_NAME);
@@ -718,9 +672,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsVersion(int $id): void
     {
         $response = $this->getResponse(
@@ -732,9 +684,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testAllOptionsForUserRESTReadOnlyAdmin(int $id): void
     {
         $response = $this->getResponse(

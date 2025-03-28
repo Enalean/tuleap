@@ -100,9 +100,7 @@ class SimpleModeTest extends TrackerBase
         return $transition_reference['id'];
     }
 
-    /**
-     * @depends testPOSTTrackerWorkflowTransitions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTTrackerWorkflowTransitions')]
     public function testCreatedPostActionDuplicatesPreConditions(int $transition_id): void
     {
         $infos         = $this->gatherWorkflowInformation();
@@ -120,9 +118,7 @@ class SimpleModeTest extends TrackerBase
         self::assertSame([$date_field_id], $pre_conditions['not_empty_field_ids']);
     }
 
-    /**
-     * @depends testPOSTTrackerWorkflowTransitions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTTrackerWorkflowTransitions')]
     public function testCreatedPostActionDuplicatesPostActions(int $transition_id)
     {
         $response = $this->getResponseByName(
@@ -248,9 +244,7 @@ class SimpleModeTest extends TrackerBase
         return $transition_id;
     }
 
-    /**
-     * @depends testPUTTrackerWorkflowTransitionsActions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerWorkflowTransitionsActions')]
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActions(int $transition_id)
     {
         $used_field_id = $this->getAUsedFieldId(
@@ -278,9 +272,7 @@ class SimpleModeTest extends TrackerBase
         return $transition_id;
     }
 
-    /**
-     * @depends testPUTTrackerWorkflowTransitionFrozenFieldsActions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerWorkflowTransitionFrozenFieldsActions')]
     public function testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction(int $transition_id): int
     {
         $response = $this->getResponseByName(
@@ -296,9 +288,7 @@ class SimpleModeTest extends TrackerBase
         return $transition_id;
     }
 
-    /**
-     * @depends testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction')]
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsCannotUsedTheWorkflowField(int $transition_id)
     {
         $workflow_field_id = $this->getAUsedFieldId(
@@ -324,9 +314,7 @@ class SimpleModeTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @depends testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction')]
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsCannotUsedAFieldUsedInFieldDependencies(
         int $transition_id,
     ) {
@@ -353,9 +341,7 @@ class SimpleModeTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @depends testPUTTrackerWorkflowTransitionsActions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerWorkflowTransitionsActions')]
     public function testPUTTrackerWorkflowTransitionHiddenFieldsetsActions(int $transition_id)
     {
         $used_field_id = $this->getAUsedFieldId(
@@ -383,9 +369,7 @@ class SimpleModeTest extends TrackerBase
         return $transition_id;
     }
 
-    /**
-     * @depends testPUTTrackerWorkflowTransitionHiddenFieldsetsActions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerWorkflowTransitionHiddenFieldsetsActions')]
     public function testGETTrackerWorkflowTransitionReturnsTheHiddenFieldsetsPostAction(int $transition_id)
     {
         $response = $this->getResponseByName(

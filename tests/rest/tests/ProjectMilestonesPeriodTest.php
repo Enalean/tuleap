@@ -24,10 +24,8 @@ namespace Tuleap\REST;
 
 use REST_TestDataBuilder;
 
-/**
- * @group ProjectTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class ProjectMilestonesPeriodTest extends ProjectBase
 {
     public function testGETmilestonesWithPeriodFutureQuery(): void

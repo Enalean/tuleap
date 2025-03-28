@@ -25,10 +25,8 @@ use RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-/**
- * @group TrackerTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('TrackerTests')]
 class TQLTest extends RestBase
 {
     public const PROJECT_NAME = 'tql';

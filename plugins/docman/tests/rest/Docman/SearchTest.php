@@ -32,9 +32,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchTest extends DocmanTestExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testSearchInFolder(int $root_id): void
     {
         $root_folder   = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
@@ -92,9 +90,7 @@ final class SearchTest extends DocmanTestExecutionHelper
         $this->assertEqualsCanonicalizing($parents, $parent_titles);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testItSearchInFolderUsingProperties(int $root_id): void
     {
         $root_folder   = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
@@ -129,9 +125,7 @@ final class SearchTest extends DocmanTestExecutionHelper
         $this->assertCount(2, $found_items);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsSearchId($id): void
     {
         $response = $this->getResponse(

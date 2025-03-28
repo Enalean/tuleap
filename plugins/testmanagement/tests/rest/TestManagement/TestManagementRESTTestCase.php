@@ -24,9 +24,7 @@ use Psr\Http\Message\ResponseInterface;
 use RestBase;
 use Tuleap\TestManagement\Tests\Rest\Cache;
 
-/**
- * @group TestManagementTest
- */
+#[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]
 abstract class TestManagementRESTTestCase extends RestBase
 {
     protected $project_id;

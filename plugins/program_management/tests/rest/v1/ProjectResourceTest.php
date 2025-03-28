@@ -65,9 +65,7 @@ final class ProjectResourceTest extends \RestBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTeam')]
     public function testPUTPlan(): void
     {
         $project_id = $this->getProgramProjectId();
@@ -88,9 +86,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTeam')]
     public function testPUTPlanWithCustomLabel(): void
     {
         $project_id = $this->getProgramProjectId();
@@ -113,9 +109,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTeam')]
     public function testPUTPlanWithIteration(): void
     {
         $project_id = $this->getProgramProjectId();
@@ -137,9 +131,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTeam')]
     public function testPUTPlanWithIterationAndCustomLabel(): void
     {
         $project_id = $this->getProgramProjectId();
@@ -161,9 +153,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTeam')]
     public function testGetProgramIncrements(): int
     {
         $project_id = $this->getProgramProjectId();
@@ -183,9 +173,7 @@ final class ProjectResourceTest extends \RestBase
         return $program_increments[1]['id'];
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testGetIterations(int $program_increment_id): int
     {
         $response = $this->getResponse(
@@ -211,9 +199,7 @@ final class ProjectResourceTest extends \RestBase
         return $iteration_id;
     }
 
-    /**
-     * @depends testGetIterations
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetIterations')]
     public function testGetIterationContent(int $iteration_id): void
     {
         $response = $this->getResponse(
@@ -228,17 +214,13 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals('team', $user_stories[0]['project']['label']);
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testGetProgramIncrementContent(int $id): void
     {
         $this->checkGetFirstElementOfProgramIncrement($id, 'title', 'My other artifact for top backlog manipulation');
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testPatchBacklogWithFeatureRemovedFromProgramIncrementWithBooleanParameterSetToTrue(int $program_increment_id): void
     {
         $project_id        = $this->getProgramProjectId();
@@ -271,9 +253,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testPatchBacklogCannotMoveFeatureFromProgramIncrementToBacklogBecauseBooleanParameterIsNotSetToTrue(int $program_increment_id): void
     {
         $project_id        = $this->getProgramProjectId();
@@ -298,9 +278,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
-    /**
-     * @depends testPUTTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTeam')]
     public function testCannotUnplannedFeatureWithLinkedPlannedStoryInTeam(): int
     {
         $project_id        = $this->getProgramProjectId();
@@ -340,9 +318,7 @@ final class ProjectResourceTest extends \RestBase
         return $program_increment['id'];
     }
 
-    /**
-     * @depends testCannotUnplannedFeatureWithLinkedPlannedStoryInTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testCannotUnplannedFeatureWithLinkedPlannedStoryInTeam')]
     public function testGetProgramIncrementBacklog(int $program_increment_id): void
     {
         $response = $this->getResponse(
@@ -357,9 +333,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals('team', $user_stories[0]['project']['label']);
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testPatchBacklogWithFeatureRemovedFromProgramAndOrderInBacklog(int $program_increment_id): void
     {
         $project_id        = $this->getProgramProjectId();
@@ -418,9 +392,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
-    /**
-     * @depends testManipulateFeature
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testManipulateFeature')]
     public function testGetProgramBacklogChildren(): void
     {
         $project_id = $this->getProgramProjectId();
@@ -435,9 +407,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals('US1', $program_increments[0]['title']);
     }
 
-    /**
-     * @depends testPUTTeam
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTTeam')]
     public function testManipulateTopBacklog(): void
     {
         $project_id = $this->getProgramProjectId();
@@ -454,9 +424,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
-    /**
-     * @depends testGetProgramIncrementBacklog
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrementBacklog')]
     public function testManipulateFeature(): void
     {
         $program_id = $this->getProgramProjectId();
@@ -509,9 +477,7 @@ final class ProjectResourceTest extends \RestBase
         $this->checkLinksArePresentInReleaseTopBacklog($release_mirror['id'], [$user_story2['id']]);
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testManipulatePIContent(int $program_increment_id): void
     {
         $program_id = $this->getProgramProjectId();
@@ -522,9 +488,7 @@ final class ProjectResourceTest extends \RestBase
         $this->checkGetFirstElementOfProgramIncrement($program_increment_id, 'id', (string) $featureB['id']);
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testUserCannotRemoveFeatureFromPIWhenItHasChildrenPlannedInMilestones(int $program_increment_id): void
     {
         $team_id        = $this->getTeamProjectId();
@@ -565,9 +529,7 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetProgramIncrements
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetProgramIncrements')]
     public function testReorderFeatureInPIContent(int $program_increment_id): void
     {
         $program_id        = $this->getProgramProjectId();

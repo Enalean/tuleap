@@ -22,10 +22,8 @@ namespace Tuleap\REST;
 
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * @group TrackersTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('TrackersTests')]
 final class TrackersTest extends TrackerBase
 {
     public function testOptionsTrackers(): void

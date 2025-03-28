@@ -20,10 +20,8 @@
 
 use Tuleap\REST\MilestoneBase;
 
-/**
- * @group MilestonesTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
 class MilestonesBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testOPTIONSBurndown(): void

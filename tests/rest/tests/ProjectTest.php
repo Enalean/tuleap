@@ -24,10 +24,8 @@ use REST_TestDataBuilder;
 use Test\Rest\TuleapConfig;
 use TestDataBuilder;
 
-/**
- * @group ProjectTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class ProjectTest extends ProjectBase
 {
     use ForgeAccessSandbox;
@@ -1831,9 +1829,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGETBanner
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGETBanner')]
     public function testDELETEBanner(): void
     {
         $response = $this->getResponseByName(
@@ -1847,9 +1843,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPUTBanner
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTBanner')]
     public function testGETBanner(): void
     {
         $response = $this->getResponseByName(

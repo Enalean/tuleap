@@ -20,10 +20,8 @@
 
 use Tuleap\REST\MilestoneBase;
 
-/**
- * @group MilestonesTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
 class MilestonesMilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testPUTRemoveSubMilestones(): void
@@ -75,9 +73,7 @@ class MilestonesMilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes
         $this->assertEquals($this->sprint_artifact_ids[1], $submilestones[0]['id']);
     }
 
-    /**
-     * @depends testPUTOnlyOneSubMilestone
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTOnlyOneSubMilestone')]
     public function testPUTOnlyOneSubMilestoneAlreadyAdded(): void
     {
         $response_put = $this->getResponse(

@@ -20,10 +20,8 @@
 
 use Tuleap\REST\MilestoneBase;
 
-/**
- * @group MilestonesTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
 class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testOPTIONSContent(): void
@@ -139,9 +137,7 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
     }
 
-    /**
-     * @depends testPUTContent
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPUTContent')]
     public function testPUTContentWithSameValueAsPreviouslyReturns200(): void
     {
         $response_put = $this->getResponse(

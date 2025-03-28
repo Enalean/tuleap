@@ -101,9 +101,7 @@ class TrackerFieldsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFileFieldId(): int
     {
         $field    = $this->getAUsedField($this->tracker_fields_tracker_id, self::FIELD_FILE);
@@ -115,9 +113,7 @@ class TrackerFieldsTest extends TrackerBase
         return $field_id;
     }
 
-    /**
-     * @depends getFileFieldId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('getFileFieldId')]
     public function testPOSTFile(int $field_id): int
     {
         $file_size = 123;
@@ -165,10 +161,8 @@ class TrackerFieldsTest extends TrackerBase
         return $response1_json['id'];
     }
 
-    /**
-     * @depends getFileFieldId
-     * @depends testPOSTFile
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('getFileFieldId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPOSTFile')]
     public function testUploadedFileCanBeAttachedToTheArtifact($field_id, $file_id): void
     {
         $payload = [
@@ -201,9 +195,7 @@ class TrackerFieldsTest extends TrackerBase
         $this->fail('File not attached to the artifact');
     }
 
-    /**
-     * @depends getFileFieldId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('getFileFieldId')]
     public function testFileCreationWithASameNameIsNotRejectedWhenTheUploadHasBeenCanceled($field_id): void
     {
         $query = [
@@ -227,9 +219,7 @@ class TrackerFieldsTest extends TrackerBase
         $this->assertEquals(200, $response_creation_file->getStatusCode());
     }
 
-    /**
-     * @depends getFileFieldId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('getFileFieldId')]
     public function testEmptyFileCreation($field_id): void
     {
         $name  = 'empty_file_' . bin2hex(random_bytes(8));

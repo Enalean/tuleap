@@ -31,9 +31,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanFoldersTest extends DocmanTestExecutionHelper
 {
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
         $this->getDocmanRegularUser();
@@ -54,9 +52,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
     {
         $root_folder = $this->loadRootFolderContent($root_id);
@@ -76,9 +72,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostFileIsRejectedIfDocumentAlreadyExists(array $items): void
     {
         $folder    = $this->findItemByTitle($items, 'GET FO');
@@ -101,9 +95,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertStringContainsString('exists', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFileDocument(int $root_id): int
     {
         $file_size     = 123;
@@ -172,10 +164,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         return $response1_json['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostFileDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostFileDocument')]
     public function testPostCopyFileDocument(int $root_id, int $file_document_id): void
     {
         $response = $this->getResponseByName(
@@ -191,10 +181,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostFileDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostFileDocument')]
     public function testPostCopyFileDocumentWithUserRESTReadOnlyAdmin(int $root_id, int $file_document_id): void
     {
         $response = $this->getResponse(
@@ -205,9 +193,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostEmptyFileDocument(int $root_id): void
     {
         $query = json_encode(
@@ -233,9 +219,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals('file', json_decode($file_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['type']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostEmptyFileDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
         $query = json_encode(
@@ -253,9 +237,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response1->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostOtherTypeDocumentIsRejectedForUnsupportedType(int $root_id): void
     {
         $query = json_encode(
@@ -272,9 +254,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(400, $response1->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFileDocumentIsRejectedIfFileIsTooBig(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -293,9 +273,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertStringContainsString('size', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testDocumentCreationIsRejectedIfAFileIsBeingUploadedForTheSameNameByADifferentUser(int $root_id): void
     {
         $document_name = 'document_conflict_' . bin2hex(random_bytes(8));
@@ -322,9 +300,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(409, $response2->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testDocumentCreationWithASameNameIsNotRejectedWhenTheUploadHasBeenCanceled(int $root_id): void
     {
         $document_name = 'document_not_conflict_after_cancel_' . bin2hex(random_bytes(8));
@@ -360,9 +336,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(201, $response_creation_empty->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFolderItem(int $root_id): int
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -385,9 +359,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         return $response_json['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFolderItemDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -406,9 +378,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostMoveFolderItem(int $root_id): void
     {
         $response_folder_to_cut_with_rest_read_only_user = $this->getResponseByName(
@@ -467,10 +437,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostFolderItem
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostFolderItem')]
     public function testPostCopyFolderItem(int $root_id, int $folder_id): void
     {
         $response = $this->getResponseByName(
@@ -486,9 +454,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFolderFailIfFolderNameAlreadyExists(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -508,10 +474,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertStringContainsString('exists', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostFolderItem
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostFolderItem')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostCopyFolderItemWithUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $folder_id): void
     {
         $response = $this->getResponse(
@@ -522,9 +486,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostEmptyDocument(int $root_id): int
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -544,10 +506,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostEmptyDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostEmptyDocument')]
     public function testPostCopyEmptyDocument(int $root_id, int $empty_document_id): void
     {
         $response = $this->getResponseByName(
@@ -563,10 +523,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostEmptyDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostEmptyDocument')]
     public function testPostCopyOtherDocumentIsRejectedIfSourceItemIsNotOtherDocument(int $root_id, int $empty_document_id): void
     {
         $response = $this->getResponseByName(
@@ -577,9 +535,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testPostReturns403WhenPermissionDenied(array $items): void
     {
         $read_only_folder = $this->findItemByTitle($items, 'GET FO RO');
@@ -605,9 +561,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostWikiDocument(int $root_id): int
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -630,9 +584,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostWikiDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -653,10 +605,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostWikiDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostWikiDocument')]
     public function testPostCopyWikiDocument(int $root_id, int $wiki_document_id): void
     {
         $response = $this->getResponseByName(
@@ -672,10 +622,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostWikiDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostWikiDocument')]
     public function testPostCopyWikiDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $wiki_document_id): void
     {
         $response = $this->getResponse(
@@ -686,9 +634,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostEmbeddedDocument(int $root_id): int
     {
         $headers             = ['Content-Type' => 'application/json'];
@@ -711,9 +657,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostEmbeddedDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
         $headers             = ['Content-Type' => 'application/json'];
@@ -734,10 +678,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostEmbeddedDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostEmbeddedDocument')]
     public function testPostCopyEmbeddedDocument(int $root_id, int $embedded_document_id): void
     {
         $response = $this->getResponseByName(
@@ -753,10 +695,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostEmbeddedDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostEmbeddedDocument')]
     public function testPostCopyEmbeddedDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $embedded_document_id): void
     {
         $response = $this->getResponse(
@@ -767,9 +707,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostLinkDocument(int $root_id): int
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -792,9 +730,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostLinkDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -815,10 +751,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostLinkDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostLinkDocument')]
     public function testPostCopyLinkDocument(int $root_id, int $link_document_id): void
     {
         $response = $this->getResponseByName(
@@ -834,10 +768,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testPostLinkDocument
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPostLinkDocument')]
     public function testPostCopyLinkDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $link_document_id): void
     {
         $response = $this->getResponse(
@@ -848,9 +780,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFolderWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -872,9 +802,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertStringContainsString('Status', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostFileWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
     {
         $file_size = 123;
@@ -896,9 +824,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertStringContainsString('Status', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdatePermissionsFolder(int $root_id): void
     {
         $response_folder_updater_permissions = $this->getResponseByName(
@@ -942,9 +868,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testUpdatePermissionsFolderAndChildren(int $root_id): void
     {
         $response_folder_update_permissions = $this->getResponseByName(
@@ -996,9 +920,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
     }
 
-    /**
-     * @depends testGetRootId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testItThrowsAnErrorWhenWeTryToDeleteTheRootFolder(int $root_id): void
     {
         $response = $this->getResponseByName(
@@ -1012,9 +934,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($root_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheFolder(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE FO RO');
@@ -1031,9 +951,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testDeleteThrowsAnErrorForUserRESTReadOnlyAdminNotInvolvedInProject(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE FO RO');
@@ -1049,9 +967,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
     public function testItDeletesAFolder(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE FO');

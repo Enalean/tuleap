@@ -92,10 +92,8 @@ class ForbidWritersTest extends \RestBase
         return $json_docman_service['root_item']['id'];
     }
 
-    /**
-     * @depends testGetRootId
-     * @depends testGetPermissions
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetPermissions')]
     public function testCreateEmptyItem(int $folder_id, array $permissions): int
     {
         $item_response = $this->getResponse(
@@ -120,9 +118,7 @@ class ForbidWritersTest extends \RestBase
         return $item_id;
     }
 
-    /**
-     * @depends testCreateEmptyItem
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testCreateEmptyItem')]
     public function testManagerIsAllowedToUpdate(int $item_id): int
     {
         $update_response = $this->getResponse(
@@ -144,9 +140,7 @@ class ForbidWritersTest extends \RestBase
         return $item_id;
     }
 
-    /**
-     * @depends testManagerIsAllowedToUpdate
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testManagerIsAllowedToUpdate')]
     public function testWriterIsNotAllowedToUpdate(int $item_id): int
     {
         $update_response = $this->getResponse(
@@ -168,9 +162,7 @@ class ForbidWritersTest extends \RestBase
         return $item_id;
     }
 
-    /**
-     * @depends testWriterIsNotAllowedToUpdate
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testWriterIsNotAllowedToUpdate')]
     public function testWriterIsNotAllowedToDelete(int $item_id): int
     {
         $update_response = $this->getResponse(
@@ -183,9 +175,7 @@ class ForbidWritersTest extends \RestBase
         return $item_id;
     }
 
-    /**
-     * @depends testWriterIsNotAllowedToDelete
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testWriterIsNotAllowedToDelete')]
     public function testManagerIsAllowedToDelete(int $item_id): void
     {
         $update_response = $this->getResponse(

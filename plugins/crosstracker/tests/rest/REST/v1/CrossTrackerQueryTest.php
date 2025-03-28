@@ -86,9 +86,7 @@ final class CrossTrackerQueryTest extends RestBase
         self::assertSame(404, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPut
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
     public function testGetContentIdForReadOnlyUser(): void
     {
         $query_id = urlencode($this->query_id);
@@ -107,9 +105,7 @@ final class CrossTrackerQueryTest extends RestBase
         self::assertEquals($this->epic_artifact_ids[1], $json_response['artifacts'][0]['@id']['value']);
     }
 
-    /**
-     * @depends testPut
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
     public function testGetContentId(): void
     {
         $query_id = urlencode($this->query_id);

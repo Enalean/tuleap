@@ -104,9 +104,7 @@ final class ArtifactsActionsTest extends TrackerBase
         return false;
     }
 
-    /**
-     * @depends testMoveArtifactDryRun
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testMoveArtifactDryRun')]
     public function testMoveArtifactWithUserRESTReadOnlyAdminNotInProject(): void
     {
         $artifact_id = end($this->base_artifact_ids);
@@ -126,9 +124,7 @@ final class ArtifactsActionsTest extends TrackerBase
         self::assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testMoveArtifactDryRun
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testMoveArtifactDryRun')]
     public function testMoveArtifact(): void
     {
         $artifact_id = end($this->base_artifact_ids);
@@ -173,9 +169,7 @@ final class ArtifactsActionsTest extends TrackerBase
         self::assertEquals($changeset_json[0]['last_comment']['body'], "Artifact was moved from 'tracker source' tracker in 'Move artifact' project.");
     }
 
-    /**
-     * @depends testMoveArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testMoveArtifact')]
     public function testDeleteArtifactsWithUserRESTReadOnlyAdminNotInProject(): void
     {
         $response = $this->performArtifactDeletion(
@@ -186,9 +180,7 @@ final class ArtifactsActionsTest extends TrackerBase
         self::assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testMoveArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testMoveArtifact')]
     public function testDeleteArtifacts(): void
     {
         $response = $this->performArtifactDeletion($this->delete_artifact_ids[1]);
@@ -206,9 +198,7 @@ final class ArtifactsActionsTest extends TrackerBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testDeleteArtifacts
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testDeleteArtifacts')]
     public function testItThrowsAnErrorWhenUserReachesTheLimitOfDeletedArtifacts(): void
     {
         $response = $this->performArtifactDeletion($this->delete_artifact_ids[2]);

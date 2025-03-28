@@ -24,10 +24,8 @@ use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 use RestBase;
 
-/**
- * @group TokenTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('TokenTests')]
 class JWTTest extends RestBase
 {
     public function testGETJWT(): void

@@ -24,10 +24,8 @@ namespace Tuleap\REST;
 use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 
-/**
- * @group ProjectTests
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class ProjectServicesTest extends ProjectBase
 {
     public function testGETProjectServices(): void

@@ -58,9 +58,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals('1', $tracker['workflow']['is_used']);
     }
 
-    /**
-     * @depends testGetStatusFieldId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetStatusFieldId')]
     public function testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation($field_status_id)
     {
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
@@ -73,9 +71,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetStatusFieldId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetStatusFieldId')]
     public function testPATCHTrackerWorkflowsRegularUsersHaveForbiddenAccess($field_status_id)
     {
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
@@ -88,10 +84,8 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetStatusFieldId
-     * @depends testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetStatusFieldId')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation')]
     public function testPATCHTrackerWorkflowsWhenAWorkflowIsAlreadyDefinedReturnsError($field_status_id)
     {
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
@@ -104,9 +98,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testGetStatusFieldId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testGetStatusFieldId')]
     public function testPATCHTrackerWorkflowsWhenDeleteAndSetATransitionSameTimeReturnsError($field_status_id)
     {
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}, "delete_transitions_rules": true}}';
@@ -119,9 +111,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation')]
     public function testPATCHTrackerWorkflowsIsUsed()
     {
         $query    = '{"workflow": {"set_transitions_rules": {"is_used": true}}}';
@@ -134,9 +124,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals('1', $result['workflow']['is_used']);
     }
 
-    /**
-     * @depends testPATCHTrackerWorkflowsIsUsed
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHTrackerWorkflowsIsUsed')]
     public function testPATCHTrackerWorkflowsIsNotUsed()
     {
         $query    = '{"workflow": {"set_transitions_rules": {"is_used": false}}}';
@@ -149,10 +137,8 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals('0', $result['workflow']['is_used']);
     }
 
-    /**
-     * @depends testPATCHTrackerWorkflowsIsUsed
-     * @depends testPATCHTrackerWorkflowsIsNotUsed
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHTrackerWorkflowsIsUsed')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHTrackerWorkflowsIsNotUsed')]
     public function testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRules()
     {
         $query    = '{"workflow": {"delete_transitions_rules": true}}';
@@ -169,9 +155,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertTrue(sizeof($result['workflow']['transitions']) === 0);
     }
 
-    /**
-     * @depends testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRules
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRules')]
     public function testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRulesWhenNotExist()
     {
         $query    = '{"workflow": {"delete_transitions_rules": true}}';

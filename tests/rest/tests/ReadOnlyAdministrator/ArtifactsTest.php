@@ -25,10 +25,8 @@ namespace Tuleap\REST\ReadOnlyAdministrator;
 
 use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
 
-/**
- * @group ArtifactsTest
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[\PHPUnit\Framework\Attributes\Group('ArtifactsTest')]
 class ArtifactsTest extends ArtifactsTestExecutionHelper
 {
     public function testOptionsArtifactsWithUser(): void

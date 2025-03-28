@@ -157,9 +157,7 @@ class ComparisonsResourceTest extends RestBase
         $this->assertEquals(404, $delete_response->getStatusCode());
     }
 
-    /**
-     * @depends testPostBaselineComparison
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostBaselineComparison')]
     public function testGetByProject(): void
     {
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
@@ -172,9 +170,7 @@ class ComparisonsResourceTest extends RestBase
         $this->assertGETByProject($response);
     }
 
-    /**
-     * @depends testPostBaselineComparison
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostBaselineComparison')]
     public function testGETByProjectWithReadOnlyAdministrator(): void
     {
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];

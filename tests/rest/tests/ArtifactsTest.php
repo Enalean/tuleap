@@ -21,9 +21,7 @@
 use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
 use Tuleap\REST\ForgeAccessSandbox;
 
-/**
- * @group ArtifactsTest
- */
+#[\PHPUnit\Framework\Attributes\Group('ArtifactsTest')]
 class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgnoreLine
 {
     use ForgeAccessSandbox;
@@ -329,9 +327,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals($expected_burndown_chart, $burndown['values'][6]['value']['points_with_date']);
     }
 
-    /**
-     * @depends testPostArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifact')]
     public function testGetArtifact($artifact_id)
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', "artifacts/$artifact_id"));
@@ -339,9 +335,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertArtifact($response);
     }
 
-    /**
-     * @depends testPostArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifact')]
     public function testGetArtifacts(): void
     {
         $do_not_exist_artifact_id = 999999999999999999;
@@ -382,9 +376,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPostArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifact')]
     public function testPutArtifactIdWithUserRESTReadOnlyAdminNonMember($artifact_id)
     {
         $field_label =  'Summary';
@@ -398,9 +390,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPostArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifact')]
     public function testPutArtifactId($artifact_id)
     {
         $field_label =  'Summary';
@@ -418,9 +408,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         return $artifact_id;
     }
 
-    /**
-     * @depends testPostArtifact
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostArtifact')]
     public function testPutArtifactIdTextField($artifact_id)
     {
         $field_label =  'Required Text';
@@ -462,9 +450,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         ]);
     }
 
-    /**
-     * @depends testPutArtifactId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutArtifactId')]
     public function testPutIsIdempotent($artifact_id)
     {
         $artifact      = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id));
@@ -496,9 +482,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         return $artifact_id;
     }
 
-    /**
-     * @depends testPutIsIdempotent
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutIsIdempotent')]
     public function testPutArtifactIdWithValidIfUnmodifiedSinceHeader($artifact_id)
     {
         $field_label  =  'Summary';
@@ -528,9 +512,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         return $artifact_id;
     }
 
-    /**
-     * @depends testPutArtifactIdWithValidIfUnmodifiedSinceHeader
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutArtifactIdWithValidIfUnmodifiedSinceHeader')]
     public function testPutArtifactIdWithValidIfMatchHeader($artifact_id)
     {
         $field_label  =  'Summary';
@@ -560,9 +542,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         return $artifact_id;
     }
 
-    /**
-     * @depends testPutArtifactIdWithValidIfMatchHeader
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutArtifactIdWithValidIfMatchHeader')]
     public function testPutArtifactIdWithInvalidIfUnmodifiedSinceHeader($artifact_id)
     {
         $field_label  =  'Summary';
@@ -585,9 +565,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         self::assertEquals(412, $response->getStatusCode());
     }
 
-    /**
-     * @depends testPutArtifactIdWithValidIfMatchHeader
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutArtifactIdWithValidIfMatchHeader')]
     public function testPutArtifactIdWithInvalidIfMatchHeader($artifact_id)
     {
         $field_label  =  'Summary';
@@ -610,9 +588,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals($response->getStatusCode(), 412);
     }
 
-    /**
-     * @depends testPutArtifactId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutArtifactId')]
     public function testPutArtifactComment($artifact_id)
     {
         $put_resource = json_encode([
@@ -639,9 +615,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         return $artifact_id;
     }
 
-    /**
-     * @depends testPutArtifactId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPutArtifactId')]
     public function testPutArtifactCommentMustFailIfCommentContentIsTooBig($artifact_id)
     {
         $put_resource = json_encode([

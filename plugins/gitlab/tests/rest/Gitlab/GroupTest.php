@@ -114,12 +114,10 @@ final class GroupTest extends TestBase
         self::assertTrue($gitlab_group_after_patch['allow_artifact_closure']);
     }
 
-    /**
-     * @depends testPatchGitlabGroupLinkToUpdateEverything
-     * @depends testPatchGitlabGroupLinkToUpdateCreateBranchPrefix
-     * @depends testPatchGitlabGroupLinkToUpdateArtifactClosure
-     * @depends testPatchGitlabGroupLinkToUpdateAccessToken
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchGitlabGroupLinkToUpdateEverything')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchGitlabGroupLinkToUpdateCreateBranchPrefix')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchGitlabGroupLinkToUpdateArtifactClosure')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPatchGitlabGroupLinkToUpdateAccessToken')]
     public function testDelete(): void
     {
         $response = $this->getResponse(

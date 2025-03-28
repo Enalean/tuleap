@@ -121,9 +121,7 @@ final class ArtifactsTest extends TestManagementRESTTestCase
         $this->assertArtifactHasStepDefField($artifact_id);
     }
 
-    /**
-     * @depends testItPostAnArtifactWithStepDefinitionFieldId
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testItPostAnArtifactWithStepDefinitionFieldId')]
     public function testUpdatesArtifactStepDef(int $artifact_id): void
     {
         $field_value = $this->getArtifactStepDefFieldValue($artifact_id);
