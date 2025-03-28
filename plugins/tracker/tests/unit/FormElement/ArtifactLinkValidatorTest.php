@@ -18,105 +18,75 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tracker;
 use Tracker_ArtifactFactory;
+use Tracker_ArtifactLinkInfo;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ArtifactLinkValidatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory
-     */
-    private $type_presenter_factory;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var ArtifactLinkValidator
-     */
-    private $artifact_link_validator;
-
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var Tracker_FormElement_Field_ArtifactLink
-     */
-    private $field;
-
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $linked_artifact;
-
-    /**
-     * @var \Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter
-     */
-    private $type_is_child;
-
-    /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter
-     */
-    private $type_fixed_in;
-
-    /**
-     * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter
-     */
-    private $type_no_type;
-    private $project;
-    private $dao;
-    /**
-     * @var \EventManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $event_dispatcher;
+    private TypePresenterFactory&MockObject $type_presenter_factory;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private ArtifactLinkValidator $artifact_link_validator;
+    private Artifact&MockObject $artifact;
+    private Tracker_FormElement_Field_ArtifactLink $field;
+    private Artifact $linked_artifact;
+    private Tracker&MockObject $tracker;
+    private TypeIsChildPresenter $type_is_child;
+    private TypePresenter $type_fixed_in;
+    private TypePresenter $type_no_type;
+    private Project $project;
+    private ArtifactLinksUsageDao&MockObject $dao;
+    private EventDispatcherInterface&MockObject $event_dispatcher;
 
     public function setUp(): void
     {
-        $this->artifact_factory       = \Mockery::spy(Tracker_ArtifactFactory::class);
-        $this->type_presenter_factory = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory::class);
+        $this->artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->type_presenter_factory = $this->createMock(TypePresenterFactory::class);
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getID')->andReturn(101);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->tracker = \Mockery::spy(\Tracker::class);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getId')->willReturn(15);
 
-        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(101);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getId')->willReturn(101);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
 
-        $this->linked_artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->linked_artifact->shouldReceive('getId')->andReturn(105);
-        $this->linked_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->linked_artifact = ArtifactTestBuilder::anArtifact(105)->inTracker($this->tracker)->build();
 
-        $this->field = \Mockery::spy(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->dao   = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
+        $this->field = ArtifactLinkFieldBuilder::anArtifactLinkField(6541)->build();
+        $this->dao   = $this->createMock(ArtifactLinksUsageDao::class);
 
-        $this->tracker->shouldReceive('getProject')->andReturn($this->project);
+        $this->tracker->method('getProject')->willReturn($this->project);
 
-        $this->event_dispatcher = $this->createMock(\EventManager::class);
+        $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $this->artifact_link_validator = new ArtifactLinkValidator(
             $this->artifact_factory,
@@ -125,9 +95,9 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->event_dispatcher
         );
 
-        $this->type_is_child = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter::class);
-        $this->type_fixed_in = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
-        $this->type_no_type  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter::class);
+        $this->type_is_child = new TypeIsChildPresenter();
+        $this->type_fixed_in = new TypePresenter('fixed_in', '', '', true);
+        $this->type_no_type  = new TypePresenter('', '', '', true);
     }
 
     public function testItReturnsTrueWhenNoNewValuesAreSent(): void
@@ -152,7 +122,8 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenArtifactIdIsIncorrect(): void
     {
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
+        $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
@@ -198,8 +169,8 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenArtifactIdDoesNotExist(): void
     {
         $value = ['new_values' => '1000'];
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn(null);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
+        $this->artifact_factory->method('getArtifactById')->willReturn(null);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
@@ -220,9 +191,9 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenTrackerIsDeleted(): void
     {
         $value = ['new_values' => '1000'];
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isDeleted')->andReturn(true);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isDeleted')->willReturn(true);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
@@ -243,9 +214,10 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenProjectIsNotActive(): void
     {
         $value = ['new_values' => '1000'];
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
-        $this->project->shouldReceive('isActive')->andReturn(false);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isDeleted')->willReturn(false);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
+        $this->project->data_array['status'] = Project::STATUS_SUSPENDED;
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
@@ -266,9 +238,9 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueWhenProjectCanNotUseType(): void
     {
         $value = ['new_values' => '1000'];
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(false);
-        $this->project->shouldReceive('isActive')->andReturn(true);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isDeleted')->willReturn(false);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
@@ -289,12 +261,12 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenProjectCanUseTypeAndTypeDoesNotExist(): void
     {
         $value = ['new_values' => '1000', 'types' => ['_is_child', 'fixed_in']];
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->andReturn(null);
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
-        $this->project->shouldReceive('isActive')->andReturn(true);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isDeleted')->willReturn(false);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->type_presenter_factory->method('getFromShortname')->willReturn(null);
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn(null);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
@@ -314,28 +286,27 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueWhenProjectCanUseTypeAndTypeExist(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn(
-            $this->type_is_child
-        );
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(
-            $this->type_fixed_in
-        );
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn(
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isDeleted')->willReturn(false);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->type_presenter_factory->method('getFromShortname')->willReturnCallback(fn(string $type) => match ($type) {
+            '_is_child' => $this->type_is_child,
+            'fixed_in'  => $this->type_fixed_in,
+        });
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn(
             [
                 new TypePresenter('_is_child', 'label', 'reverse_label', true),
                 new TypePresenter('fixed_in', 'label', 'reverse_label', true),
             ]
         );
-        $this->project->shouldReceive('isActive')->andReturn(true);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn(null);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
             [],
         );
         $this->event_dispatcher->method('dispatch')->willReturn($returned_event);
+        $this->dao->method('isTypeDisabledInProject')->willReturn(false);
 
         $value = ['new_values' => '1000', 'types' => ['_is_child', 'fixed_in']];
         self::assertTrue(
@@ -381,20 +352,21 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueWhenProjectCanUseTypeAndTypeEmpty(): void
     {
         $value = ['new_values' => '1000', 'types' => ['']];
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('')->andReturn(
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isDeleted')->willReturn(false);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->type_presenter_factory->method('getFromShortname')->with('')->willReturn(
             $this->type_no_type
         );
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
-        $this->project->shouldReceive('isActive')->andReturn(true);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn(null);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
             $value,
         );
         $this->event_dispatcher->expects($this->once())->method('dispatch')->willReturn($returned_event);
+        $this->dao->method('isTypeDisabledInProject')->willReturn(false);
 
         self::assertTrue(
             $this->artifact_link_validator->isValid(
@@ -410,21 +382,19 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '1000',
-            'types'    => ['_is_child', 'fixed_in'],
+            'types'      => ['_is_child', 'fixed_in'],
         ];
 
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn(
-            $this->type_is_child
-        );
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(
-            $this->type_fixed_in
-        );
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
-        $this->dao->shouldReceive('isTypeDisabledInProject')->with(101, 'fixed_in')->andReturn(true);
-        $this->project->shouldReceive('isActive')->andReturn(true);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isDeleted')->willReturn(false);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->type_presenter_factory->method('getFromShortname')->willReturnCallback(fn(string $type) => match ($type) {
+            '_is_child' => $this->type_is_child,
+            'fixed_in'  => $this->type_fixed_in,
+        });
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
+        $this->dao->method('isTypeDisabledInProject')->with(101, self::isString())->willReturnCallback(static fn(int $id, string $type) => $type === 'fixed_in');
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn(null);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
@@ -446,27 +416,25 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'types' => ['123' => 'fixed_in_not_editable'],
+            'types'      => ['123' => 'fixed_in_not_editable'],
         ];
 
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->type_fixed_in);
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
-        $this->project->shouldReceive('isActive')->andReturn(true);
-        $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
-        $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
-        $artifact_link_info->shouldReceive('getType')->andReturn('an_editable_link');
-        $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->type_presenter_factory->method('getFromShortname')->with('fixed_in_not_editable')->willReturn($this->type_fixed_in);
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withLinks([
+            new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
+        ])->build());
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
             $value,
         );
         $this->event_dispatcher->expects($this->once())->method('dispatch')->willReturn($returned_event);
+        $this->dao->method('isTypeDisabledInProject')->willReturn(false);
 
         self::assertFalse(
             $this->artifact_link_validator->isValid(
@@ -482,27 +450,25 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'types' => ['123' => 'fixed_in_not_editable'],
+            'types'      => ['123' => 'fixed_in_not_editable'],
         ];
 
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->type_fixed_in);
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
-        $this->project->shouldReceive('isActive')->andReturn(true);
-        $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
-        $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
-        $artifact_link_info->shouldReceive('getType')->andReturn('fixed_in_not_editable');
-        $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->type_presenter_factory->method('getFromShortname')->with('fixed_in_not_editable')->willReturn($this->type_fixed_in);
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withLinks([
+            123 => new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'fixed_in_not_editable'),
+        ])->build());
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
             $value,
         );
         $this->event_dispatcher->expects($this->once())->method('dispatch')->willReturn($returned_event);
+        $this->dao->method('isTypeDisabledInProject')->willReturn(false);
 
         self::assertTrue(
             $this->artifact_link_validator->isValid(
@@ -518,27 +484,25 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value = [
             'new_values' => '',
-            'types' => ['123' => 'fixed_in_not_editable'],
+            'types'      => ['123' => 'fixed_in_not_editable'],
         ];
 
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->type_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->type_fixed_in);
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
-        $this->project->shouldReceive('isActive')->andReturn(true);
-        $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
-        $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
-        $artifact_link_info->shouldReceive('getType')->andReturn('an_editable_link');
-        $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
+        $this->artifact_factory->method('getArtifactById')->willReturn($this->linked_artifact);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
+        $this->type_presenter_factory->method('getFromShortname')->with('fixed_in_not_editable')->willReturn($this->type_fixed_in);
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withLinks([
+            new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
+        ])->build());
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
             $value,
         );
         $this->event_dispatcher->expects($this->once())->method('dispatch')->willReturn($returned_event);
+        $this->dao->method('isTypeDisabledInProject')->willReturn(false);
 
         self::assertTrue(
             $this->artifact_link_validator->isValid(
@@ -553,21 +517,21 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAsksToExternalPluginsToValidateDeletionOfLinks(): void
     {
         $value = [
-            'new_values' => '',
-            'types' => ['123' => ''],
+            'new_values'     => '',
+            'types'          => ['123' => ''],
             'removed_values' => [
                 '666' => ['666'],
             ],
         ];
 
-        $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
-        $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
-        $artifact_link_info->shouldReceive('getType')->andReturn('an_editable_link');
-        $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
-        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
-        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withLinks([
+            new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
+        ])->build());
+        $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
+        $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
+        $this->type_presenter_factory->method('getFromShortname')->willReturn(null);
+        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
             $this->artifact,
