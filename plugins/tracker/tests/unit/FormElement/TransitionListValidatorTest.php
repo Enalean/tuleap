@@ -18,85 +18,95 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\TransitionListValidator;
+declare(strict_types=1);
 
-class TransitionListValidatorTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_List;
+use TransitionFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class TransitionListValidatorTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var TransitionListValidator
-     */
-    private $transition_validator;
-
-    /**
-     * @var TransitionFactory|\Mockery\MockInterface
-     */
-    private $transition_factory;
+    private TransitionListValidator $transition_validator;
+    private TransitionFactory&MockObject $transition_factory;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->transition_factory   = Mockery::mock(TransitionFactory::class);
+        $this->transition_factory   = $this->createMock(TransitionFactory::class);
         $this->transition_validator = new TransitionListValidator($this->transition_factory);
     }
 
-    public function testTransitionToParamIsCorrectlyExtractedForStringFields()
+    public function testTransitionToParamIsCorrectlyExtractedForStringFields(): void
     {
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $field     = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $changeset = ChangesetTestBuilder::aChangeset(65)->build();
+        $field     = $this->createMock(Tracker_FormElement_Field_List::class);
         $value     = 'Closed';
-        $tracker   = Mockery::mock(Tracker::class);
+        $tracker   = TrackerTestBuilder::aTracker()->build();
+        $field->method('getId')->willReturn(2864);
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
-        $changeset_value->shouldReceive('getListValues')->andReturn(['Open', 'Waiting for Information', 'Closed']);
+        $changeset->setFieldValue($field, ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
+            ListStaticValueBuilder::aStaticValue('Open')->build(),
+            ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
+            ListStaticValueBuilder::aStaticValue('Closed')->build(),
+        ])->build());
 
-        $this->transition_factory->shouldReceive('getTransitionId')->withArgs([$tracker, 'Open', $value])->andReturn(10);
+        $this->transition_factory->method('getTransitionId')->with($tracker, 'Open', $value)->willReturn(10);
 
-        $field->shouldReceive('userCanMakeTransition')->withArgs([10])->andReturn(true);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $field->method('userCanMakeTransition')->with(10)->willReturn(true);
+        $field->method('getTracker')->willReturn($tracker);
 
-        $this->assertTrue($this->transition_validator->checkTransition($field, $value, $changeset));
+        self::assertTrue($this->transition_validator->checkTransition($field, $value, $changeset));
     }
 
-    public function testTransitionToParamIsCorrectlyExtractedForListFields()
+    public function testTransitionToParamIsCorrectlyExtractedForListFields(): void
     {
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $field     = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $value->shouldReceive('getId')->andReturn('101');
-        $tracker = Mockery::mock(Tracker::class);
+        $changeset = ChangesetTestBuilder::aChangeset(65)->build();
+        $field     = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field->method('getId')->willReturn(2864);
+        $value   = ChangesetValueListTestBuilder::aListOfValue(101, $changeset, $field)->build();
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
-        $changeset_value->shouldReceive('getListValues')->andReturn(['Open', 'Wainting for Information', 'Closed']);
+        $changeset->setFieldValue($field, ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
+            ListStaticValueBuilder::aStaticValue('Open')->build(),
+            ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
+            ListStaticValueBuilder::aStaticValue('Closed')->build(),
+        ])->build());
 
-        $this->transition_factory->shouldReceive('getTransitionId')->withArgs([$tracker, 'Open', '101'])->andReturn(10);
+        $this->transition_factory->method('getTransitionId')->with($tracker, 'Open', '101')->willReturn(10);
 
-        $field->shouldReceive('userCanMakeTransition')->withArgs([10])->andReturn(true);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $field->method('userCanMakeTransition')->with(10)->willReturn(true);
+        $field->method('getTracker')->willReturn($tracker);
 
-        $this->assertTrue($this->transition_validator->checkTransition($field, $value, $changeset));
+        self::assertTrue($this->transition_validator->checkTransition($field, $value, $changeset));
     }
 
-    public function testTransitionIsInvalidWhenUserDoesNotHaveSufficientPermissions()
+    public function testTransitionIsInvalidWhenUserDoesNotHaveSufficientPermissions(): void
     {
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $field     = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $changeset = ChangesetTestBuilder::aChangeset(65)->build();
+        $field     = $this->createMock(Tracker_FormElement_Field_List::class);
         $value     = 'Closed';
-        $tracker   = Mockery::mock(Tracker::class);
+        $tracker   = TrackerTestBuilder::aTracker()->build();
+        $field->method('getId')->willReturn(2864);
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
-        $changeset_value->shouldReceive('getListValues')->andReturn(['Open', 'Waiting for Information', 'Closed']);
+        $changeset->setFieldValue($field, ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
+            ListStaticValueBuilder::aStaticValue('Open')->build(),
+            ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
+            ListStaticValueBuilder::aStaticValue('Closed')->build(),
+        ])->build());
 
-        $this->transition_factory->shouldReceive('getTransitionId')->withArgs([$tracker, 'Open', $value])->andReturn(10);
+        $this->transition_factory->method('getTransitionId')->with($tracker, 'Open', $value)->willReturn(10);
 
-        $field->shouldReceive('userCanMakeTransition')->withArgs([10])->andReturn(false);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $field->method('userCanMakeTransition')->with(10)->willReturn(false);
+        $field->method('getTracker')->willReturn($tracker);
 
-        $this->assertFalse($this->transition_validator->checkTransition($field, $value, $changeset));
+        self::assertFalse($this->transition_validator->checkTransition($field, $value, $changeset));
     }
 }

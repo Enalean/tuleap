@@ -112,4 +112,9 @@ final class TestLayout extends BaseLayout
     {
         $this->inspector->setPermanentRedirectUrl((string) $redirect_url);
     }
+
+    public function selectRank($id, $rank, $items, $html_options)
+    {
+        return '';
+    }
 }
