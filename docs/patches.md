@@ -28,10 +28,11 @@ For a commit to reach the main development branch (`master`), it *must* comply w
 * [Gerrit tests](./tests.md#what-is-run-and-when--aka-continuous-integration-rules-) must pass
 * An Integrator must review the code prior to the integration.
     * When two Integrators are doing pair programming, a third reviewer is not required:
-      * The co-author (the one that is not performing the commit) must be mentionned in the commit message with `Signed-off-by: Author <email>`
+      * The co-author (the one that is not performing the commit) must be mentioned in the commit message with `Co-authored-by: Author <email>` (formally `Signed-off-by: Author <email>`)
       * The co-author must perform the integration of the submitted patch on it's own development environment (regular integration flow via gerrit, minus the review)
     * When an Integrator is doing pair programming with a contributor, a independent review from another integrator is required.
     * An Integrator is not allowed to self-merge their own patches. If this happens, patch must be reverted as soon as possible.
+* Integrators must have verified that principles described in [Expected Code](./expected-code.md) are applied before setting CodeReview+2 flag
 
 ## Setting up your environment
 
@@ -78,7 +79,7 @@ Basically a good commit message has:
 -   A description that explains the intent of the change (WHY you made
     those changes and not WHAT is inside the commit)
 
-You should always reference a public artifact in your commit:
+You must always reference a public artifact in your commit:
 
 -   You should reference a
     [request](https://tuleap.net/plugins/tracker/?tracker=140) when
@@ -86,7 +87,6 @@ You should always reference a public artifact in your commit:
 -   You should reference a
     [story](https://tuleap.net/plugins/tracker/?tracker=147) when it\'s
     a new development.
-:::
 
 ### Publish workflow
 

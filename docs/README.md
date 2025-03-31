@@ -32,17 +32,22 @@ When working with sources, you must look closely to [Architecture Decision Recor
 
 ## Getting started
 
-Getting started, what you need to know to setup your environment and
-push your code
+### Setup you environment
 
-* [Contrib](contrib.md)
-* [Quick start](quick-start.md)
-* [Patches](patches.md)
-* [Coding standards](coding-standards.md)
+1. [Clone Tuleap](./quick-start/clone-tuleap.md)
+1. [Install Docker](./quick-start/install-docker.md)
+1. [Run Tuleap](./quick-start/run-tuleap.md)
+
+### Prepare a new development
+
+* [Prepare features](./story-elaboration.md)
+
+### Submit a contribution
+
 * [Expected code](expected-code.md)
-* [Development tools](development-tools.md)
+* [Submit changes](patches.md)
 
-Development 101, what you need to know
+## Development 101, what you need to know
 
 * [Front end](./front-end.md)
 * [Back end](./back-end.md)
@@ -50,8 +55,9 @@ Development 101, what you need to know
 * [Internationalization](./internationalization.md)
 * [Integrators](./integrators.md)
 
-Advanced topics
+## Advanced topics
 
+* [Development tools](development-tools.md)
 * [Release](./release.md)
 * [LDAP](./ldap.md)
 * [Realtime](./realtime.md)
