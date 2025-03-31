@@ -21,7 +21,11 @@ import "./styles/edition.scss";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
-import { initGettext, getLocaleWithDefault, getPOFileFromLocale } from "@tuleap/gettext";
+import {
+    getLocaleWithDefault,
+    getPOFileFromLocaleWithoutExtension,
+    initGettext,
+} from "@tuleap/gettext";
 import { CommentEditor } from "./comments/CommentEditor";
 import { LitHTMLAdapter } from "./comments/LitHTMLAdapter";
 import { DOMAdapter } from "./comments/DOMAdapter";
@@ -57,7 +61,7 @@ async function initComments(): Promise<void> {
     const gettext_provider = await initGettext(
         locale,
         "tracker_artifact",
-        (locale) => import(`../../po/${getPOFileFromLocale(locale)}`),
+        (locale) => import(`../../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
     const editor_creator = RichTextEditorsCreator(
         document,

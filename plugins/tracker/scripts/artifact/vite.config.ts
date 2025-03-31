@@ -20,6 +20,7 @@
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
 import { viteExternalsPlugin } from "vite-plugin-externals";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
     {
@@ -28,6 +29,7 @@ export default vite.defineAppConfig(
     },
     {
         plugins: [
+            POGettextPlugin.vite(),
             viteExternalsPlugin({
                 ckeditor4: "CKEDITOR",
                 codendi: "codendi",

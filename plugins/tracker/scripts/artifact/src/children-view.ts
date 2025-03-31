@@ -18,7 +18,11 @@
  */
 
 import type { GetText } from "@tuleap/gettext";
-import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
+import {
+    getLocaleWithDefault,
+    getPOFileFromLocaleWithoutExtension,
+    initGettext,
+} from "@tuleap/gettext";
 import { getJSON, uri } from "@tuleap/fetch-result";
 import { html, render } from "lit-html";
 
@@ -27,16 +31,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (containers.length === 0) {
         return;
     }
-    const locale = document.body.dataset.userLocale ?? "en_US";
-
     const gettext_provider = await initGettext(
-        locale,
+        getLocaleWithDefault(document),
         "tracker_artifact",
-        (locale) =>
-            import(
-                /* webpackChunkName: "tracker-artifact-po-" */ "../po/" +
-                    getPOFileFromLocale(locale)
-            ),
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     for (const container of containers) {

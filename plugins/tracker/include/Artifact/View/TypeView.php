@@ -43,7 +43,7 @@ final readonly class TypeView extends TrackerArtifactView
         $layout = $GLOBALS['HTML'];
         \assert($layout instanceof \Tuleap\Layout\BaseLayout);
         $layout->addJavascriptAsset(new JavascriptViteAsset(
-            new IncludeViteAssets(__DIR__ . '/../../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
+            new IncludeViteAssets(__DIR__ . '/../../../scripts/artifact/frontend-assets', '/assets/trackers/artifact'),
             'src/children-view.ts',
         ));
 
