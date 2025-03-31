@@ -20,19 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
-
-use Tuleap\DB\DataAccessObject;
-
-final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject implements SearchSpecificProperties
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202503311336_prefix_plugin_table_tracker_field_artifact_link extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @return null | array{field_id: int, can_edit_reverse_links: 0|1}
-     */
-    public function searchByFieldId(int $field_id): ?array
+    public function description(): string
     {
-        $sql = 'SELECT field_id, can_edit_reverse_links FROM plugin_tracker_field_artifact_link WHERE field_id = ?';
+        return 'Rename table tracker_field_artifact_link to plugin_tracker_field_artifact_link';
+    }
 
-        return $this->getDB()->row($sql, $field_id);
+    public function up(): void
+    {
+        if (! $this->api->tableNameExists('tracker_field_artifact_link')) {
+            $this->log->warning('Migration has nothing to do');
+            return;
+        }
+
+        $this->api->dbh->exec('ALTER TABLE tracker_field_artifact_link RENAME plugin_tracker_field_artifact_link');
     }
 }
