@@ -291,22 +291,9 @@ describe("KanbanCtrl", function () {
     });
 
     describe("toggleArchive() -", function () {
-        it("Given that the archive column was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function () {
-            jest.spyOn(KanbanService, "collapseArchive").mockImplementation(() => {});
-            KanbanCtrl.archive.is_open = true;
-            KanbanCtrl.archive.filtered_content = [{ id: 82 }];
-
-            KanbanCtrl.toggleArchive();
-
-            expect(KanbanCtrl.archive.filtered_content).toStrictEqual([]);
-            expect(KanbanService.collapseArchive).toHaveBeenCalledWith(kanban.id);
-            expect(KanbanCtrl.archive.is_open).toBeFalsy();
-        });
-
         describe("Given that the archive column was closed", function () {
             beforeEach(() => {
                 KanbanCtrl.archive.is_open = false;
-                jest.spyOn(KanbanService, "expandArchive").mockImplementation(() => {});
             });
 
             it("and fully loaded, when I toggle it, then it will be expanded and filtered", function () {
@@ -315,7 +302,6 @@ describe("KanbanCtrl", function () {
 
                 KanbanCtrl.toggleArchive();
 
-                expect(KanbanService.expandArchive).toHaveBeenCalledWith(kanban.id);
                 expect(KanbanCtrl.archive.is_open).toBeTruthy();
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.archive);
             });

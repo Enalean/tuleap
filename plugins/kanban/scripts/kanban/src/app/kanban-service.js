@@ -58,8 +58,6 @@ function KanbanService(
         reorderArchive,
         expandBacklog,
         collapseBacklog,
-        expandArchive,
-        collapseArchive,
         moveInBacklog,
         moveInArchive,
         moveInColumn,
@@ -283,24 +281,6 @@ function KanbanService(
             patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
                 headers,
                 body: JSON.stringify({ collapse_backlog: true }),
-            }),
-        );
-    }
-
-    function expandArchive(kanban_id) {
-        return $q.when(
-            patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
-                headers,
-                body: JSON.stringify({ collapse_archive: false }),
-            }),
-        );
-    }
-
-    function collapseArchive(kanban_id) {
-        return $q.when(
-            patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
-                headers,
-                body: JSON.stringify({ collapse_archive: true }),
             }),
         );
     }
