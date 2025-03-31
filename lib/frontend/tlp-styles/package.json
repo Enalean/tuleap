@@ -10,6 +10,8 @@
     "./components/form-element.scss": "./styles/components/forms/form-element.scss",
     "./components/forms.scss": "./styles/components/forms/forms.scss",
     "./components/selects.scss": "./styles/components/forms/selects.scss",
+    "./components/labels.scss": "./styles/components/forms/labels.scss",
+    "./components/inputs.scss": "./styles/components/forms/inputs.scss",
     "./components/typography.scss": "./styles/components/typography.scss",
     "./images/field-double-arrows-small.svg": "./images/field-double-arrows-small.svg",
     "./images/field-double-arrows.svg": "./images/field-double-arrows.svg",

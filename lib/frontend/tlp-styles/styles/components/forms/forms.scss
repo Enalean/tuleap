@@ -25,6 +25,8 @@ $assets-base-path: "../../../" !default;
 @use "./selects" with (
     $assets-base-path: $assets-base-path
 );
+@use "./labels";
+@use "./inputs";
 
 @function asset-url($file_path) {
     @return url(#{$assets-base-path + $file_path});
@@ -83,40 +85,6 @@ $assets-base-path: "../../../" !default;
 }
 
 /**
- * Label
- */
-.tlp-label {
-    display: block;
-    position: relative;
-    margin: 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-dimmed-color);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1rem;
-
-    &[for],
-    &.tlp-radio,
-    &.tlp-checkbox {
-        cursor: pointer;
-    }
-
-    > .fa-asterisk {
-        position: absolute;
-        margin: 0 0 0 3px;
-        color: var(--tlp-danger-dark-color);
-        font-size: 0.6em;
-        vertical-align: text-top;
-    }
-
-    &:not(.tlp-checkbox) ~ &.tlp-checkbox,
-    &:not(.tlp-radio) ~ &.tlp-radio {
-        color: inherit;
-        font-size: 0.875rem;
-        font-weight: normal;
-    }
-}
-
-/**
  * Property
  */
 .tlp-property {
@@ -139,31 +107,8 @@ $assets-base-path: "../../../" !default;
 /**
  * Inputs
  */
-
 %-tlp-form-element {
     @include element.tlp-form-element;
-}
-
-.tlp-input {
-    @extend %-tlp-form-element;
-
-    height: var(--tlp-form-element-height);
-
-    &[size] {
-        width: auto;
-    }
-
-    &.tlp-input-small {
-        height: var(--tlp-form-element-small-height);
-        padding: 0 element.$tlp-form-element-small-padding-horizontal;
-        font-size: var(--tlp-form-element-small-font-size);
-    }
-
-    &.tlp-input-large {
-        height: element.$tlp-form-element-large-height;
-        padding: 0 element.$tlp-form-element-large-padding-horizontal;
-        font-size: element.$tlp-form-element-large-font-size;
-    }
 }
 
 .tlp-search {
