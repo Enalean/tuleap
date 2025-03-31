@@ -23,127 +23,84 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use EventManager;
-use Mockery;
-use Project;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
+use Tuleap\Tracker\Test\Builders\Fields\FieldsetContainerBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use User\XML\Import\IFindUserFromXMLReference;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementFactoryTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElement_Container_Fieldset
-     */
-    private $form_element;
-
-    /**
-     * @var Mockery\MockInterface|IFindUserFromXMLReference
-     */
-    private $user_finder;
-
-    /**
-     * @var array
-     */
-    private $row;
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_element;
-
-    /**
-     * @var Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Mockery\MockInterface|TrackerXmlImportFeedbackCollector
-     */
-    private $feedback_collector;
+    private Tracker_FormElementFactory $form_element_factory;
+    private Tracker_FormElement_Container_Fieldset $form_element;
+    private IFindUserFromXMLReference $user_finder;
+    private Tracker $tracker;
+    private TrackerXmlImportFeedbackCollector $feedback_collector;
 
     public function setUp(): void
     {
-        $this->form_element_factory = \Mockery::mock(Tracker_FormElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->form_element         = \Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $this->user_finder          = \Mockery::mock(IFindUserFromXMLReference::class);
-        $this->xml_element          = $this->getXmlElement();
-        $this->feedback_collector   = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
-        $this->tracker              = \Mockery::mock(Tracker::class);
-        $this->row                  = [
-            'formElement_type' => 'mon_type',
-            'name' => 'field_name',
-            'label' => 'field_label',
-            'rank' => 20,
-            'use_it' => 1,
-            'scope' => 'P',
-            'required' => 1,
-            'notifications' => 1,
-            'description' => 'field_description',
-            'id' => 0,
-            'tracker_id' => 0,
-            'parent_id' => 0,
-            'original_field_id' => null,
-        ];
+        $this->form_element_factory = Tracker_FormElementFactory::instance();
+        $this->form_element         = FieldsetContainerBuilder::aFieldset(0)
+            ->withName('field_name')
+            ->withLabel('field_label')
+            ->withDescription('field_description')
+            ->required()
+            ->build();
+        $this->user_finder          = IFindUserFromXMLReferenceStub::buildWithUser(UserTestBuilder::buildWithDefaults());
+        $this->feedback_collector   = new TrackerXmlImportFeedbackCollector();
+        $this->tracker              = TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build();
+        $this->form_element->setTracker($this->tracker);
     }
 
     public function tearDown(): void
     {
         EventManager::clearInstance();
-
-        parent::tearDown();
     }
 
     public function testImportFormElement(): void
     {
         $mapping = [];
 
-        $this->form_element->shouldReceive('continueGetInstanceFromXML')->withArgs([
-            $this->xml_element,
-            Mockery::any(),
-            $this->user_finder,
-            $this->feedback_collector,
-        ])->once();
-
-        $this->form_element_factory->shouldReceive('getInstanceFromRow')->withArgs([$this->row])->andReturns($this->form_element);
-
-        $this->form_element->shouldReceive('setTracker')->withArgs([$this->tracker])->once();
-
-        $element_from_instance = $this->form_element_factory->getInstanceFromXML($this->tracker, $this->xml_element, $mapping, $this->user_finder, $this->feedback_collector);
-        self::assertSame($element_from_instance, $this->form_element);
-        self::assertSame($mapping['F0'], $this->form_element);
+        $element_from_instance = $this->form_element_factory->getInstanceFromXML($this->tracker, new SimpleXMLElement(
+            '<?xml version="1.0" standalone="yes"?>
+            <formElement type="fieldset" ID="F0" rank="20" required="1" notifications="1">
+                <name>field_name</name>
+                <label>field_label</label>
+                <description>field_description</description>
+            </formElement>'
+        ), $mapping, $this->user_finder, $this->feedback_collector);
+        self::assertEquals($this->form_element, $element_from_instance);
+        self::assertEquals($this->form_element, $mapping['F0']);
     }
 
     public function testImportFormElementReturnWarningFeedbackWhenNoFormelementCorresponding(): void
     {
         $mapping = [];
 
-        $this->form_element->shouldNotReceive('continueGetInstanceFromXML');
-
-        $this->form_element_factory->shouldReceive('getInstanceFromRow')->withArgs([$this->row])->andReturns([]);
-
-        $this->form_element->shouldNotReceive('setTracker');
-
-        $this->feedback_collector
-            ->shouldReceive('addWarnings')
-            ->withArgs(['Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').']);
-
-        $GLOBALS['Response']
-            ->method('addFeedback')
+        $GLOBALS['Response']->method('addFeedback')
             ->with('warning', 'Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').');
 
-        $this->assertNull($this->form_element_factory->getInstanceFromXML($this->tracker, $this->xml_element, $mapping, $this->user_finder, $this->feedback_collector));
+        self::assertNull($this->form_element_factory->getInstanceFromXML($this->tracker, new SimpleXMLElement(
+            '<?xml version="1.0" standalone="yes"?>
+            <formElement type="mon_type" ID="F0" rank="20" required="1" notifications="1">
+                <name>field_name</name>
+                <label>field_label</label>
+                <description>field_description</description>
+            </formElement>'
+        ), $mapping, $this->user_finder, $this->feedback_collector));
+        self::assertSame(['Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').'], $this->feedback_collector->getWarnings());
     }
 
     public function testImportCallExternalElementEventAndReturnNull(): void
@@ -162,20 +119,13 @@ class TrackerFormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 </permissions>
             </externalField>'
         );
-        $this->tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
 
-        $event_manager = Mockery::mock(EventManager::class);
+        $event_manager = $this->createMock(EventManager::class);
         EventManager::setInstance($event_manager);
+        $event_manager->expects(self::once())->method('processEvent');
 
-        $event_manager->shouldReceive('processEvent')->once();
 
-
-        $this->feedback_collector
-            ->shouldReceive('addWarnings')
-            ->withArgs(['Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').']);
-
-        $GLOBALS['Response']
-            ->method('addFeedback')
+        $GLOBALS['Response']->method('addFeedback')
             ->with('warning', 'Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').');
 
         $element_from_instance = $this->form_element_factory->getInstanceFromXML(
@@ -186,18 +136,7 @@ class TrackerFormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->feedback_collector
         );
 
-        $this->assertNull($element_from_instance);
-    }
-
-    private function getXmlElement(): SimpleXMLElement
-    {
-        return new SimpleXMLElement(
-            '<?xml version="1.0" standalone="yes"?>
-            <formElement type="mon_type" ID="F0" rank="20" required="1" notifications="1">
-                <name>field_name</name>
-                <label>field_label</label>
-                <description>field_description</description>
-            </formElement>'
-        );
+        self::assertNull($element_from_instance);
+        self::assertSame(['Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').'], $this->feedback_collector->getWarnings());
     }
 }

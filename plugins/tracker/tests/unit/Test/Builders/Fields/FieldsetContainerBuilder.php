@@ -22,21 +22,59 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElement_Container_Fieldset;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FieldsetContainerBuilder
 {
-    /** @var Tracker_FormElement[] */
-    private array $form_elements = [];
+    /** @var Tracker_FormElement[]|null */
+    private ?array $form_elements = null;
+    private string $name          = 'Fieldset';
+    private string $label         = 'label';
+    private string $description   = '';
+    private bool $required        = false;
+    private Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
     }
 
     public static function aFieldset(int $id): self
     {
         return new self($id);
+    }
+
+    public function withName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function withLabel(string $label): self
+    {
+        $this->label = $label;
+        return $this;
+    }
+
+    public function withDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function required(): self
+    {
+        $this->required = true;
+        return $this;
+    }
+
+    public function inTracker(Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
     }
 
     public function containsFormElements(Tracker_FormElement ...$elements): self
@@ -50,16 +88,16 @@ final class FieldsetContainerBuilder
     {
         $fieldset = new Tracker_FormElement_Container_Fieldset(
             $this->id,
-            51,
-            15,
-            'Fieldset',
-            'label',
-            '',
+            $this->tracker->getId(),
+            0,
+            $this->name,
+            $this->label,
+            $this->description,
             true,
-            '',
-            false,
-            false,
-            10,
+            'P',
+            $this->required,
+            true,
+            20,
             null
         );
 
