@@ -27,6 +27,7 @@ use Tracker;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
@@ -36,6 +37,7 @@ final readonly class EditorWithReverseLinksBuilder
     public function __construct(
         private ParentInHierarchyRetriever $parent_tracker_retriever,
         private RetrieveUserPermissionOnTrackers $tracker_permissions_retriever,
+        private IRetrieveAllUsableTypesInProject $allowed_link_types_retriever,
     ) {
     }
 
@@ -64,6 +66,7 @@ final readonly class EditorWithReverseLinksBuilder
             $current_artifact,
             $current_tracker,
             $parent_tracker,
+            $this->allowed_link_types_retriever->getAllUsableTypesInProject($current_tracker->getProject()),
         );
     }
 }
