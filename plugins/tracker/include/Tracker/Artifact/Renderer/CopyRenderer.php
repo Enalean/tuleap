@@ -25,7 +25,6 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
-use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\Artifact\Renderer\ViewCollection;
 use Tuleap\Tracker\Artifact\View\ArtifactViewCopy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
@@ -69,8 +68,6 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
                 'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId() . '&func=copy-artifact',
             ],
         ];
-
-        ListFieldsIncluder::includeListFieldsAssets();
 
         $this->tracker->displayHeader(
             $this->layout,

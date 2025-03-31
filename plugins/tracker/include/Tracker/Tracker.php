@@ -77,7 +77,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
-use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporterBuilder;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChildrenXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\FilePathXMLExporter;
@@ -1610,12 +1609,12 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 'url'   => '#', //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ],
         ];
+        $this->includeJavascriptAssetsForMassChange();
         $this->displayHeader($layout, $this->name, $breadcrumbs, ['body_class' => ['widgetable']]);
 
         $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
         EventManager::instance()->processEvent($event);
 
-        $this->includeJavascriptAssetsForMassChange();
 
         $this->renderer->renderToPage(
             'masschange',
@@ -3424,12 +3423,13 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
 
     private function includeJavascriptAssetsForMassChange(): void
     {
-        ListFieldsIncluder::includeListFieldsAssets();
-        $assets = new IncludeAssets(
+        $assets = new \Tuleap\Layout\IncludeViteAssets(
             __DIR__ . '/../../scripts/artifact/frontend-assets',
             '/assets/trackers/artifact'
         );
-        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('mass-change.js'));
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/mass-change/mass-change-view.ts')
+        );
     }
 
     public function isCopyAllowed(): bool

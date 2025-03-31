@@ -17,9 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global codendi:readonly jQuery:readonly LyteBox:readonly CKEDITOR:readonly */
+import codendi from "codendi";
+import jQuery from "jquery";
+import LyteBox from "lytebox";
+import CKEDITOR from "ckeditor4";
+import tuleap from "tuleap";
 
-var tuleap = window.tuleap || {};
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
 
