@@ -22,8 +22,8 @@
     "@tuleap/vue3-gettext-init": "workspace:^",
     "mitt": "^3.0.0",
     "neverthrow": "6.0.0",
-    "vue": "^3.3.4",
-    "vue-dompurify-html": "^5.1.0",
+    "vue": "^3.5.13",
+    "vue-dompurify-html": "^5.2.0",
     "vue3-gettext": "2.4.0",
     "xlsx": "git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#a0bed2a97dcb1e3b76049be91abf3747f333c975"
   },
@@ -34,7 +34,7 @@
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@vitejs/plugin-vue": "4.2.3",
-    "@vue/test-utils": "^2.4.1"
+    "@vue/test-utils": "^2.4.6"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
