@@ -612,7 +612,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $hp       = Codendi_HTMLPurifier::instance();
         $html     = '';
         $html    .= '<input type="hidden" name="' . $select_name . '" value="" />';
-        $html    .= '<select multiple="multiple" name="' . $select_name . '">
+        $html    .= '<select multiple="multiple" name="' . $select_name . '" data-test="list-user-bind-values" >
                   <option value="">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
         $selected = '';
         if (in_array('artifact_submitters', $value_function)) {

@@ -76,13 +76,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         } else { //we keep the given name
             $name = 'name="' . $hp->purify($name) . '"';
         }
-        $html .= '<div class="textboxlist">
+        $html .= '<div class="textboxlist" data-test="open-list-field">
                     <input id="tracker_field_' . $this->id . '"
                            ' . $name . '
                            style="width:98%"
                            type="text"></div>';
 
-        $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_' . $this->id . '">';
+        $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_' . $this->id . '" data-test="open-list-field-dropdown" >';
         $html .= '<div class="default">' .  $hp->purify($this->getProperty('hint'), CODENDI_PURIFIER_LIGHT) . '</div>';
         $html .= '<ul class="feed">';
         //Field values

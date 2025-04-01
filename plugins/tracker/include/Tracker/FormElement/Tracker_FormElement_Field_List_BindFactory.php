@@ -383,7 +383,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
     {
         $html  = '';
         $html .= '<h3>' . dgettext('tuleap-tracker', 'Values') . '</h3>';
-        $html .= '<dl id="tracker-bind-factory">';
+        $html .= '<dl id="tracker-bind-factory" data-test="formElement-bind">';
 
         $html .= '<dt class="tracker-bind-type">';
         $h     = new HTML_Element_Input_Radio(dgettext('tuleap-tracker', 'Choose values'), 'formElement_data[bind-type]', self::STATIK, 'checked');

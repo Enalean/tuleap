@@ -71,6 +71,208 @@ function assertListHaveBeenCreatedWithSubElements(
         .should("have.length", number_of_elements);
 }
 
+function checkListFieldType(type: string): void {
+    cy.log(`Add static ${type} and check default value is stored`);
+    selectFormElementWithName(type);
+    cy.get("[data-test=formElement_label]").type(type);
+    cy.get("[data-test=list-static-bind-values]").type("Alpha{Enter}Beta{Enter}Gamma{Enter}");
+    cy.get("[data-test=formElement-submit]").click();
+    assertListHaveBeenCreatedWithSubElements(type, 4);
+    cy.get("[data-test=form-element-field-list] option")
+        .should("contain", "None")
+        .and("contain", "Alpha")
+        .and("contain", "Beta")
+        .and("contain", "Gamma");
+
+    cy.log(`Add user ${type} and check default value is stored`);
+    selectFormElementWithName(type);
+    cy.get("[data-test=formElement_label]").type(`${type}_users`);
+    cy.get("[data-test=formElement-bind]").find("input[value=users]").click();
+    cy.get("[data-test=list-user-bind-values]").select("group_members");
+    cy.get("[data-test=formElement-submit]").click();
+    assertListHaveBeenCreatedWithSubElements(`${type}_users`, 2);
+    cy.get("[data-test=form-element-field-list] option")
+        .should("contain", "None")
+        .and("contain", "ProjectAdministrator");
+
+    cy.log(`Add user ${type} field and check default value is stored`);
+    selectFormElementWithName(type);
+    cy.get("[data-test=formElement_label]").type(`${type}_ugroup`);
+    cy.get("[data-test=formElement-bind]").find("input[value=ugroups]").click();
+    cy.get("[data-test=list-ugroup-bind-values]").select(0);
+    cy.get("[data-test=formElement-submit]").click();
+    assertListHaveBeenCreatedWithSubElements(`${type}_ugroup`, 2);
+    cy.get("[data-test=form-element-field-list] option")
+        .should("contain", "None")
+        .and("contain", "Project members");
+}
+
+function assertCheckboxHaveBeenCreatedWithSubElements(
+    field_name: string,
+    number_of_elements: number,
+): void {
+    cy.get("[data-test=administration-field-label]")
+        .contains(field_name)
+        .parent()
+        .find("[data-test=checkbox-field-value]")
+        .should("have.length", number_of_elements);
+}
+
+function checkCheckboxListFieldType(): void {
+    cy.log(`Add static Checkbox and check default value is stored`);
+    selectFormElementWithName("Checkbox");
+    cy.get("[data-test=formElement_label]").type("Checkbox");
+    cy.get("[data-test=list-static-bind-values]").type("Alpha{Enter}Beta{Enter}Gamma{Enter}");
+    cy.get("[data-test=formElement-submit]").click();
+    assertCheckboxHaveBeenCreatedWithSubElements("Checkbox", 3);
+    cy.get("[data-test=administration-field-label]")
+        .contains("Checkbox")
+        .parent()
+        .find("[data-test=checkbox-field-value]")
+        .should("contain", "Alpha")
+        .and("contain", "Beta")
+        .and("contain", "Gamma");
+
+    cy.log(`Add user Checkbox and check default value is stored`);
+    selectFormElementWithName("Checkbox");
+    cy.get("[data-test=formElement_label]").type("Checkbox_users");
+    cy.get("[data-test=formElement-bind]").find("input[value=users]").click();
+    cy.get("[data-test=list-user-bind-values]").select("group_members");
+    cy.get("[data-test=formElement-submit]").click();
+    assertCheckboxHaveBeenCreatedWithSubElements("Checkbox_users", 1);
+    cy.get("[data-test=administration-field-label]")
+        .contains("Checkbox_users")
+        .parent()
+        .find("[data-test=checkbox-field-value]")
+        .should("contain", "ProjectAdministrator");
+
+    cy.log(`Add user Checkbox field and check default value is stored`);
+    selectFormElementWithName("Checkbox");
+    cy.get("[data-test=formElement_label]").type("Checkbox_ugroup");
+    cy.get("[data-test=formElement-bind]").find("input[value=ugroups]").click();
+    cy.get("[data-test=list-ugroup-bind-values]").select(0);
+    cy.get("[data-test=formElement-submit]").click();
+    assertCheckboxHaveBeenCreatedWithSubElements("Checkbox_ugroup", 1);
+    cy.get("[data-test=administration-field-label]")
+        .contains("Checkbox_ugroup")
+        .parent()
+        .find("[data-test=checkbox-field-value]")
+        .should("contain", "Project members");
+}
+
+function assertRadioListHaveBeenCreatedWithSubElements(
+    field_name: string,
+    number_of_elements: number,
+): void {
+    cy.get("[data-test=administration-field-label]")
+        .contains(field_name)
+        .parent()
+        .find("[data-test=radiobutton-field-value]")
+        .should("have.length", number_of_elements);
+}
+
+function checkRadioListFieldType(): void {
+    cy.log(`Add static Radio and check default value is stored`);
+    selectFormElementWithName("Radio button");
+    cy.get("[data-test=formElement_label]").type("Radio");
+    cy.get("[data-test=list-static-bind-values]").type("Alpha{Enter}Beta{Enter}Gamma{Enter}");
+    cy.get("[data-test=formElement-submit]").click();
+    assertRadioListHaveBeenCreatedWithSubElements("Radio", 4);
+    cy.get("[data-test=administration-field-label]")
+        .contains("Radio")
+        .parent()
+        .find("[data-test=radiobutton-field-value]")
+        .should("contain", "None")
+        .and("contain", "Alpha")
+        .and("contain", "Beta")
+        .and("contain", "Gamma");
+
+    cy.log(`Add user Radio and check default value is stored`);
+    selectFormElementWithName("Radio button");
+    cy.get("[data-test=formElement_label]").type("Radio_users");
+    cy.get("[data-test=formElement-bind]").find("input[value=users]").click();
+    cy.get("[data-test=list-user-bind-values]").select("group_members");
+    cy.get("[data-test=formElement-submit]").click();
+    assertRadioListHaveBeenCreatedWithSubElements("Radio_users", 2);
+    cy.get("[data-test=administration-field-label]")
+        .contains("Radio_users")
+        .parent()
+        .find("[data-test=radiobutton-field-value]")
+        .should("contain", "None")
+        .and("contain", "ProjectAdministrator");
+
+    cy.log(`Add user Radio field and check default value is stored`);
+    selectFormElementWithName("Radio button");
+    cy.get("[data-test=formElement_label]").type("Radio_ugroup");
+    cy.get("[data-test=formElement-bind]").find("input[value=ugroups]").click();
+    cy.get("[data-test=list-ugroup-bind-values]").select(0);
+    cy.get("[data-test=formElement-submit]").click();
+    assertRadioListHaveBeenCreatedWithSubElements("Radio_ugroup", 2);
+    cy.get("[data-test=administration-field-label]")
+        .contains("Radio_ugroup")
+        .parent()
+        .find("[data-test=radiobutton-field-value]")
+        .should("contain", "None")
+        .and("contain", "Project members");
+}
+
+function assertOpenListHaveBeenCreatedWithSubElements(
+    field_name: string,
+    elements: ReadonlyMap<string, string>,
+): void {
+    elements.forEach((value: string, key: string): void => {
+        cy.get("[data-test=administration-field-label]")
+            .contains(field_name)
+            .parent()
+            .find("[data-test=open-list-field] input")
+            .first()
+            .type("{selectall}{del}")
+            .type(key);
+        cy.get("[data-test=administration-field-label]")
+            .contains(field_name)
+            .parent()
+            .find("[data-test=open-list-field-dropdown]")
+            .contains(value);
+    });
+}
+
+function checkOpenListFieldType(): void {
+    cy.log("Add static open list field and check default value is stored");
+    selectFormElementWithName("Open List");
+    cy.get("[data-test=formElement_label]").type("Open");
+    cy.get("[data-test=list-static-bind-values]").type("Theta{Enter}Iota{Enter}");
+    cy.get("[data-test=formElement-submit]").click();
+    assertOpenListHaveBeenCreatedWithSubElements(
+        "Open",
+        new Map([
+            ["Th", "Theta"],
+            ["Io", "Iota"],
+        ]),
+    );
+
+    cy.log("Add user open list field and check default value is stored");
+    selectFormElementWithName("Open List");
+    cy.get("[data-test=formElement_label]").type("Open_user");
+    cy.get("[data-test=formElement-bind]").find("input[value=users]").click();
+    cy.get("[data-test=list-user-bind-values]").select("group_members");
+    cy.get("[data-test=formElement-submit]").click();
+    assertOpenListHaveBeenCreatedWithSubElements(
+        "Open_user",
+        new Map([["Pr", "ProjectAdministrator"]]),
+    );
+
+    cy.log(`Add user Radio field and check default value is stored`);
+    selectFormElementWithName("Open List");
+    cy.get("[data-test=formElement_label]").type("Open_ugroup");
+    cy.get("[data-test=formElement-bind]").find("input[value=ugroups]").click();
+    cy.get("[data-test=list-ugroup-bind-values]").select(0);
+    cy.get("[data-test=formElement-submit]").click();
+    assertOpenListHaveBeenCreatedWithSubElements(
+        "Open_ugroup",
+        new Map([["Pr", "Project members"]]),
+    );
+}
+
 describe("Tracker artifacts", function () {
     const TITLE_FIELD_NAME = "title";
 
@@ -163,40 +365,11 @@ describe("Tracker artifacts", function () {
                 cy.get("[data-test=formElement-submit]").click();
                 assertFieldDefaultValue("Int", "56");
 
-                cy.log("Add list field and check default value is stored");
-                selectFormElementWithName("Selectbox");
-                cy.get("[data-test=formElement_label]").type("Selectbox");
-                cy.get("[data-test=list-static-bind-values]").type(
-                    "Alpha{Enter}Beta{Enter}Gamma{Enter}",
-                );
-                cy.get("[data-test=formElement-submit]").click();
-                assertListHaveBeenCreatedWithSubElements("Selectbox", 4);
-                cy.get("[data-test=form-element-field-list] option")
-                    .should("contain", "None")
-                    .and("contain", "Alpha")
-                    .and("contain", "Beta")
-                    .and("contain", "Gamma");
-
-                cy.log("Add multiselectbox field and check default value is stored");
-                selectFormElementWithName("Multi Select Box");
-                cy.get("[data-test=formElement_label]").type("MultiSelectbox");
-                cy.get("[data-test=list-static-bind-values]").type(
-                    "Delta{Enter}Epsilon{Enter}Zeta{Enter}Eta{Enter}",
-                );
-                cy.get("[data-test=formElement-submit]").click();
-                assertListHaveBeenCreatedWithSubElements("Selectbox", 5);
-                cy.get("[data-test=form-element-field-list] option")
-                    .should("contain", "None")
-                    .and("contain", "Delta")
-                    .and("contain", "Epsilon")
-                    .and("contain", "Zeta")
-                    .and("contain", "Eta");
-
-                cy.log("Add open list field and check default value is stored");
-                selectFormElementWithName("Open List");
-                cy.get("[data-test=formElement_label]").type("Open");
-                cy.get("[data-test=list-static-bind-values]").type("Theta{Enter}Iota{Enter}");
-                cy.get("[data-test=formElement-submit]").click();
+                checkListFieldType("Selectbox");
+                checkListFieldType("Multi Select Box");
+                checkCheckboxListFieldType();
+                checkRadioListFieldType();
+                checkOpenListFieldType();
 
                 cy.log("Add rich text field and check default value is stored");
                 selectFormElementWithName("Static Text");
