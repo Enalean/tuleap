@@ -265,4 +265,9 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
         return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

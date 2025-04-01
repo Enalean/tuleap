@@ -422,4 +422,9 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     {
          return null;
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

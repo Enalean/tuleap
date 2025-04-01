@@ -886,6 +886,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return $html;
     }
 
+    public function isAlwaysInEditMode(): bool
+    {
+        $specific_property_dao = new ArtifactLinkFieldSpecificPropertiesDAO();
+        $properties            = $specific_property_dao->searchByFieldId($this->getId());
+        return (bool) ($properties['can_edit_reverse_links'] ?? false);
+    }
+
     /**
      * Fetch the html code to display the field value in artifact
      *

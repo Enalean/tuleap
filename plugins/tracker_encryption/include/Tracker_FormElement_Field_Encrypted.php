@@ -326,4 +326,9 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     {
         return new Tracker_FormElement_View_Admin_Field($element, $used_element);
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

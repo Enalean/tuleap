@@ -771,4 +771,9 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         return $visitor->visitText($this);
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

@@ -240,4 +240,9 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         assert($old_value instanceof Tracker_Artifact_ChangesetValue_Float);
         return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

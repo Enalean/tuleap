@@ -223,4 +223,9 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         assert($old_value instanceof Tracker_Artifact_ChangesetValue_Integer);
         return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }
