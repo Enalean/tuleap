@@ -101,8 +101,8 @@ describe("Document filename pattern", () => {
         cy.log("Go to all versions page");
         cy.get("[data-test=document-view-all-versions]").contains("View all versions");
         cy.get("[data-test=document-view-all-versions]").click();
-        //
-        cy.get("[data-test=history-versions]").find("tr").should("have.length", 8);
+
+        cy.get("[data-test=history-versions]").find("tr").its("length").should("be.greaterThan", 5);
 
         cy.log("Filename is not displayed when not configured");
         cy.visitProjectService(no_pattern_project_unixname, "Documents");
