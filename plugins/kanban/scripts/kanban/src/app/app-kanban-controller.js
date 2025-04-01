@@ -90,6 +90,7 @@ function KanbanCtrl(
         filtered_content: [],
         loading_items: true,
         fully_loaded: false,
+        is_open: false,
     });
 
     Object.assign(self, {
@@ -324,7 +325,6 @@ function KanbanCtrl(
     function collapseArchive() {
         if (self.archive.is_open) {
             emptyArray(self.archive.filtered_content);
-            KanbanService.collapseArchive(kanban.id);
             self.archive.is_open = false;
         }
     }
@@ -334,7 +334,6 @@ function KanbanCtrl(
             return;
         }
 
-        KanbanService.expandArchive(kanban.id);
         self.archive.is_open = true;
 
         if (!self.archive.fully_loaded) {

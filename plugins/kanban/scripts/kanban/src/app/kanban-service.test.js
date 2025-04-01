@@ -388,34 +388,6 @@ describe("KanbanService", () => {
         });
     });
 
-    describe(`expandArchive`, () => {
-        it(`will call PATCH on the kanban to expand its archive column`, async () => {
-            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-            mockFetchSuccess(tlpPatch);
-
-            const promise = KanbanService.expandArchive(8);
-            await expect(wrapPromise(promise)).resolves.toBeTruthy();
-            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
-                headers: expected_headers,
-                body: JSON.stringify({ collapse_archive: false }),
-            });
-        });
-    });
-
-    describe(`collapseArchive`, () => {
-        it(`will call PATCH on the kanban to collapse its archive column`, async () => {
-            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-            mockFetchSuccess(tlpPatch);
-
-            const promise = KanbanService.collapseArchive(8);
-            await expect(wrapPromise(promise)).resolves.toBeTruthy();
-            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
-                headers: expected_headers,
-                body: JSON.stringify({ collapse_archive: true }),
-            });
-        });
-    });
-
     describe(`addColumn`, () => {
         it(`will call POST on the kanban's columns to create a new column
             and will return the new column's representation`, async () => {
