@@ -22,7 +22,7 @@
     <base-card
         class="taskboard-card-parent"
         v-bind:card="card"
-        v-on:editor-closed="$emit('editor-closed')"
+        v-on:editor-closed="emit('editor-closed')"
     >
         <template v-slot:initial_effort>
             <card-initial-effort v-bind:card="card" />
@@ -32,31 +32,24 @@
         </template>
     </base-card>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import CardInitialEffort from "./CardInitialEffort.vue";
 import { getWidthPercentage } from "../../../../../helpers/progress-bars";
 import BaseCard from "./BaseCard.vue";
 import type { Card } from "../../../../../type";
 
-@Component({
-    components: {
-        BaseCard,
-        CardInitialEffort,
-    },
-})
-export default class ParentCard extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
+const props = defineProps<{ card: Card }>();
 
-    get progress_bar_width(): string {
-        const { initial_effort, remaining_effort } = this.card;
+const emit = defineEmits<{
+    (e: "editor-closed"): void;
+}>();
 
-        const percentage_width = getWidthPercentage(initial_effort, remaining_effort);
-
-        return `${percentage_width}%`;
-    }
-}
+const progress_bar_width = computed((): string => {
+    const percentage_width = getWidthPercentage(
+        props.card.initial_effort,
+        props.card.remaining_effort,
+    );
+    return `${percentage_width}%`;
+});
 </script>
