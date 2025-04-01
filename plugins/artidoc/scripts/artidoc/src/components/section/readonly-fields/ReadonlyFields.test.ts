@@ -60,6 +60,7 @@ describe("ReadonlyFields", () => {
         expect(wrapper.findAll(".tlp-property")[0].classes()).toStrictEqual([
             "tlp-property",
             "display-field-in-block",
+            "document-grid-element-full-row",
         ]);
     });
 });

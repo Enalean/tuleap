@@ -19,12 +19,12 @@
   -->
 
 <template>
-    <div class="section-fields tlp-card tlp-card-inactive">
+    <div class="section-fields tlp-card tlp-card-inactive document-grid-4-columns">
         <div
             v-for="(readonly_field, index) in section.fields"
             v-bind:key="index"
             class="tlp-property"
-            v-bind:class="{ 'display-field-in-block': readonly_field.display_type === 'block' }"
+            v-bind:class="getFieldClasses(readonly_field)"
         >
             <field-string
                 v-if="isStringField(readonly_field)"
@@ -36,12 +36,23 @@
 
 <script setup lang="ts">
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
-import { isStringField } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
+import {
+    isStringField,
+    type ReadonlyField,
+} from "@/sections/readonly-fields/ReadonlyFieldsCollection";
 import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 
 defineProps<{
     section: SectionBasedOnArtifact;
 }>();
+
+const getFieldClasses = (readonly_field: ReadonlyField): string[] => {
+    if (readonly_field.display_type === "block") {
+        return ["display-field-in-block", "document-grid-element-full-row"];
+    }
+
+    return [];
+};
 </script>
 
 <style scoped lang="scss">
