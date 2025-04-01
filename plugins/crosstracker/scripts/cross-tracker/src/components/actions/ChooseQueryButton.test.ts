@@ -28,7 +28,7 @@ import {
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
     CREATE_NEW_QUERY_EVENT,
-} from "../../helpers/emitter-provider";
+} from "../../helpers/widget-events";
 
 vi.mock("@tuleap/tlp-dropdown", () => ({
     createDropdown: (): void => {

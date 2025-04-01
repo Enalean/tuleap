@@ -43,14 +43,14 @@ import {
     IS_USER_ADMIN,
     UPDATE_WIDGET_TITLE,
 } from "./injection-symbols";
-import type { EditQueryEvent, SwitchQueryEvent } from "./helpers/emitter-provider";
+import type { EditQueryEvent, SwitchQueryEvent } from "./helpers/widget-events";
 import {
     SWITCH_QUERY_EVENT,
     CLEAR_FEEDBACK_EVENT,
     CREATE_NEW_QUERY_EVENT,
     EDIT_QUERY_EVENT,
     UPDATE_WIDGET_TITLE_EVENT,
-} from "./helpers/emitter-provider";
+} from "./helpers/widget-events";
 import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
 import {
     QUERY_ACTIVE_PANE,
@@ -89,9 +89,10 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    emitter.off(CREATE_NEW_QUERY_EVENT);
-    emitter.off(EDIT_QUERY_EVENT);
+    emitter.off(CREATE_NEW_QUERY_EVENT, handleCreateNewQuery);
+    emitter.off(EDIT_QUERY_EVENT, handleEditQuery);
     emitter.off(SWITCH_QUERY_EVENT, handleSwitchQuery);
+    emitter.all.clear();
     widget_title_updater.removeListener();
 });
 

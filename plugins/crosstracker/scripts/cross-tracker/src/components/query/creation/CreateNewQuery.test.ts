@@ -20,29 +20,29 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import CreateNewQuery from "./CreateNewQuery.vue";
 import QuerySuggested from "../QuerySuggested.vue";
 import TitleInput from "../TitleInput.vue";
 import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
 import { Fault } from "@tuleap/fault";
 import type {
-    EmitterProvider,
     Events,
     NotifyFaultEvent,
     NotifySuccessEvent,
     SwitchQueryEvent,
-} from "../../../helpers/emitter-provider";
+} from "../../../helpers/widget-events";
 import {
     CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
     SEARCH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
-} from "../../../helpers/emitter-provider";
+} from "../../../helpers/widget-events";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import { PostNewQueryStub } from "../../../../tests/stubs/PostNewQueryStub";
 import type { PostNewQuery } from "../../../domain/PostNewQuery";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
 
@@ -54,7 +54,7 @@ describe("CreateNewQuery", () => {
     let dispatched_success_events: NotifySuccessEvent[];
     let dispatched_search_events: true[];
     let dispatched_switch_query_events: SwitchQueryEvent[];
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
 
     const QueryEditor = {
         name: "QueryEditor",
@@ -64,6 +64,26 @@ describe("CreateNewQuery", () => {
         },
     };
 
+    const registerClearFeedbackEvent = (): void => {
+        dispatched_clear_feedback_events.push(true);
+    };
+
+    const registerFaultEvent = (event: NotifyFaultEvent): void => {
+        dispatched_fault_events.push(event);
+    };
+
+    const registerSuccessEvent = (event: NotifySuccessEvent): void => {
+        dispatched_success_events.push(event);
+    };
+
+    const registerSearchEvent = (): void => {
+        dispatched_search_events.push(true);
+    };
+
+    const registerSwitchQueryEvent = (event: SwitchQueryEvent): void => {
+        dispatched_switch_query_events.push(event);
+    };
+
     beforeEach(() => {
         emitter = mitt<Events>();
         dispatched_clear_feedback_events = [];
@@ -71,21 +91,19 @@ describe("CreateNewQuery", () => {
         dispatched_success_events = [];
         dispatched_search_events = [];
         dispatched_switch_query_events = [];
-        emitter.on(CLEAR_FEEDBACK_EVENT, () => {
-            dispatched_clear_feedback_events.push(true);
-        });
-        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
-            dispatched_fault_events.push(event);
-        });
-        emitter.on(NOTIFY_SUCCESS_EVENT, (event) => {
-            dispatched_success_events.push(event);
-        });
-        emitter.on(SEARCH_ARTIFACTS_EVENT, () => {
-            dispatched_search_events.push(true);
-        });
-        emitter.on(SWITCH_QUERY_EVENT, (event) => {
-            dispatched_switch_query_events.push(event);
-        });
+        emitter.on(CLEAR_FEEDBACK_EVENT, registerClearFeedbackEvent);
+        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.on(NOTIFY_SUCCESS_EVENT, registerSuccessEvent);
+        emitter.on(SEARCH_ARTIFACTS_EVENT, registerSearchEvent);
+        emitter.on(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
+    });
+
+    afterEach(() => {
+        emitter.off(CLEAR_FEEDBACK_EVENT, registerClearFeedbackEvent);
+        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.off(NOTIFY_SUCCESS_EVENT, registerSuccessEvent);
+        emitter.off(SEARCH_ARTIFACTS_EVENT, registerSearchEvent);
+        emitter.off(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
     });
 
     function getWrapper(

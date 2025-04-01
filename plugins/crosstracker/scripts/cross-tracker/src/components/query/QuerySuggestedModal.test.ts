@@ -23,15 +23,16 @@ import { shallowMount } from "@vue/test-utils";
 import QuerySuggestedModal from "./QuerySuggestedModal.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { EMITTER } from "../../injection-symbols";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
-import type { EmitterProvider, Events } from "../../helpers/emitter-provider";
-import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/emitter-provider";
+import type { Events } from "../../helpers/widget-events";
+import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/widget-events";
 import type { QuerySuggestion } from "../../domain/SuggestedQueriesGetter";
 
 vi.useFakeTimers();
 
 describe("QuerySuggestedModal", () => {
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     const query: QuerySuggestion = {
         title: "My query",
         description: "Some query description",

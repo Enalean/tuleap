@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EmitterProvider, UpdateWidgetTitleEvent } from "./helpers/emitter-provider";
-import { UPDATE_WIDGET_TITLE_EVENT } from "./helpers/emitter-provider";
+import type { Events, UpdateWidgetTitleEvent } from "./helpers/widget-events";
+import { UPDATE_WIDGET_TITLE_EVENT } from "./helpers/widget-events";
+import type { Emitter } from "mitt";
 
 export type WidgetTitleUpdater = {
     listenToUpdateTitle(): void;
@@ -26,17 +27,19 @@ export type WidgetTitleUpdater = {
 };
 
 export const WidgetTitleUpdater = (
-    emitter: EmitterProvider,
+    emitter: Emitter<Events>,
     title_element: HTMLElement,
 ): WidgetTitleUpdater => {
+    const updateTitle = (event: UpdateWidgetTitleEvent): void => {
+        title_element.textContent = event.new_title;
+    };
+
     return {
         listenToUpdateTitle(): void {
-            emitter.on(UPDATE_WIDGET_TITLE_EVENT, (event: UpdateWidgetTitleEvent): void => {
-                title_element.textContent = event.new_title;
-            });
+            emitter.on(UPDATE_WIDGET_TITLE_EVENT, updateTitle);
         },
         removeListener(): void {
-            emitter.off(UPDATE_WIDGET_TITLE_EVENT);
+            emitter.off(UPDATE_WIDGET_TITLE_EVENT, updateTitle);
         },
     };
 };

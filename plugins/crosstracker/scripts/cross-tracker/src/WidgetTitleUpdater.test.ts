@@ -18,13 +18,14 @@
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
-import type { EmitterProvider, Events } from "./helpers/emitter-provider";
-import { UPDATE_WIDGET_TITLE_EVENT } from "./helpers/emitter-provider";
+import type { Events } from "./helpers/widget-events";
+import { UPDATE_WIDGET_TITLE_EVENT } from "./helpers/widget-events";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 
 describe("WidgetTitleUpdater", () => {
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let widget_title_element: HTMLElement;
 
     beforeEach(() => {

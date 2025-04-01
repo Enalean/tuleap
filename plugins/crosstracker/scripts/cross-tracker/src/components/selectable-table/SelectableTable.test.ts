@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
@@ -32,9 +32,9 @@ import {
     EMITTER,
     GET_COLUMN_NAME,
     IS_EXPORT_ALLOWED,
-    WIDGET_ID,
     QUERY_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
+    WIDGET_ID,
 } from "../../injection-symbols";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
@@ -53,8 +53,9 @@ import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
 import type { Query } from "../../type";
-import type { EmitterProvider, Events, NotifyFaultEvent } from "../../helpers/emitter-provider";
-import { NOTIFY_FAULT_EVENT } from "../../helpers/emitter-provider";
+import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 
 vi.useFakeTimers();
@@ -67,8 +68,12 @@ describe(`SelectableTable`, () => {
     let query_state: QueryState;
     let is_xslx_export_allowed: boolean;
     let writing_query: Query;
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
+
+    const registerFaultEvent = (event: NotifyFaultEvent): void => {
+        dispatched_fault_events.push(event);
+    };
 
     beforeEach(() => {
         query_state = "query-saved";
@@ -84,9 +89,11 @@ describe(`SelectableTable`, () => {
 
         emitter = mitt<Events>();
         dispatched_fault_events = [];
-        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
-            dispatched_fault_events.push(event);
-        });
+        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
+    });
+
+    afterEach(() => {
+        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
     });
 
     const getWrapper = (

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
@@ -28,13 +28,9 @@ import * as rest_querier from "../../api/rest-querier";
 import type { Query } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { EMITTER, IS_USER_ADMIN, QUERY_STATE, WIDGET_ID } from "../../injection-symbols";
-import type {
-    EmitterProvider,
-    Events,
-    NotifyFaultEvent,
-    RefreshArtifactsEvent,
-} from "../../helpers/emitter-provider";
-import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import type { Events, NotifyFaultEvent, RefreshArtifactsEvent } from "../../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 
 describe("ReadingMode", () => {
@@ -42,9 +38,17 @@ describe("ReadingMode", () => {
         reading_query: Query,
         is_user_admin: boolean,
         has_error: boolean,
-        emitter: EmitterProvider;
+        emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_refresh_events: RefreshArtifactsEvent[];
+
+    const registerFaultEvent = (event: NotifyFaultEvent): void => {
+        dispatched_fault_events.push(event);
+    };
+
+    const registerRefreshEvent = (event: RefreshArtifactsEvent): void => {
+        dispatched_refresh_events.push(event);
+    };
 
     beforeEach(() => {
         backend_query = {
@@ -66,12 +70,13 @@ describe("ReadingMode", () => {
         emitter = mitt<Events>();
         dispatched_fault_events = [];
         dispatched_refresh_events = [];
-        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
-            dispatched_fault_events.push(event);
-        });
-        emitter.on(REFRESH_ARTIFACTS_EVENT, (event) => {
-            dispatched_refresh_events.push(event);
-        });
+        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.on(REFRESH_ARTIFACTS_EVENT, registerRefreshEvent);
+    });
+
+    afterEach(() => {
+        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
+        emitter.off(REFRESH_ARTIFACTS_EVENT, registerRefreshEvent);
     });
 
     function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {

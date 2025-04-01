@@ -52,7 +52,7 @@ import QueryEditor from "./QueryEditor.vue";
 import type { Query } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER } from "../../injection-symbols";
-import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/emitter-provider";
+import { REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
 
 const { $gettext } = useGettext();
 

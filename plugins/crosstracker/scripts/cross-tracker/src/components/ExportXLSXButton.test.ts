@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
@@ -28,8 +28,9 @@ import { Fault } from "@tuleap/fault";
 import { errAsync, okAsync } from "neverthrow";
 import { ColumnNameGetter } from "../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../helpers/vue-gettext-provider-for-test";
-import type { EmitterProvider, Events, NotifyFaultEvent } from "../helpers/emitter-provider";
-import { CLEAR_FEEDBACK_EVENT, NOTIFY_FAULT_EVENT } from "../helpers/emitter-provider";
+import type { Events, NotifyFaultEvent } from "../helpers/widget-events";
+import { CLEAR_FEEDBACK_EVENT, NOTIFY_FAULT_EVENT } from "../helpers/widget-events";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
 
 vi.useFakeTimers();
@@ -49,9 +50,17 @@ vi.mock("../helpers/exporter/xlsx/download-xlsx", () => {
 });
 
 describe("ExportXLSXButton", () => {
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let dispatched_clear_events: true[];
     let dispatched_fault_events: NotifyFaultEvent[];
+
+    const registerClearEvents = (): void => {
+        dispatched_clear_events.push(true);
+    };
+
+    const registerFaultEvents = (event: NotifyFaultEvent): void => {
+        dispatched_fault_events.push(event);
+    };
 
     beforeEach(() => {
         downloadXLSXDocument.mockReset();
@@ -59,12 +68,13 @@ describe("ExportXLSXButton", () => {
         emitter = mitt<Events>();
         dispatched_clear_events = [];
         dispatched_fault_events = [];
-        emitter.on(CLEAR_FEEDBACK_EVENT, () => {
-            dispatched_clear_events.push(true);
-        });
-        emitter.on(NOTIFY_FAULT_EVENT, (event) => {
-            dispatched_fault_events.push(event);
-        });
+        emitter.on(CLEAR_FEEDBACK_EVENT, registerClearEvents);
+        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvents);
+    });
+
+    afterEach(() => {
+        emitter.off(CLEAR_FEEDBACK_EVENT, registerClearEvents);
+        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvents);
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ExportXLSXButton>> {

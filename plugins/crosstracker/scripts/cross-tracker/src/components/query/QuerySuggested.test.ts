@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
@@ -26,19 +26,20 @@ import QuerySuggested from "./QuerySuggested.vue";
 import { PROJECT_DASHBOARD, USER_DASHBOARD } from "../../domain/DashboardType";
 import { SuggestedQueries } from "../../domain/SuggestedQueriesGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
-import type {
-    DisplayQueryPreviewEvent,
-    EmitterProvider,
-    Events,
-} from "../../helpers/emitter-provider";
-import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/emitter-provider";
+import type { DisplayQueryPreviewEvent, Events } from "../../helpers/widget-events";
+import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/widget-events";
 
 describe("QuerySuggested", () => {
     const suggest_queries = SuggestedQueries(createVueGettextProviderPassThrough());
     let is_modal_should_be_displayed: boolean;
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     let dispatched_query_preview_event: DisplayQueryPreviewEvent[];
+
+    const registerQueryPreviewEvent = (event: DisplayQueryPreviewEvent): void => {
+        dispatched_query_preview_event.push(event);
+    };
     const getWrapper = (
         dashboard_type: string,
     ): VueWrapper<InstanceType<typeof QuerySuggested>> => {
@@ -56,13 +57,16 @@ describe("QuerySuggested", () => {
             },
         });
     };
+
+    afterEach(() => {
+        emitter.off(DISPLAY_QUERY_PREVIEW_EVENT, registerQueryPreviewEvent);
+    });
+
     beforeEach(() => {
         is_modal_should_be_displayed = false;
         dispatched_query_preview_event = [];
         emitter = mitt<Events>();
-        emitter.on(DISPLAY_QUERY_PREVIEW_EVENT, (event) => {
-            dispatched_query_preview_event.push(event);
-        });
+        emitter.on(DISPLAY_QUERY_PREVIEW_EVENT, registerQueryPreviewEvent);
     });
     it.each([
         ["personal", USER_DASHBOARD, suggest_queries.getTranslatedPersonalSuggestedQueries()],

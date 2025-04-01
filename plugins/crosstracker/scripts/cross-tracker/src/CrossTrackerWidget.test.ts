@@ -30,17 +30,18 @@ import {
 import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
 import ReadQuery from "./components/ReadQuery.vue";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
+import type { Emitter } from "mitt";
 import mitt from "mitt";
-import type { EmitterProvider, Events } from "./helpers/emitter-provider";
+import type { Events } from "./helpers/widget-events";
 import EditQuery from "./components/query/edition/EditQuery.vue";
-import { EDIT_QUERY_EVENT } from "./helpers/emitter-provider";
+import { EDIT_QUERY_EVENT } from "./helpers/widget-events";
 
 vi.useFakeTimers();
 
 describe("CrossTrackerWidget", () => {
     let is_user_admin: boolean;
     let widget_title_element: HTMLSpanElement;
-    let emitter: EmitterProvider;
+    let emitter: Emitter<Events>;
     beforeEach(() => {
         widget_title_element = document.createElement("span");
         widget_title_element.textContent = "Cross trackers search";
