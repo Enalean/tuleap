@@ -29,19 +29,28 @@
         <configuration-modal-header v-bind:close_modal="closeModal" />
 
         <nav class="tlp-tabs" v-if="are_fields_enabled">
-            <span class="tlp-tab tlp-tab-active">{{ $gettext("Tracker selection") }}</span>
-            <span
-                class="tlp-tab tlp-tab-disabled tlp-tooltip tlp-tooltip-right"
-                v-bind:data-tlp-tooltip="fields_title"
+            <button
+                class="tlp-tab tlp-button-secondary button-tab"
+                type="button"
+                v-bind:class="{ 'tlp-tab-active': current_tab === 'tracker' }"
+                v-on:click="current_tab = 'tracker'"
+            >
+                {{ $gettext("Tracker selection") }}
+            </button>
+            <button
+                class="tlp-tab tlp-button-secondary button-tab"
+                type="button"
+                v-bind:disabled="!is_tracker_configured"
+                v-bind:class="getFieldsTabClasses()"
+                v-bind:data-tlp-tooltip="$gettext('Please select a tracker first')"
+                v-on:click="switchToFieldsSelection()"
                 data-test="tab-fields"
             >
-                <span class="artidoc-configuration-tab-label">{{
-                    $gettext("Fields selection")
-                }}</span>
-            </span>
+                {{ $gettext("Fields selection") }}
+            </button>
         </nav>
 
-        <div class="tlp-modal-body">
+        <div class="tlp-modal-body" v-if="current_tab === 'tracker'">
             <introductory-text v-bind:configuration_helper="configuration_helper" />
             <tracker-selection
                 v-bind:configuration_helper="configuration_helper"
@@ -49,9 +58,11 @@
             />
         </div>
 
+        <div class="tlp-modal-body" v-else></div>
+
         <div class="tlp-modal-footer">
             <error-feedback v-if="is_error" v-bind:error_message="error_message" />
-            <success-feedback v-if="is_success" />
+            <success-feedback v-if="is_success && current_tab === 'tracker'" />
 
             <div class="artidoc-modal-buttons">
                 <button
@@ -108,24 +119,21 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 
-const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
-
 const { $gettext } = useGettext();
 
+const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 const configuration_store = strictInject(CONFIGURATION_STORE);
-
-const fields_title = computed(() =>
-    configuration_store.selected_tracker.value
-        ? "Not implemented yet"
-        : $gettext("Please select a tracker first"),
-);
-
 const configuration_helper = useConfigurationScreenHelper(configuration_store);
 
 const { is_submit_button_disabled, submit_button_icon, is_success, is_error, error_message } =
     configuration_helper;
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
+const current_tab = ref<"tracker" | "fields">("tracker");
+
+const is_tracker_configured = computed(() => {
+    return configuration_store.selected_tracker.value !== null;
+});
 
 const noop = (): void => {};
 
@@ -134,6 +142,20 @@ let onSuccessfulSaveCallback: () => void = noop;
 strictInject(OPEN_CONFIGURATION_MODAL_BUS).registerHandler(openModal);
 
 let modal: Modal | null = null;
+
+function getFieldsTabClasses(): string[] {
+    return [
+        is_tracker_configured.value ? "" : "tlp-tab-disabled tlp-tooltip tlp-tooltip-right",
+        current_tab.value === "fields" ? "tlp-tab-active" : "",
+    ];
+}
+
+function switchToFieldsSelection(): void {
+    if (is_tracker_configured.value) {
+        current_tab.value = "fields";
+    }
+}
+
 function openModal(onSuccessfulSaved?: () => void): void {
     onSuccessfulSaveCallback = onSuccessfulSaved || noop;
     if (modal === null && modal_element.value) {
@@ -186,5 +208,24 @@ function onSubmit(event: Event): void {
 
 .tlp-tooltip::before {
     text-transform: none;
+}
+
+.button-tab {
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-left: 0;
+    border-radius: 0;
+    background: var(--tlp-white-color);
+    box-shadow: none;
+
+    &:hover,
+    &.tlp-tab-active {
+        border-bottom: 3px solid var(--tlp-main-color);
+    }
+
+    &.tlp-tab-disabled {
+        border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    }
 }
 </style>
