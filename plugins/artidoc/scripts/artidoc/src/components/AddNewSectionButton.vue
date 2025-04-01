@@ -234,12 +234,13 @@ li:first-child > .artidoc-add-new-section-container {
     --add-new-section-button-background-color: var(--tlp-neutral-light-color);
     --add-new-section-button-text-color: var(--tlp-typo-default-text-color);
 
-    z-index: zindex.$dropdown;
     margin: 0 0 0 calc(-1 * #{size.$add-section-button-container-width});
     padding: whitespace.$add-section-button-container-vertical-padding
         whitespace.$add-section-button-container-horizontal-padding;
 
     &:has(button:hover, button:focus-within) {
+        z-index: zindex.$dropdown;
+
         --add-new-section-button-background-color: var(--tlp-main-color);
         --add-new-section-button-text-color: var(--tlp-white-color);
     }
