@@ -19,7 +19,7 @@
 
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
-import { getLocaleWithDefault } from "@tuleap/gettext";
+import type { LocaleString } from "@tuleap/gettext";
 import type { ParentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
 import {
     CurrentArtifactIdentifier,
@@ -52,12 +52,11 @@ function assertColorName(_color: string): _color is ColorName {
     return true;
 }
 
-export const LinkFieldEditor = (doc: Document): LinkFieldEditor => ({
+export const LinkFieldEditor = (doc: Document, user_locale: LocaleString): LinkFieldEditor => ({
     init(mount_point): void {
         const user_id = UserIdentifier.fromId(
             parseInt(getAttributeOrThrow(doc.body, "data-user-id")),
         );
-        const user_locale = getLocaleWithDefault(doc);
         const link_field_id = parseInt(getAttributeOrThrow(mount_point, "data-link-field-id"));
         const link_field_label = getAttributeOrThrow(mount_point, "data-link-field-label");
         const current_artifact = Option.fromNullable(
