@@ -910,7 +910,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                     new HierarchyDAO(),
                     $this->getTrackerFactory()
                 ),
-                TrackersPermissionsRetriever::build()
+                TrackersPermissionsRetriever::build(),
+                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
             );
             $presenter         = $builder->build($this, $artifact, $user);
             return $template_renderer->renderToString('editor-with-reverse-links', $presenter);

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -32,6 +33,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Hierarchy\SearchParentTrackerStub;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnTrackersStub;
+use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 
@@ -84,7 +86,8 @@ final class EditorWithReverseLinksBuilderTest extends TestCase
                 $this->search_parent_tracker,
                 RetrieveTrackerStub::withTrackers($parent_tracker),
             ),
-            $this->tracker_permissions_retriever
+            $this->tracker_permissions_retriever,
+            RetrieveAllUsableTypesInProjectStub::withUsableTypes(new TypeIsChildPresenter()),
         );
         return $builder->build($link_field, $current_artifact, UserTestBuilder::buildWithDefaults());
     }
@@ -100,7 +103,7 @@ final class EditorWithReverseLinksBuilderTest extends TestCase
         self::assertSame(self::CURRENT_TRACKER_SHORTNAME, $presenter->current_tracker_short_name);
         self::assertSame(self::PARENT_TRACKER_ID, $presenter->parent_tracker_id);
         self::assertSame(self::CURRENT_PROJECT_ID, $presenter->current_project_id);
-        self::assertSame('[]', $presenter->allowed_link_types);
+        self::assertSame('[{"reverse_label":"Parent","forward_label":"Child","shortname":"_is_child","is_system":true,"is_visible":true}]', $presenter->allowed_link_types);
     }
 
     public function testItBuildsWithoutHierarchy(): void
