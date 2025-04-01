@@ -55,7 +55,7 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         self::assertEmpty($empty_properties);
 
         $this->db->run(
-            'INSERT INTO tracker_field_artifact_link(field_id, can_edit_reverse_links) VALUES(?, true)',
+            'INSERT INTO plugin_tracker_field_artifact_link(field_id, can_edit_reverse_links) VALUES(?, true)',
             $this->artifact_link_field_id,
         );
 
