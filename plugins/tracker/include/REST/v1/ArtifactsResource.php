@@ -375,27 +375,14 @@ class ArtifactsResource extends AuthenticatedResource
             return [self::VALUES_FORMAT_COLLECTION => $artifact_representations];
         }
 
-        if (TrackersPermissionsRetriever::isEnabled()) {
-            $permissions = $this->trackers_permissions_retriever->retrieveUserPermissionOnArtifacts($user, $artifacts, ArtifactPermissionType::PERMISSION_VIEW);
-            foreach ($permissions->allowed as $artifact) {
-                $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
-                    $user,
-                    $artifact,
-                    MinimalTrackerRepresentation::build($artifact->getTracker()),
-                    StatusValueRepresentation::buildFromArtifact($artifact, $user)
-                );
-            }
-        } else {
-            foreach ($artifacts as $artifact) {
-                if ($artifact->userCanView($user)) {
-                    $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
-                        $user,
-                        $artifact,
-                        MinimalTrackerRepresentation::build($artifact->getTracker()),
-                        StatusValueRepresentation::buildFromArtifact($artifact, $user)
-                    );
-                }
-            }
+        $permissions = $this->trackers_permissions_retriever->retrieveUserPermissionOnArtifacts($user, $artifacts, ArtifactPermissionType::PERMISSION_VIEW);
+        foreach ($permissions->allowed as $artifact) {
+            $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
+                $user,
+                $artifact,
+                MinimalTrackerRepresentation::build($artifact->getTracker()),
+                StatusValueRepresentation::buildFromArtifact($artifact, $user)
+            );
         }
 
         Header::sendPaginationHeaders($limit, $offset, count($requested_artifact_ids), self::MAX_ARTIFACT_BATCH);

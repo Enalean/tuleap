@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field;
 
-use ForgeConfig;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
@@ -33,11 +32,9 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBu
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Permission\FieldPermissionType;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
@@ -57,8 +54,6 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldSelectFromBuilderTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     private const FIELD_NAME      = 'my_field';
     private const FIRST_FIELD_ID  = 134;
     private const SECOND_FIELD_ID = 334;
@@ -68,7 +63,6 @@ final class FieldSelectFromBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 1);
         $this->user           = UserTestBuilder::buildWithId(133);
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->build();
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->build();

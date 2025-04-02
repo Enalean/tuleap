@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission;
 
 use EventManager;
-use ForgeConfig;
 use PFUser;
 use Project;
 use Project_AccessException;
@@ -33,9 +32,6 @@ use Tracker_FormElement;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_UserWithReadAllPermission;
 use Tracker_Workflow_WorkflowUser;
-use Tuleap\Config\ConfigKeyHidden;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Project\CachedProjectAccessChecker;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Project\ProjectAccessChecker;
@@ -48,11 +44,6 @@ use UserManager;
 
 final readonly class TrackersPermissionsRetriever implements RetrieveUserPermissionOnFields, RetrieveUserPermissionOnTrackers, RetrieveUserPermissionOnArtifacts
 {
-    #[FeatureFlagConfigKey('Use the new way of checking user permissions on Trackers')]
-    #[ConfigKeyInt(0)]
-    #[ConfigKeyHidden]
-    public const FEATURE_FLAG = 'new_tracker_permissions_check';
-
     public function __construct(
         private SearchUserGroupsPermissionOnFields $fields_dao,
         private SearchUserGroupsPermissionOnTrackers $trackers_dao,
@@ -76,11 +67,6 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
             $event_dispatcher,
             UserManager::instance()
         );
-    }
-
-    public static function isEnabled(): bool
-    {
-        return (int) ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === 1;
     }
 
     public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems
