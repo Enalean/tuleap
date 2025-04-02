@@ -19,9 +19,9 @@
   -->
 
 <template>
-    <label class="tlp-label">{{ field_string.label }}</label>
+    <label class="tlp-label document-label">{{ field_string.label }}</label>
     <p v-if="field_string.value">{{ field_string.value }}</p>
-    <span v-else class="tlp-property-empty">{{ $gettext("Empty") }}</span>
+    <p v-else class="tlp-property-empty">{{ $gettext("Empty") }}</p>
 </template>
 
 <script setup lang="ts">

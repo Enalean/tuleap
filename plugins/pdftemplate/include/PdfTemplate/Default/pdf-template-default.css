@@ -4,6 +4,7 @@ body {
     --main-color: #f57c13;
     /* Color used for text in header and footer */
     --dimmed-color: #667080;
+    --medium-spacing: 16px;
 }
 
 /* Cover page */
@@ -169,4 +170,18 @@ img {
 
 .document-section :is(ol, ul, menu, dir) :is(ol, ul, menu, dir) ul {
     list-style-type: square;
+}
+
+.document-grid-4-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin: var(--medium-spacing) 0 0;
+
+    > .document-grid-element-full-row {
+        grid-column-start: span 4;
+    }
+}
+
+.document-label {
+    font-weight: bold;
 }

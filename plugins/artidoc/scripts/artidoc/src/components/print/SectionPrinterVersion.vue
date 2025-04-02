@@ -27,6 +27,10 @@
             v-bind:is_print_mode="true"
         />
         <section-description-read-only v-bind:section="section" />
+        <readonly-fields
+            v-if="isSectionBasedOnArtifact(section.value) && section.value.fields.length > 0"
+            v-bind:section="section.value"
+        />
     </article>
 </template>
 
@@ -35,6 +39,8 @@ import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection
 import SectionHeader from "@/components/section/header/SectionHeader.vue";
 import SectionDescriptionReadOnly from "@/components/section/description/SectionDescriptionReadOnly.vue";
 import { LEVEL_1 } from "@/sections/levels/SectionsNumberer";
+import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
 
 defineProps<{ section: ReactiveStoredArtidocSection }>();
 </script>
