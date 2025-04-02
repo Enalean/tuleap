@@ -28,11 +28,13 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDisplayTypeIsUnknownFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDoesNotBelongToTrackerFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
-use Tuleap\Artidoc\Stubs\Document\SaveConfiguredTrackerStub;
+use Tuleap\Artidoc\Stubs\Document\SaveConfigurationStub;
 use Tuleap\Artidoc\Stubs\Document\Tracker\CheckTrackerIsSuitableForDocumentStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
 use Tuleap\NeverThrow\Err;
@@ -55,7 +57,7 @@ final class PUTConfigurationHandlerTest extends TestCase
     private const FIELD_1_ID         = 201;
     private const FIELD_2_ID         = 202;
 
-    private SaveConfiguredTrackerStub $saver;
+    private SaveConfigurationStub $saver;
     private \Tracker $tracker;
     /**
      * @psalm-var list<ConfiguredFieldRepresentation>
@@ -89,7 +91,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         );
 
         $this->field_retriever  = RetrieveUsedFieldsStub::withNoFields();
-        $this->saver            = SaveConfiguredTrackerStub::noop();
+        $this->saver            = SaveConfigurationStub::noop();
         $this->retrieve_tracker = RetrieveTrackerStub::withTracker($this->tracker);
         $this->tracker_checker  = CheckTrackerIsSuitableForDocumentStub::withSuitableTrackers(
             $this->tracker
@@ -127,12 +129,6 @@ final class PUTConfigurationHandlerTest extends TestCase
         );
     }
 
-    private function assertSavedArtidocConfiguration(int $document_id, int $tracker_id): void
-    {
-        self::assertSame(self::ARTIDOC_ID, $document_id);
-        self::assertSame(self::TRACKER_ID, $tracker_id);
-    }
-
     public function testHappyPath(): void
     {
         $this->input_fields    = [
@@ -150,11 +146,23 @@ final class PUTConfigurationHandlerTest extends TestCase
                 ->build(),
         );
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertSavedArtidocConfiguration(...));
+        $was_saved   = false;
+        $this->saver = SaveConfigurationStub::withCallback(
+            static function (int $document_id, int $tracker_id, array $fields) use (&$was_saved) {
+                $was_saved = true;
+                self::assertSame(self::ARTIDOC_ID, $document_id);
+                self::assertSame(self::TRACKER_ID, $tracker_id);
+                self::assertEqualsCanonicalizing([
+                    new ArtifactSectionField(self::FIELD_1_ID, DisplayType::COLUMN),
+                    new ArtifactSectionField(self::FIELD_2_ID, DisplayType::BLOCK),
+                ], $fields);
+            }
+        );
 
         $result = $this->handle();
 
         self::assertTrue(Result::isOk($result));
+        self::assertTrue($was_saved);
     }
 
     public function testIgnoreMultipleSubmissionOfSameField(): void
@@ -170,11 +178,22 @@ final class PUTConfigurationHandlerTest extends TestCase
                 ->build(),
         );
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertSavedArtidocConfiguration(...));
+        $was_saved   = false;
+        $this->saver = SaveConfigurationStub::withCallback(
+            static function (int $document_id, int $tracker_id, array $fields) use (&$was_saved) {
+                $was_saved = true;
+                self::assertSame(self::ARTIDOC_ID, $document_id);
+                self::assertSame(self::TRACKER_ID, $tracker_id);
+                self::assertEqualsCanonicalizing([
+                    new ArtifactSectionField(self::FIELD_1_ID, DisplayType::BLOCK),
+                ], $fields);
+            }
+        );
 
         $result = $this->handle();
 
         self::assertTrue(Result::isOk($result));
+        self::assertTrue($was_saved);
     }
 
     private function assertNeverSaved(): never
@@ -187,7 +206,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         $this->input_fields    = [new ConfiguredFieldRepresentation(self::FIELD_1_ID, 'column')];
         $this->field_retriever = RetrieveUsedFieldsStub::withNoFields();
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertNeverSaved(...));
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 
         $result = $this->handle();
 
@@ -217,7 +236,7 @@ final class PUTConfigurationHandlerTest extends TestCase
             $another_tracker
         );
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertNeverSaved(...));
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 
         $result = $this->handle();
 
@@ -229,7 +248,7 @@ final class PUTConfigurationHandlerTest extends TestCase
     {
         $this->input_fields = [new ConfiguredFieldRepresentation(self::FIELD_1_ID, 'unknown')];
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertNeverSaved(...));
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 
         $result = $this->handle();
 
@@ -242,7 +261,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         $this->retrieve_artidoc = RetrieveArtidocWithContextStub::withoutDocument();
         $this->tracker_checker  = CheckTrackerIsSuitableForDocumentStub::shouldNotBeCalled();
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertNeverSaved(...));
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 
         $result = $this->handle();
 
@@ -258,7 +277,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         );
         $this->tracker_checker  = CheckTrackerIsSuitableForDocumentStub::shouldNotBeCalled();
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertNeverSaved(...));
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 
         $result = $this->handle();
 
@@ -270,7 +289,7 @@ final class PUTConfigurationHandlerTest extends TestCase
     {
         $this->retrieve_tracker = RetrieveTrackerStub::withoutTracker();
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertNeverSaved(...));
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 
         $result = $this->handle();
 
@@ -282,7 +301,7 @@ final class PUTConfigurationHandlerTest extends TestCase
     {
         $this->tracker_checker = CheckTrackerIsSuitableForDocumentStub::withoutSuitableTracker();
 
-        $this->saver = SaveConfiguredTrackerStub::withCallback($this->assertNeverSaved(...));
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 
         $result = $this->handle();
 

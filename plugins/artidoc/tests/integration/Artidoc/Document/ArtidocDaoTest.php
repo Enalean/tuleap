@@ -30,6 +30,8 @@ use Tuleap\Artidoc\Adapter\Document\Section\SectionsAsserter;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -91,20 +93,14 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             ContentToInsert::fromArtifactId(1001, Level::Two),
         ]);
         $dao->saveTracker($this->artidoc_102->document->getId(), 10001);
-        $db->insertMany('plugin_artidoc_document_tracker_field', [
+
+        (new ConfiguredFieldDao())->saveFields(
+            $this->artidoc_102->document->getId(),
             [
-                'item_id'      => $this->artidoc_102->document->getId(),
-                'field_id'     => 456,
-                'rank'         => 2,
-                'display_type' => 'column',
-            ],
-            [
-                'item_id'      => $this->artidoc_102->document->getId(),
-                'field_id'     => 457,
-                'rank'         => 1,
-                'display_type' => 'column',
-            ],
-        ]);
+                new ArtifactSectionField(457, DisplayType::COLUMN),
+                new ArtifactSectionField(456, DisplayType::COLUMN),
+            ]
+        );
         $this->assertConfiguredFields($this->artidoc_102->document->getId(), 457, 456);
 
         SectionsAsserter::assertSectionsForDocument($this->artidoc_103, []);

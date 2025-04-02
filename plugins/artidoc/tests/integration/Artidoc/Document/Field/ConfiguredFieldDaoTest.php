@@ -29,11 +29,10 @@ use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
-use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
-use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -49,27 +48,20 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
 
     protected function setUp(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insertMany('plugin_artidoc_document_tracker_field', [
+        $dao = new ConfiguredFieldDao();
+        $dao->saveFields(
+            self::ITEM_ID_2,
             [
-                'item_id'      => self::ITEM_ID_2,
-                'field_id'     => 456,
-                'rank'         => 1,
-                'display_type' => 'column',
-            ],
+                new ArtifactSectionField(456, DisplayType::COLUMN),
+            ]
+        );
+        $dao->saveFields(
+            self::ITEM_ID_3,
             [
-                'item_id'      => self::ITEM_ID_3,
-                'field_id'     => 456,
-                'rank'         => 2,
-                'display_type' => 'column',
-            ],
-            [
-                'item_id'      => self::ITEM_ID_3,
-                'field_id'     => 457,
-                'rank'         => 1,
-                'display_type' => 'column',
-            ],
-        ]);
+                new ArtifactSectionField(457, DisplayType::COLUMN),
+                new ArtifactSectionField(456, DisplayType::COLUMN),
+            ]
+        );
 
         $dao = new SaveSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
         $dao->saveSectionAtTheEnd(

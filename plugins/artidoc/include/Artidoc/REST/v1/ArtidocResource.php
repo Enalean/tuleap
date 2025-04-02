@@ -39,6 +39,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocDao;
+use Tuleap\Artidoc\Document\ConfigurationSaver;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
@@ -76,6 +77,8 @@ use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSectionsRetriever;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\DocmanItemsRequestBuilder;
@@ -433,7 +436,11 @@ final class ArtidocResource extends AuthenticatedResource
 
         return new PUTConfigurationHandler(
             $this->getArtidocWithContextRetriever($user),
-            new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory()),
+            new ConfigurationSaver(
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory()),
+                new ConfiguredFieldDao(),
+            ),
             \TrackerFactory::instance(),
             new SuitableTrackerForDocumentChecker($form_element_factory),
             new SuitableFieldRetriever($form_element_factory),
