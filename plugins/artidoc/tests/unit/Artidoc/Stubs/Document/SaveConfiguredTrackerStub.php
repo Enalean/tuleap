@@ -26,32 +26,34 @@ use Tuleap\Artidoc\Document\SaveConfiguredTracker;
 
 final class SaveConfiguredTrackerStub implements SaveConfiguredTracker
 {
-    /**
-     * @var array<int, int>
-     */
-    private array $saved = [];
+    /** @psalm-var callable(int, int): void */
+    private $callback;
 
-    private function __construct()
+    private function __construct(callable $callback)
     {
+        $this->callback = $callback;
     }
 
-    public static function build(): self
+    /**
+     * @psalm-param callable(int, int): void $callback
+     */
+    public static function withCallback(callable $callback): self
     {
-        return new self();
+        return new self($callback);
+    }
+
+    public static function noop(): self
+    {
+        return new self(self::doNothing(...));
+    }
+
+    private static function doNothing(): void
+    {
+        //Do nothing
     }
 
     public function saveTracker(int $item_id, int $tracker_id): void
     {
-        $this->saved[$item_id] = $tracker_id;
-    }
-
-    public function isSaved(int $id): bool
-    {
-        return isset($this->saved[$id]);
-    }
-
-    public function getSavedForId(int $id): int
-    {
-        return $this->saved[$id];
+        ($this->callback)($item_id, $tracker_id);
     }
 }

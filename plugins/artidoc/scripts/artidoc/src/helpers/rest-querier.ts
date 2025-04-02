@@ -42,6 +42,7 @@ export function putConfiguration(
         {},
         {
             selected_tracker_ids: [selected_tracker_id],
+            fields: [],
         },
     );
 }
