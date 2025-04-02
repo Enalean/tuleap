@@ -22,14 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
-use ForgeConfig;
 use PFUser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_UserWithReadAllPermission;
 use Tracker_Workflow_WorkflowUser;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -48,8 +46,6 @@ use Tuleap\User\TuleapFunctionsUser;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersPermissionsRetrieverTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     private SearchUserGroupsPermissionOnFieldsStub|MockObject $fields_dao;
     private SearchUserGroupsPermissionOnTrackersStub $trackers_dao;
     private SearchUserGroupsPermissionOnArtifactsStub $artifacts_dao;
@@ -58,20 +54,11 @@ final class TrackersPermissionsRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 1);
         $this->fields_dao       = SearchUserGroupsPermissionOnFieldsStub::buildEmpty();
         $this->trackers_dao     = SearchUserGroupsPermissionOnTrackersStub::build();
         $this->artifacts_dao    = SearchUserGroupsPermissionOnArtifactsStub::buildEmpty();
         $this->project_access   = CheckProjectAccessStub::withPrivateProjectWithoutAccess();
         $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
-    }
-
-    public function testIsEnabled(): void
-    {
-        ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 0);
-        self::assertFalse(TrackersPermissionsRetriever::isEnabled());
-        ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 1);
-        self::assertTrue(TrackersPermissionsRetriever::isEnabled());
     }
 
     private function getRetriever(): TrackersPermissionsRetriever
