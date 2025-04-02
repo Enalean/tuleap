@@ -151,6 +151,10 @@ msgstr "Titre 2"
 msgid "Heading 3"
 msgstr "Titre 3"
 
+msgid ""
+"If you choose another tracker, your current fields will be replaced and lost."
+msgstr "Si vous choisissez un autre tracker, vos champs actuels seront remplacés et perdus."
+
 msgid "Import existing %{tracker_label}"
 msgstr "Importer un(e) %{tracker_label} existant(e)"
 
@@ -210,6 +214,12 @@ msgstr "Veuillez vous connecter afin de pouvoir exporter en PDF"
 msgid "Please select a tracker first"
 msgstr "Veuillez sélectionner un tracker au préalable"
 
+msgid "Please select the fields you want to display below each artifact section."
+msgstr "Veuillez sélectionner les champs que vous souhaitez afficher sous chaque section d'artefact."
+
+msgid "Read-only fields provide context information about each artifact section."
+msgstr "Les champs en lecture seule fournissent des informations contextuelles sur chaque section d'artefact."
+
 msgid "Reload page"
 msgstr "Recharger la page"
 
@@ -261,6 +271,13 @@ msgstr ""
 "La section que vous êtes en train d'éditer n'existe pas ou vous n'y avez "
 "plus accès."
 
+msgid ""
+"The selection of fields to be displayed in an artidoc is tied to the "
+"selected tracker, meaning they cannot be set up until a tracker is configured."
+msgstr
+"La sélection des champs à afficher dans un artidoc est liée au tracker sélectionné, "
+"ce qui signifie qu'ils ne peuvent pas être configurés tant qu'un tracker n'est pas configuré."
+
 msgid "There is %{ remaining_uploads } other upload in progress..."
 msgid_plural "There are %{ remaining_uploads } other uploads in progress..."
 msgstr[0] "Il y a %{ remaining_uploads } autre téléchargement en cours..."
@@ -286,6 +303,11 @@ msgstr "Cette section a été mise à jour par quelqu'un d'autre."
 msgid "Title..."
 msgstr "Titre..."
 
+msgid ""
+"To configure the fields, you must be a Document Manager and have access to "
+"the tracker."
+msgstr "Pour configurer les champs, vous devez être Gestionnaire de document et avoir accès au tracker."
+
 msgid "Toggle fullscreen"
 msgstr "Basculer en plein écran"
 
@@ -306,11 +328,11 @@ msgid "Unable to reorder the sections"
 msgstr "Impossible de réorganiser les sections"
 
 msgid ""
-"You can now go back to the document and create new sections, they will be "
-"stored as artifacts in the selected tracker."
+"You can now select your fields or go back to the document and create new "
+"sections, they will be stored as artifacts in the selected tracker."
 msgstr ""
-"Vous pouvez désormais retourner au document et créer de nouvelles sections, "
-"elles seront stockées en tant qu'artéfacts dans le tracker sélectionné."
+"Vous pouvez désormais sélectionner vos champs ou retourner au document et créer de "
+"nouvelles sections, elles seront stockées en tant qu'artéfacts dans le tracker sélectionné."
 
 msgid ""
 "You can open the corresponding artifact in a new tab to fix the situation."
@@ -355,3 +377,6 @@ msgid ""
 msgstr ""
 "Vous devriez recharger la page afin de retrouver un état correct (cependant "
 "vous allez perdre vos modifications)."
+
+msgid "Your artidoc is currently set up on \"%{ tracker_name }\""
+msgstr "Votre artidoc est actuellement configuré sur \"%{ tracker_name }\"

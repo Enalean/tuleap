@@ -33,7 +33,7 @@
             data-test="artidoc-configuration-tracker"
             class="tlp-select tlp-select-adjusted"
             required
-            v-bind:disabled="disabled"
+            v-bind:disabled="is_tracker_selection_disabled"
             v-model="new_selected_tracker"
         >
             <option v-bind:value="NO_SELECTED_TRACKER" disabled>
@@ -51,13 +51,30 @@
             {{ $gettext("There isn't any suitable trackers in this project") }}
             <i class="fa-regular fa-face-frown" aria-hidden="true"></i>
         </p>
+        <p
+            v-if="!is_tracker_selection_disabled"
+            class="tlp-text-info"
+            data-test="information-message"
+        >
+            {{
+                $gettext(
+                    "If you choose another tracker, your current fields will be replaced and lost.",
+                )
+            }}
+        </p>
     </div>
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 
-const props = defineProps<{ configuration_helper: ConfigurationScreenHelper; disabled: boolean }>();
+const { $gettext } = useGettext();
+
+const props = defineProps<{
+    configuration_helper: ConfigurationScreenHelper;
+    is_tracker_selection_disabled: boolean;
+}>();
 
 const { NO_SELECTED_TRACKER, allowed_trackers, no_allowed_trackers, new_selected_tracker } =
     props.configuration_helper;

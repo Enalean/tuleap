@@ -23,10 +23,10 @@ import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { shallowMount } from "@vue/test-utils";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import { createGettext } from "vue3-gettext";
-import IntroductoryText from "@/components/configuration/IntroductoryText.vue";
+import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
-describe("IntroductoryText", () => {
+describe("TrackerSelectionIntroductoryText", () => {
     it.each<[Tracker, boolean]>([
         [TrackerStub.withoutTitleAndDescription(), true],
         [TrackerStub.withTitle(), true],
@@ -35,7 +35,7 @@ describe("IntroductoryText", () => {
     ])(
         `Given the tracker %s Then warning will be displayed = %s`,
         (tracker: Tracker, expected: boolean) => {
-            const wrapper = shallowMount(IntroductoryText, {
+            const wrapper = shallowMount(TrackerSelectionIntroductoryText, {
                 props: {
                     configuration_helper: useConfigurationScreenHelper(
                         ConfigurationStoreStub.withSelectedTracker(tracker),

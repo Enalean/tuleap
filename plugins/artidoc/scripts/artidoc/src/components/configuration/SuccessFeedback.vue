@@ -27,7 +27,7 @@
         <p>
             {{
                 $gettext(
-                    "You can now go back to the document and create new sections, they will be stored as artifacts in the selected tracker.",
+                    "You can now select your fields or go back to the document and create new sections, they will be stored as artifacts in the selected tracker.",
                 )
             }}
         </p>

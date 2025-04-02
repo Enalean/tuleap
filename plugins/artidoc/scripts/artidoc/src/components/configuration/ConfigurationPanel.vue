@@ -28,10 +28,12 @@
             </div>
 
             <section class="tlp-pane-section">
-                <introductory-text v-bind:configuration_helper="configuration_helper" />
+                <tracker-selection-introductory-text
+                    v-bind:configuration_helper="configuration_helper"
+                />
                 <tracker-selection
                     v-bind:configuration_helper="configuration_helper"
-                    v-bind:disabled="false"
+                    v-bind:is_tracker_selection_disabled="false"
                 />
             </section>
 
@@ -63,7 +65,7 @@
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
-import IntroductoryText from "@/components/configuration/IntroductoryText.vue";
+import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import { TITLE } from "@/title-injection-key";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
