@@ -431,7 +431,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
         $html  = '';
         $html .= '<input type="hidden" name="' . $select_name . '" value="" />';
-        $html .= '<select multiple="multiple" name="' . $select_name . '" size="' . min(9, max(5, count($ugroups))) . '">';
+        $html .= '<select multiple="multiple" name="' . $select_name . '" size="' . min(9, max(5, count($ugroups))) . '" data-test="list-ugroup-bind-values" >';
 
         $selected_ugroup_ids = array_map(
             static function ($value) {
