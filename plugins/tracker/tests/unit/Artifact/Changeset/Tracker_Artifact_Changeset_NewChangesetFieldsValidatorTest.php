@@ -26,6 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
@@ -227,7 +228,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
     {
         $this->artifact_link_validator->expects($this->once())->method('isValid')->willReturn(true);
 
-        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field = $this->createMock(ArtifactLinkField::class);
         $artifact_link_field->method('getId')->willReturn(101);
         $artifact_link_field->method('userCanUpdate')->willReturn(true);
         $artifact_link_field->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);

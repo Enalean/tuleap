@@ -19,6 +19,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -56,7 +57,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
         $this->trigger_rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
         $tracker                     = \Mockery::spy(\Tracker::class);
         $this->field                 = Mockery::mock(
-            Tracker_FormElement_Field_ArtifactLink::class,
+            ArtifactLinkField::class,
             [
                 1,
                 888,

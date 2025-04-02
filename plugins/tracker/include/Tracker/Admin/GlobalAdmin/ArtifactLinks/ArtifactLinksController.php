@@ -26,7 +26,6 @@ use Feedback;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
@@ -262,7 +262,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
     private function artifactLinkTypeCanBeUnused(Project $project, TypePresenter $type): bool
     {
-        if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
+        if ($type->shortname === ArtifactLinkField::TYPE_IS_CHILD) {
             return false;
         }
 

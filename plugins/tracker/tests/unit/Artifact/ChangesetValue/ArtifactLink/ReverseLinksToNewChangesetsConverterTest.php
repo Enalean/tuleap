@@ -169,7 +169,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
             self::ADDED_LINK_FIELD_ID => [
                 'new_values'     => (string) self::TARGET_ARTIFACT_ID,
                 'removed_values' => [],
-                'types'          => [self::TARGET_ARTIFACT_ID => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE],
+                'types'          => [self::TARGET_ARTIFACT_ID => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE],
             ],
         ], $second_added_changeset->getFieldsData());
     }
@@ -244,7 +244,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
             self::ADDED_LINK_FIELD_ID => [
                 'new_values'     => (string) self::TARGET_ARTIFACT_ID,
                 'removed_values' => [],
-                'types'          => [self::TARGET_ARTIFACT_ID => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE],
+                'types'          => [self::TARGET_ARTIFACT_ID => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE],
             ],
         ], $new_changeset_add_link->getFieldsData());
 

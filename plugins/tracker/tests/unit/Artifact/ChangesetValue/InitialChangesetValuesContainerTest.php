@@ -84,7 +84,7 @@ final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\Tes
                 'new_values' => '41,91',
                 'types'      => [
                     41 => 'custom_type',
-                    91 => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
+                    91 => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE,
                 ],
             ],
             $new_fields_data[self::ARTIFACT_LINK_FIELD_ID]

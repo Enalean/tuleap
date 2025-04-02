@@ -42,7 +42,7 @@ final class FieldChangeArtifactLinksUpdater implements UpdateArtifactLinkXML
 
     public function updateArtifactLinks(
         SimpleXMLElement $changeset_xml,
-        \Tracker_FormElement_Field_ArtifactLink $destination_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $destination_field,
         int $index,
     ): void {
         $artifact_links = $changeset_xml->field_change[$index]->value;
@@ -74,7 +74,7 @@ final class FieldChangeArtifactLinksUpdater implements UpdateArtifactLinkXML
                 in_array($nature, $system_natures_shortnames, true) ||
                 ! in_array($nature, $usable_natures_in_destination_project, true)
             ) {
-                $link->attributes()->nature = \Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
+                $link->attributes()->nature = \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE;
 
                 $comment[(string) $link] = sprintf(
                     dgettext('tuleap-tracker', 'The type "%s" of the link to artifact #%s has been set to "no type"'),

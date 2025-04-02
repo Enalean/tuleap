@@ -63,7 +63,7 @@ final class PostActionChecker
         foreach ($frozen_fields_post_actions as $frozen_fields_post_action) {
             foreach ($frozen_fields_post_action->getFieldIds() as $frozen_field_id) {
                 $field = $this->form_element_factory->getFieldById($frozen_field_id);
-                if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+                if ($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField) {
                     $message = dgettext(
                         'tuleap-testmanagement',
                         'The post actions cannot be saved because this tracker is used in TestManagement and "frozen fields" are defined on an artifact link field.'

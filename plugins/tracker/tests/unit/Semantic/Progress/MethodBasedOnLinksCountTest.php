@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
@@ -32,14 +32,14 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_FormElement_Field_ArtifactLink&MockObject $links_field;
+    private ArtifactLinkField&MockObject $links_field;
     private MethodBasedOnLinksCount $method;
     private SemanticProgressDao&MockObject $dao;
 
     protected function setUp(): void
     {
         $this->dao         = $this->createMock(SemanticProgressDao::class);
-        $this->links_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->links_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $this->links_field->method('getId')->willReturn(1003);
 
         $this->method = new MethodBasedOnLinksCount(

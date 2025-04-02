@@ -28,5 +28,5 @@ interface RetrieveFullArtifactLinkField
 {
     public function getArtifactLinkField(
         TrackerIdentifier $tracker_identifier,
-    ): ?\Tracker_FormElement_Field_ArtifactLink;
+    ): ?\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 }

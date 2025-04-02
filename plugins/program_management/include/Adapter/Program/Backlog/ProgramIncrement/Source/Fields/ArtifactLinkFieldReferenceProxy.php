@@ -33,7 +33,7 @@ final class ArtifactLinkFieldReferenceProxy implements ArtifactLinkFieldReferenc
     {
     }
 
-    public static function fromTrackerField(\Tracker_FormElement_Field_ArtifactLink $field): self
+    public static function fromTrackerField(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $field): self
     {
         return new self($field->getId(), $field->getLabel());
     }

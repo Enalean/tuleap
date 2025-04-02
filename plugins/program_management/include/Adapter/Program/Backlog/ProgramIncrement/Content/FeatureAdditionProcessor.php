@@ -57,7 +57,7 @@ final class FeatureAdditionProcessor implements AddFeature
                 $program_increment_artifact,
                 [$feature_addition->feature->id],
                 [],
-                \Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+                \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
             );
         } catch (
             \Tracker_NoArtifactLinkFieldException

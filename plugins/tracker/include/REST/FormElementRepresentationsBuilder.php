@@ -128,7 +128,7 @@ class FormElementRepresentationsBuilder
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
                     $this->hidden_fieldset_checker->mustFieldsetBeHidden($form_element, $artifact)
                 );
-            } elseif ($form_element instanceof \Tracker_FormElement_Field_ArtifactLink) {
+            } elseif ($form_element instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField) {
                 $form_element_representation = LinksFieldRepresentation::buildRepresentationWithAllowedLinkTypes(
                     $form_element,
                     $this->form_element_factory->getType($form_element),

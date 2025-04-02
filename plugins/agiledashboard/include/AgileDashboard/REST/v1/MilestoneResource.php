@@ -39,7 +39,6 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
@@ -87,6 +86,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
@@ -308,7 +308,7 @@ class MilestoneResource extends AuthenticatedResource
                     $this->milestone_factory,
                     $milestone
                 ),
-                Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+                ArtifactLinkField::TYPE_IS_CHILD
             );
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -367,7 +367,7 @@ class MilestoneResource extends AuthenticatedResource
                     $milestone->getArtifact(),
                     $ids_to_add,
                     [],
-                    Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+                    ArtifactLinkField::TYPE_IS_CHILD
                 );
                 $this->resources_patcher->commit();
             }

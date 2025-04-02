@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
@@ -43,7 +43,7 @@ final class NewArtifactLinkChangesetValueBuilder
      */
     public function buildFromPayload(
         Artifact $artifact,
-        \Tracker_FormElement_Field_ArtifactLink $link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $link_field,
         \PFUser $submitter,
         ArtifactValuesRepresentation $payload,
     ): NewArtifactLinkChangesetValue {

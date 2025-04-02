@@ -25,7 +25,6 @@ use Exception;
 use PFUser;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityManager;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -72,7 +71,7 @@ class ArtifactLinkUpdater
     }
 
     private function getFieldsDataForNewChangeset(
-        Tracker_FormElement_Field_ArtifactLink $artlink_field,
+        ArtifactLinkField $artlink_field,
         Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,

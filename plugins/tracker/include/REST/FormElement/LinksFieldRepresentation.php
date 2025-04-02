@@ -42,7 +42,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
      * @param mixed|null $values
      */
     private function __construct(
-        \Tracker_FormElement_Field_ArtifactLink $form_element,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $form_element,
         string $type,
         bool $is_collapsed,
         $default_rest_value,
@@ -70,7 +70,7 @@ final class LinksFieldRepresentation extends Tracker_REST_FormElementRepresentat
      * @param TypePresenter[] $allowed_link_types_presenters
      */
     public static function buildRepresentationWithAllowedLinkTypes(
-        \Tracker_FormElement_Field_ArtifactLink $form_element,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $form_element,
         string $type,
         array $permissions,
         array $allowed_link_types_presenters,

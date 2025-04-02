@@ -72,13 +72,13 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(true);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
-        $artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $artifact_link->method('getId')->willReturn(852);
 
         $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(13);
         $test_campaign_tracker = $this->buildTracker(true);
 
-        $artifact_link2 = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link2 = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $artifact_link2->method('getId')->willReturn(258);
 
         $this->form_element_factory->method('getAnArtifactLinkField')->willReturnMap(
@@ -155,7 +155,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(true);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
-        $artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $artifact_link->method('getId')->willReturn(852);
         $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($user, $test_exec_tracker)
@@ -190,7 +190,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(true);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
-        $artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $artifact_link->method('getId')->willReturn(852);
         $this->form_element_factory->method('getAnArtifactLinkField')
             ->with($user, $test_exec_tracker)

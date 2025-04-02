@@ -160,7 +160,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
         $rows = $this->getDB()->run(
             $sql,
             $feature->getId(),
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD
         );
 
         return array_map(static fn(array $row): int => $row['children_id'], $rows);
@@ -181,7 +181,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
 
         $feature_id = $this->getDB()->single($sql, [
             $story_identifier->getId(),
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD,
         ]);
 
         if (! $feature_id) {

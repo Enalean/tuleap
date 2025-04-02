@@ -22,6 +22,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
@@ -96,7 +97,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_CHECKBOX_TYPE => Tracker_FormElement_Field_Checkbox::class,
         self::FIELD_INTEGER_TYPE => Tracker_FormElement_Field_Integer::class,
         self::FIELD_OPEN_LIST_TYPE => Tracker_FormElement_Field_OpenList::class,
-        self::FIELD_ARTIFACT_LINKS => Tracker_FormElement_Field_ArtifactLink::class,
+        self::FIELD_ARTIFACT_LINKS => ArtifactLinkField::class,
         self::FIELD_PERMISSION_ON_ARTIFACT_TYPE => Tracker_FormElement_Field_PermissionsOnArtifact::class,
         self::FIELD_SHARED => Tracker_FormElement_Shared::class,
     ];
@@ -721,7 +722,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     }
 
     /**
-     * @return Tracker_FormElement_Field_ArtifactLink[]
+     * @return ArtifactLinkField[]
      */
     public function getUsedArtifactLinkFields(Tracker $tracker): array
     {
@@ -737,7 +738,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $this->getUsedFormElementsByType($tracker, ['fieldset']);
     }
 
-    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?Tracker_FormElement_Field_ArtifactLink
+    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?ArtifactLinkField
     {
         $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
         if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {

@@ -66,9 +66,9 @@ final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Te
         self::assertSame('24,45', $field_data['new_values']);
         self::assertCount(2, $field_data['types']);
         self::assertArrayHasKey($first_artifact_id, $field_data['types']);
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $field_data['types'][$first_artifact_id]);
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, $field_data['types'][$first_artifact_id]);
         self::assertArrayHasKey($second_artifact_id, $field_data['types']);
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $field_data['types'][$second_artifact_id]);
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, $field_data['types'][$second_artifact_id]);
     }
 
     public function testItFormatsNewLinksWithTypes(): void

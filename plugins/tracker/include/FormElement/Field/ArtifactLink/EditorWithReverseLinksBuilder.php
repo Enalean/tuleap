@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
@@ -42,7 +41,7 @@ final readonly class EditorWithReverseLinksBuilder
     }
 
     public function build(
-        Tracker_FormElement_Field_ArtifactLink $link_field,
+        ArtifactLinkField $link_field,
         Artifact $current_artifact,
         PFUser $user,
     ): EditorWithReverseLinksPresenter {

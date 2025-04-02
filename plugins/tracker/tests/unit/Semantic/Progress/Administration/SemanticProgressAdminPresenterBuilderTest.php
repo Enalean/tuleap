@@ -213,7 +213,7 @@ final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
 
     private function mockFormElementFactory(bool $has_a_links_field = true): void
     {
-        $links_fields = $has_a_links_field ? [$this->createMock(\Tracker_FormElement_Field_ArtifactLink::class)] : [];
+        $links_fields = $has_a_links_field ? [$this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)] : [];
 
         $this->form_element_factory->method('getUsedArtifactLinkFields')
             ->with($this->tracker)

@@ -27,11 +27,11 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 final class RetrieveFullArtifactLinkFieldStub implements RetrieveFullArtifactLinkField
 {
-    private function __construct(private ?\Tracker_FormElement_Field_ArtifactLink $artifact_link)
+    private function __construct(private ?\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $artifact_link)
     {
     }
 
-    public static function withField(\Tracker_FormElement_Field_ArtifactLink $artifact_link): self
+    public static function withField(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $artifact_link): self
     {
         return new self($artifact_link);
     }
@@ -43,7 +43,7 @@ final class RetrieveFullArtifactLinkFieldStub implements RetrieveFullArtifactLin
 
     public function getArtifactLinkField(
         TrackerIdentifier $tracker_identifier,
-    ): ?\Tracker_FormElement_Field_ArtifactLink {
+    ): ?\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField {
         return $this->artifact_link;
     }
 }

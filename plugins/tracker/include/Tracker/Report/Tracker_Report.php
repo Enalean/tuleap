@@ -32,6 +32,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreatorBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -825,7 +826,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
     {
         return $this->getArtifactLinksUsageUpdater()->isProjectAllowedToUseArtifactLinkTypes($this->getTracker()->getProject()) &&
             $dropdown_type === self::TYPE_TABLE &&
-            $this->getFormElementFactory()->getType($field) === Tracker_FormElement_Field_ArtifactLink::TYPE;
+               $this->getFormElementFactory()->getType($field) === ArtifactLinkField::TYPE;
     }
 
     /**

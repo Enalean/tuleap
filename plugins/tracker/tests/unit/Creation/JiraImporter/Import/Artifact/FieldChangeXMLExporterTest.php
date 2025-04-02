@@ -28,7 +28,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
@@ -48,6 +47,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypesStub;
 use Tuleap\Tracker\Test\Stub\XML\IDGeneratorStub;
@@ -804,7 +804,7 @@ final class FieldChangeXMLExporterTest extends TestCase
         self::assertSame(Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
         self::assertCount(2, $field_change_node->value);
         self::assertSame('10131', (string) $field_change_node->value[0]);
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, (string) $field_change_node->value[0]['nature']);
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, (string) $field_change_node->value[0]['nature']);
         self::assertSame('10132', (string) $field_change_node->value[1]);
     }
 

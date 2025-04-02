@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use Tuleap\Option\Option;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
@@ -95,7 +95,7 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'removed_values' => [53 => [53], 34 => [34]],
                 'types'          => [
                     99 => 'custom_type',
-                    42 => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
+                    42 => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE,
                 ],
                 'parent'         => [63],
             ],

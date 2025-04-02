@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class MilestoneDao extends DataAccessObject
 {
@@ -36,7 +36,7 @@ class MilestoneDao extends DataAccessObject
         $limit  = $request->getLimit();
         $offset = $request->getOffset();
         $order  = $request->getOrder();
-        $params = [$milestone_artifact_id, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD];
+        $params = [$milestone_artifact_id, ArtifactLinkField::TYPE_IS_CHILD];
 
         $limit_statement = '';
         if ($limit > 0) {
@@ -266,7 +266,7 @@ class MilestoneDao extends DataAccessObject
         ORDER BY submilestones.id ASC
         SQL;
 
-        return $this->getDB()->run($sql, $milestone_artifact_id, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
+        return $this->getDB()->run($sql, $milestone_artifact_id, ArtifactLinkField::TYPE_IS_CHILD);
     }
 
     public function getAllMilestoneByTrackers(array $list_of_trackers_ids): array

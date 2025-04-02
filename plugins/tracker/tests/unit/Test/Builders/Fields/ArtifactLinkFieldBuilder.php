@@ -77,9 +77,9 @@ final class ArtifactLinkFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_ArtifactLink
+    public function build(): \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField
     {
-        $field = new \Tracker_FormElement_Field_ArtifactLink(
+        $field = new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField(
             $this->id,
             $this->tracker->getId(),
             $this->parent_id,

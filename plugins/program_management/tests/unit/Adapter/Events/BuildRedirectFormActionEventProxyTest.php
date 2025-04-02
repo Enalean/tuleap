@@ -108,7 +108,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
             $this->redirect->query_parameters['link-artifact-id']
         );
         self::assertSame(
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD,
             $this->redirect->query_parameters['link-type']
         );
         self::assertSame('true', $this->redirect->query_parameters['immediate']);

@@ -121,7 +121,7 @@ final class ReverseLinksToNewChangesetsConverter implements ConvertAddReverseLin
     }
 
     /**
-     * @param callable(Artifact, ReverseLink, \Tracker_FormElement_Field_ArtifactLink): ChangeForwardLinksCommand $convertToForwardLinksCommand
+     * @param callable(Artifact, ReverseLink, \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField): ChangeForwardLinksCommand $convertToForwardLinksCommand
      * @return Ok<NewChangeset> | Err<Fault>
      */
     private function convertLink(
@@ -135,7 +135,7 @@ final class ReverseLinksToNewChangesetsConverter implements ConvertAddReverseLin
             ->andThen(fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)
                 ->map(
                     fn(
-                        \Tracker_FormElement_Field_ArtifactLink $link_field,
+                        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $link_field,
                     ) => NewChangeset::fromFieldsDataArrayWithEmptyComment(
                         $source_artifact,
                         (new ChangesetValuesContainer(
@@ -155,7 +155,7 @@ final class ReverseLinksToNewChangesetsConverter implements ConvertAddReverseLin
     private function convertLinkToAdd(
         Artifact $target_artifact,
         ReverseLink $link,
-        \Tracker_FormElement_Field_ArtifactLink $source_link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $source_link_field,
     ): ChangeForwardLinksCommand {
         return ChangeForwardLinksCommand::fromParts(
             $source_link_field->getId(),
@@ -168,7 +168,7 @@ final class ReverseLinksToNewChangesetsConverter implements ConvertAddReverseLin
     private function convertLinkToChange(
         Artifact $target_artifact,
         ReverseLink $link,
-        \Tracker_FormElement_Field_ArtifactLink $source_link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $source_link_field,
     ): ChangeForwardLinksCommand {
         return ChangeForwardLinksCommand::fromParts(
             $source_link_field->getId(),
@@ -181,7 +181,7 @@ final class ReverseLinksToNewChangesetsConverter implements ConvertAddReverseLin
     private function convertLinkToRemove(
         Artifact $target_artifact,
         ReverseLink $link,
-        \Tracker_FormElement_Field_ArtifactLink $source_link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $source_link_field,
     ): ChangeForwardLinksCommand {
         return ChangeForwardLinksCommand::fromParts(
             $source_link_field->getId(),
@@ -204,7 +204,7 @@ final class ReverseLinksToNewChangesetsConverter implements ConvertAddReverseLin
     }
 
     /**
-     * @return Ok<\Tracker_FormElement_Field_ArtifactLink>|Err<Fault>
+     * @return Ok<\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField>|Err<Fault>
      */
     private function getArtifactLinkField(Artifact $artifact): Ok|Err
     {

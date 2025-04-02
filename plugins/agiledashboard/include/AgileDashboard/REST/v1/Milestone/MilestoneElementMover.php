@@ -28,11 +28,11 @@ use PFUser;
 use Planning_Milestone;
 use Project;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class MilestoneElementMover
@@ -122,7 +122,7 @@ class MilestoneElementMover
             $milestone->getArtifact(),
             $to_add,
             [],
-            Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+            ArtifactLinkField::NO_TYPE
         );
     }
 
@@ -140,7 +140,7 @@ class MilestoneElementMover
                         $milestone->getArtifact(),
                         $this->getFilteredArtifactIdsToAdd($milestone, $to_add),
                         [],
-                        Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+                        ArtifactLinkField::NO_TYPE
                     );
                     $this->linkToMilestoneParent($milestone, $user, $to_add);
                     $this->removeItemsFromExplicitBacklog($milestone->getProject(), $to_add);

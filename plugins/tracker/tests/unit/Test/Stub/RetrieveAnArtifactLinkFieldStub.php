@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 
 final class RetrieveAnArtifactLinkFieldStub implements RetrieveAnArtifactLinkField
 {
-    private function __construct(private readonly ?Tracker_FormElement_Field_ArtifactLink $field)
+    private function __construct(private readonly ?ArtifactLinkField $field)
     {
     }
 
-    public static function withAnArtifactLinkField(Tracker_FormElement_Field_ArtifactLink $field): self
+    public static function withAnArtifactLinkField(ArtifactLinkField $field): self
     {
         return new self($field);
     }
@@ -42,7 +42,7 @@ final class RetrieveAnArtifactLinkFieldStub implements RetrieveAnArtifactLinkFie
         return new self(null);
     }
 
-    public function getAnArtifactLinkField(\PFUser $user, Tracker $tracker): ?Tracker_FormElement_Field_ArtifactLink
+    public function getAnArtifactLinkField(\PFUser $user, Tracker $tracker): ?ArtifactLinkField
     {
         return $this->field;
     }

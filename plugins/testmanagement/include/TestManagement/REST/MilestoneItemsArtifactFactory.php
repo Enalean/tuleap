@@ -24,9 +24,9 @@ use EventManager;
 use PFUser;
 use Project;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\TestManagement\Event\GetItemsFromMilestone;
 use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class MilestoneItemsArtifactFactory
 {
@@ -68,7 +68,7 @@ class MilestoneItemsArtifactFactory
             $test_definitions,
             $event,
             $project,
-            [TypeCoveredByPresenter::TYPE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD],
+            [TypeCoveredByPresenter::TYPE_COVERED_BY, ArtifactLinkField::TYPE_IS_CHILD],
         );
 
         return $test_definitions;

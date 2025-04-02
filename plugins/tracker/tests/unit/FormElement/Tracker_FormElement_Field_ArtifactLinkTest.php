@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueEmptyChecker;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
@@ -50,7 +51,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testNoDefaultValue(): void
     {
-        $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getProperty')->andReturn(null);
         $this->assertFalse($field->hasDefaultValue());
     }
@@ -72,7 +73,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         ]));
         $value_dao->shouldReceive('searchReverseLinksById')->andReturn(TestHelper::emptyDar());
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_ArtifactLink::class, $field->getChangesetValue($this->changeset, 123, false));
@@ -86,7 +87,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $value_dao->shouldReceive('searchById')->andReturn(TestHelper::emptyDar());
         $value_dao->shouldReceive('searchReverseLinksById')->andReturn(TestHelper::emptyDar());
 
-        $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $this->assertNotNull($field->getChangesetValue($this->changeset, 123, false));
@@ -94,7 +95,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testFetchRawValue(): void
     {
-        $f       = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f       = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art_ids = ['123, 132, 999'];
         $value   = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $value->shouldReceive('getArtifactIds')->andReturns($art_ids);
@@ -103,7 +104,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testIsValidRequiredFieldWithExistingValues(): void
     {
-        $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('isRequired')->andReturns(true);
 
         $ids = [123];
@@ -127,7 +128,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testIsValidRequiredFieldWithNullValue(): void
     {
-        $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('isRequired')->andReturns(true);
 
         $ids = [];
@@ -147,7 +148,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testIsValidAddsErrorIfARequiredFieldValueIsEmpty(): void
     {
-        $f = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('isRequired')->andReturns(true);
 
         $checker = $this->createMock(SubmittedValueEmptyChecker::class);
@@ -449,7 +450,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    private function givenAChangesetValueWithArtifactIds(Tracker_FormElement_Field_ArtifactLink $field, array $ids): Tracker_Artifact_Changeset
+    private function givenAChangesetValueWithArtifactIds(ArtifactLinkField $field, array $ids): Tracker_Artifact_Changeset
     {
         $changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $changeset_value->shouldReceive('getArtifactIds')->andReturns($ids);

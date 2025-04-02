@@ -29,9 +29,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Sear
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramIncrementLinkedToFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -105,7 +105,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $program_increment_artifact,
                 [],
                 [$feature_removal->feature_id],
-                \Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+                \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
             );
 
         $this->getProcessor()->removeFromAllProgramIncrements($feature_removal);

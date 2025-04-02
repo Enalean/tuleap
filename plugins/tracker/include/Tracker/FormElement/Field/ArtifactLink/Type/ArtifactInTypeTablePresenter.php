@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class ArtifactInTypeTablePresenter
 {
@@ -40,7 +40,7 @@ class ArtifactInTypeTablePresenter
         \PFUser $current_user,
         \Tuleap\Tracker\Artifact\Artifact $artifact,
         $html_classes,
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         public readonly bool $are_links_deletable,
     ) {
         $this->html_classes = $html_classes;

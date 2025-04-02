@@ -21,20 +21,20 @@
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
-use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettings;
-use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
-use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettings;
+use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -48,7 +48,9 @@ use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\XML\PHPCast;
+use Tuleap\XML\SimpleXMLElementBuilder;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerXmlImport
 {
     public const XML_PARENT_ID_EMPTY = '0';
@@ -333,7 +335,7 @@ class TrackerXmlImport
         if (
             $this->artifact_links_usage_dao->isTypeDisabledInProject(
                 $project->getID(),
-                Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+                ArtifactLinkField::TYPE_IS_CHILD
             )
         ) {
             $this->logger->warning('Artifact link type _is_child is disabled, skipping the hierarchy');

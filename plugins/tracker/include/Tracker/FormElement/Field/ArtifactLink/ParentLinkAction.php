@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class ParentLinkAction
@@ -53,13 +52,13 @@ class ParentLinkAction
 
         if (
             ! isset($fields_data[$artifact_link_field_id]) ||
-            ! isset($fields_data[$artifact_link_field_id][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY])
+            ! isset($fields_data[$artifact_link_field_id][ArtifactLinkField::FIELDS_DATA_PARENT_KEY])
         ) {
             return false;
         }
 
         $nb_parent_linked = 0;
-        foreach ($fields_data[$artifact_link_field_id][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY] as $parent_artifact_id) {
+        foreach ($fields_data[$artifact_link_field_id][ArtifactLinkField::FIELDS_DATA_PARENT_KEY] as $parent_artifact_id) {
             $parent_artifact = $this->artifact_factory->getArtifactById((int) $parent_artifact_id);
             if ($parent_artifact === null) {
                 continue;
@@ -69,7 +68,7 @@ class ParentLinkAction
                 $parent_artifact->linkArtifact(
                     $artifact->getId(),
                     $submitter,
-                    Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+                    ArtifactLinkField::TYPE_IS_CHILD
                 )
             ) {
                 $nb_parent_linked++;

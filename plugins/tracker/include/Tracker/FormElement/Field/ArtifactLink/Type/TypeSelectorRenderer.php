@@ -57,11 +57,11 @@ final class TypeSelectorRenderer
                 continue;
             }
 
-            if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
+            if ($type->shortname === \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD) {
                 $types_presenter[] = [
-                    'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
+                    'shortname'     => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::FAKE_TYPE_IS_PARENT,
                     'forward_label' => $type->reverse_label,
-                    'is_selected'   => (\Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $prefill_type),
+                    'is_selected'   => (\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::FAKE_TYPE_IS_PARENT === $prefill_type),
                 ];
             }
         }

@@ -53,7 +53,7 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
         $rows = $this->getDB()->run(
             $sql,
             $program_increment->getId(),
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD
         ) ?? [];
         return $rows;
     }
@@ -86,7 +86,7 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
             $sql,
             $program_increment->getId(),
             $iteration->getId(),
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD
         );
     }
 }

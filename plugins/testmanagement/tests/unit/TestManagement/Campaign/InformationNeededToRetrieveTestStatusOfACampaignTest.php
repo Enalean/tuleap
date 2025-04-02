@@ -71,7 +71,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
         $campaign_art_link_field_id = 852;
 
-        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $link->method('getId')->willReturn($campaign_art_link_field_id);
 
         $this->form_element_factory->method('getAnArtifactLinkField')
@@ -135,7 +135,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $status_field->method('userCanRead')->willReturn(false);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
 
-        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $link->method('getId')->willReturn(852);
 
         $this->form_element_factory->method('getAnArtifactLinkField')
@@ -161,7 +161,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
         $test_exec_tracker->method('getStatusField')->willReturn(null);
 
-        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $link->method('getId')->willReturn(852);
 
         $this->form_element_factory->method('getAnArtifactLinkField')
@@ -186,7 +186,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $test_exec_tracker = $this->buildTracker(false);
         $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
 
-        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $link->method('getId')->willReturn(852);
 
         $this->form_element_factory->method('getAnArtifactLinkField')
@@ -209,7 +209,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $this->campaign->method('userCanView')->willReturn(true);
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(false);
 
-        $link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $link->method('getId')->willReturn(852);
 
         $this->form_element_factory->method('getAnArtifactLinkField')

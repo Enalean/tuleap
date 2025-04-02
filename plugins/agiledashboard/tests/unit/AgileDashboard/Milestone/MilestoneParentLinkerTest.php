@@ -30,7 +30,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -161,7 +161,7 @@ final class MilestoneParentLinkerTest extends TestCase
         $this->milestone->method('getParent')->willReturn($parent_milestone);
 
         $this->artifact_linker->expects($this->once())->method('linkArtifact')->with($parent_milestone_artifact, new CollectionOfForwardLinks([
-            ForwardLinkProxy::buildFromData(101, Tracker_FormElement_Field_ArtifactLink::NO_TYPE),
+            ForwardLinkProxy::buildFromData(101, ArtifactLinkField::NO_TYPE),
         ]), $this->user);
 
         $this->milestone_parent_linker->linkToMilestoneParent(
@@ -192,7 +192,7 @@ final class MilestoneParentLinkerTest extends TestCase
         $this->milestone->method('getParent')->willReturn($parent_milestone);
 
         $this->artifact_linker->expects($this->once())->method('linkArtifact')->with($parent_milestone_artifact, new CollectionOfForwardLinks([
-            ForwardLinkProxy::buildFromData(101, Tracker_FormElement_Field_ArtifactLink::NO_TYPE),
+            ForwardLinkProxy::buildFromData(101, ArtifactLinkField::NO_TYPE),
         ]), $this->user);
 
         $this->milestone_parent_linker->linkToMilestoneParent(

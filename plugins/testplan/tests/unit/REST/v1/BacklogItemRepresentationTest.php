@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\REST\v1;
 
 use PFUser;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -67,7 +67,7 @@ final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotAddATestIfThereIsAnArtifactLinkFieldButItCannotBeUpdated(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field = $this->createMock(ArtifactLinkField::class);
         $field->method('userCanUpdate')->willReturn(false);
 
         $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -105,7 +105,7 @@ final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCanAddATestIfThereIsAnArtifactLinkFieldAndItCanBeUpdated(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field = $this->createMock(ArtifactLinkField::class);
         $field->method('userCanUpdate')->willReturn(true);
 
         $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);

@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchProgramIncrementLinkedToFeature;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
@@ -54,7 +54,7 @@ final class FeatureRemovalProcessor implements RemoveFeature
                     $program_increment_artifact,
                     [],
                     [$feature_removal->feature_id],
-                    \Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+                    \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
                 );
             } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
                 throw new RemoveFeatureException($feature_removal->feature_id, $e);

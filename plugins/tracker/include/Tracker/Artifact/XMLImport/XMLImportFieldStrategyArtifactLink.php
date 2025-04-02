@@ -20,8 +20,10 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
     /**
@@ -108,7 +110,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     private function retrieveSystemTypes(array &$types): void
     {
         $params['types']   = &$types;
-        $params['types'][] = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $params['types'][] = ArtifactLinkField::TYPE_IS_CHILD;
         EventManager::instance()->processEvent(
             self::TRACKER_ADD_SYSTEM_TYPES,
             $params

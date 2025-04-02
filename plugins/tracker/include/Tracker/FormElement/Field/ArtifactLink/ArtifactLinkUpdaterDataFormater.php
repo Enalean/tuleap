@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_FormElement_Field_ArtifactLink;
-
 class ArtifactLinkUpdaterDataFormater
 {
     public function formatFieldData(
-        Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
+        ArtifactLinkField $artifactlink_field,
         array $elements_to_be_linked,
         array $elements_to_be_unlinked,
         string $type,
@@ -67,7 +65,7 @@ class ArtifactLinkUpdaterDataFormater
     }
 
     private function augmentFieldDatasRegardingArtifactLinkTypeUsage(
-        Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
+        ArtifactLinkField $artifactlink_field,
         array $elements_to_be_linked,
         array &$field_datas,
         string $type,

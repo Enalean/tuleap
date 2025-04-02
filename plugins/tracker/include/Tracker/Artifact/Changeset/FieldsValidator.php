@@ -85,7 +85,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
         $submitted_value,
         ChangesetValidationContext $changeset_validation_context,
     ): bool {
-        if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+        if ($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField) {
             $is_field_generally_valid = $this->validateField($artifact, $field, $user, $submitted_value);
             if (! $is_field_generally_valid) {
                 return false;

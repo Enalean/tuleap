@@ -29,12 +29,12 @@ use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -45,7 +45,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
 {
-    private Tracker_FormElement_Field_ArtifactLink $field;
+    private ArtifactLinkField $field;
     private PFUser $submitted_by;
     private TestLogger $logger;
     private TypeDao&Stub $nature_dao;

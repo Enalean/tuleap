@@ -41,7 +41,7 @@ final class ArtifactLinkTypeProxy implements ArtifactLinkType
 
     public static function fromIsChildType(): self
     {
-        return new self(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
+        return new self(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD);
     }
 
     public function __toString(): string

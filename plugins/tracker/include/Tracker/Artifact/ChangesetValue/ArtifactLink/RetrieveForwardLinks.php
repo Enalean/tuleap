@@ -26,7 +26,7 @@ interface RetrieveForwardLinks
 {
     public function retrieve(
         \PFUser $submitter,
-        \Tracker_FormElement_Field_ArtifactLink $link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $link_field,
         Artifact $artifact,
     ): CollectionOfForwardLinks;
 }

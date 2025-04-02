@@ -233,7 +233,7 @@ class FieldChangeXMLExporter
                 }
             }
             foreach ($value->subtasks as $link) {
-                $field_values[] = new ArtifactLinkChange((int) $link['id'], \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
+                $field_values[] = new ArtifactLinkChange((int) $link['id'], \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD);
             }
             $this->field_change_artifact_links_builder->build($changeset_node, $mapping->getFieldName(), $field_values);
         }

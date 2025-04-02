@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\REST\v1\Helper;
 use Psr\Log\NullLogger;
 use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
@@ -47,6 +46,7 @@ use Tuleap\Queue\QueueFactory;
 use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use UserManager;
 
 final class ProgramDataBuilder extends REST_TestDataBuilder
@@ -147,19 +147,19 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $us2      = $this->getArtifactByTitle($user_story_list, 'US2');
 
         $featureA_artifact_link = $featureA->getAnArtifactLinkField($this->user);
-        assert($featureA_artifact_link instanceof \Tracker_FormElement_Field_ArtifactLink);
+        assert($featureA_artifact_link instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField);
         $fieldsA_data                                                     = [];
         $fieldsA_data[$featureA_artifact_link->getId()]['new_values']     = (string) $us1->getId();
-        $fieldsA_data[$featureA_artifact_link->getId()]['type']           = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $fieldsA_data[$featureA_artifact_link->getId()]['type']           = ArtifactLinkField::TYPE_IS_CHILD;
         $fieldsA_data[$featureA_artifact_link->getId()]['types']          = [
-            $us1->getId() => Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            $us1->getId() => ArtifactLinkField::TYPE_IS_CHILD,
         ];
         $fieldsA_data[$featureA_artifact_link->getId()]['removed_values'] = [];
 
         $featureA->createNewChangeset($fieldsA_data, '', $this->user);
 
         $featureB_artifact_link = $featureB->getAnArtifactLinkField($this->user);
-        assert($featureB_artifact_link instanceof \Tracker_FormElement_Field_ArtifactLink);
+        assert($featureB_artifact_link instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField);
         $fieldsB_data                                                     = [];
         $fieldsB_data[$featureB_artifact_link->getId()]['new_values']     = (string) $us2->getId();
         $fieldsB_data[$featureB_artifact_link->getId()]['removed_values'] = [];
@@ -231,12 +231,12 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $pi        = $this->getArtifactByTitle($program_increment_list, 'PI');
 
         $pi_artifact_link_field = $pi->getAnArtifactLinkField($this->user);
-        assert($pi_artifact_link_field instanceof \Tracker_FormElement_Field_ArtifactLink);
+        assert($pi_artifact_link_field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField);
         $data                                                     = [];
         $data[$pi_artifact_link_field->getId()]['new_values']     = (string) $iteration->getId();
-        $data[$pi_artifact_link_field->getId()]['type']           = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $data[$pi_artifact_link_field->getId()]['type']           = ArtifactLinkField::TYPE_IS_CHILD;
         $data[$pi_artifact_link_field->getId()]['types']          = [
-            $iteration->getId() => Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            $iteration->getId() => ArtifactLinkField::TYPE_IS_CHILD,
         ];
         $data[$pi_artifact_link_field->getId()]['removed_values'] = [];
         $pi->createNewChangeset($data, '', $this->user);
@@ -251,7 +251,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $us1                = $this->getArtifactByTitle($user_story_list, 'US1');
 
         $iteration_artifact_link_field = $mirrored_iteration->getAnArtifactLinkField($this->user);
-        assert($iteration_artifact_link_field instanceof \Tracker_FormElement_Field_ArtifactLink);
+        assert($iteration_artifact_link_field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField);
         $data                                                            = [];
         $data[$iteration_artifact_link_field->getId()]['new_values']     = (string) $us1->getId();
         $data[$iteration_artifact_link_field->getId()]['nature']         = '';

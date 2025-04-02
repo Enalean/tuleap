@@ -36,7 +36,7 @@ final class ArtifactForwardLinksRetriever implements RetrieveForwardLinks
 
     public function retrieve(
         \PFUser $submitter,
-        \Tracker_FormElement_Field_ArtifactLink $link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $link_field,
         Artifact $artifact,
     ): CollectionOfForwardLinks {
         $last_changeset = $artifact->getLastChangeset();
@@ -49,7 +49,7 @@ final class ArtifactForwardLinksRetriever implements RetrieveForwardLinks
 
     protected function getLinksInfo(
         \PFUser $submitter,
-        \Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $artifact_link_field,
         \Tracker_Artifact_Changeset $last_changeset,
     ): CollectionOfForwardLinks {
         $last_changeset_id = (int) $last_changeset->getId();

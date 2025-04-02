@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class SubmittedValueEmptyChecker
@@ -39,7 +38,7 @@ class SubmittedValueEmptyChecker
      */
     public function isSubmittedValueEmpty(
         array $submitted_value,
-        Tracker_FormElement_Field_ArtifactLink $field_artifact_link,
+        ArtifactLinkField $field_artifact_link,
         Artifact $artifact,
     ): bool {
         if ($this->isSubmittingAParentArtifact($submitted_value)) {
@@ -81,7 +80,7 @@ class SubmittedValueEmptyChecker
     }
 
     private function hasReverseLinks(
-        Tracker_FormElement_Field_ArtifactLink $field_artifact_link,
+        ArtifactLinkField $field_artifact_link,
         Artifact $artifact,
     ): bool {
         $reverse_artifact_links = $field_artifact_link->getReverseLinks($artifact->getId());

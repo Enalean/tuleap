@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_InvalidFieldValueException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -45,7 +45,7 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $link = RESTForwardLinkProxy::fromPayload(['id' => 75]);
         self::assertSame(75, $link->getTargetArtifactId());
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $link->getType());
+        self::assertSame(ArtifactLinkField::NO_TYPE, $link->getType());
     }
 
     public function testItThrowsExceptionIfTheTypeKeyInAllLinksPayloadIsNotAString(): void
@@ -69,7 +69,7 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
 
         self::assertSame(121, $forward_links->getTargetArtifactId());
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $forward_links->getType());
+        self::assertSame(ArtifactLinkField::NO_TYPE, $forward_links->getType());
     }
 
     public function testItReturnsTheProxyObjectWithTheIdAndType(): void

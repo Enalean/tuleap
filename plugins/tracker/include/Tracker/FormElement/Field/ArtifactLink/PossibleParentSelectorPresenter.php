@@ -28,7 +28,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
  */
 final class PossibleParentSelectorPresenter
 {
-    public int $create_new_parent_value = \Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE;
+    public int $create_new_parent_value = \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::CREATE_NEW_PARENT_VALUE;
 
     /**
      * @var PossibleParentCategoryPresenter[]

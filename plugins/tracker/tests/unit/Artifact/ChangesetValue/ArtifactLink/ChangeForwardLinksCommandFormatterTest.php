@@ -68,9 +68,9 @@ final class ChangeForwardLinksCommandFormatterTest extends \Tuleap\Test\PHPUnit\
         self::assertSame('48,53', $fields_data['new_values']);
         self::assertCount(2, $fields_data['types']);
         self::assertArrayHasKey($first_artifact_id, $fields_data['types']);
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $fields_data['types'][$first_artifact_id]);
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, $fields_data['types'][$first_artifact_id]);
         self::assertArrayHasKey($second_artifact_id, $fields_data['types']);
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $fields_data['types'][$second_artifact_id]);
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, $fields_data['types'][$second_artifact_id]);
     }
 
     public function testItFormatsNewValuesWithType(): void
@@ -110,7 +110,7 @@ final class ChangeForwardLinksCommandFormatterTest extends \Tuleap\Test\PHPUnit\
         self::assertArrayHasKey($first_artifact_id, $fields_data['types']);
         self::assertSame('custom_type', $fields_data['types'][$first_artifact_id]);
         self::assertArrayHasKey($second_artifact_id, $fields_data['types']);
-        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $fields_data['types'][$second_artifact_id]);
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, $fields_data['types'][$second_artifact_id]);
     }
 
     public function testItFormatsParent(): void

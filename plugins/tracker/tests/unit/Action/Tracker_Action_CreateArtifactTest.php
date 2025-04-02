@@ -23,13 +23,13 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Tracker&MockObject $tracker;
     private Tracker_FormElementFactory&MockObject $formelement_factory;
@@ -39,8 +39,8 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     private PFUser $current_user;
     private Artifact&MockObject $new_artifact;
     private Tracker $parent_tracker;
-    private Tracker_FormElement_Field_ArtifactLink $parent_art_link_field;
-    private Tracker_FormElement_Field_ArtifactLink $art_link_field;
+    private ArtifactLinkField $parent_art_link_field;
+    private ArtifactLinkField $art_link_field;
     private Tracker_Artifact_Redirect $redirect;
 
     protected function setUp(): void
@@ -153,7 +153,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         );
         $this->request->method('get')->with('artifact')->willReturn([
             333 => [
-                'parent' => [(string) Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE],
+                'parent' => [(string) ArtifactLinkField::CREATE_NEW_PARENT_VALUE],
             ],
         ]);
         $this->new_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([]);
@@ -197,7 +197,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(
                 $new_artifact_id,
                 $current_user,
-                \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+                \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD
             );
 
         $artifact_factory->expects($this->once())
@@ -225,7 +225,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
             new \Codendi_Request(
                 [
                     'link-artifact-id' => (string) $target_artifact_id,
-                    'link-type'        => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+                    'link-type'        => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD,
                     'immediate'        => 'true',
                 ],
                 $this->createMock(\ProjectManager::class)

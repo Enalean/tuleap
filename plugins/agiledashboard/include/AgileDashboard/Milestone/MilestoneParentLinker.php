@@ -22,6 +22,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class MilestoneParentLinker
 {
@@ -56,7 +57,7 @@ class MilestoneParentLinker
             )
         ) {
             $this->artifact_linker->linkArtifact($parent_milestone_artifact, new CollectionOfForwardLinks([
-                ForwardLinkProxy::buildFromData($artifact_added->getId(), Tracker_FormElement_Field_ArtifactLink::NO_TYPE),
+                ForwardLinkProxy::buildFromData($artifact_added->getId(), ArtifactLinkField::NO_TYPE),
             ]), $user);
             $this->linkToMilestoneParent($parent_milestone, $user, $artifact_added);
         }

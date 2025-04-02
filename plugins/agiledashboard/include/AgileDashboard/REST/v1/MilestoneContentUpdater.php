@@ -24,7 +24,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use PFUser;
 use Planning_Milestone;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class MilestoneContentUpdater
@@ -59,7 +59,7 @@ class MilestoneContentUpdater
                 $this->artifact_factory,
                 $milestone
             ),
-            Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+            ArtifactLinkField::NO_TYPE
         );
     }
 

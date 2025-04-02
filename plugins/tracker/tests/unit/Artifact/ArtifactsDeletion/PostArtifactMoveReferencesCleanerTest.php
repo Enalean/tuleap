@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -32,6 +31,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinkWithNoType;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
@@ -72,8 +72,8 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
             $this->second_parent,
         );
 
-        $this->first_parent_reverse_link  = ReverseLinkStub::withType(self::FIRST_PARENT_ARTIFACT_ID, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
-        $this->second_parent_reverse_link = ReverseLinkStub::withType(self::SECOND_PARENT_ARTIFACT_ID, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
+        $this->first_parent_reverse_link  = ReverseLinkStub::withType(self::FIRST_PARENT_ARTIFACT_ID, ArtifactLinkField::TYPE_IS_CHILD);
+        $this->second_parent_reverse_link = ReverseLinkStub::withType(self::SECOND_PARENT_ARTIFACT_ID, ArtifactLinkField::TYPE_IS_CHILD);
 
         $this->retrieve_reverse_links = RetrieveReverseLinksStub::withLinks(
             new CollectionOfReverseLinks([

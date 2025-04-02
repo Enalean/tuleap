@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -70,7 +70,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertCount(2, $new_links->getArtifactLinks());
         [$first_link, $second_link] = $new_links->getArtifactLinks();
         self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
         self::assertSame(self::SECOND_ADDED_ARTIFACT_ID, $second_link->getTargetArtifactId());
         self::assertSame('custom_type', $second_link->getType());
     }
@@ -105,7 +105,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertCount(2, $new_links->getArtifactLinks());
         [$first_link, $second_link] = $new_links->getArtifactLinks();
         self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
         self::assertSame(self::SECOND_ADDED_ARTIFACT_ID, $second_link->getTargetArtifactId());
         self::assertSame('custom_type', $second_link->getType());
     }
@@ -134,12 +134,12 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertCount(1, $new_links->getArtifactLinks());
         [$first_link] = $new_links->getArtifactLinks();
         self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
 
         $reverse_links = $value->getReverseLinks();
         self::assertCount(1, $reverse_links->links);
         [$first_link] = $reverse_links->links;
         self::assertSame(self::SECOND_ADDED_ARTIFACT_ID, $first_link->getSourceArtifactId());
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
     }
 }

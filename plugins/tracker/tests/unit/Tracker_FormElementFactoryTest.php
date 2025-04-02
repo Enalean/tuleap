@@ -463,7 +463,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfUserCannotSeeArtifactLinkField(): void
     {
-        $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $field->shouldReceive('userCanRead')->with($this->user)->andReturnFalse();
 
         $this->factory->shouldReceive('getUsedArtifactLinkFields')->with($this->tracker)->andReturn([$field]);
@@ -472,7 +472,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFieldIfUserCanSeeArtifactLinkField(): void
     {
-        $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $field->shouldReceive('userCanRead')->with($this->user)->andReturnTrue();
 
         $this->factory->shouldReceive('getUsedArtifactLinkFields')->with($this->tracker)->andReturn([$field]);

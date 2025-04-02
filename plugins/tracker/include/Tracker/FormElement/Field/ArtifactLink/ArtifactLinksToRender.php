@@ -35,7 +35,7 @@ class ArtifactLinksToRender
 
     public function __construct(
         \PFUser $current_user,
-        \Tracker_FormElement_Field_ArtifactLink $field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $field,
         \TrackerFactory $tracker_factory,
         \Tracker_ReportFactory $report_factory,
         TypePresenterFactory $type_presenter_factory,
@@ -67,7 +67,7 @@ class ArtifactLinksToRender
 
     private function getMatchingIDs(
         \PFUser $current_user,
-        \Tracker_FormElement_Field_ArtifactLink $field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $field,
         TypePresenterFactory $type_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos,
     ) {
@@ -158,7 +158,7 @@ class ArtifactLinksToRender
     }
 
     private function groupPerTypeWithPresenter(
-        \Tracker_FormElement_Field_ArtifactLink $field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $field,
         \PFUser $current_user,
         TypePresenterFactory $type_presenter_factory,
         Tracker_ArtifactLinkInfo ...$link_infos,

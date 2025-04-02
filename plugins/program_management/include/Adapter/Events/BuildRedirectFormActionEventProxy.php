@@ -60,7 +60,7 @@ final class BuildRedirectFormActionEventProxy implements BuildRedirectFormAction
         $this->redirect->query_parameters[IterationRedirectionParameters::FLAG]               = IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
         $this->redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID] = $iteration_redirection_parameters->getIncrementId();
         $this->redirect->query_parameters['link-artifact-id']                                 = $iteration_redirection_parameters->getIncrementId();
-        $this->redirect->query_parameters['link-type']                                        = \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $this->redirect->query_parameters['link-type']                                        = \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD;
         $this->redirect->query_parameters['immediate']                                        = 'true';
     }
 

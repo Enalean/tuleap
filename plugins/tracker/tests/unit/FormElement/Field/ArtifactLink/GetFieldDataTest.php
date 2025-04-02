@@ -36,7 +36,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var \Mockery\Mock&\Tracker_FormElement_Field_ArtifactLink
+     * @var \Mockery\Mock&\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField
      */
     private $field;
     /**
@@ -50,7 +50,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->field = \Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->last_changset_id = 1234;
         $this->artifact         = new Artifact(147, 65, 102, 1, null);

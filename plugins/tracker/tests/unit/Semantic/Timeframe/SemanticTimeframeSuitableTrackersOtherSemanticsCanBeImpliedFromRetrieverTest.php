@@ -82,7 +82,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
             ->method('getUsedArtifactLinkFields')
             ->willReturnCallback(
                 fn (\Tracker $tracker): array => match ($tracker) {
-                    $tasks_tracker, $bugs_tracker, $activities_tracker, $sprints_tracker => [$this->createStub(\Tracker_FormElement_Field_ArtifactLink::class)],
+                    $tasks_tracker, $bugs_tracker, $activities_tracker, $sprints_tracker => [$this->createStub(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)],
                     $requests_tracker => []
                 }
             );

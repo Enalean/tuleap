@@ -34,7 +34,7 @@ final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $type        = 'art_link';
         $permissions = ['read', 'update', 'submit'];
 
-        $link_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $link_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $link_field->method('getId')->willReturn(666);
         $link_field->method('getName')->willReturn('the_link_field');
         $link_field->method('getLabel')->willReturn('The links');

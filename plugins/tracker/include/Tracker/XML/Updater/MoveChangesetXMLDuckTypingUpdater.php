@@ -219,8 +219,8 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 $this->verify_is_artifact_link_field->isAnArtifactLinkField($source_field)
                 && $this->verify_is_artifact_link_field->isAnArtifactLinkField($destination_field)
             ) {
-                assert($source_field instanceof \Tracker_FormElement_Field_ArtifactLink);
-                assert($destination_field instanceof \Tracker_FormElement_Field_ArtifactLink);
+                assert($source_field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField);
+                assert($destination_field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField);
 
                 $this->update_artifact_link_XML->updateArtifactLinks($changeset_xml, $destination_field, $index);
             }

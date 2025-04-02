@@ -27,14 +27,14 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields
 final class RetrieveUsedArtifactLinkFieldsStub implements RetrieveUsedArtifactLinkFields
 {
     /**
-     * @param list<\Tracker_FormElement_Field_ArtifactLink> $return_values
+     * @param list<\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField> $return_values
      */
     private function __construct(private bool $return_empty, private array $return_values)
     {
     }
 
     /**
-     * @return array{0?: \Tracker_FormElement_Field_ArtifactLink}
+     * @return array{0?: \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField}
      */
     public function getUsedArtifactLinkFields(\Tracker $tracker): array
     {
@@ -52,7 +52,7 @@ final class RetrieveUsedArtifactLinkFieldsStub implements RetrieveUsedArtifactLi
         return new self(true, []);
     }
 
-    public static function withAField(\Tracker_FormElement_Field_ArtifactLink $field): self
+    public static function withAField(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $field): self
     {
         return new self(false, [$field]);
     }
@@ -61,8 +61,8 @@ final class RetrieveUsedArtifactLinkFieldsStub implements RetrieveUsedArtifactLi
      * @no-named-arguments
      */
     public static function withSuccessiveFields(
-        \Tracker_FormElement_Field_ArtifactLink $first_field,
-        \Tracker_FormElement_Field_ArtifactLink ...$other_fields,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $first_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField ...$other_fields,
     ): self {
         return new self(false, [$first_field, ...$other_fields]);
     }

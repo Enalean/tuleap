@@ -76,7 +76,7 @@ final class ArtifactLinkChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::ARTIFACT_LINK_FIELD_ID, $changeset->artifact_link_field->getId());
         self::assertSame(self::MIRRORED_ITERATION_ID, $changeset->artifact_link_value->linked_artifact->getId());
         self::assertSame(
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD,
             (string) $changeset->artifact_link_value->type
         );
     }

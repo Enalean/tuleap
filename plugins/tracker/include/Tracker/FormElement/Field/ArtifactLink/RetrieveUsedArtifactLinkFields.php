@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
 
 interface RetrieveUsedArtifactLinkFields
 {
     /**
-     * @return Tracker_FormElement_Field_ArtifactLink[]
+     * @return ArtifactLinkField[]
      */
     public function getUsedArtifactLinkFields(Tracker $tracker): array;
 }

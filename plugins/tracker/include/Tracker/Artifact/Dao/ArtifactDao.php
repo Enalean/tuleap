@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Dao;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class ArtifactDao extends DataAccessObject
 {
@@ -81,7 +81,7 @@ class ArtifactDao extends DataAccessObject
             AND artlink.nature=?
         ORDER BY tracker_artifact_priority_rank.`rank` ASC
         SQL;
-        $params[] = Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+        $params[] = ArtifactLinkField::TYPE_IS_CHILD;
 
         return $this->getDB()->run($sql, ...$params);
     }

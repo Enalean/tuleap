@@ -26,7 +26,6 @@ use PFUser;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_ReferenceManager;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -95,14 +94,14 @@ class ArtifactLinkValueSaver
     /**
      * Save the value
      *
-     * @param Tracker_FormElement_Field_ArtifactLink $field              The field in which we save the value
+     * @param ArtifactLinkField $field              The field in which we save the value
      * @param PFUser                                 $user               The current user
      * @param Artifact                               $artifact           The artifact
      * @param int                                    $changeset_value_id The id of the changeset_value
      * @param mixed                                  $submitted_value    The value submitted by the user
      */
     public function saveValue(
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         PFUser $user,
         Artifact $artifact,
         $changeset_value_id,
@@ -187,7 +186,7 @@ class ArtifactLinkValueSaver
 
         if ($this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $from_tracker->getProject()->getID())) {
             if (
-                ($is_child && $existing_type !== Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) ||
+                ($is_child && $existing_type !== ArtifactLinkField::TYPE_IS_CHILD) ||
                 $is_parent
             ) {
                 $GLOBALS['Response']->addFeedback(
@@ -203,7 +202,7 @@ class ArtifactLinkValueSaver
 
             if (
                 ! $is_child &&
-                $existing_type === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD &&
+                $existing_type === ArtifactLinkField::TYPE_IS_CHILD &&
                 $this->rules_manager->getForTargetTracker($from_tracker)->count() > 0
             ) {
                 $GLOBALS['Response']->addFeedback(
@@ -219,15 +218,15 @@ class ArtifactLinkValueSaver
         }
 
         if ($is_child) {
-            return Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+            return ArtifactLinkField::TYPE_IS_CHILD;
         }
 
         if (
             $from_tracker->getChildren()
             && ! $is_child
-            && $existing_type === Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+            && $existing_type === ArtifactLinkField::TYPE_IS_CHILD
         ) {
-            return Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
+            return ArtifactLinkField::NO_TYPE;
         }
 
         return null;

@@ -23,7 +23,6 @@ use BaseLanguageFactory;
 use ParagonIE\EasyDB\EasyDB;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_Computed;
@@ -47,6 +46,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
@@ -69,7 +69,7 @@ final class NotEqualFieldComparisonVisitor implements
         return $field->accept($this);
     }
 
-    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
+    public function visitArtifactLink(ArtifactLinkField $field)
     {
         return null;
     }

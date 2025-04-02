@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -90,7 +91,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
             new Artifact(222, null, null, null, null),
         ];
 
-        $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns($expected_list);
 
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $this->tracker)->andReturns($field);
@@ -111,7 +112,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
         $artifact2 = $this->giveMeAnArtifactWithChildren();
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
-        $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns([$artifact1, $artifact2]);
 
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $this->tracker)->andReturns($field);
@@ -135,7 +136,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
         $artifact2 = $this->giveMeAnArtifactWithChildren();
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
-        $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns([$artifact1, $artifact4]);
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $this->tracker)->andReturns($field);
 
@@ -184,7 +185,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
             [
                 'getLastChangeset' => \Mockery::mock(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
-                    Tracker_FormElement_Field_ArtifactLink::class,
+                    ArtifactLinkField::class,
                     [
                         'getLinkedArtifacts' => [],
                     ]
@@ -197,7 +198,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
             [
                 'getLastChangeset' => \Mockery::mock(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
-                    Tracker_FormElement_Field_ArtifactLink::class,
+                    ArtifactLinkField::class,
                     [
                         'getLinkedArtifacts' => [],
                     ]
@@ -217,7 +218,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
             [
                 'getLastChangeset' => \Mockery::spy(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
-                    Tracker_FormElement_Field_ArtifactLink::class,
+                    ArtifactLinkField::class,
                     [
                         'getLinkedArtifacts' => [$artifact2],
                     ]
@@ -230,7 +231,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
             [
                 'getLastChangeset' => \Mockery::spy(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
-                    Tracker_FormElement_Field_ArtifactLink::class,
+                    ArtifactLinkField::class,
                     [
                         'getLinkedArtifacts' => [$artifact1, $artifact3],
                     ]
@@ -240,7 +241,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
 
         $artifact2->shouldReceive('getAnArtifactLinkField')->andReturns(
             \Mockery::mock(
-                Tracker_FormElement_Field_ArtifactLink::class,
+                ArtifactLinkField::class,
                 [
                     'getLinkedArtifacts' => [$artifact2, $artifact4],
                 ]
@@ -289,7 +290,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
         $hierarchy_factory->shouldReceive('getChildren')->with($this->current_id)->andReturns($sub_trackers);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $field     = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field     = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $field->shouldReceive('getLinkedArtifacts')->with($changeset, $this->user)->andReturns($children);
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $tracker)->andReturns($field);
 
