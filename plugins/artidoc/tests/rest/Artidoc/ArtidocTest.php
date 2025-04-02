@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc;
 
 require_once __DIR__ . '/../../../../docman/vendor/autoload.php';
 
+use Psl\Json;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
@@ -55,7 +56,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('GET', $post_response_json['uri'])
         );
         self::assertSame(200, $item_response->getStatusCode());
-        $item_response_json = json_decode($item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $item_response_json = Json\decode($item_response->getBody()->getContents());
         self::assertSame('artidoc', $item_response_json['type']);
         self::assertSame('Artidoc F1 ' . $this->now, $item_response_json['title']);
 
@@ -78,13 +79,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('PATCH', 'artidoc/' . $item_id)
                 ->withBody(
                     $this->stream_factory->createStream(
-                        json_encode(
-                            [
-                                'move' => [
-                                    'destination_folder_id' => $folder_destination_id,
-                                ],
-                            ]
-                        )
+                        Json\encode(['move' => ['destination_folder_id' => $folder_destination_id]])
                     )
                 )
         );
@@ -103,25 +98,19 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'docman_folders/' . $parent_id . '/others')
                 ->withBody(
                     $this->stream_factory->createStream(
-                        json_encode(
+                        Json\encode(
                             [
-                                'title' => $title,
-                                'type'  => 'artidoc',
+                                'title'                  => $title,
+                                'type'                   => 'artidoc',
                                 'permissions_for_groups' => [
-                                    'can_read' => [
-                                        [
-                                            'id' => $this->registered_users_identifier,
-                                        ],
+                                    'can_read'   => [
+                                        ['id' => $this->registered_users_identifier],
                                     ],
-                                    'can_write' => [
-                                        [
-                                            'id' => $this->project_members_identifier,
-                                        ],
+                                    'can_write'  => [
+                                        ['id' => $this->project_members_identifier],
                                     ],
                                     'can_manage' => [
-                                        [
-                                            'id' => $this->project_members_identifier,
-                                        ],
+                                        ['id' => $this->project_members_identifier],
                                     ],
                                 ],
                             ],
@@ -131,7 +120,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
         self::assertSame(201, $post_item_response->getStatusCode());
 
-        $post_response_json = json_decode($post_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $post_response_json = Json\decode($post_item_response->getBody()->getContents());
         self::assertNull($post_response_json['file_properties']);
 
         return $post_response_json;
@@ -144,49 +133,38 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             $this->request_factory
                 ->createRequest('POST', 'docman_folders/' . $parent_id . '/folders')
                 ->withBody(
-                    $this->stream_factory->createStream(
-                        json_encode(
-                            [
-                                'title' => $title,
-                            ]
-                        ),
-                    )
+                    $this->stream_factory->createStream(Json\encode(['title' => $title]))
                 )
         );
         self::assertSame(201, $post_folder_response->getStatusCode());
 
-        return json_decode($post_folder_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        return Json\decode($post_folder_response->getBody()->getContents());
     }
 
     private function getFolderContent(int $id): array
     {
-        return json_decode(
+        return Json\decode(
             $this->getResponseByName(
                 DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
                 $this->request_factory->createRequest('GET', 'docman_items/' . $id . '/docman_items'),
-            )->getBody()->getContents(),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
+            )->getBody()->getContents()
         );
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testPostOtherTypeDocumentDeniedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
-        $query = json_encode(
-            [
-                'title' => 'Artidoc F2 ' . $this->now,
-                'type'  => 'artidoc',
-            ]
-        );
+        $query = Json\encode([
+            'title' => 'Artidoc F2 ' . $this->now,
+            'type'  => 'artidoc',
+        ]);
 
-        $response1 = $this->getResponse(
+        $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/others')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        self::assertSame(403, $response1->getStatusCode());
+        self::assertSame(403, $response->getStatusCode());
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testArtidocCreation')]
@@ -232,20 +210,14 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_id . '/others')
                 ->withBody(
-                    $this->stream_factory->createStream(
-                        json_encode(
-                            [
-                                'copy' => [
-                                    'item_id'  => $artidoc_id,
-                                ],
-                            ]
-                        )
-                    )
+                    $this->stream_factory->createStream(Json\encode([
+                        'copy' => ['item_id' => $artidoc_id],
+                    ]))
                 )
         );
         self::assertSame(201, $copy_item_response->getStatusCode());
 
-        $copy_response_json = json_decode($copy_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $copy_response_json = Json\decode($copy_item_response->getBody()->getContents());
         self::assertNull($copy_response_json['file_properties']);
         $new_artidoc_id = $copy_response_json['id'];
 
@@ -263,20 +235,21 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         foreach ($artifact_ids as $artifact_id) {
             $post_response = $this->getResponse(
                 $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
-                    $this->stream_factory->createStream(json_encode(
-                        [
-                            'artidoc_id' => $artidoc_id,
-                            'section' => [
-                                'import' => [
-                                    'artifact' => ['id' => $artifact_id],
-                                    'level' => 1,
+                    $this->stream_factory->createStream(
+                        Json\encode(
+                            [
+                                'artidoc_id' => $artidoc_id,
+                                'section'    => [
+                                    'import'   => [
+                                        'artifact' => ['id' => $artifact_id],
+                                        'level'    => 1,
+                                    ],
+                                    'position' => null,
+                                    'content'  => null,
                                 ],
-                                'position' => null,
-                                'content' => null,
-                            ],
-                        ],
-                        JSON_THROW_ON_ERROR
-                    ))
+                            ]
+                        )
+                    )
                 ),
                 DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
             );
@@ -305,11 +278,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                 'artidoc/' . $artidoc_id . '/configuration'
             )->withBody(
                 $this->stream_factory->createStream(
-                    json_encode(
-                        [
-                            'selected_tracker_ids' => [$this->requirements_tracker_id],
-                        ],
-                    ),
+                    Json\encode(['selected_tracker_ids' => [$this->requirements_tracker_id]]),
                 )
             )
         );
@@ -317,19 +286,19 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         // at the end
         $section_3_post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
-                $this->stream_factory->createStream(json_encode([
+                $this->stream_factory->createStream(Json\encode([
                     'artidoc_id' => $artidoc_id,
-                    'section' => [
+                    'section'    => [
                         'position' => null,
-                        'content' => [
-                            'title' => 'Section 3',
+                        'content'  => [
+                            'title'       => 'Section 3',
                             'description' => 'Content of section 3',
-                            'type' => 'artifact',
+                            'type'        => 'artifact',
                             'attachments' => [],
-                            'level' => 1,
+                            'level'       => 1,
                         ],
                     ],
-                ], JSON_THROW_ON_ERROR))
+                ]))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
@@ -342,26 +311,26 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             'Section 3',
         );
 
-        $section_3_id = json_decode($section_3_post_response->getBody()->getContents(), null, 512, JSON_THROW_ON_ERROR)->id;
+        $section_3_id = Json\decode($section_3_post_response->getBody()->getContents())['id'];
 
         // before another section
         $section_4_post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
-                $this->stream_factory->createStream(json_encode([
+                $this->stream_factory->createStream(Json\encode([
                     'artidoc_id' => $artidoc_id,
-                    'section' => [
+                    'section'    => [
                         'position' => [
                             'before' => $section_3_id,
                         ],
-                        'content' => [
-                            'title' => 'Section 4',
+                        'content'  => [
+                            'title'       => 'Section 4',
                             'description' => 'Content of section 4',
-                            'type' => 'artifact',
+                            'type'        => 'artifact',
                             'attachments' => [],
-                            'level' => 1,
+                            'level'       => 1,
                         ],
                     ],
-                ], JSON_THROW_ON_ERROR))
+                ]))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
@@ -378,26 +347,26 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         // with a free text
         $post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
-                $this->stream_factory->createStream(json_encode([
+                $this->stream_factory->createStream(Json\encode([
                     'artidoc_id' => $artidoc_id,
-                    'section' => [
+                    'section'    => [
                         'position' => [
                             'before' => $section_3_id,
                         ],
-                        'content' => [
-                            'title' => 'My freetext title',
+                        'content'  => [
+                            'title'       => 'My freetext title',
                             'description' => 'My freetext description',
-                            'type' => 'freetext',
+                            'type'        => 'freetext',
                             'attachments' => [],
-                            'level' => 1,
+                            'level'       => 1,
                         ],
                     ],
-                ], JSON_THROW_ON_ERROR))
+                ]))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         self::assertSame(200, $post_response->getStatusCode());
-        json_decode($post_response->getBody()->getContents(), null, 512, JSON_THROW_ON_ERROR)->id;
+        self::assertNotNull(Json\decode($post_response->getBody()->getContents())['id']);
 
         $this->assertSectionsMatchContent(
             $artidoc_id,
@@ -463,13 +432,13 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         $order_response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'artidoc/' . $artidoc_id . '/sections')->withBody(
-                $this->stream_factory->createStream(json_encode([
+                $this->stream_factory->createStream(Json\encode([
                     'order' => [
                         'ids'         => [$uuid1],
                         'direction'   => 'after',
                         'compared_to' => $uuid2,
                     ],
-                ], JSON_THROW_ON_ERROR))
+                ]))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
@@ -483,6 +452,9 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
     }
 
+    /**
+     * @throws \Exception
+     */
     private function getSectionUuid(int $artidoc_id, int $section_artifact_id): string
     {
         $document_content = $this->getArtidocSections($artidoc_id);
@@ -498,7 +470,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     private function assertSectionsMatchArtifactIdsForDocument(int $artidoc_id, int ...$artifact_ids): void
     {
         $document_content = $this->getArtidocSections($artidoc_id);
-        self::assertSame(count($artifact_ids), count($document_content));
+        self::assertCount(count($artifact_ids), $document_content);
         self::assertSame(
             $artifact_ids,
             array_map(
@@ -511,7 +483,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     private function assertSectionsMatchContent(int $artidoc_id, string ...$titles): void
     {
         $document_content = $this->getArtidocSections($artidoc_id);
-        self::assertSame(count($titles), count($document_content));
+        self::assertCount(count($titles), $document_content);
         self::assertSame(
             $titles,
             array_map(
@@ -544,30 +516,27 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->request_factory->createRequest('POST', 'artifacts')->withBody(
-                $this->stream_factory->createStream(json_encode([
-                    'tracker' => ['id' => $this->requirements_tracker_id],
+                $this->stream_factory->createStream(Json\encode([
+                    'tracker'         => ['id' => $this->requirements_tracker_id],
                     'values_by_field' => [
-                        'title' => ['value' => $title],
+                        'title'       => ['value' => $title],
                         'description' => ['value' => $description],
                     ],
-                ], JSON_THROW_ON_ERROR))
+                ]))
             ),
         );
 
-        $response_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $response_content = Json\decode($response->getBody()->getContents());
 
         return $response_content['id'];
     }
 
     private function getArtidocSections(int $artidoc_id): array
     {
-        return json_decode(
+        return Json\decode(
             $this->getResponse(
                 $this->request_factory->createRequest('GET', 'artidoc/' . $artidoc_id . '/sections')
             )->getBody()->getContents(),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
         );
     }
 
@@ -588,14 +557,12 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                 ->createRequest('PUT', 'docman_other_type_documents/' . $artidoc_id . '/permissions')
                 ->withBody(
                     $this->stream_factory->createStream(
-                        json_encode(
+                        Json\encode(
                             [
-                                'can_read' => [],
-                                'can_write' => [],
+                                'can_read'   => [],
+                                'can_write'  => [],
                                 'can_manage' => [
-                                    [
-                                        'id' => $this->project_admins_identifier,
-                                    ],
+                                    ['id' => $this->project_admins_identifier,],
                                 ],
                             ],
                         ),
@@ -616,7 +583,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
         self::assertSame(200, $get_by_admin_response->getStatusCode(), 'Admin can read the document');
 
-        $permissions_for_groups_representation = json_decode($get_by_admin_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['permissions_for_groups'];
+        $permissions_for_groups_representation = Json\decode($get_by_admin_response->getBody()->getContents())['permissions_for_groups'];
         $this->assertEmpty($permissions_for_groups_representation['can_read']);
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
@@ -643,7 +610,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         );
         self::assertSame(200, $get_section_response->getStatusCode());
 
-        $section_representation = json_decode($get_section_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $section_representation = Json\decode($get_section_response->getBody()->getContents());
         self::assertSame($document_content[0], $section_representation);
     }
 
@@ -660,16 +627,9 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     public function testPutConfiguration(int $id): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest(
-                'PUT',
-                'artidoc/' . $id . '/configuration'
-            )->withBody(
+            $this->request_factory->createRequest('PUT', 'artidoc/' . $id . '/configuration')->withBody(
                 $this->stream_factory->createStream(
-                    json_encode(
-                        [
-                            'selected_tracker_ids' => [$this->requirements_tracker_id],
-                        ],
-                    ),
+                    Json\encode(['selected_tracker_ids' => [$this->requirements_tracker_id]]),
                 )
             )
         );
@@ -691,14 +651,14 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         $payload = [
             'artidoc_id' => $artidoc_id,
-            'name' => 'filename.png',
-            'file_size' => 123,
-            'file_type' => 'image/png',
+            'name'       => 'filename.png',
+            'file_size'  => 123,
+            'file_type'  => 'image/png',
         ];
 
         $post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artidoc_files')->withBody(
-                $this->stream_factory->createStream(json_encode($payload, JSON_THROW_ON_ERROR))
+                $this->stream_factory->createStream(Json\encode($payload))
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -706,14 +666,14 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         $post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artidoc_files')->withBody(
-                $this->stream_factory->createStream(json_encode($payload, JSON_THROW_ON_ERROR))
+                $this->stream_factory->createStream(Json\encode($payload))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         self::assertSame(200, $post_response->getStatusCode());
-        $upload_response_json = json_decode($post_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertTrue(isset($upload_response_json['download_href']));
-        self::assertTrue(isset($upload_response_json['upload_href']));
+        $upload_response_json = Json\decode($post_response->getBody()->getContents());
+        self::assertIsString($upload_response_json['download_href']);
+        self::assertIsString($upload_response_json['upload_href']);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
@@ -722,28 +682,21 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc freetext ' . $this->now)['id'];
         $section_id = $this->postFreeTextSection($artidoc_id);
         $response   = $this->getResponse(
-            $this->request_factory->createRequest(
-                'PUT',
-                'artidoc_sections/' . $section_id
-            )->withBody(
+            $this->request_factory->createRequest('PUT', 'artidoc_sections/' . $section_id)->withBody(
                 $this->stream_factory->createStream(
-                    json_encode(
-                        [
-                            'title' => 'My updated title',
-                            'description' => 'My updated description',
-                            'attachments' => [],
-                            'level' => 1,
-                        ],
-                    ),
+                    Json\encode([
+                        'title'       => 'My updated title',
+                        'description' => 'My updated description',
+                        'attachments' => [],
+                        'level'       => 1,
+                    ]),
                 )
             )
         );
         self::assertSame(200, $response->getStatusCode());
         $document_content = $this->getArtidocSections($artidoc_id);
         self::assertContains('My updated title', array_map(
-            static function (array $section) {
-                return $section['title'] ?? null;
-            },
+            static fn(array $section) => $section['title'] ?? null,
             $document_content
         ));
     }
@@ -762,19 +715,14 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $section_id = $document_content[0]['id'];
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest(
-                'PUT',
-                'artidoc_sections/' . $section_id
-            )->withBody(
+            $this->request_factory->createRequest('PUT', 'artidoc_sections/' . $section_id)->withBody(
                 $this->stream_factory->createStream(
-                    json_encode(
-                        [
-                            'title' => 'My updated title',
-                            'description' => 'My updated description',
-                            'attachments' => [],
-                            'level' => 2,
-                        ],
-                    ),
+                    Json\encode([
+                        'title'       => 'My updated title',
+                        'description' => 'My updated description',
+                        'attachments' => [],
+                        'level'       => 2,
+                    ]),
                 )
             )
         );
@@ -794,10 +742,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc delete freetext ' . $this->now)['id'];
         $section_id = $this->postFreeTextSection($artidoc_id);
         $response   = $this->getResponse(
-            $this->request_factory->createRequest(
-                'DELETE',
-                'artidoc_sections/' . $section_id
-            )
+            $this->request_factory->createRequest('DELETE', 'artidoc_sections/' . $section_id)
         );
         self::assertSame(204, $response->getStatusCode());
 
@@ -809,24 +754,24 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     {
         $post_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
-                $this->stream_factory->createStream(json_encode([
+                $this->stream_factory->createStream(Json\encode([
                     'artidoc_id' => $id,
-                    'section' => [
+                    'section'    => [
                         'position' => null,
-                        'content' => [
-                            'title' => 'My freetext title',
+                        'content'  => [
+                            'title'       => 'My freetext title',
                             'description' => 'My freetext description',
-                            'type' => 'freetext',
+                            'type'        => 'freetext',
                             'attachments' => [],
-                            'level' => 1,
+                            'level'       => 1,
                         ],
                     ],
-                ], JSON_THROW_ON_ERROR))
+                ]))
             ),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         self::assertSame(200, $post_response->getStatusCode());
-        json_decode($post_response->getBody()->getContents(), null, 512, JSON_THROW_ON_ERROR)->id;
+        self::assertNotNull(Json\decode($post_response->getBody()->getContents())['id']);
 
         $document_content = $this->getArtidocSections($id);
         return $document_content[0]['id'];
