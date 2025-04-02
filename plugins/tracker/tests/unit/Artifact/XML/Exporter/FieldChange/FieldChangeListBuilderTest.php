@@ -50,7 +50,8 @@ final class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $changeset_node,
             'field_SB_01',
             'static',
-            [123, 456]
+            [123, 456],
+            []
         );
 
         self::assertTrue(isset($changeset_node->field_change));

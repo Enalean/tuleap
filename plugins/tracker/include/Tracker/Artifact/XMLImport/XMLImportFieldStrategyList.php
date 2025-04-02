@@ -24,7 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const BIND_STATIC  = 'static';
     public const BIND_UGROUPS = 'ugroups';
@@ -76,14 +76,14 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         return $data;
     }
 
-    private function getStaticListDataValue(Tracker_FormElement_Field $field, ?SimpleXMLElement $value): ?int
+    private function getStaticListDataValue(Tracker_FormElement_Field $field, ?SimpleXMLElement $value): int|string|null
     {
         if (! $value) {
             return null;
         }
 
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
-            return (int) $this->xml_fields_mapping->getNewValueId(trim((string) $value));
+            return $this->xml_fields_mapping->getNewValueId(trim((string) $value));
         }
 
         $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);
@@ -96,10 +96,10 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         return (int) $row['id'];
     }
 
-    private function getUgroupListDataValue(?SimpleXMLElement $value): ?int
+    private function getUgroupListDataValue(?SimpleXMLElement $value): int|string|null
     {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
-            return (int) $this->xml_fields_mapping->getNewValueId((int) $value);
+            return $this->xml_fields_mapping->getNewValueId((string) $value);
         }
 
         return null;

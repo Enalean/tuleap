@@ -103,7 +103,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends TestCase // phpcs:ignore
         $field   = ListFieldBuilder::aListField(201)->build();
 
         $value_mapping = $this->createMock(Cardwall_OnTop_Config_ValueMapping::class);
-        $value_mapping->method('getXMLValueId')->willReturn('V304');
+        $value_mapping->method('getXMLValueId')->willReturn('0195f58f-8e6f-719c-8bb7-e36ae3e11872');
         $value_mapping->method('getColumnId')->willReturn(4);
 
         $mapping = $this->createMock(Cardwall_OnTop_Config_TrackerMappingFreestyle::class);
@@ -126,7 +126,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends TestCase // phpcs:ignore
 
         $mapping_values_xml = $this->root->cardwall->trackers->tracker->mappings->mapping->values->value;
         self::assertCount(1, $mapping_values_xml);
-        self::assertEquals('V304', $mapping_values_xml['value_id']);
+        self::assertEquals('0195f58f-8e6f-719c-8bb7-e36ae3e11872', $mapping_values_xml['value_id']);
         self::assertEquals('C4', $mapping_values_xml['column_id']);
     }
 }

@@ -1316,6 +1316,11 @@
                   <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
                 </attribute>
               </optional>
+              <optional>
+                <attribute name="UUId">
+                  <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                </attribute>
+              </optional>
               <attribute name="label">
                 <ref name="non_empty_string"/>
               </attribute>
@@ -1342,7 +1347,7 @@
             <element name="decorator">
               <optional>
                 <attribute name="REF">
-                  <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                  <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
                 </attribute>
               </optional>
               <choice>
@@ -1361,7 +1366,7 @@
             <element name="value">
               <choice>
                 <attribute name="REF">
-                  <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                  <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
                 </attribute>
                 <ref name="tracker_user_content"/>
               </choice>
@@ -1493,7 +1498,7 @@
           <zeroOrMore>
             <element name="open_value">
               <attribute name="REF">
-                <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
               </attribute>
             </element>
           </zeroOrMore>

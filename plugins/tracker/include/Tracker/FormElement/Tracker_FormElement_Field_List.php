@@ -348,7 +348,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return is_numeric($value_to_match);
     }
 
-    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria, array $xml_mapping): void
     {
         $bind = $this->getBind();
         if (! $bind instanceof Tracker_FormElement_Field_List_Bind_Static) {
@@ -370,7 +370,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                         continue;
                     }
                     $selected_value_node = $criteria_value_node->addChild('selected_value');
-                    $selected_value_node->addAttribute('REF', 'V' . $value_id);
+                    $key                 = array_search($value_id, $xml_mapping);
+                    if ($key !== false) {
+                        $value_id = $key;
+                    } else {
+                        $value_id = 'V' . $value_id;
+                    }
+
+                    $selected_value_node->addAttribute('REF', $value_id);
                 }
             }
         }

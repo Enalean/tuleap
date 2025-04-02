@@ -27,6 +27,7 @@ use Mockery;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\NoneStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -60,9 +61,11 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportBindWithoutNoneValue(): void
     {
+        $value_a    = ListStaticValueBuilder::aStaticValue('Value A')->withId(1)->build();
+        $value_b    = ListStaticValueBuilder::aStaticValue('Value B')->withId(2)->build();
         $values     = [
-            ListStaticValueBuilder::aStaticValue('Value A')->withId(1)->build(),
-            ListStaticValueBuilder::aStaticValue('Value B')->withId(2)->build(),
+            $value_a,
+            $value_b,
         ];
         $decorators = [
             new Tracker_FormElement_Field_List_BindDecorator(123, 1, null, null, null, 'inca-silver'),
@@ -86,16 +89,17 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($decorators_node);
 
         $decorator_A = $decorators_node[0];
-        $this->assertTlpColor('V1', 'inca-silver', $decorator_A);
+        $this->assertTlpColor($value_a->getUuid(), 'inca-silver', $decorator_A);
 
         $decorator_B = $decorators_node[1];
-        $this->assertLegacyColor('V2', '123', '456', '789', $decorator_B);
+        $this->assertLegacyColor($value_b->getUuid(), '123', '456', '789', $decorator_B);
     }
 
     public function testItExportBindWithTLPNoneValue(): void
     {
+        $none_value = NoneStaticValueBuilder::build();
         $values     = [
-            ListStaticValueBuilder::aStaticValue('None')->withId(\Tracker_FormElement_Field_List::NONE_VALUE)->build(),
+            $none_value,
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
@@ -112,13 +116,14 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        $this->assertTlpColor('V100', 'inca-silver', $decorator_none);
+        $this->assertTlpColor($none_value->getUuid(), 'inca-silver', $decorator_none);
     }
 
     public function testItExportBindWithLegacyNoneValue(): void
     {
+        $none_value = NoneStaticValueBuilder::build();
         $values     = [
-            ListStaticValueBuilder::noneStaticValue()->build(),
+            $none_value,
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, '123', '456', '789', null)];
 
@@ -135,7 +140,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        $this->assertLegacyColor('V100', '123', '456', '789', $decorator_none);
+        $this->assertLegacyColor($none_value->getUuid(), '123', '456', '789', $decorator_none);
     }
 
     private function assertLabelAttributeIsSame(string $expected_value, \SimpleXMLElement $value_node): void

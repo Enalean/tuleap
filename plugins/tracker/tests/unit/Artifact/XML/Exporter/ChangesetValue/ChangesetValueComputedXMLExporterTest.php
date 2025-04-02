@@ -66,7 +66,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
         $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals('computed', $field_change['type']);
@@ -81,7 +81,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
         $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals('1', $field_change->is_autocomputed);
@@ -98,7 +98,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $this->changeset->method('getValue')->willReturn($changeset_value);
         $this->field->method('getComputedValue')->willReturn(1.5);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals(1.5, (float) $field_change->manual_value);
@@ -121,7 +121,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $previous_changeset->method('getId')->willReturn(1);
         $this->field->method('getComputedValue')->willReturn(1.5);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals(1.5, (float) $field_change->manual_value);
@@ -143,7 +143,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $previous_changeset->method('getId')->willReturn(1);
         $this->field->method('getComputedValue')->willReturn(1.5);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals(1.5, (float) $field_change->manual_value);
@@ -160,7 +160,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $this->artifact->method('getChangesets')->willReturn([$current_changeset, $this->changeset]);
         $this->changeset->method('getValue')->willReturn(null);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals('1', (string) $field_change->is_autocomputed);
@@ -183,7 +183,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $previous_changeset->method('getValue')->willReturn($previous_changeset_value);
         $previous_changeset->method('getId')->willReturn(1);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $this->assertFalse(isset($this->changeset_value_xml->field_change));
     }
@@ -196,7 +196,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
         $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals(1.5, (float) $field_change->manual_value);
@@ -211,7 +211,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
         $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value);
+        $exporter->export($this->artifact_xml, $this->changeset_value_xml, $this->artifact, $changeset_value, []);
 
         $field_change = $this->changeset_value_xml->field_change;
         $this->assertEquals(0, (float) $field_change->manual_value);

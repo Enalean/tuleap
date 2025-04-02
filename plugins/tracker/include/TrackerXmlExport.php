@@ -100,7 +100,7 @@ class TrackerXmlExport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
                 $exported_trackers[$tracker->getXMLId()] = $tracker;
 
                 $xml_tracker = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
-                $this->artifact_xml_export->export($tracker, $xml_tracker, $user, $archive);
+                $this->artifact_xml_export->export($tracker, $xml_tracker, $user, $archive, $xml_field_mapping);
             }
         }
 
@@ -231,24 +231,24 @@ class TrackerXmlExport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
         array $artifacts,
-    ) {
+    ): SimpleXMLElement {
         $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
         $xml_content = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
                                          <trackers />'
         );
 
+        $xml_field_mapping = [];
         if ($tracker !== null && $tracker->isActive()) {
-            $xml_field_mapping = [];
             $this->exportTracker($xml_content, $tracker, $xml_field_mapping);
         }
 
-        $this->artifact_xml_export->exportBunchOfArtifactsForArchive($artifacts, $xml_content, $user, $archive);
+        $this->artifact_xml_export->exportBunchOfArtifactsForArchive($artifacts, $xml_content, $user, $archive, $xml_field_mapping);
 
         return $xml_content;
     }
 
-    private function validateExport(SimpleXMLElement $xml_trackers)
+    private function validateExport(SimpleXMLElement $xml_trackers): void
     {
         $partial_element = new SimpleXMLElement((string) $xml_trackers->asXML());
 
@@ -259,18 +259,20 @@ class TrackerXmlExport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         $this->rng_validator->validate($partial_element, __DIR__ . '/../resources/trackers.rng');
     }
 
-    private function exportMapping(SimpleXMLElement $tracker_xml, Tracker $tracker)
+    private function exportMapping(SimpleXMLElement $tracker_xml, Tracker $tracker): array
     {
         $xml_field_mapping = [];
 
         $tracker->exportToXMLInProjectExportContext($tracker_xml, $this->user_xml_exporter, $xml_field_mapping);
+
+        return $xml_field_mapping;
     }
 
-    private function exportTrackerAndArtifacts(PFUser $user, ArchiveInterface $archive, SimpleXMLElement $xml_content, Tracker $tracker)
+    private function exportTrackerAndArtifacts(PFUser $user, ArchiveInterface $archive, SimpleXMLElement $xml_content, Tracker $tracker): void
     {
         $tracker_xml_node = $xml_content->addChild('tracker');
-        $this->exportMapping($tracker_xml_node, $tracker);
-        $this->artifact_xml_export->export($tracker, $tracker_xml_node, $user, $archive);
+        $mapping          = $this->exportMapping($tracker_xml_node, $tracker);
+        $this->artifact_xml_export->export($tracker, $tracker_xml_node, $user, $archive, $mapping);
         $this->validateExport($xml_content);
     }
 }

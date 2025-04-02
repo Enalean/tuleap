@@ -39,6 +39,7 @@ readonly class FieldChangeListBuilder
         string $field_name,
         string $bind_type,
         array $values,
+        array $mapping,
     ): void {
         $field_change = $changeset_xml->addChild('field_change');
         $field_change->addAttribute('field_name', $field_name);
@@ -53,6 +54,10 @@ readonly class FieldChangeListBuilder
             }
         } else {
             foreach ($values as $value) {
+                $key = array_search($value, $mapping);
+                if ($key !== false) {
+                    $value = $key;
+                }
                 $this->simple_xml_cdata_factory->insertWithAttributes(
                     $field_change,
                     'value',

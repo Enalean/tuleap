@@ -37,6 +37,7 @@ class ChangesetValuePermissionsOnArtifactXMLExporter extends ChangesetValueXMLEx
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
+        array $value_mapping,
     ): void {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,

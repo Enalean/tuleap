@@ -73,7 +73,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $changeset_value->expects($this->once())->method('getField')->willReturn($field);
 
         $artifact = ArtifactTestBuilder::anArtifact(42)->build();
-        $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
+        $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value, []);
         $this->assertXmlStringEqualsXmlString($this->getXmlResult()->asXML(), $changeset_xml->asXML());
     }
 
@@ -102,7 +102,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $changeset_value->expects($this->once())->method('getField')->willReturn($field);
 
         $artifact = ArtifactTestBuilder::anArtifact(42)->build();
-        $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
+        $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value, []);
         $this->assertXmlStringEqualsXmlString($expected_xml->asXML(), $changeset_xml->asXML());
     }
 

@@ -74,10 +74,11 @@ readonly class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_Chan
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
+        array $mapping,
     ): void {
         $exporter = $changeset_value->accept($this);
         \assert($exporter instanceof ChangesetValueXMLExporter);
-        $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
+        $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value, $mapping['values']);
     }
 
     public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value): ChangesetValueArtifactLinkXMLExporter

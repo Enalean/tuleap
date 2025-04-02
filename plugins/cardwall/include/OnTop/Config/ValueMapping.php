@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_OnTop_Config_ValueMapping
+class Cardwall_OnTop_Config_ValueMapping // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_FormElement_Field_List_Value
@@ -41,9 +41,9 @@ class Cardwall_OnTop_Config_ValueMapping
         return $this->value->getId();
     }
 
-    public function getXMLValueId()
+    public function getXMLValueId(): string
     {
-        return $this->value->getXMLId();
+        return $this->value->getUuid();
     }
 
     public function getValueLabel()

@@ -42,6 +42,7 @@ class ChangesetValueTextXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
+        array $value_mapping,
     ): void {
         $this->field_change_text_builder->build(
             $changeset_xml,

@@ -43,7 +43,7 @@ readonly class ArtifactXMLExporter
         $artifact_xml->addAttribute('id', $changeset->getArtifact()->getId());
         $artifact_xml->addAttribute('tracker_id', $changeset->getArtifact()->getTrackerId());
 
-        $this->changeset_exporter->exportWithoutComments($artifact_xml, $changeset);
+        $this->changeset_exporter->exportWithoutComments($artifact_xml, $changeset, ['values' => []]);
         $this->file_info_xml_exporter->export($artifact_xml, $changeset->getArtifact());
 
         return $artifacts_xml;
@@ -55,12 +55,13 @@ readonly class ArtifactXMLExporter
     public function exportFullHistory(
         SimpleXMLElement $artifacts_xml,
         Artifact $artifact,
+        array $mapping,
     ): void {
         $artifact_xml = $artifacts_xml->addChild('artifact');
         $artifact_xml->addAttribute('id', $artifact->getId());
 
         foreach ($artifact->getChangesets() as $changeset) {
-            $this->changeset_exporter->exportFullHistory($artifact_xml, $changeset);
+            $this->changeset_exporter->exportFullHistory($artifact_xml, $changeset, $mapping);
         }
         $this->file_info_xml_exporter->export($artifact_xml, $artifact);
     }

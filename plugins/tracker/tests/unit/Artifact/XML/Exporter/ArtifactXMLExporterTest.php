@@ -82,6 +82,6 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_exporter->expects($this->once())->method('export');
         $this->changeset_exporter->expects($this->exactly(2))->method('exportFullHistory');
 
-        $this->exporter->exportFullHistory($this->artifacts_xml, $this->artifact);
+        $this->exporter->exportFullHistory($this->artifacts_xml, $this->artifact, []);
     }
 }

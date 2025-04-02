@@ -540,9 +540,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $items = $root->addChild('items');
         foreach ($this->values as $value) {
             $item = $items->addChild('item');
-            $id   = $value->getXMLId();
-            $item->addAttribute('ID', $id);
-            $xmlMapping['values'][$id] = $value->getId();
+            $uuid = $value->getUuid();
+            $item->addAttribute('ID', $uuid);
+            $xmlMapping['values'][$uuid] = $value->getId();
             $item->addAttribute('label', $value->getUGroupName());
             $item->addAttribute('is_hidden', (int) $value->isHidden());
         }

@@ -2164,9 +2164,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         SimpleXMLElement $artifacts_node,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
         ArtifactXMLExporter $artifact_xml_exporter,
+        array $mapping,
     ) {
         if (count($this->getChangesets()) > 0) {
-            $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
+            $artifact_xml_exporter->exportFullHistory($artifacts_node, $this, $mapping);
 
             $attachment_exporter = $this->getArtifactAttachmentExporter();
             $attachment_exporter->exportAttachmentsInArchive($this, $archive);

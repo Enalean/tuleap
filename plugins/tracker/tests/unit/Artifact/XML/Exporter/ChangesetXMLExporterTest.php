@@ -99,7 +99,7 @@ final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->values_exporter->method('exportSnapshot');
 
-        $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset);
+        $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset, []);
 
         $this->assertCount(1, $this->artifact_xml->changeset);
         $this->assertCount(1, $this->artifact_xml->changeset->submitted_by);
@@ -111,7 +111,7 @@ final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->values_exporter->expects($this->once())->method('exportSnapshot')->with($this->artifact_xml, self::anything(), $this->artifact, $this->values);
         $this->comment->expects($this->never())->method('exportToXML');
 
-        $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset);
+        $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset, []);
     }
 
     public function testItExportsTheComments(): void
@@ -127,7 +127,7 @@ final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->values_exporter->expects($this->once())->method('exportChangedFields')->with($this->artifact_xml, self::anything(), $this->artifact, $this->values);
         $this->comment->expects($this->once())->method('exportToXML');
 
-        $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
+        $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset, []);
     }
 
     public function testItExportsTheIdOfTheChangeset(): void
@@ -142,7 +142,7 @@ final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->values_exporter->method('exportChangedFields');
         $this->comment->method('exportToXML');
 
-        $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
+        $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset, []);
 
         $this->assertEquals('CHANGESET_123', (string) $this->artifact_xml->changeset['id']);
     }
@@ -162,7 +162,7 @@ final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->method('getComment')->willReturn(null);
         $changeset->method('forceFetchAllValues');
         $changeset->method('getArtifact')->willReturn($this->artifact);
-        $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
+        $this->exporter->exportFullHistory($this->artifact_xml, $changeset, []);
     }
 
     public function testItRemovesNullValuesInChangesetValues(): void
@@ -187,6 +187,6 @@ final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset->method('getArtifact')->willReturn($this->artifact);
 
-        $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
+        $this->exporter->exportFullHistory($this->artifact_xml, $changeset, []);
     }
 }

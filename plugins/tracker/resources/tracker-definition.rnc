@@ -221,6 +221,7 @@ tracker =
             element items {
                 element item {
                     attribute ID { xsd:ID }?,
+                    attribute UUId { xsd:string }?,
                     attribute label { non_empty_string },
                     attribute is_hidden { "0" | "1" }?,
                     element description { xsd:string }?
@@ -228,7 +229,7 @@ tracker =
             }?,
             element decorators {
                 element decorator {
-                   attribute REF { xsd:IDREF }?,
+                   attribute REF { xsd:string }?,
                    (decorator_legacy_color | attribute tlp_color_name { xsd:string })
                 }*
             }?,
@@ -236,7 +237,7 @@ tracker =
             element default_values {
                 element value {
                     (
-                        attribute REF { xsd:IDREF } |
+                        attribute REF { xsd:string } |
                         tracker_user_content
                     )
                 }*
@@ -316,7 +317,7 @@ tracker =
                 },
                 element open_values {
                     element open_value {
-                        attribute REF { xsd:IDREF }
+                        attribute REF { xsd:string }
                     }*
                 }
             )

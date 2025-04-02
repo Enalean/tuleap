@@ -42,6 +42,7 @@ class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
+        array $value_mapping,
     ): void {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
@@ -67,17 +68,17 @@ class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
 
                 $this->appendOpenValueLabelToFieldChangeNode($label, $field_change);
             } else {
-                $this->appendValue($value, $field_change, $bind_type);
+                $this->appendValue($value, $field_change, $bind_type, $value_mapping);
             }
         }
     }
 
-    private function appendValue($value, SimpleXMLElement $field_xml, $bind_type): void
+    private function appendValue($value, SimpleXMLElement $field_xml, $bind_type, array $value_mapping): void
     {
         if ($bind_type === 'users') {
             $this->appendUserValueToFieldChangeNode($value, $field_xml);
         } else {
-            $this->appendValueToFieldChangeNode($value, $field_xml);
+            $this->appendValueToFieldChangeNode($value, $field_xml, $value_mapping);
         }
     }
 
@@ -93,10 +94,16 @@ class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
         return (int) substr($value, 1);
     }
 
-    private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml): void
+    private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml, array $value_mapping): void
     {
+        $value_without_legacy_bind_letter = $this->getUserIdFromValue($value);
+        $key                              = array_search($value_without_legacy_bind_letter, $value_mapping);
+        if ($key !== false) {
+            $value = $key;
+        }
+
         $cdata = new \XML_SimpleXMLCDATAFactory();
-        $cdata->insertWithAttributes($field_xml, 'value', $value, ['format' => 'id']);
+        $cdata->insertWithAttributes($field_xml, 'value', (string) $value, ['format' => 'id']);
     }
 
     private function appendOpenValueLabelToFieldChangeNode($value, SimpleXMLElement $field_xml): void

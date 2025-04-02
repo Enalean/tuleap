@@ -37,6 +37,7 @@ class ChangesetXMLExporter
     public function exportWithoutComments(
         SimpleXMLElement $artifact_xml,
         Tracker_Artifact_Changeset $changeset,
+        array $mapping,
     ): void {
         $changeset_xml = $artifact_xml->addChild('changeset');
 
@@ -49,12 +50,13 @@ class ChangesetXMLExporter
             ['format' => 'ISO8601']
         );
 
-        $this->values_exporter->exportSnapshot($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues());
+        $this->values_exporter->exportSnapshot($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues(), $mapping);
     }
 
     public function exportFullHistory(
         SimpleXMLElement $artifact_xml,
         Tracker_Artifact_Changeset $changeset,
+        array $mapping,
     ): void {
         $changeset_xml = $artifact_xml->addChild('changeset');
         $changeset_xml->addAttribute('id', self::PREFIX . $changeset->getId());
@@ -90,7 +92,8 @@ class ChangesetXMLExporter
                 $artifact_xml,
                 $changeset_xml,
                 $changeset->getArtifact(),
-                $changeset_values
+                $changeset_values,
+                $mapping
             );
         }
     }

@@ -148,6 +148,7 @@ class FieldChangeXMLExporter
                 $mapping->getFieldName(),
                 $mapping->getBindType(),
                 $value_ids,
+                []
             );
         } elseif (
             $mapping->getType() === Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE ||
@@ -178,7 +179,8 @@ class FieldChangeXMLExporter
                 $changeset_node,
                 $mapping->getFieldName(),
                 $mapping->getBindType(),
-                $value_ids
+                $value_ids,
+                []
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE) {
             if (! $mapping instanceof ListFieldMapping) {

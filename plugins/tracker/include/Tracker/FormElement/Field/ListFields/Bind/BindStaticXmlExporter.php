@@ -49,7 +49,7 @@ final readonly class BindStaticXmlExporter
         foreach ($values as $value) {
             $this->exportValueAsXml(
                 $child,
-                $value->getXMLId(),
+                $value->getUuid(),
                 (string) $value->getId(),
                 $value->getLabel(),
                 (bool) $value->isHidden(),
@@ -82,7 +82,7 @@ final readonly class BindStaticXmlExporter
 
     private function exportValueAsXml(
         \SimpleXMLElement $child,
-        string $ID,
+        string $uuid,
         string $id,
         string $label,
         bool $is_hidden,
@@ -90,8 +90,8 @@ final readonly class BindStaticXmlExporter
         array &$xml_mapping,
     ): void {
         $grandchild = $child->addChild('item');
-        $grandchild->addAttribute('ID', $ID);
-        $xml_mapping['values'][$ID] = $id;
+        $grandchild->addAttribute('ID', $uuid);
+        $xml_mapping['values'][$uuid] = $id;
         $grandchild->addAttribute('label', $label);
         $grandchild->addAttribute('is_hidden', $is_hidden ? '1' : '0');
 

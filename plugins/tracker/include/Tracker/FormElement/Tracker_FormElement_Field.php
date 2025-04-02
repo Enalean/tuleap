@@ -157,7 +157,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $value;
     }
 
-    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria, array $xml_mapping): void
     {
         $criteria_value = $this->getCriteriaValue($criteria);
         if ((string) $criteria_value !== '') {
