@@ -2849,7 +2849,7 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     min-width: 640px;
 }
 
-.tracker_artifact_field select:not(.list-picker-hidden-accessible) {
+.tracker_artifact_field select:not(.list-picker-hidden-accessible, .tlp-select) {
     width: auto;
 }
 

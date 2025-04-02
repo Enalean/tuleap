@@ -17,18 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/tlp-styles/components/selects" with (
-    $assets-base-path: "@tuleap/tlp-styles/"
-);
-@use "pkg:@tuleap/tlp-styles/components/labels";
-@use "pkg:@tuleap/tlp-styles/components/inputs";
-@use "pkg:@tuleap/tlp-styles/components/buttons";
-@use "pkg:@tuleap/plugin-tracker-link-field";
+@use "sass:math";
+@use "./form-element" as element;
 
-.list-picker-circular-color {
-    box-sizing: border-box;
+%-tlp-form-element {
+    @include element.tlp-form-element;
 }
 
-tuleap-tracker-link-type-selector > .tlp-select {
-    margin-bottom: 0;
+.tlp-input {
+    @extend %-tlp-form-element;
+
+    height: var(--tlp-form-element-height);
+
+    &[size] {
+        width: auto;
+    }
+
+    &.tlp-input-small {
+        height: var(--tlp-form-element-small-height);
+        padding: 0 element.$tlp-form-element-small-padding-horizontal;
+        font-size: var(--tlp-form-element-small-font-size);
+    }
+
+    &.tlp-input-large {
+        height: element.$tlp-form-element-large-height;
+        padding: 0 element.$tlp-form-element-large-padding-horizontal;
+        font-size: element.$tlp-form-element-large-font-size;
+    }
 }
