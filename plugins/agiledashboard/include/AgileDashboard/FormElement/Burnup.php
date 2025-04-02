@@ -37,6 +37,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_Report_Criteria;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\BurnupEffortCalculatorForArtifact;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
@@ -439,11 +440,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
 
         return new BurnupCalculator(
-            $changeset_factory,
             Tracker_ArtifactFactory::instance(),
             new BurnupDataDAO(),
-            AgileDashboard_Semantic_InitialEffortFactory::instance(),
-            new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker())
+            new BurnupEffortCalculatorForArtifact(
+                $changeset_factory,
+                AgileDashboard_Semantic_InitialEffortFactory::instance(),
+                new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker())
+            )
         );
     }
 

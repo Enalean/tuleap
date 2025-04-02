@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\FormElement\SystemEvent;
+namespace Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent;
 
 use Psr\Log\LoggerInterface;
 use SystemEvent;
@@ -29,8 +29,8 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
-use Tuleap\Date\TimezoneWrapper;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Date\TimezoneWrapper;
 use Tuleap\TimezoneRetriever;
 
 final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
