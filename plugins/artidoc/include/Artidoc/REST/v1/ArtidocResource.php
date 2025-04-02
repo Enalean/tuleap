@@ -82,7 +82,6 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\RESTLogger;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -203,8 +202,7 @@ final class ArtidocResource extends AuthenticatedResource
                         Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
                         return $collection->sections;
                     },
-                    function (Fault $fault) {
-                        Fault::writeToLogger($fault, RESTLogger::getLogger());
+                    function () {
                         throw new RestException(404);
                     },
                 );
@@ -248,7 +246,6 @@ final class ArtidocResource extends AuthenticatedResource
             ->andThen(fn (SectionOrder $order) => $this->getReorderHandler($user)->reorder($id, $order))
             ->mapErr(
                 static function (Fault $fault) use ($order) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {
                         $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
                             403,
@@ -327,7 +324,6 @@ final class ArtidocResource extends AuthenticatedResource
             ->handle($id, $configuration, $user)
             ->mapErr(
                 function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {
                         $fault instanceof TrackerNotFoundFault => new I18NRestException(
                             400,

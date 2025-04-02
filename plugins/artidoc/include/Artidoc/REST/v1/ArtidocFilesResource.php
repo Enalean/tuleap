@@ -107,32 +107,41 @@ final class ArtidocFilesResource extends AuthenticatedResource
             ->andThen(static fn (ArtidocWithContext $artidoc) => $file_creator->create($artidoc->document, $user, $payload, new \DateTimeImmutable()))
             ->match(
                 static fn (CreatedFileRepresentation $representation) => $representation,
-                function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
-                    throw match (true) {
-                        $fault instanceof CannotWriteFileFault => new RestException(
-                            500,
-                            (string) $fault,
-                        ),
-                        $fault instanceof UploadCreationConflictFault => new I18NRestException(
-                            409,
-                            dgettext('tuleap-artidoc', 'This file is already being uploaded.')
-                        ),
-                        $fault instanceof UploadMaxSizeExceededFault => new I18NRestException(
-                            400,
-                            sprintf(
-                                dgettext('tuleap-artidoc', 'The maximum allowed size for a file is %1$s bytes, you requested the creation of a file of %2$s bytes.'),
-                                $fault->max_allowed_size,
-                                $fault->requested_size,
-                            ),
-                        ),
-                        $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
-                            403,
-                            dgettext('tuleap-artidoc', "You don't have permission to write the document.")
-                        ),
-                        default => new RestException(404),
-                    };
-                }
+                $this->handleFaultInPost(...),
             );
+    }
+
+    /**
+     * @throws I18NRestException
+     * @throws RestException
+     */
+    private function handleFaultInPost(Fault $fault): never
+    {
+        if ($fault instanceof CannotWriteFileFault) {
+            Fault::writeToLogger($fault, RESTLogger::getLogger());
+            throw new RestException(500, (string) $fault);
+        }
+        throw match ($fault::class) {
+            UploadCreationConflictFault::class => new I18NRestException(
+                409,
+                dgettext('tuleap-artidoc', 'This file is already being uploaded.')
+            ),
+            UploadMaxSizeExceededFault::class => new I18NRestException(
+                400,
+                sprintf(
+                    dgettext(
+                        'tuleap-artidoc',
+                        'The maximum allowed size for a file is %1$s bytes, you requested the creation of a file of %2$s bytes.'
+                    ),
+                    $fault->max_allowed_size,
+                    $fault->requested_size,
+                )
+            ),
+            UserCannotWriteDocumentFault::class => new I18NRestException(
+                403,
+                dgettext('tuleap-artidoc', "You don't have permission to write the document.")
+            ),
+            default => new RestException(404)
+        };
     }
 }
