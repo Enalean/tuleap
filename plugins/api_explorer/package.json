@@ -19,13 +19,13 @@
   },
   "pnpm": {
     "overrides": {
-      "@babel/runtime": "^7.26.10",
-      "@babel/runtime-corejs3": "^7.26.10",
       "prismjs": "^1.30.0",
       "cookie": "^0.7.2",
       "dompurify": "^3.2.4",
-      "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@latest",
-      "side-channel": "npm:@nolyfill/side-channel@latest"
+      "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@^1",
+      "side-channel": "npm:@nolyfill/side-channel@^1",
+      "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
     }
   }
 }
