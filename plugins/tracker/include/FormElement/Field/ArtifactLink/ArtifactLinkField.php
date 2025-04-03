@@ -931,7 +931,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
         if ($can_edit_reverse_links) {
             $user              = $this->getCurrentUser();
             $template_renderer = TemplateRendererFactory::build()->getRenderer(
-                __DIR__
+                __DIR__ . '/templates'
             );
             $builder           = new EditorWithReverseLinksBuilder(
                 new ParentInHierarchyRetriever(
@@ -941,7 +941,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
                 TrackersPermissionsRetriever::build(),
                 new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
             );
-            $presenter         = $builder->build($this, $artifact, $user);
+            $presenter         = $builder->buildWithArtifact($this, $artifact, $user);
             return $template_renderer->renderToString('editor-with-reverse-links', $presenter);
         }
 
@@ -1116,7 +1116,27 @@ class ArtifactLinkField extends Tracker_FormElement_Field
 
     protected function fetchSubmitValue(array $submitted_values): string
     {
-        $html               = '';
+        $specific_property_dao  = new ArtifactLinkFieldSpecificPropertiesDAO();
+        $properties             = $specific_property_dao->searchByFieldId($this->getId());
+        $can_edit_reverse_links = $properties['can_edit_reverse_links'] ?? false;
+
+        if ($can_edit_reverse_links) {
+            $user              = $this->getCurrentUser();
+            $template_renderer = TemplateRendererFactory::build()->getRenderer(
+                __DIR__ . '/templates'
+            );
+            $builder           = new EditorWithReverseLinksBuilder(
+                new ParentInHierarchyRetriever(
+                    new HierarchyDAO(),
+                    $this->getTrackerFactory()
+                ),
+                TrackersPermissionsRetriever::build(),
+                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
+            );
+            $presenter         = $builder->buildWithoutArtifact($this, $user);
+            return $template_renderer->renderToString('editor-with-reverse-links', $presenter);
+        }
+
         $prefill_new_values = '';
         if (isset($submitted_values[$this->getId()]['new_values'])) {
             $prefill_new_values = $submitted_values[$this->getId()]['new_values'];

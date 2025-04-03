@@ -52,6 +52,13 @@ function assertColorName(_color: string): _color is ColorName {
     return true;
 }
 
+export function initLinkField(user_locale: LocaleString): void {
+    const mount_point = document.querySelector("[data-link-field-id]");
+    if (mount_point instanceof HTMLElement) {
+        LinkFieldEditor(document, user_locale).init(mount_point);
+    }
+}
+
 export const LinkFieldEditor = (doc: Document, user_locale: LocaleString): LinkFieldEditor => ({
     init(mount_point): void {
         const user_id = UserIdentifier.fromId(

@@ -556,7 +556,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 data-test="artifact-form-element"
                 data-field-id="' . $this->id . '"
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
-            $html    .= '<label data-test="field-label" for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' . $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . $required . '</label>';
+
+            if (! $this->isAlwaysInEditMode()) {
+                $html .= '<label data-test="field-label" for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' . $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . $required . '</label>';
+            }
 
             $html .= $this->fetchSubmitValue($submitted_values);
             $html .= $this->fetchSubmitAdditionnalInfo($submitted_values);

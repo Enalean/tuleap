@@ -31,7 +31,7 @@ import { CommentEditor } from "./comments/CommentEditor";
 import { LitHTMLAdapter } from "./comments/LitHTMLAdapter";
 import { DOMAdapter } from "./comments/DOMAdapter";
 import { TuleapAPIClient } from "./comments/TuleapAPIClient";
-import { LinkFieldEditor } from "./link-field/LinkFieldEditor";
+import { initLinkField } from "../fields/LinkFieldEditor";
 import { initListFields } from "../fields/list-fields";
 import { initEditionSwitcher } from "./TrackerArtifactEditionSwitcher";
 import "./text-follow-up";
@@ -44,13 +44,6 @@ function initTextFields(user_locale: LocaleString): void {
     );
     creator.createNewCommentEditor();
     creator.createTextFieldEditors();
-}
-
-function initLinkField(user_locale: LocaleString): void {
-    const mount_point = document.querySelector("[data-link-field-id]");
-    if (mount_point instanceof HTMLElement) {
-        LinkFieldEditor(document, user_locale).init(mount_point);
-    }
 }
 
 async function initComments(user_locale: LocaleString): Promise<void> {

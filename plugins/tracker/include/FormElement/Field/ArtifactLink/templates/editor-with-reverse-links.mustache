@@ -1,7 +1,7 @@
 <div
     data-link-field-id="{{ link_field_id }}"
     data-link-field-label="{{ link_field_label }}"
-    data-current-artifact-id="{{ current_artifact_id }}"
+    {{# current_artifact_id }}data-current-artifact-id="{{ . }}"{{/ current_artifact_id }}
     data-current-tracker-id="{{ current_tracker_id }}"
     data-current-tracker-color="{{ current_tracker_color }}"
     data-current-tracker-short-name="{{ current_tracker_short_name }}"

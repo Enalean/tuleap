@@ -40,13 +40,28 @@ final readonly class EditorWithReverseLinksBuilder
     ) {
     }
 
-    public function build(
+    public function buildWithArtifact(
         ArtifactLinkField $link_field,
         Artifact $current_artifact,
         PFUser $user,
     ): EditorWithReverseLinksPresenter {
-        $current_tracker = $current_artifact->getTracker();
-        $parent_tracker  = $this->parent_tracker_retriever->getParentTracker($current_tracker)
+        return $this->build($link_field, $current_artifact, $current_artifact->getTracker(), $user);
+    }
+
+    public function buildWithoutArtifact(
+        ArtifactLinkField $link_field,
+        PFUser $user,
+    ): EditorWithReverseLinksPresenter {
+        return $this->build($link_field, null, $link_field->getTracker(), $user);
+    }
+
+    private function build(
+        ArtifactLinkField $link_field,
+        ?Artifact $current_artifact,
+        Tracker $current_tracker,
+        PFUser $user,
+    ): EditorWithReverseLinksPresenter {
+        $parent_tracker = $this->parent_tracker_retriever->getParentTracker($current_tracker)
             ->andThen(function (\Tracker $parent) use ($user) {
                 $permissions               = $this->tracker_permissions_retriever->retrieveUserPermissionOnTrackers(
                     $user,
