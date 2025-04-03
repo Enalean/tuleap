@@ -10,9 +10,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/date-helper.js",
-      "require": "./dist/date-helper.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/date-helper.umd.cjs"
     }
   },
   "dependencies": {

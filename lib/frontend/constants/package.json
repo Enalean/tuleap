@@ -10,9 +10,9 @@
   "types": "./src/main.ts",
   "exports": {
     ".": {
+      "types": "./src/main.ts",
       "import": "./dist/core-constants.js",
-      "require": "./dist/core-constants.umd.cjs",
-      "types": "./src/main.ts"
+      "require": "./dist/core-constants.umd.cjs"
     }
   },
   "devDependencies": {

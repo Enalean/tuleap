@@ -10,9 +10,9 @@
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "import": "./dist/webauthn.js",
-      "require": "./dist/webauthn.umd.cjs",
-      "types": "./dist/main.d.ts"
+      "require": "./dist/webauthn.umd.cjs"
     }
   },
   "dependencies": {
