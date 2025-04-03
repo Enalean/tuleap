@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Document\Field;
+declare(strict_types=1);
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field;
 
-interface RetrieveConfiguredField
+/**
+ * @psalm-immutable
+ */
+final readonly class StoredConfiguredField
 {
-    /**
-     * @return list<StoredConfiguredField>
-     */
-    public function retrieveConfiguredFieldsFromItemId(int $item_id): array;
-
-    /**
-     * @return list<StoredConfiguredField>
-     */
-    public function retrieveConfiguredFieldsFromSectionId(SectionIdentifier $section_identifier): array;
+    public function __construct(
+        public int $field_id,
+        public DisplayType $display_type,
+    ) {
+    }
 }

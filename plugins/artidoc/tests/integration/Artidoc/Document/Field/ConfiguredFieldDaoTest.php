@@ -27,19 +27,15 @@ use Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier\UUIDFreetextIden
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
-use Tuleap\Artidoc\Document\Field\RetrieveConfiguredField;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
-use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-/**
- * @psalm-import-type ConfiguredFieldRow from RetrieveConfiguredField
- */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
 {
@@ -132,9 +128,9 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
     }
 
     /**
-     * @param list<ConfiguredFieldRow> $fields_in_item_1
-     * @param list<ConfiguredFieldRow> $fields_in_item_2
-     * @param list<ConfiguredFieldRow> $fields_in_item_3
+     * @param list<StoredConfiguredField> $fields_in_item_1
+     * @param list<StoredConfiguredField> $fields_in_item_2
+     * @param list<StoredConfiguredField> $fields_in_item_3
      */
     private function assertConfiguredFields(
         array $fields_in_item_1,
@@ -144,20 +140,20 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
         self::assertEmpty($fields_in_item_1);
 
         self::assertCount(1, $fields_in_item_2);
-        self::assertSame(456, $fields_in_item_2[0]['field_id']);
-        self::assertSame('column', $fields_in_item_2[0]['display_type']->value);
+        self::assertSame(456, $fields_in_item_2[0]->field_id);
+        self::assertSame(DisplayType::COLUMN, $fields_in_item_2[0]->display_type);
 
         self::assertCount(2, $fields_in_item_3);
-        self::assertSame(457, $fields_in_item_3[0]['field_id']);
-        self::assertSame('column', $fields_in_item_3[1]['display_type']->value);
-        self::assertSame(456, $fields_in_item_3[1]['field_id']);
-        self::assertSame('column', $fields_in_item_3[0]['display_type']->value);
+        self::assertSame(457, $fields_in_item_3[0]->field_id);
+        self::assertSame(DisplayType::COLUMN, $fields_in_item_3[0]->display_type);
+        self::assertSame(456, $fields_in_item_3[1]->field_id);
+        self::assertSame(DisplayType::COLUMN, $fields_in_item_3[1]->display_type);
     }
 
     /**
-     * @param list<ConfiguredFieldRow> $fields_in_item_1
-     * @param list<ConfiguredFieldRow> $fields_in_item_2
-     * @param list<ConfiguredFieldRow> $fields_in_item_3
+     * @param list<StoredConfiguredField> $fields_in_item_1
+     * @param list<StoredConfiguredField> $fields_in_item_2
+     * @param list<StoredConfiguredField> $fields_in_item_3
      */
     private function assertConfiguredFieldsAfterDeletingField456(
         array $fields_in_item_1,
@@ -169,22 +165,16 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
         self::assertEmpty($fields_in_item_2);
 
         self::assertCount(1, $fields_in_item_3);
-        self::assertSame(457, $fields_in_item_3[0]['field_id']);
-        self::assertSame('column', $fields_in_item_3[0]['display_type']->value);
+        self::assertSame(457, $fields_in_item_3[0]->field_id);
+        self::assertSame(DisplayType::COLUMN, $fields_in_item_3[0]->display_type);
     }
 
-    /**
-     * @return UUIDSectionIdentifierFactory
-     */
-    private function getSectionIdentifierFactory(): SectionIdentifierFactory
+    private function getSectionIdentifierFactory(): UUIDSectionIdentifierFactory
     {
         return new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
     }
 
-    /**
-     * @return UUIDFreetextIdentifierFactory
-     */
-    private function getFreetextIdentifierFactory(): FreetextIdentifierFactory
+    private function getFreetextIdentifierFactory(): UUIDFreetextIdentifierFactory
     {
         return new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
     }
