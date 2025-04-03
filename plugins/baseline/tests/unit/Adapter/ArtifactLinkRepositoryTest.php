@@ -29,8 +29,8 @@ use Planning;
 use PlanningFactory;
 use Tracker;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Baseline\Support\CurrentUserContext;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -161,8 +161,8 @@ final class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         Tracker_Artifact_Changeset $changeset,
         PFUser $user,
         array $artifacts,
-    ): Tracker_FormElement_Field_ArtifactLink&MockObject {
-        $artifact_link = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+    ): ArtifactLinkField&MockObject {
+        $artifact_link = $this->createMock(ArtifactLinkField::class);
         $artifact_link->method('getLinkedArtifacts')
             ->with($changeset, $user)
             ->willReturn($artifacts);

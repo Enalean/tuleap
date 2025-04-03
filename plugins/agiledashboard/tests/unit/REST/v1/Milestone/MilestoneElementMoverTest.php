@@ -28,7 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
@@ -37,6 +36,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -98,7 +98,7 @@ final class MilestoneElementMoverTest extends TestCase
                 $milestone->getArtifact(),
                 $valid_to_add,
                 [],
-                Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
+                ArtifactLinkField::NO_TYPE,
             );
         $this->resources_patcher->expects($this->once())->method('commit');
 

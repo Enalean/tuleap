@@ -22,9 +22,9 @@ namespace Tuleap\Tracker\FormElement;
 
 use Feedback;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ArtifactLinkValidationContext;
@@ -45,7 +45,7 @@ class ArtifactLinkValidator
     public function isValid(
         $value,
         \Tuleap\Tracker\Artifact\Artifact $artifact,
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         ArtifactLinkValidationContext $context,
     ): bool {
         if ($value === null || $this->isDataSent($value) === false) {
@@ -115,7 +115,7 @@ class ArtifactLinkValidator
         return isset($value['new_values']);
     }
 
-    private function isArtifactIdDefined(Tracker_FormElement_Field_ArtifactLink $field, string $artifact_id): bool
+    private function isArtifactIdDefined(ArtifactLinkField $field, string $artifact_id): bool
     {
         $artifact_id = trim($artifact_id);
         if ($artifact_id === '') {
@@ -135,7 +135,7 @@ class ArtifactLinkValidator
      *
      * @return \Tuleap\Tracker\Artifact\Artifact|null
      */
-    private function getArtifact(Tracker_FormElement_Field_ArtifactLink $field, $artifact_id)
+    private function getArtifact(ArtifactLinkField $field, $artifact_id)
     {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if ($artifact === null) {
@@ -157,7 +157,7 @@ class ArtifactLinkValidator
      */
     private function isTrackerDeleted(
         Artifact $artifact,
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         $artifact_id,
     ) {
         if ($artifact->getTracker()->isDeleted()) {
@@ -195,7 +195,7 @@ class ArtifactLinkValidator
     private function areTypesValid(
         Artifact $artifact,
         array $value,
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         ArtifactLinkValidationContext $context,
     ): bool {
         if ($artifact->getTracker()->isProjectAllowedToUseType() === false || ! isset($value['types'])) {
@@ -274,7 +274,7 @@ class ArtifactLinkValidator
     /**
      * @return array<int,string>
      */
-    private function getUsedTypeShortnameByArtifactID(Artifact $artifact, Tracker_FormElement_Field_ArtifactLink $field): array
+    private function getUsedTypeShortnameByArtifactID(Artifact $artifact, ArtifactLinkField $field): array
     {
         $changeset = $artifact->getLastChangesetWithFieldValue($field);
         if ($changeset === null) {

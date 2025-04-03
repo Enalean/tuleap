@@ -36,13 +36,13 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
      */
     private $project;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_ArtifactLink
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField
      */
     private $field;
 
     protected function setUp(): void
     {
-        $this->field   = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $this->tracker = $this->createMock(\Tracker::class);
         $this->project = $this->createMock(\Project::class);
 

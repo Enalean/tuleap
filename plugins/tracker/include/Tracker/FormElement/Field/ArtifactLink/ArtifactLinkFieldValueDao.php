@@ -22,7 +22,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
 class ArtifactLinkFieldValueDao extends FieldValueDao
@@ -86,7 +85,7 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
     public function searchIsChildReverseLinksById($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $is_child    = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
+        $is_child    = $this->da->quoteSmart(ArtifactLinkField::TYPE_IS_CHILD);
 
         $sql = "SELECT DISTINCT a.id as artifact_id, a.last_changeset_id, t.group_id, t.item_name as keyword, t.id as tracker_id, artlink.nature as nature
                 FROM tracker_changeset_value_artifactlink AS artlink

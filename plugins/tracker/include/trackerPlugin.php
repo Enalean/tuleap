@@ -189,6 +189,7 @@ use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
@@ -1328,7 +1329,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             return [];
         }
 
-        $platform_types = [Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD];
+        $platform_types = [ArtifactLinkField::TYPE_IS_CHILD];
         foreach ($this->getTypeDao()->searchAll() as $nature) {
             $platform_types[] = $nature['shortname'];
         }
@@ -2587,7 +2588,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function getConfigKeys(ConfigClassProvider $event): void
     {
-        $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
+        $event->addConfigClass(ArtifactLinkField::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
         $event->addConfigClass(Tracker_ReportDao::class);
         $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);

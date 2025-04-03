@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 /**
  * Update the link direction in order to ensure that it is correct resp. the
@@ -29,14 +30,14 @@ use Tuleap\Tracker\Artifact\Artifact;
 class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand implements
     Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
 {
-    /** @var Tracker_FormElement_Field_ArtifactLink */
+    /** @var ArtifactLinkField */
     private $field;
 
     /** @var Tracker_Workflow_Trigger_RulesManager */
     private $trigger_rules_manager;
 
     public function __construct(
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
     ) {
         $this->field                 = $field;

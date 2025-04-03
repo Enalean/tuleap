@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdater;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormElement_FieldVisitor
 {
     public function __construct(
@@ -49,7 +51,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         $updater->update($field_change_xml, $submitted_value);
     }
 
-    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
+    public function visitArtifactLink(ArtifactLinkField $field)
     {
         return $this->unknown_updater;
     }

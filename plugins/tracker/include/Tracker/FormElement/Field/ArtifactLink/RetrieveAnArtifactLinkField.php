@@ -22,9 +22,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
 
 interface RetrieveAnArtifactLinkField
 {
-    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?Tracker_FormElement_Field_ArtifactLink;
+    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?ArtifactLinkField;
 }

@@ -24,11 +24,11 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use PFUser;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class TestPlanLinkedTestDefinitionsRetriever
 {
@@ -70,7 +70,7 @@ class TestPlanLinkedTestDefinitionsRetriever
 
         $rows                             = $this->artifact_dao->searchPaginatedLinkedArtifactsByLinkTypeAndTrackerId(
             [$artifact->getId()],
-            [TypeCoveredByPresenter::TYPE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD],
+            [TypeCoveredByPresenter::TYPE_COVERED_BY, ArtifactLinkField::TYPE_IS_CHILD],
             $test_definition_tracker_id,
             $limit,
             $offset,

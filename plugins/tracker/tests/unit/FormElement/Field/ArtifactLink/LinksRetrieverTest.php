@@ -51,7 +51,7 @@ class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user           = $this->createMock(\PFUser::class);
         $artifact       = $this->createMock(Artifact::class);
-        $art_link_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $art_link_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $last_changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $target_tracker = $this->createMock(\Tracker::class);
 

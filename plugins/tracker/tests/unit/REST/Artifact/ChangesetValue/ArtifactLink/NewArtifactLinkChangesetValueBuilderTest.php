@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
@@ -126,7 +126,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertCount(1, $links_to_change);
         [$first_link] = $links_to_change;
         self::assertSame(self::FIRST_UNCHANGED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
     }
 
     public function testItBuildsFromARESTPayloadWithReverseLinks(): void

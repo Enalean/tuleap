@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -40,7 +39,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker;
     /**
-     * @var Tracker_FormElement_Field_ArtifactLink
+     * @var ArtifactLinkField
      */
     private $field;
 

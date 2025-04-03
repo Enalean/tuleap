@@ -21,14 +21,14 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class TypeIsChildPresenter extends TypePresenter
 {
     public function __construct()
     {
         parent::__construct(
-            Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            ArtifactLinkField::TYPE_IS_CHILD,
             dgettext('tuleap-tracker', 'Child'),
             dgettext('tuleap-tracker', 'Parent'),
             true

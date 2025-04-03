@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Dao;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -67,7 +67,7 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
             $parent_changeset,
             $parent_link_field,
             $this->child_artifact,
-            Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            ArtifactLinkField::TYPE_IS_CHILD,
         );
         $tracker_builder->buildArtifactLinkValue(
             $project_id,

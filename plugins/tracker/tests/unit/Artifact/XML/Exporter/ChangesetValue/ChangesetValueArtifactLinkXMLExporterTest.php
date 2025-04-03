@@ -28,9 +28,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_XML_ChildrenCollector;
 use TrackerFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
@@ -48,7 +48,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
 
     private Tracker_Artifact_Changeset $changeset;
 
-    private Tracker_FormElement_Field_ArtifactLink $field;
+    private ArtifactLinkField $field;
 
     private Tracker_XML_ChildrenCollector $collector;
 

@@ -181,7 +181,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
-                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
+                $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class),
             ]);
 
         $this->natures_factory
@@ -282,7 +282,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
-                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
+                $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class),
             ]);
 
         $this->natures_factory
@@ -330,7 +330,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
-                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
+                $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class),
             ]);
 
         $method = $this->method_builder->buildMethodBasedOnChildCount(
@@ -351,7 +351,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUsedArtifactLinkFields')
             ->with($this->tracker)
             ->willReturn([
-                $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class),
+                $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class),
             ]);
 
         $this->natures_factory

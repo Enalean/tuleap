@@ -71,7 +71,6 @@ use Tracker_Dispatchable_Interface;
 use Tracker_Exception;
 use Tracker_FormElement;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
@@ -142,6 +141,7 @@ use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -1786,7 +1786,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function linkArtifact(
         int $linked_artifact_id,
         PFUser $current_user,
-        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
+        string $artifact_link_type = ArtifactLinkField::NO_TYPE,
     ): bool {
         $validator = $this->getFieldValidator();
 
@@ -1817,7 +1817,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $links = [];
         foreach ($linked_artifact_ids as $linked_artifact_id) {
-            $links[] = ForwardLinkProxy::buildFromData((int) $linked_artifact_id, Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
+            $links[] = ForwardLinkProxy::buildFromData((int) $linked_artifact_id, ArtifactLinkField::NO_TYPE);
         }
         $forward_links = new CollectionOfForwardLinks($links);
 
@@ -1863,7 +1863,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @param int $offset The offset
      *
      * @return Tracker_Artifact_PaginatedArtifacts
-     * @see Tracker_FormElement_Field_ArtifactLink::getSlicedLinkedArtifacts()
+     * @see ArtifactLinkField::getSlicedLinkedArtifacts()
      *
      */
     public function getSlicedLinkedArtifacts(PFUser $user, $limit, $offset)
@@ -2061,7 +2061,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Return the first (and only one) ArtifactLink field (if any)
      *
-     * @return Tracker_FormElement_Field_ArtifactLink|null
+     * @return ArtifactLinkField|null
      * @deprecated Use \Tracker_FormElementFactory::getAnArtifactLinkField() instead
      */
     public function getAnArtifactLinkField(PFUser $user)

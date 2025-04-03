@@ -180,7 +180,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
     public function isFieldUsed(\Tracker_FormElement_Field $field): bool
     {
-        if (! ($field instanceof \Tracker_FormElement_Field_ArtifactLink)) {
+        if (! ($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField)) {
             return false;
         }
 

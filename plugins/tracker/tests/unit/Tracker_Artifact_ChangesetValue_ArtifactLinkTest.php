@@ -28,10 +28,10 @@ use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
@@ -49,7 +49,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
      */
     private function getChangesetValueArtifactLink(array $artifact_links, array $reverse_artifact_links)
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class)
+        $field = Mockery::mock(ArtifactLinkField::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getTracker')->andReturn(Mockery::mock(Tracker::class));

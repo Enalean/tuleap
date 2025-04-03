@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
@@ -33,7 +32,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 final class ArtifactLinkUpdaterDataFormaterTest extends TestCase
 {
     private Tracker&MockObject $tracker;
-    private Tracker_FormElement_Field_ArtifactLink $artifact_link_field;
+    private ArtifactLinkField $artifact_link_field;
 
     protected function setUp(): void
     {

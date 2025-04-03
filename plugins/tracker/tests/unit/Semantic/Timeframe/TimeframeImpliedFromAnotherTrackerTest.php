@@ -113,7 +113,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
 
     public function testFieldIsUsedWhenItIsAnArtLinkFieldComingFromCurrentTracker(): void
     {
-        $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $a_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $a_field->expects($this->once())->method('getTrackerId')->willReturn(10);
 
         self::assertTrue($this->timeframe->isFieldUsed($a_field));
@@ -121,7 +121,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
 
     public function testFieldIsUsedWhenItIsAnArtLinkFieldComingFromTheTrackerWeUseTheSemantic(): void
     {
-        $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $a_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $a_field->expects($this->once())->method('getTrackerId')->willReturn(self::RELEASE_TRACKER_ID);
 
         self::assertTrue($this->timeframe->isFieldUsed($a_field));
@@ -136,7 +136,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
 
     public function testFieldIsNotUsedWhenItIsAnArtLinkFieldComingFromATrackerDifferentThanTheCurrentOneAndTheTargetOne(): void
     {
-        $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $a_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $a_field->expects($this->once())->method('getTrackerId')->willReturn(16);
 
         $this->implied_from_tracker->expects($this->once())->method('getId')->willReturn(12);

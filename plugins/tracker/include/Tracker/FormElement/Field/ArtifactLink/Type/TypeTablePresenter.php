@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class TypeTablePresenter
 {
@@ -47,7 +47,7 @@ class TypeTablePresenter
         TypePresenter $type,
         array $artifact_links,
         bool $is_reverse_artifact_links,
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         public bool $are_links_deletable,
     ) {
         $this->table_id   = self::TABLE_ID_PREFIX . $type->shortname;
@@ -87,7 +87,7 @@ class TypeTablePresenter
     public static function buildForHeader(
         \PFUser $current_user,
         TypePresenter $type_presenter,
-        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkField $field,
         bool $are_links_deletable,
     ): TypeTablePresenter {
         return new TypeTablePresenter(

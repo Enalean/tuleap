@@ -66,7 +66,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
 
         self::assertEquals('Creation', $xml->select->optgroup['label']);
         self::assertStringStartsWith('Create a new', (string) $xml->select->optgroup->option);
-        self::assertEquals((string) \Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE, (string) $xml->select->optgroup->option['value']);
+        self::assertEquals((string) \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::CREATE_NEW_PARENT_VALUE, (string) $xml->select->optgroup->option['value']);
     }
 
     public function testCanCreateIsDisabled(): void

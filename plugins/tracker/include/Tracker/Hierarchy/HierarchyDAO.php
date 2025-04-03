@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\Hierarchy;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class HierarchyDAO extends DataAccessObject implements SearchParentTracker
 {
@@ -102,7 +102,7 @@ class HierarchyDAO extends DataAccessObject implements SearchParentTracker
                             ON (hierarchy.parent_id = parent_art.tracker_id
                                 AND hierarchy.child_id = child_art.tracker_id)
                         SET nature = ?",
-            array_merge($child_tracker_ids_in_condition->values(), [$parent_id, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD])
+            array_merge($child_tracker_ids_in_condition->values(), [$parent_id, ArtifactLinkField::TYPE_IS_CHILD])
         );
     }
 
@@ -163,7 +163,7 @@ class HierarchyDAO extends DataAccessObject implements SearchParentTracker
 
     private function removeIsChildTypeForArtifactsThatWasManuallySetAsChildren(int $parent_id, array $child_ids): void
     {
-        $where_condition = EasyStatement::open()->with('nature = ?', Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
+        $where_condition = EasyStatement::open()->with('nature = ?', ArtifactLinkField::TYPE_IS_CHILD);
         if (! empty($child_ids)) {
             $where_condition->andIn('child_art.tracker_id NOT IN (?*)', $child_ids);
         }

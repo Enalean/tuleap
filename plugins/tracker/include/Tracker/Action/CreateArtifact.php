@@ -24,8 +24,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
-class Tracker_Action_CreateArtifact
+class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(
         private readonly Tracker $tracker,
@@ -102,7 +103,7 @@ class Tracker_Action_CreateArtifact
         $source_artifact->linkArtifact(
             $new_artifact->getId(),
             $current_user,
-            $artifact_link_type ?: Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+            $artifact_link_type ?: ArtifactLinkField::NO_TYPE
         );
     }
 
@@ -161,7 +162,7 @@ class Tracker_Action_CreateArtifact
                     'tracker'      => (string) $parent_tracker->getId(),
                     'func'         => 'new-artifact',
                     $art_link_key  => (string) $artifact->getId(),
-                    $art_link_type => urlencode(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD),
+                    $art_link_type => urlencode(ArtifactLinkField::TYPE_IS_CHILD),
                 ];
                 $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
                 $redirect->query_parameters = $redirect_params;
@@ -181,7 +182,7 @@ class Tracker_Action_CreateArtifact
         $art_link_id = $artifact_link_field->getId();
 
         if (isset($request_data[$art_link_id]) && isset($request_data[$art_link_id]['parent'])) {
-            return $request_data[$art_link_id]['parent'] == [Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE];
+            return $request_data[$art_link_id]['parent'] == [ArtifactLinkField::CREATE_NEW_PARENT_VALUE];
         }
 
         return false;

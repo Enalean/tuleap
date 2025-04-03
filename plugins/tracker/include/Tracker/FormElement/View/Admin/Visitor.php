@@ -18,13 +18,14 @@
  */
 
 use Tuleap\JSONHeader;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
 /**
  * Can visit a FormElement and provides the corresponding administration element
  */
-class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visitor, Tracker_FormElement_FieldVisitor
+class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visitor, Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const SUBMIT_UPDATE = 'update-formElement';
     public const SUBMIT_CREATE = 'docreate-formElement';
@@ -73,7 +74,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         }
     }
 
-    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
+    public function visitArtifactLink(ArtifactLinkField $field)
     {
         $this->visitField($field);
     }

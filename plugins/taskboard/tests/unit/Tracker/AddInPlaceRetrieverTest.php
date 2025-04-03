@@ -257,7 +257,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockSemanticTitle($child_tracker, true, true);
         $this->mockTrackerFields($child_tracker, true, false, true);
 
-        $artifact_link_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $this->form_element_factory
             ->expects($this->once())
             ->method('getAnArtifactLinkField')
@@ -294,7 +294,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockSemanticTitle($child_tracker, true, true);
         $this->mockTrackerFields($child_tracker, true, false, true);
 
-        $artifact_link_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $this->form_element_factory
             ->expects($this->once())
             ->method('getAnArtifactLinkField')

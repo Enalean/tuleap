@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_FormElement_Field_ArtifactLink;
-
 class RequestDataAugmentor
 {
     public function augmentDataFromRequest(
-        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        ArtifactLinkField $artifact_link_field,
         array &$fields_data,
     ): void {
         if ($artifact_link_field->getTracker()->isProjectAllowedToUseType()) {
@@ -37,7 +35,7 @@ class RequestDataAugmentor
     }
 
     private function invertParentRelationship(
-        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        ArtifactLinkField $artifact_link_field,
         array &$fields_data,
     ): void {
         if (! isset($fields_data[$artifact_link_field->getId()]['new_values'])) {
@@ -54,11 +52,11 @@ class RequestDataAugmentor
     }
 
     private function invertParentRelashionshipForNewLinks(
-        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        ArtifactLinkField $artifact_link_field,
         array &$fields_data,
     ): void {
-        if ($fields_data[$artifact_link_field->getId()]['type'] === Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT) {
-            $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY] = explode(',', $fields_data[$artifact_link_field->getId()]['new_values']);
+        if ($fields_data[$artifact_link_field->getId()]['type'] === ArtifactLinkField::FAKE_TYPE_IS_PARENT) {
+            $fields_data[$artifact_link_field->getId()][ArtifactLinkField::FIELDS_DATA_PARENT_KEY] = explode(',', $fields_data[$artifact_link_field->getId()]['new_values']);
 
             $fields_data[$artifact_link_field->getId()]['new_values'] = '';
             $fields_data[$artifact_link_field->getId()]['type']       = '';
@@ -66,7 +64,7 @@ class RequestDataAugmentor
     }
 
     private function invertParentRelashionshipForExistingLinks(
-        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        ArtifactLinkField $artifact_link_field,
         array &$fields_data,
     ): void {
         if (! isset($fields_data[$artifact_link_field->getId()]['types'])) {
@@ -74,7 +72,7 @@ class RequestDataAugmentor
         }
 
         foreach ($fields_data[$artifact_link_field->getId()]['types'] as $id => $requested_type) {
-            if ($requested_type !== Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT) {
+            if ($requested_type !== ArtifactLinkField::FAKE_TYPE_IS_PARENT) {
                 continue;
             }
 
@@ -83,31 +81,31 @@ class RequestDataAugmentor
                 continue;
             }
 
-            if (! isset($fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY])) {
-                $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY] = [];
+            if (! isset($fields_data[$artifact_link_field->getId()][ArtifactLinkField::FIELDS_DATA_PARENT_KEY])) {
+                $fields_data[$artifact_link_field->getId()][ArtifactLinkField::FIELDS_DATA_PARENT_KEY] = [];
             }
 
-            $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY][] = (int) $id;
+            $fields_data[$artifact_link_field->getId()][ArtifactLinkField::FIELDS_DATA_PARENT_KEY][] = (int) $id;
             unset($fields_data[$artifact_link_field->getId()]['types'][$id]);
             $fields_data[$artifact_link_field->getId()]['removed_values'][$id] = [(int) $id];
         }
     }
 
     private function removeDuplicatedParents(
-        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        ArtifactLinkField $artifact_link_field,
         array &$fields_data,
     ): void {
-        if (! isset($fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY])) {
+        if (! isset($fields_data[$artifact_link_field->getId()][ArtifactLinkField::FIELDS_DATA_PARENT_KEY])) {
             return;
         }
 
-        $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY] = array_unique(
-            $fields_data[$artifact_link_field->getId()][Tracker_FormElement_Field_ArtifactLink::FIELDS_DATA_PARENT_KEY]
+        $fields_data[$artifact_link_field->getId()][ArtifactLinkField::FIELDS_DATA_PARENT_KEY] = array_unique(
+            $fields_data[$artifact_link_field->getId()][ArtifactLinkField::FIELDS_DATA_PARENT_KEY]
         );
     }
 
     private function addNewValuesInTypesArray(
-        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        ArtifactLinkField $artifact_link_field,
         array &$fields_data,
     ): void {
         if (! isset($fields_data[$artifact_link_field->getId()]['new_values'])) {
@@ -117,7 +115,7 @@ class RequestDataAugmentor
         $new_values = $fields_data[$artifact_link_field->getId()]['new_values'];
 
         if (! isset($fields_data[$artifact_link_field->getId()]['type'])) {
-            $fields_data[$artifact_link_field->getId()]['type'] = Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
+            $fields_data[$artifact_link_field->getId()]['type'] = ArtifactLinkField::NO_TYPE;
         }
 
         if (trim($new_values) != '') {

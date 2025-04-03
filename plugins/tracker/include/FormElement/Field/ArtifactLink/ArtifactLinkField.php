@@ -19,25 +19,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use EventManager;
+use HTTPRequest;
+use PFUser;
+use ReferenceManager;
+use TemplateRendererFactory;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_ArtifactLink;
+use Tracker_Artifact_PaginatedArtifacts;
+use Tracker_ArtifactDao;
+use Tracker_ArtifactFactory;
+use Tracker_ArtifactLinkInfo;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue;
+use Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
+use Tracker_FormElementFactory;
+use Tracker_HierarchyFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_ReferenceManager;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tracker_Report_Criteria_ArtifactLink_ValueDao;
+use Tracker_Report_Criteria_ValueDao;
+use Tracker_Report_Renderer;
+use Tracker_Report_Renderer_Table;
+use Tracker_ReportFactory;
+use TrackerFactory;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\DisplayArtifactLinkEvent;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\EditorWithReverseLinksBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\RequestDataAugmentor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueEmptyChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactInTypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\HTMLOutputStrategy;
@@ -56,9 +78,10 @@ use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use UserManager;
 
 #[ConfigKeyCategory('Tracker')]
-class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class ArtifactLinkField extends Tracker_FormElement_Field
 {
     public const TYPE                    = 'art_link';
     public const CREATE_NEW_PARENT_VALUE = -1;
@@ -72,15 +95,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-
     private ?ChangesetValueArtifactLinkDao $cached_changeset_value_dao = null;
 
     /**
      * Display the html form in the admin ui
-     *
-     * @return string html
      */
-    protected function fetchAdminFormElement()
+    protected function fetchAdminFormElement(): string
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';
@@ -89,7 +109,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
             $value = $this->getDefaultValue();
         }
         $html .= '<input type="text"
-                         value="' .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" autocomplete="off" />';
+                         value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" autocomplete="off" />';
         $html .= '<br />';
         $html .= '<a href="#">bug #123</a><br />';
         $html .= '<a href="#">bug #321</a><br />';
@@ -215,7 +235,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Get the field data (REST or CSV) for artifact submission
      *
-     * @param string   $value    The rest field value
+     * @param string $value The rest field value
      * @param Artifact $artifact The artifact the value is to be added/removed
      *
      * @return array
@@ -342,6 +362,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * @var string
      */
     protected $pattern = '[+\-]*[0-9]+';
+
     protected function cast($value)
     {
         return (int) $value;
@@ -430,12 +451,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Fetch the html widget for the field
      *
-     * @param Artifact $artifact               Artifact on which we operate
-     * @param string   $name                   The name, if any
-     * @param string   $prefill_new_values     Prefill new values field (what the user has submitted, if any)
-     * @param array    $prefill_removed_values Pre-remove values (what the user has submitted, if any)
-     * @param string   $prefill_parent         Prefilled parent (what the user has submitted, if any) - Only valid on submit
-     * @param bool     $read_only              True if the user can't add or remove links
+     * @param Artifact $artifact Artifact on which we operate
+     * @param string $name The name, if any
+     * @param string $prefill_new_values Prefill new values field (what the user has submitted, if any)
+     * @param array $prefill_removed_values Pre-remove values (what the user has submitted, if any)
+     * @param string $prefill_parent Prefilled parent (what the user has submitted, if any) - Only valid on submit
+     * @param bool $read_only True if the user can't add or remove links
      *
      * @return string html
      */
@@ -488,7 +509,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                              size="40"
                              data-test="artifact-link-submit"
                              data-preview-label="' . $hp->purify(dgettext('tuleap-tracker', 'Preview')) . '"
-                             value="' .  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  . '"
+                             value="' . $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML) . '"
                              title="' . dgettext('tuleap-tracker', 'Enter artifact ids separated with a comma') . '" />';
 
             $possible_parents_selector = null;
@@ -655,9 +676,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Process the request
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param HTTPRequest                    $request         The data coming from the user
-     * @param PFUser                           $current_user    The user who mades the request
+     * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
+     * @param HTTPRequest $request The data coming from the user
+     * @param PFUser $current_user The user who mades the request
      *
      * @return void
      */
@@ -854,10 +875,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Fetch the html widget for the field
      *
-     * @param string $name                   The name, if any
-     * @param array  $artifact_links         The current artifact links
-     * @param string $prefill_new_values     Prefill new values field (what the user has submitted, if any)
-     * @param bool   $read_only              True if the user can't add or remove links
+     * @param string $name The name, if any
+     * @param array $artifact_links The current artifact links
+     * @param string $prefill_new_values Prefill new values field (what the user has submitted, if any)
+     * @param bool $read_only True if the user can't add or remove links
      */
     protected function fetchHtmlWidgetMasschange($name, $artifact_links, $prefill_new_values, $read_only): string
     {
@@ -870,7 +891,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         if (! $read_only) {
             $html .= '<input type="text"
                              ' . $html_name_new . '
-                             value="' .  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  . '"
+                             value="' . $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML) . '"
                              title="' . dgettext('tuleap-tracker', 'Enter artifact ids separated with a comma') . '" />';
             $html .= '<br />';
         }
@@ -910,7 +931,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         if ($can_edit_reverse_links) {
             $user              = $this->getCurrentUser();
             $template_renderer = TemplateRendererFactory::build()->getRenderer(
-                __DIR__ . '/../../FormElement/Field/ArtifactLink'
+                __DIR__
             );
             $builder           = new EditorWithReverseLinksBuilder(
                 new ParentInHierarchyRetriever(
@@ -1034,8 +1055,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
@@ -1064,7 +1085,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         array $submitted_values,
     ) {
         return $this->fetchArtifactValue($artifact, $value, $submitted_values) .
-            "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . '></div>';
+               "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . '></div>';
     }
 
     private function fetchLinksReadOnly(Artifact $artifact, ArtifactLinksToRender $artifact_links_to_render)
@@ -1229,8 +1250,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Get the value of this field
      *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
+     * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
+     * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
@@ -1380,7 +1401,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
      * @param Artifact $artifact The artifact
-     * @param array    $value    data coming from the request.
+     * @param array $value data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
@@ -1394,8 +1415,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     /**
      * Validate a required field
      *
-     * @param Artifact $artifact        The artifact to check
-     * @param mixed    $submitted_value The submitted value
+     * @param Artifact $artifact The artifact to check
+     * @param mixed $submitted_value The submitted value
      *
      * @return bool true on success or false on failure
      */
@@ -1444,7 +1465,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * Validate a value
      *
      * @param Artifact $artifact The artifact
-     * @param string   $value    data coming from the request. Should be artifact id separated by comma
+     * @param string $value data coming from the request. Should be artifact id separated by comma
      *
      * @return bool true if the value is considered ok
      * @deprecated Use ArtifactLinkValidator instead
@@ -1620,7 +1641,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * Retrieve linked artifacts according to user's permissions
      *
      * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
-     * @param PFUser                       $user      The user who will see the artifacts
+     * @param PFUser $user The user who will see the artifacts
      *
      * @return Artifact[]
      */
@@ -1652,9 +1673,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      * And total size will be 6               # instead of 5
      *
      * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
-     * @param PFUser                     $user      The user who will see the artifacts
-     * @param int                        $limit     The number of artifact to fetch
-     * @param int                        $offset    The offset
+     * @param PFUser $user The user who will see the artifacts
+     * @param int $limit The number of artifact to fetch
+     * @param int $offset The offset
      *
      * @return Tracker_Artifact_PaginatedArtifacts
      */

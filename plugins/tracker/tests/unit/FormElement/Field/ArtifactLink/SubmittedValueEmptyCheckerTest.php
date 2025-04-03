@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
@@ -51,7 +50,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
         self::assertFalse(
             $this->empty_checker->isSubmittedValueEmpty(
                 $submitted_value,
-                $this->createMock(Tracker_FormElement_Field_ArtifactLink::class),
+                $this->createMock(ArtifactLinkField::class),
                 ArtifactTestBuilder::anArtifact(1)->build(),
             )
         );
@@ -150,9 +149,9 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
         );
     }
 
-    private function buildArtifactLinkFieldWithReverseLinks(): Tracker_FormElement_Field_ArtifactLink
+    private function buildArtifactLinkFieldWithReverseLinks(): ArtifactLinkField
     {
-        $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field = $this->createMock(ArtifactLinkField::class);
         $field->method('getReverseLinks')->willReturn([
             new Tracker_ArtifactLinkInfo(1, 'key', 101, 1, 1, null),
         ]);
@@ -160,9 +159,9 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
         return $field;
     }
 
-    private function buildArtifactLinkFieldWithLinks(): Tracker_FormElement_Field_ArtifactLink
+    private function buildArtifactLinkFieldWithLinks(): ArtifactLinkField
     {
-        $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field = $this->createMock(ArtifactLinkField::class);
         $field->method('getReverseLinks')->willReturn([]);
 
         $last_changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
@@ -175,9 +174,9 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
         return $field;
     }
 
-    private function buildArtifactLinkFieldWithoutData(): Tracker_FormElement_Field_ArtifactLink
+    private function buildArtifactLinkFieldWithoutData(): ArtifactLinkField
     {
-        $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field = $this->createMock(ArtifactLinkField::class);
         $field->method('getReverseLinks')->willReturn([]);
 
         $last_changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);

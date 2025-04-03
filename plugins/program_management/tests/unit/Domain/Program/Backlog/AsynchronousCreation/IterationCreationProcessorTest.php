@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\NullLogger;
 use ColinODell\PsrTestLogger\TestLogger;
+use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationsCreator;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
@@ -298,7 +298,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertSame(self::FIRST_MIRRORED_ITERATION_ID, $link->artifact_link_value->linked_artifact->getId());
         self::assertSame(
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD,
             (string) $link->artifact_link_value->type
         );
         self::assertSame(self::USER_ID, $link->user->getId());
@@ -316,7 +316,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             $link->artifact_link_value->linked_artifact->getId()
         );
         self::assertSame(
-            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD,
             (string) $link->artifact_link_value->type
         );
         self::assertSame(self::USER_ID, $link->user->getId());

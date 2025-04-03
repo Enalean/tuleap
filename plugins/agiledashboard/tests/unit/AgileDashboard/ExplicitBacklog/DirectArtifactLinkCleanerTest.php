@@ -28,11 +28,11 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tracker;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -159,7 +159,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field = $this->createMock(ArtifactLinkField::class);
         $artifact_link_field->method('getId')->willReturn(124);
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
 
@@ -187,7 +187,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field = $this->createMock(ArtifactLinkField::class);
         $artifact_link_field->method('getId')->willReturn(124);
         $changeset       = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(12, $changeset, $artifact_link_field)->build();
@@ -216,7 +216,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn($this->createMock(Planning_Milestone::class));
 
-        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field = $this->createMock(ArtifactLinkField::class);
         $artifact_link_field->method('getId')->willReturn(124);
         $changeset       = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(12, $changeset, $artifact_link_field)

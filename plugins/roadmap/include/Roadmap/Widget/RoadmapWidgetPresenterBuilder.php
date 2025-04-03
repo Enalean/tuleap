@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
@@ -47,7 +47,7 @@ class RoadmapWidgetPresenterBuilder
         $visible_natures = array_filter(
             $this->nature_presenter_factory->getOnlyVisibleTypes(),
             static function (TypePresenter $nature) {
-                return $nature->shortname !== Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD;
+                return $nature->shortname !== ArtifactLinkField::TYPE_IS_CHILD;
             }
         );
 

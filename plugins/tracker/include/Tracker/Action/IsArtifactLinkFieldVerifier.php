@@ -26,6 +26,6 @@ final class IsArtifactLinkFieldVerifier implements VerifyIsArtifactLinkField
 {
     public function isAnArtifactLinkField(\Tracker_FormElement_Field $field): bool
     {
-        return $field instanceof \Tracker_FormElement_Field_ArtifactLink;
+        return $field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
     }
 }

@@ -118,7 +118,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $field_01       = $this->createMock(Tracker_FormElement_Field::class);
         $field_02       = $this->createMock(Tracker_FormElement_Field::class);
         $field_03       = $this->createMock(Tracker_FormElement_Field::class);
-        $field_art_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field_art_link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
 
         $field_01->method('getRESTValue')->willReturn(
             new ArtifactFieldValueFullRepresentation(

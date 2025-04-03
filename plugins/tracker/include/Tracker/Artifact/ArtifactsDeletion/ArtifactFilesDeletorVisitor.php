@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_ArtifactId;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_Computed;
@@ -48,6 +47,7 @@ use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
@@ -62,7 +62,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
         $this->artifact = $artifact;
     }
 
-    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field): void
+    public function visitArtifactLink(ArtifactLinkField $field): void
     {
     }
 

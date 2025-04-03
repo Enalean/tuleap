@@ -26,7 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -85,7 +84,7 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->another_parent_artifact = Mockery::mock(Artifact::class);
         $this->user                    = Mockery::mock(PFUser::class);
 
-        $this->artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class)
+        $this->artifact_link_field = Mockery::mock(ArtifactLinkField::class)
             ->shouldReceive('getId')
             ->andReturn(587)
             ->getMock();
@@ -116,12 +115,12 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
             ->andReturnTrue();
 
         $this->another_parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
             ->andReturnFalse();
 
         $this->assertTrue(
@@ -158,12 +157,12 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
             ->andReturnFalse();
 
         $this->another_parent_artifact->shouldReceive('linkArtifact')
             ->once()
-            ->with(101, $this->user, Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD)
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
             ->andReturnFalse();
 
         $this->assertFalse(

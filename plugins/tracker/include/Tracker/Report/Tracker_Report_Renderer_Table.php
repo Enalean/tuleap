@@ -27,6 +27,7 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\DisplayArtifactLinkEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
@@ -1299,11 +1300,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     continue;
                                 }
 
-                                if ($type->shortname === \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
-                                    $should_select_current_type = \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT === $selected_type;
+                                if ($type->shortname === \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD) {
+                                    $should_select_current_type = \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::FAKE_TYPE_IS_PARENT === $selected_type;
                                     $is_a_usable_type_selected  = $is_a_usable_type_selected || $should_select_current_type;
                                     $types_presenter[]          = [
-                                        'shortname'     => \Tracker_FormElement_Field_ArtifactLink::FAKE_TYPE_IS_PARENT,
+                                        'shortname'     => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::FAKE_TYPE_IS_PARENT,
                                         'forward_label' => $type->reverse_label,
                                         'is_selected'   => $should_select_current_type,
                                     ];
@@ -2229,7 +2230,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $head  = [];
         $title = $column['field']->getName();
         if ($this->report->getTracker()->isProjectAllowedToUseType()) {
-            if ($this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE) {
+            if ($this->getFieldFactory()->getType($column['field']) === ArtifactLinkField::TYPE) {
                 $head[] = $title;
                 foreach ($this->getTypePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $type) {
                     if (! $type) {
@@ -2256,7 +2257,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         if (
             $this->report->getTracker()->isProjectAllowedToUseType() &&
-            $this->getFieldFactory()->getType($column['field']) === Tracker_FormElement_Field_ArtifactLink::TYPE
+            $this->getFieldFactory()->getType($column['field']) === ArtifactLinkField::TYPE
         ) {
             foreach ($this->getTypePresenterFactory()->getAllUsedTypesByProject($this->report->getTracker()->getProject()) as $type) {
                 $line[] = $column['field']->fetchCSVChangesetValueWithType(

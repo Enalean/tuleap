@@ -40,7 +40,7 @@ final class StoredReverseLink implements ReverseLink
         if (! $artifact || ! $artifact->userCanView($user)) {
             return null;
         }
-        return new self($artifact->getId(), $row->getType() ?? \Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
+        return new self($artifact->getId(), $row->getType() ?? \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE);
     }
 
     public function getSourceArtifactId(): int

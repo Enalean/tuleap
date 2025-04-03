@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinkWithNoType;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class PostArtifactMoveReferencesCleaner
 {
@@ -49,7 +49,7 @@ class PostArtifactMoveReferencesCleaner
 
             $reverse_link_collection = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $user);
             foreach ($reverse_link_collection->links as $reverse_link) {
-                if ($reverse_link->getType() !== Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
+                if ($reverse_link->getType() !== ArtifactLinkField::TYPE_IS_CHILD) {
                     continue;
                 }
 

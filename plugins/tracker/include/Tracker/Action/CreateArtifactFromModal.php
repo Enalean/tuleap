@@ -23,8 +23,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
-class Tracker_Action_CreateArtifactFromModal
+class Tracker_Action_CreateArtifactFromModal // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(
         private readonly Codendi_Request $request,
@@ -74,7 +75,7 @@ class Tracker_Action_CreateArtifactFromModal
         $source_artifact->linkArtifact(
             $new_artifact->getId(),
             $current_user,
-            Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+            ArtifactLinkField::TYPE_IS_CHILD
         );
     }
 

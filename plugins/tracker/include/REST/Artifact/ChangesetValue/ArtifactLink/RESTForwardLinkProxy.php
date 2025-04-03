@@ -88,7 +88,7 @@ final class RESTForwardLinkProxy implements ForwardLink
     private static function getLinkTypeFromLinksKey(array $link_payload): string
     {
         if (! array_key_exists(self::PAYLOAD_KEY_TYPE, $link_payload) || ! is_string($link_payload[self::PAYLOAD_KEY_TYPE])) {
-            return \Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
+            return \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE;
         }
 
         return $link_payload[self::PAYLOAD_KEY_TYPE];

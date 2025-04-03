@@ -26,7 +26,6 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class LinksRetriever
@@ -108,7 +107,7 @@ class LinksRetriever
      *
      * @return Artifact[]
      */
-    private function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user, Tracker_FormElement_Field_ArtifactLink $artifact_link): array
+    private function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user, ArtifactLinkField $artifact_link): array
     {
         $changeset_value  = $changeset->getValue($artifact_link);
         $all_artifact_ids = $this->getReverseLinksIds($changeset->getArtifact());
@@ -124,7 +123,7 @@ class LinksRetriever
     /**
      * @return Artifact[]
      */
-    private function getReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user, Tracker_FormElement_Field_ArtifactLink $artifact_link): array
+    private function getReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user, ArtifactLinkField $artifact_link): array
     {
         $all_artifact_ids = $this->getReverseLinksIds($changeset->getArtifact());
 

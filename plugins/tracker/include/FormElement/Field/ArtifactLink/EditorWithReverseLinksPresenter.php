@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use function Psl\Json\encode;
@@ -48,7 +47,7 @@ final readonly class EditorWithReverseLinksPresenter
      * @param list<TypePresenter> $allowed_link_types
      */
     public function __construct(
-        Tracker_FormElement_Field_ArtifactLink $link_field,
+        ArtifactLinkField $link_field,
         Artifact $current_artifact,
         Tracker $current_tracker,
         ?Tracker $parent_tracker,

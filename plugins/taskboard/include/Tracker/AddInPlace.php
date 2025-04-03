@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Tracker;
 
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 class AddInPlace
 {
@@ -32,11 +32,11 @@ class AddInPlace
      */
     private $child_tracker;
     /**
-     * @var Tracker_FormElement_Field_ArtifactLink
+     * @var ArtifactLinkField
      */
     private $parent_artifact_link_field;
 
-    public function __construct(Tracker $child_tracker, Tracker_FormElement_Field_ArtifactLink $parent_artifact_link_field)
+    public function __construct(Tracker $child_tracker, ArtifactLinkField $parent_artifact_link_field)
     {
         $this->child_tracker              = $child_tracker;
         $this->parent_artifact_link_field = $parent_artifact_link_field;
@@ -47,7 +47,7 @@ class AddInPlace
         return $this->child_tracker;
     }
 
-    public function getParentArtifactLinkField(): Tracker_FormElement_Field_ArtifactLink
+    public function getParentArtifactLinkField(): ArtifactLinkField
     {
         return $this->parent_artifact_link_field;
     }

@@ -20,11 +20,10 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn;
 
-use Tracker_FormElement_Field_Priority;
-use Tracker_FormElement_FieldVisitor;
+use Codendi_HTMLPurifier;
+use Tracker_Artifact_Changeset;
+use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
-use Tracker_FormElement_Field_PerTrackerArtifactId;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_Computed;
@@ -38,15 +37,16 @@ use Tracker_FormElement_Field_LastUpdateDate;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tracker_FormElement_Field_PerTrackerArtifactId;
+use Tracker_FormElement_Field_Priority;
 use Tracker_FormElement_Field_Radiobutton;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
-use Tracker_FormElement_Field;
-use Tracker_Artifact_Changeset;
-use Codendi_HTMLPurifier;
+use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 /**
@@ -75,7 +75,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $this->field->accept($this);
     }
 
-    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
+    public function visitArtifactLink(ArtifactLinkField $field)
     {
         throw new UnsupportedFieldException();
     }

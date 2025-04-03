@@ -26,6 +26,7 @@ use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -33,8 +34,7 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /** @var Tracker_FormElement_Field_ArtifactLink */
-    private $field;
+    private ArtifactLinkField $field;
 
     /** @var ArtifactLinkValueSaver */
     private $saver;
@@ -90,7 +90,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->field             = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->reference_manager = \Mockery::spy(\Tracker_ReferenceManager::class);
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->dao               = \Mockery::spy(
@@ -101,6 +100,7 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker       = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(102)->getMock();
         $this->tracker_child = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $this->field         = ArtifactLinkFieldBuilder::anArtifactLinkField(64153)->inTracker($this->tracker)->build();
 
         $this->tracker->shouldReceive('getChildren')->andReturns([$this->tracker_child]);
         $this->tracker_child->shouldReceive('getChildren')->andReturns([]);
@@ -172,7 +172,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->with([])->ordered()->andReturns([]);
         $this->artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->with([36])->ordered()->andReturns([$this->initial_linked_artifact]);
 
@@ -200,7 +199,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->dao->shouldReceive('create')->once()->andReturns(true);
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
 
         $this->reference_manager->shouldReceive('insertBetweenTwoArtifacts')->with($artifact, $this->initial_linked_artifact, $this->user)->once();
 
@@ -225,7 +223,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'removed_values' => [],
         ];
 
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
 
         $this->dao->shouldReceive('create')->once();
 
@@ -250,7 +247,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'removed_values' => [],
         ];
 
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
 
         $this->dao->shouldReceive('create')->with(\Mockery::any(), '_is_child', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
@@ -275,7 +271,7 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'removed_values' => [],
         ];
 
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker_child);
+        $this->field->setTracker($this->tracker_child);
 
         $this->dao->shouldReceive('create')->with(\Mockery::any(), null, \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
@@ -300,7 +296,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'removed_values' => [],
         ];
 
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->with(101, '_is_child')->andReturns(false);
 
         $this->dao->shouldReceive('create')->with(\Mockery::any(), '_is_child', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
@@ -325,7 +320,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'removed_values' => [],
         ];
 
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
 
         $this->dao->shouldReceive('create')->with(\Mockery::any(), null, \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
@@ -350,7 +344,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'removed_values' => [],
         ];
 
-        $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->artifact_link_usage_dao->shouldReceive('isProjectUsingArtifactLinkTypes')->andReturnTrue();
 
         $this->dao->shouldReceive('create')->with(\Mockery::any(), null, \Mockery::any(), \Mockery::any(), \Mockery::any())->once();

@@ -122,7 +122,7 @@ class ExecutionCreator
         return $field;
     }
 
-    /** @return \Tracker_FormElement_Field_ArtifactLink */
+    /** @return \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField */
     private function getArtifactLinksField(
         TrackerReference $tracker_reference,
         PFUser $user,
@@ -132,7 +132,7 @@ class ExecutionCreator
             $user,
             ExecutionRepresentation::FIELD_ARTIFACT_LINKS
         );
-        assert($field instanceof \Tracker_FormElement_Field_ArtifactLink);
+        assert($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField);
         return $field;
     }
 

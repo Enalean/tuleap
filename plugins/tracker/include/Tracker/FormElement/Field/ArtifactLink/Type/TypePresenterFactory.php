@@ -176,11 +176,11 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
 
     public function getFromShortname($shortname): ?TypePresenter
     {
-        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_TYPE) {
+        if ($shortname == \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE) {
             return new TypePresenter('', '', '', true);
         }
 
-        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD) {
+        if ($shortname == \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD) {
             return new TypeIsChildPresenter();
         }
 

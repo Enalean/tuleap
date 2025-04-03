@@ -72,7 +72,7 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEqualsCanonicalizing([
             self::FIRST_ARTIFACT_ID  => '_is_child',
             self::SECOND_ARTIFACT_ID => self::SECOND_TYPE,
-            self::THIRD_ARTIFACT_ID  => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
+            self::THIRD_ARTIFACT_ID  => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE,
         ], $collection->getArtifactTypesByIds());
     }
 

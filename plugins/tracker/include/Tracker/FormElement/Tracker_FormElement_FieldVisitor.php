@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 /**
@@ -25,9 +26,9 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
  *
  * @see http://en.wikipedia.org/wiki/Visitor_pattern
  */
-interface Tracker_FormElement_FieldVisitor
+interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field);
+    public function visitArtifactLink(ArtifactLinkField $field);
 
     public function visitDate(Tracker_FormElement_Field_Date $field);
 

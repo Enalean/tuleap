@@ -169,9 +169,9 @@ final class ArtifactLinkTypeConverterTest extends TestCase
                 'jira_json' =>                             [
                     'name'    => GetExistingArtifactLinkTypes::FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN,
                 ],
-                'types' => [TypePresenter::buildVisibleType(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, 'Child', 'Parent')],
+                'types' => [TypePresenter::buildVisibleType(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD, 'Child', 'Parent')],
                 'tests' => function (?TypePresenter $type) {
-                    self::assertSame(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, $type->shortname);
+                    self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD, $type->shortname);
                 },
             ],
         ];

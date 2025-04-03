@@ -128,7 +128,7 @@ final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::ARTIFACT_LINK_ID => [
                     'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
                     'types'      => [
-                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+                        (string) self::SOURCE_PROGRAM_INCREMENT_ID => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD,
                     ],
                 ],
             ],

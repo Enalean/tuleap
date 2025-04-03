@@ -41,7 +41,7 @@ final class PostSaveNewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_changeset      = Mockery::spy(\Tracker_Artifact_Changeset::class);
         $previous_changeset = null;
         $command            = Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class);
-        $field              = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field              = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getProcessChildrenTriggersCommand')->andReturn($command);
         $field->shouldReceive('getPostSaveNewChangesetLinkParentArtifact')->andReturn(
             new class (Mockery::mock(ParentLinkAction::class)) extends PostSaveNewChangesetLinkParentArtifact {

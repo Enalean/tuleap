@@ -52,7 +52,7 @@ final class FieldsDataBuilder
             $array_representation = $value->toArray();
 
             $field = $this->getField($indexed_fields, $array_representation);
-            if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+            if ($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField) {
                 $artifact_link = Option::fromValue(
                     $this->artifact_link_initial_builder->buildFromPayload($field, $value)
                 );
@@ -79,7 +79,7 @@ final class FieldsDataBuilder
             $array_representation = $value->toArray();
 
             $field = $this->getField($indexed_fields, $array_representation);
-            if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+            if ($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField) {
                 $artifact_link = Option::fromValue(
                     $this->artifact_link_builder->buildFromPayload(
                         $artifact,

@@ -37,7 +37,7 @@ final class NewArtifactLinkInitialChangesetValueBuilder
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
     public function buildFromPayload(
-        \Tracker_FormElement_Field_ArtifactLink $link_field,
+        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $link_field,
         ArtifactValuesRepresentation $payload,
     ): NewArtifactLinkInitialChangesetValue {
         $valid_payload = ValidArtifactLinkPayloadBuilder::buildPayloadAndCheckValidity($payload);

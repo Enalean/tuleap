@@ -38,7 +38,6 @@ use Tracker_SemanticManager;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
@@ -51,6 +50,7 @@ use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
@@ -344,7 +344,7 @@ class BacklogItemResource extends AuthenticatedResource
                         $artifact,
                         $backlog_items_ids,
                         [],
-                        \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
+                        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD
                     );
                     $indexed_children_ids = array_flip($backlog_items_ids);
                 }

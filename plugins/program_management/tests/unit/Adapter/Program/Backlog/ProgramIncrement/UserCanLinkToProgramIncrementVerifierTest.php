@@ -34,7 +34,7 @@ final class UserCanLinkToProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
 {
     private const USER_ID = 477;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElement_Field_ArtifactLink
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField
      */
     private $field;
     private RetrieveFullArtifactLinkFieldStub $field_retriever;
@@ -43,7 +43,7 @@ final class UserCanLinkToProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
 
     protected function setUp(): void
     {
-        $this->field                     = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->field                     = $this->createStub(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
         $this->field_retriever           = RetrieveFullArtifactLinkFieldStub::withField($this->field);
         $this->program_increment_tracker = ProgramIncrementTrackerIdentifierBuilder::buildWithId(48);
         $this->user                      = UserIdentifierStub::withId(self::USER_ID);
