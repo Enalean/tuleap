@@ -63,7 +63,7 @@ final class TrackersPermissionsDaoOnFieldsTest extends TestIntegrationTestCase
     public function testItRetrieveFieldsReadPermissions(): void
     {
         $dao     = new TrackersPermissionsDao();
-        $results = $dao->searchUserGroupsPermissionOnFields([new UserGroupInProject($this->project_id, ProjectUGroup::PROJECT_MEMBERS)], $this->fields_id, FieldPermissionType::PERMISSION_READ->value);
+        $results = $dao->searchUserGroupsPermissionOnFields([new UserGroupInProject($this->project_id, ProjectUGroup::PROJECT_MEMBERS)], $this->fields_id, FieldPermissionType::PERMISSION_READ);
 
         self::assertCount(2, $results);
         self::assertEqualsCanonicalizing([$this->field1_id, $this->field3_id], $results);
@@ -75,7 +75,7 @@ final class TrackersPermissionsDaoOnFieldsTest extends TestIntegrationTestCase
         $results = $dao->searchUserGroupsPermissionOnFields([
             new UserGroupInProject($this->project_id, ProjectUGroup::PROJECT_MEMBERS),
             new UserGroupInProject($this->project_id, ProjectUGroup::PROJECT_ADMIN),
-        ], $this->fields_id, FieldPermissionType::PERMISSION_READ->value);
+        ], $this->fields_id, FieldPermissionType::PERMISSION_READ);
 
         self::assertCount(3, $results);
         self::assertEqualsCanonicalizing($this->fields_id, $results);
