@@ -304,4 +304,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
             $step_results
         );
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

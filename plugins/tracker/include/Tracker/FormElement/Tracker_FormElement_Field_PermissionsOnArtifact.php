@@ -853,4 +853,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         return false;
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

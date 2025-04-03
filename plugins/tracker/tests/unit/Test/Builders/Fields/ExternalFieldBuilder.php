@@ -239,6 +239,11 @@ final class ExternalFieldBuilder
             ): string {
                 return '';
             }
+
+            public function isAlwaysInEditMode(): bool
+            {
+                return false;
+            }
         };
         $field->setTracker($this->tracker);
         if ($this->user_with_read_permission !== null) {

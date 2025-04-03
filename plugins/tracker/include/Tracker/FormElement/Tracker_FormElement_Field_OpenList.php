@@ -1133,4 +1133,9 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
         return $html;
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

@@ -1130,4 +1130,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             \BackendLogger::getDefaultLogger()
         );
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

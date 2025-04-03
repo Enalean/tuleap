@@ -799,4 +799,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return Tracker_ArtifactFactory::instance();
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

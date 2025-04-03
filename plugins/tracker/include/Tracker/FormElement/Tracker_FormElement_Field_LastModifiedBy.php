@@ -387,4 +387,9 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     {
          return null;
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

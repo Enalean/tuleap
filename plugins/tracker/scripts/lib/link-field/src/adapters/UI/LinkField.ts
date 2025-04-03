@@ -322,7 +322,7 @@ export const LinkField = define.compile<InternalLinkField>({
     new_artifact_title: "",
     render: (host) =>
         html`<div class="tracker-form-element" data-test="artifact-link-field">
-            <label class="tlp-label">${host.field_presenter.label}</label>
+            <label class="tlp-label tracker_formelement_label">${host.field_presenter.label}</label>
             <div class="link-field-rows-wrapper">
                 ${host.linked_artifact_presenters.map((link) =>
                     getLinkedArtifactTemplate(host, link),

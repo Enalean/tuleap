@@ -473,4 +473,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         return new CountElementsModeChecker(new ProjectsCountModeDao());
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }

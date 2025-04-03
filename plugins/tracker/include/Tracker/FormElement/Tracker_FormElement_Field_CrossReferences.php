@@ -556,4 +556,9 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     {
         return $visitor->visitCrossReferences($this);
     }
+
+    public function isAlwaysInEditMode(): bool
+    {
+        return false;
+    }
 }
