@@ -33,7 +33,7 @@
 @use "./components/cards";
 @use "pkg:@tuleap/tlp-styles/components/alerts";
 @use "./components/tables";
-@use "./components/tabs";
+@use "pkg:@tuleap/tlp-styles/components/tabs";
 @use "pkg:@tuleap/tlp-styles/components/forms" with (
     $assets-base-path: "@tuleap/tlp-styles/"
 );
