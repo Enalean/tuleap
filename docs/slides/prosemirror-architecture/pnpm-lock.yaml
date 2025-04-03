@@ -3289,8 +3289,8 @@ packages:
     dev: true
     optional: true
 
-  /image-size@1.2.0:
-    resolution: {integrity: sha512-4S8fwbO6w3GeCVN6OPtA9I5IGKkcDMPcKndtUlpJuCwu7JLjtj7JZpwqLuyY2nrmQT3AWsCJLSKPsc2mPBSl3w==}
+  /image-size@1.2.1:
+    resolution: {integrity: sha512-rH+46sQJ2dlwfjfhCyNx5thzrv+dtmBIhPHk0zgRUukHzZ/kRueTJXoYYsclBaKcSMBWuGbOFXtioLpzTb5euw==}
     engines: {node: '>=16.x'}
     hasBin: true
     dependencies:
@@ -4314,7 +4314,7 @@ packages:
     dependencies:
       '@types/node': 18.19.76
       https: 1.0.0
-      image-size: 1.2.0
+      image-size: 1.2.1
       jszip: 3.10.1
     dev: true
 
