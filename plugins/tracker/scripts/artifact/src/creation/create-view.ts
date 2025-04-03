@@ -17,24 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "./styles/creation.scss";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "@tuleap/plugin-tracker-rte-creator";
+import { getLocaleWithDefault } from "@tuleap/gettext";
 import { reopenFieldsetsWithInvalidInput } from "../edition/reopen-fieldsets-with-invalid-input";
+import { initLinkField } from "../fields/LinkFieldEditor";
 import { initListFields } from "../fields/list-fields";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const locale = document.body.dataset.userLocale;
-    if (locale === undefined) {
-        return;
-    }
+    const user_locale = getLocaleWithDefault(document);
     const creator = RichTextEditorsCreator(
         document,
-        UploadImageFormFactory(document, locale),
-        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale),
+        UploadImageFormFactory(document, user_locale),
+        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, user_locale),
     );
     creator.createTextFieldEditors();
     initListFields();
+    initLinkField(user_locale);
 
     const submit_buttons = document.querySelectorAll(
         `.artifact-form input[name="submit_and_continue"],

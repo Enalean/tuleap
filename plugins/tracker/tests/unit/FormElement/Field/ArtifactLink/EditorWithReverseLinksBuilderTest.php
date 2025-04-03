@@ -89,7 +89,7 @@ final class EditorWithReverseLinksBuilderTest extends TestCase
             $this->tracker_permissions_retriever,
             RetrieveAllUsableTypesInProjectStub::withUsableTypes(new TypeIsChildPresenter()),
         );
-        return $builder->build($link_field, $current_artifact, UserTestBuilder::buildWithDefaults());
+        return $builder->buildWithArtifact($link_field, $current_artifact, UserTestBuilder::buildWithDefaults());
     }
 
     public function testItBuilds(): void
@@ -98,6 +98,44 @@ final class EditorWithReverseLinksBuilderTest extends TestCase
         self::assertSame(self::LINK_FIELD_ID, $presenter->link_field_id);
         self::assertSame(self::LINK_FIELD_LABEL, $presenter->link_field_label);
         self::assertSame(self::CURRENT_ARTIFACT_ID, $presenter->current_artifact_id);
+        self::assertSame(self::CURRENT_TRACKER_ID, $presenter->current_tracker_id);
+        self::assertSame(self::CURRENT_TRACKER_COLOR, $presenter->current_tracker_color);
+        self::assertSame(self::CURRENT_TRACKER_SHORTNAME, $presenter->current_tracker_short_name);
+        self::assertSame(self::PARENT_TRACKER_ID, $presenter->parent_tracker_id);
+        self::assertSame(self::CURRENT_PROJECT_ID, $presenter->current_project_id);
+        self::assertSame('[{"reverse_label":"Parent","forward_label":"Child","shortname":"_is_child","is_system":true,"is_visible":true}]', $presenter->allowed_link_types);
+    }
+
+    public function testItBuildsWithoutArtifact(): void
+    {
+        $current_project = ProjectTestBuilder::aProject()->withId(self::CURRENT_PROJECT_ID)->build();
+
+        $parent_tracker  = TrackerTestBuilder::aTracker()->withId(self::PARENT_TRACKER_ID)
+            ->withProject($current_project)
+            ->build();
+        $current_tracker = TrackerTestBuilder::aTracker()->withId(self::CURRENT_TRACKER_ID)
+            ->withColor(TrackerColor::fromName(self::CURRENT_TRACKER_COLOR))
+            ->withShortName(self::CURRENT_TRACKER_SHORTNAME)
+            ->withProject($current_project)
+            ->build();
+
+        $link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(self::LINK_FIELD_ID)
+            ->withLabel(self::LINK_FIELD_LABEL)
+            ->inTracker($current_tracker)
+            ->build();
+
+        $builder   = new EditorWithReverseLinksBuilder(
+            new ParentInHierarchyRetriever(
+                $this->search_parent_tracker,
+                RetrieveTrackerStub::withTrackers($parent_tracker),
+            ),
+            $this->tracker_permissions_retriever,
+            RetrieveAllUsableTypesInProjectStub::withUsableTypes(new TypeIsChildPresenter()),
+        );
+        $presenter = $builder->buildWithoutArtifact($link_field, UserTestBuilder::buildWithDefaults());
+        self::assertSame(self::LINK_FIELD_ID, $presenter->link_field_id);
+        self::assertSame(self::LINK_FIELD_LABEL, $presenter->link_field_label);
+        self::assertNull($presenter->current_artifact_id);
         self::assertSame(self::CURRENT_TRACKER_ID, $presenter->current_tracker_id);
         self::assertSame(self::CURRENT_TRACKER_COLOR, $presenter->current_tracker_color);
         self::assertSame(self::CURRENT_TRACKER_SHORTNAME, $presenter->current_tracker_short_name);
