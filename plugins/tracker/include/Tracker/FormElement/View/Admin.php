@@ -239,7 +239,7 @@ class Tracker_FormElement_View_Admin
      * @see fetchAdminSpecificProperties
      * @return string html
      */
-    protected function fetchAdminSpecificProperty($key, $property)
+    protected function fetchAdminSpecificProperty(string $key, array $property): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';

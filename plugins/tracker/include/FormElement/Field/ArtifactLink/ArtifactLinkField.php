@@ -68,6 +68,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
@@ -88,6 +90,13 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     public const FAKE_TYPE_IS_PARENT     = '_is_parent';
     public const NO_TYPE                 = '';
     public const FIELDS_DATA_PARENT_KEY  = 'parent';
+
+    public array $default_properties = [
+        'can_edit_reverse_links' => [
+            'value' => 0,
+            'type'  => 'checkbox',
+        ],
+    ];
 
     /**
      * @var Tracker_ArtifactFactory
@@ -1817,7 +1826,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
         }
     }
 
-    private function getFieldDataBuilder()
+    private function getFieldDataBuilder(): FieldDataBuilder
     {
         return new FieldDataBuilder();
     }
@@ -1825,5 +1834,15 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaAlphaNumValueDAO();
+    }
+
+    protected function getSearchSpecificPropertiesDao(): ?SearchSpecificProperties
+    {
+        return new ArtifactLinkFieldSpecificPropertiesDAO();
+    }
+
+    protected function getSaveSpecificPropertiesDao(): ?SaveSpecificFieldProperties
+    {
+        return new ArtifactLinkFieldSpecificPropertiesDAO();
     }
 }

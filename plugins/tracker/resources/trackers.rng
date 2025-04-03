@@ -1247,6 +1247,14 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="can_edit_reverse_links">
+            <choice>
+              <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">0</value>
+              <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">1</value>
+            </choice>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>

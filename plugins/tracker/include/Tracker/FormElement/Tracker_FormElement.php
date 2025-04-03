@@ -782,6 +782,8 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
                 return dgettext('tuleap-tracker', 'Include week-ends');
             case 'display_time':
                 return dgettext('tuleap-tracker', 'Display time');
+            case 'can_edit_reverse_links':
+                return dgettext('tuleap-tracker', 'Can edit reverse links');
             case 'default_value':
             default:
                 return dgettext('tuleap-tracker', 'Default value');

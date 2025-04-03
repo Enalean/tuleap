@@ -182,7 +182,8 @@ tracker =
             attribute use_capacity { "0" | "1" }?,
             attribute include_weekends  { "0" | "1" }?,
             attribute display_time  { "0" | "1" }?,
-            attribute use_cache  { "0" | "1" }?
+            attribute use_cache  { "0" | "1" }?,
+            attribute can_edit_reverse_links { "0" | "1" }?
         }?,
 
         (

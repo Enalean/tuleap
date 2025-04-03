@@ -24,7 +24,7 @@ class Computed extends Tracker_FormElement_View_Admin_Field
 {
     private const DEFAULT_VALUE_KEY = 'default_value';
 
-    protected function fetchAdminSpecificProperty($key, $property)
+    protected function fetchAdminSpecificProperty(string $key, array $property): string
     {
         $html = '';
         switch ($property['type']) {
