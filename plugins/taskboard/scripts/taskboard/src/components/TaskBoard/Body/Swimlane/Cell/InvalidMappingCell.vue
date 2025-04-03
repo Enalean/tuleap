@@ -29,50 +29,40 @@
         <add-card v-if="is_add_card_rendered" v-bind:column="column" v-bind:swimlane="swimlane" />
     </div>
 </template>
-
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import { Getter, namespace, State } from "vuex-class";
+<script setup lang="ts">
+import { computed } from "vue";
+import {
+    useGetters,
+    useNamespacedActions,
+    useNamespacedMutations,
+    useStore,
+} from "vuex-composition-helpers";
 import AddCard from "../Card/Add/AddCard.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
 import { useClassesForCollapsedColumn } from "./classes-for-collapsed-column-composable";
 import type { DraggedCard } from "../../../../../store/type";
-import type { PointerLeavesColumnPayload } from "../../../../../store/column/type";
-import Vue from "vue";
 
-const column_store = namespace("column");
+const props = defineProps<{ swimlane: Swimlane; column: ColumnDefinition }>();
 
-@Component({
-    components: { AddCard },
-})
-export default class InvalidMappingCell extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const store = useStore();
+const card_being_dragged = computed((): DraggedCard | null => store.state.card_being_dragged);
 
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const { pointerEntersColumn, pointerLeavesColumn } = useNamespacedMutations("column", [
+    "pointerEntersColumn",
+    "pointerLeavesColumn",
+]);
 
-    @State
-    readonly card_being_dragged!: DraggedCard | null;
+const { can_add_in_place } = useGetters(["can_add_in_place"]);
 
-    @column_store.Mutation
-    readonly pointerEntersColumn!: (column: ColumnDefinition) => void;
+const { expandColumn } = useNamespacedActions("column", ["expandColumn"]);
 
-    @column_store.Mutation
-    readonly pointerLeavesColumn!: (payload: PointerLeavesColumnPayload) => void;
+const is_add_card_rendered = computed((): boolean => can_add_in_place.value(props.swimlane));
 
-    @Getter
-    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
-
-    @column_store.Action
-    readonly expandColumn!: (column: ColumnDefinition) => void;
-
-    get is_add_card_rendered(): boolean {
-        return this.can_add_in_place(this.swimlane);
+const classes = computed((): string[] => {
+    const column_classes = useClassesForCollapsedColumn(props.column).getClasses();
+    if (!is_add_card_rendered.value) {
+        return column_classes;
     }
-
-    get classes(): string[] {
-        return useClassesForCollapsedColumn(this.column).getClasses();
-    }
-}
+    return [...column_classes, "taskboard-cell-with-add-form"];
+});
 </script>
