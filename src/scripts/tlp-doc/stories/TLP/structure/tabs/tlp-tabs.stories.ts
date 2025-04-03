@@ -22,6 +22,7 @@ import { html, type TemplateResult } from "lit";
 import "./tlp-tabs.scss";
 
 type TabsProps = {
+    hypertext: boolean;
     vertical: boolean;
     active: boolean;
     disabled: boolean;
@@ -38,7 +39,7 @@ function getTabsClass(args: TabsProps): string {
     return tabs_class;
 }
 
-function getTabClasses(args: TabsProps): string {
+function getLinkTabClasses(args: TabsProps): string {
     const tab_classes = ["tlp-tab"];
     if (args.disabled) {
         tab_classes.push("tlp-tab-disabled");
@@ -48,12 +49,12 @@ function getTabClasses(args: TabsProps): string {
     return tab_classes.join(" ");
 }
 
-function getTemplate(args: TabsProps): TemplateResult {
+function getTemplateWithTabsAsLinks(args: TabsProps): TemplateResult {
     // prettier-ignore
     return html`
 <nav class="${getTabsClass(args)}">
     <a href="https://example.com" class="tlp-tab">First tab</a>
-    <a href="https://example.com" class="${getTabClasses(args)}">${args.with_icon ? html`
+    <a href="https://example.com" class="${getLinkTabClasses(args)}">${args.with_icon ? html`
         <i class="tlp-tab-icon fa-solid fa-tlp-tuleap " aria-hidden="true"></i>` : ``}
         Custom tab ${args.with_badge ? html`
         <span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline">3</span>` : ``}${args.with_menu ? html`
@@ -73,6 +74,32 @@ function getTemplate(args: TabsProps): TemplateResult {
 </nav>`;
 }
 
+function getButtonTabClasses(args: TabsProps): string {
+    const tab_classes = ["tlp-tab"];
+    if (args.active) {
+        tab_classes.push(`tlp-tab-active`);
+    }
+    return tab_classes.join(" ");
+}
+
+function getTemplateWithTabsAsButtons(args: TabsProps): TemplateResult {
+    // prettier-ignore
+    return html`
+<nav class="${getTabsClass(args)}">
+    <button type="button" class="tlp-tab">First tab</button>
+    <button type="button" class="${getButtonTabClasses(args)}" ?disabled="${ args.disabled }">${args.with_icon ? html`
+        <i class="tlp-tab-icon fa-solid fa-tlp-tuleap " aria-hidden="true"></i>` : ``}
+        Custom tab ${args.with_badge ? html`
+            <span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline">3</span>`: html``}
+    </button>
+    <button type="button" class="tlp-tab">Another one</button>
+</nav>`;
+}
+
+function getTemplate(args: TabsProps): TemplateResult {
+    return args.hypertext ? getTemplateWithTabsAsLinks(args) : getTemplateWithTabsAsButtons(args);
+}
+
 const meta: Meta<TabsProps> = {
     title: "TLP/Structure & Navigation/Tabs",
     parameters: {
@@ -82,6 +109,11 @@ const meta: Meta<TabsProps> = {
         return getTemplate(args);
     },
     argTypes: {
+        hypertext: {
+            name: "Hypertext",
+            description:
+                "When true, the tabs are &lt;a&gt; elements. When false, the tabs are &lt;button&gt; elements.",
+        },
         vertical: {
             name: "Vertical",
             description: "Applies the class",
@@ -98,7 +130,7 @@ const meta: Meta<TabsProps> = {
         },
         disabled: {
             name: "Disabled",
-            description: "Applies the class",
+            description: "Sets the disabled attribute or applies the class",
             table: {
                 type: { summary: ".tlp-tab-disabled" },
             },
@@ -123,9 +155,13 @@ const meta: Meta<TabsProps> = {
             table: {
                 type: { summary: ".tlp-tab-menu" },
             },
+            if: {
+                arg: "hypertext",
+            },
         },
     },
     args: {
+        hypertext: true,
         vertical: false,
         active: true,
         disabled: false,

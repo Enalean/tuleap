@@ -30,7 +30,7 @@
 
         <nav class="tlp-tabs" v-if="are_fields_enabled">
             <button
-                class="tlp-tab tlp-button-secondary button-tab"
+                class="tlp-tab"
                 type="button"
                 v-bind:class="{ 'tlp-tab-active': current_tab === 'tracker' }"
                 v-on:click="current_tab = 'tracker'"
@@ -38,7 +38,7 @@
                 {{ $gettext("Tracker selection") }}
             </button>
             <button
-                class="tlp-tab tlp-button-secondary button-tab"
+                class="tlp-tab"
                 type="button"
                 v-bind:disabled="!is_tracker_configured"
                 v-bind:class="getFieldsTabClasses()"
@@ -208,24 +208,5 @@ function onSubmit(event: Event): void {
 
 .tlp-tooltip::before {
     text-transform: none;
-}
-
-.button-tab {
-    border-top: 0;
-    border-right: 0;
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
-    border-left: 0;
-    border-radius: 0;
-    background: var(--tlp-white-color);
-    box-shadow: none;
-
-    &:hover,
-    &.tlp-tab-active {
-        border-bottom: 3px solid var(--tlp-main-color);
-    }
-
-    &.tlp-tab-disabled {
-        border-bottom: 1px solid var(--tlp-neutral-normal-color);
-    }
 }
 </style>
