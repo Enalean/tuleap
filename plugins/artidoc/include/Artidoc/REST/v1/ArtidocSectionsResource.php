@@ -184,8 +184,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     ->getSectionRepresentation($section, $collector, $user))
                 ->match(
                     fn(SectionRepresentation $representation) => $representation,
-                    function (Fault $fault) {
-                        Fault::writeToLogger($fault, RESTLogger::getLogger());
+                    function () {
                         throw new RestException(404);
                     },
                 );
@@ -253,7 +252,6 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         $updater->update($section_id, $content->title, $content->description, $content->attachments, $level)
             ->mapErr(
                 function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {
                         $fault instanceof EmptyTitleFault => new I18NRestException(
                             400,
@@ -298,8 +296,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             ->match(
                 function () {
                 },
-                function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
+                function () {
                     throw new RestException(404);
                 },
             );
@@ -396,11 +393,8 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     ->getSectionRepresentation($section, $collector, $user)
             )
             ->match(
-                static function (SectionRepresentation $representation) {
-                    return $representation;
-                },
+                static fn(SectionRepresentation $representation) => $representation,
                 static function (Fault $fault) {
-                    Fault::writeToLogger($fault, RESTLogger::getLogger());
                     throw match (true) {
                         $fault instanceof CannotUpdatePartiallyReadableDocumentFault => new RestException(404),
                         $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
