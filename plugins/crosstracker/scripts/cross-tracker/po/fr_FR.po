@@ -158,9 +158,6 @@ msgstr "La création de requête est en cours d'implémentation"
 msgid "Query details & tools"
 msgstr "Détails & outils de la requête"
 
-msgid "Query has been successfully saved"
-msgstr "La requête est enregistrée avec succès"
-
 msgid "Query is empty"
 msgstr "La requête est vide"
 
@@ -175,9 +172,6 @@ msgstr "Requête mise à jour avec succès !"
 
 msgid "Save"
 msgstr "Sauvegarder"
-
-msgid "Save query"
-msgstr "Enregistrer la requête"
 
 msgid "Search"
 msgstr "Rechercher"

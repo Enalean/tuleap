@@ -151,9 +151,6 @@ msgstr ""
 msgid "Query details & tools"
 msgstr ""
 
-msgid "Query has been successfully saved"
-msgstr ""
-
 msgid "Query is empty"
 msgstr ""
 
@@ -167,9 +164,6 @@ msgid "Query updated with success!"
 msgstr ""
 
 msgid "Save"
-msgstr ""
-
-msgid "Save query"
 msgstr ""
 
 msgid "Search"

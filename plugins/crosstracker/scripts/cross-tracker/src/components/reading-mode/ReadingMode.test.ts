@@ -17,47 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { errAsync, okAsync } from "neverthrow";
-import { ref } from "vue";
-import { Fault } from "@tuleap/fault";
 import ReadingMode from "./ReadingMode.vue";
-import * as rest_querier from "../../api/rest-querier";
 import type { Query } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { EMITTER, IS_USER_ADMIN, QUERY_STATE, WIDGET_ID } from "../../injection-symbols";
-import type { Events, NotifyFaultEvent, RefreshArtifactsEvent } from "../../helpers/widget-events";
-import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
-import type { Emitter } from "mitt";
-import mitt from "mitt";
+import { IS_USER_ADMIN, WIDGET_ID } from "../../injection-symbols";
 
 describe("ReadingMode", () => {
-    let backend_query: Query,
-        reading_query: Query,
-        is_user_admin: boolean,
-        has_error: boolean,
-        emitter: Emitter<Events>;
-    let dispatched_fault_events: NotifyFaultEvent[];
-    let dispatched_refresh_events: RefreshArtifactsEvent[];
-
-    const registerFaultEvent = (event: NotifyFaultEvent): void => {
-        dispatched_fault_events.push(event);
-    };
-
-    const registerRefreshEvent = (event: RefreshArtifactsEvent): void => {
-        dispatched_refresh_events.push(event);
-    };
+    let reading_query: Query, is_user_admin: boolean, has_error: boolean;
 
     beforeEach(() => {
-        backend_query = {
-            id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
-            tql_query: "",
-            title: "",
-            description: "a great backend query",
-            is_default: false,
-        };
         reading_query = {
             id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
             tql_query: "",
@@ -67,16 +38,6 @@ describe("ReadingMode", () => {
         };
         is_user_admin = true;
         has_error = false;
-        emitter = mitt<Events>();
-        dispatched_fault_events = [];
-        dispatched_refresh_events = [];
-        emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
-        emitter.on(REFRESH_ARTIFACTS_EVENT, registerRefreshEvent);
-    });
-
-    afterEach(() => {
-        emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
-        emitter.off(REFRESH_ARTIFACTS_EVENT, registerRefreshEvent);
     });
 
     function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {
@@ -84,15 +45,12 @@ describe("ReadingMode", () => {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
-                    [QUERY_STATE.valueOf()]: ref("result-preview"),
                     [WIDGET_ID.valueOf()]: 875,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
-                    [EMITTER.valueOf()]: emitter,
                 },
             },
             props: {
                 has_error,
-                backend_query,
                 reading_query,
             },
         });
@@ -117,68 +75,6 @@ describe("ReadingMode", () => {
 
             const emitted = wrapper.emitted("switch-to-writing-mode");
             expect(emitted).toBeUndefined();
-        });
-    });
-
-    describe("saveQuery()", () => {
-        it(`will update the backend query and emit a "saved" event`, async () => {
-            const expert_query =
-                'SELECT @description FROM @project.name="TOTOYA" WHERE @ddescription != ""';
-            const query: Query = {
-                id: reading_query.id,
-                tql_query: expert_query,
-                title: reading_query.title,
-                description: reading_query.description,
-                is_default: false,
-            };
-
-            const updateQuery = vi
-                .spyOn(rest_querier, "updateQuery")
-                .mockReturnValue(okAsync(query));
-            const wrapper = instantiateComponent();
-
-            await wrapper.get("[data-test=cross-tracker-save-query]").trigger("click");
-
-            expect(updateQuery).toHaveBeenCalled();
-            const emitted = wrapper.emitted("saved");
-            expect(emitted).toBeDefined();
-        });
-
-        it("Given the query is in error, then nothing will happen", async () => {
-            has_error = true;
-            const updateQuery = vi.spyOn(rest_querier, "updateQuery");
-
-            const wrapper = instantiateComponent();
-            await wrapper.get("[data-test=cross-tracker-save-query]").trigger("click");
-
-            expect(updateQuery).not.toHaveBeenCalled();
-        });
-
-        it("When there is a REST error, then it will be shown", async () => {
-            vi.spyOn(rest_querier, "updateQuery").mockReturnValue(
-                errAsync(Fault.fromMessage("Query not found")),
-            );
-
-            const wrapper = instantiateComponent();
-
-            await wrapper.get("[data-test=cross-tracker-save-query]").trigger("click");
-
-            expect(dispatched_fault_events).toHaveLength(1);
-            expect(dispatched_fault_events[0].fault.isSaveQuery()).toBe(true);
-        });
-    });
-
-    describe("cancelQuery()", () => {
-        it(`when the query is unsaved and I click on "Cancel", then an event will be emitted`, async () => {
-            const wrapper = instantiateComponent();
-
-            await wrapper.get("[data-test=cross-tracker-cancel-query]").trigger("click");
-
-            expect(wrapper.emitted("discard-unsaved-query")).toBeDefined();
-            expect(dispatched_refresh_events).toHaveLength(1);
-            expect(dispatched_refresh_events[0]).toStrictEqual({
-                query: backend_query,
-            });
         });
     });
 });
