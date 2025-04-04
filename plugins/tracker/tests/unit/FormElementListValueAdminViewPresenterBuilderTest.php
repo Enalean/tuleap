@@ -25,10 +25,10 @@ namespace Tuleap\Tracker;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -60,11 +60,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
 
     public function testBuildPresenter(): void
     {
-        $value = \Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value->shouldReceive('getId')->andReturn(666);
-        $value->shouldReceive('getLabel')->andReturn('label');
-        $value->shouldReceive('getDescription')->andReturn('description');
-        $value->shouldReceive('isHidden')->andReturn(false);
+        $value = ListStaticValueBuilder::aStaticValue('label')->withId(666)->withDescription('description')->build();
 
         $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
 
@@ -88,13 +84,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
 
     public function testBuildPresenterNoneValueCantBeDeletedOrId(): void
     {
-        $value = \Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value->shouldReceive('getId')->andReturn(100);
-        $value->shouldReceive('getLabel')->andReturn('label');
-        $value->shouldReceive('getDescription')->andReturn('description');
-
-        $value->shouldReceive('isHidden')->andReturn(false);
-
+        $value     = ListStaticValueBuilder::noneStaticValue()->build();
         $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
 
         $expected_result = new FormElementListValueAdminViewPresenter(

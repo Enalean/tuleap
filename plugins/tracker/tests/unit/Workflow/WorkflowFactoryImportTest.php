@@ -29,7 +29,6 @@ use Project;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesManager;
@@ -38,6 +37,7 @@ use Transition;
 use Transition_PostAction_Field_Date;
 use TransitionFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -76,11 +76,8 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
-        $static_value_01 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $static_value_02 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-
-        $static_value_01->shouldReceive('getId')->andReturn(801);
-        $static_value_02->shouldReceive('getId')->andReturn(802);
+        $static_value_01 = ListStaticValueBuilder::aStaticValue('value 1')->withId(801)->build();
+        $static_value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(802)->build();
 
         $mapping = [
             'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
@@ -175,11 +172,8 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
-        $static_value_01 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $static_value_02 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-
-        $static_value_01->shouldReceive('getId')->andReturn(801);
-        $static_value_02->shouldReceive('getId')->andReturn(802);
+        $static_value_01 = ListStaticValueBuilder::aStaticValue('value 1')->withId(801)->build();
+        $static_value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(802)->build();
 
         $mapping = [
             'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),

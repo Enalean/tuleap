@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -79,12 +80,9 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
 
         $this->xml_ugroup_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($xml_ugroup_mapping);
 
-        $static_value_01 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_StaticValue::class)
-            ->shouldReceive('getId')->andReturns(24076)->getMock();
-        $static_value_02 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_StaticValue::class)
-            ->shouldReceive('getId')->andReturns(24077)->getMock();
-        $static_value_03 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_StaticValue::class)
-            ->shouldReceive('getId')->andReturns('bug_label')->getMock();
+        $static_value_01 = ListStaticValueBuilder::aStaticValue('01')->withId(24076)->build();
+        $static_value_02 = ListStaticValueBuilder::aStaticValue('02')->withId(24077)->build();
+        $static_value_03 = ListStaticValueBuilder::aStaticValue('03')->withXMLId('bug_label')->build();
 
         $open_list_field  = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
         $open_xml_mapping = [
@@ -111,13 +109,9 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
         $this->xml_static_fields_mapping->getNewValueId(12345);
     }
 
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|null
-     */
-    private function getBindValueWithId(int $bind_value_id)
+    private function getBindValueWithId(int $bind_value_id): \Tracker_FormElement_Field_List_Bind_StaticValue
     {
-        return \Mockery::spy(\Tracker_FormElement_Field_List_Bind_StaticValue::class)
-            ->shouldReceive('getId')->andReturns($bind_value_id)->getMock();
+        return ListStaticValueBuilder::aStaticValue('static')->withId($bind_value_id)->build();
     }
 
     protected function getBindForUGroupWithId(int $ugroup_id): Tracker_FormElement_Field_List_Bind_UgroupsValue

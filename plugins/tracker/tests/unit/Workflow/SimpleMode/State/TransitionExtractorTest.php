@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -77,13 +77,9 @@ final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRetrievesSiblingsTransitionsInState(): void
     {
-        $value_01 = $this->createMock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value_02 = $this->createMock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value_03 = $this->createMock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-
-        $value_01->method('getId')->willReturn(101);
-        $value_02->method('getId')->willReturn(102);
-        $value_03->method('getId')->willReturn(103);
+        $value_01 = ListStaticValueBuilder::aStaticValue('value 1')->withId(101)->build();
+        $value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(102)->build();
+        $value_03 = ListStaticValueBuilder::aStaticValue('value 3')->withId(103)->build();
 
         $transition_01 = new \Transition(1, 1, $value_01, $value_02);
         $transition_02 = new \Transition(2, 1, $value_01, $value_03);
@@ -98,11 +94,8 @@ final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsEmptyArrayIfNoSiblingsTransitionsInState(): void
     {
-        $value_01 = $this->createMock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value_02 = $this->createMock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-
-        $value_01->method('getId')->willReturn(101);
-        $value_02->method('getId')->willReturn(102);
+        $value_01 = ListStaticValueBuilder::aStaticValue('value 1')->withId(101)->build();
+        $value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(102)->build();
 
         $transition_01 = new \Transition(1, 1, $value_01, $value_02);
 
