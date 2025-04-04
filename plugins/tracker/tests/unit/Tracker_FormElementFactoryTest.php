@@ -251,72 +251,6 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expectedResult, $this->factory->getProjectSharedFields($project));
     }
 
-    public function testItReturnsTheFieldsIfUserCanReadTheOriginalAndAllTargets(): void
-    {
-        $user    = Mockery::spy(\PFUser::class);
-        $project = Mockery::spy(\Project::class);
-
-        $readableField = Mockery::mock(\Tracker_FormElement::class);
-        $readableField->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-        $targetOfReadableField1 = Mockery::mock(\Tracker_FormElement::class);
-        $targetOfReadableField1->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-        $targetOfReadableField2 = Mockery::mock(\Tracker_FormElement::class);
-        $targetOfReadableField2->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-        $unReadableField = Mockery::mock(\Tracker_FormElement::class);
-        $unReadableField->shouldReceive('userCanRead')->withArgs([$user])->andReturnFalse();
-
-        $this->factory->shouldReceive('getProjectSharedFields')->withArgs([$project])->andReturns(
-            [$readableField, $unReadableField]
-        );
-        $this->factory->shouldReceive('getSharedTargets')->withArgs([$unReadableField])->andReturns([]);
-        $this->factory->shouldReceive('getSharedTargets')->withArgs([$readableField])->andReturns(
-            [$targetOfReadableField1, $targetOfReadableField2]
-        );
-
-        $this->assertEquals([$readableField], $this->factory->getSharedFieldsReadableBy($user, $project));
-    }
-
-    public function testItDoesntReturnAnythingIfUserCannotReadTheOriginalAndAllTheTargets(): void
-    {
-        $user    = Mockery::spy(\PFUser::class);
-        $project = Mockery::spy(\Project::class);
-
-        $aReadableField = Mockery::mock(\Tracker_FormElement::class);
-        $aReadableField->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-        $targetOfReadableField1 = Mockery::mock(\Tracker_FormElement::class);
-        $targetOfReadableField1->shouldReceive('userCanRead')->withArgs([$user])->andReturnFalse();
-        $targetOfReadableField2 = Mockery::mock(\Tracker_FormElement::class);
-        $targetOfReadableField2->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-
-        $this->factory->shouldReceive('getProjectSharedFields')->withArgs([$project])->andReturns([$aReadableField]);
-        $this->factory->shouldReceive('getSharedTargets')->withArgs([$aReadableField])->andReturns(
-            [$targetOfReadableField1, $targetOfReadableField2]
-        );
-
-        $this->assertEquals([], $this->factory->getSharedFieldsReadableBy($user, $project));
-    }
-
-    public function testItReturnsACollectionOfUniqueOriginals(): void
-    {
-        $user    = Mockery::spy(\PFUser::class);
-        $project = Mockery::spy(\Project::class);
-
-        $aReadableField = Mockery::mock(\Tracker_FormElement::class);
-        $aReadableField->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-        $targetOfReadableField1 = Mockery::mock(\Tracker_FormElement::class);
-        $targetOfReadableField1->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-        $targetOfReadableField2 = Mockery::mock(\Tracker_FormElement::class);
-        $targetOfReadableField2->shouldReceive('userCanRead')->withArgs([$user])->andReturnTrue();
-
-
-        $this->factory->shouldReceive('getProjectSharedFields')->withArgs([$project])->andReturns([$aReadableField]);
-        $this->factory->shouldReceive('getSharedTargets')->withArgs([$aReadableField])->andReturns(
-            [$targetOfReadableField1, $targetOfReadableField2]
-        );
-
-        $this->assertEquals([$aReadableField], $this->factory->getSharedFieldsReadableBy($user, $project));
-    }
-
     private function createRow(int $id, string $type): array
     {
         return [
@@ -334,26 +268,6 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'rank'              => null,
             'original_field_id' => null,
         ];
-    }
-
-    public function testGetFieldFromTrackerAndSharedField(): void
-    {
-        $original_field_dar = TestHelper::arrayToDar($this->createRow(999, 'text'));
-
-        $this->dao->shouldReceive('searchFieldFromTrackerIdAndSharedFieldId')
-            ->withArgs([66, 123])->andReturns($original_field_dar)->once();
-
-        $originalField = Mockery::spy(Tracker_FormElement_Field_Text::class);
-        $originalField->shouldReceive('getId')->andReturn(999);
-
-        $exportedField = Mockery::spy(Tracker_FormElement_Field_Text::class);
-        $exportedField->shouldReceive('getId')->andReturn(123);
-
-        $field = $this->factory->getFieldFromTrackerAndSharedField($this->tracker, $exportedField);
-        $this->assertEquals(
-            $originalField->getId(),
-            $field->getId()
-        );
     }
 
     public function testItDoesNothingWhenFieldMappingIsEmpty(): void

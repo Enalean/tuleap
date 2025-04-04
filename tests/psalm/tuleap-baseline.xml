@@ -32232,10 +32232,6 @@
       <code><![CDATA[new CSVOutputStrategy(Codendi_HTMLPurifier::instance())]]></code>
       <code><![CDATA[searchById]]></code>
     </TooManyArguments>
-    <TypeDoesNotContainType>
-      <code><![CDATA[! $this->artifact_factory]]></code>
-      <code><![CDATA[$this->artifact_factory]]></code>
-    </TypeDoesNotContainType>
     <UndefinedMethod>
       <code><![CDATA[getArtifactIds]]></code>
     </UndefinedMethod>
@@ -37476,7 +37472,6 @@
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
     </InvalidFalsableReturnType>
     <MissingParamType>
-      <code><![CDATA[$TrackerId]]></code>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field]]></code>
@@ -37509,7 +37504,6 @@
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$required]]></code>
       <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$shared_field_id]]></code>
       <code><![CDATA[$to_tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
@@ -37542,18 +37536,14 @@
       <code><![CDATA[delete]]></code>
       <code><![CDATA[duplicate]]></code>
       <code><![CDATA[getUsedUserClosedListFieldById]]></code>
-      <code><![CDATA[getUsedUserListFieldById]]></code>
       <code><![CDATA[mapNewParentsAfterDuplication]]></code>
       <code><![CDATA[save]]></code>
       <code><![CDATA[searchById]]></code>
       <code><![CDATA[searchByParentId]]></code>
       <code><![CDATA[searchByTrackerId]]></code>
       <code><![CDATA[searchByTrackerIdAndName]]></code>
-      <code><![CDATA[searchByTrackerIdAndType]]></code>
-      <code><![CDATA[searchFieldFromTrackerIdAndSharedFieldId]]></code>
       <code><![CDATA[searchFieldIdsByGroupId]]></code>
       <code><![CDATA[searchNextUsedSibling]]></code>
-      <code><![CDATA[searchPreviousUsedSibling]]></code>
       <code><![CDATA[searchProjectSharedFieldsTargets]]></code>
       <code><![CDATA[searchSharedTargets]]></code>
       <code><![CDATA[searchUnusedByTrackerId]]></code>
@@ -37564,7 +37554,6 @@
       <code><![CDATA[searchUsedByTrackerIdAndType]]></code>
       <code><![CDATA[searchUsedStaticSbFieldByTrackerId]]></code>
       <code><![CDATA[searchUsedUserClosedListFieldsByTrackerId]]></code>
-      <code><![CDATA[searchUsedUserListFieldByTrackerId]]></code>
       <code><![CDATA[setType]]></code>
       <code><![CDATA[updateOriginalFieldId]]></code>
     </MissingReturnType>
@@ -38516,7 +38505,6 @@
       <code><![CDATA[$this->getCachedInstanceFromRow($row)]]></code>
     </LessSpecificReturnStatement>
     <MissingParamType>
-      <code><![CDATA[$dar]]></code>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$elmtId]]></code>
       <code><![CDATA[$field]]></code>
@@ -38603,14 +38591,11 @@
       <code><![CDATA[fixSharedFieldOriginalValueIds]]></code>
       <code><![CDATA[getAllUsedFormElementOfAnyTypesForTracker]]></code>
       <code><![CDATA[getDao]]></code>
-      <code><![CDATA[getDateFieldByNameForUser]]></code>
       <code><![CDATA[getFactoryButton]]></code>
       <code><![CDATA[getFieldByNameAndType]]></code>
       <code><![CDATA[getFieldsSQLTypes]]></code>
       <code><![CDATA[getFieldsetById]]></code>
       <code><![CDATA[getFormElementClass]]></code>
-      <code><![CDATA[getGroupsByTrackerId]]></code>
-      <code><![CDATA[getInstanceFromDar]]></code>
       <code><![CDATA[getNewOriginalFieldIdFromMapping]]></code>
       <code><![CDATA[getNumericFieldByName]]></code>
       <code><![CDATA[getNumericFieldByNameForUser]]></code>
@@ -38621,7 +38606,6 @@
       <code><![CDATA[getUsedSbFields]]></code>
       <code><![CDATA[getUsedTextFieldById]]></code>
       <code><![CDATA[getUsedUserClosedListFieldById]]></code>
-      <code><![CDATA[getUsedUserListFieldById]]></code>
       <code><![CDATA[getValueMappingFromFieldMapping]]></code>
       <code><![CDATA[isFieldASimpleListField]]></code>
       <code><![CDATA[isFieldUniqueAndAlreadyUsed]]></code>

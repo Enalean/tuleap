@@ -369,20 +369,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $this->getFieldByNameAndType($tracker, [self::FIELD_INTEGER_TYPE, self::FIELD_FLOAT_TYPE, self::FIELD_COMPUTED], $name);
     }
 
-    public function getDateFieldByNameForUser(Tracker $tracker, PFUser $user, $name)
-    {
-        $field = $this->getFieldByNameAndType($tracker, ['date'], $name);
-        if (! $field) {
-            return null;
-        }
-
-        return $this->getUsedFieldByNameForUser(
-            $tracker->getId(),
-            $name,
-            $user
-        );
-    }
-
     private function getFieldByNameAndType(Tracker $tracker, array $accepted_type, $name)
     {
         $field = $tracker->hasFormElementWithNameAndType(
@@ -592,17 +578,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      * @param Tracker $tracker
-     * @return array of Tracker_FormElement - All non dynamic fields used by the tracker
-     */
-    public function getUsedNonDynamicFields($tracker)
-    {
-        $field_classnames = $this->classnames;
-
-        return $this->getUsedFormElementsByType($tracker, array_keys($field_classnames));
-    }
-
-    /**
-     * @param Tracker $tracker
      * @return Tracker_FormElement_Field[] - All fields used and  unused by the tracker
      */
     public function getFields($tracker)
@@ -653,14 +628,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function getUsedCustomDateFields(Tracker $tracker)
     {
         return $this->getUsedFormElementsByType($tracker, ['date']);
-    }
-
-    /**
-     * @return Tracker_FormElement_Field[] All core date formElements of the tracker
-     */
-    public function getCoreDateFields(Tracker $tracker)
-    {
-        return $this->getFormElementsByType($tracker, ['lud', 'subon'], false);
     }
 
     /**
@@ -716,7 +683,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * @param Tracker $tracker
      * @return array All (multi) selectboxes formElements used by the tracker
      */
-    public function getUsedClosedListFields($tracker)
+    private function getUsedClosedListFields($tracker)
     {
         return $this->getUsedFormElementsByType($tracker, ['sb', 'msb', self::FIELD_CHECKBOX_TYPE, 'rb', self::FIELD_SUBMITTED_BY_TYPE, self::FIELD_LAST_MODIFIED_BY]);
     }
@@ -752,7 +719,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      *
      * @return Tracker_FormElement_Field_Burndown[]
      */
-    public function getUsedBurndownFields($tracker)
+    private function getUsedBurndownFields($tracker)
     {
         return $this->getUsedFormElementsByType($tracker, [self::FIELD_BURNDOWN]);
     }
@@ -768,29 +735,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         }
 
         return null;
-    }
-
-    /**
-     * @param Tracker $tracker
-     *
-     * @return array All lists formElements bind to users used by the tracker
-     */
-    public function getUsedUserListFields($tracker)
-    {
-        $form_elements = [];
-        $tracker_id    = $tracker->getId();
-        foreach ($this->getDao()->searchUsedUserListFieldByTrackerId($tracker_id) as $row) {
-            $form_elements[] = $this->getCachedInstanceFromRow($row);
-        }
-        return array_filter($form_elements);
-    }
-
-    public function getUsedUserListFieldById($tracker, $field_id)
-    {
-        $tracker_id = $tracker->getId();
-        if ($row = $this->getDao()->getUsedUserListFieldById($tracker_id, $field_id)->getRow()) {
-            return $this->getCachedInstanceFromRow($row);
-        }
     }
 
     /**
@@ -884,16 +828,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         }
 
         return $fields;
-    }
-
-    /**
-     * @param Tracker $tracker
-     * @param int $field_id
-     * @return Tracker_FormElement | void
-     */
-    public function getUsedNumericFieldById($tracker, $field_id)
-    {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, [self::FIELD_INTEGER_TYPE, self::FIELD_FLOAT_TYPE, self::FIELD_COMPUTED]);
     }
 
     /**
@@ -1287,23 +1221,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     private function originalFieldIsInTemplateProject(array $shared_field, array $original_shared_field_ids)
     {
         return in_array($shared_field['original_field_id'], $original_shared_field_ids);
-    }
-
-    /**
-     * Returns the shared field originals of which the user can either the orginal
-     * or atleast one of the targets
-     *
-     * @return Array of Tracker_FormElement_Field
-     */
-    public function getSharedFieldsReadableBy(PFUser $user, Project $project)
-    {
-        $fields = $this->getProjectSharedFields($project);
-        foreach ($fields as $k => $field) {
-            if (! $this->userCanReadSharedField($user, $field)) {
-                unset($fields[$k]);
-            }
-        }
-        return $fields;
     }
 
     protected function userCanReadSharedField(PFUser $user, Tracker_FormElement $field)
@@ -1744,15 +1661,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $id;
     }
 
-    public function getGroupsByTrackerId($tracker_id)
-    {
-        $form_elements = [];
-        foreach ($this->getDao()->searchByTrackerIdAndType($tracker_id, array_keys($this->group_classnames)) as $row) {
-            $form_elements[] = $this->getCachedInstanceFromRow($row);
-        }
-        return array_filter($form_elements);
-    }
-
     /**
      * Get the next used sibbling of an element.
      *
@@ -1765,38 +1673,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         $tracker_id = $element->getTrackerId();
         $element_id = $element->getId();
         if ($row = $this->getDao()->searchNextUsedSibling($tracker_id, $element_id)->getRow()) {
-            return $this->getCachedInstanceFromRow($row);
-        }
-    }
-
-    /**
-     * Get the previous used sibbling of an element.
-     *
-     * @param Tracker_FormElement $element
-     *
-     * @return Tracker_FormElement | null if not found
-     */
-    public function getPreviousSibling($element)
-    {
-        $tracker_id = $element->getTrackerId();
-        $element_id = $element->getId();
-        if ($row = $this->getDao()->searchPreviousUsedSibling($tracker_id, $element_id)->getRow()) {
-            return $this->getCachedInstanceFromRow($row);
-        }
-    }
-
-    /**
-     * @return Tracker_FormElement
-     */
-    public function getFieldFromTrackerAndSharedField(Tracker $tracker, Tracker_FormElement $shared)
-    {
-        $dar = $this->getDao()->searchFieldFromTrackerIdAndSharedFieldId($tracker->getId(), $shared->getId());
-        return $this->getInstanceFromDar($dar);
-    }
-
-    public function getInstanceFromDar($dar)
-    {
-        if ($dar && $row = $dar->getRow()) {
             return $this->getCachedInstanceFromRow($row);
         }
     }
