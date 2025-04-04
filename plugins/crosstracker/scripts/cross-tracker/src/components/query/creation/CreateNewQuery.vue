@@ -108,11 +108,10 @@ import QuerySuggested from "../QuerySuggested.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
 import {
-    CLEAR_FEEDBACK_EVENT,
+    NEW_QUERY_CREATED_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
     SEARCH_ARTIFACTS_EVENT,
-    SWITCH_QUERY_EVENT,
 } from "../../../helpers/widget-events";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
@@ -160,7 +159,6 @@ const is_modal_should_be_displayed = computed((): boolean => {
 });
 
 function handleCancelButton(): void {
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
     emit("return-to-active-query-pane");
 }
 
@@ -170,7 +168,6 @@ function handleSearch(tql_query: string): void {
 }
 
 function handleSaveButton(): void {
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
     is_save_loading.value = true;
     const new_query: PostQueryRepresentation = {
         tql_query: searched_tql_query.value,
@@ -186,7 +183,7 @@ function handleSaveButton(): void {
                 emitter.emit(NOTIFY_SUCCESS_EVENT, {
                     message: $gettext("Query created with success!"),
                 });
-                emitter.emit(SWITCH_QUERY_EVENT, { query: created_query });
+                emitter.emit(NEW_QUERY_CREATED_EVENT, { query: created_query });
                 emit("return-to-active-query-pane");
             },
             (fault) => {
@@ -204,7 +201,6 @@ function handleSearchButton(): void {
 }
 
 function search(): void {
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
     is_selectable_table_displayed.value = true;
     emitter.emit(SEARCH_ARTIFACTS_EVENT);
 }

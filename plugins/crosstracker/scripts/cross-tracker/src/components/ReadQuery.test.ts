@@ -29,12 +29,14 @@ import { EMITTER, IS_USER_ADMIN, WIDGET_ID } from "../injection-symbols";
 import ReadQuery from "./ReadQuery.vue";
 import type {
     Events,
+    InitializedWithQueryEvent,
     NotifyFaultEvent,
     RefreshArtifactsEvent,
     SwitchQueryEvent,
     UpdateWidgetTitleEvent,
 } from "../helpers/widget-events";
 import {
+    INITIALIZED_WITH_QUERY_EVENT,
     NOTIFY_FAULT_EVENT,
     QUERY_DELETED_EVENT,
     REFRESH_ARTIFACTS_EVENT,
@@ -51,12 +53,16 @@ vi.useFakeTimers();
 describe("ReadQuery", () => {
     let is_user_admin: boolean;
     let dispatched_switch_query_events: SwitchQueryEvent[];
+    let dispatched_initialized_with_query_events: InitializedWithQueryEvent[];
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_updated_title_events: UpdateWidgetTitleEvent[];
     let dispatched_refresh_events: RefreshArtifactsEvent[];
     let emitter: Emitter<Events>;
     let selected_query: Query | undefined;
 
+    const registerInitializedWithQueryEvent = (event: InitializedWithQueryEvent): void => {
+        dispatched_initialized_with_query_events.push(event);
+    };
     const registerSwitchQueryEvent = (event: SwitchQueryEvent): void => {
         dispatched_switch_query_events.push(event);
     };
@@ -77,11 +83,13 @@ describe("ReadQuery", () => {
         selected_query = undefined;
         is_user_admin = true;
         dispatched_switch_query_events = [];
+        dispatched_initialized_with_query_events = [];
         dispatched_fault_events = [];
         dispatched_updated_title_events = [];
         dispatched_refresh_events = [];
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
+        emitter.on(INITIALIZED_WITH_QUERY_EVENT, registerInitializedWithQueryEvent);
         emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
         emitter.on(UPDATE_WIDGET_TITLE_EVENT, registerUpdateTitleEvent);
         emitter.on(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
@@ -101,6 +109,7 @@ describe("ReadQuery", () => {
 
     afterEach(() => {
         emitter.off(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
+        emitter.off(INITIALIZED_WITH_QUERY_EVENT, registerInitializedWithQueryEvent);
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
         emitter.off(UPDATE_WIDGET_TITLE_EVENT, registerUpdateTitleEvent);
         emitter.off(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
@@ -160,14 +169,14 @@ describe("ReadQuery", () => {
             expect(wrapper.emitted()).toHaveProperty("switch-to-create-query-pane");
         });
 
-        it("Does not emit a SWITCH_QUERY_EVENT when there are no queries", () => {
+        it("Does not emit an INITIALIZED_WITH_QUERY_EVENT when there are no queries", () => {
             vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync([]));
             getWrapper();
 
-            expect(dispatched_switch_query_events.length).toBe(0);
+            expect(dispatched_initialized_with_query_events.length).toBe(0);
         });
 
-        it("Does emit a SWITCH_QUERY_EVENT with the first query as parameter once done loading", async () => {
+        it("Does emit an INITIALIZED_WITH_QUERY_EVENT with the first query as parameter once done loading", async () => {
             const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
             const uuid1 = "0194dfd6-a489-703b-aabd-9d473212d908";
             const uuid2 = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
@@ -191,11 +200,11 @@ describe("ReadQuery", () => {
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(dispatched_switch_query_events.length).toBe(1);
-            expect(dispatched_switch_query_events[0].query).toStrictEqual(queries[0]);
+            expect(dispatched_initialized_with_query_events.length).toBe(1);
+            expect(dispatched_initialized_with_query_events[0].query).toStrictEqual(queries[0]);
         });
 
-        it("Does emit a SWITCH_QUERY_EVENT with the selected query as parameter if it is defined", async () => {
+        it("Does emit a INITIALIZED_WITH_QUERY_EVENT with the selected query as parameter if it is defined", async () => {
             const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
 
             const uuid_previously_selected = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
@@ -222,37 +231,10 @@ describe("ReadQuery", () => {
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(dispatched_switch_query_events.length).toBe(1);
-            expect(dispatched_switch_query_events[0].query).toStrictEqual(
+            expect(dispatched_initialized_with_query_events.length).toBe(1);
+            expect(dispatched_initialized_with_query_events[0].query).toStrictEqual(
                 previously_selected_query,
             );
-        });
-
-        it("Does emit a UPDATE_WIDGET_TITLE_EVENT with the first query as parameter once done loading", async () => {
-            const query = 'SELECT @title FROM @project.name="TATAYO" WHERE @title != ""';
-            const uuid1 = "0194dfd6-a489-703b-aabd-9d473212d908";
-            const uuid2 = "01952813-7ae7-7a27-bcc0-4a9c660dccb4";
-            const queries: ReadonlyArray<Query> = [
-                {
-                    tql_query: query,
-                    title: "TQL query title 1",
-                    description: "",
-                    id: uuid1,
-                    is_default: false,
-                },
-                {
-                    tql_query: query,
-                    title: "TQL query title 2",
-                    description: "",
-                    id: uuid2,
-                    is_default: false,
-                },
-            ];
-            vi.spyOn(rest_querier, "getQueries").mockReturnValue(okAsync(queries));
-            getWrapper();
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(dispatched_updated_title_events[0].new_title).toStrictEqual(queries[0].title);
         });
     });
 
@@ -336,10 +318,8 @@ describe("ReadQuery", () => {
             await vi.runOnlyPendingTimersAsync();
             emitter.emit(QUERY_DELETED_EVENT, { deleted_query: query_1 });
 
-            expect(dispatched_switch_query_events).toHaveLength(2);
-            expect(dispatched_switch_query_events[1]).toStrictEqual({ query: query_2 });
-            expect(dispatched_updated_title_events).toHaveLength(2); // First one is in loadBackendQueries
-            expect(dispatched_updated_title_events[1]).toStrictEqual({ new_title: query_2.title });
+            expect(dispatched_switch_query_events).toHaveLength(1);
+            expect(dispatched_switch_query_events[0]).toStrictEqual({ query: query_2 });
             expect(dispatched_refresh_events).toHaveLength(1);
             expect(dispatched_refresh_events[0]).toStrictEqual({ query: query_2 });
         });
@@ -358,7 +338,6 @@ describe("ReadQuery", () => {
             emitter.emit(QUERY_DELETED_EVENT, { deleted_query: query });
 
             expect(wrapper.emitted("switch-to-create-query-pane")).toBeDefined();
-            expect(dispatched_switch_query_events).toHaveLength(1);
         });
     });
 });

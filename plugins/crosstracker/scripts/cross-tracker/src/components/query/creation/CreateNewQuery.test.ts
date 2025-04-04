@@ -27,17 +27,17 @@ import TitleInput from "../TitleInput.vue";
 import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
 import { Fault } from "@tuleap/fault";
 import type {
+    CreatedQueryEvent,
     Events,
     NotifyFaultEvent,
     NotifySuccessEvent,
     SwitchQueryEvent,
 } from "../../../helpers/widget-events";
 import {
-    CLEAR_FEEDBACK_EVENT,
+    NEW_QUERY_CREATED_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
     SEARCH_ARTIFACTS_EVENT,
-    SWITCH_QUERY_EVENT,
 } from "../../../helpers/widget-events";
 import QuerySelectableTable from "../QuerySelectableTable.vue";
 import { PostNewQueryStub } from "../../../../tests/stubs/PostNewQueryStub";
@@ -49,11 +49,10 @@ import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue"
 vi.useFakeTimers();
 
 describe("CreateNewQuery", () => {
-    let dispatched_clear_feedback_events: true[];
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_success_events: NotifySuccessEvent[];
     let dispatched_search_events: true[];
-    let dispatched_switch_query_events: SwitchQueryEvent[];
+    let dispatched_new_query_created_events: SwitchQueryEvent[];
     let emitter: Emitter<Events>;
 
     const QueryEditor = {
@@ -62,10 +61,6 @@ describe("CreateNewQuery", () => {
         methods: {
             updateEditor: (tql_query: string): string => tql_query,
         },
-    };
-
-    const registerClearFeedbackEvent = (): void => {
-        dispatched_clear_feedback_events.push(true);
     };
 
     const registerFaultEvent = (event: NotifyFaultEvent): void => {
@@ -80,30 +75,27 @@ describe("CreateNewQuery", () => {
         dispatched_search_events.push(true);
     };
 
-    const registerSwitchQueryEvent = (event: SwitchQueryEvent): void => {
-        dispatched_switch_query_events.push(event);
+    const registerQueryCreatedEvent = (event: CreatedQueryEvent): void => {
+        dispatched_new_query_created_events.push(event);
     };
 
     beforeEach(() => {
         emitter = mitt<Events>();
-        dispatched_clear_feedback_events = [];
         dispatched_fault_events = [];
         dispatched_success_events = [];
         dispatched_search_events = [];
-        dispatched_switch_query_events = [];
-        emitter.on(CLEAR_FEEDBACK_EVENT, registerClearFeedbackEvent);
+        dispatched_new_query_created_events = [];
         emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
         emitter.on(NOTIFY_SUCCESS_EVENT, registerSuccessEvent);
         emitter.on(SEARCH_ARTIFACTS_EVENT, registerSearchEvent);
-        emitter.on(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
+        emitter.on(NEW_QUERY_CREATED_EVENT, registerQueryCreatedEvent);
     });
 
     afterEach(() => {
-        emitter.off(CLEAR_FEEDBACK_EVENT, registerClearFeedbackEvent);
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
         emitter.off(NOTIFY_SUCCESS_EVENT, registerSuccessEvent);
         emitter.off(SEARCH_ARTIFACTS_EVENT, registerSearchEvent);
-        emitter.off(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
+        emitter.off(NEW_QUERY_CREATED_EVENT, registerQueryCreatedEvent);
     });
 
     function getWrapper(
@@ -127,7 +119,6 @@ describe("CreateNewQuery", () => {
         const wrapper = getWrapper();
         await wrapper.find("[data-test=query-creation-cancel-button]").trigger("click");
         expect(wrapper.emitted()).toHaveProperty("return-to-active-query-pane");
-        expect(dispatched_clear_feedback_events).toHaveLength(1);
     });
 
     describe("'Save' and 'Search' buttons", () => {
@@ -283,10 +274,9 @@ describe("CreateNewQuery", () => {
             await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
 
             expect(dispatched_fault_events).toHaveLength(0);
-            expect(dispatched_clear_feedback_events).toHaveLength(2);
             expect(dispatched_success_events).toHaveLength(1);
-            expect(dispatched_switch_query_events).toHaveLength(1);
-            expect(dispatched_switch_query_events[0].query.title).toBe(title);
+            expect(dispatched_new_query_created_events).toHaveLength(1);
+            expect(dispatched_new_query_created_events[0].query.title).toBe(title);
             expect(wrapper.emitted()).toHaveProperty("return-to-active-query-pane");
         });
         it("show an error if the save failed", async () => {
@@ -306,9 +296,8 @@ describe("CreateNewQuery", () => {
             await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
 
             expect(dispatched_fault_events).toHaveLength(1);
-            expect(dispatched_clear_feedback_events).toHaveLength(2);
             expect(dispatched_success_events).toHaveLength(0);
-            expect(dispatched_switch_query_events).toHaveLength(0);
+            expect(dispatched_new_query_created_events).toHaveLength(0);
             expect(wrapper.emitted()).not.toHaveProperty("return-to-active-query-pane");
         });
     });

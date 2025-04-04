@@ -22,33 +22,37 @@ import type { Fault } from "@tuleap/fault";
 import type { QuerySuggestion } from "../domain/SuggestedQueriesGetter";
 
 export const SWITCH_QUERY_EVENT = "switch-query";
+export const INITIALIZED_WITH_QUERY_EVENT = "initialized-with-query";
 export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";
 export const SEARCH_ARTIFACTS_EVENT = "search-artifact";
 export const CREATE_NEW_QUERY_EVENT = "create-new-query";
 export const EDIT_QUERY_EVENT = "edit-query";
+export const QUERY_EDITED_EVENT = "query-edited";
 export const NEW_QUERY_CREATED_EVENT = "new-query-created";
 export const QUERY_DELETED_EVENT = "query-deleted";
 export const NOTIFY_FAULT_EVENT = "notify-fault";
 export const NOTIFY_SUCCESS_EVENT = "notify-success";
-export const CLEAR_FEEDBACK_EVENT = "clear-feedback";
 export const DISPLAY_QUERY_PREVIEW_EVENT = "display-query-preview";
 export const UPDATE_WIDGET_TITLE_EVENT = "update-widget-title";
 export const TOGGLE_QUERY_DETAILS_EVENT = "toggle-query-details";
+export const STARTING_XLSX_EXPORT_EVENT = "starting-xlsx-export-event";
 
 export type Events = {
     [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
+    [INITIALIZED_WITH_QUERY_EVENT]: InitializedWithQueryEvent;
     [REFRESH_ARTIFACTS_EVENT]: RefreshArtifactsEvent;
     [SEARCH_ARTIFACTS_EVENT]: void;
     [CREATE_NEW_QUERY_EVENT]: void;
     [EDIT_QUERY_EVENT]: EditQueryEvent;
+    [QUERY_EDITED_EVENT]: EditedQueryEvent;
     [NEW_QUERY_CREATED_EVENT]: CreatedQueryEvent;
     [QUERY_DELETED_EVENT]: DeletedQueryEvent;
     [NOTIFY_FAULT_EVENT]: NotifyFaultEvent;
     [NOTIFY_SUCCESS_EVENT]: NotifySuccessEvent;
-    [CLEAR_FEEDBACK_EVENT]: void;
     [DISPLAY_QUERY_PREVIEW_EVENT]: DisplayQueryPreviewEvent;
     [UPDATE_WIDGET_TITLE_EVENT]: UpdateWidgetTitleEvent;
     [TOGGLE_QUERY_DETAILS_EVENT]: ToggleQueryDetailsEvent;
+    [STARTING_XLSX_EXPORT_EVENT]: void;
 };
 
 export type UpdateWidgetTitleEvent = {
@@ -64,7 +68,11 @@ export type EditQueryEvent = {
 };
 
 export type CreatedQueryEvent = {
-    readonly created_query: Query;
+    readonly query: Query;
+};
+
+export type EditedQueryEvent = {
+    readonly query: Query;
 };
 
 export type DeletedQueryEvent = {
@@ -72,6 +80,10 @@ export type DeletedQueryEvent = {
 };
 
 export type SwitchQueryEvent = {
+    readonly query: Query;
+};
+
+export type InitializedWithQueryEvent = {
     readonly query: Query;
 };
 

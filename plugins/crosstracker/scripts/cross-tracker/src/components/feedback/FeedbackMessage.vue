@@ -35,7 +35,10 @@ import type { Fault } from "@tuleap/fault";
 import { onMounted, onUnmounted, ref } from "vue";
 import type { NotifyFaultEvent, NotifySuccessEvent } from "../../helpers/widget-events";
 import {
-    CLEAR_FEEDBACK_EVENT,
+    SWITCH_QUERY_EVENT,
+    CREATE_NEW_QUERY_EVENT,
+    EDIT_QUERY_EVENT,
+    STARTING_XLSX_EXPORT_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
 } from "../../helpers/widget-events";
@@ -51,13 +54,19 @@ const current_success = ref<Option<string>>(Option.nothing());
 onMounted(() => {
     emitter.on(NOTIFY_FAULT_EVENT, handleFault);
     emitter.on(NOTIFY_SUCCESS_EVENT, handleSuccess);
-    emitter.on(CLEAR_FEEDBACK_EVENT, handleClear);
+    emitter.on(CREATE_NEW_QUERY_EVENT, clearFeedback);
+    emitter.on(EDIT_QUERY_EVENT, clearFeedback);
+    emitter.on(STARTING_XLSX_EXPORT_EVENT, clearFeedback);
+    emitter.on(SWITCH_QUERY_EVENT, clearFeedback);
 });
 
 onUnmounted(() => {
     emitter.off(NOTIFY_FAULT_EVENT, handleFault);
     emitter.off(NOTIFY_SUCCESS_EVENT, handleSuccess);
-    emitter.off(CLEAR_FEEDBACK_EVENT, handleClear);
+    emitter.off(CREATE_NEW_QUERY_EVENT, clearFeedback);
+    emitter.off(EDIT_QUERY_EVENT, clearFeedback);
+    emitter.off(STARTING_XLSX_EXPORT_EVENT, clearFeedback);
+    emitter.off(SWITCH_QUERY_EVENT, clearFeedback);
 });
 
 function handleFault(event: NotifyFaultEvent): void {
@@ -71,7 +80,7 @@ function handleSuccess(event: NotifySuccessEvent): void {
     current_success.value = Option.fromValue(event.message);
 }
 
-function handleClear(): void {
+function clearFeedback(): void {
     current_fault.value = Option.nothing();
     current_success.value = Option.nothing();
     tql_query.value = "";

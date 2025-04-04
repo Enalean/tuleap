@@ -53,12 +53,11 @@ import type {
     ToggleQueryDetailsEvent,
 } from "../helpers/widget-events";
 import {
+    INITIALIZED_WITH_QUERY_EVENT,
     EDIT_QUERY_EVENT,
     REFRESH_ARTIFACTS_EVENT,
     QUERY_DELETED_EVENT,
-    UPDATE_WIDGET_TITLE_EVENT,
     TOGGLE_QUERY_DETAILS_EVENT,
-    CLEAR_FEEDBACK_EVENT,
     NOTIFY_FAULT_EVENT,
     SWITCH_QUERY_EVENT,
 } from "../helpers/widget-events";
@@ -114,7 +113,7 @@ function loadBackendQueries(): void {
                     props.selected_query ??
                     widget_queries.find((query) => query.is_default) ??
                     widget_queries[0];
-                emitter.emit(SWITCH_QUERY_EVENT, { query: backend_query.value });
+                emitter.emit(INITIALIZED_WITH_QUERY_EVENT, { query: backend_query.value });
                 has_error.value = false;
             },
             (fault) => {
@@ -159,14 +158,11 @@ function handleSwitchWriting(): void {
     if (!is_user_admin) {
         return;
     }
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
     emitter.emit(EDIT_QUERY_EVENT, { query_to_edit: backend_query.value });
 }
 
 function handleSwitchQuery(event: SwitchQueryEvent): void {
     backend_query.value = event.query;
-    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: event.query.title });
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
 }
 
 defineExpose({

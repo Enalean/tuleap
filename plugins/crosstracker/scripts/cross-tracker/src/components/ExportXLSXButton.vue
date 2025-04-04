@@ -41,7 +41,7 @@ import { useGettext } from "vue3-gettext";
 import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../injection-symbols";
 import { XLSXExportFault } from "../domain/XLSXExportFault";
 import type { Query } from "../type";
-import { CLEAR_FEEDBACK_EVENT, NOTIFY_FAULT_EVENT } from "../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT, STARTING_XLSX_EXPORT_EVENT } from "../helpers/widget-events";
 
 const artifact_table_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const column_name_getter = strictInject(GET_COLUMN_NAME);
@@ -59,7 +59,7 @@ async function exportXSLX(): Promise<void> {
         return;
     }
     is_loading.value = true;
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
+    emitter.emit(STARTING_XLSX_EXPORT_EVENT);
     const export_document_module = import("../helpers/exporter/export-document");
     const download_xlsx_module = import("../helpers/exporter/xlsx/download-xlsx");
 

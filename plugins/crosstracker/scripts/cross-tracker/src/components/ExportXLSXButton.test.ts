@@ -29,7 +29,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { ColumnNameGetter } from "../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../helpers/vue-gettext-provider-for-test";
 import type { Events, NotifyFaultEvent } from "../helpers/widget-events";
-import { CLEAR_FEEDBACK_EVENT, NOTIFY_FAULT_EVENT } from "../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT } from "../helpers/widget-events";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
 
@@ -51,12 +51,7 @@ vi.mock("../helpers/exporter/xlsx/download-xlsx", () => {
 
 describe("ExportXLSXButton", () => {
     let emitter: Emitter<Events>;
-    let dispatched_clear_events: true[];
     let dispatched_fault_events: NotifyFaultEvent[];
-
-    const registerClearEvents = (): void => {
-        dispatched_clear_events.push(true);
-    };
 
     const registerFaultEvents = (event: NotifyFaultEvent): void => {
         dispatched_fault_events.push(event);
@@ -66,14 +61,11 @@ describe("ExportXLSXButton", () => {
         downloadXLSXDocument.mockReset();
         downloadXLSX.mockReset();
         emitter = mitt<Events>();
-        dispatched_clear_events = [];
         dispatched_fault_events = [];
-        emitter.on(CLEAR_FEEDBACK_EVENT, registerClearEvents);
         emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvents);
     });
 
     afterEach(() => {
-        emitter.off(CLEAR_FEEDBACK_EVENT, registerClearEvents);
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvents);
     });
 
@@ -122,7 +114,6 @@ describe("ExportXLSXButton", () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(xlsx_button_icon.classes()).toContain("fa-download");
-            expect(dispatched_clear_events).toHaveLength(1);
             expect(dispatched_fault_events).toHaveLength(0);
         });
 
