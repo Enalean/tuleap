@@ -31,6 +31,7 @@ final readonly class ArtidocPresenter
     public string $allowed_trackers;
     public string $selected_tracker;
     public string $pdf_templates;
+    public string $selected_readonly_fields;
 
     /**
      * @param list<DocumentTrackerRepresentation> $allowed_trackers
@@ -43,12 +44,14 @@ final readonly class ArtidocPresenter
         public string $title,
         ?DocumentTrackerRepresentation $selected_tracker,
         array $allowed_trackers,
+        array $selected_readonly_fields,
         public int $upload_max_size,
         ?array $pdf_templates,
         public bool $are_fields_enabled,
     ) {
-        $this->selected_tracker = encode($selected_tracker);
-        $this->allowed_trackers = encode($allowed_trackers);
-        $this->pdf_templates    = encode($pdf_templates);
+        $this->selected_tracker         = encode($selected_tracker);
+        $this->allowed_trackers         = encode($allowed_trackers);
+        $this->pdf_templates            = encode($pdf_templates);
+        $this->selected_readonly_fields = encode($selected_readonly_fields);
     }
 }

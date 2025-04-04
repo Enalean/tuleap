@@ -64,6 +64,7 @@
             <fields-selection-introductory-text
                 v-bind:tracker="configuration_store.selected_tracker.value"
             />
+            <fields-selection v-bind:selected_fields="configuration_store.selected_fields" />
         </div>
 
         <div class="tlp-modal-footer">
@@ -119,6 +120,7 @@ import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
+import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";

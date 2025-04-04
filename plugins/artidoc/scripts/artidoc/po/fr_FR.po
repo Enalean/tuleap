@@ -105,6 +105,9 @@ msgstr "Configuration sauvegardée"
 msgid "Configure document"
 msgstr "Configurer le document"
 
+msgid "Display"
+msgstr "Affichage"
+
 msgid ""
 "Do you want to continue to force save your modification, or discard it and "
 "load the new one?"
@@ -130,11 +133,17 @@ msgstr "Exporter le document en PDF"
 msgid "Export error"
 msgstr "Erreur d'export"
 
+msgid "Field"
+msgstr "Champ"
+
 msgid "Fields selection"
 msgstr "Sélection des champs"
 
 msgid "Force save"
 msgstr "Forcer la sauvegarde"
+
+msgid "Full row"
+msgstr "Ligne entière"
 
 msgid "Fullscreen"
 msgstr "Plein écran"
@@ -185,6 +194,9 @@ msgstr "Déplacer vers le haut"
 
 msgid "No artifact is matching your query"
 msgstr "Aucun artéfact ne correspond à votre recherche"
+
+msgid "No fields selected"
+msgstr "Aucun champ n'est sélectionné"
 
 msgid "No template was defined for export, please contact site administrator"
 msgstr ""

@@ -22,6 +22,7 @@ import { ref } from "vue";
 import { putConfiguration } from "@/helpers/rest-querier";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Project } from "@/helpers/project.type";
+import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
 
 export interface TitleFieldDefinition {
     readonly field_id: number;
@@ -70,6 +71,7 @@ export function isTrackerWithSubmittableSection(
 export interface ConfigurationStore {
     selected_tracker: Ref<Tracker | null>;
     allowed_trackers: readonly Tracker[];
+    selected_fields: ReadonlyField[];
     is_saving: Ref<boolean>;
     is_error: Ref<boolean>;
     is_success: Ref<boolean>;
@@ -86,6 +88,7 @@ export function initConfigurationStore(
     document_id: number,
     selected_tracker: Tracker | null,
     allowed_trackers: readonly Tracker[],
+    selected_fields: ReadonlyField[],
 ): ConfigurationStore {
     const currently_selected_tracker = ref(selected_tracker);
     const is_saving = ref(false);
@@ -123,6 +126,7 @@ export function initConfigurationStore(
     return {
         allowed_trackers,
         selected_tracker: currently_selected_tracker,
+        selected_fields: selected_fields,
         is_saving,
         is_error,
         is_success,
