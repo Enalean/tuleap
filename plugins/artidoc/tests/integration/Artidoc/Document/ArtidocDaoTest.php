@@ -128,7 +128,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
         self::assertCount(count($field_ids), $fields);
         foreach ($field_ids as $index => $field_id) {
-            self::assertSame($field_id, $fields[$index]['field_id']);
+            self::assertSame($field_id, $fields[$index]->field_id);
         }
     }
 

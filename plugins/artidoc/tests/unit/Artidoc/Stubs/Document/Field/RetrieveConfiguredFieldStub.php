@@ -23,26 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Document\Field;
 
 use Tuleap\Artidoc\Document\Field\RetrieveConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
-/**
- * @psalm-import-type ConfiguredFieldRow from RetrieveConfiguredField
- */
 final readonly class RetrieveConfiguredFieldStub implements RetrieveConfiguredField
 {
     /**
-     * @param list<ConfiguredFieldRow> $rows
+     * @param list<StoredConfiguredField> $rows
      */
     private function __construct(private array $rows)
     {
     }
 
     /**
-     * @param list<ConfiguredFieldRow> $rows
+     * @no-named-arguments
      */
-    public static function withConfiguredFields(array $rows): self
+    public static function withConfiguredFields(StoredConfiguredField $first_field, StoredConfiguredField ...$other_fields): self
     {
-        return new self($rows);
+        return new self([$first_field, ...$other_fields]);
     }
 
     public static function withoutConfiguredFields(): self

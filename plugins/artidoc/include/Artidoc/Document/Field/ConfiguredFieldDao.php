@@ -23,19 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\DB\DataAccessObject;
 
-/**
- * @psalm-import-type ConfiguredFieldRow from RetrieveConfiguredField
- */
 final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfiguredField
 {
     public function retrieveConfiguredFieldsFromItemId(int $item_id): array
     {
         return array_values(
             array_map(
-                self::injectDisplayType(...),
+                self::mapToField(...),
                 $this->getDB()->run(
                     <<<EOS
                     SELECT field_id, display_type
@@ -53,7 +51,7 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
     {
         return array_values(
             array_map(
-                self::injectDisplayType(...),
+                self::mapToField(...),
                 $this->getDB()->run(
                     <<<EOS
                     SELECT field_id, display_type
@@ -80,15 +78,10 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
 
     /**
      * @param array{field_id: int, display_type: string} $row
-     * @return ConfiguredFieldRow
      */
-    private static function injectDisplayType(array $row): array
+    private static function mapToField(array $row): StoredConfiguredField
     {
-        $row['display_type'] = DisplayType::tryFrom($row['display_type']);
-        if (! $row['display_type']) {
-            $row['display_type'] = DisplayType::COLUMN;
-        }
-
-        return $row;
+        $display_type = DisplayType::tryFrom($row['display_type']) ?? DisplayType::COLUMN;
+        return new StoredConfiguredField($row['field_id'], $display_type);
     }
 }

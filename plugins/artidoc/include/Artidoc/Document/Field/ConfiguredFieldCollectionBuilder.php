@@ -23,11 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
-/**
- * @psalm-import-type ConfiguredFieldRow from RetrieveConfiguredField
- */
 final readonly class ConfiguredFieldCollectionBuilder
 {
     public function __construct(private RetrieveConfiguredField $dao, private \Tracker_FormElementFactory $factory)
@@ -50,13 +48,13 @@ final readonly class ConfiguredFieldCollectionBuilder
     }
 
     /**
-     * @param list<ConfiguredFieldRow> $rows
+     * @param list<StoredConfiguredField> $stored_fields
      */
-    private function buildFromRows(array $rows, \PFUser $user): ConfiguredFieldCollection
+    private function buildFromRows(array $stored_fields, \PFUser $user): ConfiguredFieldCollection
     {
         $fields = [];
-        foreach ($rows as $row) {
-            $field = $this->factory->getFieldById($row['field_id']);
+        foreach ($stored_fields as $stored_field) {
+            $field = $this->factory->getFieldById($stored_field->field_id);
 
             if (! $field instanceof \Tracker_FormElement_Field_String) {
                 continue;
@@ -79,7 +77,7 @@ final readonly class ConfiguredFieldCollectionBuilder
             if (! isset($fields[$field->tracker_id])) {
                 $fields[$field->tracker_id] = [];
             }
-            $fields[$field->tracker_id][] = new ConfiguredField($field, $row['display_type']);
+            $fields[$field->tracker_id][] = new ConfiguredField($field, $stored_field->display_type);
         }
 
         return new ConfiguredFieldCollection($fields);
