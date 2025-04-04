@@ -42,7 +42,6 @@ use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\ExternalSemanticsExportEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
-use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
@@ -91,7 +90,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
             $this->addHook(TrackerEventExportFullXML::NAME);
-            $this->addHook(IsFieldUsedInASemanticEvent::NAME);
             $this->addHook(ImportRendererFromXmlEvent::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(CompleteIssuesTemplateEvent::NAME);
@@ -349,17 +347,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         \assert($semantics instanceof Tracker_SemanticCollection);
 
         $semantics->add(Cardwall_Semantic_CardFields::load($tracker));
-    }
-
-    public function isFieldUsedInASemanticEvent(IsFieldUsedInASemanticEvent $event)
-    {
-        $checker = new FieldUsedInSemanticObjectChecker(
-            new BackgroundColorDao()
-        );
-
-        $event->setIsUsed(
-            $checker->isUsedInBackgroundColorSemantic($event->getField())
-        );
     }
 
     /**

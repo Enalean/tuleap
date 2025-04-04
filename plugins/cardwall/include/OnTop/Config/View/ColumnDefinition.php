@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Cardwall_OnTop_Config_View_ColumnDefinition
 {
     /**
@@ -248,8 +248,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
             \Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder::buildPresenter(
                 $current_color,
                 $input_name,
-                $input_id,
-                false
+                $input_id
             )
         );
     }

@@ -22,6 +22,7 @@ import { createApp } from "vue";
 import { createGettext } from "vue3-gettext";
 import ColorPicker from "./ColorPicker.vue";
 import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
+import { getAttributeOrThrow } from "@tuleap/dom";
 
 export async function createColorPicker(mount_point: HTMLElement): Promise<void> {
     const gettext = await initVueGettext(createGettext, (locale: string) => {
@@ -29,11 +30,12 @@ export async function createColorPicker(mount_point: HTMLElement): Promise<void>
     });
 
     const app = createApp(ColorPicker, {
-        input_name: mount_point.dataset.inputName,
-        input_id: mount_point.dataset.inputId,
-        current_color: mount_point.dataset.currentColor,
-        is_switch_disabled: Boolean(mount_point.dataset.isSwitchDisabled),
-        is_old_palette_enabled: Boolean(mount_point.dataset.isOldPaletteEnabled),
+        input_name: getAttributeOrThrow(mount_point, "data-input-name"),
+        input_id: getAttributeOrThrow(mount_point, "data-input-id"),
+        current_color: getAttributeOrThrow(mount_point, "data-current-color"),
+        is_unsupported_color: Boolean(
+            getAttributeOrThrow(mount_point, "data-is-unsupported-color"),
+        ),
     });
     app.use(gettext);
     app.mount(mount_point);

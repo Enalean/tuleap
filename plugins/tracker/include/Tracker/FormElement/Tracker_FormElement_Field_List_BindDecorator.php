@@ -128,15 +128,15 @@ class Tracker_FormElement_Field_List_BindDecorator
     /**
      * Display the color and allow the user to edit it
      */
-    public function decorateEdit($is_used_in_semantics): ColorpickerMountPointPresenter
+    public function decorateEdit(): ColorpickerMountPointPresenter
     {
         $color = $this->getCurrentColor();
         $id    = 'decorator_' . $this->field_id . '_' . $this->value_id;
 
-        return self::getColorPickerMountPoint($id, $this->value_id, $color, $is_used_in_semantics);
+        return self::getColorPickerMountPoint($id, $this->value_id, $color);
     }
 
-    private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color, $is_used_in_semantics): ColorpickerMountPointPresenter
+    private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color): ColorpickerMountPointPresenter
     {
         $input_name = "bind[decorator][$value_id]";
         $input_id   = $decorator_id . '_field';
@@ -145,15 +145,14 @@ class Tracker_FormElement_Field_List_BindDecorator
             $current_color,
             $input_name,
             $input_id,
-            $is_used_in_semantics
         );
     }
 
-    public static function noDecoratorEdit(int $field_id, int $value_id, bool $is_used_in_semantics): ColorpickerMountPointPresenter
+    public static function noDecoratorEdit(int $field_id, int $value_id): ColorpickerMountPointPresenter
     {
         $id = 'decorator_' . $field_id . '_' . $value_id;
 
-        return self::getColorPickerMountPoint($id, $value_id, null, $is_used_in_semantics);
+        return self::getColorPickerMountPoint($id, $value_id, null);
     }
 
     protected static function fetchSquareColor($id, $title, $classname, $r, $g, $b, $img = 'blank16x16.png')
