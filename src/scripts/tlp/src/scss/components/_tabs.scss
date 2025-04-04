@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "button_styles_mixins" as button_styles;
+
 $tlp-tabs-transition: 75ms ease-out;
 $active-tab-border-width: 3px;
 $inactive-tab-right-border-width: 1px;
@@ -126,6 +128,16 @@ $inactive-tab-right-margin: calc(
     border-top: 1px solid var(--tlp-neutral-light-color);
 }
 
+button:where(.tlp-tab) {
+    @include button_styles.unset-button-style;
+
+    cursor: pointer;
+
+    &:focus {
+        color: var(--tlp-main-color);
+    }
+}
+
 .tlp-tab {
     display: flex;
     position: relative;
@@ -152,7 +164,9 @@ $inactive-tab-right-margin: calc(
     }
 
     &.tlp-tab-disabled,
-    &.tlp-tab-disabled:hover {
+    &.tlp-tab-disabled:hover,
+    &[disabled],
+    &[disabled]:hover {
         border-bottom-color: transparent;
         opacity: 0.5;
         color: var(--tlp-dimmed-color);
@@ -201,7 +215,9 @@ $inactive-tab-right-margin: calc(
     }
 
     &.tlp-tab-disabled,
-    &.tlp-tab-disabled:hover {
+    &.tlp-tab-disabled:hover,
+    &[disabled],
+    &[disabled]:hover {
         padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing)
             var(--tlp-medium-spacing);
         border-right: $inactive-tab-right-border-width solid
