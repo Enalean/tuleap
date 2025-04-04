@@ -31,7 +31,7 @@ use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
 
-final readonly class EditorWithReverseLinksBuilder
+final readonly class EditorWithReverseLinksPresenterBuilder
 {
     public function __construct(
         private ParentInHierarchyRetriever $parent_tracker_retriever,
