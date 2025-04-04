@@ -35,6 +35,7 @@ type DropdownProps = {
     disabled_options: boolean;
     trigger: "click" | "hover-and-click";
     keyboard: boolean;
+    hypertext: boolean;
 };
 
 function getMenuClasses(args: DropdownProps): string {
@@ -47,16 +48,96 @@ function getMenuClasses(args: DropdownProps): string {
 
 function getItemClasses(args: DropdownProps): string {
     const classes = ["tlp-dropdown-menu-item"];
-    if (args.disabled_options) {
+    if (args.disabled_options && args.hypertext) {
         classes.push("tlp-dropdown-menu-item-disabled");
     }
     return classes.join(" ");
 }
 
-function getTemplate(args: DropdownProps): TemplateResult {
-    if (args.story === "with submenu") {
-        // prettier-ignore
-        return html`
+function getDropdownItemsAsLinks(args: DropdownProps): TemplateResult {
+    return html`<span class="tlp-dropdown-menu-title" role="menuitem">Favorites</span>
+        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">User story</a>
+        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">Task</a>
+        <span class="tlp-dropdown-menu-title" role="menuitem">Others</span>
+        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">Epic</a>
+        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">Test case</a>
+        <span class="tlp-dropdown-menu-separator" role="separator"></span>
+        <a
+            href="https://example.com"
+            class="${getItemClasses(args)} tlp-dropdown-menu-item-danger"
+            role="menuitem"
+            >External request</a
+        >`;
+}
+
+function getDropdownItemsAsButtons(args: DropdownProps): TemplateResult {
+    return html`<span class="tlp-dropdown-menu-title" role="menuitem">Favorites</span>
+        <button
+            type="button"
+            class=${getItemClasses(args)}
+            ?disabled=${args.disabled_options}
+            role="menuitem"
+        >
+            User story
+        </button>
+        <button
+            type="button"
+            class=${getItemClasses(args)}
+            ?disabled=${args.disabled_options}
+            role="menuitem"
+        >
+            Task
+        </button>
+        <span class="tlp-dropdown-menu-title" role="menuitem">Others</span>
+        <button
+            type="button"
+            class=${getItemClasses(args)}
+            ?disabled=${args.disabled_options}
+            role="menuitem"
+        >
+            Epic
+        </button>
+        <button
+            type="button"
+            class=${getItemClasses(args)}
+            ?disabled=${args.disabled_options}
+            role="menuitem"
+        >
+            Test case
+        </button>
+        <span class="tlp-dropdown-menu-separator" role="separator"></span>
+        <button
+            type="button"
+            class="${getItemClasses(args)} tlp-dropdown-menu-item-danger"
+            ?disabled=${args.disabled_options}
+            role="menuitem"
+        >
+            External request
+        </button>`;
+}
+
+function getBaseTemplate(args: DropdownProps): TemplateResult {
+    const dropdown_items = args.hypertext
+        ? getDropdownItemsAsLinks(args)
+        : getDropdownItemsAsButtons(args);
+
+    // prettier-ignore
+    return html`
+<div class="tlp-dropdown">
+    <button type="button" id="dropdown-example" class="tlp-button-primary">
+        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+        Add item
+        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+    </button>
+    <div class=${getMenuClasses(args)} id="dropdown-menu-example" role="menu">
+        ${ dropdown_items }
+    </div>
+</div>`;
+}
+
+function getTemplateWithSubMenu(): TemplateResult {
+    // prettier-ignore
+    return html`
 <button type="button" id="dropdown-example" class="tlp-button-primary tlp-button-outline">
     Using options and submenu
     <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
@@ -95,57 +176,63 @@ function getTemplate(args: DropdownProps): TemplateResult {
         </div>
     </div>
 </div>`;
-    } else if (args.story === "with tabs") {
-        // prettier-ignore
-        return html`
-            <div class="tlp-dropdown">
-                <button type="button" id="dropdown-example" class="tlp-button-primary">
-                    with tabs
-                    <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
-                </button>
-                <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" id="dropdown-menu-example" role="menu">
-                    <nav class="tlp-tabs">
-                        <a href="https://example.com" class="tlp-tab tlp-tab-active">Branches</a>
-                        <a href="https://example.com" class="tlp-tab">Tags</a>
-                    </nav>
-                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
-                        <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-rebel" aria-hidden="true"></i> Send a email to the Rebel Alliance
-                    </a>
-                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
-                        <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-empire" aria-hidden="true"></i> Send a email to the Empire
-                    </a>
-                </div>
-            </div>`;
-    } else if (args.story === "with filter") {
-        // prettier-ignore
-        return html`
-            <div class="tlp-dropdown">
-                <button type="button" id="dropdown-example" class="tlp-button-primary">
-                    with filter
-                    <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
-                </button>
-                <div class="tlp-dropdown-menu dropdown-menu-example-filter" id="dropdown-menu-example" role="menu">
-                    <div class="tlp-dropdown-menu-actions">
-                        <input type="search" class="tlp-search tlp-search-small" placeholder="Filter…">
-                        <button class="tlp-button-primary tlp-button-small">
-                            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-                            Create new item
-                        </button>
-                    </div>
-                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
-                        Open the last 10 days
-                    </a>
-                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
-                        All about me
-                    </a>
-                    <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
-                        Waiting for action
-                    </a>
-                </div>
-            </div>`;
-    } else if (args.story === "split button") {
-        // prettier-ignore
-        return html`
+}
+
+function getTemplateWithTabs(): TemplateResult {
+    // prettier-ignore
+    return html`
+<div class="tlp-dropdown">
+    <button type="button" id="dropdown-example" class="tlp-button-primary">
+        with tabs
+        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+    </button>
+    <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" id="dropdown-menu-example" role="menu">
+        <nav class="tlp-tabs">
+            <a href="https://example.com" class="tlp-tab tlp-tab-active">Branches</a>
+            <a href="https://example.com" class="tlp-tab">Tags</a>
+        </nav>
+        <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-rebel" aria-hidden="true"></i> Send a email to the Rebel Alliance
+        </a>
+        <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-empire" aria-hidden="true"></i> Send a email to the Empire
+        </a>
+    </div>
+</div>`;
+}
+
+function getTemplateWithFilter(): TemplateResult {
+    // prettier-ignore
+    return html`
+<div class="tlp-dropdown">
+    <button type="button" id="dropdown-example" class="tlp-button-primary">
+        with filter
+        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+    </button>
+    <div class="tlp-dropdown-menu dropdown-menu-example-filter" id="dropdown-menu-example" role="menu">
+        <div class="tlp-dropdown-menu-actions">
+            <input type="search" class="tlp-search tlp-search-small" placeholder="Filter…">
+            <button class="tlp-button-primary tlp-button-small">
+                <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                Create new item
+            </button>
+        </div>
+        <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+            Open the last 10 days
+        </a>
+        <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+            All about me
+        </a>
+        <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
+            Waiting for action
+        </a>
+    </div>
+</div>`;
+}
+
+function getTemplateWithRegularSplitButton(): TemplateResult {
+    // prettier-ignore
+    return html`
 <div class="tlp-dropdown">
     <div class="tlp-dropdown-split-button">
         <button class="tlp-button-primary tlp-button-outline tlp-dropdown-split-button-main" type="button"
@@ -168,9 +255,11 @@ function getTemplate(args: DropdownProps): TemplateResult {
         </a>
     </div>
 </div>`;
-    } else if (args.story === "large split button") {
-        // prettier-ignore
-        return html`
+}
+
+function getTemplateWithLargeSplitButton(): TemplateResult {
+    // prettier-ignore
+    return html`
 <div class="tlp-dropdown">
     <div class="tlp-dropdown-split-button">
         <button class="tlp-button-primary tlp-dropdown-split-button-main tlp-button-large" type="button" title="Passed">
@@ -192,9 +281,11 @@ function getTemplate(args: DropdownProps): TemplateResult {
         </a>
     </div>
 </div>`;
-    } else if (args.story === "unique icon trigger") {
-        // prettier-ignore
-        return html`
+}
+
+function getTemplateWithUniqueIconTrigger(): TemplateResult {
+    // prettier-ignore
+    return html`
 <div class="tlp-dropdown">
     <i class="fa-solid fa-gear fa-fw" aria-hidden="true" id="dropdown-example"></i>
     <div id="dropdown-menu-example" class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
@@ -206,31 +297,26 @@ function getTemplate(args: DropdownProps): TemplateResult {
         </a>
     </div>
 </div>`;
+}
+
+function getTemplate(args: DropdownProps): TemplateResult {
+    switch (args.story) {
+        case "with submenu":
+            return getTemplateWithSubMenu();
+        case "with tabs":
+            return getTemplateWithTabs();
+        case "with filter":
+            return getTemplateWithFilter();
+        case "split button":
+            return getTemplateWithRegularSplitButton();
+        case "large split button":
+            return getTemplateWithLargeSplitButton();
+        case "unique icon trigger":
+            return getTemplateWithUniqueIconTrigger();
+        case "base":
+        default:
+            return getBaseTemplate(args);
     }
-    // prettier-ignore
-    return html`
-<div class="tlp-dropdown">
-    <button type="button" id="dropdown-example" class="tlp-button-primary">
-        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-        Add item
-        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
-    </button>
-    <div class=${getMenuClasses(args)} id="dropdown-menu-example" role="menu">
-        <span class="tlp-dropdown-menu-title" role="menuitem">Favorites</span>
-        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">User story</a>
-        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">Task</a>
-        <span class="tlp-dropdown-menu-title" role="menuitem">Others</span>
-        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">Epic</a>
-        <a href="https://example.com" class=${getItemClasses(args)} role="menuitem">Test case</a>
-        <span class="tlp-dropdown-menu-separator" role="separator"></span>
-        <a
-            href="https://example.com"
-            class="${getItemClasses(args)} tlp-dropdown-menu-item-danger"
-            role="menuitem"
-        >External request</a
-        >
-    </div>
-</div>`;
 }
 
 const meta: Meta<DropdownProps> = {
@@ -244,6 +330,7 @@ const meta: Meta<DropdownProps> = {
         return getTemplate(args);
     },
     args: {
+        hypertext: true,
         story: "base",
         top_align: false,
         disabled_options: false,
@@ -251,6 +338,11 @@ const meta: Meta<DropdownProps> = {
         keyboard: true,
     },
     argTypes: {
+        hypertext: {
+            name: "Hypertext",
+            description:
+                "When true, the dropdown items are &lt;a&gt; elements. When false, the dropdown items are &lt;button&gt; elements.",
+        },
         top_align: {
             name: "Top align",
             description: "Add the class",
@@ -261,7 +353,7 @@ const meta: Meta<DropdownProps> = {
         },
         disabled_options: {
             name: "Disabled options",
-            description: "Add the class",
+            description: "Sets the disabled attribute or add the class",
             table: {
                 type: { summary: ".tlp-dropdown-menu-item-disabled" },
             },

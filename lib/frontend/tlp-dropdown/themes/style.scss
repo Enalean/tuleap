@@ -204,7 +204,8 @@ $tlp-dropdown-transition: 75ms ease-out;
     font-size: 0.7rem;
 }
 
-.tlp-dropdown-menu-item-disabled {
+.tlp-dropdown-menu-item-disabled,
+.tlp-dropdown-menu-item[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
 

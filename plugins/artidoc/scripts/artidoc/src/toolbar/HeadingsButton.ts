@@ -65,13 +65,6 @@ export const renderHeadingsButton = (
     gettext_provider: GetText,
 ): UpdateFunction<InternalHeadingsButton> => {
     const isLevelDisabled = (level: Level): boolean => host.section?.level === level;
-    const getDropdownItemClasses = (heading_level: Level): Record<string, boolean> => {
-        return {
-            "artidoc-menuitem-level": true,
-            "tlp-dropdown-menu-item": true,
-            "artidoc-selected-level": isLevelDisabled(heading_level),
-        };
-    };
 
     const dispatchUpdateSectionLevel = (level: Level): void => {
         dispatch(host, "update-section-level", { detail: { level } });
@@ -94,8 +87,8 @@ export const renderHeadingsButton = (
                 <button
                     role="menuitem"
                     type="button"
-                    class="${getDropdownItemClasses(LEVEL_1)}"
-                    tabindex="${isLevelDisabled(LEVEL_1) ? "-1" : "0"}"
+                    class="tlp-dropdown-menu-item headings-button-dropdown-option"
+                    disabled="${isLevelDisabled(LEVEL_1)}"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_1)}"
                     title="${gettext_provider.gettext("Change to heading 1")}"
                     data-test="change-section-level-1"
@@ -106,8 +99,8 @@ export const renderHeadingsButton = (
                 <button
                     role="menuitem"
                     type="button"
-                    class="${getDropdownItemClasses(LEVEL_2)}"
-                    tabindex="${isLevelDisabled(LEVEL_2) ? "-1" : "0"}"
+                    class="tlp-dropdown-menu-item headings-button-dropdown-option"
+                    disabled="${isLevelDisabled(LEVEL_2)}"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_2)}"
                     title="${gettext_provider.gettext("Change to heading 2")}"
                     data-test="change-section-level-2"
@@ -118,8 +111,8 @@ export const renderHeadingsButton = (
                 <button
                     role="menuitem"
                     type="button"
-                    class="${getDropdownItemClasses(LEVEL_3)}"
-                    tabindex="${isLevelDisabled(LEVEL_3) ? "-1" : "0"}"
+                    class="tlp-dropdown-menu-item headings-button-dropdown-option"
+                    disabled="${isLevelDisabled(LEVEL_3)}"
                     onclick="${(): void => dispatchUpdateSectionLevel(LEVEL_3)}"
                     title="${gettext_provider.gettext("Change to heading 3")}"
                     data-test="change-section-level-3"

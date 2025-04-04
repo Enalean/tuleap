@@ -53,7 +53,7 @@ describe("HeadingsButton", () => {
         return target;
     };
 
-    it("should apply correct classes and tabindex to dropdown items based on the current section level", () => {
+    it("should disable the dropdown items according to the current level", () => {
         const section = CreateStoredSections.fromArtidocSection(
             FreetextSectionFactory.override({
                 level: LEVEL_3,
@@ -66,12 +66,9 @@ describe("HeadingsButton", () => {
 
         const [item_1, item_2, item_3] = items;
 
-        expect(item_1.classList.value).not.contains("artidoc-selected-level");
-        expect(item_1.getAttribute("tabindex")).toBe("0");
-        expect(item_2.classList.value).not.contains("artidoc-selected-level");
-        expect(item_2.getAttribute("tabindex")).toBe("0");
-        expect(item_3.classList.value).contains("artidoc-selected-level");
-        expect(item_3.getAttribute("tabindex")).toBe("-1");
+        expect(item_1.hasAttribute("disabled")).toBe(false);
+        expect(item_2.hasAttribute("disabled")).toBe(false);
+        expect(item_3.hasAttribute("disabled")).toBe(true);
     });
 
     it.each([
@@ -82,7 +79,9 @@ describe("HeadingsButton", () => {
         "When the user click the %s item in the dropdown, then it should dispatch an update-section-level event with the correct heading level and hide the dropdown",
         (item_name, expected_level) => {
             const section = CreateStoredSections.fromArtidocSection(
-                FreetextSectionFactory.create(),
+                FreetextSectionFactory.override({
+                    level: expected_level === LEVEL_1 ? LEVEL_2 : LEVEL_1,
+                }),
             );
             const host = getHost(section);
             const button = renderButton(host);

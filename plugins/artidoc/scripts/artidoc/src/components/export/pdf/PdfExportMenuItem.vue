@@ -23,7 +23,7 @@
         v-if="is_option_disabled"
         type="button"
         disabled
-        class="tlp-dropdown-menu-item tlp-dropdown-menu-item-disabled"
+        class="tlp-dropdown-menu-item"
         role="menuitem"
         v-bind:title="getDisabledOptionTitle()"
     >
