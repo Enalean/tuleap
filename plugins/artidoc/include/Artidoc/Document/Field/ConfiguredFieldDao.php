@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\DB\DataAccessObject;
 
@@ -79,9 +79,9 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
     /**
      * @param array{field_id: int, display_type: string} $row
      */
-    private static function mapToField(array $row): StoredConfiguredField
+    private static function mapToField(array $row): ArtifactSectionField
     {
         $display_type = DisplayType::tryFrom($row['display_type']) ?? DisplayType::COLUMN;
-        return new StoredConfiguredField($row['field_id'], $display_type);
+        return new ArtifactSectionField($row['field_id'], $display_type);
     }
 }

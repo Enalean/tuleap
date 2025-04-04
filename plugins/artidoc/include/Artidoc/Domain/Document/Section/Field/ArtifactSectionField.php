@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\Domain\Document\Section\Field;
 /**
  * @psalm-immutable
  */
-final readonly class StoredConfiguredField
+final readonly class ArtifactSectionField
 {
     public function __construct(
         public int $field_id,

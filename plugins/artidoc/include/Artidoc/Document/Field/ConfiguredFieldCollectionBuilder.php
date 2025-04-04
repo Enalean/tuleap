@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 final readonly class ConfiguredFieldCollectionBuilder
@@ -48,7 +48,7 @@ final readonly class ConfiguredFieldCollectionBuilder
     }
 
     /**
-     * @param list<StoredConfiguredField> $stored_fields
+     * @param list<ArtifactSectionField> $stored_fields
      */
     private function buildFromRows(array $stored_fields, \PFUser $user): ConfiguredFieldCollection
     {

@@ -30,7 +30,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Stubs\Document\Field\RetrieveConfiguredFieldStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -80,7 +80,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
             ->willReturn(DateFieldBuilder::aDateField(123)->build());
 
         $builder = new ConfiguredFieldCollectionBuilder(
-            RetrieveConfiguredFieldStub::withConfiguredFields(new StoredConfiguredField(123, DisplayType::COLUMN)),
+            RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
             $factory,
         );
 
@@ -100,7 +100,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
             );
 
         $builder = new ConfiguredFieldCollectionBuilder(
-            RetrieveConfiguredFieldStub::withConfiguredFields(new StoredConfiguredField(123, DisplayType::COLUMN)),
+            RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
             $factory,
         );
 
@@ -120,7 +120,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
             );
 
         $builder = new ConfiguredFieldCollectionBuilder(
-            RetrieveConfiguredFieldStub::withConfiguredFields(new StoredConfiguredField(123, DisplayType::COLUMN)),
+            RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
             $factory,
         );
 
@@ -148,7 +148,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
         );
 
         $builder = new ConfiguredFieldCollectionBuilder(
-            RetrieveConfiguredFieldStub::withConfiguredFields(new StoredConfiguredField(123, DisplayType::COLUMN)),
+            RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
             $factory,
         );
 
@@ -178,8 +178,8 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
 
         $builder = new ConfiguredFieldCollectionBuilder(
             RetrieveConfiguredFieldStub::withConfiguredFields(
-                new StoredConfiguredField(123, DisplayType::COLUMN),
-                new StoredConfiguredField(124, DisplayType::BLOCK),
+                new ArtifactSectionField(123, DisplayType::COLUMN),
+                new ArtifactSectionField(124, DisplayType::BLOCK),
             ),
             $factory,
         );
