@@ -46,6 +46,7 @@
         </div>
     </div>
     <selectable-pagination
+        v-if="!is_table_empty"
         v-bind:limit="limit"
         v-bind:offset="offset"
         v-bind:total_number="total"

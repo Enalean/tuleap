@@ -52,5 +52,6 @@ function getEmptyStateMessage(): string {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 </style>

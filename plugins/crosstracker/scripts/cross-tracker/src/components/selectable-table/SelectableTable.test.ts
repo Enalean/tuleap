@@ -52,6 +52,7 @@ import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
 import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
+import SelectablePagination from "./SelectablePagination.vue";
 
 vi.useFakeTimers();
 
@@ -202,7 +203,7 @@ describe(`SelectableTable`, () => {
         });
     });
     describe("Empty state", () => {
-        it("displays the empty state and no XLSX button when there is no result", () => {
+        it("displays the empty state and no XLSX button nor pagination when there is no result", () => {
             const table_result = {
                 table: new ArtifactsTableBuilder().build(),
                 total: 0,
@@ -216,6 +217,7 @@ describe(`SelectableTable`, () => {
             const wrapper = getWrapper(table_retriever);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
+            expect(wrapper.findComponent(SelectablePagination).exists()).toBe(false);
         });
     });
 });
