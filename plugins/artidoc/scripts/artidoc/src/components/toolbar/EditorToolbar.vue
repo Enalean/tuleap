@@ -131,17 +131,7 @@ onBeforeUnmount(() => {
     box-shadow: var(--tlp-sticky-header-shadow);
 }
 
-.artidoc-selected-level {
-    color: var(--tlp-dimmed-color-lighter-50);
-    cursor: default;
-
-    &:hover {
-        background: var(--tlp-white-color);
-        color: var(--tlp-dimmed-color-lighter-50);
-    }
-}
-
-.artidoc-menuitem-level {
+.headings-button-dropdown-option {
     display: flex;
     flex-direction: row;
     gap: var(--tlp-small-spacing);
