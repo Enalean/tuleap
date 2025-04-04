@@ -37,10 +37,5 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"
-  },
-  "pnpm": {
-    "overrides": {
-      "@babel/runtime": "^7.26.10"
-    }
   }
 }
