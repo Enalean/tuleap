@@ -32,6 +32,7 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
 {
     private ArtifactLinkFieldSpecificPropertiesDAO $dao;
     private int $artifact_link_field_id;
+    private int $artifact_link_field_id_2;
 
     protected function setUp(): void
     {
@@ -44,7 +45,8 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         $project_id = (int) $project->getID();
         $tracker    = $tracker_builder->buildTracker($project_id, 'MyTracker');
 
-        $this->artifact_link_field_id = $tracker_builder->buildArtifactLinkField($tracker->getId());
+        $this->artifact_link_field_id   = $tracker_builder->buildArtifactLinkField($tracker->getId());
+        $this->artifact_link_field_id_2 = $tracker_builder->buildArtifactLinkField($tracker->getId());
     }
 
     public function testSaveAndSearchProperties(): void
@@ -63,5 +65,16 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         $this->dao->saveSpecificProperties($this->artifact_link_field_id, ['can_edit_reverse_links' => 0]);
         $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
         self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 0], $properties);
+    }
+
+    public function testDuplicateProperties(): void
+    {
+        $this->dao->saveSpecificProperties($this->artifact_link_field_id, ['can_edit_reverse_links' => 1]);
+        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
+        self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 1], $properties);
+
+        $this->dao->duplicate($this->artifact_link_field_id, $this->artifact_link_field_id_2);
+        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id_2);
+        self::assertSame(['field_id' => $this->artifact_link_field_id_2, 'can_edit_reverse_links' => 1], $properties);
     }
 }
