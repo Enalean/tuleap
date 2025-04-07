@@ -1828,4 +1828,9 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     {
         return new ArtifactLinkFieldSpecificPropertiesDAO();
     }
+
+    public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
+    {
+        return '';
+    }
 }
