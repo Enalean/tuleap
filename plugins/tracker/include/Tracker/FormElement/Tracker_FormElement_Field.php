@@ -496,7 +496,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                     '</button>';
             }
 
-            $html .= '<label data-test="field-label" id="tracker_artifact_' . $this->id . '" for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) . '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
+            if (! $this->isAlwaysInEditMode()) {
+                $html .= '<label data-test="field-label" id="tracker_artifact_' . $this->id . '" for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) . '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
+            }
 
             $html .= $html_value;
             $html .= '</div>';

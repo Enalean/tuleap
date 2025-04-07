@@ -38,7 +38,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class EditorWithReverseLinksBuilderTest extends TestCase
+final class EditorWithReverseLinksPresenterBuilderTest extends TestCase
 {
     private const LINK_FIELD_ID             = 865;
     private const LINK_FIELD_LABEL          = 'My Artifact Links';
@@ -81,7 +81,7 @@ final class EditorWithReverseLinksBuilderTest extends TestCase
             ->withLabel(self::LINK_FIELD_LABEL)
             ->build();
 
-        $builder = new EditorWithReverseLinksBuilder(
+        $builder = new EditorWithReverseLinksPresenterBuilder(
             new ParentInHierarchyRetriever(
                 $this->search_parent_tracker,
                 RetrieveTrackerStub::withTrackers($parent_tracker),
@@ -124,7 +124,7 @@ final class EditorWithReverseLinksBuilderTest extends TestCase
             ->inTracker($current_tracker)
             ->build();
 
-        $builder   = new EditorWithReverseLinksBuilder(
+        $builder   = new EditorWithReverseLinksPresenterBuilder(
             new ParentInHierarchyRetriever(
                 $this->search_parent_tracker,
                 RetrieveTrackerStub::withTrackers($parent_tracker),
