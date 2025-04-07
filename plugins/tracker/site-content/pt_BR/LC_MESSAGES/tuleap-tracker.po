@@ -695,6 +695,9 @@ msgstr ""
 msgid "Calendar events configuration updated"
 msgstr ""
 
+msgid "Can edit reverse links"
+msgstr ""
+
 msgid "Can make the transition"
 msgstr ""
 

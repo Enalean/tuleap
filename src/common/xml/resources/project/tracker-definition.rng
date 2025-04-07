@@ -498,6 +498,14 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="can_edit_reverse_links">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>

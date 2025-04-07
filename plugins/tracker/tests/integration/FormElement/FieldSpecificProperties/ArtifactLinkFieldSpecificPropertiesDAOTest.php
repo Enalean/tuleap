@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
-use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -31,15 +30,14 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
-    private EasyDB $db;
     private ArtifactLinkFieldSpecificPropertiesDAO $dao;
     private int $artifact_link_field_id;
 
     protected function setUp(): void
     {
-        $this->db        = DBFactory::getMainTuleapDBConnection()->getDB();
-        $tracker_builder = new TrackerDatabaseBuilder($this->db);
-        $core_builder    = new CoreDatabaseBuilder($this->db);
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+        $core_builder    = new CoreDatabaseBuilder($db);
         $this->dao       = new ArtifactLinkFieldSpecificPropertiesDAO();
 
         $project    = $core_builder->buildProject('project_name');
@@ -49,17 +47,21 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         $this->artifact_link_field_id = $tracker_builder->buildArtifactLinkField($tracker->getId());
     }
 
-    public function testManualProperties(): void
+    public function testSaveAndSearchProperties(): void
     {
         $empty_properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
         self::assertEmpty($empty_properties);
 
-        $this->db->run(
-            'INSERT INTO plugin_tracker_field_artifact_link(field_id, can_edit_reverse_links) VALUES(?, true)',
-            $this->artifact_link_field_id,
-        );
+        $this->dao->saveSpecificProperties($this->artifact_link_field_id, []);
+        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
+        self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 0], $properties);
 
+        $this->dao->saveSpecificProperties($this->artifact_link_field_id, ['can_edit_reverse_links' => 1]);
         $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
         self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 1], $properties);
+
+        $this->dao->saveSpecificProperties($this->artifact_link_field_id, ['can_edit_reverse_links' => 0]);
+        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
+        self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 0], $properties);
     }
 }

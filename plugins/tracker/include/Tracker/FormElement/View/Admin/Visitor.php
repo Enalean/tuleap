@@ -19,6 +19,7 @@
 
 use Tuleap\JSONHeader;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
@@ -76,7 +77,8 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
 
     public function visitArtifactLink(ArtifactLinkField $field)
     {
-        $this->visitField($field);
+        $this->element      = $field;
+        $this->adminElement = new ArtifactLinkFieldAdmin($field, $this->allUsedElements);
     }
 
     public function visitDate(Tracker_FormElement_Field_Date $field)

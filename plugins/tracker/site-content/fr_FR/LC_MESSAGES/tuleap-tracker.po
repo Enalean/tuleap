@@ -810,6 +810,9 @@ msgstr "Évènements du calendrier"
 msgid "Calendar events configuration updated"
 msgstr "La configuration des événements de calendrier a été mise à jour"
 
+msgid "Can edit reverse links"
+msgstr "Peut éditer les liens inversés"
+
 msgid "Can make the transition"
 msgstr "Peut effectuer la transition"
 
