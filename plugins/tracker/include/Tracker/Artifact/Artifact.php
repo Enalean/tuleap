@@ -43,7 +43,6 @@ use SimpleXMLElement;
 use SystemEventManager;
 use TemplateRendererFactory;
 use Tracker;
-use Tracker_Action_UpdateArtifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_CommentDao;
@@ -96,6 +95,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Action\UpdateArtifactAction;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
@@ -896,13 +896,14 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 break;
             case 'artifact-update':
                 $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
-                $action = new Tracker_Action_UpdateArtifact(
+                $action = new UpdateArtifactAction(
                     $this,
                     $this->getFormElementFactory(),
                     $this->getEventManager(),
                     $this->getTypeIsChildLinkRetriever(),
                     $this->getVisitRecorder(),
-                    $this->getHiddenFieldsetsDetector()
+                    $this->getHiddenFieldsetsDetector(),
+                    $this->getNewChangesetCreator($this->getFieldValidator()),
                 );
                 $action->process($layout, $request, $current_user);
                 break;

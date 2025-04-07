@@ -666,7 +666,6 @@
             <file name="plugins/tracker/tests/unit/Action/OpenListFieldsCompatibilityVerifierTest.php"/>
             <file name="plugins/tracker/tests/unit/Action/StaticListFieldVerifierTest.php"/>
             <file name="plugins/tracker/tests/unit/Action/Tracker_Action_CreateArtifactTest.php"/>
-            <file name="plugins/tracker/tests/unit/Action/Tracker_Action_UpdateArtifactTest.php"/>
             <file name="plugins/tracker/tests/unit/Action/UserGroupOpenListFieldVerifierTest.php"/>
             <file name="plugins/tracker/tests/unit/Action/UserListFieldVerifierTest.php"/>
             <file name="plugins/tracker/tests/unit/Admin/ArtifactDeletion/ArtifactsConfirmDeletionInTrackerAdminUrlBuilderTest.php"/>

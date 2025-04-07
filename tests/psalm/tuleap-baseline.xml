@@ -31921,6 +31921,28 @@
       <code><![CDATA[$dao->retrieve($sql)]]></code>
     </PossiblyFalseIterator>
   </file>
+  <file src="plugins/tracker/include/Action/UpdateArtifactAction.php">
+    <InvalidArgument>
+      <code><![CDATA[$remaining_effort_field]]></code>
+    </InvalidArgument>
+    <MissingParamType>
+      <code><![CDATA[$from_aid]]></code>
+      <code><![CDATA[$remaining_effort]]></code>
+      <code><![CDATA[$stay]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$this->artifact->tracker_id]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[addAutocomputeLabelIfFieldIsAutcocomputed]]></code>
+    </MissingReturnType>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
+    </PossiblyUndefinedArrayOffset>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[fetchCardValue]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
   <file src="plugins/tracker/include/Artifact/Renderer/ViewCollection.php">
     <FalsableReturnStatement>
       <code><![CDATA[current($this->views)]]></code>
@@ -32197,7 +32219,6 @@
       <code><![CDATA[fetchSubmitForOverlay]]></code>
       <code><![CDATA[getArtifactLinkIdsOfLastChangeset]]></code>
       <code><![CDATA[getArtifactLinksToRenderFromChangesetValue]]></code>
-      <code><![CDATA[getFieldDataBuilder]]></code>
       <code><![CDATA[getNormalizedSubmittedValue]]></code>
       <code><![CDATA[getReverseArtifactLinksToRender]]></code>
       <code><![CDATA[getTemplateRenderer]]></code>
@@ -33189,41 +33210,6 @@
       <code><![CDATA[process]]></code>
       <code><![CDATA[sendJSONErrors]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Action/UpdateArtifact.php">
-    <DeprecatedMethod>
-      <code><![CDATA[createNewChangeset]]></code>
-    </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[$remaining_effort_field]]></code>
-    </InvalidArgument>
-    <MissingParamType>
-      <code><![CDATA[$from_aid]]></code>
-      <code><![CDATA[$remaining_effort]]></code>
-      <code><![CDATA[$stay]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$this->artifact->tracker_id]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[addAutocomputeLabelIfFieldIsAutcocomputed]]></code>
-      <code><![CDATA[calculateRedirectParams]]></code>
-      <code><![CDATA[getCardUpdateInfo]]></code>
-      <code><![CDATA[getRedirectUrlAfterArtifactUpdate]]></code>
-      <code><![CDATA[process]]></code>
-      <code><![CDATA[sendAjaxCardsUpdateInfo]]></code>
-    </MissingReturnType>
-    <TooManyArguments>
-      <code><![CDATA[sendAjaxCardsUpdateInfo]]></code>
-      <code><![CDATA[sendAjaxCardsUpdateInfo]]></code>
-      <code><![CDATA[sendAjaxCardsUpdateInfo]]></code>
-    </TooManyArguments>
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[fetchCardValue]]></code>
-    </UndefinedInterfaceMethod>
-    <UndefinedMethod>
-      <code><![CDATA[isArtifactValueAutocomputed]]></code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Admin/ArtifactLinksUsageUpdater.php">
     <MissingReturnType>
@@ -37358,16 +37344,6 @@
       <code><![CDATA[DataAccessObject]]></code>
       <code><![CDATA[[$this->da, 'quoteSmart']]]></code>
       <code><![CDATA[[$this->da, 'quoteSmart']]]></code>
-      <code><![CDATA[[$this->da, 'quoteSmart']]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
@@ -37426,14 +37402,6 @@
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -37463,12 +37431,8 @@
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
     </InvalidFalsableReturnType>
     <MissingParamType>
@@ -37478,11 +37442,9 @@
       <code><![CDATA[$field]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$force_absolute_ranking]]></code>
       <code><![CDATA[$from_field_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -37499,7 +37461,6 @@
       <code><![CDATA[$parent_id]]></code>
       <code><![CDATA[$parent_id]]></code>
       <code><![CDATA[$prefix_name]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$rank]]></code>
       <code><![CDATA[$required]]></code>
@@ -37518,12 +37479,6 @@
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
@@ -38514,7 +38469,6 @@
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_mapping]]></code>
       <code><![CDATA[$field_mapping]]></code>
       <code><![CDATA[$field_mapping]]></code>
@@ -38542,7 +38496,6 @@
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$old_field_id]]></code>
       <code><![CDATA[$old_original_field_id]]></code>
       <code><![CDATA[$old_original_field_id]]></code>
@@ -38553,8 +38506,6 @@
       <code><![CDATA[$tracker]]></code>
       <code><![CDATA[$tracker]]></code>
       <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_is_empty]]></code>
       <code><![CDATA[$tracker_is_empty]]></code>
