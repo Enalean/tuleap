@@ -51,14 +51,20 @@
         </nav>
 
         <div class="tlp-modal-body" v-if="current_tab === 'tracker'">
-            <introductory-text v-bind:configuration_helper="configuration_helper" />
+            <tracker-selection-introductory-text
+                v-bind:configuration_helper="configuration_helper"
+            />
             <tracker-selection
                 v-bind:configuration_helper="configuration_helper"
-                v-bind:disabled="is_success"
+                v-bind:is_tracker_selection_disabled="is_success"
             />
         </div>
 
-        <div class="tlp-modal-body" v-else></div>
+        <div class="tlp-modal-body" v-else-if="configuration_store.selected_tracker.value !== null">
+            <fields-selection-introductory-text
+                v-bind:tracker="configuration_store.selected_tracker.value"
+            />
+        </div>
 
         <div class="tlp-modal-footer">
             <error-feedback v-if="is_error" v-bind:error_message="error_message" />
@@ -108,7 +114,7 @@ import { useGettext } from "vue3-gettext";
 import { computed, ref, toRaw } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import IntroductoryText from "@/components/configuration/IntroductoryText.vue";
+import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
@@ -118,6 +124,7 @@ import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModal
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
+import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSelectionIntroductoryText.vue";
 
 const { $gettext } = useGettext();
 
