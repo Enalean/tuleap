@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Cocur\Slugify\Slugify;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
 use Tuleap\User\UserNameNormalizer;
-
-require_once(__DIR__ . '/../../bootstrap.php');
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,6 +35,34 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->userNameNormalizer = $this->createMock(UserNameNormalizer::class);
+    }
+
+    #[DataProvider('dataProviderUserInformationExpectedUserName')]
+    public function testGeneratesUsernameFromUserInformation(array $user_information, string $expected_username): void
+    {
+        $rule = $this->createStub(\Rule_UserName::class);
+        $rule->method('isUnixValid')->willReturn(true);
+        $rule->method('isValid')->willReturn(true);
+
+        $username_generator = new UsernameGenerator(new UserNameNormalizer($rule, new Slugify()));
+
+        $generated_username = $username_generator->getUsername($user_information);
+
+        self::assertSame($expected_username, $generated_username);
+    }
+
+    public static function dataProviderUserInformationExpectedUserName(): array
+    {
+        return [
+            'From name' => [
+                ['name' => 'Some Name'],
+                'somename',
+            ],
+            'From email' => [
+                ['email' => '"Some.na me"@example.com'],
+                'some_name',
+            ],
+        ];
     }
 
     public function testItGeneratesUsernameFromPreferredUsername(): void
