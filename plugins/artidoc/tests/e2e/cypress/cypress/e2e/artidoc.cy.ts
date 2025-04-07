@@ -294,7 +294,7 @@ describe("Artidoc", () => {
         const added_word = "supercalifragilisticexpialidocious";
         getSectionDescription().type(`{end}${added_word}`);
         getSectionTitle().type("{end}");
-        cy.get(`[data-test=change-section-level-2]`).should("have.class", "artidoc-selected-level");
+        cy.get(`[data-test=change-section-level-2]`).should("have.attr", "disabled");
         cy.get("[data-test=change-section-level]").click();
         cy.get(`[data-test=change-section-level-1]`).click();
         assertTocContains(["1. Functional Requirement"]);
