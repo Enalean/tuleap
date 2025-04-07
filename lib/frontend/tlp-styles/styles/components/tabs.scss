@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "button_styles_mixins" as button_styles;
+@use "../button_styles_mixins" as button_styles;
 
 $tlp-tabs-transition: 75ms ease-out;
 $active-tab-border-width: 3px;
