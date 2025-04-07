@@ -188,8 +188,8 @@ function getTemplateWithTabs(): TemplateResult {
     </button>
     <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" id="dropdown-menu-example" role="menu">
         <nav class="tlp-tabs">
-            <a href="https://example.com" class="tlp-tab tlp-tab-active">Branches</a>
-            <a href="https://example.com" class="tlp-tab">Tags</a>
+            <button type="button" role="menuitem" class="tlp-tab tlp-tab-active">Branches</button>
+            <button type="button" role="menuitem" class="tlp-tab">Tags</button>
         </nav>
         <a href="https://example.com" class="tlp-dropdown-menu-item" role="menuitem">
             <i class="tlp-dropdown-menu-item-icon fa-brands fa-fw fa-rebel" aria-hidden="true"></i> Send a email to the Rebel Alliance
