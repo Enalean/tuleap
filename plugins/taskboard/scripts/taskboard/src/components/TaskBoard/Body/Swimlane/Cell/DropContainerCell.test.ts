@@ -29,7 +29,7 @@ function getWrapper(
     column: ColumnDefinition,
     can_add_in_place: boolean,
     slots: Slots = {},
-): Wrapper<DropContainerCell> {
+): Wrapper<Vue> {
     const swimlane = { card: { id: 1 } } as Swimlane;
 
     return shallowMount(DropContainerCell, {
