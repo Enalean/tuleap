@@ -18,92 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Permission_PermissionsSerializer
-     */
-    private $serializer;
-    /**
-     * @var int
-     */
-    private $project_id = 333;
-    /**
-     * @var int
-     */
-    private $marketing_ugroup_id = 115;
-    /**
-     * @var int
-     */
-    private $support_ugroup_id = 114;
-    /**
-     * @var int
-     */
-    private $summary_field_id = 352;
-    /**
-     * @var string
-     */
-    private $support_ugroup_literalize = '@ug_114';
-    /**
-     * @var string
-     */
-    private $project_members_literalize = '@_project_members';
-    /**
-     * @var string
-     */
-    private $project_admin_literalize = '@_project_admin';
-    /**
-     * @var \Mockery\LegacyMockInterface|PFUser
-     */
-    private $support_member_only;
-    /**
-     * @var \Mockery\LegacyMockInterface|PFUser
-     */
-    private $support_and_project_member;
-    /**
-     * @var \Mockery\LegacyMockInterface|PFUser
-     */
-    private $user_project_member;
-    /**
-     * @var \Mockery\LegacyMockInterface|PFUser
-     */
-    private $user_not_project_member;
-    /**
-     * @var \Mockery\LegacyMockInterface|PFUser
-     */
-    private $marketing_member_only;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|null
-     */
-    private $project;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Permission_PermissionRetrieveAssignee
-     */
-    private $assignee_retriever;
+    private Tracker_Permission_PermissionsSerializer $serializer;
+    private int $project_id                    = 333;
+    private int $marketing_ugroup_id           = 115;
+    private int $support_ugroup_id             = 114;
+    private int $summary_field_id              = 352;
+    private string $support_ugroup_literalize  = '@ug_114';
+    private string $project_members_literalize = '@acme_project_members';
+    private string $project_admin_literalize   = '@acme_project_admin';
+    private PFUser $support_member_only;
+    private PFUser $support_and_project_member;
+    private PFUser $user_project_member;
+    private PFUser $user_not_project_member;
+    private PFUser $marketing_member_only;
+    private Tracker&MockObject $tracker;
+    private Artifact $artifact;
+    private Project $project;
+    private Tracker_Permission_PermissionRetrieveAssignee&MockObject $assignee_retriever;
 
     protected function setUp(): void
     {
+        $this->project = ProjectTestBuilder::aProject()->withId($this->project_id)->withUnixName('acme')->build();
+
         $this->setUpUsers();
 
-        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getId')
-            ->andReturns($this->project_id)->getMock();
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getProject')->andReturn($this->project);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getProject')->willReturn($this->project);
 
-        $this->assignee_retriever = \Mockery::spy(\Tracker_Permission_PermissionRetrieveAssignee::class);
+        $this->assignee_retriever = $this->createMock(\Tracker_Permission_PermissionRetrieveAssignee::class);
 
         $this->serializer = new Tracker_Permission_PermissionsSerializer($this->assignee_retriever);
     }
@@ -119,14 +68,10 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
         );
     }
 
-    /**
-     *
-     * @return \Mockery\LegacyMockInterface|PFUser
-     */
-    private function getUserWithGroups(array $ugroup_ids)
+    private function getUserWithGroups(array $ugroup_ids): PFUser&MockObject
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUgroups')->with($this->project_id, \Mockery::any())->andReturns($ugroup_ids);
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getUgroups')->with($this->project_id, $this->anything())->willReturn($ugroup_ids);
 
         return $user;
     }
@@ -194,18 +139,18 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     private function anArtifact($submitter, array $assignees, array $authorized_ugroups): Artifact
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getSubmittedByUser')->andReturn($submitter);
-        $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $artifact->shouldReceive('getAuthorizedUGroups')->andReturn($authorized_ugroups);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getSubmittedByUser')->willReturn($submitter);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->method('getAuthorizedUGroups')->willReturn($authorized_ugroups);
 
-        $this->assignee_retriever->shouldReceive('getAssignees')->with($artifact)->andReturn($assignees);
+        $this->assignee_retriever->method('getAssignees')->with($artifact)->willReturn($assignees);
         return $artifact;
     }
 
     public function testProjectAdminAlwaysReturnsProjectAdminWhenAllUsersHaveAccessToAllArtifacts(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns([]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn([]);
 
         $this->assertTrackerUGroupIdsWithoutAdminsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -215,8 +160,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testProjectAdminReturnsAnonymousWhenAllUsersHaveAccessToAllArtifacts(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_FULL => [ProjectUGroup::ANONYMOUS]]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_FULL => [ProjectUGroup::ANONYMOUS]]);
 
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -226,8 +171,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testProjectAdminReturnsRegisteredUsersWhenTheyAreGranted(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_FULL => [ProjectUGroup::REGISTERED]]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_FULL => [ProjectUGroup::REGISTERED]]);
 
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -239,8 +184,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testProjectAdminReturnsProjectMemberWhenTheyAreGranted(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_FULL => [ProjectUGroup::PROJECT_MEMBERS]]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_FULL => [ProjectUGroup::PROJECT_MEMBERS]]);
 
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -250,8 +195,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testProjectAdminReturnsOneDynamicUserGroupWhenTheyAreGranted(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_FULL => [$this->support_ugroup_id]]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_FULL => [$this->support_ugroup_id]]);
 
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -261,8 +206,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testProjectAdminReturnsDynamicUsersAndProjectMembersGroupWhenTheyAreGranted(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_FULL => [$this->support_ugroup_id, ProjectUGroup::PROJECT_MEMBERS]]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_FULL => [$this->support_ugroup_id, ProjectUGroup::PROJECT_MEMBERS]]);
 
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -275,8 +220,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testTrackerAdminReturnsProjectMemberWhenTheyAreGranted(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_ADMIN => [ProjectUGroup::PROJECT_MEMBERS]]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_ADMIN => [ProjectUGroup::PROJECT_MEMBERS]]);
 
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -286,8 +231,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testTrackerAdminReturnsOneDynamicUserGroupWhenTheyAreGranted(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_ADMIN => [$this->support_ugroup_id]]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_ADMIN => [$this->support_ugroup_id]]);
 
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact($this->user_not_project_member, [], []),
@@ -297,8 +242,8 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testTrackerAdminReturnsDynamicUsersAndProjectMembersGroupWhenTheyAreGranted(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns(
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn(
                 [
                     Tracker::PERMISSION_ADMIN => [$this->support_ugroup_id, ProjectUGroup::PROJECT_MEMBERS],
                 ]
@@ -627,11 +572,11 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testSubmitterOnlyPermissionPermissionReturnsSubmitterOnlyUGroupsIds(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [Tracker::PERMISSION_SUBMITTER_ONLY => [$this->support_ugroup_id]]
         );
 
-        $this->tracker->shouldReceive('userIsAdmin')->andReturns(true);
+        $this->tracker->method('userIsAdmin')->willReturn(true);
 
         $this->artifact = $this->anArtifact($this->marketing_ugroup_id, [], []);
 
@@ -643,7 +588,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testFieldPermissionReturnsArtifactFieldsPermissionsWithoutPermissionSubmit(): void
     {
-        $this->tracker->shouldReceive('getFieldsAuthorizedUgroupsByPermissionType')->andReturns(
+        $this->tracker->method('getFieldsAuthorizedUgroupsByPermissionType')->willReturn(
             [
                 $this->summary_field_id =>
                     [
@@ -664,7 +609,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testGroupsPermissionsReturnsAllGroupsCanViewTracker(): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [
                 Tracker::PERMISSION_FULL           => [ProjectUGroup::PROJECT_ADMIN],
                 Tracker::PERMISSION_ADMIN          => [ProjectUGroup::PROJECT_ADMIN],
@@ -686,20 +631,20 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     private function mockSubmitter(array $submitter): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')
-            ->andReturns([Tracker::PERMISSION_SUBMITTER => $submitter]);
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')
+            ->willReturn([Tracker::PERMISSION_SUBMITTER => $submitter]);
     }
 
     private function mockAssignee(array $assignee): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [Tracker::PERMISSION_ASSIGNEE => $assignee]
         );
     }
 
     private function mockSubmitterAndAssignee(array $submitter, array $assignee): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [
                 Tracker::PERMISSION_SUBMITTER => $submitter,
                 Tracker::PERMISSION_ASSIGNEE  => $assignee,
@@ -709,7 +654,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     private function mockSeveralPermissions(array $submitter, array $assignee, array $full): void
     {
-        $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $this->tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [
                 Tracker::PERMISSION_FULL      => $full,
                 Tracker::PERMISSION_SUBMITTER => $submitter,

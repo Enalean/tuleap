@@ -41,6 +41,7 @@ final class TrackerTestBuilder
     private bool $user_can_submit = true;
     private ?Tracker $parent      = Tracker::NO_PARENT;
     private ?bool $user_can_view  = null;
+    private ?bool $user_is_admin  = null;
 
     public static function aTracker(): self
     {
@@ -117,6 +118,13 @@ final class TrackerTestBuilder
         return $this;
     }
 
+    public function withUserIsAdmin(bool $user_is_admin): self
+    {
+        $this->user_is_admin = $user_is_admin;
+
+        return $this;
+    }
+
     public function withParent(?Tracker $parent): self
     {
         $this->parent = $parent;
@@ -162,6 +170,7 @@ final class TrackerTestBuilder
             false,
             $this->user_can_submit,
             $this->user_can_view,
+            $this->user_is_admin,
         ) extends Tracker {
             public function __construct(
                 int $id,
@@ -181,6 +190,7 @@ final class TrackerTestBuilder
                 bool $enable_emailgateway,
                 private readonly bool $user_can_submit,
                 private readonly ?bool $user_can_view,
+                private readonly ?bool $user_is_admin,
             ) {
                 parent::__construct($id, $group_id, $name, $description, $item_name, $allow_copy, $submit_instructions, $browse_instructions, $status, $deletion_date, $instantiate_for_new_projects, $log_priority_changes, $notifications_level, $color, $enable_emailgateway);
             }
@@ -195,6 +205,11 @@ final class TrackerTestBuilder
             public function userCanView($user = 0): bool
             {
                 return $this->user_can_view ?? parent::userCanView($user);
+            }
+
+            public function userIsAdmin($user = 0): bool
+            {
+                return $this->user_is_admin ?? parent::userIsAdmin($user);
             }
         };
 

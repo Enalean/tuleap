@@ -18,47 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\CoversClass(Tracker_Permission_PermissionManager::class)]
 final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
 
-    /**
-     * @var Tracker_Permission_PermissionSetter
-     */
-    private $permission_setter;
-    /**
-     * @var Tracker_Permission_PermissionManager
-     */
-    private $permission_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var int
-     */
-    private $tracker_id;
-    /**
-     * @var array[]
-     */
-    private $permissions;
+    private Tracker_Permission_PermissionSetter $permission_setter;
+    private Tracker_Permission_PermissionManager $permission_manager;
+    private PermissionsManager&MockObject $permissions_manager;
+    private Tracker $tracker;
+    private int $tracker_id = 112;
+    private array $permissions;
 
     protected function setUp(): void
     {
-        $this->tracker_id = 112;
-        $project_id       = 34;
-        $this->tracker    = \Mockery::spy(\Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturns($this->tracker_id);
-        $this->tracker->shouldReceive('getGroupId')->andReturns($project_id);
-        $this->permissions         = [
+        $project           = ProjectTestBuilder::aProject()->withId(34)->build();
+        $this->tracker     = TrackerTestBuilder::aTracker()
+            ->withId($this->tracker_id)
+            ->withProject($project)
+            ->build();
+        $this->permissions = [
             ProjectUGroup::ANONYMOUS => [
                 'ugroup'      => ['name' => 'whatever'],
                 'permissions' => [],
@@ -76,9 +61,12 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
                 'permissions' => [],
             ],
         ];
-        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
-        $this->permission_setter   = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
-        $this->permission_manager  = new Tracker_Permission_PermissionManager();
+
+        $this->permissions_manager = $this->createMock(\PermissionsManager::class);
+        $this->permissions_manager->method('addHistory');
+
+        $this->permission_setter  = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
+        $this->permission_manager = new Tracker_Permission_PermissionManager();
     }
 
     public function testItDoesNothingTryingToGrantAnonymousSubmittedOnly(): void
@@ -87,8 +75,8 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             ProjectUGroup::ANONYMOUS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
-        $this->permissions_manager->shouldReceive('addPermission')->never();
-        $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();
+        $this->permissions_manager->expects($this->never())->method('addPermission');
+        $this->permissions_manager->expects($this->never())->method('revokePermissionForUGroup');
 
         $this->permission_manager->save($request, $this->permission_setter);
     }
@@ -99,8 +87,8 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
-        $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::REGISTERED)->once();
-        $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();
+        $this->permissions_manager->expects($this->once())->method('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::REGISTERED);
+        $this->permissions_manager->expects($this->never())->method('revokePermissionForUGroup');
 
         $this->permission_manager->save($request, $this->permission_setter);
     }
@@ -116,8 +104,8 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_FULL,
         ]);
 
-        $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::REGISTERED)->once();
-        $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->with(Tracker::PERMISSION_SUBMITTER, $this->tracker_id, ProjectUGroup::REGISTERED)->once();
+        $this->permissions_manager->expects($this->once())->method('addPermission')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::REGISTERED);
+        $this->permissions_manager->expects($this->once())->method('revokePermissionForUGroup')->with(Tracker::PERMISSION_SUBMITTER, $this->tracker_id, ProjectUGroup::REGISTERED);
 
         $this->permission_manager->save(
             $request,
@@ -132,8 +120,8 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
-        $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::ANONYMOUS)->once();
-        $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();
+        $this->permissions_manager->expects($this->once())->method('addPermission')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::ANONYMOUS);
+        $this->permissions_manager->expects($this->never())->method('revokePermissionForUGroup');
 
         $this->permission_manager->save($request, $this->permission_setter);
     }
@@ -160,8 +148,8 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ]);
 
-        $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS)->once();
-        $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();
+        $this->permissions_manager->expects($this->once())->method('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS);
+        $this->permissions_manager->expects($this->never())->method('revokePermissionForUGroup');
 
         $this->permission_manager->save($request, $this->permission_setter);
     }
@@ -176,8 +164,8 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
             Tracker::PERMISSION_FULL => 1,
         ];
 
-        $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS)->once();
-        $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS)->once();
+        $this->permissions_manager->expects($this->once())->method('addPermission')->with(Tracker::PERMISSION_SUBMITTER_ONLY, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS);
+        $this->permissions_manager->expects($this->once())->method('revokePermissionForUGroup')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $permission_setter = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
         $this->permission_manager->save($request, $permission_setter);

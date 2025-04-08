@@ -21,111 +21,69 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Permission_PermissionChecker
-     */
-    private $permission_checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $submitter;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $restricted_user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $not_member;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact2;
-    /**
-     * @var int
-     */
-    private $ugroup_id_maintainers = 111;
-    /**
-     * @var int
-     */
-    private $ugroup_id_admin = 4;
-    /**
-     * @var int
-     */
-    private $ugroup_private_project = 114;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $maintainer;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $tracker_admin;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $project_admin;
+    private Tracker_Permission_PermissionChecker $permission_checker;
+    private PFUser $user;
+    private PFUser $submitter;
+    private Artifact&MockObject $artifact;
+    private PFUser $restricted_user;
+    private PFUser $not_member;
+    private Artifact $artifact2;
+    private int $ugroup_id_maintainers  = 111;
+    private int $ugroup_private_project = 114;
+    private PFUser $maintainer;
+    private PFUser $tracker_admin;
+    private PFUser $project_admin;
 
     protected function setUp(): void
     {
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getID')->andReturns(120);
-        $project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withId(222)->build();
 
-        $user_manager             = \Mockery::spy(\UserManager::class);
-        $project_access_checker   = \Mockery::spy(ProjectAccessChecker::class);
-        $this->permission_checker = new Tracker_Permission_PermissionChecker(
-            $user_manager,
-            $project_access_checker,
-            $this->createMock(\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker::class),
-        );
+        $private_project = ProjectTestBuilder::aProject()->withId(223)->withAccessPrivate()->build();
 
-        $tracker = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns(666);
-        $tracker->shouldReceive('getGroupId')->andReturns(222);
-        $tracker->shouldReceive('getProject')->andReturns($project);
+        $another_project = ProjectTestBuilder::aProject()->withId(12)->build();
+
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(666);
+        $tracker->method('getGroupId')->willReturn(222);
+        $tracker->method('getProject')->willReturn($project);
+        $tracker->method('isDeleted')->willReturn(false);
+        $tracker->method('userIsAdmin')->willReturn(false);
 
         $ugroup_id_submitter_only = 112;
 
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturns(120);
-        $this->user->shouldReceive('isMember')->with(12)->andReturns(true);
-        $this->user->shouldReceive('userIsAdmin')->with(12)->andReturns(true);
-        $this->user->shouldReceive('isAdmin')->andReturns(false);
+        $this->user = UserTestBuilder::aUser()
+            ->withId(120)
+            ->withAdministratorOf($another_project)
+            ->withUserGroupMembership($project, $ugroup_id_submitter_only, false)
+            ->withUserGroupMembership($project, $this->ugroup_id_maintainers, false)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->submitter = \Mockery::spy(\PFUser::class);
-        $this->submitter->shouldReceive('getId')->andReturns(250);
-        $this->submitter->shouldReceive('isAdmin')->andReturns(false);
-        $this->submitter->shouldReceive('isMemberOfUGroup')->with($ugroup_id_submitter_only, 222)->andReturns(
-            true
-        );
-        $this->submitter->shouldReceive('isMember')->with(12)->andReturns(true);
+        $this->submitter = UserTestBuilder::aUser()
+            ->withId(250)
+            ->withAdministratorOf($another_project)
+            ->withUserGroupMembership($project, $ugroup_id_submitter_only, true)
+            ->withUserGroupMembership($project, $this->ugroup_id_maintainers, false)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $user_manager->shouldReceive('getUserById')->with(120)->andReturns($this->user);
-        $user_manager->shouldReceive('getUserById')->with(250)->andReturns($this->submitter);
+        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($tracker);
+        $this->artifact->method('useArtifactPermissions')->willReturn(false);
+        $this->artifact->method('permission_db_authorized_ugroups')->willReturn(false);
 
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
-        $this->artifact->shouldReceive('useArtifactPermissions')->andReturnFalse();
-        $this->artifact->shouldReceive('permission_db_authorized_ugroups')->andReturnFalse();
-
-        $tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $tracker->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [
                 Tracker::PERMISSION_SUBMITTER_ONLY => [
                     $ugroup_id_submitter_only,
@@ -134,54 +92,59 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
                     $this->ugroup_id_maintainers,
                 ],
                 Tracker::PERMISSION_ADMIN          => [
-                    $this->ugroup_id_admin,
+                    ProjectUGroup::PROJECT_ADMIN,
                 ],
             ]
         );
 
-        $this->restricted_user = \Mockery::spy(\PFUser::class);
-        $this->restricted_user->shouldReceive('getId')->andReturns(249);
-        $this->restricted_user->shouldReceive('isMemberOfUGroup')->with(114, 223)->andReturns(true);
-        $this->restricted_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->restricted_user->shouldReceive('isMember')->with(223)->andReturns(true);
-        $this->restricted_user->shouldReceive('isMember')->with(222)->andReturns(false);
-        $this->restricted_user->shouldReceive('isRestricted')->andReturns(true);
-        $this->restricted_user->shouldReceive('isAdmin')->andReturns(false);
+        $this->restricted_user = UserTestBuilder::aUser()
+            ->withId(249)
+            ->withMemberOf($project)
+            ->withUserGroupMembership($project, $ugroup_id_submitter_only, false)
+            ->withUserGroupMembership($project, $this->ugroup_id_maintainers, false)
+            ->withUserGroupMembership($private_project, $this->ugroup_private_project, true)
+            ->withoutSiteAdministrator()
+            ->withStatus(PFUser::STATUS_RESTRICTED)
+            ->build();
 
-        $this->not_member = \Mockery::spy(\PFUser::class);
-        $this->not_member->shouldReceive('getId')->andReturns(250);
-        $this->not_member->shouldReceive('isMemberOfUGroup')->andReturns(false);
-        $this->not_member->shouldReceive('isSuperUser')->andReturns(false);
-        $this->not_member->shouldReceive('isMember')->andReturns(false);
-        $this->not_member->shouldReceive('isRestricted')->andReturns(false);
-        $this->not_member->shouldReceive('isAdmin')->andReturns(false);
+        $this->not_member = UserTestBuilder::aUser()
+            ->withId(260)
+            ->withAdministratorOf($another_project)
+            ->withUserGroupMembership($project, $ugroup_id_submitter_only, false)
+            ->withUserGroupMembership($project, $this->ugroup_id_maintainers, false)
+            ->withUserGroupMembership($private_project, $this->ugroup_private_project, false)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->maintainer = \Mockery::spy(\PFUser::class);
-        $this->maintainer->shouldReceive('getId')->andReturns(251);
-        $this->maintainer->shouldReceive('isAdmin')->andReturns(false);
-        $this->maintainer->shouldReceive('isMemberOfUGroup')->with($this->ugroup_id_maintainers, 222)->andReturns(true);
+        $this->maintainer = UserTestBuilder::aUser()
+            ->withId(251)
+            ->withAdministratorOf($another_project)
+            ->withUserGroupMembership($project, $ugroup_id_submitter_only, false)
+            ->withUserGroupMembership($project, $this->ugroup_id_maintainers, true)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->tracker_admin = \Mockery::spy(\PFUser::class);
-        $this->tracker_admin->shouldReceive('isAdmin')->andReturnTrue();
-        $tracker->shouldReceive('userIsAdmin')->andReturns(false);
-        $tracker->shouldReceive('isAdmin')->andReturns(false);
+        $this->tracker_admin = UserTestBuilder::aUser()
+            ->withId(251)
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->project_admin = \Mockery::spy(\PFUser::class);
-        $this->project_admin->shouldReceive('getId')->andReturns(253);
-        $this->project_admin->shouldReceive('isAdmin')->with(120)->andReturns(true);
-        $this->project_admin->shouldReceive('isAdmin')->andReturns(false);
+        $this->project_admin = UserTestBuilder::aUser()
+            ->withId(253)
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->artifact->shouldReceive('getSubmittedBy')->andReturns(250);
+        $this->artifact->method('getSubmittedBy')->willReturn(250);
 
-        $private_project = Mockery::spy(\Project::class);
-        $private_project->shouldReceive('isPublic')->andReturnFalse();
-
-        $tracker_in_private_project = Mockery::spy(\Tracker::class);
-        $tracker_in_private_project->shouldReceive('getProject')->andReturns($private_project);
-
-        $private_project->shouldReceive('getID')->andReturns(223);
-        $tracker_in_private_project->shouldReceive('getGroupId')->andReturns(223);
-        $tracker_in_private_project->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(
+        $tracker_in_private_project = $this->createMock(\Tracker::class);
+        $tracker_in_private_project->method('getId')->willReturn(111);
+        $tracker_in_private_project->method('getProject')->willReturn($private_project);
+        $tracker_in_private_project->method('getGroupId')->willReturn(223);
+        $tracker_in_private_project->method('isDeleted')->willReturn(false);
+        $tracker_in_private_project->method('userIsAdmin')->willReturn(false);
+        $tracker_in_private_project->method('getAuthorizedUgroupsByPermissionType')->willReturn(
             [
                 Tracker::PERMISSION_FULL => [
                     $this->ugroup_private_project,
@@ -189,10 +152,18 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
             ]
         );
 
-        $project_access_checker->shouldReceive('checkUserCanAccessProject');
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $this->artifact2 = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact2->shouldReceive('getTracker')->andReturns($tracker_in_private_project);
+        $this->permission_checker = new Tracker_Permission_PermissionChecker(
+            RetrieveUserByIdStub::withUsers($this->user, $this->submitter),
+            $project_access_checker,
+            $this->createMock(GlobalAdminPermissionsChecker::class),
+        );
+
+        $this->artifact2 = \Tuleap\Tracker\Test\Builders\ArtifactTestBuilder::anArtifact(10001)
+            ->inTracker($tracker_in_private_project)
+            ->build();
     }
 
     public function testItDoesntSeeArtifactSubmittedByOthers(): void

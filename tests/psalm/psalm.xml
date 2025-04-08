@@ -1003,7 +1003,6 @@
             <file name="plugins/tracker/tests/unit/Notifications/RemoveRecipient/RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest.php"/>
             <file name="plugins/tracker/tests/unit/Notifications/Settings/Administration/CalendarConfigUpdaterTest.php"/>
             <file name="plugins/tracker/tests/unit/Notifications/Settings/UserNotificationSettingsTest.php"/>
-            <file name="plugins/tracker/tests/unit/Permission/Fields/ByGroup/PermissionsOnFieldsTests.php"/>
             <file name="plugins/tracker/tests/unit/Permission/PermissionCheckerTest.php"/>
             <file name="plugins/tracker/tests/unit/Permission/PermissionManagerTest.php"/>
             <file name="plugins/tracker/tests/unit/Permission/PermissionRequestTest.php"/>
