@@ -39,10 +39,12 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
+use Tuleap\Project\Registration\Template\ScrumTemplateDashboardDefinition;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
+use Tuleap\Widget\ProjectHeartbeat;
 use Tuleap\Widget\XML\XMLPreference;
 use Tuleap\Widget\XML\XMLPreferenceValue;
 use Tuleap\Widget\XML\XMLWidget;
@@ -155,12 +157,24 @@ class crosstrackerPlugin extends Plugin
     #[ListeningToEventClass]
     public function issuesTemplateDashboardDefinition(IssuesTemplateDashboardDefinition $dashboard_definition): void
     {
+        $this->enforceUniqueDashboard(new XMLWidget(ProjectHeartbeat::NAME), $dashboard_definition);
+    }
+
+    #[ListeningToEventClass]
+    public function scrumTemplateDashboardDefinition(ScrumTemplateDashboardDefinition $dashboard_definition): void
+    {
+        $this->enforceUniqueDashboard(new XMLWidget('dashboardprojectmilestone'), $dashboard_definition);
+    }
+
+    private function enforceUniqueDashboard(
+        XMLWidget $widget_in_left_column,
+        IssuesTemplateDashboardDefinition|ScrumTemplateDashboardDefinition $dashboard_definition,
+    ): void {
         $dashboard_definition->enforceUniqueDashboard(
             (new XMLDashboard('Dashboard'))
                 ->withLine(
                     XMLLine::withLayout('two-columns-small-big')
-                        ->withColumn((new XMLColumn())
-                            ->withWidget(new XMLWidget('projectheartbeat')))
+                        ->withColumn((new XMLColumn())->withWidget($widget_in_left_column))
                         ->withColumn((new XMLColumn())
                             ->withWidget((new XMLWidget(CrossTrackerSearchWidget::NAME))
                                 ->withPreference(
