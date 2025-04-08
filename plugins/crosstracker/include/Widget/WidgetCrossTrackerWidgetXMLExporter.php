@@ -28,6 +28,12 @@ use Tuleap\Option\Option;
 
 final readonly class WidgetCrossTrackerWidgetXMLExporter
 {
+    public const PREFERENCE_QUERY             = 'query';
+    public const PREFERENCE_QUERY_IS_DEFAULT  = 'is-default';
+    public const PREFERENCE_QUERY_TITLE       = 'title';
+    public const PREFERENCE_QUERY_DESCRIPTION = 'description';
+    public const PREFERENCE_QUERY_TQL         = 'tql';
+
     public function __construct(
         private CrossTrackerQueryFactory $query_cross_tracker_query_factory,
     ) {
@@ -48,31 +54,31 @@ final readonly class WidgetCrossTrackerWidgetXMLExporter
             if ($preference === null) {
                 return Option::nothing(SimpleXMLElement::class);
             }
-            $preference->addAttribute('name', 'query');
+            $preference->addAttribute('name', self::PREFERENCE_QUERY);
 
             $is_default_value_element = $preference->addChild('value', $query->isDefault() ? '1' : '0');
             if ($is_default_value_element === null) {
                 return Option::nothing(SimpleXMLElement::class);
             }
-            $is_default_value_element->addAttribute('name', 'is-default');
+            $is_default_value_element->addAttribute('name', self::PREFERENCE_QUERY_IS_DEFAULT);
 
             $cdata_factory->insertWithAttributes(
                 $preference,
                 'value',
                 $query->getTitle(),
-                ['name' => 'title']
+                ['name' => self::PREFERENCE_QUERY_TITLE]
             );
             $cdata_factory->insertWithAttributes(
                 $preference,
                 'value',
                 $query->getDescription(),
-                ['name' => 'description']
+                ['name' => self::PREFERENCE_QUERY_DESCRIPTION]
             );
             $cdata_factory->insertWithAttributes(
                 $preference,
                 'value',
                 $query->getQuery(),
-                ['name' => 'tql']
+                ['name' => self::PREFERENCE_QUERY_TQL]
             );
         }
 

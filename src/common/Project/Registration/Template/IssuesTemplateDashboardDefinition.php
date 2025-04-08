@@ -39,6 +39,7 @@ final class IssuesTemplateDashboardDefinition implements Dispatchable
     private XMLColumn $team_dashboard_left_column;
     private XMLColumn $team_dashboard_right_column;
     private XMLColumn $manager_dashboard_main_column;
+    private ?XMLDashboard $enforced_unique_dashboard = null;
 
     public function __construct(private EventDispatcherInterface $dispatcher)
     {
@@ -51,6 +52,10 @@ final class IssuesTemplateDashboardDefinition implements Dispatchable
     public function getDashboards(): array
     {
         $this->dispatcher->dispatch($this);
+
+        if ($this->enforced_unique_dashboard !== null) {
+            return [$this->enforced_unique_dashboard];
+        }
 
         $global_dashboard = (new XMLDashboard('0 - Global Dashboard'))
             ->withLine(
@@ -120,5 +125,10 @@ final class IssuesTemplateDashboardDefinition implements Dispatchable
     public function withWidgetInMainColumnOfManagerDashboard(XMLWidget $widget): void
     {
         $this->manager_dashboard_main_column = $this->manager_dashboard_main_column->withWidget($widget);
+    }
+
+    public function enforceUniqueDashboard(XMLDashboard $enforced_unique_dashboard): void
+    {
+        $this->enforced_unique_dashboard = $enforced_unique_dashboard;
     }
 }
