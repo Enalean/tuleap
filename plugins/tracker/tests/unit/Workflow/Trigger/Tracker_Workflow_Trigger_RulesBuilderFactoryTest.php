@@ -20,60 +20,45 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker
-     */
-    private $target_tracker;
-
-    /**
-     * @var Tracker_Workflow_Trigger_RulesBuilderFactory
-     */
-    private $factory;
-    private $formelement_factory;
+    private Tracker_Workflow_Trigger_RulesBuilderFactory $factory;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
 
     protected function setUp(): void
     {
-        $this->target_tracker = Mockery::mock(Tracker::class);
-        $this->target_tracker->shouldReceive('getId')->andReturn(12);
-        $this->target_tracker->shouldReceive('getChildren')->andReturn([]);
-        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
 
         $this->factory = new Tracker_Workflow_Trigger_RulesBuilderFactory($this->formelement_factory);
     }
 
     public function testItHasAllTargetTrackerSelectBoxFields(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
-            ->with($this->target_tracker)
-            ->once()
-            ->andReturn(Mockery::spy(DataAccessResult::class));
+        $target_tracker = TrackerTestBuilder::aTracker()->withId(12)->build();
+        $target_tracker->setChildren([]);
 
-        $this->factory->getForTracker($this->target_tracker);
+        $this->formelement_factory->expects($this->once())->method('getUsedStaticSbFields')
+            ->with($target_tracker)
+            ->willReturn($this->createMock(DataAccessResult::class));
+
+        $this->factory->getForTracker($target_tracker);
     }
 
     public function testItHasAllTriggeringFields(): void
     {
-        $child_tracker = Mockery::mock(Tracker::class);
-        $child_tracker->shouldReceive('getId')->andReturn(200);
-        $target_tracker = Mockery::mock(Tracker::class);
-        $target_tracker->shouldReceive('getId')->andReturn(12);
-        $target_tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
+        $child_tracker  = TrackerTestBuilder::aTracker()->withId(200)->build();
+        $target_tracker = TrackerTestBuilder::aTracker()->withId(12)->build();
+        $target_tracker->setChildren([$child_tracker]);
 
-        $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
-            ->with($target_tracker)
-            ->once()
-            ->andReturn(Mockery::spy(DataAccessResult::class));
-
-        $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
-            ->with($child_tracker)
-            ->once()
-            ->andReturn(Mockery::spy(DataAccessResult::class));
+        $this->formelement_factory->expects($this->exactly(2))->method('getUsedStaticSbFields')
+            ->willReturnCallback(fn (Tracker $tracker) => match ($tracker) {
+                $target_tracker => $this->createMock(DataAccessResult::class),
+                $child_tracker => $this->createMock(DataAccessResult::class),
+            });
 
         $this->factory->getForTracker($target_tracker);
     }

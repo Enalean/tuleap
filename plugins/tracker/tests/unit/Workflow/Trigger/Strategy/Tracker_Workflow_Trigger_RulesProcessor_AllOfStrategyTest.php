@@ -20,7 +20,10 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
@@ -28,29 +31,24 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Artifact $artifact;
+    private Tracker_FormElement_Field_Selectbox $trigger_field_task;
+    private Tracker_FormElement_Field_Selectbox $trigger_field_bug;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $trigger_value_task;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $trigger_value_bug;
+    private Tracker $task_tracker;
+    private Tracker $bug_tracker;
+    private Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy $strategy;
+    private Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy $strategy_complex_rule;
 
-    private $artifact;
-    private $trigger_field;
-    private $trigger_value;
-    private $task_tracker;
-    private $bug_tracker;
-    private $strategy;
-    private $strategy_complex_rule;
-    private $trigger_value_2;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SiblingsRetriever
-     */
-    private $siblings_retriever;
+    private SiblingsRetriever&MockObject $siblings_retriever;
 
     protected function setUp(): void
     {
         $story_tracker      = $this->buildTracker(888);
         $this->task_tracker = $this->buildTracker(899);
 
-        $parent = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $parent->shouldReceive('getTracker')->andReturns($story_tracker);
+        $parent = ArtifactTestBuilder::anArtifact(1001)->inTracker($story_tracker)->build();
 
         $this->artifact = new Artifact(
             2,
@@ -61,15 +59,15 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         );
         $this->artifact->setTracker($this->task_tracker);
         $this->artifact->setParentWithoutPermissionChecking($parent);
-        $this->artifact->setChangesets([\Mockery::spy(\Tracker_Artifact_Changeset::class)]);
+        $this->artifact->setChangesets([ChangesetTestBuilder::aChangeset(201)->build()]);
 
         $target_field_id = 569;
         $target_field    = $this->buildSelectBoxField($target_field_id, $story_tracker);
         $target_value_id = 7;
         $target_value    = ListStaticValueBuilder::aStaticValue('label')->withId($target_value_id)->build();
 
-        $this->trigger_field = $this->buildSelectBoxField(965, $this->task_tracker);
-        $this->trigger_value = ListStaticValueBuilder::aStaticValue('label')->withId(14)->build();
+        $this->trigger_field_task = $this->buildSelectBoxField(965, $this->task_tracker);
+        $this->trigger_value_task = ListStaticValueBuilder::aStaticValue('label')->withId(14)->build();
 
         $rule = new Tracker_Workflow_Trigger_TriggerRule(
             1,
@@ -80,13 +78,13 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
             [
                 new Tracker_Workflow_Trigger_FieldValue(
-                    $this->trigger_field,
-                    $this->trigger_value
+                    $this->trigger_field_task,
+                    $this->trigger_value_task
                 ),
             ]
         );
 
-        $this->siblings_retriever = Mockery::mock(SiblingsRetriever::class);
+        $this->siblings_retriever = $this->createMock(SiblingsRetriever::class);
         $this->strategy           = new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy(
             $this->artifact,
             $rule,
@@ -95,8 +93,8 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
 
         $this->bug_tracker = $this->buildTracker(901);
 
-        $trigger_field_2       = $this->buildSelectBoxField(236, $this->bug_tracker);
-        $this->trigger_value_2 = ListStaticValueBuilder::aStaticValue('label')->withId(28)->build();
+        $this->trigger_field_bug = $this->buildSelectBoxField(236, $this->bug_tracker);
+        $this->trigger_value_bug = ListStaticValueBuilder::aStaticValue('label')->withId(28)->build();
 
         $complex_rule = new Tracker_Workflow_Trigger_TriggerRule(
             1,
@@ -107,12 +105,12 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
             [
                 new Tracker_Workflow_Trigger_FieldValue(
-                    $this->trigger_field,
-                    $this->trigger_value
+                    $this->trigger_field_task,
+                    $this->trigger_value_task
                 ),
                 new Tracker_Workflow_Trigger_FieldValue(
-                    $trigger_field_2,
-                    $this->trigger_value_2
+                    $this->trigger_field_bug,
+                    $this->trigger_value_bug
                 ),
             ]
         );
@@ -166,7 +164,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
 
     public function testItSetTheValueIfArtifactHasNoSiblings(): void
     {
-        $this->siblings_retriever->shouldReceive('getSiblingsWithoutPermissionChecking')->andReturn([]);
+        $this->siblings_retriever->method('getSiblingsWithoutPermissionChecking')->willReturn([]);
 
         $this->assertTrue($this->strategy->allPrecondtionsAreMet());
     }
@@ -182,84 +180,84 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         );
         $sibling->setTracker($this->task_tracker);
         $sibling->setChangesets([]);
-        $this->siblings_retriever->shouldReceive('getSiblingsWithoutPermissionChecking')->andReturn([$sibling]);
+        $this->siblings_retriever->method('getSiblingsWithoutPermissionChecking')->willReturn([$sibling]);
 
         $this->assertEquals(0, $this->strategy->allPrecondtionsAreMet());
     }
 
     public function testItSetTheValueIfOneSameTypeSiblingHasCorrectValue(): void
     {
-        $sibling = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $sibling->shouldReceive('getId')->andReturns(112);
-        $sibling->shouldReceive('getTracker')->andReturns($this->task_tracker);
-        $changeset_value_list = new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value]);
-        $sibling->shouldReceive('getValue')->with($this->trigger_field)->andReturns($changeset_value_list);
-        $this->siblings_retriever->shouldReceive('getSiblingsWithoutPermissionChecking')->andReturn([$sibling]);
+        $sibling = $this->createMock(Artifact::class);
+        $sibling->method('getId')->willReturn(112);
+        $sibling->method('getTracker')->willReturn($this->task_tracker);
+        $changeset_value_list = new Tracker_Artifact_ChangesetValue_List(41, $this->createMock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value_task]);
+        $sibling->method('getValue')->with($this->trigger_field_task)->willReturn($changeset_value_list);
+        $this->siblings_retriever->method('getSiblingsWithoutPermissionChecking')->willReturn([$sibling]);
 
         $this->assertEquals(1, $this->strategy->allPrecondtionsAreMet());
     }
 
     public function testItDoesntSetTheValueIfOneSameTypeSiblingHasIncorrectValue(): void
     {
-        $sibling_1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $sibling_1->shouldReceive('getId')->andReturns(112);
-        $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
-        $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
+        $sibling_1 = $this->createMock(Artifact::class);
+        $sibling_1->method('getId')->willReturn(112);
+        $sibling_1->method('getTracker')->willReturn($this->task_tracker);
+        $sibling_1->method('getValue')->with($this->trigger_field_task)->willReturn(
+            new Tracker_Artifact_ChangesetValue_List(43, $this->createMock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value_task])
         );
 
-        $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $sibling_2->shouldReceive('getId')->andReturns(113);
-        $sibling_2->shouldReceive('getTracker')->andReturns($this->task_tracker);
+        $sibling_2 = $this->createMock(Artifact::class);
+        $sibling_2->method('getId')->willReturn(113);
+        $sibling_2->method('getTracker')->willReturn($this->task_tracker);
         $bind_static_value = ListStaticValueBuilder::aStaticValue('label')->withId(74)->build();
-        $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
+        $sibling_2->method('getValue')->with($this->trigger_field_task)->willReturn(
+            new Tracker_Artifact_ChangesetValue_List(43, $this->createMock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
         );
 
-        $this->siblings_retriever->shouldReceive('getSiblingsWithoutPermissionChecking')->andReturn([$sibling_1, $sibling_2]);
+        $this->siblings_retriever->method('getSiblingsWithoutPermissionChecking')->willReturn([$sibling_1, $sibling_2]);
 
         $this->assertEquals(0, $this->strategy->allPrecondtionsAreMet());
     }
 
     public function testItSetTheValueIfDifferentTypeSiblingHaveLegitValue(): void
     {
-        $sibling_1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $sibling_1->shouldReceive('getId')->andReturns(112);
-        $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
-        $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
+        $sibling_1 = $this->createMock(Artifact::class);
+        $sibling_1->method('getId')->willReturn(112);
+        $sibling_1->method('getTracker')->willReturn($this->task_tracker);
+        $sibling_1->method('getValue')->with($this->trigger_field_task)->willReturn(
+            new Tracker_Artifact_ChangesetValue_List(41, $this->createMock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value_task])
         );
 
-        $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $sibling_2->shouldReceive('getId')->andReturns(113);
-        $sibling_1->shouldReceive('getTracker')->andReturns($this->bug_tracker);
-        $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value_2])
+        $sibling_2 = $this->createMock(Artifact::class);
+        $sibling_2->method('getId')->willReturn(113);
+        $sibling_2->method('getTracker')->willReturn($this->bug_tracker);
+        $sibling_2->method('getValue')->with($this->trigger_field_bug)->willReturn(
+            new Tracker_Artifact_ChangesetValue_List(43, $this->createMock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value_bug])
         );
 
-        $this->siblings_retriever->shouldReceive('getSiblingsWithoutPermissionChecking')->andReturn([$sibling_1, $sibling_2]);
+        $this->siblings_retriever->method('getSiblingsWithoutPermissionChecking')->willReturn([$sibling_1, $sibling_2]);
 
         $this->assertEquals(1, $this->strategy_complex_rule->allPrecondtionsAreMet());
     }
 
     public function testItDoesntSetTheValueIfOneOfTheChildDoesntApply(): void
     {
-        $sibling_1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $sibling_1->shouldReceive('getId')->andReturns(112);
-        $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
-        $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
+        $sibling_1 = $this->createMock(Artifact::class);
+        $sibling_1->method('getId')->willReturn(112);
+        $sibling_1->method('getTracker')->willReturn($this->task_tracker);
+        $sibling_1->method('getValue')->with($this->trigger_field_task)->willReturn(
+            new Tracker_Artifact_ChangesetValue_List(41, $this->createMock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value_task])
         );
 
-        $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $sibling_2->shouldReceive('getId')->andReturns(113);
-        $sibling_2->shouldReceive('getTracker')->andReturns($this->bug_tracker);
+        $sibling_2 = $this->createMock(Artifact::class);
+        $sibling_2->method('getId')->willReturn(113);
+        $sibling_2->method('getTracker')->willReturn($this->bug_tracker);
         $bind_static_value = ListStaticValueBuilder::aStaticValue('label')->withId(74)->build();
-        $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
+        $sibling_2->method('getValue')->with($this->trigger_field_bug)->willReturn(
+            new Tracker_Artifact_ChangesetValue_List(43, $this->createMock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
         );
 
-        $this->siblings_retriever->shouldReceive('getSiblingsWithoutPermissionChecking')->andReturn([$sibling_1, $sibling_2]);
+        $this->siblings_retriever->method('getSiblingsWithoutPermissionChecking')->willReturn([$sibling_1, $sibling_2]);
 
         $this->assertEquals(0, $this->strategy_complex_rule->allPrecondtionsAreMet());
     }
