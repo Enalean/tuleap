@@ -740,7 +740,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $this->criteria_value[$criteria->report->id];
     }
 
-    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria, array $xml_mapping): void
     {
         return;
     }

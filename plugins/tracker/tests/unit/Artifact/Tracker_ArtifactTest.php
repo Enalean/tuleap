@@ -846,7 +846,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             false
         );
 
-        $artifact->exportToXML($artifacts_node, $archive, $artifact_xml_exporter);
+        $artifact->exportToXML($artifacts_node, $archive, $artifact_xml_exporter, ['values' => []]);
 
         self::assertEquals(101, (int) $artifacts_node->artifact['id']);
     }

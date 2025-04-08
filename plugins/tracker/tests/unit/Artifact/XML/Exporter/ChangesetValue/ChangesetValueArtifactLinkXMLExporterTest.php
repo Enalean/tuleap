@@ -111,7 +111,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             $artifact,
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
@@ -140,7 +141,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             $artifact,
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
@@ -161,7 +163,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             ArtifactTestBuilder::anArtifact(101)->build(),
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
@@ -184,7 +187,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             $artifact,
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
@@ -208,7 +212,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             $artifact,
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
@@ -226,7 +231,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             ArtifactTestBuilder::anArtifact(101)->build(),
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
@@ -250,7 +256,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             $artifact,
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $this->assertEquals([111, 222], $this->collector->getAllChildrenIds());
@@ -273,7 +280,8 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
             $this->artifact_xml,
             $this->changeset_xml,
             $artifact,
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $this->assertEquals([111, 222], $this->collector->getAllChildrenIds());

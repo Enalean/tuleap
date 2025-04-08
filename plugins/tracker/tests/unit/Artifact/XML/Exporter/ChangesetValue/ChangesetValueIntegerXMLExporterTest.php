@@ -64,7 +64,8 @@ final class ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\Te
             $this->artifact_xml,
             $this->changeset_xml,
             ArtifactTestBuilder::anArtifact(101)->build(),
-            $this->changeset_value
+            $this->changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;

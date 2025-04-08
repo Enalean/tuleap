@@ -49,8 +49,9 @@ class ChangesetValuesXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         array $changeset_values,
+        array $mapping,
     ): void {
-        $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_SNAPSHOT);
+        $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_SNAPSHOT, $mapping);
     }
 
     public function exportChangedFields(
@@ -58,8 +59,9 @@ class ChangesetValuesXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         array $changeset_values,
+        array $mapping,
     ): void {
-        $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_CHANGES);
+        $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_CHANGES, $mapping);
     }
 
     private function exportValues(
@@ -68,6 +70,7 @@ class ChangesetValuesXMLExporter
         Artifact $artifact,
         array $changeset_values,
         $export_mode,
+        array $mapping,
     ) {
         $params = [
             self::ARTIFACT_KEY => $artifact,
@@ -80,20 +83,22 @@ class ChangesetValuesXMLExporter
             if ($changeset_value === null) {
                 continue;
             }
-            $this->exportValue($changeset_value, $params);
+            $this->exportValue($changeset_value, $params, $mapping);
         }
     }
 
     private function exportValue(
         Tracker_Artifact_ChangesetValue $changeset_value,
         array $params,
+        array $mapping,
     ): void {
         if ($this->isFieldChangeExportable($changeset_value, $params[self::EXPORT_MODE_KEY])) {
             $this->visitor->export(
                 $params[self::ARTIFACT_XML_KEY],
                 $params[self::CHANGESET_XML_KEY],
                 $params[self::ARTIFACT_KEY],
-                $changeset_value
+                $changeset_value,
+                $mapping
             );
         }
     }

@@ -445,7 +445,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->criteria_value[$criteria->report->id];
     }
 
-    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria, array $xml_mapping): void
     {
         return;
     }

@@ -567,6 +567,11 @@
                   <data type="ID"/>
                 </attribute>
               </optional>
+              <optional>
+                <attribute name="UUId">
+                  <data type="string"/>
+                </attribute>
+              </optional>
               <attribute name="label">
                 <ref name="non_empty_string"/>
               </attribute>
@@ -593,7 +598,7 @@
             <element name="decorator">
               <optional>
                 <attribute name="REF">
-                  <data type="IDREF"/>
+                  <data type="string"/>
                 </attribute>
               </optional>
               <choice>
@@ -612,7 +617,7 @@
             <element name="value">
               <choice>
                 <attribute name="REF">
-                  <data type="IDREF"/>
+                  <data type="string"/>
                 </attribute>
                 <ref name="tracker_user_content"/>
               </choice>
@@ -744,7 +749,7 @@
           <zeroOrMore>
             <element name="open_value">
               <attribute name="REF">
-                <data type="IDREF"/>
+                <data type="string"/>
               </attribute>
             </element>
           </zeroOrMore>

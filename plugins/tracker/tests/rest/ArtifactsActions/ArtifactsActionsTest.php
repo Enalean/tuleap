@@ -141,7 +141,6 @@ final class ArtifactsActionsTest extends TrackerBase
         );
 
         self::assertMoveArtifact($response, $artifact_id);
-
         $changeset_response = $this->getResponse(
             $this->request_factory->createRequest('GET', "artifacts/$artifact_id/changesets?fields=comments&limit=10")
         );

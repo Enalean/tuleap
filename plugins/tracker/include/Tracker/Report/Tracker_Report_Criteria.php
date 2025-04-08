@@ -101,18 +101,20 @@ class Tracker_Report_Criteria // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     /**
      * Transforms Criteria into a SimpleXMLElement
-     *
-     * @param SimpleXMLElement $root the node to which the Criteria is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    public function exportToXml(SimpleXMLElement $root, array $xml_mapping): void
     {
         $root->addAttribute('rank', $this->rank);
         if ($this->is_advanced) {
             $root->addAttribute('is_advanced', (string) $this->is_advanced);
         }
 
-        $root->addChild('field')->addAttribute('REF', array_search($this->field->id, $xmlMapping));
-        $this->field->exportCriteriaValueToXML($this, $root);
+        $field_id = array_search($this->field->id, $xml_mapping);
+        if ($field_id === false) {
+            return;
+        }
+        $root->addChild('field')->addAttribute('REF', $field_id);
+        $this->field->exportCriteriaValueToXML($this, $root, $xml_mapping['values']);
     }
 
     public function getField()

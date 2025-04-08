@@ -89,7 +89,8 @@ final class ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_xml,
             $this->changeset_xml,
             $this->artifact,
-            $this->values
+            $this->values,
+            []
         );
     }
 
@@ -115,7 +116,8 @@ final class ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_xml,
             $this->changeset_xml,
             $this->artifact,
-            array_merge([null], $this->values)
+            array_merge([null], $this->values),
+            []
         );
     }
 
@@ -141,7 +143,8 @@ final class ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_xml,
             $this->changeset_xml,
             $this->artifact,
-            array_merge([null], $this->values)
+            array_merge([null], $this->values),
+            []
         );
     }
 }

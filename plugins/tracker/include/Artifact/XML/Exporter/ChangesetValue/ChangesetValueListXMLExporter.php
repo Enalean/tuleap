@@ -41,6 +41,7 @@ class ChangesetValueListXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
+        array $value_mapping,
     ): void {
         $bind_type = $changeset_value->getField()->getBind()->getType();
         $values    = $changeset_value->getValue();
@@ -49,7 +50,8 @@ class ChangesetValueListXMLExporter extends ChangesetValueXMLExporter
             $changeset_xml,
             $changeset_value->getField()->getName(),
             $bind_type,
-            $values
+            $values,
+            $value_mapping
         );
     }
 }

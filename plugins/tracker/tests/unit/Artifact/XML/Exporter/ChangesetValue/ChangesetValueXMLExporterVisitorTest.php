@@ -115,7 +115,8 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
             $this->artifact_xml,
             $this->changeset_xml,
             $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
-            $int_changeset_value
+            $int_changeset_value,
+            ['values' => []]
         );
     }
 
@@ -137,7 +138,8 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
             $this->artifact_xml,
             $this->changeset_xml,
             $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
-            $float_changeset_value
+            $float_changeset_value,
+            ['values' => []]
         );
     }
 
@@ -148,8 +150,8 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
             $this->changeset,
             $this->createMock(ArtifactLinkField::class),
             false,
-            [],
-            []
+            ['values' => []],
+            ['values' => []]
         );
 
         $this->int_exporter->expects($this->never())->method('export');
@@ -160,7 +162,8 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
             $this->artifact_xml,
             $this->changeset_xml,
             $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
-            $artlink_changeset_value
+            $artlink_changeset_value,
+            ['values' => []]
         );
     }
 
@@ -182,7 +185,8 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
             $this->artifact_xml,
             $this->changeset_xml,
             $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
-            $external_changeset_value
+            $external_changeset_value,
+            ['values' => []]
         );
     }
 
@@ -203,7 +207,8 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
             $this->artifact_xml,
             $this->changeset_xml,
             $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
-            $external_changeset_value
+            $external_changeset_value,
+            ['values' => []]
         );
     }
 
@@ -252,6 +257,7 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
                 SimpleXMLElement $changeset_xml,
                 Artifact $artifact,
                 Tracker_Artifact_ChangesetValue $changeset_value,
+                array $value_mapping,
             ) {
             }
         };

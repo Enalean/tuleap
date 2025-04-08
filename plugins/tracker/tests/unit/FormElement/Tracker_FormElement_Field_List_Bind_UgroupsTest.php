@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
@@ -53,26 +54,27 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $this->value_dao         = Mockery::mock(BindUgroupsValueDao::class);
         $this->default_value_dao = Mockery::mock(BindDefaultValueDao::class);
         $this->field             = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $uuid_factory            = new DatabaseUUIDV7Factory();
 
         $integrators_ugroup_id          = 103;
         $integrators_ugroup_name        = 'Integrators';
         $integrators_ugroup             = new ProjectUGroup(
             ['ugroup_id' => $integrators_ugroup_id, 'name' => $integrators_ugroup_name]
         );
-        $this->integrators_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($integrators_ugroup)->withId(345)->build();
+        $this->integrators_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($integrators_ugroup)->withId(345)->withUUId($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()))->build();
 
         $customers_ugroup_id          = 104;
         $customers_ugroup_name        = 'Customers';
         $customers_ugroup             = new ProjectUGroup(
             ['ugroup_id' => $customers_ugroup_id, 'name' => $customers_ugroup_name]
         );
-        $this->customers_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($customers_ugroup)->withId(687)->build();
+        $this->customers_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($customers_ugroup)->withId(687)->withUUId($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()))->build();
 
         $project_members_ugroup_name        = 'ugroup_project_members_name_key';
         $project_members_ugroup             = new ProjectUGroup(
             ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => $project_members_ugroup_name]
         );
-        $this->project_members_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($project_members_ugroup)->withId(4545)->build();
+        $this->project_members_ugroup_value = ListUserGroupValueBuilder::aUserGroupValue($project_members_ugroup)->withId(4545)->withUUId($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()))->build();
 
         $hidden_ugroup_id          = 105;
         $hidden_ugroup_name        = 'Unused ProjectUGroup';
@@ -185,7 +187,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
 
         $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->default_values->children();
-        $this->assertEquals('V687', (string) $items->value['REF']);
+        $this->assertEquals($this->customers_ugroup_value->getUuid(), (string) $items->value['REF']);
     }
 
     public function testItSavesNothingWhenNoValue(): void

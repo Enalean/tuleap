@@ -40,6 +40,12 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
             return $value->getId();
         }
 
+        if (isset($this->xml_mapping[$old_value_id])) {
+            $value = $this->xml_mapping[$old_value_id];
+
+            return $value->getId();
+        }
+
         throw new TrackerXmlFieldsMapping_ValueNotFoundException($old_value_id, $old_reference);
     }
 
@@ -54,6 +60,12 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
 
         if (isset($this->xml_mapping[$old_reference])) {
             $value = $this->xml_mapping[$old_reference];
+
+            return $value->getId();
+        }
+
+        if (isset($this->xml_mapping[$old_value_id])) {
+            $value = $this->xml_mapping[$old_value_id];
 
             return $value->getId();
         }

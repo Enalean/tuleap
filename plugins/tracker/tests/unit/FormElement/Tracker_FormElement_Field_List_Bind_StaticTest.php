@@ -45,19 +45,21 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
      */
     private $bind;
     private $bind_without_values;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $first_value;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $second_value;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $first_value  = ListStaticValueBuilder::aStaticValue('10')->withId(431)->withDescription('int value')->build();
-        $second_value = ListStaticValueBuilder::aStaticValue('123abc')->withId(432)->withDescription('string value')->build();
+        $this->first_value  = ListStaticValueBuilder::aStaticValue('10')->withId(431)->withDescription('int value')->build();
+        $this->second_value = ListStaticValueBuilder::aStaticValue('123abc')->withId(432)->withDescription('string value')->build();
 
         $field         = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
         $is_rank_alpha = 0;
         $values        = [
-            431 => $first_value,
-            432 => $second_value,
+            431 => $this->first_value,
+            432 => $this->second_value,
         ];
 
         $default_values = [];
@@ -234,22 +236,8 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $this->assertEquals($expected_result, $root);
     }
 
-    public function testItExportBindWithValues()
+    public function testItExportBindWithValues(): void
     {
-        $expected_result = new SimpleXMLElement(
-            '<?xml version="1.0"?>
-                 <bind type="static" is_rank_alpha="0">
-                     <items>
-                         <item ID="V431" label="10" is_hidden="0">
-                            <description><![CDATA[int value]]></description>
-                         </item>
-                         <item ID="V432" label="123abc" is_hidden="0">
-                             <description><![CDATA[string value]]></description>
-                         </item>
-                     </items>
-                 </bind>'
-        );
-
         $user_xml_exporter      = Mockery::mock(UserXMLExporter::class);
         $root                   = new SimpleXMLElement('<bind type="static"/>');
         $xml_mapping            = [1, 2, 3];
@@ -261,6 +249,12 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
             $user_xml_exporter
         );
 
-        $this->assertEquals($expected_result, $root);
+        $items = $root->items->children();
+
+        $this->assertEquals($this->first_value->getLabel(), $items[0]['label']);
+        $this->assertEquals($this->first_value->getUuid(), $items[0]['ID']);
+
+        $this->assertEquals($this->second_value->getLabel(), $items[1]['label']);
+        $this->assertEquals($this->second_value->getUuid(), $items[1]['ID']);
     }
 }

@@ -37,7 +37,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
     protected $is_hidden = false;
 
 
-    public function __construct(\Tuleap\DB\UUID $uuid, $id, $is_hidden = false)
+    public function __construct(private \Tuleap\DB\UUID $uuid, $id, $is_hidden = false)
     {
         $this->id        = $id;
         $this->is_hidden = $is_hidden;
@@ -129,11 +129,6 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
         return $this->getId();
     }
 
-    public function getXMLId()
-    {
-        return self::XML_ID_PREFIX . $this->getId();
-    }
-
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
         return [
@@ -144,5 +139,10 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
     public function getRESTId()
     {
         return intval($this->getId());
+    }
+
+    public function getUuid(): string
+    {
+        return self::XML_ID_PREFIX . $this->uuid->toString();
     }
 }

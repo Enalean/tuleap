@@ -201,7 +201,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
               <value format="id"><![CDATA[104_2]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->method('getNewValueId')->with(104)->willReturn('111');
+        $this->xml_fields_mapping->method('getNewValueId')->with('104_2')->willReturn('111');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertEquals([111], $result);

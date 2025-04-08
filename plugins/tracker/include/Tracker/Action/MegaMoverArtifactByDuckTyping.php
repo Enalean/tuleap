@@ -85,7 +85,8 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
         $xml_artifacts = $this->getXMLRootNode();
         $this->xml_exporter->exportFullHistory(
             $xml_artifacts,
-            $artifact
+            $artifact,
+            ['values' => []]
         );
         $this->xml_updater->updateFromDuckTypingCollection(
             $user,

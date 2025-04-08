@@ -71,7 +71,7 @@ final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->file_exporter->expects($this->never())->method('add');
 
-        $this->exporter->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->changeset_value);
+        $this->exporter->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->changeset_value, []);
 
         $this->assertEquals('attachments', (string) $this->changeset_xml->field_change['field_name']);
         $this->assertEquals('file', (string) $this->changeset_xml->field_change['type']);
@@ -108,7 +108,7 @@ final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
                 $file_1, $file_2 => true,
             });
 
-        $this->exporter->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->changeset_value);
+        $this->exporter->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->changeset_value, []);
 
         $this->assertEquals('attachments', (string) $this->changeset_xml->field_change['field_name']);
         $this->assertEquals('file', (string) $this->changeset_xml->field_change['type']);

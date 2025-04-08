@@ -43,9 +43,8 @@ use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_XMLExportTest extends TestCase
+final class Tracker_Artifact_XMLExportTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private UserManager&MockObject $user_manager;
     private Tracker_FormElementFactory&MockObject $formelement_factory;
@@ -165,7 +164,7 @@ final class Tracker_Artifact_XMLExportTest extends TestCase
 
         $archive = $this->createMock(ArchiveInterface::class);
 
-        $exporter->export($tracker, $xml_element, $admin_user, $archive);
+        $exporter->export($tracker, $xml_element, $admin_user, $archive, ['values' => []]);
 
         self::assertNotNull($xml_element->artifacts);
 
@@ -214,6 +213,6 @@ final class Tracker_Artifact_XMLExportTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(888)->build();
 
         $this->expectException(Tracker_Artifact_XMLExportTooManyArtifactsException::class);
-        $exporter->export($tracker, $xml_element, UserTestBuilder::buildWithDefaults(), $archive);
+        $exporter->export($tracker, $xml_element, UserTestBuilder::buildWithDefaults(), $archive, []);
     }
 }

@@ -345,7 +345,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         parent::setCriteriaValue($criteria_value, $report_id);
     }
 
-    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria, array $xml_mapping): void
     {
         return;
     }

@@ -44,6 +44,7 @@ class ChangesetValueDateXMLExporter extends ChangesetValueXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value,
+        array $value_mapping,
     ): void {
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
 

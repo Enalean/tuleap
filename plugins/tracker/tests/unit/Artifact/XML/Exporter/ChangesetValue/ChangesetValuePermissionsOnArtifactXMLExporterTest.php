@@ -71,7 +71,8 @@ final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\T
             $this->artifact_xml,
             $this->changeset_xml,
             ArtifactTestBuilder::anArtifact(101)->build(),
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
@@ -95,7 +96,8 @@ final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\T
             $this->artifact_xml,
             $this->changeset_xml,
             ArtifactTestBuilder::anArtifact(101)->build(),
-            $changeset_value
+            $changeset_value,
+            []
         );
 
         $field_change = $this->changeset_xml->field_change;
