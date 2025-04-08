@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use Tuleap\DB\DataAccessObject;
 
-final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject implements SearchSpecificProperties, SaveSpecificFieldProperties
+final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject implements SearchSpecificProperties, SaveSpecificFieldProperties, DuplicateSpecificProperties
 {
     /**
      * @return null | array{field_id: int, can_edit_reverse_links: 0|1}
@@ -42,5 +42,14 @@ final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject impl
 
         $sql = 'REPLACE INTO plugin_tracker_field_artifact_link (field_id, can_edit_reverse_links) VALUES (?, ?)';
         $this->getDB()->run($sql, $field_id, $can_edit_reverse_links);
+    }
+
+    public function duplicate(int $from_field_id, int $to_field_id): void
+    {
+        $sql = 'REPLACE INTO plugin_tracker_field_artifact_link (field_id, can_edit_reverse_links)
+                SELECT ?, can_edit_reverse_links
+                FROM plugin_tracker_field_artifact_link
+                WHERE field_id = ?';
+        $this->getDB()->run($sql, $to_field_id, $from_field_id);
     }
 }

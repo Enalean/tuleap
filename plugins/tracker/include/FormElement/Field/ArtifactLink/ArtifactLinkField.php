@@ -68,6 +68,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -1825,6 +1826,11 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     }
 
     protected function getSaveSpecificPropertiesDao(): ?SaveSpecificFieldProperties
+    {
+        return new ArtifactLinkFieldSpecificPropertiesDAO();
+    }
+
+    protected function getDuplicateSpecificPropertiesDao(): ?DuplicateSpecificProperties
     {
         return new ArtifactLinkFieldSpecificPropertiesDAO();
     }
