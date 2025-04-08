@@ -30,7 +30,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DBFactory;
@@ -128,9 +128,9 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
     }
 
     /**
-     * @param list<StoredConfiguredField> $fields_in_item_1
-     * @param list<StoredConfiguredField> $fields_in_item_2
-     * @param list<StoredConfiguredField> $fields_in_item_3
+     * @param list<ArtifactSectionField> $fields_in_item_1
+     * @param list<ArtifactSectionField> $fields_in_item_2
+     * @param list<ArtifactSectionField> $fields_in_item_3
      */
     private function assertConfiguredFields(
         array $fields_in_item_1,
@@ -151,9 +151,9 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
     }
 
     /**
-     * @param list<StoredConfiguredField> $fields_in_item_1
-     * @param list<StoredConfiguredField> $fields_in_item_2
-     * @param list<StoredConfiguredField> $fields_in_item_3
+     * @param list<ArtifactSectionField> $fields_in_item_1
+     * @param list<ArtifactSectionField> $fields_in_item_2
+     * @param list<ArtifactSectionField> $fields_in_item_3
      */
     private function assertConfiguredFieldsAfterDeletingField456(
         array $fields_in_item_1,

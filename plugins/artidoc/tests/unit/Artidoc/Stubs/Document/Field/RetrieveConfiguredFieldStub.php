@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Document\Field;
 
 use Tuleap\Artidoc\Document\Field\RetrieveConfiguredField;
-use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 final readonly class RetrieveConfiguredFieldStub implements RetrieveConfiguredField
 {
     /**
-     * @param list<StoredConfiguredField> $rows
+     * @param list<ArtifactSectionField> $rows
      */
     private function __construct(private array $rows)
     {
@@ -38,7 +38,7 @@ final readonly class RetrieveConfiguredFieldStub implements RetrieveConfiguredFi
     /**
      * @no-named-arguments
      */
-    public static function withConfiguredFields(StoredConfiguredField $first_field, StoredConfiguredField ...$other_fields): self
+    public static function withConfiguredFields(ArtifactSectionField $first_field, ArtifactSectionField ...$other_fields): self
     {
         return new self([$first_field, ...$other_fields]);
     }

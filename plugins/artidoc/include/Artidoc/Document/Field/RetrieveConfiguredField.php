@@ -20,18 +20,18 @@
 
 namespace Tuleap\Artidoc\Document\Field;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\StoredConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 interface RetrieveConfiguredField
 {
     /**
-     * @return list<StoredConfiguredField>
+     * @return list<ArtifactSectionField>
      */
     public function retrieveConfiguredFieldsFromItemId(int $item_id): array;
 
     /**
-     * @return list<StoredConfiguredField>
+     * @return list<ArtifactSectionField>
      */
     public function retrieveConfiguredFieldsFromSectionId(SectionIdentifier $section_identifier): array;
 }
