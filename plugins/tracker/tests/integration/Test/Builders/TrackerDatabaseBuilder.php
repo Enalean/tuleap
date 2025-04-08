@@ -699,13 +699,8 @@ final class TrackerDatabaseBuilder
 
     public function buildDescriptionSemantic(int $tracker_id, int $field_id): void
     {
-        $this->db->insert(
-            'tracker_semantic_description',
-            [
-                'tracker_id' => $tracker_id,
-                'field_id'   => $field_id,
-            ]
-        );
+        $dao = new \Tracker_Semantic_DescriptionDao();
+        $dao->save($tracker_id, $field_id);
     }
 
     public function buildContributorAssigneeSemantic(int $tracker_id, int $field_id): void
