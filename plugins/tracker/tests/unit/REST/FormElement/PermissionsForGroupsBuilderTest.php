@@ -23,86 +23,80 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\FormElement;
 
-use Mockery as M;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use ProjectUGroup;
+use Tracker;
 use Tracker_FormElement;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\UGroupRetrieverStub;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class PermissionsForGroupsBuilderTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var M\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var M\MockInterface|FrozenFieldDetector
-     */
-    private $frozen_detector;
-    /**
-     * @var PermissionsForGroupsBuilder
-     */
-    private $builder;
-    /**
-     * @var M\MockInterface|\PFUser
-     */
-    private $tracker_admin_user;
-    /**
-     * @var M\MockInterface|\Tracker
-     */
-    private $tracker;
-    /**
-     * @var M\MockInterface|PermissionsFunctionsWrapper
-     */
-    private $permissions_functions;
-    /**
-     * @var M\MockInterface|\Project
-     */
-    private $project;
+    private FrozenFieldDetector&MockObject $frozen_detector;
+    private PFUser $tracker_admin_user;
+    private Tracker&MockObject $tracker;
+    private PermissionsFunctionsWrapper&MockObject $permissions_functions;
+    private Project $project;
 
     protected function setUp(): void
     {
-        $this->tracker_admin_user = M::mock(\PFUser::class);
+        $this->tracker_admin_user = UserTestBuilder::buildWithDefaults();
 
-        $this->project = M::mock(\Project::class, ['getID' => 202]);
+        $this->project = ProjectTestBuilder::aProject()->withId(202)->build();
 
-        $this->tracker = M::mock(\Tracker::class, ['getID' => 12, 'getProject' => $this->project]);
-        $this->tracker->shouldReceive('userIsAdmin')->with($this->tracker_admin_user)->andReturnTrue();
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getID')->willReturn(12);
+        $this->tracker->method('getProject')->willReturn($this->project);
+        $this->tracker->method('userIsAdmin')->willReturnCallback(fn (PFUser $user) => $user === $this->tracker_admin_user);
 
-        $this->ugroup_manager        = M::mock(\UGroupManager::class);
-        $this->frozen_detector       = M::mock(FrozenFieldDetector::class);
-        $this->permissions_functions = M::mock(PermissionsFunctionsWrapper::class);
-        $this->builder               = new PermissionsForGroupsBuilder($this->ugroup_manager, $this->frozen_detector, $this->permissions_functions);
+        $this->frozen_detector       = $this->createMock(FrozenFieldDetector::class);
+        $this->permissions_functions = $this->createMock(PermissionsFunctionsWrapper::class);
     }
 
     public function testItDoesntReturnFieldsForNonAdminUsers(): void
     {
-        $a_random_user = M::mock(\PFUser::class);
+        $a_random_user = UserTestBuilder::aRandomActiveUser()->build();
 
-        $this->tracker->shouldReceive('userIsAdmin')->with($a_random_user)->andReturnFalse();
+        $form_element = IntFieldBuilder::anIntField(1234)->inTracker($this->tracker)->build();
 
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getTracker' => $this->tracker]);
-        $this->assertNull($this->builder->getPermissionsForGroups($form_element, null, $a_random_user));
+        $builder = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups(...[]),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $this->assertNull($builder->getPermissionsForGroups($form_element, null, $a_random_user));
     }
 
     public function testItReturnsNullWhenThereAreNoPermissionsSet(): void
     {
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => 1234, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField(1234)->inTracker($this->tracker)->build();
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn([]);
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn([]);
 
-        $this->assertNull($this->builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user));
+        $builder = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups(...[]),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $this->assertNull($builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user));
     }
 
     public function testItReturnsEmptyRepresentationWhenNoPermissionsMatches(): void
     {
         $field_id     = 1234;
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
                 $field_id => [
                     'ugroups' => [
@@ -111,23 +105,27 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $representation = $this->builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
+        $builder        = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups(...[]),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $representation = $builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
         $this->assertEquals(new PermissionsForGroupsRepresentation([], [], []), $representation);
     }
 
     public function testItReturnsOneGroupThatCanRead(): void
     {
         $field_id     = 1234;
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
                 $field_id => [
                     'ugroups' => [
@@ -144,7 +142,12 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $representation = $this->builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
+        $builder        = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups($anonymous_ugroup),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $representation = $builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
         $this->assertEmpty($representation->can_update);
         $this->assertEmpty($representation->can_submit);
         $this->assertCount(1, $representation->can_read);
@@ -154,16 +157,15 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsOneGroupThatCanSubmit(): void
     {
         $field_id     = 1234;
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
                 $field_id => [
                     'ugroups' => [
@@ -180,7 +182,12 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $representation = $this->builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
+        $builder        = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups($anonymous_ugroup),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $representation = $builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
         $this->assertEmpty($representation->can_update);
         $this->assertEmpty($representation->can_read);
         $this->assertCount(1, $representation->can_submit);
@@ -190,16 +197,15 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsOneGroupThatCanUpdate(): void
     {
         $field_id     = 1234;
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
                 $field_id => [
                     'ugroups' => [
@@ -216,7 +222,12 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $representation = $this->builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
+        $builder        = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups($anonymous_ugroup),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $representation = $builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
         $this->assertCount(1, $representation->can_update);
         $this->assertEquals(ProjectUGroup::ANONYMOUS, $representation->can_update[0]->id);
     }
@@ -224,16 +235,15 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItExcludedFromUpdateGroupsThatAreFrozenWhenThereIsAnArtifact(): void
     {
         $field_id     = 1234;
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
                 $field_id => [
                     'ugroups' => [
@@ -250,10 +260,15 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->frozen_detector->shouldReceive('isFieldFrozen')->with($artifact, $form_element)->andReturnFalse();
+        $artifact = $this->createMock(Artifact::class);
+        $this->frozen_detector->method('isFieldFrozen')->with($artifact, $form_element)->willReturn(false);
 
-        $representation = $this->builder->getPermissionsForGroups($form_element, $artifact, $this->tracker_admin_user);
+        $builder        = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups($anonymous_ugroup),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $representation = $builder->getPermissionsForGroups($form_element, $artifact, $this->tracker_admin_user);
         $this->assertCount(1, $representation->can_update);
         $this->assertEquals(ProjectUGroup::ANONYMOUS, $representation->can_update[0]->id);
     }
@@ -261,16 +276,15 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItAllowUpdateWhenUseArifactButFieldIsNotFrozen(): void
     {
         $field_id     = 1234;
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
                 $field_id => [
                     'ugroups' => [
@@ -287,10 +301,15 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->frozen_detector->shouldReceive('isFieldFrozen')->with($artifact, $form_element)->andReturnTrue();
+        $artifact = $this->createMock(Artifact::class);
+        $this->frozen_detector->method('isFieldFrozen')->with($artifact, $form_element)->willReturn(true);
 
-        $representation = $this->builder->getPermissionsForGroups($form_element, $artifact, $this->tracker_admin_user);
+        $builder        = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups($anonymous_ugroup),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $representation = $builder->getPermissionsForGroups($form_element, $artifact, $this->tracker_admin_user);
         $this->assertEmpty($representation->can_submit);
         $this->assertEmpty($representation->can_read);
         $this->assertEmpty($representation->can_update);
@@ -299,7 +318,7 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsACompleteDefinitionOfGroups(): void
     {
         $field_id     = 1234;
-        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup       = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -317,11 +336,8 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             'name' => 'Developers',
             'group_id' => 202,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members_ugroup);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $developers_id)->andReturn($static_ugroup);
 
-        $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
+        $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
                 $field_id => [
                     'ugroups' => [
@@ -356,7 +372,12 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $representation = $this->builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
+        $builder        = new PermissionsForGroupsBuilder(
+            UGroupRetrieverStub::buildWithUserGroups($anonymous_ugroup, $project_members_ugroup, $static_ugroup),
+            $this->frozen_detector,
+            $this->permissions_functions,
+        );
+        $representation = $builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
         $this->assertEquals(ProjectUGroup::ANONYMOUS, $representation->can_read[0]->id);
 
         $this->assertCount(2, $representation->can_submit);
