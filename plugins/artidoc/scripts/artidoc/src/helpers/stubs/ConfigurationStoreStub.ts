@@ -41,6 +41,7 @@ export const ConfigurationStoreStub = {
         selected_tracker: ref(null),
         allowed_trackers: [],
         selected_fields: [],
+        available_fields: ref([]),
         is_saving: ref(false),
         is_error: ref(false),
         is_success: ref(false),

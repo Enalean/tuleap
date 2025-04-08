@@ -21,12 +21,13 @@ import { describe, expect, it, vi } from "vitest";
 import * as fetch from "@tuleap/fetch-result";
 import { errAsync, okAsync } from "neverthrow";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { getAllSections, getSection, putSection } from "@/helpers/rest-querier";
+import { getAllSections, getSection, getTracker, putSection } from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { Fault } from "@tuleap/fault";
 import { uri } from "@tuleap/fetch-result";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 describe("rest-querier", () => {
     describe("getAllSections", () => {
@@ -171,6 +172,36 @@ describe("rest-querier", () => {
                     level: 1,
                 },
             );
+        });
+    });
+
+    describe("getTracker", () => {
+        it("should return tracker information", async () => {
+            const field_1 = {
+                field_id: 599,
+                label: "Summary",
+                type: "string",
+            } as ConfigurationField;
+            const field_2 = {
+                field_id: 602,
+                label: "String Field",
+                type: "string",
+            } as ConfigurationField;
+            const semantics = { title: { field_id: 599 } };
+
+            vi.spyOn(fetch, "getJSON").mockReturnValue(
+                okAsync({
+                    fields: [field_1, field_2],
+                    semantics: semantics,
+                }),
+            );
+
+            const result = await getTracker(24);
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+
+            expect(result.value.fields).toStrictEqual([field_1, field_2]);
         });
     });
 });

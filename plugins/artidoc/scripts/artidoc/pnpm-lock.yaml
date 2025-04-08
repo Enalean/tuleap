@@ -32,6 +32,9 @@ dependencies:
   '@tuleap/lazybox':
     specifier: workspace:^
     version: link:../../../../lib/frontend/lazybox
+  '@tuleap/list-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/list-picker
   '@tuleap/option':
     specifier: workspace:^
     version: link:../../../../lib/frontend/option
@@ -109,6 +112,9 @@ devDependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:^
     version: link:../../../../src/themes/BurningParrot
+  '@tuleap/plugin-tracker-rest-api-types':
+    specifier: workspace:^
+    version: link:../../../tracker/scripts/lib/rest-api-types
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin

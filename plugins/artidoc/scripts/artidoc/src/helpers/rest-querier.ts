@@ -32,6 +32,7 @@ import type { FileIdentifier } from "@tuleap/file-upload";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { Level } from "@/sections/levels/SectionsNumberer";
+import type { TrackerForFields } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 export function putConfiguration(
     document_id: number,
@@ -135,4 +136,8 @@ export function putSection(
 
 export function deleteSection(section_id: string): ResultAsync<Response, Fault> {
     return del(uri`/api/artidoc_sections/${section_id}`);
+}
+
+export function getTracker(tracker_id: number): ResultAsync<TrackerForFields, Fault> {
+    return getJSON<TrackerForFields>(uri`/api/trackers/${tracker_id}`);
 }

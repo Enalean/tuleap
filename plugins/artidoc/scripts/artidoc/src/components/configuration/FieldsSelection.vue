@@ -19,6 +19,19 @@
   -->
 
 <template>
+    <select ref="field_selector" multiple>
+        <option></option>
+        <option
+            v-for="field in available_fields"
+            v-bind:key="field.field_id"
+            v-bind:value="field.label"
+            data-test="available-readonly-fields"
+            disabled
+        >
+            {{ field.label }}
+        </option>
+    </select>
+
     <table class="tlp-table" data-test="artidoc-configuration-fields-table">
         <thead>
             <tr>
@@ -77,15 +90,42 @@
 
 <script setup lang="ts">
 import type { Ref } from "vue";
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
+import { createListPicker } from "@tuleap/list-picker";
+import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import type { ListPicker } from "@tuleap/list-picker";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
-    selected_fields: ReadonlyField[];
+    selected_fields: ConfigurationField[];
+    available_fields: ConfigurationField[];
 }>();
 
-const selected_fields: Ref<ReadonlyField[]> = ref(props.selected_fields);
+const selected_fields: Ref<ConfigurationField[]> = ref(props.selected_fields);
+const list_picker = ref<ListPicker | undefined>();
+const field_selector = ref<HTMLSelectElement>();
+
+onMounted(() => {
+    if (!(field_selector.value instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    list_picker.value = createListPicker(field_selector.value, {
+        locale: document.body.dataset.userLocale,
+        placeholder: $gettext("Select fields..."),
+        is_filterable: true,
+    });
+});
+
+onBeforeUnmount(() => {
+    list_picker.value?.destroy();
+});
 </script>
+
+<style scoped lang="scss">
+.tlp-table {
+    margin-top: var(--tlp-medium-spacing);
+}
+</style>

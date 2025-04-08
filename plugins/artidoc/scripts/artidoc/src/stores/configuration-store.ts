@@ -22,7 +22,8 @@ import { ref } from "vue";
 import { putConfiguration } from "@/helpers/rest-querier";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Project } from "@/helpers/project.type";
-import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
+import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import { getAvailableFields } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 export interface TitleFieldDefinition {
     readonly field_id: number;
@@ -71,7 +72,8 @@ export function isTrackerWithSubmittableSection(
 export interface ConfigurationStore {
     selected_tracker: Ref<Tracker | null>;
     allowed_trackers: readonly Tracker[];
-    selected_fields: ReadonlyField[];
+    selected_fields: ConfigurationField[];
+    available_fields: Ref<ConfigurationField[]>;
     is_saving: Ref<boolean>;
     is_error: Ref<boolean>;
     is_success: Ref<boolean>;
@@ -88,7 +90,7 @@ export function initConfigurationStore(
     document_id: number,
     selected_tracker: Tracker | null,
     allowed_trackers: readonly Tracker[],
-    selected_fields: ReadonlyField[],
+    selected_fields: ConfigurationField[],
 ): ConfigurationStore {
     const currently_selected_tracker = ref(selected_tracker);
     const is_saving = ref(false);
@@ -98,6 +100,19 @@ export function initConfigurationStore(
     const current_project: Ref<Project | null> = ref(
         selected_tracker ? selected_tracker.project : null,
     );
+
+    const available_fields: Ref<ConfigurationField[]> = ref([]);
+
+    if (selected_tracker) {
+        getAvailableFields(selected_tracker.id).match(
+            (fields) => {
+                available_fields.value = fields;
+            },
+            (fault) => {
+                error_message.value = String(fault);
+            },
+        );
+    }
 
     function saveConfiguration(new_selected_tracker: Tracker): void {
         is_saving.value = true;
@@ -126,7 +141,8 @@ export function initConfigurationStore(
     return {
         allowed_trackers,
         selected_tracker: currently_selected_tracker,
-        selected_fields: selected_fields,
+        selected_fields,
+        available_fields,
         is_saving,
         is_error,
         is_success,

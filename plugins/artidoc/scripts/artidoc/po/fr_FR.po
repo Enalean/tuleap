@@ -265,6 +265,9 @@ msgstr ""
 "Recherche d'artéfact existant à utiliser comme section dans le tracker "
 "%{ tracker }"
 
+msgid "Select fields..."
+msgstr "Sélectionner les champs..."
+
 msgid "Table of contents"
 msgstr "Table des matières"
 

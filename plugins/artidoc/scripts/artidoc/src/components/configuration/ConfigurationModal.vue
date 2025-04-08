@@ -64,7 +64,10 @@
             <fields-selection-introductory-text
                 v-bind:tracker="configuration_store.selected_tracker.value"
             />
-            <fields-selection v-bind:selected_fields="configuration_store.selected_fields" />
+            <fields-selection
+                v-bind:selected_fields="configuration_store.selected_fields"
+                v-bind:available_fields="configuration_store.available_fields.value"
+            />
         </div>
 
         <div class="tlp-modal-footer">

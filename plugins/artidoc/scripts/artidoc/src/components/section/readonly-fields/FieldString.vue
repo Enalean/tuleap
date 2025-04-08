@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
+import type { ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFields";
 
 const gettext_provider = useGettext();
 const { $gettext } = gettext_provider;

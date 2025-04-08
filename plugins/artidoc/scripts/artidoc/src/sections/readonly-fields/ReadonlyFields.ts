@@ -21,11 +21,7 @@ export type ReadonlyField = ReadonlyFieldString;
 
 export type ReadonlyFieldString = {
     readonly type: "string";
-    label: string;
-    display_type: "column" | "block";
-    value: string;
+    readonly label: string;
+    readonly display_type: "column" | "block";
+    readonly value: string;
 };
-
-export function isStringField(field: ReadonlyField): field is ReadonlyFieldString {
-    return field.type === "string";
-}

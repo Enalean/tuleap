@@ -21,7 +21,7 @@ import { describe, it, expect } from "vitest";
 import { createGettext } from "vue3-gettext";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
+import type { ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFields";
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 
 const field_string: ReadonlyFieldString = {
