@@ -26,10 +26,10 @@ use Codendi_Request;
 use EventManager;
 use PFUser;
 use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Tracker;
-use Tracker_Action_UpdateArtifact;
 use Tracker_Artifact_Redirect;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElementFactory;
@@ -44,11 +44,11 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Action_UpdateArtifactTest extends TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class UpdateArtifactActionTest extends TestCase
 {
     use GlobalResponseMock;
 
@@ -67,7 +67,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
     private Tracker_FormElementFactory&MockObject $formelement_factory;
     private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
     private EventManager&MockObject $event_manager;
-    private Tracker_Action_UpdateArtifact $action;
+    private UpdateArtifactAction $action;
     private HiddenFieldsetsDetector&MockObject $hidden_fieldsets_detector;
 
     protected function setUp(): void
@@ -99,7 +99,6 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
         $this->task->setId(self::ARTIFACT_ID);
-        $this->task->method('createNewChangeset')->willReturn(true);
 
         $this->computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
         $this->us_computed_field->method('fetchCardValue')->with($this->user_story)->willReturn(23);
@@ -109,13 +108,14 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $this->artifact_retriever        = $this->createMock(TypeIsChildLinkRetriever::class);
         $this->hidden_fieldsets_detector = $this->createMock(HiddenFieldsetsDetector::class);
 
-        $this->action = new Tracker_Action_UpdateArtifact(
+        $this->action = new UpdateArtifactAction(
             $this->task,
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
             $this->createMock(VisitRecorder::class),
-            $this->hidden_fieldsets_detector
+            $this->hidden_fieldsets_detector,
+            CreateNewChangesetStub::withNullReturnChangeset(),
         );
     }
 
@@ -190,19 +190,19 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
         $task->method('getId')->willReturn(self::ARTIFACT_ID);
         $task->method('getTracker')->willReturn($tracker);
         $task->method('validateCommentFormat')->willReturn(CommentFormatIdentifier::COMMONMARK);
-        $task->method('createNewChangeset');
         $task->method('fetchDirectLinkToArtifact');
         $task->method('summonArtifactRedirectors');
         $task->method('getParent');
         $visit_recorder = $this->createMock(VisitRecorder::class);
 
-        $action = new Tracker_Action_UpdateArtifact(
+        $action = new UpdateArtifactAction(
             $task,
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
             $visit_recorder,
-            $this->hidden_fieldsets_detector
+            $this->hidden_fieldsets_detector,
+            CreateNewChangesetStub::withNullReturnChangeset(),
         );
 
         $this->computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
@@ -286,15 +286,14 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
     {
         ob_start();
         $this->action->process($layout, $request, $user);
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function testItCreatesAChangeset(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
         $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
-
-        $this->task->expects($this->once())->method('createNewChangeset')->willReturn(true);
 
         $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
     }
@@ -328,19 +327,15 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
     private function getRedirectUrlFor(array $request_data): Tracker_Artifact_Redirect
     {
         $request = new Codendi_Request($request_data, $this->createMock(ProjectManager::class));
-        $action  = new class (
+        $action  = new UpdateArtifactAction(
             $this->task,
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
             $this->createMock(VisitRecorder::class),
-            $this->hidden_fieldsets_detector
-        ) extends Tracker_Action_UpdateArtifact {
-            public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request)
-            {
-                return parent::getRedirectUrlAfterArtifactUpdate($request);
-            }
-        };
+            $this->hidden_fieldsets_detector,
+            CreateNewChangesetStub::withNullReturnChangeset(),
+        );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
     }
 
@@ -369,7 +364,7 @@ final class Tracker_Action_UpdateArtifactTest extends TestCase
     private function assertURIHasArgument(string $url, string $argument, string $argument_value): void
     {
         $query_string = parse_url($url, PHP_URL_QUERY);
-        parse_str($query_string, $args);
+        parse_str((string) $query_string, $args);
         $this->assertTrue(isset($args[$argument]));
         $this->assertEquals($argument_value, $args[$argument]);
     }

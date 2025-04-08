@@ -18,51 +18,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Action;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use EventManager;
+use PFUser;
+use Tracker;
+use Tracker_Artifact_ReadOnlyRenderer;
+use Tracker_Artifact_Redirect;
+use Tracker_Exception;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_Computed;
+use Tracker_FormElementFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final readonly class UpdateArtifactAction
 {
-    /** @var Artifact */
-    private $artifact;
-
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
-    /** @var EventManager */
-    private $event_manager;
-    private $artifact_retriever;
-    /**
-     * @var VisitRecorder
-     */
-    private $visit_recorder;
-
-    /**
-     * @var HiddenFieldsetsDetector
-     */
-    private $hidden_fieldsets_detector;
-
     public function __construct(
-        Artifact $artifact,
-        Tracker_FormElementFactory $form_element_factory,
-        EventManager $event_manager,
-        TypeIsChildLinkRetriever $artifact_retriever,
-        VisitRecorder $visit_recorder,
-        HiddenFieldsetsDetector $hidden_fieldsets_detector,
+        private Artifact $artifact,
+        private Tracker_FormElementFactory $form_element_factory,
+        private EventManager $event_manager,
+        private TypeIsChildLinkRetriever $artifact_retriever,
+        private VisitRecorder $visit_recorder,
+        private HiddenFieldsetsDetector $hidden_fieldsets_detector,
+        private CreateNewChangeset $new_changeset_creator,
     ) {
-        $this->artifact                  = $artifact;
-        $this->form_element_factory      = $form_element_factory;
-        $this->event_manager             = $event_manager;
-        $this->artifact_retriever        = $artifact_retriever;
-        $this->visit_recorder            = $visit_recorder;
-        $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
     {
-         //TODO : check permissions on this action?
+        // TODO: check permissions on this action?
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
 
         $fields_data = $request->get('artifact');
@@ -79,7 +75,16 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
                 $email         = ($request_email !== false) ? $request_email : null;
                 $current_user->setEmail($email);
             }
-            $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, true, $comment_format);
+            $this->new_changeset_creator->create(NewChangeset::fromFieldsDataArray(
+                $this->artifact,
+                $fields_data,
+                (string) $request->get('artifact_followup_comment'),
+                $comment_format,
+                [],
+                $current_user,
+                (int) $_SERVER['REQUEST_TIME'],
+                new CreatedFileURLMapping(),
+            ), PostCreationContext::withNoConfig(true));
 
             $art_link = $this->artifact->fetchDirectLinkToArtifact();
             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Successfully Updated (%1$s)'), $art_link), CODENDI_PURIFIER_LIGHT);
@@ -88,7 +93,7 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
             $this->artifact->summonArtifactRedirectors($request, $redirect);
 
             if ($request->isAjax()) {
-                $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
+                $this->sendAjaxCardsUpdateInfo($current_user);
             } elseif ($request->existAndNonEmpty('from_overlay')) {
                 $purifier  = Codendi_HTMLPurifier::instance();
                 $csp_nonce = $GLOBALS['Response']->getCSPNonce();
@@ -99,7 +104,7 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
             }
         } catch (Tracker_NoChangeException $e) {
             if ($request->isAjax()) {
-                $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
+                $this->sendAjaxCardsUpdateInfo($current_user);
             } else {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $render = new Tracker_Artifact_ReadOnlyRenderer(
@@ -109,13 +114,13 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
                     $this->artifact_retriever,
                     $this->visit_recorder,
                     $this->hidden_fieldsets_detector,
-                    new \Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
+                    new ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
                 );
                 $render->display($request, $current_user);
             }
         } catch (Tracker_Exception $e) {
             if ($request->isAjax()) {
-                $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
+                $this->sendAjaxCardsUpdateInfo($current_user);
             } else {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 $render = new Tracker_Artifact_ReadOnlyRenderer(
@@ -125,14 +130,14 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
                     $this->artifact_retriever,
                     $this->visit_recorder,
                     $this->hidden_fieldsets_detector,
-                    new \Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
+                    new ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
                 );
                 $render->display($request, $current_user);
             }
         }
     }
 
-    protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request)
+    public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request): Tracker_Artifact_Redirect
     {
         $stay     = $request->get('submit_and_stay');
         $from_aid = $request->get('from_aid');
@@ -147,7 +152,7 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $redirect;
     }
 
-    private function calculateRedirectParams($stay, $from_aid)
+    private function calculateRedirectParams($stay, $from_aid): array
     {
         $redirect_params = [];
         if ($stay) {
@@ -161,7 +166,7 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return array_filter($redirect_params);
     }
 
-    private function sendAjaxCardsUpdateInfo(PFUser $current_user)
+    private function sendAjaxCardsUpdateInfo(PFUser $current_user): void
     {
         $cards_info = $this->getCardUpdateInfo($this->artifact, $current_user);
         $parent     = $this->artifact->getParent($current_user);
@@ -172,7 +177,7 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $GLOBALS['Response']->sendJSON($cards_info);
     }
 
-    private function getCardUpdateInfo(Artifact $artifact, PFUser $current_user)
+    private function getCardUpdateInfo(Artifact $artifact, PFUser $current_user): array
     {
         $card_info              = [];
         $tracker_id             = $artifact->getTracker()->getId();
@@ -181,7 +186,7 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
             Tracker::REMAINING_EFFORT_FIELD_NAME,
             $current_user
         );
-        if ($remaining_effort_field) {
+        if ($remaining_effort_field !== null) {
             $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
             $remaining_effort = $this->addAutocomputeLabelIfFieldIsAutcocomputed($artifact, $remaining_effort_field, $remaining_effort);
 
@@ -199,6 +204,7 @@ class Tracker_Action_UpdateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
     ) {
         if (
             $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), ['computed'])
+            && $remaining_effort_field instanceof Tracker_FormElement_Field_Computed
             && $remaining_effort_field->isArtifactValueAutocomputed($artifact)
         ) {
             $remaining_effort .= ' (' . dgettext('tuleap-tracker', 'autocomputed') . ')';
