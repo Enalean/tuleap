@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 
-class Tracker_Semantic_Title extends Tracker_Semantic
+class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const NAME = 'title';
 
@@ -181,7 +181,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
         return $dao->delete($this->tracker->getId());
     }
 
-    protected static $_instances;
+    protected static $_instances; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      * Load an instance of a Tracker_Semantic_Title
      *

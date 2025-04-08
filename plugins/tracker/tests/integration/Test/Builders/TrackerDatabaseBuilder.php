@@ -28,6 +28,7 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\TrackerColor;
 use function Psl\Str\lowercase;
 
 final class TrackerDatabaseBuilder
@@ -38,6 +39,7 @@ final class TrackerDatabaseBuilder
 
     public function buildTracker(int $project_id, string $name, string $color = 'inca-silver'): Tracker
     {
+        $color_name = TrackerColor::fromName($color);
         $factory    = \TrackerFactory::instance();
         $tracker_id = (int) $this->db->insertReturnId(
             'tracker',
@@ -46,7 +48,7 @@ final class TrackerDatabaseBuilder
                 'name'      => $name,
                 'item_name' => lowercase($name),
                 'status'    => 'A',
-                'color'     => $color,
+                'color'     => $color_name->getName(),
             ]
         );
         $tracker    = $factory->getTrackerById($tracker_id);
@@ -688,13 +690,8 @@ final class TrackerDatabaseBuilder
 
     public function buildTitleSemantic(int $tracker_id, int $field_id): void
     {
-        $this->db->insert(
-            'tracker_semantic_title',
-            [
-                'tracker_id' => $tracker_id,
-                'field_id'   => $field_id,
-            ]
-        );
+        $title_dao = new \Tracker_Semantic_TitleDao();
+        $title_dao->save($tracker_id, $field_id);
     }
 
     public function buildDescriptionSemantic(int $tracker_id, int $field_id): void

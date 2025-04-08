@@ -20,7 +20,7 @@
  */
 
 
-class Tracker_Semantic_TitleDao extends DataAccessObject
+class Tracker_Semantic_TitleDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
