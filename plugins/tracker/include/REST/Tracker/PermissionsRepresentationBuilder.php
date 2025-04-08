@@ -25,23 +25,15 @@ namespace Tuleap\Tracker\REST\Tracker;
 
 use Tracker;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
+use Tuleap\Project\UGroupRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 
-class PermissionsRepresentationBuilder
+readonly class PermissionsRepresentationBuilder
 {
-    /**
-     * @var \UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var PermissionsFunctionsWrapper
-     */
-    private $permissions_functions_wrapper;
-
-    public function __construct(\UGroupManager $ugroup_manager, PermissionsFunctionsWrapper $permissions_functions_wrapper)
-    {
-        $this->ugroup_manager                = $ugroup_manager;
-        $this->permissions_functions_wrapper = $permissions_functions_wrapper;
+    public function __construct(
+        private UGroupRetriever $ugroup_manager,
+        private PermissionsFunctionsWrapper $permissions_functions_wrapper,
+    ) {
     }
 
     public function getPermissionsRepresentation(Tracker $tracker, \PFUser $user): ?PermissionsRepresentation
