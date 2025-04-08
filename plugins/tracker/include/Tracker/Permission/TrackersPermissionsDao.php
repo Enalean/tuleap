@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class TrackersPermissionsDao extends DataAccessObject implements SearchUserGroupsPermissionOnFields, SearchUserGroupsPermissionOnTrackers, SearchUserGroupsPermissionOnArtifacts
 {
-    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, string $permission): array
+    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, FieldPermissionType $permission): array
     {
         $fields_statement = EasyStatement::open()->in('field.id IN (?*)', $fields_id);
         $groups_statement = implode(', ', array_map(static fn(UserGroupInProject $user_group) => '(?, ?)', $user_groups));
@@ -48,7 +48,7 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
         WHERE permissions.permission_type = ? AND $fields_statement AND (project.group_id, permissions.ugroup_id) IN ($groups_statement)
         SQL;
 
-        $results = $this->getDB()->safeQuery($sql, [$permission, ...$fields_id, ...$groups_values]);
+        $results = $this->getDB()->safeQuery($sql, [$permission->value, ...$fields_id, ...$groups_values]);
         assert(is_array($results));
         return array_map(static fn(array $row) => (int) $row['field_id'], $results);
     }

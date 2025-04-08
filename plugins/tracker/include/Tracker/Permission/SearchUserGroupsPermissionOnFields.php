@@ -29,5 +29,5 @@ interface SearchUserGroupsPermissionOnFields
      * @param int[] $fields_id
      * @return int[]
      */
-    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, string $permission): array;
+    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, FieldPermissionType $permission): array;
 }

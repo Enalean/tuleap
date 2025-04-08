@@ -107,9 +107,9 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         $this->fields_dao = $this->createMock(SearchUserGroupsPermissionOnFields::class);
         $user->method('getUgroups')->willReturn([]);
         $this->fields_dao->expects($this->exactly(2))->method('searchUserGroupsPermissionOnFields')
-            ->willReturnCallback(static fn(array $user_groups_id, array $fields_id, string $permission) => match ($permission) {
-                FieldPermissionType::PERMISSION_READ->value   => [],
-                FieldPermissionType::PERMISSION_UPDATE->value => [301, 303, 304],
+            ->willReturnCallback(static fn(array $user_groups_id, array $fields_id, FieldPermissionType $permission) => match ($permission) {
+                FieldPermissionType::PERMISSION_READ   => [],
+                FieldPermissionType::PERMISSION_UPDATE => [301, 303, 304],
             });
 
         $result = $this->getRetriever()->retrieveUserPermissionOnFields(

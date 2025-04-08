@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Permission;
 
+use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\SearchUserGroupsPermissionOnFields;
 
 final readonly class SearchUserGroupsPermissionOnFieldsStub implements SearchUserGroupsPermissionOnFields
@@ -46,7 +47,7 @@ final readonly class SearchUserGroupsPermissionOnFieldsStub implements SearchUse
         return new self($results);
     }
 
-    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, string $permission): array
+    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, FieldPermissionType $permission): array
     {
         return $this->result;
     }
