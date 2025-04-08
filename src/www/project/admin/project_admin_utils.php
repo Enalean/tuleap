@@ -26,6 +26,7 @@
 
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectAdminHistoryEntry;
 
 function project_admin_header(string $title, string $current_pane_shortname): void
 {
@@ -95,6 +96,8 @@ function get_history_entries()
             'frs_self_add_monitor_package',
             'frs_add_monitor_package',
             'frs_stop_monitor_package',
+            ProjectAdminHistoryEntry::Add->value,
+            ProjectAdminHistoryEntry::Remove->value,
         ],
         'event_ug' =>         ['upd_ug',
             'del_ug',
