@@ -26,7 +26,6 @@ use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_ArtifactDao;
-use Tracker_MasschangeDataValueExtractor;
 use Tracker_Report;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
@@ -86,7 +85,7 @@ final class MasschangeUpdaterTest extends TestCase
         $rules_factory = $this->createStub(Tracker_RuleFactory::class);
         $rules_factory->method('getAllListRulesByTrackerWithOrder')->willReturn($rules);
 
-        $masschange_data_value_extractor = $this->createStub(Tracker_MasschangeDataValueExtractor::class);
+        $masschange_data_value_extractor = $this->createStub(MasschangeDataValueExtractor::class);
         $masschange_data_value_extractor->method('getNewValues')->willReturn($new_values);
 
         $event_manager = EventDispatcherStub::withIdentityCallback();
