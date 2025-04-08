@@ -38,4 +38,14 @@ As for [pre-receive git hook](#pre-receive-git-hook), this action need a WASM mo
 - The module receives as input a payload same as [Tracker webhooks](https://docs.tuleap.org/user-guide/integration/webhook.html#tracker)
 - The module must output a payload identical to the one for REST API `PUT /api/artifacts/:id`
 
-An example module is available in https://github.com/Enalean/tuleap-functions-for-tracker-example.
+Example modules are available in https://github.com/Enalean/tuleap-function-examples.
+
+```bash
+git clone git@github.com:Enalean/tuleap-function-examples.git
+cd tuleap-function-examples/artifact-post-action/post-action-add-comment
+nix-shell
+make build
+```
+
+Then upload the target `target/wasm32-wasi/release/post-action-add-comment.wasm`
+in your tracker » admin » workflow » tuleap function.
