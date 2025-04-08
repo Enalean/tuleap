@@ -217,12 +217,6 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ['date']
         )->andReturn(true);
 
-        $this->form_element_field_factoy->shouldReceive('getDateFieldByNameForUser')->with(
-            $this->artifact->getTracker(),
-            $this->user,
-            'start_date'
-        )->andReturn(null);
-
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
                 $this->tracker,
@@ -245,12 +239,6 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'start_date',
             ['date']
         )->andReturn(true);
-
-        $this->form_element_field_factoy->shouldReceive('getDateFieldByNameForUser')->with(
-            $this->artifact->getTracker(),
-            $this->user,
-            'start_date'
-        )->andReturn(null);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
@@ -279,12 +267,6 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'start_date',
             ['date']
         )->andReturn(true);
-
-        $this->form_element_field_factoy->shouldReceive('getDateFieldByNameForUser')->with(
-            $this->artifact->getTracker(),
-            $this->user,
-            'start_date'
-        )->andReturn($this->field_start_date);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
