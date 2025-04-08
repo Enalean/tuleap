@@ -39,6 +39,7 @@ import {
     UserIdentifier,
 } from "@tuleap/plugin-tracker-link-field";
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
+import type { EditionSwitcher } from "../edition/TrackerArtifactEditionSwitcher";
 
 export interface LinkFieldEditor {
     init(mount_point: HTMLElement): void;
@@ -52,14 +53,21 @@ function assertColorName(_color: string): _color is ColorName {
     return true;
 }
 
-export function initLinkField(user_locale: LocaleString): void {
+export function initLinkField(
+    user_locale: LocaleString,
+    edition_switcher: EditionSwitcher | null,
+): void {
     const mount_point = document.querySelector("[data-link-field-id]");
     if (mount_point instanceof HTMLElement) {
-        LinkFieldEditor(document, user_locale).init(mount_point);
+        LinkFieldEditor(document, user_locale, edition_switcher).init(mount_point);
     }
 }
 
-export const LinkFieldEditor = (doc: Document, user_locale: LocaleString): LinkFieldEditor => ({
+export const LinkFieldEditor = (
+    doc: Document,
+    user_locale: LocaleString,
+    edition_switcher: EditionSwitcher | null,
+): LinkFieldEditor => ({
     init(mount_point): void {
         const user_id = UserIdentifier.fromId(
             parseInt(getAttributeOrThrow(doc.body, "data-user-id")),
@@ -126,6 +134,14 @@ export const LinkFieldEditor = (doc: Document, user_locale: LocaleString): LinkF
         );
         element.autocompleter = link_field_creator.createLinkSelectorAutoCompleter();
         element.creatorController = link_field_creator.createArtifactCreatorController();
+
+        const parent = mount_point.parentElement;
+        if (edition_switcher !== null && parent !== null) {
+            element.addEventListener("change", () => {
+                parent.classList.add("in-edition");
+                edition_switcher.toggleSubmissionBar();
+            });
+        }
 
         mount_point.replaceWith(element);
     },

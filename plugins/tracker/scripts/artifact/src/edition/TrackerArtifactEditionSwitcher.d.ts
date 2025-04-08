@@ -17,4 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function initEditionSwitcher(): void;
+export interface EditionSwitcher {
+    init(): void;
+    submissionBarIsAlreadyActive(): boolean;
+    toggleSubmissionBar(): void;
+}
+
+export function initEditionSwitcher(): EditionSwitcher;
