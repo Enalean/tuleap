@@ -34,7 +34,7 @@ describe("configuration-store", () => {
             const bugs: Tracker = TrackerStub.build(101, "Bugs");
             const tasks: Tracker = TrackerStub.build(102, "Tasks");
 
-            const store = initConfigurationStore(1, null, [bugs, tasks]);
+            const store = initConfigurationStore(1, null, [bugs, tasks], []);
 
             expect(store.selected_tracker.value).toStrictEqual(null);
 
@@ -54,7 +54,7 @@ describe("configuration-store", () => {
             const bugs: Tracker = TrackerStub.build(101, "Bugs");
             const tasks: Tracker = TrackerStub.build(102, "Tasks");
 
-            const store = initConfigurationStore(1, null, [bugs, tasks]);
+            const store = initConfigurationStore(1, null, [bugs, tasks], []);
 
             expect(store.selected_tracker.value).toStrictEqual(null);
 
@@ -70,7 +70,7 @@ describe("configuration-store", () => {
 
     describe("resetSuccessFlagFromPreviousCalls", () => {
         it("should put the success flag to false", () => {
-            const store = initConfigurationStore(1, null, []);
+            const store = initConfigurationStore(1, null, [], []);
             store.is_success.value = true;
 
             store.resetSuccessFlagFromPreviousCalls();

@@ -26,9 +26,12 @@ use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldRepresentation;
 use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
@@ -63,6 +66,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         private ConfiguredTrackerRetriever $configured_tracker_retriever,
         private SuitableTrackersForDocumentRetriever $suitable_trackers_retriever,
         private ArtidocBreadcrumbsProvider $breadcrumbs_provider,
+        private ConfiguredFieldCollectionBuilder $configured_fields_builder,
         private LoggerInterface $logger,
         private FileUploadDataProvider $file_upload_provider,
         private EventDispatcherInterface $event_dispatcher,
@@ -121,6 +125,10 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                 ->withBodyClass(['has-sidebar-with-pinned-header', 'reduce-help-button'])
                 ->build()
         );
+
+        $configured_tracker = $this->configured_tracker_retriever->getTracker($document_information->document);
+        $configured_fields  = $configured_tracker ? $this->configured_fields_builder->buildFromArtidoc($document_information, $user)->getFields($configured_tracker) : [];
+
         \TemplateRendererFactory::build()
             ->getRenderer(__DIR__)
             ->renderToPage(
@@ -130,10 +138,14 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     $project_id,
                     $user_can_write,
                     $title,
-                    $this->getTrackerRepresentation($this->configured_tracker_retriever->getTracker($document_information->document), $user),
+                    $this->getTrackerRepresentation($configured_tracker, $user),
                     array_map(
                         fn (\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker, $user),
                         $this->suitable_trackers_retriever->getTrackers($document_information, $user),
+                    ),
+                    array_map(
+                        fn (ConfiguredField $configured_field): ConfiguredFieldRepresentation => ConfiguredFieldRepresentation::fromConfiguredField($configured_field),
+                        $configured_fields,
                     ),
                     $allowed_max_size,
                     $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent($user))->getTemplates(),

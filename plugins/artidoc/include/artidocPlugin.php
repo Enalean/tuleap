@@ -34,6 +34,7 @@ use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
@@ -251,6 +252,10 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
                 $tracker_factory,
             ),
             new ArtidocBreadcrumbsProvider($docman_item_factory),
+            new ConfiguredFieldCollectionBuilder(
+                new ConfiguredFieldDao(),
+                \Tracker_FormElementFactory::instance(),
+            ),
             $logger,
             new FileUploadDataProvider(
                 new FrozenFieldDetector(

@@ -107,6 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         item_id,
         selected_tracker,
         JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-trackers")),
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-selected-fields")),
     );
 
     const is_loading_failed = ref(false);
