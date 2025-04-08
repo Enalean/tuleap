@@ -23,81 +23,71 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Tracker;
 
-use Mockery as M;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use ProjectUGroup;
 use Tracker;
+use Tuleap\Project\UGroupRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private const PROJECT_ID = 202;
 
-    /**
-     * @var M\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var M\MockInterface|PermissionsFunctionsWrapper
-     */
-    private $permissions_functions_wrapper;
-    /**
-     * @var PermissionsRepresentationBuilder
-     */
-    private $builder;
-    /**
-     * @var M\MockInterface|\PFUser
-     */
-    private $tracker_admin_user;
-    /**
-     * @var M\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var M\MockInterface|Tracker
-     */
-    private $tracker;
+    private UGroupRetriever $ugroup_manager;
+    private PermissionsFunctionsWrapper&MockObject $permissions_functions_wrapper;
+    private \PFUser $tracker_admin_user;
+    private Project $project;
+    private Tracker&MockObject $tracker;
 
     protected function setUp(): void
     {
-        $this->tracker_admin_user = M::mock(\PFUser::class);
+        $this->tracker_admin_user = UserTestBuilder::buildWithDefaults();
 
-        $this->project = M::mock(\Project::class, ['getID' => 202]);
+        $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $this->tracker = M::mock(Tracker::class, ['getID' => 12, 'getProject' => $this->project]);
-        $this->tracker->shouldReceive('userIsAdmin')->with($this->tracker_admin_user)->andReturnTrue();
-
-        $this->ugroup_manager = M::mock(\UGroupManager::class);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getID')->willReturn(12);
+        $this->tracker->method('getProject')->willReturn($this->project);
+        $this->tracker->method('userIsAdmin')->willReturnCallback(fn (PFUser $user) => match ($user) {
+            $this->tracker_admin_user => true,
+            default => false,
+        });
 
         $project_members_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
-            'group_id' => 202,
+            'group_id' => self::PROJECT_ID,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members_ugroup);
+        $this->ugroup_manager   = UGroupRetrieverStub::buildWithUserGroups($project_members_ugroup);
 
-        $this->permissions_functions_wrapper = M::mock(PermissionsFunctionsWrapper::class);
-        $this->builder                       = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $this->permissions_functions_wrapper = $this->createMock(PermissionsFunctionsWrapper::class);
     }
 
     public function testItReturnsNullWhenUserIsNotAdmin(): void
     {
-        $a_random_user = M::mock(\PFUser::class);
+        $a_random_user = UserTestBuilder::aRandomActiveUser()->build();
 
-        $this->tracker->shouldReceive('userIsAdmin')->with($a_random_user)->andReturnFalse();
-
-        $this->assertNull($this->builder->getPermissionsRepresentation($this->tracker, $a_random_user));
+        $builder = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $this->assertNull($builder->getPermissionsRepresentation($this->tracker, $a_random_user));
     }
 
     public function testItReturnsAnEmptyRepresentationWhenThereAreNoPermissions(): void
     {
-        $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([]);
-        $this->assertEquals(new PermissionsRepresentation([], [], [], [], []), $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user));
+        $this->permissions_functions_wrapper->method('getTrackerUGroupsPermissions')->with($this->tracker)->willReturn([]);
+
+        $builder = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        self::assertEquals(new PermissionsRepresentation([], [], [], [], []), $builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user));
     }
 
     public function testItReturnsAGroupThatHaveAccess(): void
     {
-        $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
+        $this->permissions_functions_wrapper->method('getTrackerUGroupsPermissions')->with($this->tracker)->willReturn([
             [
                 'ugroup' => [
                     'id' => ProjectUGroup::PROJECT_MEMBERS,
@@ -108,18 +98,19 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
             ],
         ]);
 
-        $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
-        $this->assertEmpty($representation->can_admin);
-        $this->assertEmpty($representation->can_access_submitted_by_group);
-        $this->assertEmpty($representation->can_access_assigned_to_group);
-        $this->assertEmpty($representation->can_access_submitted_by_user);
-        $this->assertCount(1, $representation->can_access);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access[0]->short_name);
+        $builder        = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $representation = $builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
+        self::assertEmpty($representation->can_admin);
+        self::assertEmpty($representation->can_access_submitted_by_group);
+        self::assertEmpty($representation->can_access_assigned_to_group);
+        self::assertEmpty($representation->can_access_submitted_by_user);
+        self::assertCount(1, $representation->can_access);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveAdminAccess(): void
     {
-        $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
+        $this->permissions_functions_wrapper->method('getTrackerUGroupsPermissions')->with($this->tracker)->willReturn([
             [
                 'ugroup' => [
                     'id' => ProjectUGroup::PROJECT_MEMBERS,
@@ -130,18 +121,19 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
             ],
         ]);
 
-        $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
-        $this->assertEmpty($representation->can_access);
-        $this->assertEmpty($representation->can_access_submitted_by_group);
-        $this->assertEmpty($representation->can_access_assigned_to_group);
-        $this->assertEmpty($representation->can_access_submitted_by_user);
-        $this->assertCount(1, $representation->can_admin);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
+        $builder        = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $representation = $builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
+        self::assertEmpty($representation->can_access);
+        self::assertEmpty($representation->can_access_submitted_by_group);
+        self::assertEmpty($representation->can_access_assigned_to_group);
+        self::assertEmpty($representation->can_access_submitted_by_user);
+        self::assertCount(1, $representation->can_admin);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveSubmittedByThemAccess(): void
     {
-        $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
+        $this->permissions_functions_wrapper->method('getTrackerUGroupsPermissions')->with($this->tracker)->willReturn([
             [
                 'ugroup' => [
                     'id' => ProjectUGroup::PROJECT_MEMBERS,
@@ -152,18 +144,19 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
             ],
         ]);
 
-        $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
-        $this->assertEmpty($representation->can_access);
-        $this->assertEmpty($representation->can_access_submitted_by_group);
-        $this->assertEmpty($representation->can_access_assigned_to_group);
-        $this->assertEmpty($representation->can_admin);
-        $this->assertCount(1, $representation->can_access_submitted_by_user);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_user[0]->short_name);
+        $builder        = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $representation = $builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
+        self::assertEmpty($representation->can_access);
+        self::assertEmpty($representation->can_access_submitted_by_group);
+        self::assertEmpty($representation->can_access_assigned_to_group);
+        self::assertEmpty($representation->can_admin);
+        self::assertCount(1, $representation->can_access_submitted_by_user);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_user[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveSubmittedByGroup(): void
     {
-        $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
+        $this->permissions_functions_wrapper->method('getTrackerUGroupsPermissions')->with($this->tracker)->willReturn([
             [
                 'ugroup' => [
                     'id' => ProjectUGroup::PROJECT_MEMBERS,
@@ -174,18 +167,19 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
             ],
         ]);
 
-        $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
-        $this->assertEmpty($representation->can_access);
-        $this->assertEmpty($representation->can_access_submitted_by_user);
-        $this->assertEmpty($representation->can_access_assigned_to_group);
-        $this->assertEmpty($representation->can_admin);
-        $this->assertCount(1, $representation->can_access_submitted_by_group);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_group[0]->short_name);
+        $builder        = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $representation = $builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
+        self::assertEmpty($representation->can_access);
+        self::assertEmpty($representation->can_access_submitted_by_user);
+        self::assertEmpty($representation->can_access_assigned_to_group);
+        self::assertEmpty($representation->can_admin);
+        self::assertCount(1, $representation->can_access_submitted_by_group);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_group[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveAssignedToGroup(): void
     {
-        $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
+        $this->permissions_functions_wrapper->method('getTrackerUGroupsPermissions')->with($this->tracker)->willReturn([
             [
                 'ugroup' => [
                     'id' => ProjectUGroup::PROJECT_MEMBERS,
@@ -196,39 +190,49 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
             ],
         ]);
 
-        $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
-        $this->assertEmpty($representation->can_access);
-        $this->assertEmpty($representation->can_access_submitted_by_user);
-        $this->assertEmpty($representation->can_access_submitted_by_group);
-        $this->assertEmpty($representation->can_admin);
-        $this->assertCount(1, $representation->can_access_assigned_to_group);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_assigned_to_group[0]->short_name);
+        $builder        = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $representation = $builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
+        self::assertEmpty($representation->can_access);
+        self::assertEmpty($representation->can_access_submitted_by_user);
+        self::assertEmpty($representation->can_access_submitted_by_group);
+        self::assertEmpty($representation->can_admin);
+        self::assertCount(1, $representation->can_access_assigned_to_group);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_assigned_to_group[0]->short_name);
     }
 
     public function testItReturnsAMixOfPermissions(): void
     {
-        $anonymous_ugroup     = new ProjectUGroup([
+        $project_members_ugroup = new ProjectUGroup([
+            'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
+            'group_id' => self::PROJECT_ID,
+        ]);
+        $anonymous_ugroup       = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
-            'group_id' => 202,
+            'group_id' => self::PROJECT_ID,
         ]);
-        $developers_id        = 501;
-        $developers_ugroup    = new ProjectUGroup([
+        $developers_id          = 501;
+        $developers_ugroup      = new ProjectUGroup([
             'ugroup_id' => $developers_id,
             'name' => 'Developers',
-            'group_id' => 202,
+            'group_id' => self::PROJECT_ID,
         ]);
-        $tracker_admin_id     = 502;
-        $tracker_admin_ugroup = new ProjectUGroup([
+        $tracker_admin_id       = 502;
+        $tracker_admin_ugroup   = new ProjectUGroup([
             'ugroup_id' => $tracker_admin_id,
             'name' => 'TrackerAdmins',
-            'group_id' => 202,
+            'group_id' => self::PROJECT_ID,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $developers_id)->andReturn($developers_ugroup);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $tracker_admin_id)->andReturn($tracker_admin_ugroup);
 
-        $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([
+        $ugroup_manager = UGroupRetrieverStub::buildWithUserGroups(
+            $project_members_ugroup,
+            $anonymous_ugroup,
+            $developers_ugroup,
+            $tracker_admin_ugroup,
+        );
+
+        $this->permissions_functions_wrapper->method('getTrackerUGroupsPermissions')->with($this->tracker)->willReturn([
             [
                 'ugroup' => [
                     'id' => ProjectUGroup::ANONYMOUS,
@@ -264,20 +268,21 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
             ],
         ]);
 
-        $representation = $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
-        $this->assertEmpty($representation->can_access_submitted_by_user);
+        $builder        = new PermissionsRepresentationBuilder($ugroup_manager, $this->permissions_functions_wrapper);
+        $representation = $builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user);
+        self::assertEmpty($representation->can_access_submitted_by_user);
 
-        $this->assertCount(1, $representation->can_access);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS], $representation->can_access[0]->short_name);
+        self::assertCount(1, $representation->can_access);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS], $representation->can_access[0]->short_name);
 
-        $this->assertCount(1, $representation->can_access_assigned_to_group);
-        $this->assertEquals('Developers', $representation->can_access_assigned_to_group[0]->short_name);
+        self::assertCount(1, $representation->can_access_assigned_to_group);
+        self::assertEquals('Developers', $representation->can_access_assigned_to_group[0]->short_name);
 
-        $this->assertCount(1, $representation->can_access_submitted_by_group);
-        $this->assertEquals('Developers', $representation->can_access_assigned_to_group[0]->short_name);
+        self::assertCount(1, $representation->can_access_submitted_by_group);
+        self::assertEquals('Developers', $representation->can_access_assigned_to_group[0]->short_name);
 
-        $this->assertCount(2, $representation->can_admin);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
-        $this->assertEquals('TrackerAdmins', $representation->can_admin[1]->short_name);
+        self::assertCount(2, $representation->can_admin);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
+        self::assertEquals('TrackerAdmins', $representation->can_admin[1]->short_name);
     }
 }
