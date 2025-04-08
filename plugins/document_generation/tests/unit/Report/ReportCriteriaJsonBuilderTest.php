@@ -36,6 +36,7 @@ use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
 use Tracker_Report_Criteria;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -352,6 +353,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->with($criterion_open_list_static)
             ->willReturn('b14,b15,!abc');
 
+        $uuid_factory = new DatabaseUUIDV7Factory();
         $open_list_static_field
             ->method('extractCriteriaValue')
             ->with('b14,b15,!abc')
@@ -359,6 +361,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
                 ListStaticValueBuilder::aStaticValue('a')->withId(14)->build(),
                 ListStaticValueBuilder::aStaticValue('b')->withId(15)->build(),
                 new Tracker_FormElement_Field_List_UnsavedValue(
+                    $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()),
                     'abc'
                 ),
             ]);

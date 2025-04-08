@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\UGroupRetriever;
@@ -54,9 +55,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     protected $value_dao;
 
-    public function __construct($field, $values, $default_values, $decorators, UGroupRetriever $ugroup_manager, BindUgroupsValueDao $value_dao)
+    public function __construct(public DatabaseUUIDV7Factory $uuid_factory, $field, $values, $default_values, $decorators, UGroupRetriever $ugroup_manager, BindUgroupsValueDao $value_dao)
     {
-        parent::__construct($field, $default_values, $decorators);
+        parent::__construct($uuid_factory, $field, $default_values, $decorators);
         $this->values           = $values;
         $this->ugroup_retriever = $ugroup_manager;
         $this->value_dao        = $value_dao;
@@ -161,9 +162,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if ($ugroup) {
             $is_hidden = isset($row['is_hidden']) ? $row['is_hidden'] : false;
 
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup, $is_hidden);
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $ugroup, $is_hidden);
         }
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
+        return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
     }
 
     /**
@@ -795,14 +796,13 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     /**
      * @param int $bindvalue_id
-     * @return Tracker_FormElement_Field_List_BindValue
      */
-    public function getBindValueById($bindvalue_id)
+    public function getBindValueById($bindvalue_id): Tracker_FormElement_Field_List_BindValue
     {
         $row = $this->value_dao->searchById($bindvalue_id);
 
         if (! $row) {
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
         }
 
         return $this->getValueFromRow($row);

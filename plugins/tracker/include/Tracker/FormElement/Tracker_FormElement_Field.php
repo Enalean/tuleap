@@ -586,7 +586,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             new TrackerRulesListValidator($tracker_formelement_factory, $logger),
             new TrackerRulesDateValidator($tracker_formelement_factory, $logger),
             TrackerFactory::instance(),
-            $logger
+            $logger,
+            new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory())),
+            new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $tracker_formelement_factory),
+            new Tracker_RuleFactory(new Tracker_RuleDao()),
         );
         return $tracker_rules_manager->getFieldTargets($this);
     }
@@ -994,7 +997,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             new TrackerRulesListValidator($tracker_formelement_factory, $logger),
             new TrackerRulesDateValidator($tracker_formelement_factory, $logger),
             TrackerFactory::instance(),
-            $logger
+            $logger,
+            new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao(), new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory())),
+            new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $tracker_formelement_factory),
+            new Tracker_RuleFactory(new Tracker_RuleDao()),
         );
         return $tracker_rules_manager->isUsedInFieldDependency($this);
     }

@@ -242,10 +242,12 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     {
         $json_values     = [];
         $matching_values = $this->getBind()->getValuesByKeyword($keyword, $limit);
+        $uuid_factory    = $this->getBind()->uuid_factory;
         $nb              = count($matching_values);
         if ($nb < $limit) {
             foreach ($this->getOpenValueDao()->searchByKeyword($this->getId(), $keyword, $limit - $nb) as $row) {
                 $matching_values[] = new Tracker_FormElement_Field_List_OpenValue(
+                    $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()),
                     $row['id'],
                     $row['label'],
                     $row['is_hidden']
@@ -376,6 +378,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $this->cache_openvalues[$oid] = null;
             if ($row = $this->getOpenValueDao()->searchById($this->getId(), $oid)->getRow()) {
                 $this->cache_openvalues[$oid] = new Tracker_FormElement_Field_List_OpenValue(
+                    $this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()),
                     $row['id'],
                     $row['label'],
                     $row['is_hidden']
@@ -483,7 +486,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                         }
                         break;
                     case self::NEW_VALUE_PREFIX: // new open value
-                        $sanitized[] = new Tracker_FormElement_Field_List_UnsavedValue(substr($v, 1));
+                        $sanitized[] = new Tracker_FormElement_Field_List_UnsavedValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), substr($v, 1));
                         break;
                     default:
                         break;
@@ -522,6 +525,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach ($values as $row) {
             if ($row['openvalue_label']) {
                 $v = new Tracker_FormElement_Field_List_OpenValue(
+                    $this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()),
                     $row['id'],
                     $row['openvalue_label'],
                     $row['openvalue_is_hidden']
@@ -565,6 +569,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach ($values as $row) {
             if ($row['openvalue_label']) {
                 $v = new Tracker_FormElement_Field_List_OpenValue(
+                    $this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()),
                     $row['id'],
                     $row['openvalue_label'],
                     $row['openvalue_is_hidden']
@@ -783,7 +788,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $bindvalue_ids[]      = substr($val, 1);
                 $criteria_value[$key] = $val; //store the trimmed val
             } elseif ($val[0] === self::NEW_VALUE_PREFIX) {
-                $criteria_value[$key] = new Tracker_FormElement_Field_List_UnsavedValue(substr($val, 1));
+                $criteria_value[$key] = new Tracker_FormElement_Field_List_UnsavedValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), substr($val, 1));
             } else {
                 unset($criteria_value[$key]);
             }

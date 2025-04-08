@@ -73,23 +73,23 @@ final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->value_checker = new SemanticDoneValueChecker();
     }
 
-    public function testItReturnsTrueWhenTheValueCouldBeAddedAsADoneValue()
+    public function testItReturnsTrueWhenTheValueCouldBeAddedAsADoneValue(): void
     {
         $this->assertTrue($this->value_checker->isValueAPossibleDoneValue($this->done_value, $this->semantic_status));
     }
 
-    public function testItReturnsFalseWhenTheValueIsAnOpenValue()
+    public function testItReturnsFalseWhenTheValueIsAnOpenValue(): void
     {
         $this->assertFalse($this->value_checker->isValueAPossibleDoneValue($this->to_do_value, $this->semantic_status));
         $this->assertFalse($this->value_checker->isValueAPossibleDoneValue($this->on_going_value, $this->semantic_status));
     }
 
-    public function testItReturnsFalseWhenTheValueIsHidden()
+    public function testItReturnsFalseWhenTheValueIsHidden(): void
     {
         $this->assertFalse($this->value_checker->isValueAPossibleDoneValue($this->hidden_value, $this->semantic_status));
     }
 
-    public function testItReturnsTrueWhenTheValueCouldBeAddedAsADoneValueInXML()
+    public function testItReturnsTrueWhenTheValueCouldBeAddedAsADoneValueInXML(): void
     {
         $this->assertTrue($this->value_checker->isValueAPossibleDoneValueInXMLImport(
             $this->xml_done_value,
@@ -97,7 +97,7 @@ final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         ));
     }
 
-    public function testItReturnsFalseWhenTheValueIsAnOpenValueInXML()
+    public function testItReturnsFalseWhenTheValueIsAnOpenValueInXML(): void
     {
         $this->assertFalse($this->value_checker->isValueAPossibleDoneValueInXMLImport(
             $this->xml_to_do_value,
@@ -110,7 +110,7 @@ final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         ));
     }
 
-    public function testItReturnsFalseWhenTheValueIsHiddenInXML()
+    public function testItReturnsFalseWhenTheValueIsHiddenInXML(): void
     {
         $this->assertFalse($this->value_checker->isValueAPossibleDoneValueInXMLImport(
             $this->xml_hidden_value,

@@ -18,8 +18,9 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 
-class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue
+final class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const VALUE_ID     = 100;
     public const XML_VALUE_ID = '';
@@ -32,7 +33,8 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormE
         $rank        = 0;
         $is_hidden   = false;
 
-        parent::__construct($id, $label, $description, $rank, $is_hidden);
+        $uuid_factory = new DatabaseUUIDV7Factory();
+        parent::__construct($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $id, $label, $description, $rank, $is_hidden);
     }
 
     public function getXMLId()

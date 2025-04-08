@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
@@ -72,7 +73,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
         $value_function = 'project_members';
         $default_values = $decorators = '';
 
-        $users = new Tracker_FormElement_Field_List_Bind_Users($field, $value_function, $default_values, $decorators);
+        $users = new Tracker_FormElement_Field_List_Bind_Users(new DatabaseUUIDV7Factory(), $field, $value_function, $default_values, $decorators);
         $this->assertEquals(['u1', 'u2'], $users->getRecipients($changeset_value));
     }
 
@@ -123,7 +124,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
 
         return Mockery::mock(
             Tracker_FormElement_Field_List_Bind_Users::class,
-            [$field, $is_rank_alpha, $values, $default_values, $decorators]
+            [new \Tuleap\DB\DatabaseUUIDV7Factory(), $field, $is_rank_alpha, $values, $default_values, $decorators]
         )->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
@@ -132,7 +133,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends \Tuleap\Test\P
         $list_field     = Mockery::mock(Tracker_FormElement_Field_List::class);
         $default_values = [];
 
-        $bind_users = new Tracker_FormElement_Field_List_Bind_Users($list_field, '', $default_values, []);
+        $bind_users = new Tracker_FormElement_Field_List_Bind_Users(new \Tuleap\DB\DatabaseUUIDV7Factory(), $list_field, '', $default_values, []);
 
         $this->assertEmpty($bind_users->getDefaultValues());
         $this->assertEmpty($bind_users->getDefaultRESTValues());

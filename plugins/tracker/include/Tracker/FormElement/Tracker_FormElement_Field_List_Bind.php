@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorEditor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorSaver;
@@ -57,7 +58,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
     /** @var Tracker_FormElement_Field */
     protected $field;
 
-    public function __construct($field, $default_values, $decorators)
+    public function __construct(public DatabaseUUIDV7Factory $uuid_factory, $field, $default_values, $decorators)
     {
         $this->field          = $field;
         $this->default_values = $default_values;
@@ -142,7 +143,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
 
     public function getRESTBindingProperties()
     {
-        $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
+        $bind_factory = new Tracker_FormElement_Field_List_BindFactory($this->uuid_factory);
         $bind_type    = $bind_factory->getType($this);
         return [
             self::REST_TYPE_KEY => $bind_type,

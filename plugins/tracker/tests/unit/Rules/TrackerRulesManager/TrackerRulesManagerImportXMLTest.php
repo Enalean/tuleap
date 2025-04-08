@@ -25,6 +25,7 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List_Factory;
+use Tracker_RuleFactory;
 use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -34,7 +35,7 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRulesManagerImportXMLTest extends TestCase
 {
-    public function testExportToXmlCallsRuleListFactoryExport()
+    public function testExportToXmlCallsRuleListFactoryExport(): void
     {
         $xml_data                     = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -50,6 +51,12 @@ XML;
 
         $tracker_factory = $this->createMock(TrackerFactory::class);
 
+        $date_factory = $this->createMock(Tracker_Rule_Date_Factory::class);
+        $date_factory->expects($this->once())->method('exportToXml')->with($sax_object, $xmlMapping, 45);
+
+        $list_factory = $this->createMock(Tracker_Rule_List_Factory::class);
+        $list_factory->expects($this->once())->method('exportToXml')->with($sax_object, $xmlMapping, $form_element_factory, 45);
+
         $manager = new Tracker_RulesManager(
             $tracker,
             $form_element_factory,
@@ -57,17 +64,11 @@ XML;
             $tracker_rules_list_validator,
             $tracker_rules_date_validator,
             $tracker_factory,
-            new NullLogger()
+            new NullLogger(),
+            $list_factory,
+            $date_factory,
+            $this->createMock(Tracker_RuleFactory::class)
         );
-
-        $date_factory = $this->createMock(Tracker_Rule_Date_Factory::class);
-        $date_factory->expects($this->once())->method('exportToXml')->with($sax_object, $xmlMapping, 45);
-
-        $list_factory = $this->createMock(Tracker_Rule_List_Factory::class);
-        $list_factory->expects($this->once())->method('exportToXml')->with($sax_object, $xmlMapping, $form_element_factory, 45);
-
-        $manager->setRuleDateFactory($date_factory);
-        $manager->setRuleListFactory($list_factory);
 
         $manager->exportToXml($sax_object, $xmlMapping);
     }

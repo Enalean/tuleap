@@ -28,7 +28,10 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
+use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
+use Tracker_Rule_List_Factory;
+use Tracker_RuleFactory;
 use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -67,6 +70,9 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
                 $tracker_rules_date_validator,
                 $tracker_factory,
                 new NullLogger(),
+                $this->createMock(Tracker_Rule_List_Factory::class),
+                $this->createMock(Tracker_Rule_Date_Factory::class),
+                $this->createMock(Tracker_RuleFactory::class),
             ])->getMock();
 
         $this->a_field_not_used_in_rules = ListFieldBuilder::aListField(14)->build();

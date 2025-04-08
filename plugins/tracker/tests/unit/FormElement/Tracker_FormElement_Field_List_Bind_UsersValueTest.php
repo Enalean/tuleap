@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -85,7 +87,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \Tuleap\T
 
     public function testItReturnsNullForGetJsonIfUserIsNone(): void
     {
-        $value = new Tracker_FormElement_Field_List_Bind_UsersValue(100, 'none', 'none');
+        $value = ListUserValueBuilder::noneUser()->build();
         $json  = $value->getJsonValue();
         $this->assertNull($json);
     }

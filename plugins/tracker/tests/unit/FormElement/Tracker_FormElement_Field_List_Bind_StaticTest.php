@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_Static;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
@@ -63,6 +64,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $decorators     = [];
 
         $this->bind = new Tracker_FormElement_Field_List_Bind_Static(
+            new \Tuleap\DB\DatabaseUUIDV7Factory(),
             $field,
             $is_rank_alpha,
             $values,
@@ -71,6 +73,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         );
 
         $this->bind_without_values = new Tracker_FormElement_Field_List_Bind_Static(
+            new \Tuleap\DB\DatabaseUUIDV7Factory(),
             $field,
             $is_rank_alpha,
             [],
@@ -108,7 +111,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $bv2    = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $field  = $is_rank_alpha = $default_values = $decorators = '';
         $values = [101 => $bv1, 102 => $bv2];
-        $static = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
+        $static = new Tracker_FormElement_Field_List_Bind_Static(new DatabaseUUIDV7Factory(), $field, $is_rank_alpha, $values, $default_values, $decorators);
         $this->assertEquals($values, $static->getBindValues());
         $this->assertEquals([], $static->getBindValues([]), 'Dont give more than what we are asking');
         $this->assertEquals([102 => $bv2], $static->getBindValues([102]));
@@ -186,7 +189,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
     public function testItDoesntCrashWhenInvalidValueShouldBePrinted(): void
     {
         $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $bind  = new Tracker_FormElement_Field_List_Bind_Static($field, 0, [], null, null);
+        $bind  = new Tracker_FormElement_Field_List_Bind_Static(new DatabaseUUIDV7Factory(), $field, 0, [], null, null);
         $this->assertEquals('-', $bind->formatArtifactValue(0));
     }
 
@@ -206,7 +209,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
         $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
         $field->shouldReceive('getId')->andReturn(101);
 
-        return Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class, [$field, true, $values, [], []])
+        return Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class, [new DatabaseUUIDV7Factory(), $field, true, $values, [], []])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
     }

@@ -27,9 +27,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
 {
     public const TYPE = 'null';
 
-    public function __construct($field)
+    public function __construct(public \Tuleap\DB\DatabaseUUIDV7Factory $uuid_factory, $field)
     {
-        parent::__construct($field, [], []);
+        parent::__construct($this->uuid_factory, $field, [], []);
     }
 
     /**

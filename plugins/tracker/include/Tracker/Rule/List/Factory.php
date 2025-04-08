@@ -23,17 +23,10 @@
 *
 * Base class to create, retrieve, update or delete rules
 */
-class Tracker_Rule_List_Factory
+class Tracker_Rule_List_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     *
-     * @var Tracker_Rule_List_Dao
-     */
-    protected $dao;
-
-    public function __construct(Tracker_Rule_List_Dao $dao)
+    public function __construct(private readonly Tracker_Rule_List_Dao $dao, private readonly Tracker_FormElement_Field_List_BindFactory $bind_factory)
     {
-        $this->dao = $dao;
     }
 
     /**
@@ -164,9 +157,8 @@ class Tracker_Rule_List_Factory
         foreach ($rules as $rule) {
             $source_field = $form_element_factory->getFormElementById($rule->getSourceFieldId());
             $target_field = $form_element_factory->getFormElementById($rule->getTargetFieldId());
-            $bf           = new Tracker_FormElement_Field_List_BindFactory();
             //TODO: handle sb/msb bind to users and remove condition
-            if ($bf->getType($source_field->getBind()) == 'static' && $bf->getType($target_field->getBind()) == 'static') {
+            if ($this->bind_factory->getType($source_field->getBind()) == 'static' && $this->bind_factory->getType($target_field->getBind()) == 'static') {
                 $child = $list_rules->addChild('rule');
                 $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
                 $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));

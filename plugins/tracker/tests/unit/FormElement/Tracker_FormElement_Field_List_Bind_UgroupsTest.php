@@ -87,6 +87,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         array $default_values = [],
     ): Tracker_FormElement_Field_List_Bind_Ugroups {
         $bind = new Tracker_FormElement_Field_List_Bind_Ugroups(
+            new \Tuleap\DB\DatabaseUUIDV7Factory(),
             $this->field,
             $values,
             $default_values,

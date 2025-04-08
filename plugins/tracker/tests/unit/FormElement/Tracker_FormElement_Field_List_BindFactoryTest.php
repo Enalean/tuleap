@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use User\XML\Import\IFindUserFromXMLReference;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -154,7 +155,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
     public function testItRaisesAnErrorIfUnkownType(): void
     {
         $logger  = new \ColinODell\PsrTestLogger\TestLogger();
-        $factory = new Tracker_FormElement_Field_List_BindFactory($this->createStub(UGroupManager::class), $logger);
+        $factory = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory(), $this->createStub(UGroupManager::class), $logger);
 
         self::assertInstanceOf(
             Tracker_FormElement_Field_List_Bind_Null::class,
@@ -185,7 +186,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
             ->withArgs([$project, 'Customers'])
             ->andReturn(new ProjectUGroup(['name' => 'Customers']));
 
-        $bind_factory = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class)
+        $bind_factory = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class, [new DatabaseUUIDV7Factory()])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -292,7 +293,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
 
     protected function getListBindFactory($ugroup_manager, $project, SimpleXMLElement $xml): Tracker_FormElement_Field_List_Bind
     {
-        $bind_factory = new Tracker_FormElement_Field_List_BindFactory($ugroup_manager);
+        $bind_factory = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory(), $ugroup_manager);
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->andReturn($project);

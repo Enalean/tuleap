@@ -18,7 +18,7 @@
  */
 
 
-class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View_Admin_Field
+class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View_Admin_Field  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Fetch additionnal stuff to display below the edit form
@@ -38,7 +38,7 @@ class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View
      */
     public function fetchAfterAdminCreateForm()
     {
-        $bf    = new Tracker_FormElement_Field_List_BindFactory();
+        $bf    = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $html  = '';
         $html .= '<tr valign="top"><td colspan="2">';
         $html .= $bf->fetchCreateABind($this->formElement);

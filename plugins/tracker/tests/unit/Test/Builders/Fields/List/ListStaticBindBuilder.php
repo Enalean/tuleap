@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 
 final class ListStaticBindBuilder
 {
@@ -53,8 +54,10 @@ final class ListStaticBindBuilder
      */
     public function withStaticValues(array $values_labels, array $hidden_values = []): self
     {
+        $uuid_factory = new DatabaseUUIDV7Factory();
         foreach ($values_labels as $id => $label) {
             $bind_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
+                $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()),
                 $id,
                 $label,
                 'A static bind value',
@@ -81,6 +84,7 @@ final class ListStaticBindBuilder
     public function build(): Tracker_FormElement_Field_List_Bind_Static
     {
         $bind = new class (
+            new DatabaseUUIDV7Factory(),
             $this->field,
             false,
             $this->bind_values,

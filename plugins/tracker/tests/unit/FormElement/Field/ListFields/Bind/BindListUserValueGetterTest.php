@@ -29,7 +29,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -63,7 +63,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper, $platform_users_getter])
+        $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper, $platform_users_getter, new DatabaseUUIDV7Factory()])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
     }
@@ -117,12 +117,12 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $expected = [
-            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
-            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
-        ];
+        $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
+        $this->assertEquals('user 1', $subset[101]->getUsername());
+        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
+        $this->assertEquals('user 2', $subset[102]->getUsername());
+        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForProjectAdminGroup(): void
@@ -158,12 +158,12 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $expected = [
-            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
-            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
-        ];
+        $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
+        $this->assertEquals('user 1', $subset[101]->getUsername());
+        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
+        $this->assertEquals('user 2', $subset[102]->getUsername());
+        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItReturnsAnEmptyArrayIfNoUserIsFoundInUgroups(): void
@@ -224,12 +224,12 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $expected = [
-            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
-            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
-        ];
+        $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
+        $this->assertEquals('user 1', $subset[101]->getUsername());
+        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
+        $this->assertEquals('user 2', $subset[102]->getUsername());
+        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForArtifactModifiers(): void
@@ -259,12 +259,12 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $expected = [
-            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
-            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
-        ];
+        $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
+        $this->assertEquals('user 1', $subset[101]->getUsername());
+        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
+        $this->assertEquals('user 2', $subset[102]->getUsername());
+        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForDynamicUGroup(): void
@@ -300,12 +300,12 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->once()->andReturn('sql fragement');
 
-        $expected = [
-            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
-            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
-        ];
+        $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
+        $this->assertEquals('user 1', $subset[101]->getUsername());
+        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
+        $this->assertEquals('user 2', $subset[102]->getUsername());
+        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForStaticUGroup(): void
@@ -340,15 +340,12 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->once()->andReturn('sql fragement');
 
-        $expected = [
-            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
-            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
-        ];
+        $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
+        $this->assertEquals('user 1', $subset[101]->getUsername());
+        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals(
-            $expected,
-            $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field)
-        );
+        $this->assertEquals('user 2', $subset[102]->getUsername());
+        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractActiveUserListForStaticUGroup(): void
@@ -381,14 +378,11 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->getter->shouldReceive('getAllMembersOfStaticGroup')->never();
 
-        $expected = [
-            101 => ListUserValueBuilder::aUserWithId(101)->withUserName('user 1')->withDisplayedName('user 1 full name')->build(),
-            102 => ListUserValueBuilder::aUserWithId(102)->withUserName('user 2')->withDisplayedName('user 2 full name')->build(),
-        ];
+        $subset = $this->getter->getActiveUsersValue($ugroups, $field);
+        $this->assertEquals('user 1', $subset[101]->getUsername());
+        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals(
-            $expected,
-            $this->getter->getActiveUsersValue($ugroups, $field)
-        );
+        $this->assertEquals('user 2', $subset[102]->getUsername());
+        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 }
