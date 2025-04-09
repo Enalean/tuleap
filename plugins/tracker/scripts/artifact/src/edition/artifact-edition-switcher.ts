@@ -21,3 +21,18 @@ export const noFieldIsSwitchedToEdit = (doc: Document): boolean => {
     const in_edition_fields = doc.querySelectorAll(".tracker_artifact_field.in-edition");
     return in_edition_fields.length === 0;
 };
+
+export const isFollowUpEmpty = (
+    follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    follow_up_new_comment: HTMLElement | null,
+): boolean => {
+    if (follow_up_comment_editor_instance) {
+        return follow_up_comment_editor_instance.getData().trim() === "";
+    }
+
+    if (follow_up_new_comment && follow_up_new_comment instanceof HTMLTextAreaElement) {
+        return follow_up_new_comment.value.trim() === "";
+    }
+
+    return true;
+};

@@ -17,24 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { noFieldIsSwitchedToEdit } from "./artifact-edition-switcher";
+import { isFollowUpEmpty, noFieldIsSwitchedToEdit } from "./artifact-edition-switcher";
 
-describe("noFieldIsSwitchedToEdit", () => {
-    let doc: Document;
+describe("artifact edition switcher", () => {
+    describe("noFieldIsSwitchedToEdit", () => {
+        let doc: Document;
 
-    beforeEach(() => {
-        doc = document.implementation.createHTMLDocument();
+        beforeEach(() => {
+            doc = document.implementation.createHTMLDocument();
+        });
+
+        it("should return true when no fields are in edition", () => {
+            expect(noFieldIsSwitchedToEdit(doc)).toBe(true);
+        });
+
+        it("should return false when there are fields in edition", () => {
+            const field = doc.createElement("div");
+            field.className = "tracker_artifact_field in-edition";
+            doc.body.appendChild(field);
+
+            expect(noFieldIsSwitchedToEdit(doc)).toBe(false);
+        });
     });
 
-    it("should return true when no fields are in edition", () => {
-        expect(noFieldIsSwitchedToEdit(doc)).toBe(true);
-    });
+    describe("isFollowUpEmpty", () => {
+        it("should return true if the CKEDITOR instance has empty content", () => {
+            const mock_editor_instance = {
+                getData: jest.fn().mockReturnValue("   "),
+            } as unknown as CKEDITOR.editor;
 
-    it("should return false when there are fields in edition", () => {
-        const field = doc.createElement("div");
-        field.className = "tracker_artifact_field in-edition";
-        doc.body.appendChild(field);
+            expect(isFollowUpEmpty(mock_editor_instance, null)).toBe(true);
+        });
 
-        expect(noFieldIsSwitchedToEdit(doc)).toBe(false);
+        it("should return false if the CKEDITOR instance has content", () => {
+            const mock_editor_instance = {
+                getData: jest.fn().mockReturnValue("Some content"),
+            } as unknown as CKEDITOR.editor;
+
+            expect(isFollowUpEmpty(mock_editor_instance, null)).toBe(false);
+        });
+
+        it("should return true if follow_up_new_comment is a textarea but empty", () => {
+            const mock_comment = document.createElement("textarea");
+            mock_comment.value = "   ";
+
+            expect(isFollowUpEmpty(null, mock_comment)).toBe(true);
+        });
+
+        it("should return false if follow_up_new_comment is a textarea and has content", () => {
+            const mock_comment = document.createElement("textarea");
+            mock_comment.value = "Some content";
+
+            expect(isFollowUpEmpty(null, mock_comment)).toBe(false);
+        });
+
+        it("should return true if both CKEDITOR instance and follow_up_new_comment are null", () => {
+            expect(isFollowUpEmpty(null, null)).toBe(true);
+        });
     });
 });
