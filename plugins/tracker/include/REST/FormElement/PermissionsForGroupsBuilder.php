@@ -25,30 +25,18 @@ namespace Tuleap\Tracker\REST\FormElement;
 
 use Tracker_FormElement;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
+use Tuleap\Project\UGroupRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class PermissionsForGroupsBuilder
 {
-    /**
-     * @var \UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var FrozenFieldDetector
-     */
-    private $read_only_field_detector;
-    /**
-     * @var PermissionsFunctionsWrapper
-     */
-    private $permissions_functions_wrapper;
-
-    public function __construct(\UGroupManager $ugroup_manager, FrozenFieldDetector $read_only_field_detector, PermissionsFunctionsWrapper $permissions_functions_wrapper)
-    {
-        $this->ugroup_manager                = $ugroup_manager;
-        $this->read_only_field_detector      = $read_only_field_detector;
-        $this->permissions_functions_wrapper = $permissions_functions_wrapper;
+    public function __construct(
+        private UGroupRetriever $ugroup_manager,
+        private FrozenFieldDetector $read_only_field_detector,
+        private PermissionsFunctionsWrapper $permissions_functions_wrapper,
+    ) {
     }
 
     public function getPermissionsForGroups(Tracker_FormElement $form_element, ?Artifact $artifact, \PFUser $user): ?PermissionsForGroupsRepresentation
