@@ -115,4 +115,4 @@ ignoreUntil = 2025-04-10
 [[IgnoredVulns]]
 id = "GO-2025-3563" # CVE-2025-22871
 reason = "No security impact for Tuleap use cases. https://github.com/golang/go/issues/71988"
-ignoreUntil = 2025-04-10
+ignoreUntil = 2025-05-09
