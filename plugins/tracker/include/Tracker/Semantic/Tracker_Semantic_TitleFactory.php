@@ -18,10 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
+use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetTitleSemantic
 {
     /**
@@ -67,32 +70,22 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
     }
 
     /**
-     * Return the Dao
-     *
-     * @return Tracker_Semantic_TitleDao The dao
-     */
-    public function getDao()
-    {
-        return new Tracker_Semantic_TitleDao();
-    }
-
-    /**
      * Duplicate the semantic from tracker source to tracker target
      */
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
-        $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
-        if ($row) {
-            $from_title_field_id = $row['field_id'];
-            $to_title_field_id   = false;
-            foreach ($field_mapping as $mapping) {
-                if ($mapping['from'] == $from_title_field_id) {
-                    $to_title_field_id = $mapping['to'];
+        $old_dao = new \Tracker_Semantic_TitleDao();
+        $new_dao = new TitleSemanticDAO();
+        $new_dao->searchByTrackerId($from_tracker_id)
+            ->andThen(function (int $from_title_field_id) use ($field_mapping): Option {
+                foreach ($field_mapping as $mapping) {
+                    if ($mapping['from'] == $from_title_field_id) {
+                        return Option::fromValue((int) $mapping['to']);
+                    }
                 }
-            }
-            if ($to_title_field_id) {
-                $this->getDao()->save($to_tracker_id, $to_title_field_id);
-            }
-        }
+                return Option::nothing(\Psl\Type\int());
+            })->apply(function (int $to_title_field_id) use ($old_dao, $to_tracker_id): void {
+                $old_dao->save($to_tracker_id, $to_title_field_id);
+            });
     }
 }
