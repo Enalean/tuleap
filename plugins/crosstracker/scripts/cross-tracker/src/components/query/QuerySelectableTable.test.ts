@@ -40,6 +40,7 @@ import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
 import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
+import SelectablePagination from "../selectable-table/SelectablePagination.vue";
 
 vi.useFakeTimers();
 
@@ -257,6 +258,7 @@ describe(`SelectableTable`, () => {
 
             await vi.runOnlyPendingTimersAsync();
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
+            expect(wrapper.findComponent(SelectablePagination).exists()).toBe(false);
         });
     });
 });
