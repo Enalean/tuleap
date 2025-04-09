@@ -22,43 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Helpers;
 
+use EventManager;
 use Luracast\Restler\RestException;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
+use Tracker_Artifact_PriorityHistoryChange;
+use Tracker_Artifact_PriorityManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ArtifactsRankOrdererTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ArtifactsRankOrderer */
-    private $orderer;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var string
-     */
-    private $context_id;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Artifact_PriorityManager
-     */
-    private $priority_manager;
-    /**
-     * @var \EventManager|M\LegacyMockInterface|M\MockInterface
-     */
-    private $event_manager;
+    private ArtifactsRankOrderer $orderer;
+    private Project $project;
+    private string $context_id;
+    private Tracker_Artifact_PriorityManager&MockObject $priority_manager;
+    private EventManager $event_manager;
 
     protected function setUp(): void
     {
-        $this->project          = M::mock(\Project::class)->shouldReceive(['getID' => 101])->getMock();
-        $this->context_id       = \Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT;
-        $this->priority_manager = M::mock(\Tracker_Artifact_PriorityManager::class);
-        $this->priority_manager->shouldReceive('enableExceptionsOnError');
-        $this->event_manager = M::mock(\EventManager::class);
+        $this->project          = ProjectTestBuilder::aProject()->build();
+        $this->context_id       = Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT;
+        $this->priority_manager = $this->createMock(Tracker_Artifact_PriorityManager::class);
+        $this->priority_manager->method('enableExceptionsOnError');
+        $this->event_manager = $this->createMock(EventManager::class);
         $this->orderer       = new ArtifactsRankOrderer($this->priority_manager, $this->event_manager);
     }
 
@@ -66,10 +57,10 @@ final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $order = OrderRepresentation::build([123], OrderRepresentation::BEFORE, 123);
 
-        $this->priority_manager->shouldReceive('moveListOfArtifactsBefore')
+        $this->priority_manager->expects($this->once())
+            ->method('moveListOfArtifactsBefore')
             ->with([123], 123, $this->context_id, 101)
-            ->once()
-            ->andThrow(new Tracker_Artifact_Exception_CannotRankWithMyself(123));
+            ->willThrowException(new Tracker_Artifact_Exception_CannotRankWithMyself(123));
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
@@ -80,16 +71,14 @@ final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $order = OrderRepresentation::build([123, 789], OrderRepresentation::BEFORE, 456);
 
-        $this->priority_manager->shouldReceive('moveListOfArtifactsBefore')
-            ->with([123, 789], 456, $this->context_id, 101)
-            ->once();
-        $this->event_manager->shouldReceive('processEvent')->with(
-            M::on(
-                function ($hook) {
-                    return $hook instanceof ArtifactsReordered;
-                }
-            )
-        )->once();
+        $this->priority_manager->expects($this->once())
+            ->method('moveListOfArtifactsBefore')
+            ->with([123, 789], 456, $this->context_id, 101);
+        $this->event_manager->method('processEvent')->willReturnCallback(
+            function ($hook) {
+                self::assertInstanceOf(ArtifactsReordered::class, $hook);
+            }
+        );
 
         $this->orderer->reorder($order, $this->context_id, $this->project);
     }
@@ -98,16 +87,14 @@ final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $order = OrderRepresentation::build([123, 789], OrderRepresentation::AFTER, 456);
 
-        $this->priority_manager->shouldReceive('moveListOfArtifactsAfter')
-            ->with([123, 789], 456, $this->context_id, 101)
-            ->once();
-        $this->event_manager->shouldReceive('processEvent')->with(
-            M::on(
-                function ($hook) {
-                    return $hook instanceof ArtifactsReordered;
-                }
-            )
-        )->once();
+        $this->priority_manager->expects($this->once())
+            ->method('moveListOfArtifactsAfter')
+            ->with([123, 789], 456, $this->context_id, 101);
+        $this->event_manager->method('processEvent')->willReturnCallback(
+            function ($hook) {
+                self::assertInstanceOf(ArtifactsReordered::class, $hook);
+            }
+        );
 
         $this->orderer->reorder($order, $this->context_id, $this->project);
     }
