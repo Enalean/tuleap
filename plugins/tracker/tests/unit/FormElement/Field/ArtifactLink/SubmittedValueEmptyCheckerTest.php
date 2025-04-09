@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -164,7 +164,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
         $field = $this->createMock(ArtifactLinkField::class);
         $field->method('getReverseLinks')->willReturn([]);
 
-        $last_changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $last_changeset_value = $this->createMock(ArtifactLinkChangesetValue::class);
         $last_changeset_value->method('getArtifactIds')->willReturn([
             1004,
             1005,
@@ -179,7 +179,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
         $field = $this->createMock(ArtifactLinkField::class);
         $field->method('getReverseLinks')->willReturn([]);
 
-        $last_changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $last_changeset_value = $this->createMock(ArtifactLinkChangesetValue::class);
         $last_changeset_value->method('getArtifactIds')->willReturn([]);
         $field->method('getLastChangesetValue')->willReturn($last_changeset_value);
 

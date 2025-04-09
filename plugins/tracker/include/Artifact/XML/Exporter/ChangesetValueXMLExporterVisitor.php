@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_Artifact_ChangesetValue_Float;
@@ -34,10 +33,10 @@ use Tracker_Artifact_ChangesetValue_String;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Artifact_ChangesetValueVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
-use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueArtifactLinkXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueDateXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFileXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueFloatXMLExporter;
@@ -49,6 +48,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueStringXMLE
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueTextXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueUnknownXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueXMLExporter;
+use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 
 readonly class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
 {
@@ -81,7 +81,7 @@ readonly class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_Chan
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value, $mapping['values']);
     }
 
-    public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value): ChangesetValueArtifactLinkXMLExporter
+    public function visitArtifactLink(ArtifactLinkChangesetValue $changeset_value): ChangesetValueArtifactLinkXMLExporter
     {
         return $this->artlink_exporter;
     }

@@ -19,33 +19,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Artifact\Changeset\ArtifactLink;
+
+use PFUser;
+use Tracker;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_ArtifactLinkDiff;
+use Tracker_Artifact_ChangesetValueVisitor;
+use Tracker_ArtifactLinkInfo;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
+use Tuleap\User\ProvideCurrentUser;
+use UserManager;
 
 /**
  * Manage values in changeset for 'artifact link' fields
  */
-class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_ChangesetValue
+class ArtifactLinkChangesetValue extends Tracker_Artifact_ChangesetValue
 {
-    /**
-     * @var Tracker_ArtifactLinkInfo[]
-     * @psalm-var array<mixed,Tracker_ArtifactLinkInfo>
-     */
-    protected $artifact_links;
+    /** @var array<int, Tracker_ArtifactLinkInfo> */
+    private array $artifact_links;
+    /** @var array<int, Tracker_ArtifactLinkInfo> */
+    private array $reverse_artifact_links;
+    private ProvideCurrentUser $user_manager;
 
-    /**
-     * @var Tracker_ArtifactLinkInfo[]
-     * @psalm-var array<mixed,Tracker_ArtifactLinkInfo>
-     */
-    protected $reverse_artifact_links;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $artifact_links, $reverse_artifact_links)
-    {
+    public function __construct(
+        int $id,
+        Tracker_Artifact_Changeset $changeset,
+        ArtifactLinkField $field,
+        bool $has_changed,
+        array $artifact_links,
+        array $reverse_artifact_links,
+    ) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->artifact_links         = $artifact_links;
         $this->reverse_artifact_links = $reverse_artifact_links;
@@ -67,7 +78,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return bool true if there are differences
      */
-    public function hasChanges($new_value)
+    public function hasChanges($new_value): bool
     {
         if (empty($new_value['list_of_artifactlinkinfo']) && empty($new_value['removed_values'])) {
             // no changes
@@ -108,11 +119,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
 
     /**
      * Return diff between 2 changeset values
-     *
-     *
-     * @return Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
      */
-    public function getArtifactLinkInfoDiff(Tracker $tracker, ?Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value = null)
+    public function getArtifactLinkInfoDiff(Tracker $tracker, ?ArtifactLinkChangesetValue $old_changeset_value = null): Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
     {
         $previous = [];
         if ($old_changeset_value !== null) {
@@ -121,7 +129,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return $this->getArtifactLinkDiff($previous, $this->getValue(), $tracker);
     }
 
-    protected function getArtifactLinkDiff($previous, $next, Tracker $tracker)
+    protected function getArtifactLinkDiff($previous, $next, Tracker $tracker): Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
     {
         return new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff(
             $previous,
@@ -132,7 +140,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     }
 
     /** @protected for testing purpose */
-    protected function getTypePresenterFactory()
+    protected function getTypePresenterFactory(): TypePresenterFactory
     {
         return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
     }
@@ -157,12 +165,12 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         }
     }
 
-    public function getRESTValue(PFUser $user)
+    public function getRESTValue(PFUser $user): ArtifactFieldValueArtifactLinksFullRepresentation
     {
         return $this->getFullRESTValue($user);
     }
 
-    public function getFullRESTValue(PFUser $user)
+    public function getFullRESTValue(PFUser $user): ArtifactFieldValueArtifactLinksFullRepresentation
     {
         $outgoing_links = $this->getAllOutgoingArtifactIdsUserCanSee($user);
         $incoming_links = $this->getAllIncomingArtifactIdsUserCanSee($user);
@@ -180,7 +188,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     }
 
     /**
-     * @return \Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType[]
+     * @return ArtifactReferenceWithType[]
      */
     private function getAllOutgoingArtifactIdsUserCanSee(PFUser $user): array
     {
@@ -194,7 +202,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     }
 
     /**
-     * @return \Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType[]
+     * @return ArtifactReferenceWithType[]
      */
     private function getAllIncomingArtifactIdsUserCanSee(PFUser $user): array
     {
@@ -207,13 +215,13 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return array_filter($values);
     }
 
-    private function buildArtifactReference(Tracker_ArtifactLinkInfo $link_info): ?\Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType
+    private function buildArtifactReference(Tracker_ArtifactLinkInfo $link_info): ?ArtifactReferenceWithType
     {
         $artifact = $link_info->getArtifact();
         if ($artifact === null) {
             return null;
         }
-        return \Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType::buildWithType(
+        return ArtifactReferenceWithType::buildWithType(
             $artifact,
             $link_info->getType()
         );
@@ -229,7 +237,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return $this->artifact_links;
     }
 
-    public function getArtifactIds()
+    public function getArtifactIds(): array
     {
         return array_keys($this->artifact_links);
     }
@@ -268,7 +276,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return $reverse_artifact_links_user_can_see;
     }
 
-    private function setCurrentUserIfUserIsNotDefined(&$user)
+    private function setCurrentUserIfUserIsNotDefined(&$user): void
     {
         if (! isset($user)) {
             $user = $this->user_manager->getCurrentUser();

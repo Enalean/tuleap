@@ -1187,7 +1187,6 @@
             <file name="plugins/tracker/tests/unit/Tracker_ArtifactFactory_GetChildrenTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker_Artifact_ChangesetJsonFormatterTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker_Artifact_ChangesetTest.php"/>
-            <file name="plugins/tracker/tests/unit/Tracker_Artifact_ChangesetValue_ArtifactLinkTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker_Artifact_ChangesetValue_DateTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker_Artifact_ChangesetValue_IntegerTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker_Artifact_ChangesetValue_ListTest.php"/>

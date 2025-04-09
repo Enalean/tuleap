@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
 /**
@@ -25,9 +26,9 @@ use Tuleap\Tracker\Artifact\ChangesetValueComputed;
  *
  * @see http://en.wikipedia.org/wiki/Visitor_pattern
  */
-interface Tracker_Artifact_ChangesetValueVisitor
+interface Tracker_Artifact_ChangesetValueVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value);
+    public function visitArtifactLink(ArtifactLinkChangesetValue $changeset_value);
 
     public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value);
 

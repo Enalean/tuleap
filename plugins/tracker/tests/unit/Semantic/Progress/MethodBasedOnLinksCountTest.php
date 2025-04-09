@@ -64,7 +64,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
-        $last_artifact_changeset = $this->createMock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $last_artifact_changeset = $this->createMock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class);
         $last_artifact_changeset->method('getValue')->willReturn(
             [
                 '141' => $this->buildArtifactLinkInfo(141, '_is_child', $tracker, false), // 1 out of 4 children is closed
@@ -132,7 +132,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItComputesWhenItHasNoLinksOfGivenType(bool $is_artifact_open, float $expected_progress_value): void
     {
-        $last_artifact_changeset = $this->createMock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $last_artifact_changeset = $this->createMock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class);
         $last_artifact_changeset->method('getValue')->willReturn([]);
 
         $artifact = $this->createMock(Artifact::class);

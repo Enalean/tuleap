@@ -30,7 +30,6 @@ use ReferenceManager;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
@@ -56,6 +55,7 @@ use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactInTypeTablePresenter;
@@ -210,7 +210,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
 
     public function fetchRawValue(mixed $value): string
     {
-        assert($value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
+        assert($value instanceof ArtifactLinkChangesetValue);
         $artifact_id_array = $value->getArtifactIds();
         return implode(', ', $artifact_id_array);
     }
@@ -1259,10 +1259,8 @@ class ArtifactLinkField extends Tracker_FormElement_Field
      * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
      * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
-     *
-     * @return Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed)
+    public function getChangesetValue($changeset, $value_id, $has_changed): ArtifactLinkChangesetValue
     {
         $rows                   = $this->getValueDao()->searchById($value_id, $this->id);
         $artifact_links         = $this->getArtifactLinkInfos($rows);
@@ -1272,7 +1270,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
             $reverse_artifact_links = $this->getReverseLinks($changeset->getArtifact()->getId());
         }
 
-        return new Tracker_Artifact_ChangesetValue_ArtifactLink(
+        return new ArtifactLinkChangesetValue(
             $value_id,
             $changeset,
             $this,
@@ -1283,7 +1281,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     }
 
     /**
-     * @return Tracker_ArtifactLinkInfo[]
+     * @return array<int, Tracker_ArtifactLinkInfo>
      */
     public function getReverseLinks($artifact_id): array
     {
@@ -1293,13 +1291,13 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     }
 
     /**
-     * @return Tracker_ArtifactLinkInfo[]
+     * @return array<int, Tracker_ArtifactLinkInfo>
      */
-    private function getArtifactLinkInfos($data)
+    private function getArtifactLinkInfos($data): array
     {
         $artifact_links = [];
         while ($row = $data->getRow()) {
-            $artifact_links[$row['artifact_id']] = new Tracker_ArtifactLinkInfo(
+            $artifact_links[(int) $row['artifact_id']] = new Tracker_ArtifactLinkInfo(
                 $row['artifact_id'],
                 $row['keyword'],
                 $row['group_id'],
@@ -1363,7 +1361,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
      */
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
-        if (! $old_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink) {
+        if (! $old_value instanceof ArtifactLinkChangesetValue) {
             return false;
         }
 
@@ -1692,7 +1690,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
             return new Tracker_Artifact_PaginatedArtifacts([], 0);
         }
 
-        assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
+        assert($changeset_value instanceof ArtifactLinkChangesetValue);
         $artifact_ids = $changeset_value->getArtifactIds();
         $size         = count($artifact_ids);
 

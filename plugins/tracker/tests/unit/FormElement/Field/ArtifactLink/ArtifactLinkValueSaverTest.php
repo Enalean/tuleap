@@ -26,6 +26,7 @@ use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -54,7 +55,7 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
+    /** @var ArtifactLinkChangesetValue */
     private $previous_changesetvalue;
 
     /** @var PFUser */
@@ -132,7 +133,7 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->another_artifact->shouldReceive('getLastChangeset')->andReturns(\Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(4581)->getMock());
         $this->artifact_factory->shouldReceive('getArtifactById')->with(458)->andReturns($this->another_artifact);
 
-        $this->previous_changesetvalue = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $this->previous_changesetvalue = \Mockery::spy(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class);
         $this->previous_changesetvalue->shouldReceive('getArtifactIds')->andReturns([36]);
 
         $this->user = new PFUser([

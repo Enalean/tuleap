@@ -24,11 +24,11 @@ namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 
 class CountElementsCalculator
 {
@@ -77,7 +77,7 @@ class CountElementsCalculator
             return $initial_accumulator;
         }
 
-        assert($artifact_link_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
+        assert($artifact_link_value instanceof ArtifactLinkChangesetValue);
 
         return array_reduce(
             $artifact_link_value->getArtifactIds(),

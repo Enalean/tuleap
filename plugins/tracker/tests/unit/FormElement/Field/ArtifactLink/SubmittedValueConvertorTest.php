@@ -22,9 +22,9 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +36,7 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $convertor;
 
-    /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
+    /** @var ArtifactLinkChangesetValue */
     private $previous_changesetvalue;
 
     /** @var Artifact */
@@ -80,7 +80,7 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $this->previous_changesetvalue = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $this->previous_changesetvalue = \Mockery::spy(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class);
         $this->previous_changesetvalue->shouldReceive('getValue')->andReturns(
             [
                 201 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_201, '_is_child'),
