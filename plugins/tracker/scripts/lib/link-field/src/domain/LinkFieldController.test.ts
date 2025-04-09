@@ -365,6 +365,7 @@ describe(`LinkFieldController`, () => {
 
             expect(deleted_link_adder.getCallCount()).toBe(1);
             expect(artifacts).toHaveLength(1);
+            expect(event_dispatcher.getDispatchedEventTypes()[0]).toBe("DidChangeLinkFieldValue");
         });
     });
 
@@ -383,6 +384,7 @@ describe(`LinkFieldController`, () => {
 
             expect(deleted_link_remover.getCallCount()).toBe(1);
             expect(artifacts).toHaveLength(1);
+            expect(event_dispatcher.getDispatchedEventTypes()[0]).toBe("DidChangeLinkFieldValue");
         });
     });
 
@@ -419,6 +421,7 @@ describe(`LinkFieldController`, () => {
             const artifacts = changeLinkType();
             expect(link_type_changer.getCallCount()).toBe(1);
             expect(artifacts).toHaveLength(1);
+            expect(event_dispatcher.getDispatchedEventTypes()[0]).toBe("DidChangeLinkFieldValue");
         });
     });
 
@@ -445,6 +448,7 @@ describe(`LinkFieldController`, () => {
             expect(links).toHaveLength(1);
             expect(links[0].identifier.id).toBe(ARTIFACT_ID);
             expect(links[0].link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
+            expect(event_dispatcher.getDispatchedEventTypes()[0]).toBe("DidChangeLinkFieldValue");
         });
     });
 
@@ -460,6 +464,7 @@ describe(`LinkFieldController`, () => {
 
             expect(new_link_remover.getCallCount()).toBe(1);
             expect(links).toHaveLength(0);
+            expect(event_dispatcher.getDispatchedEventTypes()[0]).toBe("DidChangeLinkFieldValue");
         });
     });
 
@@ -475,6 +480,7 @@ describe(`LinkFieldController`, () => {
             const links = changeNewLinkType();
             expect(new_link_type_changer.getCallCount()).toBe(1);
             expect(links).toHaveLength(1);
+            expect(event_dispatcher.getDispatchedEventTypes()[0]).toBe("DidChangeLinkFieldValue");
         });
     });
 

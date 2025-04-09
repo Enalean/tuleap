@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesIn
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
+use function Psl\Json\encode as psl_json_encode;
 
 final readonly class EditorWithReverseLinksPresenterBuilder
 {
@@ -81,6 +82,10 @@ final readonly class EditorWithReverseLinksPresenterBuilder
             $current_tracker,
             $parent_tracker,
             $this->allowed_link_types_retriever->getAllUsableTypesInProject($current_tracker->getProject()),
+            psl_json_encode([
+                'field_id'  => $link_field->getId(),
+                'all_links' => [],
+            ]),
         );
     }
 }

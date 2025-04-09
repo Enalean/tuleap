@@ -9,3 +9,4 @@
     data-allowed-link-types="{{ allowed_link_types }}"
     {{# parent_tracker_id }}data-parent-tracker-id="{{ . }}"{{/ parent_tracker_id }}
 ></div>
+<input type="hidden" name="artifact[{{ link_field_id }}]" data-test="link-field-value" value="{{ initial_value }}" />

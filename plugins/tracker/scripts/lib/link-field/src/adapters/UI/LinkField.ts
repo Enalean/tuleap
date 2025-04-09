@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UpdateFunction } from "hybrids";
+import type { HybridElement, UpdateFunction } from "hybrids";
 import { define, dispatch, html } from "hybrids";
 import type { Option } from "@tuleap/option";
 import type { GroupCollection, Lazybox, LazyboxOptions } from "@tuleap/lazybox";
@@ -270,7 +270,7 @@ const createLazyBox = (host: HostElement): Lazybox & HTMLElement => {
     return link_selector;
 };
 
-export const LinkField = define.compile<InternalLinkField>({
+export const LinkField: HybridElement<InternalLinkField> = define.compile<InternalLinkField>({
     tag: TAG,
     link_selector: (host: HostElement) => createLazyBox(host),
     controller: {
