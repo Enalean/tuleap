@@ -1458,8 +1458,9 @@ msgid "Error in your Jira import"
 msgstr "Erreur lors de votre import Jira"
 
 #, php-format
-msgid "Error on the date value : %1$s must be %2$s to %3$s."
-msgstr "Erreur de dates : %1$s doit être %2$s à %3$s."
+msgid "Error on the tracker #%4$s date value : %1$s must be %2$s to %3$s."
+msgstr ""
+"Erreur de dates sur l'outil de suivi #%4$s : %1$s doit être %2$s à %3$s."
 
 #, php-format
 msgid "Error while updating the parent artifact %1$s: %2$s"
@@ -1656,8 +1657,9 @@ msgstr "Administrateur de trackers"
 msgid "Global rules"
 msgstr "Règles globales"
 
-msgid "Global rules are not respected"
-msgstr "Règles globales non respectées"
+#, php-format
+msgid "Global rules are not respected in tracker #%d"
+msgstr "Règles globales non respectées pour l'outil de suivi #%d"
 
 msgid "Go see this tracker"
 msgstr "Aller voir cet outil de suivi"

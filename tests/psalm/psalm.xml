@@ -1094,7 +1094,6 @@
             <file name="plugins/tracker/tests/unit/Rules/FirstValidValueAccordingToDependenciesRetrieverTest.php"/>
             <file name="plugins/tracker/tests/unit/Rules/List/ListTest.php"/>
             <file name="plugins/tracker/tests/unit/Rules/List/Tracker_Rule_List_FactoryTest.php"/>
-            <file name="plugins/tracker/tests/unit/Rules/TrackerRulesDateValidatorTest.php"/>
             <file name="plugins/tracker/tests/unit/Rules/TrackerRulesListValidatorTest.php"/>
             <file name="plugins/tracker/tests/unit/Rules/TrackerRulesManager/TrackerRulesManagerForbiddenTest.php"/>
             <file name="plugins/tracker/tests/unit/Rules/TrackerRulesManager/TrackerRulesManagerImportXMLTest.php"/>
