@@ -122,15 +122,16 @@ final readonly class CrossTrackerQueryFactory
         );
     }
 
-    public static function fromUpdatedQuery(UUID $uuid, CrossTrackerQuery $new_query): CrossTrackerQuery
+    public static function fromNewQueryToInsert(int $widget_id, string $title, string $description, string $tql, bool $is_default): CrossTrackerQuery
     {
+        $uuid_factory = new DatabaseUUIDV7Factory();
         return new CrossTrackerQuery(
-            $uuid,
-            $new_query->getQuery(),
-            $new_query->getTitle(),
-            $new_query->getDescription(),
-            $new_query->getWidgetId(),
-            $new_query->isDefault(),
+            $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()),
+            $tql,
+            $title,
+            $description,
+            $widget_id,
+            $is_default,
         );
     }
 }

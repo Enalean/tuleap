@@ -45,6 +45,12 @@ final class CrossTrackerQueryTestBuilder
         return new self();
     }
 
+    public function withTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
     public function withTqlQuery(string $query): self
     {
         $this->query = $query;
@@ -60,6 +66,12 @@ final class CrossTrackerQueryTestBuilder
     public function inWidget(int $widget_id): self
     {
         $this->widget_id = $widget_id;
+        return $this;
+    }
+
+    public function isDefault(): self
+    {
+        $this->is_default = true;
         return $this;
     }
 
