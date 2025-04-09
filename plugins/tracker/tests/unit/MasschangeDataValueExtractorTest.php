@@ -27,8 +27,8 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
-use Tracker_MasschangeDataValueExtractor;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\Masschange\MasschangeDataValueExtractor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -52,10 +52,29 @@ final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $GLOBALS['Language']->method('getText')->willReturn('Unchanged');
 
-        $masschange_data_values_extractor = new Tracker_MasschangeDataValueExtractor($form_element_factory);
+        $masschange_data_values_extractor = new MasschangeDataValueExtractor($form_element_factory);
 
         $this->assertEquals(
             $expected_result,
+            $masschange_data_values_extractor->getNewValues($masschange_data)
+        );
+    }
+
+    public function testReturnsFieldWithNewValueRemovingUnchangedValueForMultiSelectboxField(): void
+    {
+        $field = $this->createStub(Tracker_FormElement_Field_List::class);
+
+        $form_element_factory = $this->createStub(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getFieldById')->willReturn($field);
+
+        $masschange_data = [12 => ['-1', 'Value02']];
+
+        $GLOBALS['Language']->method('getText')->willReturn('Unchanged');
+
+        $masschange_data_values_extractor = new MasschangeDataValueExtractor($form_element_factory);
+
+        $this->assertEquals(
+            [12 => [1 => 'Value02']],
             $masschange_data_values_extractor->getNewValues($masschange_data)
         );
     }

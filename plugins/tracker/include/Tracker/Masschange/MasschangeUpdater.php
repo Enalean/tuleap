@@ -32,7 +32,6 @@ use Tracker_ArtifactDao;
 use Tracker_ArtifactNotificationSubscriber;
 use Tracker_Exception;
 use Tracker_FormElement_Field_List;
-use Tracker_MasschangeDataValueExtractor;
 use Tracker_NoChangeException;
 use Tracker_Report;
 use Tracker_RuleFactory;
@@ -49,7 +48,7 @@ final readonly class MasschangeUpdater
     public function __construct(
         private Tracker $tracker,
         private Tracker_Report $tracker_report,
-        private Tracker_MasschangeDataValueExtractor $masschange_values_extractor,
+        private MasschangeDataValueExtractor $masschange_values_extractor,
         private Tracker_RuleFactory $rule_factory,
         private RetrieveUsedListField $form_element_factory,
         private RetrieveArtifact $artifact_factory,
