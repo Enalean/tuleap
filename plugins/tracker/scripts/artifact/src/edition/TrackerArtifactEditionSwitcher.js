@@ -22,6 +22,7 @@ import $ from "jquery";
 import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
+import { noFieldIsSwitchedToEdit } from "./artifact-edition-switcher";
 
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
@@ -424,15 +425,7 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     };
 
     var nothingIsEdited = function () {
-        return followUpIsEmpty() && noFieldIsSwitchedToEdit();
-    };
-
-    var noFieldIsSwitchedToEdit = function () {
-        if ($(".tracker_artifact_field.in-edition").size() > 0) {
-            return false;
-        }
-
-        return true;
+        return followUpIsEmpty() && noFieldIsSwitchedToEdit(document);
     };
 
     var followUpIsEmpty = function () {
