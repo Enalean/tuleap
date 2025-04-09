@@ -44,7 +44,6 @@
     "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/marked": "^3.0.2",
-    "@types/turndown": "^5.0.0",
     "@types/uuid": "^9.0.8",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.3.2",
