@@ -22,49 +22,49 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\Trigger;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LogLevel;
+use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
 use Tracker_Workflow_Trigger_FieldValue;
 use Tracker_Workflow_Trigger_RulesBuilderData;
 use Tracker_Workflow_Trigger_RulesProcessor;
 use Tracker_Workflow_Trigger_TriggerRule;
 use Tracker_Workflow_WorkflowUser;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class WorkflowTriggerRulesProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class WorkflowTriggerRulesProcessorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testRulesProcessorDoesNotLoopWhenUpdatingAnArtifactParentWithItself(): void
     {
-        $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
+        $workflow_user = $this->createMock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(
             $workflow_user,
-            Mockery::mock(SiblingsRetriever::class),
-            new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::ERROR)
+            $this->createMock(SiblingsRetriever::class),
+            new WorkflowBackendLogger(new NullLogger(), LogLevel::ERROR)
         );
 
-        $target_tracker = Mockery::mock(Tracker::class);
-        $target_tracker->shouldReceive('getId')->andReturn(852);
+        $target_tracker = TrackerTestBuilder::aTracker()->build();
 
-        $rule = Mockery::mock(Tracker_Workflow_Trigger_TriggerRule::class);
-        $rule->shouldReceive('getId')->andReturn(1);
-        $rule->shouldReceive('getTargetTracker')->andReturn($target_tracker);
-        $field_value = Mockery::mock(Tracker_Workflow_Trigger_FieldValue::class);
-        $field_value->shouldReceive('isSetForArtifact')->andReturn(false);
-        $field_value->shouldReceive('getFieldData')->andReturn([]);
-        $rule->shouldReceive('getTarget')->andReturn($field_value);
-        $rule->shouldReceive('getCondition')->andReturn(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE);
-        $rule->shouldReceive('getAsChangesetComment')->andReturn('');
+        $rule = $this->createMock(Tracker_Workflow_Trigger_TriggerRule::class);
+        $rule->method('getId')->willReturn(1);
+        $rule->method('getTargetTracker')->willReturn($target_tracker);
+        $field_value = $this->createMock(Tracker_Workflow_Trigger_FieldValue::class);
+        $field_value->method('isSetForArtifact')->willReturn(false);
+        $field_value->method('getFieldData')->willReturn([]);
+        $rule->method('getTarget')->willReturn($field_value);
+        $rule->method('getCondition')->willReturn(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE);
+        $rule->method('getAsChangesetComment')->willReturn('');
 
-        $artifact_1 = Mockery::mock(Artifact::class);
-        $artifact_2 = Mockery::mock(Artifact::class);
-        $artifact_2->shouldReceive('getTrackerId')->andReturn(852);
+        $artifact_1 = $this->createMock(Artifact::class);
+        $artifact_2 = $this->createMock(Artifact::class);
+        $artifact_2->method('getTrackerId')->willReturn(852);
         $this->prepareArtifactMockToBeProcessed(
             $artifact_1,
             147,
@@ -86,19 +86,19 @@ final class WorkflowTriggerRulesProcessorTest extends \Tuleap\Test\PHPUnit\TestC
     }
 
     private function prepareArtifactMockToBeProcessed(
-        Mockery\MockInterface $artifact_mock,
+        MockObject&Artifact $artifact_mock,
         int $artifact_id,
         Artifact $parent,
         Tracker_Workflow_Trigger_TriggerRule $rule,
         Tracker_Workflow_Trigger_RulesProcessor $processor,
     ): void {
-        $artifact_mock->shouldReceive('getId')->andReturn($artifact_id);
-        $artifact_mock->shouldReceive('getXRef')->andReturn('xref #' . $artifact_id);
-        $artifact_mock->shouldReceive('getParentWithoutPermissionChecking')->andReturn($parent);
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getUri')->andReturn('');
-        $artifact_mock->shouldReceive('getLastChangeset')->andReturn($changeset);
-        $artifact_mock->shouldReceive('createNewChangeset')->andReturnUsing(
+        $artifact_mock->method('getId')->willReturn($artifact_id);
+        $artifact_mock->method('getXRef')->willReturn('xref #' . $artifact_id);
+        $artifact_mock->method('getParentWithoutPermissionChecking')->willReturn($parent);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $changeset->method('getUri')->willReturn('');
+        $artifact_mock->method('getLastChangeset')->willReturn($changeset);
+        $artifact_mock->method('createNewChangeset')->willReturnCallback(
             static function () use ($processor, $parent, $rule): void {
                 $processor->process($parent, $rule);
             }
@@ -107,33 +107,32 @@ final class WorkflowTriggerRulesProcessorTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testRuleOnlyUpdatesAParentArtifactIfItIsInTheExpectedTargetedTracker(): void
     {
-        $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
+        $workflow_user = $this->createMock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(
             $workflow_user,
-            Mockery::mock(SiblingsRetriever::class),
-            new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::ERROR)
+            $this->createMock(SiblingsRetriever::class),
+            new WorkflowBackendLogger(new NullLogger(), LogLevel::ERROR)
         );
 
-        $target_tracker = Mockery::mock(Tracker::class);
-        $target_tracker->shouldReceive('getId')->andReturn(852);
-        $rule = Mockery::mock(Tracker_Workflow_Trigger_TriggerRule::class);
-        $rule->shouldReceive('getId')->andReturn(1);
-        $rule->shouldReceive('getTargetTracker')->andReturn($target_tracker);
-        $field_value = Mockery::mock(Tracker_Workflow_Trigger_FieldValue::class);
-        $field_value->shouldReceive('isSetForArtifact')->andReturn(false);
-        $rule->shouldReceive('getTarget')->andReturn($field_value);
-        $rule->shouldReceive('getCondition')->andReturn(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE);
+        $target_tracker = TrackerTestBuilder::aTracker()->build();
+        $rule           = $this->createMock(Tracker_Workflow_Trigger_TriggerRule::class);
+        $rule->method('getId')->willReturn(1);
+        $rule->method('getTargetTracker')->willReturn($target_tracker);
+        $field_value = $this->createMock(Tracker_Workflow_Trigger_FieldValue::class);
+        $field_value->method('isSetForArtifact')->willReturn(false);
+        $rule->method('getTarget')->willReturn($field_value);
+        $rule->method('getCondition')->willReturn(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(123);
-        $artifact->shouldReceive('getXRef')->andReturn('xref #' . 123);
-        $parent_artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getParentWithoutPermissionChecking')->andReturn($parent_artifact);
-        $parent_artifact->shouldReceive('getTrackerId')->andReturn(963);
-        $parent_artifact->shouldReceive('getId')->andReturn(122);
-        $parent_artifact->shouldReceive('getXRef')->andReturn('xref #' . 122);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(123);
+        $artifact->method('getXRef')->willReturn('xref #' . 123);
+        $parent_artifact = $this->createMock(Artifact::class);
+        $artifact->method('getParentWithoutPermissionChecking')->willReturn($parent_artifact);
+        $parent_artifact->method('getTrackerId')->willReturn(963);
+        $parent_artifact->method('getId')->willReturn(122);
+        $parent_artifact->method('getXRef')->willReturn('xref #' . 122);
 
-        $parent_artifact->shouldReceive('createNewChangeset')->never();
+        $parent_artifact->expects($this->never())->method('createNewChangeset');
 
         $processor->process($artifact, $rule);
     }

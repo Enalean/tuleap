@@ -20,12 +20,11 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testItHasNoData(): void
     {
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), []);
@@ -51,11 +50,11 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\P
     public function testItHasATargetFieldOfTheTrackerOnWhichRulesWillApply(): void
     {
         $field_id     = 269;
-        $target_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $target_field->shouldReceive('getId')->andReturn($field_id);
+        $target_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $target_field->method('getId')->willReturn($field_id);
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator([$target_field]), []);
 
-        $target_field->shouldReceive('fetchFormattedForJson')->andReturns('whatever')->once();
+        $target_field->expects($this->once())->method('fetchFormattedForJson')->willReturn('whatever');
 
         $result = $rules_builder_data->fetchFormattedForJson();
         $this->assertCount(1, $result['targets']);
@@ -65,9 +64,8 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\P
     public function testItHasATriggerTracker(): void
     {
         $tracker_id = 90;
-        $tracker    = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($tracker_id);
-        $tracker->shouldReceive('getName')->andReturn('Tasks');
+        $tracker    = TrackerTestBuilder::aTracker()->withId($tracker_id)->withName('Tasks')->build();
+
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             $tracker,
             new ArrayIterator()
@@ -84,14 +82,13 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\P
     public function testItHasATriggerTrackerWithAField(): void
     {
         $field_id = 693;
-        $field    = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $field->shouldReceive('getId')->andReturn($field_id);
-        $field->shouldReceive('fetchFormattedForJson')->andReturns('whatever')->once();
+        $field    = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field->method('getId')->willReturn($field_id);
+        $field->expects($this->once())->method('fetchFormattedForJson')->willReturn('whatever');
 
         $tracker_id = 90;
-        $tracker    = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($tracker_id);
-        $tracker->shouldReceive('getName')->andReturn('Tasks');
+        $tracker    = TrackerTestBuilder::aTracker()->withId($tracker_id)->withName('Tasks')->build();
+
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             $tracker,
             new ArrayIterator([$field])

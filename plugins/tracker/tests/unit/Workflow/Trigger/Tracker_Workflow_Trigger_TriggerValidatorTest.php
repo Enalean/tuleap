@@ -20,21 +20,20 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-    private $validator;
-    private $tracker;
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+{
+    private Tracker_Workflow_Trigger_TriggerValidator $validator;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {
-        $rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
+        $rules_manager = $this->createMock(\Tracker_Workflow_Trigger_RulesManager::class);
         $collection    = new Tracker_Workflow_Trigger_TriggerRuleCollection();
-        $this->tracker = \Mockery::spy(\Tracker::class);
-        $rules_manager->shouldReceive('getForTargetTracker')->with($this->tracker)->andReturns($collection);
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
+        $rules_manager->method('getForTargetTracker')->with($this->tracker)->willReturn($collection);
 
         $this->validator = new Tracker_Workflow_Trigger_TriggerValidator($rules_manager);
     }
@@ -184,9 +183,9 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \Tuleap\Test\P
 
         $json->triggering_fields = [$triggering_field, $triggering_field2];
 
-        $field_list = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $bind_value = \Mockery::spy(\Tracker_FormElement_Field_List_BindValue::class);
-        $bind_value->shouldReceive('getId')->andReturns(75);
+        $field_list = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $bind_value = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
+        $bind_value->method('getId')->willReturn(75);
         $target    = new Tracker_Workflow_Trigger_FieldValue($field_list, $bind_value);
         $condition = 'some_condition';
         $triggers  = [];
@@ -195,12 +194,12 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \Tuleap\Test\P
         $collection = new Tracker_Workflow_Trigger_TriggerRuleCollection();
         $collection->push($rule);
 
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_TriggerInvalidTargetException::class);
 
-        $rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
-        $rules_manager->shouldReceive('getForTargetTracker')->with($tracker)->andReturns($collection);
+        $rules_manager = $this->createMock(\Tracker_Workflow_Trigger_RulesManager::class);
+        $rules_manager->method('getForTargetTracker')->with($tracker)->willReturn($collection);
         $validator = new Tracker_Workflow_Trigger_TriggerValidator($rules_manager);
 
         $validator->validateJsonFormat($json, $tracker);

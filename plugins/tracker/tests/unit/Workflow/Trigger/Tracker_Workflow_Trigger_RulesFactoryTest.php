@@ -21,99 +21,41 @@
 declare(strict_types=1);
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $tracker_id;
-    private $tracker;
-    private $formelement_factory;
-    private $factory;
-    private $json_input;
-    private $validator;
-    /**
-     * @var int
-     */
-    private $target_value_id;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $target_field_value;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $target_field;
-    /**
-     * @var int
-     */
-    private $target_field_id;
-    /**
-     * @var int
-     */
-    private $trigger_field_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $not_child_tracker;
-    /**
-     * @var int
-     */
-    private $trigger_value_id;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $trigger_field_value;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $trigger_field;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $child_tracker_1;
-    /**
-     * @var int
-     */
-    private $trigger_field_id_1;
-    /**
-     * @var int
-     */
-    private $trigger_value_id_1;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $trigger_field_value_1;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $trigger_field_1;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $trigger_field_value_2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $trigger_field_2;
+    private int $tracker_id = 274;
+    private Tracker $tracker;
+    private stdClass $json_input;
+    private Tracker_Workflow_Trigger_TriggerValidator&MockObject $validator;
+    private int $target_value_id = 250;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $target_field_value;
+    private Tracker_FormElement_Field_Selectbox&MockObject $target_field;
+    private int $target_field_id  = 30;
+    private int $trigger_field_id = 369;
+    private int $trigger_value_id = 852;
 
     protected function setUp(): void
     {
-        $this->tracker_id = 274;
-        $this->tracker    = Mockery::spy(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
-        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->validator           = \Mockery::spy(\Tracker_Workflow_Trigger_TriggerValidator::class);
-        $this->factory             = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $this->validator);
-        $this->json_input          = json_decode(file_get_contents(__DIR__ . '/_fixtures/add_rule.json'));
+        $this->tracker = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
 
-        $this->target_value_id    = 250;
+        $this->validator = $this->createMock(Tracker_Workflow_Trigger_TriggerValidator::class);
+        $this->validator->method('validateJsonFormat');
+
+        $this->json_input = json_decode(file_get_contents(__DIR__ . '/_fixtures/add_rule.json'));
+
         $this->target_field_value = ListStaticValueBuilder::aStaticValue('label')->withId($this->target_value_id)->build();
-        $this->target_field       = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->target_field->shouldReceive('getAllValues')->andReturns([
+        $this->target_field       = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->target_field->method('getId')->willReturn($this->target_field_id);
+        $this->target_field->method('getTracker')->willReturn($this->tracker);
+        $this->target_field->method('getAllValues')->willReturn([
             ListStaticValueBuilder::aStaticValue('label')->withId(9998)->build(),
             $this->target_field_value,
             ListStaticValueBuilder::aStaticValue('label')->withId(9999)->build(),
@@ -122,200 +64,203 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
 
     public function testItFetchesFieldFromFormElementFactory(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with('30')->once()->andReturns($this->target_field);
+        $factory = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($this->target_field),
+            $this->validator,
+        );
 
-        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        self::assertSame(
+            $this->target_field,
+            $factory->getRuleFromJson($this->tracker, $this->json_input)->getTarget()->getField()
+        );
     }
 
     public function testItRaisesAnExceptionIfFieldIsInvalid(): void
     {
+        $factory                            = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($this->target_field),
+            $this->validator,
+        );
         $this->json_input->target->field_id = '40';
 
-        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
-        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $this->expectException(Tracker_FormElement_InvalidFieldException::class);
+
+        $factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
     public function testItRaisesAnExceptionWhenFieldDoesntBelongToTracker(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(37);
-        $field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->andReturns($field);
+        $field   = IntFieldBuilder::anIntField(30)
+            ->inTracker(TrackerTestBuilder::aTracker()->withId(37)->build())
+            ->build();
+        $factory = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($field),
+            $this->validator,
+        );
 
-        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
-        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $this->expectException(Tracker_FormElement_InvalidFieldException::class);
+
+        $factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
     public function testItBuildsTheRuleWithTargetFieldAndValue(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with('30')->andReturns($this->target_field);
+        $factory = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($this->target_field),
+            $this->validator,
+        );
 
-        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
-        $this->assertEquals($this->target_field, $rule->getTarget()->getField());
-        $this->assertEquals($this->target_field_value, $rule->getTarget()->getValue());
+        $rule = $factory->getRuleFromJson($this->tracker, $this->json_input);
+        self::assertEquals($this->target_field, $rule->getTarget()->getField());
+        self::assertEquals($this->target_field_value, $rule->getTarget()->getValue());
     }
 
     public function testItRaisesAnExceptionWhenTargetValueDoesntBelongToField(): void
     {
-        $target_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $target_field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $target_field->shouldReceive('getAllValues')->andReturns([]);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->andReturns($target_field);
+        $target_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $target_field->method('getId')->willReturn(30);
+        $target_field->method('getTracker')->willReturn($this->tracker);
+        $target_field->method('getAllValues')->willReturn([]);
+        $factory = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($target_field),
+            $this->validator,
+        );
 
-        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
 
-        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
     public function testItBuildsTheRuleWithCondition(): void
     {
-        $this->target_field->shouldReceive('getAllValues')->andReturns([$this->target_field_value]);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with('30')->andReturns(
-            $this->target_field
+        $this->target_field->method('getAllValues')->willReturn([$this->target_field_value]);
+        $factory = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($this->target_field),
+            $this->validator,
         );
-        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
-        $this->assertEquals(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF, $rule->getCondition());
+        $rule    = $factory->getRuleFromJson($this->tracker, $this->json_input);
+        self::assertEquals(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF, $rule->getCondition());
     }
 
     private function setupRuleFromRequestTriggerTests(): void
     {
-        $this->target_field_id = 30;
-        $this->tracker_id      = 274;
-        $this->tracker         = Mockery::spy(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
-        $this->target_value_id    = 250;
         $this->target_field_value = ListStaticValueBuilder::aStaticValue('label')->withId($this->target_value_id)->build();
 
-        $this->target_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $this->target_field->shouldReceive('getId')->andReturn($this->target_field_id);
-        $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->target_field->shouldReceive('getAllValues')->andReturns([
+        $this->target_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->target_field->method('getId')->willReturn($this->target_field_id);
+        $this->target_field->method('getTracker')->willReturn($this->tracker);
+        $this->target_field->method('getAllValues')->willReturn([
             $this->target_field_value,
         ]);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->target_field_id")->andReturns($this->target_field);
     }
 
     public function testItHasATrigger(): void
     {
         $this->setupRuleFromRequestTriggerTests();
-        $child_tracker = Mockery::spy(Tracker::class);
-        $child_tracker->shouldReceive('getParent')->andReturn($this->tracker);
+        $child_tracker = TrackerTestBuilder::aTracker()->withParent($this->tracker)->build();
 
-        $this->trigger_field_id    = 369;
-        $this->trigger_value_id    = 852;
-        $this->trigger_field_value = ListStaticValueBuilder::aStaticValue('label')->withId($this->trigger_value_id)->build();
+        $trigger_field_value = ListStaticValueBuilder::aStaticValue('label')->withId($this->trigger_value_id)->build();
 
-
-        $this->trigger_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $this->trigger_field->shouldReceive('getTracker')->andReturn($child_tracker);
-        $this->trigger_field->shouldReceive('getAllValues')->andReturns([
-            $this->trigger_field_value,
+        $trigger_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $trigger_field->method('getId')->willReturn($this->trigger_field_id);
+        $trigger_field->method('getTracker')->willReturn($child_tracker);
+        $trigger_field->method('getAllValues')->willReturn([
+            $trigger_field_value,
         ]);
 
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->trigger_field_id")->andReturns($this->trigger_field);
-
-        $rule     = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $factory  = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($this->target_field, $trigger_field),
+            $this->validator,
+        );
+        $rule     = $factory->getRuleFromJson($this->tracker, $this->json_input);
         $triggers = $rule->getTriggers();
         $this->assertCount(1, $triggers);
         $rule1 = array_pop($triggers);
-        $this->assertEquals($this->trigger_field, $rule1->getField());
-        $this->assertEquals($this->trigger_field_value, $rule1->getValue());
+        self::assertEquals($trigger_field, $rule1->getField());
+        self::assertEquals($trigger_field_value, $rule1->getValue());
     }
 
     public function testItRaisesAnErrorIfTriggerTrackerDoesntBelongToChildren(): void
     {
         $this->setupRuleFromRequestTriggerTests();
-        $this->not_child_tracker = Mockery::spy(Tracker::class);
-        $this->not_child_tracker->shouldReceive('getParent')->andReturn(null);
+        $not_child_tracker = TrackerTestBuilder::aTracker()->withParent(null)->build();
 
-        $this->trigger_field_id = 369;
-        $this->trigger_value_id = 852;
+        $trigger_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $trigger_field->method('getId')->willReturn($this->trigger_field_id);
+        $trigger_field->method('getTracker')->willReturn($not_child_tracker);
 
-        $this->trigger_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $this->trigger_field->shouldReceive('getTracker')->andReturn($this->not_child_tracker);
+        $factory = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($this->target_field, $trigger_field),
+            $this->validator,
+        );
 
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->trigger_field_id")->andReturns($this->trigger_field);
+        $this->expectException(Tracker_FormElement_InvalidFieldException::class);
 
-        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
-
-        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
-    private function setUpTwoTriggers()
+    public function testItHasTwoTriggers(): void
     {
+        $this->setupRuleFromRequestTriggerTests();
         // field 1
-        $this->child_tracker_1 = Mockery::mock(Tracker::class);
-        $this->child_tracker_1->shouldReceive('getParent')->andReturn($this->tracker);
+        $child_tracker_1 = TrackerTestBuilder::aTracker()->withId(101)->withParent($this->tracker)->build();
 
-        $this->trigger_field_id_1 = 369;
-        $this->trigger_value_id_1 = 852;
+        $trigger_field_id_1 = 369;
+        $trigger_value_id_1 = 852;
 
-        $this->trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('label')->withId($this->trigger_value_id_1)->build();
+        $trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('label')->withId($trigger_value_id_1)->build();
 
-        $this->trigger_field_1 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $this->trigger_field_1->shouldReceive('getId')->andReturn($this->trigger_field_id_1);
-        $this->trigger_field_1->shouldReceive('getTracker')->andReturn($this->child_tracker_1);
-        $this->trigger_field_1->shouldReceive('getAllValues')->andReturns([
-            $this->trigger_field_value_1,
+        $trigger_field_1 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $trigger_field_1->method('getId')->willReturn($trigger_field_id_1);
+        $trigger_field_1->method('getTracker')->willReturn($child_tracker_1);
+        $trigger_field_1->method('getAllValues')->willReturn([
+            $trigger_field_value_1,
         ]);
 
         // field 2
-        $child_tracker_2 = Mockery::mock(Tracker::class);
-        $child_tracker_2->shouldReceive('getParent')->andReturn($this->tracker);
+        $child_tracker_2 = TrackerTestBuilder::aTracker()->withId(102)->withParent($this->tracker)->build();
 
         $trigger_field_id_2 = 874;
         $trigger_value_id_2 = 147;
 
-        $this->trigger_field_value_2 = ListStaticValueBuilder::aStaticValue('label')->withId($trigger_value_id_2)->build();
+        $trigger_field_value_2 = ListStaticValueBuilder::aStaticValue('label')->withId($trigger_value_id_2)->build();
 
-        $this->trigger_field_2 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $this->trigger_field_2->shouldReceive('getId')->andReturn($trigger_field_id_2);
-        $this->trigger_field_2->shouldReceive('getTracker')->andReturn($child_tracker_2);
-        $this->trigger_field_2->shouldReceive('getAllValues')->andReturns([
-            $this->trigger_field_value_2,
+        $trigger_field_2 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $trigger_field_2->method('getId')->willReturn($trigger_field_id_2);
+        $trigger_field_2->method('getTracker')->willReturn($child_tracker_2);
+        $trigger_field_2->method('getAllValues')->willReturn([
+            $trigger_field_value_2,
         ]);
-
-        // Returns the 2 fields
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->trigger_field_id_1")->andReturns($this->trigger_field_1);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$trigger_field_id_2")->andReturns($this->trigger_field_2);
 
         // Update input
         $json_triggering_field2                 = new stdClass();
         $json_triggering_field2->field_id       = "$trigger_field_id_2";
         $json_triggering_field2->field_value_id = "$trigger_value_id_2";
         $this->json_input->triggering_fields[]  = $json_triggering_field2;
-    }
 
-    public function testItHasTwoTriggers(): void
-    {
-        $this->setupRuleFromRequestTriggerTests();
-        $this->setUpTwoTriggers();
-
-        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $factory = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($this->target_field, $trigger_field_1, $trigger_field_2),
+            $this->validator,
+        );
+        $rule    = $factory->getRuleFromJson($this->tracker, $this->json_input);
 
         $this->assertCount(2, $rule->getTriggers());
 
         $triggering_fields = $rule->getTriggers();
         $rule1             = array_shift($triggering_fields);
-        $this->assertEquals($this->trigger_field_1, $rule1->getField());
-        $this->assertEquals($this->trigger_field_value_1, $rule1->getValue());
+        self::assertEquals($trigger_field_1, $rule1->getField());
+        self::assertEquals($trigger_field_value_1, $rule1->getValue());
 
         $rule2 = array_shift($triggering_fields);
-        $this->assertEquals($this->trigger_field_2, $rule2->getField());
-        $this->assertEquals($this->trigger_field_value_2, $rule2->getValue());
+        self::assertEquals($trigger_field_2, $rule2->getField());
+        self::assertEquals($trigger_field_value_2, $rule2->getValue());
     }
 
     public function testItDoesATwoWayTransform(): void
     {
-        $this->tracker_id = 274;
-        $tracker_name     = 'Target Tracker Name';
+        $target_field_value = ListStaticValueBuilder::aStaticValue('Target Value Label')->withId($this->target_value_id)->build();
 
-        $this->target_field_id = 30;
-        $this->target_value_id = 250;
-        $target_field_value    = ListStaticValueBuilder::aStaticValue('Target Value Label')->withId($this->target_value_id)->build();
-
-        $target_bind_static   = new Tracker_FormElement_Field_List_Bind_Static(
+        $target_bind_static = new Tracker_FormElement_Field_List_Bind_Static(
             new DatabaseUUIDV7Factory(),
             null,
             null,
@@ -323,40 +268,31 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
             null,
             null
         );
-        $tracker_target_field = Mockery::spy(Tracker::class);
-        $tracker_target_field->shouldReceive('getId')->andReturn($this->tracker_id);
-        $tracker_target_field->shouldReceive('getName')->andReturn($tracker_name);
-        $target_field = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
-        $target_field->shouldReceive('getId')->andReturn($this->target_field_id);
-        $target_field->shouldReceive('getLabel')->andReturn('Target Field Label');
-        $target_field->shouldReceive('getTracker')->andReturn($tracker_target_field);
-        $target_field->shouldReceive('getBind')->andReturn($target_bind_static);
-        $target_field->shouldReceive('getAllValues')->andReturn([$target_field_value]);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->target_field_id")->andReturns($target_field);
+        $tracker_target     = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->withName('Target Tracker Name')->build();
+        $target_field       = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $target_field->method('getId')->willReturn($this->target_field_id);
+        $target_field->method('getLabel')->willReturn('Target Field Label');
+        $target_field->method('getTracker')->willReturn($tracker_target);
+        $target_field->method('getBind')->willReturn($target_bind_static);
+        $target_field->method('getAllValues')->willReturn([$target_field_value]);
 
-        // field 1
-        $this->trigger_field_id_1    = 369;
-        $this->trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('Triggering Value Label 1')->withId(852)->build();
-        $trigger_bind_static         = new Tracker_FormElement_Field_List_Bind_Static(
+        $trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('Triggering Value Label')->withId(852)->build();
+        $trigger_bind_static   = new Tracker_FormElement_Field_List_Bind_Static(
             new DatabaseUUIDV7Factory(),
             null,
             null,
-            [$this->trigger_field_value_1],
+            [$trigger_field_value_1],
             null,
             null
         );
-        $tracker_field_1             = Mockery::spy(Tracker::class);
-        $tracker_field_1->shouldReceive('getId')->andReturn(69);
-        $tracker_field_1->shouldReceive('getName')->andReturn('Triggering Tracker 1');
-        $tracker_field_1->shouldReceive('getParent')->andReturn($this->tracker);
+        $trigger_tracker       = TrackerTestBuilder::aTracker()->withId(69)->withName('Triggering Tracker')->withParent($this->tracker)->build();
 
-        $this->trigger_field_1 = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
-        $this->trigger_field_1->shouldReceive('getId')->andReturn($this->trigger_field_id_1);
-        $this->trigger_field_1->shouldReceive('getLabel')->andReturn('Triggering Field Label 1');
-        $this->trigger_field_1->shouldReceive('getTracker')->andReturn($tracker_field_1);
-        $this->trigger_field_1->shouldReceive('getBind')->andReturn($trigger_bind_static);
-        $this->trigger_field_1->shouldReceive('getAllValues')->andReturn([$this->trigger_field_value_1]);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->trigger_field_id_1")->andReturns($this->trigger_field_1);
+        $trigger_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $trigger_field->method('getId')->willReturn($this->trigger_field_id);
+        $trigger_field->method('getLabel')->willReturn('Triggering Field Label');
+        $trigger_field->method('getTracker')->willReturn($trigger_tracker);
+        $trigger_field->method('getBind')->willReturn($trigger_bind_static);
+        $trigger_field->method('getAllValues')->willReturn([$trigger_field_value_1]);
 
         // Add to input what should be added by get
         $json_input                                          = clone $this->json_input;
@@ -364,12 +300,16 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $json_input->target->field_label                     = 'Target Field Label';
         $json_input->target->field_value_label               = 'Target Value Label';
         $json_input->target->tracker_name                    = 'Target Tracker Name';
-        $json_input->triggering_fields[0]->field_label       = 'Triggering Field Label 1';
-        $json_input->triggering_fields[0]->field_value_label = 'Triggering Value Label 1';
-        $json_input->triggering_fields[0]->tracker_name      = 'Triggering Tracker 1';
+        $json_input->triggering_fields[0]->field_label       = 'Triggering Field Label';
+        $json_input->triggering_fields[0]->field_value_label = 'Triggering Value Label';
+        $json_input->triggering_fields[0]->tracker_name      = 'Triggering Tracker';
 
-        $rule        = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $factory     = new Tracker_Workflow_Trigger_RulesFactory(
+            RetrieveUsedFieldsStub::withFields($target_field, $trigger_field),
+            $this->validator,
+        );
+        $rule        = $factory->getRuleFromJson($this->tracker, $this->json_input);
         $json_output = json_decode(json_encode($rule->fetchFormattedForJson()));
-        $this->assertEquals($json_output, $json_input);
+        self::assertEquals($json_output, $json_input);
     }
 }

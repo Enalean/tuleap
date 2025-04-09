@@ -18,21 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+
 /**
  * Build a PHP representation of a Rule out of json
  */
-class Tracker_Workflow_Trigger_RulesFactory
+class Tracker_Workflow_Trigger_RulesFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var Tracker_Workflow_Trigger_TriggerValidator */
-    private $validator;
-
-    public function __construct(Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_TriggerValidator $validator)
-    {
-        $this->formelement_factory = $formelement_factory;
-        $this->validator           = $validator;
+    public function __construct(
+        private readonly RetrieveUsedFields $formelement_factory,
+        private readonly Tracker_Workflow_Trigger_TriggerValidator $validator,
+    ) {
     }
 
     /**
