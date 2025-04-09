@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_CheckboxTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -68,8 +69,7 @@ final class Tracker_FormElement_Field_CheckboxTest extends \Tuleap\Test\PHPUnit\
 
     public function testItHasAnHiddenFieldForEachCheckbox(): void
     {
-        $value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value->shouldReceive('getId')->andReturn(1);
+        $value      = ListStaticValueBuilder::aStaticValue('static')->withId(1)->build();
         $parameters = [$value, 'lename', false];
 
         $field = $this->getCheckboxField();
@@ -91,14 +91,11 @@ final class Tracker_FormElement_Field_CheckboxTest extends \Tuleap\Test\PHPUnit\
         $artifact     = Mockery::mock(Artifact::class);
         $value        = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
         $bind         = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_value   = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $bind_value_2 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $bind_value_3 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $bind_value->shouldReceive('getId')->andReturn(523);
-        $bind_value_2->shouldReceive('getId')->andReturn(524);
-        $bind_value_3->shouldReceive('getId')->andReturn(525);
-        $bind->shouldReceive('getAllVisibleValues')->andReturn([523 => $bind_value, 524 => $bind_value_2, 525 => $bind_value_3]);
-        $value->shouldReceive('getListValues')->andReturn([523 => $bind_value, 525 => $bind_value_3]);
+        $bind_value   = ListStaticValueBuilder::aStaticValue('static')->withId(523)->build();
+        $bind_value_2 = ListStaticValueBuilder::aStaticValue('static')->withId(524)->build();
+        $bind_value_3 = ListStaticValueBuilder::aStaticValue('static')->withId(525)->build();
+        $bind->shouldReceive('getAllVisibleValues')->andReturn([$bind_value->getId() => $bind_value, $bind_value_2->getId() => $bind_value_2, $bind_value_3->getId() => $bind_value_3]);
+        $value->shouldReceive('getListValues')->andReturn([$bind_value->getId() => $bind_value, $bind_value_3->getId() => $bind_value_3]);
 
         $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value)->andReturn('Value_1');
         $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value_2)->andReturn('Value_2');

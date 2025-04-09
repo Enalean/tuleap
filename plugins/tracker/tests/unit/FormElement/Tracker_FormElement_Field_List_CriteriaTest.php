@@ -31,17 +31,14 @@ use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Tracker_FormElement_Field_List
-     */
-    private $field;
+    private Tracker_FormElement_Field_List $field;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Report_Criteria
@@ -74,8 +71,8 @@ class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHPUnit\T
             </criteria_value>
         ');
 
-        $value_01 = Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value_02 = Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $value_01 = ListStaticValueBuilder::aStaticValue('value 1')->build();
+        $value_02 = ListStaticValueBuilder::aStaticValue('value 2')->build();
         $mapping  = [
             'V1' => $value_01,
             'V2' => $value_02,

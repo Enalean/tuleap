@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -45,30 +46,13 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
      * @var \SimpleXMLElement
      */
     private $xml_input;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $bind_value_1;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $bind_value_2;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $bind_value_3;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $bind_value_4;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $bind_value_5;
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue
-     */
-    private $bind_value_6;
+
+    private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_1;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_2;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_3;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_4;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_5;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_6;
     /**
      * @var Tracker_FormElement_Field_Selectbox
      */
@@ -120,12 +104,12 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         $this->column_3 = $this->mockAColumn('stepC');
         $this->column_4 = $this->mockAColumn('stepD');
 
-        $this->bind_value_1 = $this->mockAListStaticValue('To be done');
-        $this->bind_value_2 = $this->mockAListStaticValue('On going');
-        $this->bind_value_3 = $this->mockAListStaticValue('Done');
-        $this->bind_value_4 = $this->mockAListStaticValue('Canceled');
-        $this->bind_value_5 = $this->mockAListStaticValue('Functional review');
-        $this->bind_value_6 = $this->mockAListStaticValue('Code review');
+        $this->bind_value_1 = $this->buildListStaticValue('To be done');
+        $this->bind_value_2 = $this->buildListStaticValue('On going');
+        $this->bind_value_3 = $this->buildListStaticValue('Done');
+        $this->bind_value_4 = $this->buildListStaticValue('Canceled');
+        $this->bind_value_5 = $this->buildListStaticValue('Functional review');
+        $this->bind_value_6 = $this->buildListStaticValue('Code review');
 
         $bind_values = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
         $bind_values->shouldReceive('getAllValues')->andReturn(
@@ -187,12 +171,12 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         $this->mockAColumn('stuffC');
         $this->mockAColumn('stuffD');
 
-        $this->mockAListStaticValue('stuff1');
-        $this->mockAListStaticValue('stuff2');
-        $this->mockAListStaticValue('stuff3');
-        $this->mockAListStaticValue('stuff4');
-        $this->mockAListStaticValue('stuff5');
-        $this->mockAListStaticValue('stuff5');
+        $this->buildListStaticValue('stuff1');
+        $this->buildListStaticValue('stuff2');
+        $this->buildListStaticValue('stuff3');
+        $this->buildListStaticValue('stuff4');
+        $this->buildListStaticValue('stuff5');
+        $this->buildListStaticValue('stuff5');
 
         $bind_values = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
         $bind_values->shouldReceive('getAllValues')->andReturn(
@@ -232,12 +216,12 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         $this->mockAColumn('stuffC');
         $this->mockAColumn('stuffD');
 
-        $this->mockAListStaticValue('stuff1');
-        $this->mockAListStaticValue('stuff2');
-        $this->mockAListStaticValue('stuff3');
-        $this->mockAListStaticValue('stuff4');
-        $this->mockAListStaticValue('stuff5');
-        $this->mockAListStaticValue('stuff5');
+        $this->buildListStaticValue('stuff1');
+        $this->buildListStaticValue('stuff2');
+        $this->buildListStaticValue('stuff3');
+        $this->buildListStaticValue('stuff4');
+        $this->buildListStaticValue('stuff5');
+        $this->buildListStaticValue('stuff5');
 
         $bind_values = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
         $bind_values->shouldReceive('getAllValues')->andReturn(
@@ -277,15 +261,9 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         return $column;
     }
 
-    /**
-     * @param $label
-     * @return Mockery\MockInterface
-     */
-    private function mockAListStaticValue($label)
+    private function buildListStaticValue(string $label): Tracker_FormElement_Field_List_Bind_StaticValue
     {
-        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $bind_value->shouldReceive('getLabel')->andReturn($label);
-        return $bind_value;
+        return ListStaticValueBuilder::aStaticValue($label)->build();
     }
 
     /**

@@ -40,10 +40,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind;
+    private Tracker_FormElement_Field_List_Bind_Static $bind;
     private $bind_without_values;
     private Tracker_FormElement_Field_List_Bind_StaticValue $first_value;
     private Tracker_FormElement_Field_List_Bind_StaticValue $second_value;
@@ -109,8 +106,8 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
 
     public function testGetBindValues(): void
     {
-        $bv1    = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $bv2    = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $bv1    = ListStaticValueBuilder::aStaticValue('1')->build();
+        $bv2    = ListStaticValueBuilder::aStaticValue('2')->build();
         $field  = $is_rank_alpha = $default_values = $decorators = '';
         $values = [101 => $bv1, 102 => $bv2];
         $static = new Tracker_FormElement_Field_List_Bind_Static(new DatabaseUUIDV7Factory(), $field, $is_rank_alpha, $values, $default_values, $decorators);
@@ -197,10 +194,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\
 
     protected function getFieldValueListWithLabel(string $label): \Tracker_FormElement_Field_List_BindValue
     {
-        $value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value->shouldReceive('getLabel')->andReturn($label);
-
-        return $value;
+        return ListStaticValueBuilder::aStaticValue($label)->build();
     }
 
     /**

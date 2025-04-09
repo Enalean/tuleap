@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -95,8 +96,8 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
         $this->changeset->setFieldValue($field, $value);
 
-        $todo = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $done = $this->createMock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $todo = ListStaticValueBuilder::aStaticValue('todo')->build();
+        $done = ListStaticValueBuilder::aStaticValue('done')->build();
         $value->expects($this->once())->method('getListValues')->willReturn([$todo, $done]);
 
         self::assertSame($todo, $this->provider->getStatusValueForChangeset($this->changeset, $this->user));

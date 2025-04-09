@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -59,7 +59,7 @@ final class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withChangesets($changeset)
             ->build();
 
-        $value = $this->createMock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $value = ListStaticValueBuilder::aStaticValue('value 1')->build();
         $this->for_changeset_provider
             ->expects($this->once())
             ->method('getStatusValueForChangeset')
