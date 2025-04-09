@@ -23,6 +23,7 @@
 @use "pkg:@tuleap/tlp-styles/components/labels";
 @use "pkg:@tuleap/tlp-styles/components/inputs";
 @use "pkg:@tuleap/tlp-styles/components/buttons";
+@use "pkg:@tuleap/tlp-styles/components/alerts";
 @use "pkg:@tuleap/plugin-tracker-link-field";
 
 .list-picker-circular-color {
@@ -40,4 +41,8 @@ tuleap-tracker-link-type-selector > .tlp-select {
     &:hover {
         cursor: default;
     }
+}
+
+.hidden-alert {
+    display: none;
 }

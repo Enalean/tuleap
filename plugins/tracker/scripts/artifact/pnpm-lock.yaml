@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/fault
   '@tuleap/fetch-result':
     specifier: workspace:^
     version: link:../../../../lib/frontend/fetch-result
