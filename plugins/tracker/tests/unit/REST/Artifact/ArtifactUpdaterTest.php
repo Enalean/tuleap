@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Luracast\Restler\RestException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\MockObject\MockObject;
+use SebastianBergmann\Comparator\ComparisonFailure;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
@@ -44,32 +47,24 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const TRACKER_ID  = 34;
     private const FIELD_ID    = 652;
     private const FIELD_VALUE = 'osteolite';
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & NewChangesetCreator
-     */
-    private $changeset_creator;
+    private NewChangesetCreator&MockObject $changeset_creator;
     private RetrieveUsedFieldsStub $fields_retriever;
     private \PFUser $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & Artifact
-     */
-    private $artifact;
+    private Artifact&MockObject $artifact;
 
     protected function setUp(): void
     {
         $this->user     = UserTestBuilder::aUser()->build();
         $tracker        = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $this->artifact = \Mockery::spy(Artifact::class);
-        $this->artifact->shouldReceive('userCanUpdate')->andReturnTrue();
-        $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('userCanUpdate')->willReturn(true);
+        $this->artifact->method('getTracker')->willReturn($tracker);
 
-        $this->changeset_creator = \Mockery::spy(NewChangesetCreator::class);
+        $this->changeset_creator = $this->createMock(NewChangesetCreator::class);
         $this->fields_retriever  = RetrieveUsedFieldsStub::withFields(
             new \Tracker_FormElement_Field_String(
                 self::FIELD_ID,
@@ -112,36 +107,12 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateDefaultsCommentToEmptyCommonmarkFormat(): void
     {
-        $this->changeset_creator->shouldReceive('create')->withArgs(
-            function (
-                NewChangeset $new_changeset,
-                PostCreationContext $context,
-            ) {
-                if ($new_changeset->getArtifact() !== $this->artifact) {
-                    return false;
-                }
-                if ($new_changeset->getFieldsData() !== [self::FIELD_ID => self::FIELD_VALUE]) {
-                    return false;
-                }
-                if ($new_changeset->getSubmitter() !== $this->user) {
-                    return false;
-                }
-                if ($context->getImportConfig()->isFromXml()) {
-                    return false;
-                }
-                if ($context->shouldSendNotifications() !== true) {
-                    return false;
-                }
-                $comment = $new_changeset->getComment();
-                if ($comment->getBody() !== '') {
-                    return false;
-                }
-                if ($comment->getFormat() !== CommentFormatIdentifier::COMMONMARK) {
-                    return false;
-                }
-                return true;
-            }
-        )->once();
+        $this->changeset_creator->expects($this->once())
+            ->method('create')
+            ->with(
+                $this->getNewChangesetMatcher($this->artifact, [self::FIELD_ID => self::FIELD_VALUE], $this->user, '', CommentFormatIdentifier::COMMONMARK),
+                $this->getContextMatcher(),
+            );
         $this->update(null, CheckArtifactRestUpdateConditionsStub::allowArtifactUpdate());
     }
 
@@ -151,33 +122,12 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment_format = 'html';
         $comment        = new NewChangesetCommentRepresentation($comment_body, $comment_format);
 
-        $this->changeset_creator->shouldReceive('create')->withArgs(
-            function (
-                NewChangeset $new_changeset,
-                PostCreationContext $context,
-            ) use ($comment_body) {
-                if ($new_changeset->getArtifact() !== $this->artifact) {
-                    return false;
-                }
-                if ($new_changeset->getSubmitter() !== $this->user) {
-                    return false;
-                }
-                if ($context->getImportConfig()->isFromXml()) {
-                    return false;
-                }
-                if ($context->shouldSendNotifications() !== true) {
-                    return false;
-                }
-                $comment = $new_changeset->getComment();
-                if ($comment->getBody() !== $comment_body) {
-                    return false;
-                }
-                if ($comment->getFormat() !== CommentFormatIdentifier::HTML) {
-                    return false;
-                }
-                return true;
-            }
-        )->once();
+        $this->changeset_creator->expects($this->once())
+            ->method('create')
+            ->with(
+                $this->getNewChangesetMatcher($this->artifact, [self::FIELD_ID => self::FIELD_VALUE], $this->user, $comment_body, CommentFormatIdentifier::HTML),
+                $this->getContextMatcher(),
+            );
         $this->update($comment, CheckArtifactRestUpdateConditionsStub::allowArtifactUpdate());
     }
 
@@ -188,5 +138,133 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             CheckArtifactRestUpdateConditionsStub::disallowArtifactUpdate()
         );
+    }
+
+    private function getContextMatcher(): Constraint
+    {
+        return new class extends Constraint
+        {
+            public function matches(mixed $other): bool
+            {
+                return $other instanceof PostCreationContext &&
+                    $other->getImportConfig() &&
+                    $other->shouldSendNotifications();
+            }
+
+            public function toString(): string
+            {
+                return 'is expected context';
+            }
+        };
+    }
+
+    private function getNewChangesetMatcher(
+        Artifact $artifact,
+        array $fields_data,
+        PFUser $user,
+        string $body,
+        CommentFormatIdentifier $format,
+    ): Constraint {
+        return new class (
+            $artifact,
+            $fields_data,
+            $user,
+            $body,
+            $format,
+        ) extends Constraint {
+            public function __construct(
+                private readonly Artifact $artifact,
+                private readonly array $fields_data,
+                private readonly PFUser $user,
+                private readonly string $body,
+                private readonly CommentFormatIdentifier $format,
+            ) {
+            }
+
+            public function evaluate(mixed $other, string $description = '', bool $return_result = false): ?bool
+            {
+                if (! $other instanceof NewChangeset) {
+                    throw new \Exception('NewChangeset expected');
+                }
+
+                if ($other->getArtifact() !== $this->artifact) {
+                    if ($return_result) {
+                        return false;
+                    }
+
+                    $this->fail($other, $description, new ComparisonFailure(
+                        $this->artifact,
+                        $other->getArtifact(),
+                        sprintf("'%s'", $this->artifact),
+                        sprintf("'%s'", $other->getArtifact()),
+                    ));
+                    return null;
+                }
+
+                if ($other->getFieldsData() !== $this->fields_data) {
+                    if ($return_result) {
+                        return false;
+                    }
+
+                    $this->fail($other, $description, new ComparisonFailure(
+                        $this->fields_data,
+                        $other->getFieldsData(),
+                        sprintf("'%s'", $this->fields_data),
+                        sprintf("'%s'", $other->getFieldsData()),
+                    ));
+                    return null;
+                }
+
+                if ($other->getSubmitter() !== $this->user) {
+                    if ($return_result) {
+                        return false;
+                    }
+
+                    $this->fail($other, $description, new ComparisonFailure(
+                        $this->user,
+                        $other->getSubmitter(),
+                        sprintf("'%s'", $this->user),
+                        sprintf("'%s'", $other->getSubmitter()),
+                    ));
+                    return null;
+                }
+
+                $comment = $other->getComment();
+                if ($comment->getBody() !== $this->body) {
+                    if ($return_result) {
+                        return false;
+                    }
+
+                    $this->fail($other, $description, new ComparisonFailure(
+                        $this->body,
+                        $comment->getBody(),
+                        sprintf("'%s'", $this->body),
+                        sprintf("'%s'", $comment->getBody()),
+                    ));
+                    return null;
+                }
+
+                if ($comment->getFormat() !== $this->format) {
+                    if ($return_result) {
+                        return false;
+                    }
+
+                    $this->fail($other, $description, new ComparisonFailure(
+                        $this->format,
+                        $comment->getFormat(),
+                        sprintf("'%s'", $this->format->value),
+                        sprintf("'%s'", $comment->getFormat()),
+                    ));
+                    return null;
+                }
+
+                return null;
+            }
+
+            public function toString(): string
+            {
+                return 'is expected new changeset';
+            }
+        };
     }
 }
