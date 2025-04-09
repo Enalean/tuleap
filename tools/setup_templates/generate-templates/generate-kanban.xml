@@ -2,7 +2,7 @@
 <project>
     <dashboards>
         <dashboard name="Kanban">
-            <line layout= "two-columns-big-small">
+            <line layout="one-column">
                <column>
                 <widget name="plugin_agiledashboard_projects_kanban">
                   <preference name="kanban">
@@ -11,21 +11,6 @@
                   </preference>
                 </widget>
                </column>
-                <column>
-                    <widget name="projectnote">
-                        <preference name="note">
-                            <value name="title">Note from the Tuleap team</value>
-                            <value name="content"><![CDATA[
-Welcome to your new project!
-
-It is based on Kanban template.
-You will find a kanban named "Activities".
-
-]]></value>
-                        </preference>
-                    </widget>
-                    <widget name="projectmembers" />
-                </column>
             </line>
         </dashboard>
     </dashboards>
