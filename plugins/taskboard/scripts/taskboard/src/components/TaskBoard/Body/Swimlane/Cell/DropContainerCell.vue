@@ -42,68 +42,62 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Getter, namespace, State } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import {
+    useGetters,
+    useNamespacedActions,
+    useNamespacedGetters,
+    useNamespacedMutations,
+    useStore,
+} from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
 import { useClassesForCollapsedColumn } from "./classes-for-collapsed-column-composable";
 import type { DraggedCard } from "../../../../../store/type";
-import type { PointerLeavesColumnPayload } from "../../../../../store/column/type";
-import Vue from "vue";
 
-const column_store = namespace("column");
-const swimlane = namespace("swimlane");
+const { $gettext } = useGettext();
 
-@Component({
-    components: { AddCard, CellDisallowsDropOverlay },
-})
-export default class DropContainerCell extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const props = defineProps<{
+    swimlane: Swimlane;
+    column: ColumnDefinition;
+}>();
 
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
+const store = useStore();
+const card_being_dragged = computed((): DraggedCard | null => store.state.card_being_dragged);
 
-    @State
-    readonly card_being_dragged!: DraggedCard | null;
+const { pointerEntersColumn, pointerLeavesColumn } = useNamespacedMutations("column", [
+    "pointerEntersColumn",
+    "pointerLeavesColumn",
+]);
 
-    @column_store.Mutation
-    readonly pointerEntersColumn!: (column: ColumnDefinition) => void;
+const { expandColumn } = useNamespacedActions("column", ["expandColumn"]);
 
-    @column_store.Mutation
-    readonly pointerLeavesColumn!: (payload: PointerLeavesColumnPayload) => void;
+const accepted_trackers_ids = computed(
+    (): ((column: ColumnDefinition) => number[]) => store.getters["column/accepted_trackers_ids"],
+);
 
-    @column_store.Action
-    readonly expandColumn!: (column: ColumnDefinition) => void;
+const { can_add_in_place } = useGetters(["can_add_in_place"]);
 
-    @column_store.Getter
-    readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
+const { is_there_at_least_one_children_to_display } = useNamespacedGetters("swimlane", [
+    "is_there_at_least_one_children_to_display",
+]);
 
-    @Getter
-    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
+const is_add_card_rendered = computed(
+    (): boolean => can_add_in_place.value(props.swimlane) && !props.column.is_collapsed,
+);
 
-    @swimlane.Getter
-    readonly is_there_at_least_one_children_to_display!: (current_swimlane: Swimlane) => boolean;
+const add_button_label = computed((): string =>
+    !is_there_at_least_one_children_to_display.value(props.swimlane) ? $gettext("Add child") : "",
+);
 
-    get is_add_card_rendered(): boolean {
-        return this.can_add_in_place(this.swimlane) && !this.column.is_collapsed;
+const drop_classes = computed((): string[] => {
+    const column_classes = useClassesForCollapsedColumn(props.column).getClasses();
+    if (!is_add_card_rendered.value) {
+        return column_classes;
     }
-
-    get add_button_label(): string {
-        return !this.is_there_at_least_one_children_to_display(this.swimlane)
-            ? this.$gettext("Add child")
-            : "";
-    }
-
-    get drop_classes(): string[] {
-        const classes = useClassesForCollapsedColumn(this.column).getClasses();
-        if (this.is_add_card_rendered) {
-            classes.push("taskboard-cell-with-add-form");
-        }
-
-        return classes;
-    }
-}
+    return [...column_classes, "taskboard-cell-with-add-form"];
+});
 </script>
