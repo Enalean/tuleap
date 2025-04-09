@@ -73,9 +73,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_locale = getLocaleWithDefault(document);
     initTextFields(user_locale);
     initListFields();
-    initLinkField(user_locale);
     await initComments(user_locale);
     // The "submission bar" init must be AFTER init of text fields and comments, otherwise it will not detect the
     // changes in CKEditors
-    initEditionSwitcher();
+    const edition_switcher = initEditionSwitcher();
+
+    initLinkField(user_locale, edition_switcher);
 });

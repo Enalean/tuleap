@@ -450,10 +450,12 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     return {
         init: init,
         submissionBarIsAlreadyActive: submissionBarIsAlreadyActive,
+        toggleSubmissionBar: toggleSubmissionBar,
     };
 };
 
 export function initEditionSwitcher() {
     const edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
     edition_switcher.init();
+    return edition_switcher;
 }

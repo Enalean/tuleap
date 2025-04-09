@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     creator.createTextFieldEditors();
     initListFields();
-    initLinkField(user_locale);
+    initLinkField(user_locale, null);
 
     const submit_buttons = document.querySelectorAll(
         `.artifact-form input[name="submit_and_continue"],
