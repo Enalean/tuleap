@@ -202,8 +202,8 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $float_field->shouldReceive('getCriteriaValue')->andReturn(0);
 
         $this->assertEquals(
-            $float_field->fetchCriteriaValue($criteria),
-            '<input type="text" name="criteria[1]" id="tracker_report_criteria_1" value="0" />'
+            '<input data-test="float-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="0" />',
+            $float_field->fetchCriteriaValue($criteria)
         );
     }
 
@@ -216,8 +216,8 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $float_field->shouldReceive('getCriteriaValue')->andReturn('');
 
         $this->assertEquals(
-            $float_field->fetchCriteriaValue($criteria),
-            '<input type="text" name="criteria[1]" id="tracker_report_criteria_1" value="" />'
+            '<input data-test="float-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="" />',
+            $float_field->fetchCriteriaValue($criteria)
         );
     }
 

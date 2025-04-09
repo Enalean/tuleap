@@ -572,7 +572,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         $criteria_fetched = [];
         foreach ($criteria as $criterion) {
             if ($criterion->field->isUsed()) {
-                $li = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">';
+                $li = '<li data-test="report-criteria-item" id="tracker_report_crit_' . $criterion->field->getId() . '">';
                 if ($current_user->isAnonymous()) {
                     $li .= $criterion->fetchWithoutExpandFunctionnality();
                 } else {

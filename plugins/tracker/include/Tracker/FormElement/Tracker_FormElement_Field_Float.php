@@ -81,7 +81,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
-        $html           = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
+        $html           = '<input data-test="float-report-criteria" type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
         $criteria_value = $this->getCriteriaValue($criteria);
 
         if ($criteria_value !== '') {

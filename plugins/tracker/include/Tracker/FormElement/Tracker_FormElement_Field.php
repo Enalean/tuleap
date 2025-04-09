@@ -270,7 +270,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html .= '<table cellpadding="0" cellspacing="0"><tbody><tr><td>';
             $html .= $GLOBALS['HTML']->getImage(
                 'ic/toggle_' . ($criteria->is_advanced ? 'minus' : 'plus' ) . '.png',
-                ['class' => 'tracker_report_criteria_advanced_toggle']
+                [
+                    'class' => 'tracker_report_criteria_advanced_toggle',
+                    'data-test' => 'tracker-report-criteria-advanced-toggle',
+                ]
             );
             $html .= '</td><td>';
         }
