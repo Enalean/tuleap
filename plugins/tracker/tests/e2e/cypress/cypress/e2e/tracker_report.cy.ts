@@ -124,6 +124,8 @@ function createArtifactWithValues(): void {
 }
 
 function updateTrackerReportCriterias(): void {
+    cy.intercept("POST", "*/tracker/*").as("advancedToggle");
+
     cy.log("Update report in order to have a query for every field of artifact");
     cy.log("Update criteria Title");
     cy.get("[data-test=report-criteria-item]")
@@ -194,6 +196,7 @@ function updateTrackerReportCriterias(): void {
         .closest("li")
         .within(() => {
             cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
+            cy.wait("@advancedToggle");
             cy.get("[data-test=permissions-report-criteria]").select([
                 "Project members",
                 "Integrators",
@@ -248,6 +251,7 @@ function updateTrackerReportCriterias(): void {
         .closest("li")
         .within(() => {
             cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
+            cy.wait("@advancedToggle");
             cy.get("[data-test=list-report-criteria]").select(["Deux", "Trois"]);
         });
 
@@ -271,6 +275,7 @@ function updateTrackerReportCriterias(): void {
         .closest("li")
         .within(() => {
             cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
+            cy.wait("@advancedToggle");
             cy.get("[data-test=list-report-criteria]").select(["One", "Three"]);
         });
 
@@ -287,6 +292,7 @@ function updateTrackerReportCriterias(): void {
         .closest("li")
         .within(() => {
             cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
+            cy.wait("@advancedToggle");
             cy.get("[data-test=list-report-criteria]").select([
                 "Project administrators",
                 "Contributors",
