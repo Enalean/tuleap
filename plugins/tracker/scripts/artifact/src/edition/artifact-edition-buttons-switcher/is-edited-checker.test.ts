@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { nothingIsEdited } from "./is-edited-checker";
+import { nothingIsEdited, somethingIsEdited } from "./is-edited-checker";
 import { isFollowUpEmpty } from "./follow-up-checker";
 import { noFieldIsSwitchedToEdit } from "./fields-checker";
 
 jest.mock("./follow-up-checker");
 jest.mock("./fields-checker");
 
-describe("nothingIsEdited", () => {
+describe("Is edited", () => {
     const mock_editor_instance = {
         getData: jest.fn().mockReturnValue("   "),
     } as unknown as CKEDITOR.editor;
@@ -36,30 +36,48 @@ describe("nothingIsEdited", () => {
         textarea = doc.createElement("textarea");
     });
 
-    it("should return true when follow-up is empty and no fields are in edition", () => {
-        (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
-        (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
+    describe("nothingIsEdited", () => {
+        it("should return true when follow-up is empty and no fields are in edition", () => {
+            (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
+            (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
 
-        expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(true);
+            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(true);
+        });
+
+        it("should return false when follow-up is not empty, regardless of fields status", () => {
+            (isFollowUpEmpty as jest.Mock).mockReturnValue(false);
+            (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
+
+            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+
+            (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
+            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+        });
+
+        it("should return false when fields are in edition, regardless of follow-up status", () => {
+            (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
+            (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
+
+            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+
+            (isFollowUpEmpty as jest.Mock).mockReturnValue(false);
+            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+        });
     });
 
-    it("should return false when follow-up is not empty, regardless of fields status", () => {
-        (isFollowUpEmpty as jest.Mock).mockReturnValue(false);
-        (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
+    describe("somethingIsEdited", () => {
+        it("should return true when nothing is edited", () => {
+            (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
+            (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
 
-        expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+            expect(somethingIsEdited(mock_editor_instance, textarea, doc)).toBe(true);
+        });
 
-        (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
-        expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
-    });
+        it("should return false when a field is switch to edited", () => {
+            (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
+            (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
 
-    it("should return false when fields are in edition, regardless of follow-up status", () => {
-        (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
-        (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
-
-        expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
-
-        (isFollowUpEmpty as jest.Mock).mockReturnValue(false);
-        expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+            expect(somethingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+        });
     });
 });

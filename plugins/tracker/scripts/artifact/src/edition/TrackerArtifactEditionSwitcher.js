@@ -22,8 +22,8 @@ import $ from "jquery";
 import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
-import { nothingIsEdited } from "./artifact-edition-buttons-switcher/is-edited-checker";
 import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker.js";
+import { somethingIsEdited } from "./artifact-edition-buttons-switcher/is-edited-checker.js";
 
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
@@ -409,24 +409,28 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     };
 
     var displaySubmissionBarIfNeeded = function () {
-        if (somethingIsEdited()) {
+        if (
+            somethingIsEdited(
+                CKEDITOR.instances.tracker_followup_comment_new,
+                document.getElementById("tracker_followup_comment_new"),
+                document,
+            )
+        ) {
             $(".hidden-artifact-submit-button").slideDown(50);
         }
     };
 
     var removeSubmissionBarIfNeeded = function () {
-        if (somethingIsEdited()) {
+        if (
+            somethingIsEdited(
+                CKEDITOR.instances.tracker_followup_comment_new,
+                document.getElementById("tracker_followup_comment_new"),
+                document,
+            )
+        ) {
             return;
         }
         $(".hidden-artifact-submit-button").slideUp(50);
-    };
-
-    var somethingIsEdited = function () {
-        return !nothingIsEdited(
-            CKEDITOR.instances.tracker_followup_comment_new,
-            document.getElementById("tracker_followup_comment_new"),
-            document,
-        );
     };
 
     return {
