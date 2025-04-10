@@ -3,7 +3,7 @@
     "compilerOptions": {
         "declarationDir": "./types",
         "outDir": "./dist",
-        "lib": ["dom", "es6"],
+        "lib": ["ES2023", "DOM"],
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

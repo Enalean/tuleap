@@ -1,8 +1,7 @@
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["DOM"],
-        "module": "ES2022",
+        "lib": ["ES2023", "DOM"],
         "exactOptionalPropertyTypes": false,
     },
     "include": [".storybook/**/*", "stories/**/*"],

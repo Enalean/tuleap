@@ -1,13 +1,14 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "target": "es2015",
-    "lib": ["es6", "dom"],
-    "types": ["cypress"],
-    "module": "ES2015",
-    "outDir": "dist",
-    "sourceMap": false,
-    "moduleResolution": "node"
-  },
-  "include": ["src/**/*"]
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ES2022",
+        "lib": ["ES2023", "DOM"],
+        "sourceMap": false,
+        "strict": true,
+        "types": ["cypress"],
+        "outDir": "dist",
+        "moduleResolution": "node",
+        "skipLibCheck": true
+    },
+    "include": ["src/**/*"]
 }
