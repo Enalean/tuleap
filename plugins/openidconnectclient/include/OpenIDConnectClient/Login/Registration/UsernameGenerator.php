@@ -42,19 +42,15 @@ class UsernameGenerator
         } catch (DataIncompatibleWithUsernameGenerationException $ex) {
         }
 
-        if (! isset($user_information['given_name']) && ! isset($user_information['family_name'])) {
-            throw new NotEnoughDataToGenerateUsernameException();
-        }
-
         $given_name_without_spaces  = '';
         $family_name_without_spaces = '';
 
         if (isset($user_information['given_name'])) {
-            $given_name_without_spaces = mb_strtolower(str_replace(' ', '', $user_information['given_name']));
+            $given_name_without_spaces = self::transformStringToLowercaseWithoutSpaces($user_information['given_name']);
         }
 
         if (isset($user_information['family_name'])) {
-            $family_name_without_spaces = mb_strtolower(str_replace(' ', '', $user_information['family_name']));
+            $family_name_without_spaces = self::transformStringToLowercaseWithoutSpaces($user_information['family_name']);
         }
 
         if (mb_strlen($family_name_without_spaces) > 0) {
@@ -62,6 +58,30 @@ class UsernameGenerator
             return $this->username_generator->normalize($base_username);
         }
 
-        return $this->username_generator->normalize($given_name_without_spaces);
+        if ($given_name_without_spaces !== '') {
+            return $this->username_generator->normalize($given_name_without_spaces);
+        }
+
+        $user_information_name                = (string) ($user_information['name'] ?? '');
+        $user_information_name_without_spaces = self::transformStringToLowercaseWithoutSpaces($user_information_name);
+        if ($user_information_name_without_spaces !== '') {
+            return $this->username_generator->normalize($user_information_name_without_spaces);
+        }
+
+        $user_information_email          = (string) ($user_information['email'] ?? '');
+        $email_local_part_without_spaces = self::transformStringToLowercaseWithoutSpaces(\Psl\Str\before_last($user_information_email, '@') ?? '');
+        if ($email_local_part_without_spaces !== '') {
+            return $this->username_generator->normalize($email_local_part_without_spaces);
+        }
+
+        throw new NotEnoughDataToGenerateUsernameException();
+    }
+
+    /**
+     * @psalm-pure
+     */
+    private static function transformStringToLowercaseWithoutSpaces(string $content): string
+    {
+        return mb_strtolower(str_replace(' ', '', $content));
     }
 }
