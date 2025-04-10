@@ -22,7 +22,7 @@ import $ from "jquery";
 import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
-import { noFieldIsSwitchedToEdit } from "./artifact-edition-switcher";
+import { isFollowUpEmpty, noFieldIsSwitchedToEdit } from "./artifact-edition-switcher";
 
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
@@ -425,15 +425,12 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     };
 
     var nothingIsEdited = function () {
-        return followUpIsEmpty() && noFieldIsSwitchedToEdit(document);
-    };
-
-    var followUpIsEmpty = function () {
-        if (CKEDITOR.instances.tracker_followup_comment_new) {
-            return !$.trim(CKEDITOR.instances.tracker_followup_comment_new.getData());
-        }
-
-        return !$.trim($("#tracker_followup_comment_new").val());
+        return (
+            isFollowUpEmpty(
+                CKEDITOR.instances.tracker_followup_comment_new,
+                document.getElementById("tracker_followup_comment_new"),
+            ) && noFieldIsSwitchedToEdit(document)
+        );
     };
 
     var submissionBarIsAlreadyActive = function () {
