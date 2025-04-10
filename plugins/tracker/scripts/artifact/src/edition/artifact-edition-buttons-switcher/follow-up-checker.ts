@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,11 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-export const noFieldIsSwitchedToEdit = (doc: Document): boolean => {
-    const in_edition_fields = doc.querySelectorAll(".tracker_artifact_field.in-edition");
-    return in_edition_fields.length === 0;
-};
 
 export const isFollowUpEmpty = (
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
