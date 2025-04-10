@@ -867,7 +867,6 @@
             <file name="plugins/tracker/tests/unit/FormElement/Field/ArtifactLink/PostSaveNewChangesetTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommandTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/ArtifactLink/RequestDataAugmentorTest.php"/>
-            <file name="plugins/tracker/tests/unit/FormElement/Field/ArtifactLink/SubmittedValueConvertorTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/ArtifactLink/SubmittedValueEmptyCheckerTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/ArtifactLink/Type/NatureValidatorTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/ArtifactLink/Type/TypePresenterFactoryTest.php"/>

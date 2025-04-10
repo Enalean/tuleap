@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
+namespace Tuleap\Tracker\Artifact\Changeset\ArtifactLink;
 
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 
 /**
  * I convert submitted value into something that can be given to ArtifactLinkValueSaver.
@@ -44,26 +43,19 @@ use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
  * );
  *
  */
-class SubmittedValueConvertor
+final readonly class SubmittedValueConvertor
 {
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-    ) {
-        $this->artifact_factory = $artifact_factory;
+    public function __construct(private Tracker_ArtifactFactory $artifact_factory)
+    {
     }
 
     /**
-     * @return mixed The submitted value expurged from updated links
+     * @return array The submitted value expurged from updated links
      */
     public function convert(
         array $submitted_value,
-        ?ArtifactLinkChangesetValue $previous_changesetvalue = null,
-    ) {
+        ?ArtifactLinkChangesetValue $previous_changesetvalue,
+    ): array {
         $submitted_value['list_of_artifactlinkinfo'] = $this->getListOfArtifactLinkInfo(
             $submitted_value,
             $previous_changesetvalue
@@ -72,11 +64,11 @@ class SubmittedValueConvertor
         return $submitted_value;
     }
 
-    /** @return Tracker_ArtifactLinkInfo[] */
+    /** @return array<int, Tracker_ArtifactLinkInfo> */
     private function getListOfArtifactLinkInfo(
         array $submitted_value,
-        ?ArtifactLinkChangesetValue $previous_changesetvalue = null,
-    ) {
+        ?ArtifactLinkChangesetValue $previous_changesetvalue,
+    ): array {
         $list_of_artifactlinkinfo = [];
         if ($previous_changesetvalue != null) {
             $list_of_artifactlinkinfo = $previous_changesetvalue->getValue();
@@ -88,17 +80,20 @@ class SubmittedValueConvertor
         return $list_of_artifactlinkinfo;
     }
 
+    /**
+     * @param array<int, Tracker_ArtifactLinkInfo> $list_of_artifactlinkinfo
+     */
     private function removeLinksFromSubmittedValue(
         array &$list_of_artifactlinkinfo,
         array $submitted_value,
-    ) {
+    ): void {
         $removed_values = $this->extractRemovedValuesFromSubmittedValue($submitted_value);
 
         if (empty($removed_values)) {
             return;
         }
 
-        foreach ($list_of_artifactlinkinfo as $id => $noop) {
+        foreach (array_keys($list_of_artifactlinkinfo) as $id) {
             if (isset($removed_values[$id])) {
                 unset($list_of_artifactlinkinfo[$id]);
             }
@@ -106,12 +101,12 @@ class SubmittedValueConvertor
     }
 
     /**
-     * @param Tracker_ArtifactLinkInfo[] $list_of_artifactlinkinfo
+     * @param array<int, Tracker_ArtifactLinkInfo> $list_of_artifactlinkinfo
      */
     private function changeTypeOfExistingLinks(
         array &$list_of_artifactlinkinfo,
         array $submitted_value,
-    ) {
+    ): void {
         $types = $this->extractTypesFromSubmittedValue($submitted_value);
 
         if (empty($types)) {
@@ -126,13 +121,16 @@ class SubmittedValueConvertor
         }
     }
 
-    private function addLinksFromSubmittedValue(array &$list_of_artifactlinkinfo, array $submitted_value)
+    /**
+     * @param array<int, Tracker_ArtifactLinkInfo> $list_of_artifactlinkinfo
+     */
+    private function addLinksFromSubmittedValue(array &$list_of_artifactlinkinfo, array $submitted_value): void
     {
         $new_values = $this->extractNewValuesFromSubmittedValue($submitted_value);
 
         foreach ($new_values as $new_artifact_id) {
-            $type = $this->extractTypeFromSubmittedValue($submitted_value, $new_artifact_id);
-            if (isset($list_of_artifactlinkinfo[$new_artifact_id])) {
+            $type = $this->extractTypeFromSubmittedValue($submitted_value, (int) $new_artifact_id);
+            if (isset($list_of_artifactlinkinfo[(int) $new_artifact_id])) {
                 continue;
             }
 
@@ -140,14 +138,14 @@ class SubmittedValueConvertor
             if (! $artifact) {
                 continue;
             }
-            $list_of_artifactlinkinfo[$new_artifact_id] = Tracker_ArtifactLinkInfo::buildFromArtifact(
+            $list_of_artifactlinkinfo[(int) $new_artifact_id] = Tracker_ArtifactLinkInfo::buildFromArtifact(
                 $artifact,
                 $type
             );
         }
     }
 
-    private function extractTypeFromSubmittedValue(array $submitted_value, $artifact_id): string
+    private function extractTypeFromSubmittedValue(array $submitted_value, int $artifact_id): string
     {
         if (isset($submitted_value['types'])) {
             $types = $submitted_value['types'];
@@ -159,7 +157,7 @@ class SubmittedValueConvertor
         return '';
     }
 
-    private function extractNewValuesFromSubmittedValue(array $submitted_value)
+    private function extractNewValuesFromSubmittedValue(array $submitted_value): array
     {
         $new_values          = (string) $submitted_value['new_values'];
         $removed_values      = $this->extractRemovedValuesFromSubmittedValue($submitted_value);
@@ -168,17 +166,17 @@ class SubmittedValueConvertor
         return array_unique(array_diff($new_values_as_array, array_keys($removed_values)));
     }
 
-    private function extractRemovedValuesFromSubmittedValue(array $submitted_value)
+    private function extractRemovedValuesFromSubmittedValue(array $submitted_value): array
     {
         return $this->extractArrayFromSubmittedValue($submitted_value, 'removed_values');
     }
 
-    private function extractTypesFromSubmittedValue(array $submitted_value)
+    private function extractTypesFromSubmittedValue(array $submitted_value): array
     {
         return $this->extractArrayFromSubmittedValue($submitted_value, 'types');
     }
 
-    private function extractArrayFromSubmittedValue(array $submitted_value, $key)
+    private function extractArrayFromSubmittedValue(array $submitted_value, string $key): array
     {
         if (! isset($submitted_value[$key])) {
             return [];
