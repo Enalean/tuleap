@@ -20,47 +20,44 @@
 
 declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalResponseMock;
+
+#[DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|null
-     */
-    private $field;
+    private Tracker_FormElement_Field_Float&MockObject $field;
 
-    /**
-     * @var \Mockery\Mock
-     */
-    private $post_action;
+    private Transition_PostAction_Field_Float&MockObject $post_action;
 
     protected function setUp(): void
     {
         $value          = 1.5;
         $post_action_id = 9348;
-        $transition     = \Mockery::spy(\Transition::class);
-        $this->field    = \Mockery::spy(\Tracker_FormElement_Field_Float::class)
-            ->shouldReceive('getId')->andReturns(1131)->getMock();
+        $transition     = $this->createMock(Transition::class);
+        $this->field    = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $this->field->method('getId')->willReturn(1131);
 
-        $this->post_action = \Mockery::mock(
-            \Transition_PostAction_Field_Float::class,
-            [$transition, $post_action_id, $this->field, $value]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao               = \Mockery::spy(\Transition_PostAction_Field_FloatDao::class);
+        $this->post_action = $this->getMockBuilder(Transition_PostAction_Field_Float::class)
+            ->setConstructorArgs([$transition, $post_action_id, $this->field, $value])
+            ->onlyMethods(['getDao', 'isDefined'])
+            ->getMock();
+        $dao               = $this->createMock(Transition_PostAction_Field_FloatDao::class);
 
-        $this->post_action->shouldReceive('getDao')->andReturns($dao);
-        $this->post_action->shouldReceive('isDefined')->andReturns($this->field);
+        $this->post_action->method('getDao')->willReturn($dao);
+        $this->post_action->method('isDefined')->willReturn($this->field);
     }
 
     public function testBeforeShouldSetTheFloatField(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
-        $this->field->shouldReceive('getLabel')->andReturns('Remaining Effort');
-        $this->field->shouldReceive('userCanRead')->with($user)->andReturns(true);
-        $this->field->shouldReceive('userCanUpdate')->with($user)->andReturns(true);
+        $this->field->method('getLabel')->willReturn('Remaining Effort');
+        $this->field->method('userCanRead')->with($user)->willReturn(true);
+        $this->field->method('userCanUpdate')->with($user)->willReturn(true);
 
         $expected    = 1.5;
         $fields_data = [
@@ -73,11 +70,11 @@ final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\T
 
     public function testBeforeShouldBypassAndSetTheFloatField(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
-        $this->field->shouldReceive('getLabel')->andReturns('Remaining Effort')->getMock();
-        $this->field->shouldReceive('userCanRead')->with($user)->andReturns(true)->getMock();
-        $this->field->shouldReceive('userCanUpdate')->with($user)->andReturns(false)->getMock();
+        $this->field->method('getLabel')->willReturn('Remaining Effort');
+        $this->field->method('userCanRead')->with($user)->willReturn(true);
+        $this->field->method('userCanUpdate')->with($user)->willReturn(false);
 
         $expected    = 1.5;
         $fields_data = [
@@ -90,10 +87,10 @@ final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\T
 
     public function testBeforeShouldNOTDisplayFeedback(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
-        $this->field->shouldReceive('getLabel')->andReturns('Remaining Effort')->getMock();
-        $this->field->shouldReceive('userCanRead')->with($user)->andReturns(false)->getMock();
+        $this->field->method('getLabel')->willReturn('Remaining Effort');
+        $this->field->method('userCanRead')->with($user)->willReturn(false);
 
         $expected    = 1.5;
         $fields_data = [
@@ -107,9 +104,9 @@ final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\T
     public function testItAcceptsValue0(): void
     {
         $post_action = new Transition_PostAction_Field_Float(
-            Mockery::mock(Transition::class),
+            $this->createMock(Transition::class),
             0,
-            Mockery::mock(Tracker_FormElement_Field_Float::class),
+            $this->createMock(Tracker_FormElement_Field_Float::class),
             0.0
         );
 

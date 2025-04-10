@@ -21,73 +21,36 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var array
-     */
-    private $post_action_rows;
+    private array $post_action_rows;
 
     /**
      * @var int[]
      */
-    private $mapping;
+    private array $mapping;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $element_factory;
-    /**
-     * @var int
-     */
-    private $field_id;
-    /**
-     * @var int
-     */
-    private $post_action_value;
-    /**
-     * @var int
-     */
-    private $post_action_id;
-    /**
-     * @var Transition
-     */
-    private $transition;
-    /**
-     * @var int
-     */
-    private $transition_id;
-    /**
-     * @var Transition_PostAction_FieldFactory
-     */
-    private $factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction_Field_FloatDao
-     */
-    private $float_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction_Field_IntDao
-     */
-    private $int_dao;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction_Field_DateDao
-     */
-    private $date_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Workflow
-     */
-    private $workflow;
+    private Tracker_FormElementFactory&MockObject $element_factory;
+    private int $field_id;
+    private int $post_action_value;
+    private int $post_action_id;
+    private Transition $transition;
+    private int $transition_id;
+    private Transition_PostAction_FieldFactory $factory;
+    private Transition_PostAction_Field_FloatDao&MockObject $float_dao;
+    private Transition_PostAction_Field_IntDao&MockObject $int_dao;
+    private Transition_PostAction_Field_DateDao&MockObject $date_dao;
+    private Workflow&MockObject $workflow;
 
     protected function setUp(): void
     {
         $workflow_id    = '1112';
-        $this->workflow = Mockery::mock(Workflow::class, ['getId' => $workflow_id]);
+        $this->workflow = $this->createMock(Workflow::class);
+        $this->workflow->method('getId')->willReturn($workflow_id);
 
         $this->transition_id = 123;
         $this->transition    = new Transition(
@@ -98,10 +61,10 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         );
         $this->transition->setWorkflow($this->workflow);
 
-        $this->date_dao        = \Mockery::spy(\Transition_PostAction_Field_DateDao::class);
-        $this->int_dao         = \Mockery::spy(\Transition_PostAction_Field_IntDao::class);
-        $this->float_dao       = \Mockery::spy(\Transition_PostAction_Field_FloatDao::class);
-        $this->element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->date_dao        = $this->createMock(\Transition_PostAction_Field_DateDao::class);
+        $this->int_dao         = $this->createMock(\Transition_PostAction_Field_IntDao::class);
+        $this->float_dao       = $this->createMock(\Transition_PostAction_Field_FloatDao::class);
+        $this->element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->factory         = new Transition_PostAction_FieldFactory(
             $this->element_factory,
             $this->date_dao,
@@ -125,17 +88,17 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItLoadsIntFieldPostActions(): void
     {
         $this->element_factory
-            ->shouldReceive('getFormElementById')
+            ->method('getFormElementById')
             ->with($this->field_id)
-            ->andReturn(new Tracker_FormElement_Field_Integer(null, null, null, null, null, null, null, null, null, null, null));
+            ->willReturn(new Tracker_FormElement_Field_Integer(null, null, null, null, null, null, null, null, null, null, null));
 
-        $this->int_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->int_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::arrayToDar($this->post_action_rows)
         );
-        $this->float_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->float_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
         );
-        $this->date_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->date_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
         );
 
@@ -151,17 +114,17 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItLoadsFloatFieldPostActions(): void
     {
         $this->element_factory
-            ->shouldReceive('getFormElementById')
+            ->method('getFormElementById')
             ->with($this->field_id)
-            ->andReturn(new Tracker_FormElement_Field_Float(null, null, null, null, null, null, null, null, null, null, null));
+            ->willReturn(new Tracker_FormElement_Field_Float(null, null, null, null, null, null, null, null, null, null, null));
 
-        $this->int_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->int_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
         );
-        $this->float_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->float_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::arrayToDar($this->post_action_rows)
         );
-        $this->date_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->date_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
         );
 
@@ -177,9 +140,9 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItLoadsDateFieldPostActions(): void
     {
         $this->element_factory
-            ->shouldReceive('getFormElementById')
+            ->method('getFormElementById')
             ->with($this->field_id)
-            ->andReturn(new Tracker_FormElement_Field_Date(null, null, null, null, null, null, null, null, null, null, null));
+            ->willReturn(new Tracker_FormElement_Field_Date(null, null, null, null, null, null, null, null, null, null, null));
 
         $post_action_rows = [
             'id'         => $this->post_action_id,
@@ -187,13 +150,13 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
             'value_type' => $this->post_action_value,
         ];
 
-        $this->int_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->int_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
         );
-        $this->float_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->float_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
         );
-        $this->date_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->date_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::arrayToDar($post_action_rows)
         );
 
@@ -208,20 +171,22 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
 
     public function testItDelegatesDuplicationToTheCorrespondingDao(): void
     {
-        $select_box1 = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
-        $select_box1->shouldReceive('getId')->andReturn(2065);
-        $select_box2 = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
-        $select_box2->shouldReceive('getId')->andReturn(2066);
-        $select_box3 = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
-        $select_box3->shouldReceive('getId')->andReturn(2067);
-        $this->element_factory->shouldReceive('getFormElementById')->with(2065)->andReturns($select_box1);
-        $this->element_factory->shouldReceive('getFormElementById')->with(2066)->andReturns($select_box2);
-        $this->element_factory->shouldReceive('getFormElementById')->with(2067)->andReturns($select_box3);
+        $select_box1 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $select_box1->method('getId')->willReturn(2065);
+        $select_box2 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $select_box2->method('getId')->willReturn(2066);
+        $select_box3 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $select_box3->method('getId')->willReturn(2067);
+        $this->element_factory->method('getFormElementById')->willReturnCallback(static fn (int $id) => match ($id) {
+            $select_box1->getId() => $select_box1,
+            $select_box2->getId() => $select_box2,
+            $select_box3->getId() => $select_box3,
+        });
 
-        $this->date_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->date_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
         );
-        $this->float_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->float_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::arrayToDar(
                 [
                     'id'       => 1,
@@ -230,7 +195,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
                 ]
             )
         );
-        $this->int_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
+        $this->int_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::arrayToDar(
                 [
                     'id'       => 1,
@@ -251,8 +216,8 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
             3 => ['from' => 2065, 'to' => 3065],
         ];
 
-        $this->float_dao->shouldReceive('duplicate')->with(123, 124, 2065, 3065)->once();
-        $this->int_dao->shouldReceive('duplicate')->times(2);
+        $this->float_dao->expects($this->once())->method('duplicate')->with(123, 124, 2065, 3065);
+        $this->int_dao->expects($this->exactly(2))->method('duplicate');
         $this->factory->duplicate($this->transition, 124, $field_mapping);
     }
 
@@ -321,51 +286,69 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
 
     public function testItSavesDateFieldPostActions(): void
     {
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(123);
+
+        $field_date = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field_date->method('getId')->willReturn(456);
+
         $post_action = new Transition_PostAction_Field_Date(
-            Mockery::mock(Transition::class)->shouldReceive('getId')->andReturn(123)->getMock(),
+            $transition,
             0,
-            Mockery::mock(Tracker_FormElement_Field_Date::class)->shouldReceive('getId')->andReturn(456)->getMock(),
+            $field_date,
             1
         );
 
-        $this->date_dao->shouldReceive('save')->with(123, 456, 1)->once();
+        $this->date_dao->expects($this->once())->method('save')->with(123, 456, 1);
         $this->factory->saveObject($post_action);
     }
 
     public function testItSavesIntFieldPostActions(): void
     {
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(123);
+
+        $field_int = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field_int->method('getId')->willReturn(456);
+
         $post_action = new Transition_PostAction_Field_Int(
-            Mockery::mock(Transition::class)->shouldReceive('getId')->andReturn(123)->getMock(),
+            $transition,
             0,
-            Mockery::mock(Tracker_FormElement_Field_Integer::class)->shouldReceive('getId')->andReturn(456)->getMock(),
+            $field_int,
             0
         );
 
-        $this->int_dao->shouldReceive('save')->with(123, 456, 0)->once();
+        $this->int_dao->expects($this->once())->method('save')->with(123, 456, 0);
         $this->factory->saveObject($post_action);
     }
 
     public function testItSavesFloatFieldPostActions(): void
     {
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(123);
+
+        $field_float = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field_float->method('getId')->willReturn(456);
+
         $post_action = new Transition_PostAction_Field_Float(
-            Mockery::mock(Transition::class)->shouldReceive('getId')->andReturn(123)->getMock(),
+            $transition,
             0,
-            Mockery::mock(Tracker_FormElement_Field_Float::class)->shouldReceive('getId')->andReturn(456)->getMock(),
+            $field_float,
             0
         );
 
-        $this->float_dao->shouldReceive('save')->with(123, 456, 0)->once();
+        $this->float_dao->expects($this->once())->method('save')->with(123, 456, 0);
         $this->factory->saveObject($post_action);
     }
 
     public function testItIsTrueWhenFieldIsUsedInADatePostAction(): void
     {
         $field_id = 45617;
-        $field    = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn($field_id);
-        $this->date_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(1);
-        $this->int_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
-        $this->float_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
+        $field    = $this->createMock(\Tracker_FormElement_Field::class);
+        $field->method('getId')->willReturn($field_id);
+        $this->date_dao->method('countByFieldId')->with($field_id)->willReturn(1);
+        $this->int_dao->method('countByFieldId')->with($field_id)->willReturn(0);
+        $this->float_dao->method('countByFieldId')->with($field_id)->willReturn(0);
 
         $this->assertTrue($this->factory->isFieldUsedInPostActions($field));
     }
@@ -373,11 +356,11 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItIsTrueWhenFieldIsUsedInAnIntPostAction(): void
     {
         $field_id = 45617;
-        $field    = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn($field_id);
-        $this->date_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
-        $this->int_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(2);
-        $this->float_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
+        $field    = $this->createMock(\Tracker_FormElement_Field::class);
+        $field->method('getId')->willReturn($field_id);
+        $this->date_dao->method('countByFieldId')->with($field_id)->willReturn(0);
+        $this->int_dao->method('countByFieldId')->with($field_id)->willReturn(2);
+        $this->float_dao->method('countByFieldId')->with($field_id)->willReturn(0);
 
         $this->assertTrue($this->factory->isFieldUsedInPostActions($field));
     }
@@ -385,11 +368,11 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItIsTrueWhenFieldIsUsedInAFloatPostAction(): void
     {
         $field_id = 45617;
-        $field    = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn($field_id);
-        $this->date_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
-        $this->int_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
-        $this->float_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(3);
+        $field    = $this->createMock(\Tracker_FormElement_Field::class);
+        $field->method('getId')->willReturn($field_id);
+        $this->date_dao->method('countByFieldId')->with($field_id)->willReturn(0);
+        $this->int_dao->method('countByFieldId')->with($field_id)->willReturn(0);
+        $this->float_dao->method('countByFieldId')->with($field_id)->willReturn(3);
 
         $this->assertTrue($this->factory->isFieldUsedInPostActions($field));
     }
@@ -397,11 +380,11 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItIsTrueWhenFieldIsUsedInMultiplePostActions(): void
     {
         $field_id = 45617;
-        $field    = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn($field_id);
-        $this->date_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(1);
-        $this->int_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(2);
-        $this->float_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(3);
+        $field    = $this->createMock(\Tracker_FormElement_Field::class);
+        $field->method('getId')->willReturn($field_id);
+        $this->date_dao->method('countByFieldId')->with($field_id)->willReturn(1);
+        $this->int_dao->method('countByFieldId')->with($field_id)->willReturn(2);
+        $this->float_dao->method('countByFieldId')->with($field_id)->willReturn(3);
 
         $this->assertTrue($this->factory->isFieldUsedInPostActions($field));
     }
@@ -409,11 +392,11 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     public function testItIsFalseWhenFieldIsNotUsedInAnyPostAction(): void
     {
         $field_id = 45617;
-        $field    = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn($field_id);
-        $this->date_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
-        $this->int_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
-        $this->float_dao->shouldReceive('countByFieldId')->with($field_id)->andReturns(0);
+        $field    = $this->createMock(\Tracker_FormElement_Field::class);
+        $field->method('getId')->willReturn($field_id);
+        $this->date_dao->method('countByFieldId')->with($field_id)->willReturn(0);
+        $this->int_dao->method('countByFieldId')->with($field_id)->willReturn(0);
+        $this->float_dao->method('countByFieldId')->with($field_id)->willReturn(0);
 
         $this->assertFalse($this->factory->isFieldUsedInPostActions($field));
     }
