@@ -28,8 +28,10 @@ use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 
 final readonly class ConfiguredFieldCollectionBuilder
 {
-    public function __construct(private RetrieveConfiguredField $dao, private \Tracker_FormElementFactory $factory)
-    {
+    public function __construct(
+        private RetrieveConfiguredField $dao,
+        private SuitableFieldRetriever $field_retriever,
+    ) {
     }
 
     public function buildFromSectionIdentifier(SectionIdentifier $section_identifier, \PFUser $user): ConfiguredFieldCollection
@@ -54,32 +56,14 @@ final readonly class ConfiguredFieldCollectionBuilder
     {
         $fields = [];
         foreach ($stored_fields as $stored_field) {
-            $field = $this->factory->getFieldById($stored_field->field_id);
-
-            if (! $field instanceof \Tracker_FormElement_Field_String) {
-                continue;
-            }
-
-            if (! $field->isUsed()) {
-                continue;
-            }
-
-            if (! $field->userCanRead($user)) {
-                continue;
-            }
-
-            $tracker              = $field->getTracker();
-            $semantic_title_field = \Tracker_Semantic_Title::load($tracker)->getField();
-            if ($semantic_title_field && $semantic_title_field->getId() === $field->getId()) {
-                continue;
-            }
-
-            if (! isset($fields[$field->tracker_id])) {
-                $fields[$field->tracker_id] = [];
-            }
-            $fields[$field->tracker_id][] = new ConfiguredField($field, $stored_field->display_type);
+            $this->field_retriever->retrieveField($stored_field->field_id, $user)
+                ->map(static function (\Tracker_FormElement_Field_String $field) use (&$fields, $stored_field) {
+                    if (! isset($fields[$field->tracker_id])) {
+                        $fields[$field->tracker_id] = [];
+                    }
+                    $fields[$field->tracker_id][] = new ConfiguredField($field, $stored_field->display_type);
+                });
         }
-
         return new ConfiguredFieldCollection($fields);
     }
 }

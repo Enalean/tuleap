@@ -42,6 +42,7 @@ use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
+use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
 use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
@@ -64,6 +65,11 @@ use Tuleap\Artidoc\Domain\Document\Order\SectionOrderBuilder;
 use Tuleap\Artidoc\Domain\Document\Order\UnableToReorderSectionOutsideOfDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Order\UnknownSectionToMoveFault;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDoesNotBelongToTrackerFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotSupportedFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
@@ -306,6 +312,23 @@ final class ArtidocResource extends AuthenticatedResource
      *
      * Update the configuration of an artidoc document.
      *
+     * <p>Payload example:</p>
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"selected_tracker_ids": [ 123 ],<br>
+     * &nbsp;&nbsp;"fields": [<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"field_id": 1001,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"display_type": "column"<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"field_id": 1002,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"display_type": "block"<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+     * &nbsp;&nbsp;]<br>
+     * }
+     * </pre>
+     *
      * @url    PUT {id}/configuration
      * @access hybrid
      *
@@ -324,28 +347,48 @@ final class ArtidocResource extends AuthenticatedResource
             ->handle($id, $configuration, $user)
             ->mapErr(
                 function (Fault $fault) {
-                    throw match (true) {
-                        $fault instanceof TrackerNotFoundFault => new I18NRestException(
+                    throw match ($fault::class) {
+                        FieldNotFoundFault::class => new I18NRestException(
+                            400,
+                            sprintf(dgettext('tuleap-artidoc', 'The field with id #%s could not be found.'), $fault->field_id),
+                        ),
+                        FieldIsDescriptionSemanticFault::class => new I18NRestException(
+                            400,
+                            sprintf(dgettext('tuleap-artidoc', 'The field with id #%s is already used in description semantic, it cannot be reused in fields for artidoc.'), $fault->field_id)
+                        ),
+                        FieldIsTitleSemanticFault::class => new I18NRestException(
+                            400,
+                            sprintf(dgettext('tuleap-artidoc', 'The field with id #%s is already used in title semantic, it cannot be reused in fields for artidoc.'), $fault->field_id)
+                        ),
+                        FieldNotSupportedFault::class => new I18NRestException(
+                            400,
+                            sprintf(dgettext('tuleap-artidoc', 'The field with id #%s is not supported in Artidoc.'), $fault->field_id)
+                        ),
+                        FieldDoesNotBelongToTrackerFault::class => new I18NRestException(
+                            400,
+                            sprintf(dgettext('tuleap-artidoc', 'The field with id #%s must belong to the selected tracker.'), $fault->field_id),
+                        ),
+                        TrackerNotFoundFault::class => new I18NRestException(
                             400,
                             dgettext('tuleap-artidoc', "Given tracker cannot be found or you don't have access to it.")
                         ),
-                        $fault instanceof NoSemanticTitleFault => new I18NRestException(
+                        NoSemanticTitleFault::class => new I18NRestException(
                             400,
                             dgettext('tuleap-artidoc', 'Given tracker does not have a semantic title.')
                         ),
-                        $fault instanceof NoSemanticDescriptionFault => new I18NRestException(
+                        NoSemanticDescriptionFault::class => new I18NRestException(
                             400,
                             dgettext('tuleap-artidoc', 'Given tracker does not have a semantic description.')
                         ),
-                        $fault instanceof SemanticTitleIsNotAStringFault => new I18NRestException(
+                        SemanticTitleIsNotAStringFault::class => new I18NRestException(
                             400,
                             dgettext('tuleap-artidoc', 'The semantic title should be a string field.')
                         ),
-                        $fault instanceof TooManyRequiredFieldsFault => new I18NRestException(
+                        TooManyRequiredFieldsFault::class => new I18NRestException(
                             400,
                             dgettext('tuleap-artidoc', 'There cannot be other required fields than title or description.')
                         ),
-                        $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
+                        UserCannotWriteDocumentFault::class => new I18NRestException(
                             403,
                             dgettext('tuleap-artidoc', "You don't have permission to write the document.")
                         ),
@@ -386,11 +429,14 @@ final class ArtidocResource extends AuthenticatedResource
      */
     private function getPutConfigurationHandler(\PFUser $user): PUTConfigurationHandler
     {
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+
         return new PUTConfigurationHandler(
             $this->getArtidocWithContextRetriever($user),
             new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory()),
             \TrackerFactory::instance(),
-            new SuitableTrackerForDocumentChecker(\Tracker_FormElementFactory::instance()),
+            new SuitableTrackerForDocumentChecker($form_element_factory),
+            new SuitableFieldRetriever($form_element_factory),
         );
     }
 
@@ -440,7 +486,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
             new ConfiguredFieldDao(),
-            $form_element_factory,
+            new SuitableFieldRetriever($form_element_factory),
         );
 
         return new ArtifactSectionRepresentationBuilder(

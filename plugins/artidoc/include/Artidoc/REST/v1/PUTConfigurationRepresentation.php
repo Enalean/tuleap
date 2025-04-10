@@ -28,13 +28,24 @@ namespace Tuleap\Artidoc\REST\v1;
 final class PUTConfigurationRepresentation
 {
     /**
-     * @var int[] Selected trackers for document {@required true} {@min 1}{@max 1}
-     * @psalm-param array{0:int} $selected_tracker_ids
+     * @var int[] Selected trackers for the document {@required true} {@min 1} {@max 1} {@type int}
+     * @psalm-var array{0:int} $selected_tracker_ids
      */
     public array $selected_tracker_ids;
 
-    public function __construct(array $selected_tracker_ids)
+    /**
+     * @var ConfiguredFieldRepresentation[] Selected artifact fields for the document {@type \Tuleap\Artidoc\REST\v1\ConfiguredFieldRepresentation} {@required true}
+     * @psalm-var ConfiguredFieldRepresentation[]
+     */
+    public array $fields;
+
+    /**
+     * @param int[] $selected_tracker_ids
+     * @param ConfiguredFieldRepresentation[] $fields
+     */
+    public function __construct(array $selected_tracker_ids, array $fields)
     {
         $this->selected_tracker_ids = $selected_tracker_ids;
+        $this->fields               = $fields;
     }
 }

@@ -59,6 +59,7 @@ use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
+use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CannotUpdatePartiallyReadableDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
@@ -490,7 +491,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
     ): ArtifactSectionRepresentationBuilder {
         $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
             new ConfiguredFieldDao(),
-            Tracker_FormElementFactory::instance(),
+            new SuitableFieldRetriever(Tracker_FormElementFactory::instance()),
         );
         return new ArtifactSectionRepresentationBuilder(
             $this->getFileUploadDataProvider(),

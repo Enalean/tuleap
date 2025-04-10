@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.5\n"
 
 msgid "Administration"
 msgstr "Administration"
@@ -42,6 +42,34 @@ msgstr ""
 
 msgid "The compared_to is not a valid section identifier."
 msgstr "Le paramètre compared_to n'est pas un identifiant de section valide."
+
+#, php-format
+msgid "The field with id #%s could not be found."
+msgstr "Le champ dont l'id est #%s n'a pas été trouvé."
+
+#, php-format
+msgid ""
+"The field with id #%s is already used in description semantic, it cannot be "
+"reused in fields for artidoc."
+msgstr ""
+"Le champ dont l'id est #%s est déjà utilisé en sémantique description, il ne "
+"peut pas être réutilisé pour les champs d'artidoc."
+
+#, php-format
+msgid ""
+"The field with id #%s is already used in title semantic, it cannot be reused "
+"in fields for artidoc."
+msgstr ""
+"Le champ dont l'id est #%s est déjà utilisé en sémantique titre, il ne peut "
+"pas être réutilisé pour les champs d'artidoc."
+
+#, php-format
+msgid "The field with id #%s is not supported in Artidoc."
+msgstr "Le champ dont l'id est #%s n'est pas supporté dans Artidoc."
+
+#, php-format
+msgid "The field with id #%s must belong to the selected tracker."
+msgstr "Le champ dont l'id est #%s doit appartenir au tracker sélectionné."
 
 msgid "The ids is invalid. Expected an array of one section identifier."
 msgstr ""

@@ -278,7 +278,10 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                 'artidoc/' . $artidoc_id . '/configuration'
             )->withBody(
                 $this->stream_factory->createStream(
-                    Json\encode(['selected_tracker_ids' => [$this->requirements_tracker_id]]),
+                    Json\encode([
+                        'selected_tracker_ids' => [$this->requirements_tracker_id],
+                        'fields'               => [],
+                    ]),
                 )
             )
         );
@@ -629,7 +632,10 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'artidoc/' . $id . '/configuration')->withBody(
                 $this->stream_factory->createStream(
-                    Json\encode(['selected_tracker_ids' => [$this->requirements_tracker_id]]),
+                    Json\encode([
+                        'selected_tracker_ids' => [$this->requirements_tracker_id],
+                        'fields'               => [],
+                    ]),
                 )
             )
         );

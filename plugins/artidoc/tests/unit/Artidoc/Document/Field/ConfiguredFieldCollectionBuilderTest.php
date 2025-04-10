@@ -24,21 +24,22 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElementFactory;
+use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Stubs\Document\Field\RetrieveConfiguredFieldStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ConfiguredFieldCollectionBuilderTest extends TestCase
@@ -58,130 +59,72 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
 
     protected function tearDown(): void
     {
-        \Tracker_Semantic_Title::clearInstances();
+        Tracker_Semantic_Title::clearInstances();
+        Tracker_Semantic_Description::clearInstances();
     }
 
     public function testEmptyConfiguredFields(): void
     {
         $builder = new ConfiguredFieldCollectionBuilder(
             RetrieveConfiguredFieldStub::withoutConfiguredFields(),
-            $this->createMock(Tracker_FormElementFactory::class),
+            new SuitableFieldRetriever(RetrieveUsedFieldsStub::withNoFields())
         );
 
         self::assertEmpty($builder->buildFromArtidoc($this->artidoc, $this->user)->getFields($this->tracker));
-        self::assertEmpty($builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker));
+        self::assertEmpty(
+            $builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker)
+        );
     }
 
-    public function testExcludeFieldsThatAreNotString(): void
+    public function testExcludeFieldsThatAreNotSuitable(): void
     {
-        $factory = $this->createMock(Tracker_FormElementFactory::class);
-        $factory->method('getFieldById')
-            ->with(123)
-            ->willReturn(DateFieldBuilder::aDateField(123)->build());
-
         $builder = new ConfiguredFieldCollectionBuilder(
             RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
-            $factory,
+            new SuitableFieldRetriever(
+                RetrieveUsedFieldsStub::withFields(
+                    ExternalFieldBuilder::anExternalField(123)
+                        ->withReadPermission($this->user, true)
+                        ->inTracker($this->tracker)
+                        ->build()
+                )
+            ),
         );
 
         self::assertEmpty($builder->buildFromArtidoc($this->artidoc, $this->user)->getFields($this->tracker));
-        self::assertEmpty($builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker));
-    }
-
-    public function testExcludeFieldsThatAreUnused(): void
-    {
-        $factory = $this->createMock(Tracker_FormElementFactory::class);
-        $factory->method('getFieldById')
-            ->with(123)
-            ->willReturn(
-                StringFieldBuilder::aStringField(123)
-                    ->unused()
-                    ->build()
-            );
-
-        $builder = new ConfiguredFieldCollectionBuilder(
-            RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
-            $factory,
+        self::assertEmpty(
+            $builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker)
         );
-
-        self::assertEmpty($builder->buildFromArtidoc($this->artidoc, $this->user)->getFields($this->tracker));
-        self::assertEmpty($builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker));
-    }
-
-    public function testExcludeFieldsThatAreNotReadable(): void
-    {
-        $factory = $this->createMock(Tracker_FormElementFactory::class);
-        $factory->method('getFieldById')
-            ->with(123)
-            ->willReturn(
-                StringFieldBuilder::aStringField(123)
-                    ->withReadPermission($this->user, false)
-                    ->build()
-            );
-
-        $builder = new ConfiguredFieldCollectionBuilder(
-            RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
-            $factory,
-        );
-
-        self::assertEmpty($builder->buildFromArtidoc($this->artidoc, $this->user)->getFields($this->tracker));
-        self::assertEmpty($builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker));
-    }
-
-    public function testExcludeFieldThatIsSemanticTitle(): void
-    {
-        $field_string = StringFieldBuilder::aStringField(123)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->build();
-
-        $factory = $this->createMock(Tracker_FormElementFactory::class);
-        $factory->method('getFieldById')
-            ->with(123)
-            ->willReturn(
-                $field_string
-            );
-
-        \Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($this->tracker, $field_string),
-            $this->tracker,
-        );
-
-        $builder = new ConfiguredFieldCollectionBuilder(
-            RetrieveConfiguredFieldStub::withConfiguredFields(new ArtifactSectionField(123, DisplayType::COLUMN)),
-            $factory,
-        );
-
-        self::assertEmpty($builder->buildFromArtidoc($this->artidoc, $this->user)->getFields($this->tracker));
-        self::assertEmpty($builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($this->tracker));
     }
 
     public function testHappyPath(): void
     {
-        $factory = $this->createMock(Tracker_FormElementFactory::class);
-        $factory->method('getFieldById')
-            ->willReturnCallback(fn (int $id) => match ($id) {
-                123 => StringFieldBuilder::aStringField(123)
-                    ->inTracker($this->tracker)
-                    ->withReadPermission($this->user, true)
-                    ->build(),
-                124 => StringFieldBuilder::aStringField(124)
-                    ->inTracker($this->tracker)
-                    ->withReadPermission($this->user, true)
-                    ->build(),
-            });
-
-        \Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($this->tracker, null),
-            $this->tracker,
-        );
-
-        $builder = new ConfiguredFieldCollectionBuilder(
+        $first_field_id  = 123;
+        $second_field_id = 124;
+        $builder         = new ConfiguredFieldCollectionBuilder(
             RetrieveConfiguredFieldStub::withConfiguredFields(
-                new ArtifactSectionField(123, DisplayType::COLUMN),
-                new ArtifactSectionField(124, DisplayType::BLOCK),
+                new ArtifactSectionField($first_field_id, DisplayType::COLUMN),
+                new ArtifactSectionField($second_field_id, DisplayType::BLOCK),
             ),
-            $factory,
+            new SuitableFieldRetriever(
+                RetrieveUsedFieldsStub::withFields(
+                    StringFieldBuilder::aStringField($first_field_id)
+                        ->withReadPermission($this->user, true)
+                        ->inTracker($this->tracker)
+                        ->build(),
+                    StringFieldBuilder::aStringField($second_field_id)
+                        ->withReadPermission($this->user, true)
+                        ->inTracker($this->tracker)
+                        ->build(),
+                )
+            )
+        );
+        Tracker_Semantic_Title::setInstance(
+            new Tracker_Semantic_Title($this->tracker, null),
+            $this->tracker
+        );
+        Tracker_Semantic_Description::setInstance(
+            new Tracker_Semantic_Description($this->tracker, null),
+            $this->tracker
         );
 
         $scenarios = [
@@ -191,18 +134,10 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
 
         foreach ($scenarios as $configured_fields) {
             self::assertCount(2, $configured_fields);
-            self::assertSame(123, $configured_fields[0]->field->getId());
-            self::assertSame('column', $configured_fields[0]->display_type->value);
-            self::assertSame(124, $configured_fields[1]->field->getId());
-            self::assertSame('block', $configured_fields[1]->display_type->value);
+            self::assertSame($first_field_id, $configured_fields[0]->field->getId());
+            self::assertSame(DisplayType::COLUMN, $configured_fields[0]->display_type);
+            self::assertSame($second_field_id, $configured_fields[1]->field->getId());
+            self::assertSame(DisplayType::BLOCK, $configured_fields[1]->display_type);
         }
-
-        $another_tracker = TrackerTestBuilder::aTracker()->withId(1002)->build();
-        self::assertEmpty(
-            $builder->buildFromArtidoc($this->artidoc, $this->user)->getFields($another_tracker),
-        );
-        self::assertEmpty(
-            $builder->buildFromSectionIdentifier($this->section_id, $this->user)->getFields($another_tracker),
-        );
     }
 }
