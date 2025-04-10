@@ -3234,7 +3234,6 @@
       <code><![CDATA[getColumnId]]></code>
       <code><![CDATA[getValueId]]></code>
       <code><![CDATA[getValueLabel]]></code>
-      <code><![CDATA[getXMLValueId]]></code>
       <code><![CDATA[matchLabel]]></code>
       <code><![CDATA[matchNone]]></code>
     </MissingReturnType>
@@ -31943,6 +31942,20 @@
       <code><![CDATA[fetchCardValue]]></code>
     </UndefinedInterfaceMethod>
   </file>
+  <file src="plugins/tracker/include/Artifact/Changeset/ArtifactLink/ArtifactLinkChangesetValue.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <MissingParamType>
+      <code><![CDATA[$changeset_value]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$ignore_perms]]></code>
+      <code><![CDATA[$next]]></code>
+      <code><![CDATA[$previous]]></code>
+      <code><![CDATA[$user]]></code>
+    </MissingParamType>
+  </file>
   <file src="plugins/tracker/include/Artifact/Renderer/ViewCollection.php">
     <FalsableReturnStatement>
       <code><![CDATA[current($this->views)]]></code>
@@ -34675,31 +34688,6 @@
       <code><![CDATA[visitText]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_ArtifactLink.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code><![CDATA[$artifact_links]]></code>
-      <code><![CDATA[$changeset_value]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$has_changed]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$ignore_perms]]></code>
-      <code><![CDATA[$next]]></code>
-      <code><![CDATA[$previous]]></code>
-      <code><![CDATA[$reverse_artifact_links]]></code>
-      <code><![CDATA[$user]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getArtifactIds]]></code>
-      <code><![CDATA[getArtifactLinkDiff]]></code>
-      <code><![CDATA[getTypePresenterFactory]]></code>
-      <code><![CDATA[setCurrentUserIfUserIsNotDefined]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_ArtifactLinkDiff.php">
     <MissingParamType>
       <code><![CDATA[$format]]></code>
@@ -36800,11 +36788,6 @@
       <code><![CDATA[removeLinksFromSubmittedValue]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/SubmittedValueEmptyChecker.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($currently_linked_artifact)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
     <MissingParamType>
       <code><![CDATA[$html_classes]]></code>
@@ -38781,7 +38764,6 @@
       <code><![CDATA[canBeUsedAsReportColumn]]></code>
       <code><![CDATA[canBeUsedAsReportCriterion]]></code>
       <code><![CDATA[deleteChangesetValue]]></code>
-      <code><![CDATA[exportCriteriaValueToXML]]></code>
       <code><![CDATA[fetchArtifactForOverlay]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[fetchSubmitForOverlay]]></code>
@@ -39057,7 +39039,6 @@
       <code><![CDATA[_nbDigits]]></code>
       <code><![CDATA[accept]]></code>
       <code><![CDATA[areBetweenDatesValid]]></code>
-      <code><![CDATA[exportCriteriaValueToXML]]></code>
       <code><![CDATA[exportDefaultValueToXML]]></code>
       <code><![CDATA[exportDisplayTimeToXML]]></code>
       <code><![CDATA[extractStringifiedDate]]></code>
@@ -39355,7 +39336,6 @@
       <code><![CDATA[$workflow->is_used]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[exportCriteriaValueToXML]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[fetchFieldContainerEnd]]></code>
       <code><![CDATA[fetchFieldValue]]></code>
@@ -39573,7 +39553,6 @@
       <code><![CDATA[setUgroupsValueDao]]></code>
     </MissingReturnType>
     <UndefinedDocblockClass>
-      <code><![CDATA[Bind]]></code>
       <code><![CDATA[Field]]></code>
     </UndefinedDocblockClass>
   </file>
@@ -39719,11 +39698,6 @@
     <UndefinedMethod>
       <code><![CDATA[getDecorators]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_StaticValue_None.php">
-    <MissingReturnType>
-      <code><![CDATA[getXMLId]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Ugroups.php">
     <ImplementedReturnTypeMismatch>
@@ -39991,7 +39965,6 @@
       <code><![CDATA[getJsonId]]></code>
       <code><![CDATA[getJsonValue]]></code>
       <code><![CDATA[getRESTId]]></code>
-      <code><![CDATA[getXMLId]]></code>
       <code><![CDATA[isHidden]]></code>
       <code><![CDATA[setId]]></code>
     </MissingReturnType>
@@ -40069,7 +40042,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[exportCriteriaValueToXML]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[formatCriteriaValue]]></code>
       <code><![CDATA[getDefaultValues]]></code>
@@ -40164,7 +40136,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
-      <code><![CDATA[exportCriteriaValueToXML]]></code>
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[getFieldDataFromArray]]></code>
       <code><![CDATA[getHiddenArtifactValueForEdition]]></code>
@@ -40819,15 +40790,6 @@
     </DeprecatedFunction>
     <MissingReturnType>
       <code><![CDATA[inheritFromLegacy]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/MasschangeDataValueExtractor.php">
-    <MissingParamType>
-      <code><![CDATA[$data]]></code>
-      <code><![CDATA[$data]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getNewValues]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Masschange_Presenter.php">
@@ -43546,7 +43508,6 @@
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_Criteria.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$id]]></code>
@@ -43554,7 +43515,6 @@
       <code><![CDATA[$report]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[fetch]]></code>
       <code><![CDATA[fetchWithoutExpandFunctionnality]]></code>
       <code><![CDATA[getField]]></code>
@@ -45066,11 +45026,9 @@
       <code><![CDATA[fieldIsAForbiddenTarget]]></code>
       <code><![CDATA[getAllSourceFields]]></code>
       <code><![CDATA[getAllTargetFields]]></code>
-      <code><![CDATA[getTrackerFormElementFactory]]></code>
       <code><![CDATA[isFieldUsedInFrozenFieldsTransitionPostAction]]></code>
       <code><![CDATA[process]]></code>
       <code><![CDATA[ruleExists]]></code>
-      <code><![CDATA[setTrackerFormElementFactory]]></code>
       <code><![CDATA[valueHasSource]]></code>
       <code><![CDATA[valueHasTarget]]></code>
     </MissingReturnType>
@@ -47235,15 +47193,11 @@
     <MissingReturnType>
       <code><![CDATA[addTypeChild]]></code>
       <code><![CDATA[addUsedTypes]]></code>
-      <code><![CDATA[exportMapping]]></code>
-      <code><![CDATA[exportSingleTrackerBunchOfArtifactsToXml]]></code>
       <code><![CDATA[exportSingleTrackerToXml]]></code>
       <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[exportToXmlFull]]></code>
       <code><![CDATA[exportTracker]]></code>
-      <code><![CDATA[exportTrackerAndArtifacts]]></code>
       <code><![CDATA[exportTriggers]]></code>
-      <code><![CDATA[validateExport]]></code>
       <code><![CDATA[validateTrackerExport]]></code>
     </MissingReturnType>
     <PossiblyInvalidArgument>

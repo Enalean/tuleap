@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 final class ChangesetValueArtifactLinkTestBuilder
 {
@@ -37,11 +37,11 @@ final class ChangesetValueArtifactLinkTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly Tracker_FormElement_Field $field,
+        private readonly ArtifactLinkField $field,
     ) {
     }
 
-    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, Tracker_FormElement_Field $field): self
+    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, ArtifactLinkField $field): self
     {
         return new self($id, $changeset, $field);
     }
@@ -56,9 +56,9 @@ final class ChangesetValueArtifactLinkTestBuilder
         return $this;
     }
 
-    public function build(): Tracker_Artifact_ChangesetValue_ArtifactLink
+    public function build(): ArtifactLinkChangesetValue
     {
-        $value = new Tracker_Artifact_ChangesetValue_ArtifactLink(
+        $value = new ArtifactLinkChangesetValue(
             $this->id,
             $this->changeset,
             $this->field,

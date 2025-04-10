@@ -24,9 +24,9 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 
 class LinksRetriever
 {
@@ -113,7 +113,7 @@ class LinksRetriever
         $all_artifact_ids = $this->getReverseLinksIds($changeset->getArtifact());
 
         if ($changeset_value) {
-            assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
+            assert($changeset_value instanceof ArtifactLinkChangesetValue);
             $all_artifact_ids = array_unique(array_merge($all_artifact_ids, $changeset_value->getArtifactIds()));
         }
 

@@ -123,7 +123,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     ) {
         $removed_artifacts = [];
         foreach ($changesets as $changeset) {
-            if ($changeset instanceof \Tracker_Artifact_ChangesetValue_ArtifactLink) {
+            if ($changeset instanceof \Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue) {
                 foreach ($changeset->getArtifactIds() as $artifact_id) {
                     if (! in_array($artifact_id, $artifact_links)) {
                         $removed_artifacts[$artifact_id] = $artifact_id;

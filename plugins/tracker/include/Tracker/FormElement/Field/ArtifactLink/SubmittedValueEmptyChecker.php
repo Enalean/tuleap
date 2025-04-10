@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 
 class SubmittedValueEmptyChecker
 {
@@ -56,7 +56,7 @@ class SubmittedValueEmptyChecker
         $currently_linked_artifact = [];
         $last_changeset_value      = $field_artifact_link->getLastChangesetValue($artifact);
         if ($last_changeset_value) {
-            assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
+            assert($last_changeset_value instanceof ArtifactLinkChangesetValue);
             $currently_linked_artifact = $last_changeset_value->getArtifactIds();
         }
 

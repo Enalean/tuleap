@@ -24,8 +24,8 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use PFUser;
 use Planning_MilestoneFactory;
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 
 final readonly class DirectArtifactLinkCleaner
@@ -71,7 +71,7 @@ final readonly class DirectArtifactLinkCleaner
         if ($last_changeset_value === null) {
             return;
         }
-        assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
+        assert($last_changeset_value instanceof ArtifactLinkChangesetValue);
 
         $linked_artifact_ids = $last_changeset_value->getArtifactIds();
         if (count($linked_artifact_ids) > 0) {

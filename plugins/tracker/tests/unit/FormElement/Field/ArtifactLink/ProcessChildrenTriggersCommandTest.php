@@ -94,7 +94,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
     {
         $previous_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
-        $changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class)
+        $changeset_value = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value->shouldReceive('getValue')->andReturns(
             [
@@ -106,7 +106,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
 
         $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
-        $changeset_value_bis = \Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class)
+        $changeset_value_bis = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [
@@ -125,7 +125,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
     public function testItCallsNothingWhenThereAreNotAnyChanges(): void
     {
         $previous_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset_value    = \Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class)
+        $changeset_value    = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value->shouldReceive('getValue')->andReturns(
             [
@@ -136,7 +136,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
         $changeset_value->shouldReceive('getNaturePresenterFactory')->andReturns($this->nature_factory);
 
         $new_changeset       = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset_value_bis = \Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class)->makePartial(
+        $changeset_value_bis = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [
@@ -154,12 +154,12 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
     public function testItDoesntFailWhenPreviousChangesetHasNoValue(): void
     {
         $previous_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset_value    = \Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class)
+        $changeset_value    = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value->shouldReceive('getValue')->andReturns(null);
 
         $new_changeset       = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset_value_bis = \Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class)
+        $changeset_value_bis = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [
@@ -179,7 +179,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
         $previous_changeset = null;
 
         $new_changeset       = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset_value_bis = \Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class)
+        $changeset_value_bis = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $changeset_value_bis->shouldReceive('getValue')->andReturns(
             [

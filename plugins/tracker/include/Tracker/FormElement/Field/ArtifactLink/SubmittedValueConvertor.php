@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 
 /**
  * I convert submitted value into something that can be given to ArtifactLinkValueSaver.
@@ -62,7 +62,7 @@ class SubmittedValueConvertor
      */
     public function convert(
         array $submitted_value,
-        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null,
+        ?ArtifactLinkChangesetValue $previous_changesetvalue = null,
     ) {
         $submitted_value['list_of_artifactlinkinfo'] = $this->getListOfArtifactLinkInfo(
             $submitted_value,
@@ -75,7 +75,7 @@ class SubmittedValueConvertor
     /** @return Tracker_ArtifactLinkInfo[] */
     private function getListOfArtifactLinkInfo(
         array $submitted_value,
-        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null,
+        ?ArtifactLinkChangesetValue $previous_changesetvalue = null,
     ) {
         $list_of_artifactlinkinfo = [];
         if ($previous_changesetvalue != null) {
