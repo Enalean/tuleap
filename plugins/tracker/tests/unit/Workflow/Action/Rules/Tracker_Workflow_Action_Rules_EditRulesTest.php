@@ -20,11 +20,13 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
 
@@ -36,87 +38,90 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     private const PARAMETER_TARGET_FIELD = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD;
     private const PARAMETER_COMPARATOR   = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR;
 
-    private $tracker_id = 42;
-    private $date_factory;
-    private $tracker;
-    private $token;
+    private int $tracker_id = 42;
+    private Tracker_Rule_Date_Factory&MockObject $date_factory;
+    private Tracker&MockObject $tracker;
 
-    private $planned_start_date;
-    private $actual_start_date;
-    private $planned_end_date;
-    private $actual_end_date;
-    private $source_field_id        = 44;
-    private $target_field_id        = 22;
-    private $actual_source_field_id = 66;
-    private $actual_target_field_id = 55;
-    private $rule_42_id             = 42;
-    private $rule_42;
-    private $rule_66_id = 66;
-    private $rule_66;
-    private $action;
-    /**
-     * @var Tracker_Rule_Date
-     */
-    private $rule_1;
-    /**
-     * @var Tracker_Rule_Date
-     */
-    private $rule_2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_IDisplayTrackerLayout
-     */
-    private $layout;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private Tracker_FormElement_Field_Date $planned_start_date;
+    private Tracker_FormElement_Field_Date $actual_start_date;
+    private Tracker_FormElement_Field_Date $planned_end_date;
+    private Tracker_FormElement_Field_Date $actual_end_date;
+    private int $source_field_id        = 44;
+    private int $target_field_id        = 22;
+    private int $actual_source_field_id = 66;
+    private int $actual_target_field_id = 55;
+    private int $rule_42_id             = 42;
+    private Tracker_Rule_Date&MockObject $rule_42;
+    private int $rule_66_id = 66;
+    private Tracker_Rule_Date&MockObject $rule_66;
+    private Tracker_Workflow_Action_Rules_EditRules $action;
+    private Tracker_Rule_Date $rule_1;
+    private Tracker_Rule_Date $rule_2;
+    private Tracker_IDisplayTrackerLayout&MockObject $layout;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->date_factory       = \Mockery::spy(\Tracker_Rule_Date_Factory::class);
-        $this->tracker            = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->tracker_id)->getMock();
-        $token                    = \Mockery::spy(\CSRFSynchronizerToken::class);
-        $this->planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
-        $this->actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
-        $this->planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
-        $this->actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
-        $this->rule_1             = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $this->planned_end_date);
-        $this->rule_2             = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
-        $this->layout             = \Mockery::spy(\Tracker_IDisplayTrackerLayout::class);
-        $this->user               = \Mockery::spy(\PFUser::class);
-        $this->date_factory->shouldReceive('getRule')->with($this->tracker, 123)->andReturns($this->rule_1);
-        $this->date_factory->shouldReceive('getRule')->with($this->tracker, 456)->andReturns($this->rule_2);
-        $this->date_factory->shouldReceive('searchByTrackerId')->with($this->tracker_id)->andReturns([$this->rule_1, $this->rule_2]);
-        $this->date_factory->shouldReceive('getUsedDateFields')->andReturns([
+        $this->date_factory = $this->createMock(\Tracker_Rule_Date_Factory::class);
+
+        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker->method('getId')->willReturn($this->tracker_id);
+        $this->tracker->method('displayAdminItemHeader');
+        $this->tracker->method('displayFooter');
+
+        $token = $this->createMock(\CSRFSynchronizerToken::class);
+        $token->method('fetchHTMLInput');
+        $token->method('check');
+
+        $this->planned_start_date = DateFieldBuilder::aDateField($this->source_field_id)->withLabel('Planned Start Date')->build();
+        $this->actual_start_date  = DateFieldBuilder::aDateField($this->target_field_id)->withLabel('Actual Start Date')->build();
+        $this->planned_end_date   = DateFieldBuilder::aDateField($this->actual_source_field_id)->withLabel('Planned End Date')->build();
+        $this->actual_end_date    = DateFieldBuilder::aDateField($this->actual_target_field_id)->withLabel('Actual End Date')->build();
+
+        $this->date_factory->method('getUsedDateFieldById')
+            ->willReturnCallback(fn (Tracker $tracker, int $field_id) => match ($field_id) {
+                $this->planned_start_date->getId() => $this->planned_start_date,
+                $this->actual_start_date->getId() => $this->actual_start_date,
+                $this->planned_end_date->getId() => $this->planned_end_date,
+                $this->actual_end_date->getId() => $this->actual_end_date,
+                default => null,
+            });
+
+        $this->rule_1 = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $this->planned_end_date);
+        $this->rule_2 = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
+        $this->layout = $this->createMock(\Tracker_IDisplayTrackerLayout::class);
+        $this->user   = UserTestBuilder::buildWithDefaults();
+        $this->date_factory->method('searchByTrackerId')->with($this->tracker_id)->willReturn([$this->rule_1, $this->rule_2]);
+        $this->date_factory->method('getUsedDateFields')->willReturn([
             $this->planned_start_date,
             $this->actual_start_date,
             $this->planned_end_date,
             $this->actual_end_date,
         ]);
 
-        $this->rule_42 = \Mockery::spy(\Tracker_Rule_Date::class);
-        $this->rule_42->shouldReceive('getId')->andReturns($this->rule_42_id);
-        $this->rule_42->shouldReceive('getSourceField')->andReturns($this->planned_start_date);
-        $this->rule_42->shouldReceive('getTargetField')->andReturns($this->actual_start_date);
-        $this->rule_42->shouldReceive('getComparator')->andReturns('<');
-        $this->date_factory->shouldReceive('getRule')->with($this->tracker, $this->rule_42_id)->andReturns($this->rule_42);
+        $this->rule_42 = $this->createMock(\Tracker_Rule_Date::class);
+        $this->rule_42->method('getId')->willReturn($this->rule_42_id);
+        $this->rule_42->method('getSourceField')->willReturn($this->planned_start_date);
+        $this->rule_42->method('getTargetField')->willReturn($this->actual_start_date);
+        $this->rule_42->method('getComparator')->willReturn('<');
 
-        $this->rule_66 = \Mockery::spy(\Tracker_Rule_Date::class);
-        $this->rule_66->shouldReceive('getId')->andReturns($this->rule_66_id);
-        $this->rule_42->shouldReceive('getSourceField')->andReturns($this->actual_start_date);
-        $this->rule_42->shouldReceive('getTargetField')->andReturns($this->planned_start_date);
-        $this->rule_42->shouldReceive('getComparator')->andReturns('>');
-        $this->date_factory->shouldReceive('getRule')->with($this->tracker, $this->rule_66_id)->andReturns($this->rule_66);
+        $this->rule_66 = $this->createMock(\Tracker_Rule_Date::class);
+        $this->rule_66->method('getId')->willReturn($this->rule_66_id);
+        $this->rule_42->method('getSourceField')->willReturn($this->actual_start_date);
+        $this->rule_42->method('getTargetField')->willReturn($this->planned_start_date);
+        $this->rule_42->method('getComparator')->willReturn('>');
+
+        $this->date_factory->method('getRule')->willReturnCallback(
+            fn (Tracker $tracker, int $rule_id) => match ($rule_id) {
+                $this->rule_1->getId() => $this->rule_1,
+                $this->rule_2->getId() => $this->rule_2,
+                $this->rule_42->getId() => $this->rule_42,
+                $this->rule_66->getId() => $this->rule_66,
+                default => null,
+            }
+        );
 
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $token);
-    }
-
-    private function setUpField($id, string $label)
-    {
-         $field = \Mockery::spy(\Tracker_FormElement_Field_Date::class)->shouldReceive('getLabel')->andReturns($label)->getMock();
-         $field->shouldReceive('getId')->andReturns($id);
-         $this->date_factory->shouldReceive('getUsedDateFieldById')->with($this->tracker, $id)->andReturns($field);
-         return $field;
     }
 
     private function setUpRule($id, Tracker_FormElement_Field $source_field, $comparator, Tracker_FormElement_Field $target_field): Tracker_Rule_Date
@@ -140,7 +145,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     protected function processRequestAndExpectFormOutput(Codendi_Request $request): void
     {
-        $GLOBALS['Response']->expects(self::never())->method('redirect');
+        $GLOBALS['Response']->expects($this->never())->method('redirect');
         ob_start();
         $this->action->process($this->layout, $request, $this->user);
         $content = ob_get_clean();
@@ -149,8 +154,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     public function testItDoesNotDisplayErrorsIfNoActions(): void
     {
-        $request = new Codendi_Request([], Mockery::mock(ProjectManager::class));
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with(Feedback::ERROR);
+        $request = new Codendi_Request([], $this->createMock(ProjectManager::class));
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with(Feedback::ERROR);
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -158,9 +163,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => ['123']],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 123)->andReturn(true)->once();
+        $this->date_factory->expects($this->once())->method('deleteById')->with($this->tracker_id, 123)->willReturn(true);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -168,10 +173,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => ['123', '456']],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 123)->andReturn(true)->once();
-        $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 456)->andReturn(true)->once();
+        $this->date_factory->expects($this->exactly(2))
+            ->method('deleteById')
+            ->willReturnCallback(static fn (int $tracker_id, int $rule_id) => $rule_id === 123 || $rule_id === 456);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -179,9 +185,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => '123'],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->never();
+        $this->date_factory->expects($this->never())->method('deleteById');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -189,9 +195,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => ['invalid_id']],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 0)->andReturn(true)->once();
+        $this->date_factory->expects($this->once())->method('deleteById')->with($this->tracker_id, 0)->willReturn(true);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -199,9 +205,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_SOURCE_FIELD => '21', self::PARAMETER_TARGET_FIELD => '14'],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->never();
+        $this->date_factory->expects($this->never())->method('deleteById');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -209,9 +215,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => ['123']],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->andReturns(true);
+        $this->date_factory->method('deleteById')->willReturn(true);
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
@@ -220,9 +226,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => ['123', '456']],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->andReturns(true);
+        $this->date_factory->method('deleteById')->willReturn(true);
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
@@ -231,10 +237,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => ['123']],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->andReturns(false);
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('info');
+        $this->date_factory->method('deleteById')->willReturn(false);
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -242,10 +248,14 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [self::PARAMETER_REMOVE_RULES => ['123', '456']],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 123)->ordered()->andReturns(false);
-        $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 456)->ordered()->andReturns(true);
+        $this->date_factory->expects($this->exactly(2))
+            ->method('deleteById')
+            ->willReturnCallback(static fn (int $tracker_id, int $rule_id) => match ($rule_id) {
+                123 => false,
+                456 => true,
+            });
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
@@ -254,7 +264,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $request = new Codendi_Request(
             [],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
         ob_start();
@@ -293,10 +303,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->with($this->source_field_id, $this->target_field_id, $this->tracker_id, '>')->once();
+        $this->date_factory->expects($this->once())->method('create')->with($this->source_field_id, $this->target_field_id, $this->tracker_id, '>');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -309,11 +319,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_TARGET_FIELD => '22',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('info');
+        $this->date_factory->expects($this->never())->method('create');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('info');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -326,10 +336,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -343,10 +353,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -360,10 +370,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -377,10 +387,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -393,10 +403,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -410,10 +420,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -427,10 +437,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -444,10 +454,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -461,10 +471,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '%invalid_comparator%',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -478,9 +488,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         $this->processRequestAndExpectFormOutput($request);
     }
@@ -495,9 +505,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
+        $this->date_factory->method('create');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -511,10 +522,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -528,10 +539,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     self::PARAMETER_COMPARATOR   => '>',
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('create')->never();
+        $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -547,13 +558,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->rule_42->shouldReceive('setSourceField')->with($this->planned_start_date)->once();
-        $this->rule_42->shouldReceive('setTargetField')->with($this->actual_start_date)->once();
-        $this->rule_42->shouldReceive('setComparator')->with('>')->once();
-        $this->date_factory->shouldReceive('save')->with($this->rule_42)->once();
+        $this->rule_42->expects($this->once())->method('setSourceField')->with($this->planned_start_date);
+        $this->rule_42->expects($this->once())->method('setTargetField')->with($this->actual_start_date);
+        $this->rule_42->expects($this->once())->method('setComparator')->with('>');
+        $this->date_factory->expects($this->once())->method('save')->with($this->rule_42);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -574,13 +585,22 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->rule_42->shouldReceive('setSourceField')->with($this->planned_start_date)->once();
-        $this->rule_66->shouldReceive('setSourceField')->with($this->actual_start_date)->once();
-        $this->date_factory->shouldReceive('save')->with($this->rule_42)->ordered();
-        $this->date_factory->shouldReceive('save')->with($this->rule_66)->ordered();
+        $this->rule_42->expects($this->once())->method('setSourceField')->with($this->planned_start_date);
+        $this->rule_42->method('setTargetField');
+        $this->rule_42->method('setComparator');
+        $this->rule_42->method('getSourceField');
+
+        $this->rule_66->expects($this->once())->method('setSourceField')->with($this->actual_start_date);
+        $this->rule_66->method('setTargetField');
+        $this->rule_66->method('setComparator');
+        $this->rule_66->method('getSourceField');
+
+        $this->date_factory->expects($this->exactly(2))
+            ->method('save')
+            ->willReturnCallback(fn (Tracker_Rule_Date $rule) => $rule === $this->rule_42 || $rule === $this->rule_66);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -596,11 +616,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->rule_42->shouldReceive('setSourceField')->never();
-        $this->date_factory->shouldReceive('save')->with($this->rule_42)->never();
+        $this->rule_42->expects($this->never())->method('setSourceField');
+        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -616,11 +636,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->rule_42->shouldReceive('setTargetField')->never();
-        $this->date_factory->shouldReceive('save')->with($this->rule_42)->never();
+        $this->rule_42->expects($this->never())->method('setTargetField');
+        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -636,11 +656,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->rule_42->shouldReceive('setComparator')->never();
-        $this->date_factory->shouldReceive('save')->with($this->rule_42)->never();
+        $this->rule_42->expects($this->never())->method('setComparator');
+        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -655,11 +675,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->rule_42->shouldReceive('setComparator')->never();
-        $this->date_factory->shouldReceive('save')->with($this->rule_42)->never();
+        $this->rule_42->expects($this->never())->method('setComparator');
+        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -674,11 +694,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->rule_42->shouldReceive('setComparator')->never();
-        $this->date_factory->shouldReceive('save')->with($this->rule_42)->never();
+        $this->rule_42->expects($this->never())->method('setComparator');
+        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -694,10 +714,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('save')->never();
+        $this->date_factory->expects($this->never())->method('save');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -713,10 +733,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('save')->never();
+        $this->date_factory->expects($this->never())->method('save');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -732,10 +752,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('save')->never();
+        $this->date_factory->expects($this->never())->method('save');
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         $this->processRequestAndExpectRedirection($request);
     }
@@ -757,10 +777,21 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     ],
                 ],
             ],
-            Mockery::mock(ProjectManager::class)
+            $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->shouldReceive('save')->andReturns(true);
+        $this->date_factory->method('save')->willReturn(true);
+
+        $this->rule_42->method('setSourceField');
+        $this->rule_42->method('setTargetField');
+        $this->rule_42->method('setComparator');
+        $this->rule_42->method('getSourceField');
+
+        $this->rule_66->method('getSourceField');
+        $this->rule_66->method('setSourceField');
+        $this->rule_66->method('setTargetField');
+        $this->rule_66->method('setComparator');
+
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
