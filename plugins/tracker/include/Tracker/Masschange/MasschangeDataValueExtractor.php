@@ -36,17 +36,14 @@ class MasschangeDataValueExtractor
         $fields_data = [];
         foreach ($masschange_data as $field_id => $data) {
             $field = $this->form_element_factory->getFieldById($field_id);
-            if (! $field) {
+            if ($field === null) {
                 continue;
             }
+
             if ($field instanceof Tracker_FormElement_Field_List) {
-                if (is_array($data) && count($data) > 1) {
-                    $key = array_search((string) BindStaticValueUnchanged::VALUE_ID, $data, true);
-                    if ($key !== false) {
-                        unset($data[$key]);
-                    }
-                }
+                $data = $this->removeUnchangedValueForMultiSelectWhenMoreThanAValueIsSubmitted($data);
             }
+
             if ($this->hasDataChanged($field, $data)) {
                 $fields_data[$field_id] = $data;
             }
@@ -55,23 +52,54 @@ class MasschangeDataValueExtractor
         return $fields_data;
     }
 
+    private function removeUnchangedValueForMultiSelectWhenMoreThanAValueIsSubmitted(mixed $data): mixed
+    {
+        if (! is_array($data)) {
+            return $data;
+        }
+
+        if (count($data) === 1) {
+            return $data;
+        }
+
+        $key = array_search((string) BindStaticValueUnchanged::VALUE_ID, $data, true);
+        if ($key !== false) {
+            unset($data[$key]);
+        }
+
+        return $data;
+    }
+
     private function hasDataChanged(\Tracker_FormElement_Field $field, mixed $data): bool
     {
         if ($field instanceof Tracker_FormElement_Field_List) {
-            return $this->isValueInData($data, (string) BindStaticValueUnchanged::VALUE_ID);
-        } elseif ($field instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
-            return isset($data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG]) &&
-                $data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG] === '1';
+            return $this->hasListValueChanged($data);
         }
 
-        return $this->isValueInData($data, $GLOBALS['Language']->getText('global', 'unchanged'));
+        if ($field instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
+            return $this->hasPermissionsOnArtifactChanged($data);
+        }
+
+        return $this->isValueNotInData($data, $GLOBALS['Language']->getText('global', 'unchanged'));
     }
 
-    private function isValueInData(mixed $data, string $value): bool
+    private function hasListValueChanged(mixed $data): bool
     {
-        return (
-            (is_array($data) && ! in_array($value, $data)) ||
-            (! is_array($data) && $data !== $value)
-        );
+        return $this->isValueNotInData($data, (string) BindStaticValueUnchanged::VALUE_ID);
+    }
+
+    private function hasPermissionsOnArtifactChanged(mixed $data): bool
+    {
+        return isset($data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG]) &&
+            $data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG] === '1';
+    }
+
+    private function isValueNotInData(mixed $data, string $value): bool
+    {
+        if (is_array($data)) {
+            return ! in_array($value, $data);
+        }
+
+        return $data !== $value;
     }
 }
