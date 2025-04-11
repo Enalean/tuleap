@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getAttributeOrThrow } from "@tuleap/dom";
+import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import type { LocaleString } from "@tuleap/gettext";
 import type {
     ParentArtifactIdentifier,
     CommonEvents,
     WillNotifyFault,
+    DidChangeLinkFieldValue,
 } from "@tuleap/plugin-tracker-artifact-common";
 import {
     CurrentArtifactIdentifier,
@@ -31,6 +32,7 @@ import {
     CurrentTrackerIdentifier,
     EventDispatcher,
 } from "@tuleap/plugin-tracker-artifact-common";
+import type { FormatLinkFieldValue } from "@tuleap/plugin-tracker-link-field";
 import {
     ArtifactCrossReference,
     createLinkField,
@@ -41,6 +43,7 @@ import {
     ParentTrackerIdentifier,
     TrackerShortname,
     UserIdentifier,
+    LinkFieldValueFormatter,
 } from "@tuleap/plugin-tracker-link-field";
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import type { EditionSwitcher } from "../edition/TrackerArtifactEditionSwitcher";
@@ -81,6 +84,17 @@ function initLinkFault(
         const fault: Fault = event.fault;
         fault_div.textContent = fault.toString();
         fault_div.classList.remove("hidden-alert");
+    });
+}
+
+function initObserveLinkValue(
+    event_dispatcher: EventDispatcher<CommonEvents>,
+    link_field_value_formatter: FormatLinkFieldValue,
+    input: HTMLInputElement,
+): void {
+    event_dispatcher.addObserver("DidChangeLinkFieldValue", (event: DidChangeLinkFieldValue) => {
+        const links = link_field_value_formatter.getFormattedValuesByFieldId(event.field_id);
+        input.value = JSON.stringify(links);
     });
 }
 
@@ -128,11 +142,14 @@ export const LinkFieldEditor = (
             .map(ParentTrackerIdentifier.fromId);
 
         const event_dispatcher = EventDispatcher();
+        const links_store = LinksStore();
+        const new_links_store = NewLinksStore();
+        const links_marked_for_removal_store = LinksMarkedForRemovalStore();
         const link_field_creator = LinkFieldCreator(
             event_dispatcher,
-            LinksStore(),
-            NewLinksStore(),
-            LinksMarkedForRemovalStore(),
+            links_store,
+            new_links_store,
+            links_marked_for_removal_store,
             current_artifact,
             ArtifactCrossReference.fromCurrentArtifact(
                 current_artifact,
@@ -147,7 +164,22 @@ export const LinkFieldEditor = (
             user_locale,
         );
 
+        const link_field_value_formatter = LinkFieldValueFormatter(
+            links_store,
+            links_marked_for_removal_store,
+            new_links_store,
+        );
+        const parent = mount_point.parentElement;
+
         initLinkFault(event_dispatcher, doc, mount_point);
+        if (parent !== null) {
+            const input = selectOrThrow(
+                parent,
+                "input[data-test=link-field-value]",
+                HTMLInputElement,
+            );
+            initObserveLinkValue(event_dispatcher, link_field_value_formatter, input);
+        }
 
         const field = { field_id: link_field_id, label: link_field_label };
 
@@ -159,7 +191,6 @@ export const LinkFieldEditor = (
         element.autocompleter = link_field_creator.createLinkSelectorAutoCompleter();
         element.creatorController = link_field_creator.createArtifactCreatorController();
 
-        const parent = mount_point.parentElement;
         if (edition_switcher !== null && parent !== null) {
             element.addEventListener("change", () => {
                 parent.classList.add("in-edition");

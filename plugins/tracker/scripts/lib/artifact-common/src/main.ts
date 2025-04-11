@@ -34,3 +34,4 @@ export { WillClearFaultNotification } from "./events/WillClearFaultNotification"
 export { WillDisableSubmit } from "./events/WillDisableSubmit";
 export { WillEnableSubmit } from "./events/WillEnableSubmit";
 export { WillNotifyFault } from "./events/WillNotifyFault";
+export { DidChangeLinkFieldValue } from "./events/DidChangeLinkFieldValue";

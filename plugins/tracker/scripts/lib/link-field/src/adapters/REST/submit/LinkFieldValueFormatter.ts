@@ -23,7 +23,7 @@ import type { RetrieveNewLinks } from "../../../domain/links/RetrieveNewLinks";
 import { NewChangesetLinkProxy } from "./NewChangesetLinkProxy";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
 
-interface FormatLinkFieldValue {
+export interface FormatLinkFieldValue {
     getFormattedValuesByFieldId: (field_id: number) => ArtifactLinkNewChangesetValue;
 }
 

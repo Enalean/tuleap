@@ -42,6 +42,7 @@ final readonly class EditorWithReverseLinksPresenter
     public ?int $parent_tracker_id;
     public int $user_id;
     public string $allowed_link_types;
+    public string $initial_value;
 
     /**
      * @param list<TypePresenter> $allowed_link_types
@@ -52,6 +53,7 @@ final readonly class EditorWithReverseLinksPresenter
         Tracker $current_tracker,
         ?Tracker $parent_tracker,
         array $allowed_link_types,
+        string $initial_value,
     ) {
         $this->link_field_id              = $link_field->getId();
         $this->link_field_label           = $link_field->getLabel();
@@ -62,5 +64,6 @@ final readonly class EditorWithReverseLinksPresenter
         $this->current_project_id         = (int) $current_tracker->getGroupId();
         $this->parent_tracker_id          = $parent_tracker?->getId();
         $this->allowed_link_types         = encode($allowed_link_types);
+        $this->initial_value              = $initial_value;
     }
 }

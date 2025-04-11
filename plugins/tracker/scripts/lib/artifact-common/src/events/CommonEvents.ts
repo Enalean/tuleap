@@ -21,6 +21,7 @@ import type { WillDisableSubmit } from "./WillDisableSubmit";
 import type { WillEnableSubmit } from "./WillEnableSubmit";
 import type { WillNotifyFault } from "./WillNotifyFault";
 import type { WillClearFaultNotification } from "./WillClearFaultNotification";
+import type { DidChangeLinkFieldValue } from "./DidChangeLinkFieldValue";
 import type { EventsMap } from "./EventDispatcher";
 
 export interface CommonEvents extends EventsMap {
@@ -28,4 +29,5 @@ export interface CommonEvents extends EventsMap {
     WillDisableSubmit: WillDisableSubmit;
     WillEnableSubmit: WillEnableSubmit;
     WillNotifyFault: WillNotifyFault;
+    DidChangeLinkFieldValue: DidChangeLinkFieldValue;
 }

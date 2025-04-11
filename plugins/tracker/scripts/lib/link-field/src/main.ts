@@ -29,6 +29,7 @@ export { formatExistingValue } from "./adapters/REST/link-field-initializer";
 export type { LabeledField } from "./domain/LabeledField";
 export { LinkFieldCreator } from "./LinkFieldCreator";
 export { LinkFieldValueFormatter } from "./adapters/REST/submit/LinkFieldValueFormatter";
+export type { FormatLinkFieldValue } from "./adapters/REST/submit/LinkFieldValueFormatter";
 export { LinksStore } from "./adapters/Memory/LinksStore";
 export { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 export { LinksMarkedForRemovalStore } from "./adapters/Memory/LinksMarkedForRemovalStore";

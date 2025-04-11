@@ -31,6 +31,7 @@ import {
     WillDisableSubmit,
     WillEnableSubmit,
     WillNotifyFault,
+    DidChangeLinkFieldValue,
 } from "@tuleap/plugin-tracker-artifact-common";
 import type { RetrieveAllLinkedArtifacts } from "./links/RetrieveAllLinkedArtifacts";
 import type { LinkedArtifact, LinkedArtifactIdentifier } from "./links/LinkedArtifact";
@@ -79,6 +80,7 @@ export type LinkFieldController = {
     ): LinkType;
     clearFaultNotification(): void;
     isLinkedArtifactInCurrentProject(artifact: LinkedArtifact | NewLink): boolean;
+    dispatchDidChange(): void;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -118,6 +120,10 @@ export const LinkFieldController = (
         const has_new_parent = new_links.some((link) => LinkType.isReverseChild(link.link_type));
 
         return has_new_parent || has_non_removed_parent;
+    };
+
+    const dispatchDidChange = (): void => {
+        event_dispatcher.dispatch(DidChangeLinkFieldValue(field.field_id));
     };
 
     return {
@@ -166,11 +172,13 @@ export const LinkFieldController = (
 
         markForRemoval(artifact_identifier): ReadonlyArray<LinkedArtifact> {
             deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);
+            dispatchDidChange();
             return links_store.getLinkedArtifacts();
         },
 
         unmarkForRemoval(artifact_identifier): ReadonlyArray<LinkedArtifact> {
             deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
+            dispatchDidChange();
             return links_store.getLinkedArtifacts();
         },
 
@@ -180,6 +188,7 @@ export const LinkFieldController = (
 
         changeLinkType(link, type): ReadonlyArray<LinkedArtifact> {
             link_type_changer.changeLinkType(link, type);
+            dispatchDidChange();
             return links_store.getLinkedArtifacts();
         },
 
@@ -189,16 +198,19 @@ export const LinkFieldController = (
 
         addNewLink(artifact, type): ReadonlyArray<NewLink> {
             new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
+            dispatchDidChange();
             return new_links_retriever.getNewLinks();
         },
 
         removeNewLink(link): ReadonlyArray<NewLink> {
             new_link_remover.deleteNewLink(link);
+            dispatchDidChange();
             return new_links_retriever.getNewLinks();
         },
 
         changeNewLinkType(link, type): ReadonlyArray<NewLink> {
             new_link_type_changer.changeNewLinkType(link, type);
+            dispatchDidChange();
             return new_links_retriever.getNewLinks();
         },
 
@@ -217,5 +229,7 @@ export const LinkFieldController = (
         isLinkedArtifactInCurrentProject(artifact): boolean {
             return artifact.project.id === current_project_identifier.id;
         },
+
+        dispatchDidChange,
     };
 };
