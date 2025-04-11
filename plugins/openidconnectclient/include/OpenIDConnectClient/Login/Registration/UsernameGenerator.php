@@ -74,7 +74,7 @@ class UsernameGenerator
             return $this->username_generator->normalize($email_local_part_without_spaces);
         }
 
-        throw new NotEnoughDataToGenerateUsernameException();
+        throw new NotEnoughDataToGenerateUsernameException('Not enough data in user\'s information to generate a username. Please check your identity provider.');
     }
 
     /**
