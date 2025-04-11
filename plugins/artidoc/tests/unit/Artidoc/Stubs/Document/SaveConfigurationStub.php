@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Document\SaveConfiguredTracker;
+use Tuleap\Artidoc\Document\SaveConfiguration;
+use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 
-final class SaveConfiguredTrackerStub implements SaveConfiguredTracker
+final class SaveConfigurationStub implements SaveConfiguration
 {
-    /** @psalm-var callable(int, int): void */
+    /** @psalm-var callable(int, int, ArtifactSectionField[]): void */
     private $callback;
 
     private function __construct(callable $callback)
@@ -35,7 +36,7 @@ final class SaveConfiguredTrackerStub implements SaveConfiguredTracker
     }
 
     /**
-     * @psalm-param callable(int, int): void $callback
+     * @psalm-param callable(int, int, ArtifactSectionField[]): void $callback
      */
     public static function withCallback(callable $callback): self
     {
@@ -52,8 +53,8 @@ final class SaveConfiguredTrackerStub implements SaveConfiguredTracker
         //Do nothing
     }
 
-    public function saveTracker(int $item_id, int $tracker_id): void
+    public function saveConfiguration(int $item_id, int $tracker_id, array $fields): void
     {
-        ($this->callback)($item_id, $tracker_id);
+        ($this->callback)($item_id, $tracker_id, $fields);
     }
 }

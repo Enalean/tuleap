@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\DB\DataAccessObject;
 
-final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfiguredField
+final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfiguredField, SaveConfiguredFields
 {
     public function retrieveConfiguredFieldsFromItemId(int $item_id): array
     {
@@ -74,6 +74,33 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
                 'field_id' => $field_id,
             ]
         );
+    }
+
+    public function saveFields(int $item_id, array $fields): void
+    {
+        $this->getDB()->tryFlatTransaction(function () use ($item_id, $fields) {
+            $this->getDB()->delete('plugin_artidoc_document_tracker_field', ['item_id' => $item_id]);
+
+            if (count($fields) === 0) {
+                return;
+            }
+
+            $rank = 0;
+            $this->getDB()->insertMany(
+                'plugin_artidoc_document_tracker_field',
+                array_map(
+                    static function (ArtifactSectionField $field) use (&$rank, $item_id) {
+                        return [
+                            'item_id'      => $item_id,
+                            'field_id'     => $field->field_id,
+                            'display_type' => $field->display_type->value,
+                            'rank'         => $rank++,
+                        ];
+                    },
+                    $fields,
+                )
+            );
+        });
     }
 
     /**

@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use PFUser;
 use Tracker;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
-use Tuleap\Artidoc\Document\SaveConfiguredTracker;
+use Tuleap\Artidoc\Document\SaveConfiguration;
 use Tuleap\Artidoc\Document\Tracker\CheckTrackerIsSuitableForDocument;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
@@ -44,7 +44,7 @@ final readonly class PUTConfigurationHandler
 {
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
-        private SaveConfiguredTracker $save_configured_tracker,
+        private SaveConfiguration $save_configuration,
         private RetrieveTracker $retrieve_tracker,
         private CheckTrackerIsSuitableForDocument $suitable_tracker_for_document_checker,
         private SuitableFieldRetriever $retrieve_suitable_field,
@@ -86,10 +86,11 @@ final readonly class PUTConfigurationHandler
             $user
         )->andThen(
             fn(Tracker $tracker) => $this->validateAllFields($configuration->fields, $tracker, $user)
-                ->map(function () use ($document_information, $tracker) {
-                    $this->save_configured_tracker->saveTracker(
+                ->map(function (array $fields) use ($document_information, $tracker) {
+                    $this->save_configuration->saveConfiguration(
                         $document_information->document->getId(),
                         $tracker->getId(),
+                        $fields
                     );
                     return true;
                 })
