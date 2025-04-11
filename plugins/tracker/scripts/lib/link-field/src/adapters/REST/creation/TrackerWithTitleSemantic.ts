@@ -23,5 +23,5 @@ import type {
 } from "@tuleap/plugin-tracker-rest-api-types";
 
 export type TrackerWithTitleSemantic = Pick<TrackerResponseNoInstance, "id"> & {
-    readonly semantics: Pick<SemanticsRepresentation, "title">;
+    readonly semantics: Required<Pick<SemanticsRepresentation, "title">>;
 };
