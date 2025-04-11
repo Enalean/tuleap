@@ -20,59 +20,28 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\Artifact\Artifact;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    /**
-     * @var array
-     */
-    private $expected_parameters;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition
-     */
-    private $transition;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $field;
-    /**
-     * @var Jenkins_Client|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $client;
-    /**
-     * @var Transition_PostAction_CIBuild
-     */
-    private $post_action_ci_build;
-    /**
-     * @var string
-     */
-    private $job_url;
+    private array $expected_parameters;
+    private Transition $transition;
+    private Tracker_Artifact_Changeset $changeset;
+    private Jenkins_Client&MockObject $client;
+    private Transition_PostAction_CIBuild $post_action_ci_build;
+    private string $job_url;
 
     protected function setUp(): void
     {
-        $build_user             = 'mickey mooouse';
+        $build_user             = 101;
         $project_id             = 9852614;
         $artifact_id            = 333558899;
         $tracker_id             = 5245;
@@ -86,10 +55,12 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
             Transition_PostAction_CIBuild::BUILD_PARAMETER_TRIGGER_FIELD_VALUE => $value_triggering_build,
         ];
 
-        $this->transition = \Mockery::spy(\Transition::class);
+        $field_value = ListStaticValueBuilder::aStaticValue($value_triggering_build)->build();
+
+        $this->transition = new Transition(100001, 123, null, $field_value);
         $id               = 123;
         $this->job_url    = 'http://example.com/job';
-        $this->client     = \Mockery::spy(\Jenkins_Client::class);
+        $this->client     = $this->createMock(\Jenkins_Client::class);
 
         $this->post_action_ci_build = new Transition_PostAction_CIBuild(
             $this->transition,
@@ -98,58 +69,43 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
             $this->client
         );
 
-        $this->tracker   = \Mockery::spy(\Tracker::class);
-        $this->project   = \Mockery::spy(\Project::class);
-        $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $this->field     = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $field_value     = ListStaticValueBuilder::aStaticValue($value_triggering_build)->build();
+        $project  = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($project)->build();
+        $artifact = ArtifactTestBuilder::anArtifact($artifact_id)->inTracker($tracker)->build();
 
-        $this->changeset->shouldReceive('getSubmittedBy')->andReturns($build_user);
-
-        $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
-        $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->tracker->shouldReceive('getProject')->andReturns($this->project);
-        $this->project->shouldReceive('getId')->andReturns($project_id);
-
-        $this->artifact->shouldReceive('getId')->andReturns($artifact_id);
-
-        $this->tracker->shouldReceive('getId')->andReturns($tracker_id);
-
-        $this->transition->shouldReceive('getFieldValueTo')->andReturns($field_value);
-        $this->field->shouldReceive('getLabel')->andReturns($value_triggering_build);
+        $this->changeset = ChangesetTestBuilder::aChangeset(1001)
+            ->ofArtifact($artifact)
+            ->submittedBy($build_user)
+            ->build();
     }
 
     public function testItIsNotDefinedWhenJobUrlIsEmpty(): void
     {
-        $transition = \Mockery::spy(\Transition::class);
+        $transition = $this->createMock(\Transition::class);
         $id         = 123;
         $job_url    = null;
-        $client     = \Mockery::spy(\Jenkins_Client::class);
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $this->client);
         $this->assertFalse($post_action_ci_build->isDefined());
     }
 
     public function testItIsDefinedWhenJobUrlIsFilled(): void
     {
-        $transition = \Mockery::spy(\Transition::class);
+        $transition = $this->createMock(\Transition::class);
         $id         = 123;
         $job_url    = 'http://example.com/job';
-        $client     = \Mockery::spy(\Jenkins_Client::class);
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $this->client);
         $this->assertTrue($post_action_ci_build->isDefined());
     }
 
     public function testItExportsInXMLFormatTheJobUrl(): void
     {
-        $transition = \Mockery::spy(\Transition::class);
+        $transition = $this->createMock(\Transition::class);
         $id         = 123;
         $job_url    = 'http://example.com';
-        $client     = \Mockery::spy(\Jenkins_Client::class);
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $this->client);
 
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = [];
@@ -160,12 +116,11 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesNotExportThePostActionIfJobUrlIsNotSet(): void
     {
-        $transition = \Mockery::spy(\Transition::class);
+        $transition = $this->createMock(\Transition::class);
         $id         = 123;
         $job_url    = '';
-        $client     = \Mockery::spy(\Jenkins_Client::class);
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $this->client);
 
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = [];
@@ -176,20 +131,21 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItLaunchTheCIBuildOnAfter(): void
     {
-        $this->client->shouldReceive('launchJobBuild')->with($this->job_url, \Mockery::any())->once();
+        $this->client->expects($this->once())->method('launchJobBuild')->with($this->job_url, $this->anything());
         $this->post_action_ci_build->after($this->changeset);
     }
 
     public function testItDisplayInfoFeedbackIfLaunchSucceed(): void
     {
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
+        $this->client->method('launchJobBuild');
         $this->post_action_ci_build->after($this->changeset);
     }
 
     public function testItDisplayErrorFeedbackIfLaunchFailed(): void
     {
         $error_message = 'Oops';
-        $this->client->shouldReceive('launchJobBuild')->with($this->job_url, \Mockery::any())->andThrows(
+        $this->client->method('launchJobBuild')->with($this->job_url, $this->anything())->willThrowException(
             new Jenkins_ClientUnableToLaunchBuildException($error_message)
         );
 
@@ -199,7 +155,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItIncludesTheNeededParameters(): void
     {
-        $this->client->shouldReceive('launchJobBuild')->with($this->job_url, $this->expected_parameters)->once();
+        $this->client->expects($this->once())->method('launchJobBuild')->with($this->job_url, $this->expected_parameters);
         $this->post_action_ci_build->after($this->changeset);
     }
 
@@ -208,8 +164,8 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
         $id                   = 123;
         $job_url              = '';
         $post_action_ci_build = new Transition_PostAction_CIBuild($this->transition, $id, $job_url, $this->client);
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
-        $this->client->shouldReceive('launchJobBuild')->never();
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
+        $this->client->expects($this->never())->method('launchJobBuild');
         $post_action_ci_build->after($this->changeset);
     }
 }

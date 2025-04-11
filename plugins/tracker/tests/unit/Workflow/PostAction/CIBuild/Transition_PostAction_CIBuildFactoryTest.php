@@ -19,23 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-
     private Transition $transition;
     private int $post_action_id;
     private int $transition_id;
     private Transition_PostAction_CIBuildFactory $factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction_CIBuildDao
-     */
-    private $dao;
-    private Workflow $workflow;
+    private Transition_PostAction_CIBuildDao&MockObject $dao;
+    private Workflow&MockObject $workflow;
 
     protected function setUp(): void
     {
@@ -43,7 +38,8 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
         $this->post_action_id = 789;
 
         $workflow_id    = '1112';
-        $this->workflow = Mockery::mock(Workflow::class, ['getId' => $workflow_id]);
+        $this->workflow = $this->createMock(Workflow::class);
+        $this->workflow->method('getId')->willReturn($workflow_id);
 
         $this->transition = new Transition(
             $this->transition_id,
@@ -53,7 +49,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
         );
         $this->transition->setWorkflow($this->workflow);
 
-        $this->dao     = Mockery::mock(Transition_PostAction_CIBuildDao::class);
+        $this->dao     = $this->createMock(Transition_PostAction_CIBuildDao::class);
         $this->factory = new Transition_PostAction_CIBuildFactory($this->dao);
     }
 
@@ -66,8 +62,8 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
             'transition_id' => (string) $this->transition_id,
         ];
 
-        $this->dao->shouldReceive('searchByTransitionId')->with($this->transition_id)
-            ->andReturns(\TestHelper::arrayToDar($post_action_rows));
+        $this->dao->method('searchByTransitionId')->with($this->transition_id)
+            ->willReturn(\TestHelper::arrayToDar($post_action_rows));
 
         $this->assertCount(1, $this->factory->loadPostActions($this->transition));
 
@@ -83,8 +79,8 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
     {
         $post_action_value = 'http://ww.myjenks.com/job';
 
-        $this->dao->shouldReceive('searchByWorkflow')->with($this->workflow)
-            ->andReturns(\TestHelper::arrayToDar(
+        $this->dao->method('searchByWorkflow')->with($this->workflow)
+            ->willReturn(\TestHelper::arrayToDar(
                 [
                     'id'         => (string) $this->post_action_id,
                     'job_url'    => $post_action_value,
@@ -113,7 +109,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
         $to_transition_id = 2;
         $field_mapping    = [];
 
-        $this->dao->shouldReceive('duplicate')->with($this->transition_id, $to_transition_id)->once();
+        $this->dao->expects($this->once())->method('duplicate')->with($this->transition_id, $to_transition_id);
         $this->factory->duplicate($this->transition, $to_transition_id, $field_mapping);
     }
 
@@ -132,6 +128,6 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
 
     public function testItReturnsAlwaysFalseSinceThereIsNoFieldUsedInThisPostAction(): void
     {
-        $this->assertFalse($this->factory->isFieldUsedInPostActions(\Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)));
+        $this->assertFalse($this->factory->isFieldUsedInPostActions($this->createMock(\Tracker_FormElement_Field_Selectbox::class)));
     }
 }
