@@ -84,7 +84,8 @@ const { is_submit_button_disabled, submit_button_icon, is_error, error_message }
     configuration_helper;
 
 function onSubmit(event: Event): void {
-    configuration_helper.onSubmit(event);
+    event.preventDefault();
+    configuration_helper.onSubmit();
 }
 </script>
 
