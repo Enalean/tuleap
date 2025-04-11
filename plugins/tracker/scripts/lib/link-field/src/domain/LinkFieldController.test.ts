@@ -291,9 +291,10 @@ describe(`LinkFieldController`, () => {
 
             expect(artifacts).toHaveLength(1);
             const event_types = event_dispatcher.getDispatchedEventTypes();
-            expect(event_types).toHaveLength(2);
+            expect(event_types).toHaveLength(3);
             expect(event_types).toContain("WillDisableSubmit");
             expect(event_types).toContain("WillEnableSubmit");
+            expect(event_types).toContain("DidChangeLinkFieldValue");
         });
 
         it(`when the modal is in edition mode and it fails loading,
