@@ -95,9 +95,14 @@
       </formElements>
     </formElement>
     <formElement type="fieldset" ID="F13050" rank="28">
-      <name>references</name>
-      <label><![CDATA[References]]></label>
+      <name>links_fieldset</name>
+      <label><![CDATA[Links]]></label>
       <formElements>
+        <formElement type="art_link" ID="F14342" rank="0">
+          <name>links</name>
+          <label>Links</label>
+          <description>Links</description>
+        </formElement>
         <formElement type="cross" ID="F13051" rank="0">
           <name>cross_references</name>
           <label><![CDATA[Cross References]]></label>
@@ -139,6 +144,12 @@
       <label>Title</label>
       <description>Define the title of an artifact</description>
       <field REF="F13039"/>
+    </semantic>
+    <semantic type="description">
+      <shortname>description</shortname>
+      <label>Description</label>
+      <description>Define the description of an artifact</description>
+      <field REF="F13040"/>
     </semantic>
     <semantic type="status">
       <shortname>status</shortname>
@@ -214,6 +225,9 @@
     <permission scope="field" REF="F13049" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F13049" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F13049" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14342" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14342" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14342" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F13051" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F13053" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F13054" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
