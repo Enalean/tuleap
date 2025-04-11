@@ -23,6 +23,7 @@ import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 import { nothingIsEdited } from "./artifact-edition-buttons-switcher/is-edited-checker";
+import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker.js";
 
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
@@ -392,7 +393,7 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     };
 
     var toggleSubmissionBar = function () {
-        if (submissionBarIsAlreadyActive()) {
+        if (submissionBarIsAlreadyActive(document)) {
             removeSubmissionBarIfNeeded();
         }
 
@@ -426,10 +427,6 @@ tuleap.tracker.artifact.editionSwitcher = function () {
             document.getElementById("tracker_followup_comment_new"),
             document,
         );
-    };
-
-    var submissionBarIsAlreadyActive = function () {
-        return $(".hidden-artifact-submit-button:visible").size() > 0;
     };
 
     return {
