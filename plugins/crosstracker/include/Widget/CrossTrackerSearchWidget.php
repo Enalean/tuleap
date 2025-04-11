@@ -188,7 +188,7 @@ class CrossTrackerSearchWidget extends Widget
     public function exportAsXML(): ?SimpleXMLElement
     {
         return $this->widget_XML_exporter->generateXML($this->content_id)->match(
-            static fn(SimpleXMLElement $widget_id) => $widget_id,
+            static fn(SimpleXMLElement $widget) => $widget,
             static fn() => null
         );
     }
