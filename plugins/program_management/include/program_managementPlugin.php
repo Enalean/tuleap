@@ -32,6 +32,8 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
+use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\MoveArtifactActionEventProxy;
@@ -122,6 +124,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
+use Tuleap\ProgramManagement\Adapter\ProjectHistory\ProgramHistoryEntry;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Redirections\IterationRedirectionParametersProxy;
 use Tuleap\ProgramManagement\Adapter\Redirections\ProgramRedirectionParametersProxy;
@@ -205,6 +208,8 @@ use Tuleap\ProgramManagement\SynchronizeTeamController;
 use Tuleap\ProgramManagement\Templates\PortfolioTemplate;
 use Tuleap\ProgramManagement\Templates\ProgramTemplate;
 use Tuleap\ProgramManagement\Templates\TeamTemplate;
+use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
@@ -1742,5 +1747,34 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             ),
             array_map(static fn ($link) => $link->getId(), $event->getArtifact()->getLinkedArtifacts($event->getUser()))
         );
+    }
+
+    #[ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents(array $params): void
+    {
+        $params['subEvents']['event_others'][] = ProgramHistoryEntry::UpdateTeamConfiguration->value;
+    }
+
+    #[ListeningToEventClass]
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        $history_entry = ProgramHistoryEntry::tryFrom($event->getKey());
+
+        if ($history_entry) {
+            $event->setLabel(
+                $history_entry->getLabel()
+            );
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event): void
+    {
+        $history_entry = ProgramHistoryEntry::tryFrom($event->getKey());
+        if ($history_entry) {
+            $event->setValue(
+                $history_entry->getValue($event->getParameters())
+            );
+        }
     }
 }

@@ -77,6 +77,12 @@ msgid ""
 "increments."
 msgstr ""
 
+#, php-format
+msgid ""
+"Configuration updated for program #%d - previous team linked [ %s ] - new "
+"teams linked [ %s ] "
+msgstr ""
+
 msgid "Configure the teams"
 msgstr ""
 
@@ -485,6 +491,9 @@ msgid "Tracker with id #%d has no artifact link field"
 msgstr ""
 
 msgid "Unchanged"
+msgstr ""
+
+msgid "Update the configuration of Program"
 msgstr ""
 
 #, php-format

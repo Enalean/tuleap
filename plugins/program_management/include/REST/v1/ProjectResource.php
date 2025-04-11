@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
+use ProjectHistoryDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
@@ -52,6 +53,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
+use Tuleap\ProgramManagement\Adapter\ProjectHistory\ProjectHistorySaver;
+use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
@@ -148,7 +151,16 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao,
             $project_permission_verifier,
             $team_adapter,
-            $team_dao
+            $team_dao,
+            new ProjectHistorySaver(
+                new ProjectHistoryDao(),
+                $project_manager_adapter,
+                $this->user_manager_adapter,
+            ),
+            $program_dao,
+            new ProjectReferenceRetriever(
+                $project_manager_adapter,
+            ),
         );
 
         $artifacts_linked_to_parent_dao   = new ArtifactsLinkedToParentDao();
