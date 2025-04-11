@@ -26,7 +26,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^12.0.1",
     "css-loader": "^6.8.1",
-    "cypress": "^14.0.1",
+    "cypress": "^14.3.0",
     "esbuild-loader": "^2.20.0",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.1.0",
@@ -113,7 +113,8 @@
       "side-channel": "npm:@nolyfill/side-channel@^1",
       "is-core-module": "npm:@nolyfill/is-core-module@^1",
       "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
-      "safer-buffer": "npm:@nolyfill/safer-buffer@^1"
+      "safer-buffer": "npm:@nolyfill/safer-buffer@^1",
+      "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1"
     }
   }
 }
