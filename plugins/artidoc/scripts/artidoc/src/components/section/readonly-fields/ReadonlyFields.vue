@@ -27,7 +27,7 @@
             v-bind:class="getFieldClasses(readonly_field)"
         >
             <field-string
-                v-if="isStringField(readonly_field)"
+                v-if="readonly_field.type === 'string'"
                 v-bind:field_string="readonly_field"
             />
         </div>
@@ -36,10 +36,7 @@
 
 <script setup lang="ts">
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
-import {
-    isStringField,
-    type ReadonlyField,
-} from "@/sections/readonly-fields/ReadonlyFieldsCollection";
+import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 
 defineProps<{

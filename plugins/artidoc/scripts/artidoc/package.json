@@ -15,6 +15,7 @@
     "@tuleap/gettext": "workspace:^",
     "@tuleap/keyboard-shortcuts": "workspace:^",
     "@tuleap/lazybox": "workspace:^",
+    "@tuleap/list-picker": "workspace:^",
     "@tuleap/option": "workspace:^",
     "@tuleap/print-as-pdf": "workspace:^",
     "@tuleap/project-background": "workspace:^",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/burningparrot-theme": "workspace:^",
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:^",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/marked": "^3.0.2",
     "@types/uuid": "^9.0.8",

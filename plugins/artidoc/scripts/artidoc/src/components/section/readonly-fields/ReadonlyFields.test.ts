@@ -21,7 +21,7 @@ import { describe, it, expect } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import type { ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFieldsCollection";
+import type { ReadonlyField, ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFields";
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
 
@@ -33,9 +33,9 @@ const string_field: ReadonlyFieldString = {
 };
 
 describe("ReadonlyFields", () => {
-    const getWrapper = (): VueWrapper => {
+    const getWrapper = (fields: ReadonlyField[]): VueWrapper => {
         const section = ArtifactSectionFactory.override({
-            fields: [string_field],
+            fields,
         });
 
         return shallowMount(ReadonlyFields, {
@@ -46,15 +46,14 @@ describe("ReadonlyFields", () => {
     };
 
     it("should display String fields in column", () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper([string_field]);
 
         expect(wrapper.findComponent(FieldString).exists()).toBe(true);
         expect(wrapper.findAll(".tlp-property")[0].classes()).toStrictEqual(["tlp-property"]);
     });
 
     it("should display String fields in block", () => {
-        string_field.display_type = "block";
-        const wrapper = getWrapper();
+        const wrapper = getWrapper([{ ...string_field, display_type: "block" }]);
 
         expect(wrapper.findComponent(FieldString).exists()).toBe(true);
         expect(wrapper.findAll(".tlp-property")[0].classes()).toStrictEqual([
