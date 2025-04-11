@@ -24,6 +24,7 @@ use Codendi_Request;
 use HTTPRequest;
 use LogicException;
 use Project;
+use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -40,10 +41,11 @@ class CrossTrackerSearchWidget extends Widget
     public const NAME = 'crosstrackersearch';
 
     public function __construct(
-        private readonly CreateWidget $widget_creator,
         private readonly WidgetInheritanceHandler $inheritance_handler,
         private readonly WidgetPermissionChecker $permission_checker,
         private readonly SearchCrossTrackerWidget $search_cross_tracker_widget,
+        private readonly WidgetCrossTrackerWidgetXMLExporter $widget_XML_exporter,
+        private readonly CrossTrackerWidgetCreator $cross_tracker_widget_creator,
     ) {
         parent::__construct(self::NAME);
     }
@@ -109,9 +111,12 @@ class CrossTrackerSearchWidget extends Widget
         return false;
     }
 
-    public function create(Codendi_Request $request): int
+    public function create(Codendi_Request $request): int|false
     {
-        return $this->widget_creator->createWidget();
+            return $this->cross_tracker_widget_creator->createWithQueries($request)->match(
+                static fn(int $widget_id) => $widget_id,
+                static fn() => false
+            );
     }
 
     public function destroy($id): void
@@ -177,6 +182,14 @@ class CrossTrackerSearchWidget extends Widget
         return $renderer->renderToString(
             'widget-title',
             ['title_attribute' => $this->getTitleAttributeValue()],
+        );
+    }
+
+    public function exportAsXML(): ?SimpleXMLElement
+    {
+        return $this->widget_XML_exporter->generateXML($this->content_id)->match(
+            static fn(SimpleXMLElement $widget_id) => $widget_id,
+            static fn() => null
         );
     }
 

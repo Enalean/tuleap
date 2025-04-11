@@ -19,36 +19,37 @@
  */
 
 declare(strict_types=1);
-namespace Tuleap\CrossTracker\Tests\Stub\Query;
+namespace Tuleap\CrossTracker\Tests\Stub\Widget;
 
-use Tuleap\CrossTracker\Query\InsertNewQuery;
-use Tuleap\DB\UUID;
+use Codendi_Request;
+use Widget;
 
-final class InsertNewQueryStub implements InsertNewQuery
+final class CrossTrackerSearchWidgetStub extends Widget
 {
-    private int $call_count = 0;
-    private function __construct(private readonly UUID $uuid)
+    private function __construct(int $id, private ?\Closure $callback)
     {
+        parent::__construct($id);
     }
 
-    public function create(
-        string $query,
-        string $title,
-        string $description,
-        int $widget_id,
-        bool $is_default,
-    ): UUID {
-        $this->call_count++;
-        return $this->uuid;
+    /**
+     *
+     * @return null|false|int
+     */
+    public function create(Codendi_Request $request)
+    {
+        if ($this->callback !== null) {
+            ($this->callback)($request);
+        }
+        return $this->id;
     }
 
-    public static function withUUID(UUID $uuid): self
+    public static function withIdAndCallback(int $id, \Closure $callback): self
     {
-        return new self($uuid);
+        return new self($id, $callback);
     }
 
-    public function getCallCount(): int
+    public static function withDefault(): self
     {
-        return $this->call_count;
+        return new self(0, null);
     }
 }

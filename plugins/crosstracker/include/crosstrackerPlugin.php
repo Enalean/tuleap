@@ -20,13 +20,22 @@
 
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactory;
+use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
+use Tuleap\CrossTracker\Query\CrossTrackerQueryFactory;
+use Tuleap\CrossTracker\Query\QueryCreator;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\CrossTrackerSearchWidget;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetCreator;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Widget\WidgetCrossTrackerWidgetXMLExporter;
+use Tuleap\CrossTracker\Widget\WidgetCrossTrackerXMLImporter;
 use Tuleap\CrossTracker\Widget\WidgetInheritanceHandler;
 use Tuleap\CrossTracker\Widget\WidgetPermissionChecker;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
@@ -81,16 +90,28 @@ class crosstrackerPlugin extends Plugin
     {
         if ($get_widget_event->getName() === CrossTrackerSearchWidget::NAME) {
             $widget_dao = new CrossTrackerWidgetDao();
+            $query_dao  = new CrossTrackerQueryDao();
+            $executor   = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
             $get_widget_event->setWidget(
                 new CrossTrackerSearchWidget(
-                    $widget_dao,
                     new WidgetInheritanceHandler(
                         $widget_dao,
                         $widget_dao,
                         $this->getBackendLogger()
                     ),
-                    new WidgetPermissionChecker($widget_dao, \ProjectManager::instance()),
-                    $widget_dao
+                    new WidgetPermissionChecker($widget_dao, ProjectManager::instance()),
+                    $widget_dao,
+                    new WidgetCrossTrackerWidgetXMLExporter(new CrossTrackerQueryFactory(new CrossTrackerQueryDao())),
+                    new CrossTrackerWidgetCreator(
+                        $widget_dao,
+                        new QueryCreator(
+                            $executor,
+                            $query_dao,
+                            $query_dao
+                        ),
+                        $executor
+                    )
                 )
             );
         }
@@ -106,6 +127,15 @@ class crosstrackerPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    #[ListeningToEventClass]
+    public function configureAtXMLImport(ConfigureAtXMLImport $event): void
+    {
+        if ($event->getWidget()->getId() === CrossTrackerSearchWidget::NAME) {
+            $xml_import = new WidgetCrossTrackerXMLImporter();
+            $xml_import->configureWidget($event);
+        }
     }
 
     #[ListeningToEventClass]
