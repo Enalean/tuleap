@@ -116,7 +116,7 @@ export interface StructureFormat {
 export type TrackerProjectRepresentation = ProjectReference;
 
 export type SemanticsRepresentation = {
-    readonly title: {
+    readonly title?: {
         readonly field_id: number;
     };
 };
