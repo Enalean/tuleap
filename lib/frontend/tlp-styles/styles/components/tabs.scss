@@ -168,8 +168,7 @@ button:where(.tlp-tab) {
     &[disabled],
     &[disabled]:hover {
         border-bottom-color: transparent;
-        opacity: 0.5;
-        color: var(--tlp-dimmed-color);
+        color: var(--tlp-dimmed-color-lighter-50);
         cursor: not-allowed;
 
         > .tlp-tab-badge-append {
@@ -222,7 +221,6 @@ button:where(.tlp-tab) {
             var(--tlp-medium-spacing);
         border-right: $inactive-tab-right-border-width solid
             var(--tlp-neutral-dark-color-transparent-50);
-        opacity: 1;
         color: var(--tlp-dimmed-color-lighter-50);
 
         > .tlp-tab-badge-append {
