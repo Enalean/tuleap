@@ -43,10 +43,18 @@ import {
     IS_USER_ADMIN,
     UPDATE_WIDGET_TITLE,
 } from "./injection-symbols";
-import type { EditQueryEvent, SwitchQueryEvent } from "./helpers/widget-events";
+import type {
+    CreatedQueryEvent,
+    EditedQueryEvent,
+    EditQueryEvent,
+    InitializedWithQueryEvent,
+    SwitchQueryEvent,
+} from "./helpers/widget-events";
 import {
+    NEW_QUERY_CREATED_EVENT,
+    QUERY_EDITED_EVENT,
+    INITIALIZED_WITH_QUERY_EVENT,
     SWITCH_QUERY_EVENT,
-    CLEAR_FEEDBACK_EVENT,
     CREATE_NEW_QUERY_EVENT,
     EDIT_QUERY_EVENT,
     UPDATE_WIDGET_TITLE_EVENT,
@@ -84,24 +92,32 @@ function displayActiveQuery(): void {
 onMounted(() => {
     emitter.on(CREATE_NEW_QUERY_EVENT, handleCreateNewQuery);
     emitter.on(EDIT_QUERY_EVENT, handleEditQuery);
-    emitter.on(SWITCH_QUERY_EVENT, handleSwitchQuery);
+    emitter.on(SWITCH_QUERY_EVENT, setCurrentlySelectedQuery);
+    emitter.on(INITIALIZED_WITH_QUERY_EVENT, setCurrentlySelectedQuery);
+    emitter.on(NEW_QUERY_CREATED_EVENT, setCurrentlySelectedQuery);
+    emitter.on(QUERY_EDITED_EVENT, setCurrentlySelectedQuery);
     widget_title_updater.listenToUpdateTitle();
 });
 
 onBeforeUnmount(() => {
     emitter.off(CREATE_NEW_QUERY_EVENT, handleCreateNewQuery);
     emitter.off(EDIT_QUERY_EVENT, handleEditQuery);
-    emitter.off(SWITCH_QUERY_EVENT, handleSwitchQuery);
+    emitter.off(SWITCH_QUERY_EVENT, setCurrentlySelectedQuery);
+    emitter.off(INITIALIZED_WITH_QUERY_EVENT, setCurrentlySelectedQuery);
+    emitter.off(NEW_QUERY_CREATED_EVENT, setCurrentlySelectedQuery);
+    emitter.off(QUERY_EDITED_EVENT, setCurrentlySelectedQuery);
     emitter.all.clear();
     widget_title_updater.removeListener();
 });
 
-function handleSwitchQuery(event: SwitchQueryEvent): void {
+function setCurrentlySelectedQuery(
+    event: SwitchQueryEvent | InitializedWithQueryEvent | CreatedQueryEvent | EditedQueryEvent,
+): void {
     selected_query.value = event.query;
+    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: event.query.title });
 }
 
 function handleCreateNewQuery(): void {
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
     emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: default_widget_title });
     widget_pane.value = QUERY_CREATION_PANE;
 }
@@ -109,7 +125,6 @@ function handleCreateNewQuery(): void {
 function handleEditQuery(query_to_edit_event: EditQueryEvent): void {
     query_to_edit.value = query_to_edit_event.query_to_edit;
     widget_pane.value = QUERY_EDITION_PANE;
-    emitter.emit(CLEAR_FEEDBACK_EVENT);
     emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: query_to_edit_event.query_to_edit.title });
 }
 </script>
