@@ -1,77 +1,31 @@
 <?xml-stylesheet type="text/xsl" href="style.xsl"?>
 <project>
   <dashboards>
-    <dashboard name="0 - Main Dashboard">
-      <line>
+    <dashboard name="Dashboard">
+      <line layout="two-columns-small-big">
         <column>
           <widget name="dashboardprojectmilestone"/>
-          <widget name="projectmembers"/>
-        </column>
-        <column>
-          <widget name="projectnote">
-            <preference name="note">
-              <value name="title">Note from the Tuleap team</value>
-              <value name="content"><![CDATA[
-Welcome to your new project!
-
-It is based on Agile Enterprise Planning - Full ALM template.
-
-You will find a complete workspace to plan, build and ship quality products.
-
-It includes a ready-to-use Scrum & Test environment
-to collect stories, plan releases, monitor sprints and test your features.
-
-It also includes a Git to create all repositories your team needs.
-
-In brief, all tools to reach end-to-end traceability.
-
-
-]]></value>
-            </preference>
-          </widget>
           <widget name="projectheartbeat"/>
         </column>
-      </line>
-    </dashboard>
-    <dashboard name="1 - Product Owner">
-      <line>
         <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R1744"></reference>
-              <value name="title">Releases</value>
+          <widget name="crosstrackersearch">
+            <preference name="query">
+              <value name="is-default">1</value>
+              <value name="title"><![CDATA[All open artifacts]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+  FROM @project = 'self'
+  WHERE @status = OPEN()
+  ORDER BY @last_update_date DESC]]></value>
             </preference>
-          </widget>
-        </column>
-      </line>
-    </dashboard>
-    <dashboard name="2 - Developers">
-      <line>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R1740"></reference>
-              <value name="title">New Submitted Bugs</value>
-            </preference>
-          </widget>
-        </column>
-      </line>
-    </dashboard>
-    <dashboard name="3 - QA">
-      <line>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R1685"></reference>
-              <value name="title">Test Cases Charts</value>
-            </preference>
-          </widget>
-        </column>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R1686"></reference>
-              <value name="title">All tests execution status</value>
+            <preference name="query">
+              <value name="is-default">0</value>
+              <value name="title"><![CDATA[Open artifacts assigned to me]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+FROM @project = 'self'
+WHERE @status = OPEN() AND @assigned_to = MYSELF()
+ORDER BY @last_update_date DESC]]></value>
             </preference>
           </widget>
         </column>

@@ -17,8 +17,8 @@
     <service shortname="plugin_testmanagement" enabled="0"/>
   </services>
   <dashboards>
-    <dashboard name="0 - Portfolio Vision">
-      <line layout="two-columns">
+    <dashboard name="Dashboard">
+      <line layout="two-columns-small-big">
         <column>
           <widget name="projectnote">
             <preference name="note">
@@ -31,49 +31,24 @@ In addition, you can add on this dashboard the **Portfolio Canvas**. It defines 
           </widget>
         </column>
         <column>
-          <widget name="projectmembers"/>
-        </column>
-      </line>
-    </dashboard>
-    <dashboard name="1 - Portfolio Dashboard">
-      <line layout="one-column">
-        <column>
-          <widget name="plugin_roadmap_project_widget">
-            <preference name="roadmap">
-              <value name="title">Portfolio Roadmap</value>
-              <value name="tracker_id">T1089</value>
+          <widget name="crosstrackersearch">
+            <preference name="query">
+              <value name="is-default">1</value>
+              <value name="title"><![CDATA[All open artifacts]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+  FROM @project = 'self'
+  WHERE @status = OPEN()
+  ORDER BY @last_update_date DESC]]></value>
             </preference>
-          </widget>
-          <widget name="plugin_agiledashboard_projects_kanban">
-            <preference name="kanban">
-              <reference name="id" REF="K70"/>
-              <value name="title">Portfolio Kanban</value>
-            </preference>
-          </widget>
-        </column>
-      </line>
-    </dashboard>
-    <dashboard name="Epics Analysis">
-      <line layout="two-columns">
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <value name="title"><![CDATA[Costs]]></value>
-              <reference name="id" REF="R3544"/>
-            </preference>
-          </widget>
-        </column>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <value name="title"><![CDATA[Type of Epic by Importance]]></value>
-              <reference name="id" REF="R3542"/>
-            </preference>
-          </widget>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <value name="title"><![CDATA[Epics by Status]]></value>
-              <reference name="id" REF="R3541"/>
+            <preference name="query">
+              <value name="is-default">0</value>
+              <value name="title"><![CDATA[Open artifacts assigned to me]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+FROM @project = 'self'
+WHERE @status = OPEN() AND @assigned_to = MYSELF()
+ORDER BY @last_update_date DESC]]></value>
             </preference>
           </widget>
         </column>
