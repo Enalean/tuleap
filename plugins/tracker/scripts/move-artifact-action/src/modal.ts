@@ -22,6 +22,7 @@ import { createGettext } from "vue3-gettext";
 import { createPinia } from "pinia";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { getAttributeOrThrow } from "@tuleap/dom";
+import type { ColorName } from "@tuleap/core-constants";
 import MoveModal from "./components/MoveModal.vue";
 import {
     ARTIFACT_ID,
@@ -38,7 +39,11 @@ export async function init(vue_mount_point: HTMLElement): Promise<void> {
             Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-tracker-id"), 10),
         )
         .provide(TRACKER_NAME, getAttributeOrThrow(vue_mount_point, "data-tracker-name"))
-        .provide(TRACKER_COLOR, getAttributeOrThrow(vue_mount_point, "data-tracker-color"))
+        .provide(
+            TRACKER_COLOR,
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Assume that the backend does not send any string
+            getAttributeOrThrow(vue_mount_point, "data-tracker-color") as ColorName,
+        )
         .provide(
             ARTIFACT_ID,
             Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-artifact-id"), 10),
@@ -48,9 +53,10 @@ export async function init(vue_mount_point: HTMLElement): Promise<void> {
             Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-project-id"), 10),
         )
         .use(
-            await initVueGettext(createGettext, (locale: string) => {
-                return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-            }),
+            await initVueGettext(
+                createGettext,
+                (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+            ),
         )
         .use(createPinia())
         .mount(vue_mount_point);

@@ -28,6 +28,7 @@ exports[`CriterionDate > should render the component when date is set 1`] = `
       </option>
       <option
         data-test="equal"
+        selected=""
         value="="
       >
         On
@@ -60,6 +61,7 @@ exports[`CriterionDate > should render the component when no date set 1`] = `
       class="tlp-prepend"
     >
       <option
+        selected=""
         value=">"
       >
         After

@@ -25,14 +25,12 @@ import { createGettext } from "vue3-gettext";
 describe("GitInlineFilter", () => {
     it("When user types on keyboard, Then event is emitted", () => {
         const wrapper = shallowMount(GitInlineFilter, {
-            props: {
-                modelValue: "lorem",
-            },
+            props: { query: "lorem" },
             global: {
                 plugins: [createGettext({ silent: true })],
             },
         });
         wrapper.find("[data-test=git-inline-filter-input]").trigger("input");
-        expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+        expect(wrapper.emitted("update")).toStrictEqual([["lorem"]]);
     });
 });

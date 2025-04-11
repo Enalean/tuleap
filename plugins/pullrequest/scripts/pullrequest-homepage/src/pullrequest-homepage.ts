@@ -23,6 +23,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import { buildBaseUrl } from "./urls/base-url-builders";
 import HomePage from "./components/HomePage.vue";
 import {
@@ -57,7 +58,11 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
         .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-            getAttributeOrThrow(mount_point, "data-relative-date-display"),
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Assume that the backend does not send any string
+            getAttributeOrThrow(
+                mount_point,
+                "data-relative-date-display",
+            ) as RelativeDatesDisplayPreference,
         )
         .provide(SHOW_CLOSED_PULL_REQUESTS, ref(false))
         .provide(SHOW_PULL_REQUESTS_RELATED_TO_ME, ref(false))

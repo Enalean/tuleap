@@ -26,7 +26,8 @@
                 class="tlp-search"
                 autocomplete="off"
                 v-bind:placeholder="placeholder"
-                v-model="model"
+                v-bind:value="props.query"
+                v-on:input="onInput"
                 data-test="git-inline-filter-input"
             />
         </div>
@@ -37,11 +38,22 @@
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 
-// eslint doesn't know yet defineModel: https://github.com/vuejs/eslint-plugin-vue/issues/2130
-// eslint-disable-next-line no-undef
-const model = defineModel();
+const props = defineProps<{
+    query: string;
+}>();
+
+const emit = defineEmits<{
+    (e: "update", value: string): void;
+}>();
 
 const { $gettext } = useGettext();
 
 const placeholder = computed(() => $gettext("Repository name"));
+
+const onInput = (event: Event): void => {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+    emit("update", event.target.value);
+};
 </script>

@@ -28,7 +28,7 @@
         />
     </div>
     <configure-tracker-footer
-        v-on:after-save="(successful) => (is_success = successful)"
+        v-on:after-save="onAfterSave"
         v-bind:new_selected_tracker="new_selected_tracker"
         v-bind:configuration_saver="configuration_saver"
     />
@@ -67,5 +67,9 @@ const configuration_saver = buildTrackerConfigurationSaver(
 
 function onSelectTracker(tracker: Option<Tracker>): void {
     new_selected_tracker.value = tracker;
+}
+
+function onAfterSave(successful: boolean): void {
+    is_success.value = successful;
 }
 </script>

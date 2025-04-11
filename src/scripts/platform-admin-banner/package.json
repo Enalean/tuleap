@@ -12,7 +12,7 @@
     "@tuleap/vue3-gettext-init": "workspace:^",
     "ckeditor4": "^4.18.0",
     "neverthrow": "6.0.0",
-    "vue": "^3.3.4",
+    "vue": "^3.4.38",
     "vue3-gettext": "2.4.0"
   },
   "devDependencies": {

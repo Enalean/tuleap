@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "vue": "3.3.4",
-    "@vitejs/plugin-vue": "^4.2.3"
+    "@vitejs/plugin-vue": "^4.2.3",
+    "vue": "3.4.38"
   },
   "scripts": {
     "build": "vite build",

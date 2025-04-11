@@ -22,6 +22,7 @@ exports[`CriterionGlobalText > should render the component 1`] = `
     data-test="global-search"
     id="document-global-search"
     type="text"
+    value="Lorem"
   />
 </div>
 `;

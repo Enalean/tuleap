@@ -41,7 +41,7 @@
                 )
             }}
         </p>
-        <query-suggested-modal v-on:query-chosen="(query) => emit('query-chosen', query)" />
+        <query-suggested-modal v-on:query-chosen="onQueryChosen" />
     </div>
 </template>
 <script setup lang="ts">
@@ -77,6 +77,10 @@ function getTranslatedQueries(): QuerySuggestion[] {
         return suggested_query_getter.getTranslatedProjectSuggestedQueries();
     }
     return suggested_query_getter.getTranslatedPersonalSuggestedQueries();
+}
+
+function onQueryChosen(query: QuerySuggestion): void {
+    emit("query-chosen", query);
 }
 </script>
 <style scoped lang="scss">

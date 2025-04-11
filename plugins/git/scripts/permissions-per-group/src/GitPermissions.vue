@@ -40,7 +40,7 @@
         ></div>
 
         <h2 class="tlp-pane-subtitle" v-if="is_loaded">{{ $gettext("Repository permissions") }}</h2>
-        <git-inline-filter v-if="is_loaded" v-model="filter" />
+        <git-inline-filter v-if="is_loaded" v-bind:query="filter" v-on:update="onFilterUpdate" />
         <git-permissions-table
             v-if="is_loaded"
             v-bind:repositories="repositories"
@@ -88,5 +88,9 @@ function loadAll(): void {
             error.value = String(fault);
         },
     );
+}
+
+function onFilterUpdate(query: string): void {
+    filter.value = query;
 }
 </script>

@@ -35,6 +35,7 @@ exports[`ItemPermissionError > displays the error with a for to send custom emai
         <input
           name="challenge"
           type="hidden"
+          value=""
         />
         <div
           class="tlp-form-element"

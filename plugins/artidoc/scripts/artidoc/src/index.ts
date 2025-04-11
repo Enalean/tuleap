@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
         .provide(
             ARE_FIELDS_ENABLED,
-            Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-are-fields-enabled"), 10),
+            vue_mount_point.getAttribute("data-are-fields-enabled") === "1",
         )
         .provide(ALLOWED_TRACKERS, allowed_trackers)
         .provide(SELECTED_TRACKER, selected_tracker)
@@ -177,8 +177,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             IS_USER_ANONYMOUS,
             Number(getAttributeOrThrow(document.body, "data-user-id")) === 0,
         )
-
-        .provide(PROJECT_ID, getAttributeOrThrow(vue_mount_point, "data-project-id"))
+        .provide(
+            PROJECT_ID,
+            Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-project-id"), 10),
+        )
         .provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed)
         .use(gettext)
         .use(VueDOMPurifyHTML)
