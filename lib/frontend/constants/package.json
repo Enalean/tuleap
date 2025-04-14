@@ -5,8 +5,6 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "./dist/core-constants.js",
-  "main": "./dist/core-constants.umd.cjs",
   "types": "./src/main.ts",
   "exports": {
     ".": {
@@ -14,6 +12,9 @@
       "import": "./dist/core-constants.js",
       "require": "./dist/core-constants.umd.cjs"
     }
+  },
+  "dependencies": {
+    "@tuleap/locale": "workspace:^"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

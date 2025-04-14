@@ -8,19 +8,11 @@ dependencies:
   '@tuleap/core-constants':
     specifier: workspace:*
     version: link:../constants
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../locale
 
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../build-system-configurator
-  typescript:
-    specifier: ^5.3.3
-    version: 5.8.2
-
-packages:
-
-  /typescript@5.8.2:
-    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true

@@ -4,11 +4,8 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/vue3-gettext-init.js",
-  "main": "dist/vue3-gettext-init.umd.cjs",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/vue3-gettext-init.js",
@@ -16,10 +13,11 @@
     }
   },
   "dependencies": {
-    "@tuleap/gettext": "workspace:*"
+    "@tuleap/locale": "workspace:^"
   },
   "peerDependencies": {
-    "vue": "^3.2.37"
+    "vue": "^3.2.37",
+    "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

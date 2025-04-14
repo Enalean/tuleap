@@ -18,8 +18,9 @@
  */
 
 import type { createGettext } from "vue3-gettext";
-
-export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/gettext";
+import type { LocaleString } from "@tuleap/locale";
+import { getLocaleWithDefault, DEFAULT_LOCALE } from "@tuleap/locale";
+export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/locale";
 
 type VueGettext = ReturnType<typeof createGettext>;
 
@@ -32,10 +33,11 @@ interface Vue3GettextTranslationMap {
 }
 
 const loadTranslations = (
-    locale: string | undefined,
+    locale: LocaleString,
     load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>,
 ): PromiseLike<Vue3GettextTranslationMap> => {
-    if (!locale) {
+    if (locale === DEFAULT_LOCALE) {
+        // do not load translations, en_US is the default
         return Promise.resolve({});
     }
     return load_translations_callback(locale).then(
@@ -68,9 +70,9 @@ export async function initVueGettext(
     create_gettext: typeof createGettext,
     load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>,
 ): Promise<VueGettext> {
-    const locale = document.body.dataset.userLocale;
+    const locale = getLocaleWithDefault(document);
     return create_gettext({
-        defaultLanguage: locale ?? "",
+        defaultLanguage: locale,
         translations: await loadTranslations(locale, load_translations_callback),
         silent: true,
     });

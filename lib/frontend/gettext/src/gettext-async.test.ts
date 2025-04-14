@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import {
-    initGettext,
-    getPOFileFromLocale,
-    getPOFileFromLocaleWithoutExtension,
-} from "./gettext-async";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { initGettext } from "./gettext-async";
 
 vi.mock("node-gettext", () => {
     const mocked_gettext_class = vi.fn();
@@ -62,26 +58,6 @@ describe("initGettext", () => {
         expect(gettext_provider.addTranslations).toHaveBeenCalledWith("fr_FR", "my-domain", {
             headers: { Language: "fr_FR" },
             translations: {},
-        });
-    });
-
-    describe(`getPOFileFromLocale`, () => {
-        it("does not reject string looking like actual locale ID string", () => {
-            expect(getPOFileFromLocale("fr_FR")).toBe("fr_FR.po");
-        });
-
-        it("rejects string that does not look like locale ID string", () => {
-            expect(() => getPOFileFromLocale("not_a_locale")).toThrow();
-        });
-    });
-
-    describe(`getPOFileFromLocaleWithoutExtension`, () => {
-        it("does not reject string looking like actual locale ID string", () => {
-            expect(getPOFileFromLocaleWithoutExtension("fr_FR")).toBe("fr_FR");
-        });
-
-        it("rejects string that does not look like locale ID string", () => {
-            expect(() => getPOFileFromLocaleWithoutExtension("not_a_locale")).toThrow();
         });
     });
 });

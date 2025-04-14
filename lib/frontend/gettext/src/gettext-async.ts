@@ -19,18 +19,7 @@
 
 import Gettext from "node-gettext";
 import type { GettextParserPoFile } from "./types";
-import { DEFAULT_LANGUAGE } from "./constants";
-
-export function getPOFileFromLocale(locale: string): string {
-    return getPOFileFromLocaleWithoutExtension(locale) + ".po";
-}
-
-export function getPOFileFromLocaleWithoutExtension(locale: string): string {
-    if (!locale.match(/[a-z]{2,3}_[A-Z]{2,3}/)) {
-        throw new Error(`${locale} does not not seem to be a locale string`);
-    }
-    return locale;
-}
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 
 export async function initGettext(
     locale: string,
@@ -38,7 +27,7 @@ export async function initGettext(
     load_translations_callback: (locale: string) => Promise<GettextParserPoFile>,
 ): Promise<Gettext> {
     const gettext_provider = new Gettext();
-    if (locale !== DEFAULT_LANGUAGE) {
+    if (locale !== DEFAULT_LOCALE) {
         try {
             gettext_provider.addTranslations(
                 locale,

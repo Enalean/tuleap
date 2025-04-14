@@ -28,11 +28,8 @@ export const en_US_DATE_FORMAT = "Y-m-d";
 export const fr_FR_DATE_TIME_FORMAT = "d/m/Y H:i";
 export const fr_FR_DATE_FORMAT = "d/m/Y";
 
-export type LocaleString = "fr_FR" | "en_US" | "pt_BR" | "ko_KR";
-export const en_US_LOCALE = "en_US";
-export const fr_FR_LOCALE = "fr_FR";
-export const pt_BR_LOCALE = "pt_BR";
-export const ko_KR_LOCALE = "ko_KR";
+export type { LocaleString } from "@tuleap/locale";
+export { en_US_LOCALE, fr_FR_LOCALE, ko_KR_LOCALE, pt_BR_LOCALE } from "@tuleap/locale";
 
 export type ColorName =
     | "inca-silver"

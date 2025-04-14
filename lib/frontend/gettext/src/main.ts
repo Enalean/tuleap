@@ -17,9 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./gettext-async";
-export * from "./synchronous";
-export { getLocaleWithDefault } from "./dom";
-export type { LocaleString } from "@tuleap/core-constants";
+export { initGettext } from "./gettext-async";
+export { initGettextSync } from "./synchronous";
+export {
+    getLocaleWithDefault,
+    getPOFileFromLocale,
+    getPOFileFromLocaleWithoutExtension,
+} from "@tuleap/locale";
+export type { LocaleString } from "@tuleap/locale";
 export type { GettextProvider, GettextParserPoFile } from "./types";
 export type { default as GetText } from "node-gettext";

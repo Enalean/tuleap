@@ -1,5 +1,5 @@
 import { buildHomepageUrl } from "./helpers/homepage-url-builder";
-import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
+import { getLocaleWithDefault, getTimezoneOrThrow } from "@tuleap/date-helper";
 
 export default MainController;
 
@@ -43,7 +43,7 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
         SharedPropertiesService.setRelativeDateDisplay(relative_date_display);
 
         SharedPropertiesService.setTimezone(getTimezoneOrThrow(document));
-        SharedPropertiesService.setUserLocale(getLocaleOrThrow(document));
+        SharedPropertiesService.setUserLocale(getLocaleWithDefault(document));
         SharedPropertiesService.setUserAvatarUrl(pullrequest_init_data.userAvatarUrl);
 
         useUiRouterInPullRequestTabLink(project_id, repository_id);

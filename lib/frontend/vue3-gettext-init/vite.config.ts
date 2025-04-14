@@ -28,12 +28,7 @@ export default vite.defineLibConfig({
             name: "Vue3GettextInit",
         },
         rollupOptions: {
-            external: ["vue"],
-            output: {
-                globals: {
-                    vue: "Vue",
-                },
-            },
+            external: ["vue3-gettext"],
         },
     },
 });
