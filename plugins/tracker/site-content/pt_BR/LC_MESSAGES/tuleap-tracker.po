@@ -1462,6 +1462,15 @@ msgstr ""
 msgid "Global Tracker Administrator"
 msgstr ""
 
+msgid "Global rule added"
+msgstr ""
+
+msgid "Global rule deleted"
+msgstr ""
+
+msgid "Global rule updated"
+msgstr ""
+
 msgid "Global rules"
 msgstr ""
 
@@ -3672,7 +3681,23 @@ msgid "Tracker"
 msgstr ""
 
 #, php-format
+msgid ""
+"Tracker #%d add rule #%d - source field #%s should be %s than target field "
+"#%s"
+msgstr ""
+
+#, php-format
 msgid "Tracker #%d new children: %s (previous children: %s)"
+msgstr ""
+
+#, php-format
+msgid "Tracker #%d rule #%d deleted"
+msgstr ""
+
+#, php-format
+msgid ""
+"Tracker #%d updated rule #%d - previous source field #%s should be %s than "
+"target field #%s - new source field #%s should be %s than target field #%s"
 msgstr ""
 
 #, php-format

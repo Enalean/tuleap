@@ -23,6 +23,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -60,6 +61,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     private Tracker_IDisplayTrackerLayout&MockObject $layout;
     private PFUser $user;
 
+    private ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
+
     protected function setUp(): void
     {
         $this->date_factory = $this->createMock(\Tracker_Rule_Date_Factory::class);
@@ -68,6 +71,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         $this->tracker->method('getId')->willReturn($this->tracker_id);
         $this->tracker->method('displayAdminItemHeader');
         $this->tracker->method('displayFooter');
+        $this->tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $this->tracker->method('getId')->willReturn($this->tracker_id);
 
         $token = $this->createMock(\CSRFSynchronizerToken::class);
         $token->method('fetchHTMLInput');
@@ -121,7 +126,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             }
         );
 
-        $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $token);
+        $this->project_history_dao = $this->createMock(ProjectHistoryDao::class);
+        $this->action              = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $token, $this->project_history_dao);
     }
 
     private function setUpRule($id, Tracker_FormElement_Field $source_field, $comparator, Tracker_FormElement_Field $target_field): Tracker_Rule_Date
@@ -166,6 +172,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->expects($this->once())->method('deleteById')->with($this->tracker_id, 123)->willReturn(true);
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -178,6 +185,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         $this->date_factory->expects($this->exactly(2))
             ->method('deleteById')
             ->willReturnCallback(static fn (int $tracker_id, int $rule_id) => $rule_id === 123 || $rule_id === 456);
+        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -198,6 +206,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->expects($this->once())->method('deleteById')->with($this->tracker_id, 0)->willReturn(true);
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -219,6 +228,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
         $this->date_factory->method('deleteById')->willReturn(true);
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -230,6 +240,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
         $this->date_factory->method('deleteById')->willReturn(true);
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
+        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -257,6 +268,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 456 => true,
             });
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -293,7 +305,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         $this->assertMatchesRegularExpression('/SELECTED>&lt;</s', $output);
     }
 
-    public function testItAddsARule(): void
+    public function testItAddsARuleAndCheckFeedbackIsDisplayed(): void
     {
         $request = new Codendi_Request(
             [
@@ -306,7 +318,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->createMock(ProjectManager::class)
         );
 
-        $this->date_factory->expects($this->once())->method('create')->with($this->source_field_id, $this->target_field_id, $this->tracker_id, '>');
+        $this->date_factory->expects($this->once())->method('create')->with($this->source_field_id, $this->target_field_id, $this->tracker_id, '>')->willReturn($this->rule_42);
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -508,7 +521,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->createMock(ProjectManager::class)
         );
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
-        $this->date_factory->method('create');
+        $this->date_factory->method('create')->willReturn($this->rule_42);
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -562,9 +576,12 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
 
         $this->rule_42->expects($this->once())->method('setSourceField')->with($this->planned_start_date);
+        $this->rule_42->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
         $this->rule_42->expects($this->once())->method('setTargetField')->with($this->actual_start_date);
+        $this->rule_42->method('getTargetFieldId')->willReturn($this->actual_start_date->getId());
         $this->rule_42->expects($this->once())->method('setComparator')->with('>');
         $this->date_factory->expects($this->once())->method('save')->with($this->rule_42);
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -590,17 +607,24 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
         $this->rule_42->expects($this->once())->method('setSourceField')->with($this->planned_start_date);
         $this->rule_42->method('setTargetField');
+        $this->rule_42->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
         $this->rule_42->method('setComparator');
+        $this->rule_42->method('getComparator');
         $this->rule_42->method('getSourceField');
+        $this->rule_42->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
 
         $this->rule_66->expects($this->once())->method('setSourceField')->with($this->actual_start_date);
+        $this->rule_66->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
         $this->rule_66->method('setTargetField');
         $this->rule_66->method('setComparator');
+        $this->rule_66->method('getComparator');
         $this->rule_66->method('getSourceField');
+        $this->rule_66->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
 
         $this->date_factory->expects($this->exactly(2))
             ->method('save')
             ->willReturnCallback(fn (Tracker_Rule_Date $rule) => $rule === $this->rule_42 || $rule === $this->rule_66);
+        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -785,13 +809,20 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         $this->rule_42->method('setSourceField');
         $this->rule_42->method('setTargetField');
         $this->rule_42->method('setComparator');
+        $this->rule_42->method('getComparator');
         $this->rule_42->method('getSourceField');
+        $this->rule_42->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
+        $this->rule_42->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
 
         $this->rule_66->method('getSourceField');
+        $this->rule_66->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
+        $this->rule_66->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
         $this->rule_66->method('setSourceField');
         $this->rule_66->method('setTargetField');
         $this->rule_66->method('setComparator');
+        $this->rule_66->method('getComparator');
 
+        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
