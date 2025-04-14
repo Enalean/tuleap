@@ -28,11 +28,12 @@ import * as mapper from "../../../helpers/list-value-to-column-mapper";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import type { RootState } from "../../../store/type";
 import type { Swimlane, ColumnDefinition } from "../../../type";
+import type { Vue } from "vue/types/vue";
 
 async function createWrapper(
     swimlanes: Swimlane[],
     are_closed_items_displayed: boolean,
-): Promise<Wrapper<TaskBoardBody>> {
+): Promise<Wrapper<Vue>> {
     return shallowMount(TaskBoardBody, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
