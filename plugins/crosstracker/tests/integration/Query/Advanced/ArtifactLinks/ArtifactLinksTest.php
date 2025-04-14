@@ -42,6 +42,7 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     private array $epics_ids;
     /** @var list<int> */
     private array $epics_with_children_ids;
+    private int $id_that_does_not_match_any_artifact;
 
     protected function setUp(): void
     {
@@ -82,6 +83,8 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
 
         $this->epics_ids               = [$epic_1, $epic_2];
         $this->epics_with_children_ids = [$epic_2];
+
+        $this->id_that_does_not_match_any_artifact = $story_1 + 1;
     }
 
     public function testWithParent(): void
@@ -102,7 +105,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH PARENT ARTIFACT = 123',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH PARENT ARTIFACT = %s',
+                        $this->id_that_does_not_match_any_artifact
+                    ),
                 )->build(),
             $this->user,
         );
@@ -142,7 +148,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT PARENT ARTIFACT = 123',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT PARENT ARTIFACT = %s',
+                        $this->id_that_does_not_match_any_artifact
+                    ),
                 )->build(),
             $this->user,
         );
@@ -183,7 +192,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED FROM ARTIFACT = %s WITH TYPE "_is_child"',
+                        $this->id_that_does_not_match_any_artifact
+                    )
                 )->build(),
             $this->user,
         );
@@ -223,7 +235,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED FROM ARTIFACT = %s WITH TYPE "_is_child"',
+                        $this->id_that_does_not_match_any_artifact
+                    )
                 )->build(),
             $this->user,
         );
@@ -265,7 +280,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH CHILDREN ARTIFACT = 123',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITH CHILDREN ARTIFACT = %s',
+                        $this->id_that_does_not_match_any_artifact
+                    )
                 )->build(),
             $this->user,
         );
@@ -305,7 +323,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT CHILDREN ARTIFACT = 123',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE WITHOUT CHILDREN ARTIFACT = %s',
+                        $this->id_that_does_not_match_any_artifact,
+                    )
                 )->build(),
             $this->user,
         );
@@ -347,7 +368,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS LINKED TO ARTIFACT = %s WITH TYPE "_is_child"',
+                        $this->id_that_does_not_match_any_artifact
+                    )
                 )->build(),
             $this->user,
         );
@@ -415,7 +439,10 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $artifacts = $this->getMatchingArtifactIds(
             CrossTrackerQueryTestBuilder::aQuery()
                 ->withUUID($this->uuid)->withTqlQuery(
-                    'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+                    sprintf(
+                        'SELECT @id FROM @project = "self" AND @tracker.name = "epic" WHERE IS NOT LINKED TO ARTIFACT = %s WITH TYPE "_is_child"',
+                        $this->id_that_does_not_match_any_artifact
+                    )
                 )->build(),
             $this->user,
         );
