@@ -100,6 +100,14 @@ msgstr ""
 "La configuration est incorrecte, vous ne pourrez pas créer d'incréments de "
 "programme."
 
+#, php-format
+msgid ""
+"Configuration updated for program #%d - previous team linked [ %s ] - new "
+"teams linked [ %s ] "
+msgstr ""
+"Configuration mise à jour pour le programme #%d - anciennes équipes liées "
+"[ %s ] - nouvelles équipes liées [ %s ]"
+
 msgid "Configure the teams"
 msgstr "Configurer les équipes"
 
@@ -600,6 +608,9 @@ msgstr "L'outil de suivi avec l'id #%d n'a pas de champ de lien d'artéfacts"
 
 msgid "Unchanged"
 msgstr "Inchangé"
+
+msgid "Update the configuration of Program"
+msgstr "Mise à jour de la configuration du Programme"
 
 #, php-format
 msgid "User #%d cannot manipulate the top backlog of the Program #%d"
