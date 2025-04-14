@@ -35,8 +35,7 @@ import {
     RETRIEVE_ARTIFACTS_TABLE,
     DASHBOARD_TYPE,
     NEW_QUERY_CREATOR,
-    UPDATE_WIDGET_TITLE,
-    DEFAULT_WIDGET_TITLE,
+    WIDGET_TITLE_UPDATER,
     QUERY_UPDATER,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
@@ -82,7 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             document,
             `[data-widget-title="${widget_data.title_attribute}"]`,
         );
-        const widget_title_updater = WidgetTitleUpdater(emitter, title_element);
+        const widget_title_updater = WidgetTitleUpdater(
+            emitter,
+            title_element,
+            widget_data.default_title,
+        );
 
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
 
@@ -104,8 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(DASHBOARD_TYPE, widget_data.dashboard_type)
             .provide(NEW_QUERY_CREATOR, NewQueryCreator())
             .provide(QUERY_UPDATER, QueryUpdater())
-            .provide(UPDATE_WIDGET_TITLE, widget_title_updater)
-            .provide(DEFAULT_WIDGET_TITLE, widget_data.default_title)
+            .provide(WIDGET_TITLE_UPDATER, widget_title_updater)
             .mount(vue_mount_point);
     }
 });

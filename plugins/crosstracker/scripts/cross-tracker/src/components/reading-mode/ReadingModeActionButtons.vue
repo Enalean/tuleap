@@ -24,7 +24,7 @@
                 v-if="is_user_admin"
                 type="button"
                 class="tlp-button-primary tlp-button-mini tlp-button-outline reading-mode-action-edit-button"
-                v-on:click="emitter.emit(EDIT_QUERY_EVENT, { query_to_edit: current_query })"
+                v-on:click="emitter.emit(EDIT_QUERY_EVENT, { query: current_query })"
                 data-test="reading-mode-action-edit-button"
             >
                 <i class="fa-solid fa-fw fa-edit" aria-hidden="true"></i> {{ $gettext("Edit") }}

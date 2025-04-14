@@ -33,7 +33,6 @@ export const QUERY_DELETED_EVENT = "query-deleted";
 export const NOTIFY_FAULT_EVENT = "notify-fault";
 export const NOTIFY_SUCCESS_EVENT = "notify-success";
 export const DISPLAY_QUERY_PREVIEW_EVENT = "display-query-preview";
-export const UPDATE_WIDGET_TITLE_EVENT = "update-widget-title";
 export const TOGGLE_QUERY_DETAILS_EVENT = "toggle-query-details";
 export const STARTING_XLSX_EXPORT_EVENT = "starting-xlsx-export-event";
 
@@ -50,13 +49,8 @@ export type Events = {
     [NOTIFY_FAULT_EVENT]: NotifyFaultEvent;
     [NOTIFY_SUCCESS_EVENT]: NotifySuccessEvent;
     [DISPLAY_QUERY_PREVIEW_EVENT]: DisplayQueryPreviewEvent;
-    [UPDATE_WIDGET_TITLE_EVENT]: UpdateWidgetTitleEvent;
     [TOGGLE_QUERY_DETAILS_EVENT]: ToggleQueryDetailsEvent;
     [STARTING_XLSX_EXPORT_EVENT]: void;
-};
-
-export type UpdateWidgetTitleEvent = {
-    readonly new_title: string;
 };
 
 export type ToggleQueryDetailsEvent = {
@@ -64,7 +58,7 @@ export type ToggleQueryDetailsEvent = {
 };
 
 export type EditQueryEvent = {
-    readonly query_to_edit: Query;
+    readonly query: Query;
 };
 
 export type CreatedQueryEvent = {

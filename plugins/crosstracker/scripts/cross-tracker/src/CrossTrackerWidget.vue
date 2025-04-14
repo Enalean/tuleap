@@ -37,12 +37,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    DEFAULT_WIDGET_TITLE,
-    EMITTER,
-    IS_USER_ADMIN,
-    UPDATE_WIDGET_TITLE,
-} from "./injection-symbols";
+import { EMITTER, IS_USER_ADMIN, WIDGET_TITLE_UPDATER } from "./injection-symbols";
 import type {
     CreatedQueryEvent,
     EditedQueryEvent,
@@ -57,7 +52,6 @@ import {
     SWITCH_QUERY_EVENT,
     CREATE_NEW_QUERY_EVENT,
     EDIT_QUERY_EVENT,
-    UPDATE_WIDGET_TITLE_EVENT,
 } from "./helpers/widget-events";
 import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
 import {
@@ -72,8 +66,7 @@ import type { Query } from "./type";
 
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
-const widget_title_updater = strictInject(UPDATE_WIDGET_TITLE);
-const default_widget_title = strictInject(DEFAULT_WIDGET_TITLE);
+const widget_title_updater = strictInject(WIDGET_TITLE_UPDATER);
 
 const widget_pane = ref(QUERY_ACTIVE_PANE);
 const selected_query = ref<Query>();
@@ -114,17 +107,14 @@ function setCurrentlySelectedQuery(
     event: SwitchQueryEvent | InitializedWithQueryEvent | CreatedQueryEvent | EditedQueryEvent,
 ): void {
     selected_query.value = event.query;
-    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: event.query.title });
 }
 
 function handleCreateNewQuery(): void {
-    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: default_widget_title });
     widget_pane.value = QUERY_CREATION_PANE;
 }
 
 function handleEditQuery(query_to_edit_event: EditQueryEvent): void {
-    query_to_edit.value = query_to_edit_event.query_to_edit;
+    query_to_edit.value = query_to_edit_event.query;
     widget_pane.value = QUERY_EDITION_PANE;
-    emitter.emit(UPDATE_WIDGET_TITLE_EVENT, { new_title: query_to_edit_event.query_to_edit.title });
 }
 </script>

@@ -33,7 +33,6 @@ import type {
     NotifyFaultEvent,
     RefreshArtifactsEvent,
     SwitchQueryEvent,
-    UpdateWidgetTitleEvent,
 } from "../helpers/widget-events";
 import {
     INITIALIZED_WITH_QUERY_EVENT,
@@ -42,7 +41,6 @@ import {
     REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
     TOGGLE_QUERY_DETAILS_EVENT,
-    UPDATE_WIDGET_TITLE_EVENT,
 } from "../helpers/widget-events";
 import type { Query } from "../type";
 import type { Emitter } from "mitt";
@@ -55,7 +53,6 @@ describe("ReadQuery", () => {
     let dispatched_switch_query_events: SwitchQueryEvent[];
     let dispatched_initialized_with_query_events: InitializedWithQueryEvent[];
     let dispatched_fault_events: NotifyFaultEvent[];
-    let dispatched_updated_title_events: UpdateWidgetTitleEvent[];
     let dispatched_refresh_events: RefreshArtifactsEvent[];
     let emitter: Emitter<Events>;
     let selected_query: Query | undefined;
@@ -71,10 +68,6 @@ describe("ReadQuery", () => {
         dispatched_fault_events.push(event);
     };
 
-    const registerUpdateTitleEvent = (event: UpdateWidgetTitleEvent): void => {
-        dispatched_updated_title_events.push(event);
-    };
-
     const registerRefreshArtifactsEvent = (event: RefreshArtifactsEvent): void => {
         dispatched_refresh_events.push(event);
     };
@@ -85,13 +78,11 @@ describe("ReadQuery", () => {
         dispatched_switch_query_events = [];
         dispatched_initialized_with_query_events = [];
         dispatched_fault_events = [];
-        dispatched_updated_title_events = [];
         dispatched_refresh_events = [];
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
         emitter.on(INITIALIZED_WITH_QUERY_EVENT, registerInitializedWithQueryEvent);
         emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
-        emitter.on(UPDATE_WIDGET_TITLE_EVENT, registerUpdateTitleEvent);
         emitter.on(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
 
         vi.spyOn(rest_querier, "getQueries").mockReturnValue(
@@ -111,7 +102,6 @@ describe("ReadQuery", () => {
         emitter.off(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
         emitter.off(INITIALIZED_WITH_QUERY_EVENT, registerInitializedWithQueryEvent);
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
-        emitter.off(UPDATE_WIDGET_TITLE_EVENT, registerUpdateTitleEvent);
         emitter.off(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
     });
 

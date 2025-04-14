@@ -124,7 +124,7 @@ describe("ReadingModeActionButtons", () => {
             await wrapper.find('[data-test="reading-mode-action-edit-button"]').trigger("click");
 
             expect(dispatched_edit_query_events.length).toBe(1);
-            expect(dispatched_edit_query_events[0].query_to_edit).toStrictEqual(current_query);
+            expect(dispatched_edit_query_events[0].query).toStrictEqual(current_query);
         });
     });
 });
