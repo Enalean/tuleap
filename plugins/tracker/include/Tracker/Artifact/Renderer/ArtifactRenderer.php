@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 /**
  * I'm responsible of rendering artifact to user (creation, update, view...)
  */
-abstract class Tracker_Artifact_ArtifactRenderer
+abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker
@@ -153,7 +153,7 @@ abstract class Tracker_Artifact_ArtifactRenderer
 
     public function fetchArtifactForm($html): string
     {
-        $csrf_token = new CSRFSynchronizerToken($this->tracker->getUri());
+        $csrf_token = new CSRFSynchronizerToken($this->tracker->getUri(), CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, $_SESSION['tracker_csrf']);
         return '
         <form action="' . $this->redirect->toUrl() . '" method="POST" enctype="multipart/form-data" class="artifact-form">
             ' . $csrf_token->fetchHTMLInput() . $html . '
