@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Description;
 
 use Tracker_Semantic_DescriptionDao;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -33,37 +33,32 @@ final class Tracker_Semantic_DescriptionDaoTest extends TestIntegrationTestCase 
 {
     private const TRACKER_ID = 60;
     private const FIELD_ID   = 2404;
-    private Tracker_Semantic_DescriptionDao $dao;
+    private Tracker_Semantic_DescriptionDao $old_dao;
+    private DescriptionSemanticDAO $new_dao;
 
     protected function setUp(): void
     {
-        $this->dao = new Tracker_Semantic_DescriptionDao();
+        $this->old_dao = new Tracker_Semantic_DescriptionDao();
+        $this->new_dao = new DescriptionSemanticDAO();
     }
 
     public function testCRUD(): void
     {
         $this->assertItRetrievesNothing();
-        $this->dao->save(self::TRACKER_ID, self::FIELD_ID);
+        $this->old_dao->save(self::TRACKER_ID, self::FIELD_ID);
 
         // Retrieve what we just saved
-        $dar = $this->dao->searchByTrackerId(self::TRACKER_ID);
-        self::assertInstanceOf(LegacyDataAccessResultInterface::class, $dar);
-        self::assertSame(1, $dar->rowCount());
-        $row = $dar->getRow();
-        self::assertNotFalse($row); // C'est pas faux !
-        self::assertSame((string) self::TRACKER_ID, $row['tracker_id']);
-        self::assertSame((string) self::FIELD_ID, $row['field_id']);
-        self::assertFalse($dar->getRow());
+        $retrieved_field_id = $this->new_dao->searchByTrackerId(self::TRACKER_ID)->unwrapOr(0);
+        self::assertSame(self::FIELD_ID, $retrieved_field_id);
 
-        $this->dao->delete(self::TRACKER_ID);
+        $this->old_dao->delete(self::TRACKER_ID);
         // Do not retrieve what we just deleted
         $this->assertItRetrievesNothing();
     }
 
     private function assertItRetrievesNothing(): void
     {
-        $dar = $this->dao->searchByTrackerId(self::TRACKER_ID);
-        self::assertCount(0, $dar);
+        self::assertTrue($this->new_dao->searchByTrackerId(self::TRACKER_ID)->isNothing());
     }
 
     public function testOperationsOnSeveralTrackers(): void
@@ -77,23 +72,23 @@ final class Tracker_Semantic_DescriptionDaoTest extends TestIntegrationTestCase 
         $tasks_id           = $tasks_tracker->getId();
 
         // It finds the two trackers because they do not have description semantic set
-        self::assertSame(2, $this->dao->getNbOfTrackerWithoutSemanticDescriptionDefined([
+        self::assertSame(2, $this->old_dao->getNbOfTrackerWithoutSemanticDescriptionDefined([
             $activities_id,
             $tasks_id,
         ]));
         self::assertEqualsCanonicalizing(
             [$activities_id, $tasks_id],
-            $this->dao->getTrackerIdsWithoutSemanticDescriptionDefined([$activities_id, $tasks_id])
+            $this->old_dao->getTrackerIdsWithoutSemanticDescriptionDefined([$activities_id, $tasks_id])
         );
 
-        $this->dao->save($activities_id, 4075);
-        $this->dao->save($tasks_id, 9398);
+        $this->old_dao->save($activities_id, 4075);
+        $this->old_dao->save($tasks_id, 9398);
 
         // It finds zero tracker now that they have the description semantic set
-        self::assertSame(0, $this->dao->getNbOfTrackerWithoutSemanticDescriptionDefined([
+        self::assertSame(0, $this->old_dao->getNbOfTrackerWithoutSemanticDescriptionDefined([
             $activities_id,
             $tasks_id,
         ]));
-        self::assertEmpty($this->dao->getTrackerIdsWithoutSemanticDescriptionDefined([$activities_id, $tasks_id]));
+        self::assertEmpty($this->old_dao->getTrackerIdsWithoutSemanticDescriptionDefined([$activities_id, $tasks_id]));
     }
 }
