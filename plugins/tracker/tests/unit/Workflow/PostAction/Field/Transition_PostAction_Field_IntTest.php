@@ -20,48 +20,42 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Integer
-     */
-    private $field;
+    private Tracker_FormElement_Field_Integer&MockObject $field;
 
-    /**
-     * @var \Mockery\Mock
-     */
-    private $post_action;
+    private Transition_PostAction_Field_Int&MockObject $post_action;
 
     protected function setUp(): void
     {
         $value          = 0;
         $post_action_id = 9348;
-        $transition     = \Mockery::spy(\Transition::class);
-        $this->field    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class)
-            ->shouldReceive('getId')->andReturns(1131)->getMock();
+        $transition     = $this->createMock(\Transition::class);
+        $this->field    = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $this->field->method('getId')->willReturn(1131);
 
-        $this->post_action = \Mockery::mock(
-            \Transition_PostAction_Field_Int::class,
-            [$transition, $post_action_id, $this->field, $value]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao               = \Mockery::spy(\Transition_PostAction_Field_IntDao::class);
+        $this->post_action = $this->getMockBuilder(\Transition_PostAction_Field_Int::class)
+            ->setConstructorArgs([$transition, $post_action_id, $this->field, $value])
+            ->onlyMethods(['getDao', 'isDefined'])
+            ->getMock();
+        $dao               = $this->createMock(\Transition_PostAction_Field_IntDao::class);
 
-        $this->post_action->shouldReceive('getDao')->andReturns($dao);
-        $this->post_action->shouldReceive('isDefined')->andReturns($this->field);
+        $this->post_action->method('getDao')->willReturn($dao);
+        $this->post_action->method('isDefined')->willReturn($this->field);
     }
 
     public function testBeforeShouldSetTheIntegerField(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
-        $this->field->shouldReceive('getLabel')->andReturns('Remaining Effort');
-        $this->field->shouldReceive('userCanRead')->with($user)->andReturns(true);
-        $this->field->shouldReceive('userCanUpdate')->with($user)->andReturns(true);
+        $this->field->method('getLabel')->willReturn('Remaining Effort');
+        $this->field->method('userCanRead')->with($user)->willReturn(true);
+        $this->field->method('userCanUpdate')->with($user)->willReturn(true);
 
         $expected    = 0;
         $fields_data = [
@@ -74,11 +68,11 @@ final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testBeforeShouldBypassAndSetTheIntegerField(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
-        $this->field->shouldReceive('getLabel')->andReturns('Remaining Effort')->getMock();
-        $this->field->shouldReceive('userCanRead')->with($user)->andReturns(true)->getMock();
-        $this->field->shouldReceive('userCanUpdate')->with($user)->andReturns(false)->getMock();
+        $this->field->method('getLabel')->willReturn('Remaining Effort');
+        $this->field->method('userCanRead')->with($user)->willReturn(true);
+        $this->field->method('userCanUpdate')->with($user)->willReturn(false);
 
         $expected    = 0;
         $fields_data = [
@@ -91,10 +85,10 @@ final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testBeforeShouldNOTDisplayFeedback(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
-        $this->field->shouldReceive('getLabel')->andReturns('Remaining Effort')->getMock();
-        $this->field->shouldReceive('userCanRead')->with($user)->andReturns(false)->getMock();
+        $this->field->method('getLabel')->willReturn('Remaining Effort');
+        $this->field->method('userCanRead')->with($user)->willReturn(false);
 
         $expected    = 0;
         $fields_data = [
@@ -107,10 +101,16 @@ final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItAcceptsValue0(): void
     {
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(123);
+
+        $field_integer = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field_integer->method('getId')->willReturn(456);
+
         $post_action = new Transition_PostAction_Field_Int(
-            Mockery::mock(Transition::class)->shouldReceive('getId')->andReturn(123)->getMock(),
+            $transition,
             0,
-            Mockery::mock(Tracker_FormElement_Field_Integer::class)->shouldReceive('getId')->andReturn(456)->getMock(),
+            $field_integer,
             0
         );
 
