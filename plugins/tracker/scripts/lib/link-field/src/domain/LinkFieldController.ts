@@ -80,7 +80,6 @@ export type LinkFieldController = {
     ): LinkType;
     clearFaultNotification(): void;
     isLinkedArtifactInCurrentProject(artifact: LinkedArtifact | NewLink): boolean;
-    dispatchDidChange(): void;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -149,6 +148,7 @@ export const LinkFieldController = (
             return links_retriever.getLinkedArtifacts().match(
                 (artifacts) => {
                     event_dispatcher.dispatch(WillEnableSubmit());
+                    dispatchDidChange();
                     return artifacts;
                 },
                 (fault) => {
@@ -229,7 +229,5 @@ export const LinkFieldController = (
         isLinkedArtifactInCurrentProject(artifact): boolean {
             return artifact.project.id === current_project_identifier.id;
         },
-
-        dispatchDidChange,
     };
 };
