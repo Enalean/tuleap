@@ -26,6 +26,32 @@ use Tuleap\DB\DataAccessObject;
 class ExecutionDao extends DataAccessObject
 {
     /**
+     * @param int[] $tracker_ids
+     * @return int[]
+     */
+    public function filterTrackerIdsThatAreUsedForTestExecution(array $tracker_ids): array
+    {
+        if (count($tracker_ids) === 0) {
+            return [];
+        }
+
+        $statement = EasyStatement::open()->in('(?*)', $tracker_ids);
+
+        return $this->getDB()->col(
+            <<<EOS
+            SELECT tracker.id
+            FROM tracker
+                LEFT JOIN plugin_testmanagement
+                    ON (tracker.id = plugin_testmanagement.test_execution_tracker_id)
+            WHERE tracker.id IN $statement
+                AND plugin_testmanagement.test_execution_tracker_id IS NULL
+            EOS,
+            0,
+            ...$statement->values()
+        );
+    }
+
+    /**
      * @param int[] $executions_ids
      */
     public function searchDefinitionsChangesetIdsForExecution(array $executions_ids): array
