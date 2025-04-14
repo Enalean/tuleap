@@ -30,3 +30,11 @@ export const nothingIsEdited = (
         noFieldIsSwitchedToEdit(doc)
     );
 };
+
+export const somethingIsEdited = (
+    follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    follow_up_new_comment: HTMLElement | null,
+    doc: Document,
+): boolean => {
+    return !nothingIsEdited(follow_up_comment_editor_instance, follow_up_new_comment, doc);
+};
