@@ -58,9 +58,7 @@ describe("Tracker Workflow Global Rules", () => {
             cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
             cy.get("[data-test=date-time-end_date]").clear().type("2023-06-20");
             cy.get("[data-test=summary]").type("Blah{enter}");
-            cy.get("[data-test=feedback]").contains(
-                "Error on the date value : Start Date must be < to End Date",
-            );
+            cy.get("[data-test=feedback]").contains("Start Date must be < to End Date");
 
             cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
             cy.get("[data-test=date-time-end_date]").clear().type("2023-06-22");
@@ -89,9 +87,7 @@ describe("Tracker Workflow Global Rules", () => {
             cy.get("[data-test=date-time-due_date]").clear().type("2023-06-22");
             cy.get("[data-test=date-time-end_date]").clear().type("2023-06-23");
             cy.get("[data-test=summary]").type("Blah{enter}");
-            cy.get("[data-test=feedback]").contains(
-                "Error on the date value : Due Date must be > to End Date.",
-            );
+            cy.get("[data-test=feedback]").contains("Due Date must be > to End Date.");
 
             cy.get("[data-test=date-time-start_date]").clear().type("2023-06-21");
             cy.get("[data-test=date-time-due_date]").clear().type("2023-06-24");
