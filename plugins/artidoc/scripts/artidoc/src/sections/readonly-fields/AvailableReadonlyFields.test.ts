@@ -17,30 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
+    ignoreAlreadySelectedFields,
     getStringFields,
     ignoreSemanticsTitle,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
 
 describe("getAvailableFields", () => {
     const title_field_id = 599;
 
-    const field_summary: ConfigurationField = {
-        field_id: title_field_id,
-        label: "Summary",
-        type: "string",
-        display_type: "column",
-    };
-
-    const field_string: ConfigurationField = {
-        field_id: 602,
-        label: "String Field",
-        type: "string",
-        display_type: "column",
-    };
+    const field_summary = ConfigurationFieldStub.withFieldId(title_field_id);
+    const field_string = ConfigurationFieldStub.withFieldId(602);
 
     const field_other = {
         field_id: 591,
@@ -67,6 +58,38 @@ describe("getAvailableFields", () => {
             const available_fields = ignoreSemanticsTitle(tracker_information, string_fields);
 
             expect(available_fields).toStrictEqual([field_string]);
+        });
+    });
+
+    describe("ignoreAlreadySelectedFields", () => {
+        const field_string_2 = ConfigurationFieldStub.withFieldId(603);
+
+        let string_fields: ConfigurationField[];
+        let selected_fields: ConfigurationField[];
+
+        beforeEach(() => {
+            string_fields = [field_string, field_string_2];
+            selected_fields = [];
+        });
+
+        it("should return all available fields if no field is selected", () => {
+            const available_fields = ignoreAlreadySelectedFields(string_fields, selected_fields);
+
+            expect(available_fields).toStrictEqual(string_fields);
+        });
+
+        it("should return available fields without the selected fields if there is selected fields", () => {
+            selected_fields = [field_string];
+            const available_fields = ignoreAlreadySelectedFields(string_fields, selected_fields);
+
+            expect(available_fields).toStrictEqual([field_string_2]);
+        });
+
+        it("should return no available fields if all fields are selected", () => {
+            selected_fields = [field_string_2, field_string];
+            const available_fields = ignoreAlreadySelectedFields(string_fields, selected_fields);
+
+            expect(available_fields).toStrictEqual([]);
         });
     });
 });

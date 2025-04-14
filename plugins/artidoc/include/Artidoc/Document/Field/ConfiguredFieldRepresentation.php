@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 final readonly class ConfiguredFieldRepresentation
 {
     private function __construct(
-        public int $id,
+        public int $field_id,
         public string $label,
         public DisplayType $display_type,
     ) {

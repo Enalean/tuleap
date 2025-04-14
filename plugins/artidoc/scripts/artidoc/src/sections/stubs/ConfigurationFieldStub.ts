@@ -27,4 +27,11 @@ export const ConfigurationFieldStub = {
             display_type: "column",
         };
     },
+
+    withFieldId: (field_id: number): ConfigurationField => {
+        return {
+            ...ConfigurationFieldStub.build(),
+            field_id,
+        };
+    },
 };
