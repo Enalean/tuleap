@@ -191,18 +191,7 @@ function insertNewSection(): void {
 
 <style lang="scss">
 @use "@/themes/includes/viewport-breakpoint";
-
-.artidoc-add-new-section-container:not(:hover) {
-    transition: opacity ease-in-out 250ms 250ms;
-    opacity: 0;
-}
-
-ol:has(> .artidoc-section-with-add-button:last-child:hover) + .artidoc-add-new-section-container, // the last one
-.artidoc-section-with-add-button:hover + .artidoc-section-with-add-button > .artidoc-add-new-section-container, // the next one
-.artidoc-add-new-section-container:has(+ .artidoc-section-container:hover) // the previous one
-{
-    opacity: 1;
-}
+@use "@/themes/includes/add-buttons-reveal";
 
 .is-aside-expanded + .document-content {
     .artidoc-add-new-section-container {
@@ -237,6 +226,7 @@ li:first-child > .artidoc-add-new-section-container {
     margin: 0 0 0 calc(-1 * #{size.$add-section-button-container-width});
     padding: whitespace.$add-section-button-container-vertical-padding
         whitespace.$add-section-button-container-horizontal-padding;
+    transition: opacity ease-in-out 250ms 250ms;
 
     &:has(button:hover, button:focus-within) {
         z-index: zindex.$dropdown;
