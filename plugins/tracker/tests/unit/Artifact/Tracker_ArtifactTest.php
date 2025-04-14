@@ -586,7 +586,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             102 => '456',
         ];
         $workflow->expects($this->once())->method('checkGlobalRules')->with($updated_fields_data_by_workflow)
-            ->willThrowException(new Tracker_Workflow_GlobalRulesViolationException());
+            ->willThrowException(new Tracker_Workflow_GlobalRulesViolationException($tracker->getId()));
 
         $this->expectException(Tracker_Exception::class);
         $artifact->createNewChangeset($fields_data, $comment, $user);

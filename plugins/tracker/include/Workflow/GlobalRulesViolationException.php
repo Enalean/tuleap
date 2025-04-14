@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception
+class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function __construct()
+    public function __construct(int $tracker_id)
     {
-        parent::__construct(dgettext('tuleap-tracker', 'Global rules are not respected'));
+        parent::__construct(sprintf(dgettext('tuleap-tracker', 'Global rules are not respected in tracker #%d'), $tracker_id));
     }
 }

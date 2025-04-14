@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -42,7 +43,7 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_rules_date_validator = new TrackerRulesDateValidator($this->formelement_factory, new \Psr\Log\NullLogger());
     }
 
-    public function testValidateDateRulesReturnsTrueWhenThereAreValidDateRules()
+    public function testValidateDateRulesReturnsTrueWhenThereAreValidDateRules(): void
     {
         $tracker_rule_date  = $this->createMock(\Tracker_Rule_Date::class);
         $tracker_rule_date2 = $this->createMock(\Tracker_Rule_Date::class);
@@ -63,11 +64,13 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($this->tracker_rules_date_validator->validateDateRules($value_field_list, [$tracker_rule_date, $tracker_rule_date2]));
     }
 
-    public function testValidateDateRulesReturnsFalseAndFeedbackWhenADateIsnotValid()
+    public function testValidateDateRulesReturnsFalseAndFeedbackWhenADateIsnotValid(): void
     {
         $source_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $source_field->method('getID')->willReturn(123);
         $source_field->method('getLabel')->willReturn('aaaaa');
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $source_field->method('getTracker')->willReturn($tracker);
         $target_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $target_field->method('getID')->willReturn(789);
         $target_field->method('getLabel')->willReturn('bbbbb');
@@ -90,7 +93,7 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             13 => $target_field,
         });
 
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'Error on the date value : aaaaa must be > to bbbbb.');
+        $GLOBALS['Response']->method('addFeedback')->with('error', 'Error on the tracker #' . $tracker->getId() . ' date value : aaaaa must be > to bbbbb.');
         $source_field->method('setHasErrors')->with(true);
         $target_field->method('setHasErrors')->with(true);
 
@@ -103,7 +106,7 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($this->tracker_rules_date_validator->validateDateRules($value_field_list, [$tracker_rule_date, $tracker_rule_date2]));
     }
 
-    public function testValidateDateRulesReturnsFalseAndFeedbackDuringCSVImportWhenADateIsValidButNotInFieldList()
+    public function testValidateDateRulesReturnsFalseAndFeedbackDuringCSVImportWhenADateIsValidButNotInFieldList(): void
     {
         $source_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $source_field->method('getID')->willReturn(123);

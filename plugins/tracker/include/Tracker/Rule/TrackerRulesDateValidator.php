@@ -47,7 +47,10 @@ class TrackerRulesDateValidator
                 $target_field = $this->getFieldById($rule->getTargetFieldId());
 
                 $this->logger->debug('Error on the date value : ' . $source_field->getLabel() . ' must be ' . $rule->getComparator() . ' to ' . $target_field->getLabel());
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-tracker', 'Error on the date value : %1$s must be %2$s to %3$s.'), $source_field->getLabel(), $rule->getComparator(), $target_field->getLabel()));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    sprintf(dgettext('tuleap-tracker', 'Error on the tracker #%4$s date value : %1$s must be %2$s to %3$s.'), $source_field->getLabel(), $rule->getComparator(), $target_field->getLabel(), $source_field->getTracker()->getId())
+                );
 
                 $source_field->setHasErrors(true);
                 $target_field->setHasErrors(true);

@@ -386,7 +386,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             return true;
         }
         if (! $this->global_rules_manager->validate($this->tracker_id, $fields_data)) {
-            throw new Tracker_Workflow_GlobalRulesViolationException();
+            throw new Tracker_Workflow_GlobalRulesViolationException($this->tracker_id);
         }
     }
 

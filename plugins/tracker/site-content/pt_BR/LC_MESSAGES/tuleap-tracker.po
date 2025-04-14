@@ -1287,7 +1287,7 @@ msgid "Error in your Jira import"
 msgstr ""
 
 #, php-format
-msgid "Error on the date value : %1$s must be %2$s to %3$s."
+msgid "Error on the tracker #%4$s date value : %1$s must be %2$s to %3$s."
 msgstr ""
 
 #, php-format
@@ -1465,7 +1465,8 @@ msgstr ""
 msgid "Global rules"
 msgstr ""
 
-msgid "Global rules are not respected"
+#, php-format
+msgid "Global rules are not respected in tracker #%d"
 msgstr ""
 
 msgid "Go see this tracker"
