@@ -38,7 +38,7 @@ codendi.tracker.artifact.editor = {
         ) {
             var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
 
-            if (edition_switcher.submissionBarIsAlreadyActive()) {
+            if (edition_switcher.submissionBarIsAlreadyActive(document)) {
                 return codendi.locales.tracker_formelement_admin.lose_follows;
             }
         }
