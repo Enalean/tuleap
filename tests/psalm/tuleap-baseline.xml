@@ -49171,13 +49171,6 @@
       <code><![CDATA[rowCount]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/tracker/tests/integration/Semantic/Title/Tracker_Semantic_TitleDaoTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[rowCount]]></code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/tracker/tests/unit/Artifact/ArtifactsDeletion/PostArtifactMoveReferencesCleanerTest.php">
     <InternalMethod>
       <code><![CDATA[numberOfInvocations]]></code>

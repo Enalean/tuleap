@@ -19,7 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
+use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 
 class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -190,19 +192,20 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
      */
     public static function load(Tracker $tracker)
     {
-        if (! isset(self::$_instances[$tracker->getId()])) {
-            $field_id = null;
-            $dao      = new Tracker_Semantic_TitleDao();
-            if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {
-                $field_id = $row['field_id'];
-            }
-            $field = null;
-            if ($field_id) {
-                $field = Tracker_FormElementFactory::instance()->getFieldById($field_id);
-            }
-            self::$_instances[$tracker->getId()] = new Tracker_Semantic_Title($tracker, $field);
+        $tracker_id = $tracker->getId();
+        if (isset(self::$_instances[$tracker_id])) {
+            return self::$_instances[$tracker_id];
         }
-        return self::$_instances[$tracker->getId()];
+
+        $dao                           = new TitleSemanticDAO();
+        $field                         = $dao->searchByTrackerId($tracker_id)
+            ->andThen(
+                static fn(int $field_id) => Option::fromNullable(
+                    Tracker_FormElementFactory::instance()->getFieldById($field_id)
+                )
+            )->unwrapOr(null);
+        self::$_instances[$tracker_id] = new self($tracker, $field);
+        return self::$_instances[$tracker_id];
     }
 
     /**
