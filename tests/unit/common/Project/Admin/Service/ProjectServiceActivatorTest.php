@@ -502,4 +502,50 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
+
+    public function testProjectDefinedServiceIsInheritedFromXml(): void
+    {
+        $project          = ProjectTestBuilder::aProject()->withId(101)->build();
+        $template_project = ProjectTestBuilder::aProject()->withId(201)->build();
+
+        $data = $this->createMock(ProjectCreationData::class);
+        $data->method('isIsBuiltFromXml')->willReturn(true);
+        $data->method('getDataServices')->willReturn([
+            'Custom service' => [
+                'is_used'                 => true,
+                'label'                   => 'Custom service',
+                'description'             => 'Description',
+                'link'                    => 'https://example.com',
+                'is_in_new_tab'           => true,
+                'project_defined_service' => true,
+            ],
+        ]);
+        $data->method('getServiceInfo')->willReturn([
+            'is_used'                 => true,
+            'label'                   => 'Custom service',
+            'description'             => 'Description',
+            'link'                    => 'https://example.com',
+            'is_in_new_tab'           => true,
+            'project_defined_service' => true,
+        ]);
+
+        $this->link_builder->method('substituteVariablesInLink')->with($project, 'https://example.com')->willReturn('https://example.com');
+
+        $this->service_dao->expects($this->once())->method('create')->with(
+            $project->getID(),
+            'Custom service',
+            'fa-fw fas fa-angle-double-right',
+            'Description',
+            '',
+            'https://example.com',
+            1,
+            1,
+            'project',
+            0,
+            true
+        );
+        $this->event_manager->method('processEvent');
+
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
+    }
 }

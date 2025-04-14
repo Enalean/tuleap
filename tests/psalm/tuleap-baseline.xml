@@ -24430,12 +24430,6 @@
       <code><![CDATA[$return_to]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/Registration/UsernameGenerator.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[str_replace(' ', '', $user_information['family_name'])]]></code>
-      <code><![CDATA[str_replace(' ', '', $user_information['given_name'])]]></code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/SpecificLoginPresenter.php">
     <MissingReturnType>
       <code><![CDATA[account_login_login_with_tuleap]]></code>
@@ -36776,21 +36770,6 @@
       <code><![CDATA[getArtifactLinkInfoDiff]]></code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/SubmittedValueConvertor.php">
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$key]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addLinksFromSubmittedValue]]></code>
-      <code><![CDATA[changeTypeOfExistingLinks]]></code>
-      <code><![CDATA[extractArrayFromSubmittedValue]]></code>
-      <code><![CDATA[extractNewValuesFromSubmittedValue]]></code>
-      <code><![CDATA[extractRemovedValuesFromSubmittedValue]]></code>
-      <code><![CDATA[extractTypesFromSubmittedValue]]></code>
-      <code><![CDATA[removeLinksFromSubmittedValue]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
     <MissingParamType>
       <code><![CDATA[$html_classes]]></code>
@@ -47360,8 +47339,6 @@
       <code><![CDATA[$url_query]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[addRule]]></code>
-      <code><![CDATA[addUpdateOrDeleteRules]]></code>
       <code><![CDATA[checkFieldsAreDifferent]]></code>
       <code><![CDATA[displayAdd]]></code>
       <code><![CDATA[displayComparatorSelector]]></code>
@@ -47375,8 +47352,6 @@
       <code><![CDATA[getListOfDateFieldLabels]]></code>
       <code><![CDATA[getListOfDateFieldLabelsPlusPleaseChoose]]></code>
       <code><![CDATA[getRules]]></code>
-      <code><![CDATA[process]]></code>
-      <code><![CDATA[removeRules]]></code>
       <code><![CDATA[shouldAddRule]]></code>
       <code><![CDATA[shouldAddUpdateOrDeleteRules]]></code>
       <code><![CDATA[shouldUpdateTheRule]]></code>
@@ -50773,29 +50748,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/common/Dashboard/Project/ProjectDashboardXMLImporter.php">
-    <MissingParamType>
-      <code><![CDATA[$column_id]]></code>
-      <code><![CDATA[$column_rank]]></code>
-      <code><![CDATA[$content_id]]></code>
-      <code><![CDATA[$line_id]]></code>
-      <code><![CDATA[$line_id]]></code>
-      <code><![CDATA[$line_id]]></code>
-      <code><![CDATA[$line_rank]]></code>
-      <code><![CDATA[$line_rank]]></code>
-      <code><![CDATA[$widget]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[createColumn]]></code>
-      <code><![CDATA[createLine]]></code>
-      <code><![CDATA[import]]></code>
-      <code><![CDATA[importWidgets]]></code>
-      <code><![CDATA[isColumnCreated]]></code>
-      <code><![CDATA[isLineCreated]]></code>
-      <code><![CDATA[isWidgetCreated]]></code>
-    </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$column_id]]></code>
-    </RiskyTruthyFalsyComparison>
     <TypeDoesNotContainType>
       <code><![CDATA[isset($dashboard_xml->line)]]></code>
     </TypeDoesNotContainType>
@@ -57141,6 +57093,7 @@
   <file src="src/common/Project/ProjectCreationDataServiceFromXmlInheritor.php">
     <PossiblyNullArgument>
       <code><![CDATA[$attrs['enabled']]]></code>
+      <code><![CDATA[$attrs['is_in_new_tab']]]></code>
     </PossiblyNullArgument>
     <PossiblyNullIterator>
       <code><![CDATA[$xml->services->children()]]></code>
@@ -57459,6 +57412,8 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addChild]]></code>
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
     <RiskyTruthyFalsyComparison>
@@ -57499,6 +57454,7 @@
     </PossiblyInvalidOperand>
     <PossiblyNullArgument>
       <code><![CDATA[$service['enabled']]]></code>
+      <code><![CDATA[$service_info['is_in_new_tab']]]></code>
     </PossiblyNullArgument>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($project_name_override)]]></code>

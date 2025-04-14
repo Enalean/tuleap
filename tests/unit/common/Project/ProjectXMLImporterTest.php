@@ -37,6 +37,8 @@ use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\Email\EmailCopier;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
+use Tuleap\Project\Service\ServiceDao;
+use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\XML\Import;
@@ -124,6 +126,8 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new XMLFileContentRetriever(),
             $this->createMock(DescriptionFieldsFactory::class),
             $this->createMock(ReconnectAfterALongRunningProcess::class),
+            $this->createMock(ServiceDao::class),
+            $this->createMock(ServiceLinkDataBuilder::class),
         );
 
         $this->configuration = new Import\ImportConfig();

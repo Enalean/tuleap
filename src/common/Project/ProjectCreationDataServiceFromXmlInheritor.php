@@ -27,6 +27,7 @@ use Project;
 use Service;
 use ServiceManager;
 use SimpleXMLElement;
+use Tuleap\XML\PHPCast;
 
 class ProjectCreationDataServiceFromXmlInheritor
 {
@@ -59,7 +60,7 @@ class ProjectCreationDataServiceFromXmlInheritor
             if (! ($service instanceof SimpleXMLElement)) {
                 continue;
             }
-            if ($service->getName() !== 'service') {
+            if ($service->getName() !== 'service' && $service->getName() !== 'project-defined-service') {
                 continue;
             }
             $attrs = $service->attributes();
@@ -70,10 +71,24 @@ class ProjectCreationDataServiceFromXmlInheritor
 
             $name = (string) $attrs['shortname'];
 
-            $enabled = \Tuleap\XML\PHPCast::toBoolean($attrs['enabled']);
+            $enabled                 = PHPCast::toBoolean($attrs['enabled']);
+            $project_defined_service = $service->getName() === 'project-defined-service';
             if (isset($services_by_name[$name])) {
                 $service_id                 = $services_by_name[$name]->getId();
-                $data_services[$service_id] = ['is_used' => $enabled];
+                $data_services[$service_id] = [
+                    'is_used'                 => $enabled,
+                    'project_defined_service' => $project_defined_service,
+                ];
+            } elseif ($project_defined_service) {
+                $service_id                 = (string) $attrs['label'];
+                $data_services[$service_id] = [
+                    'is_used'                 => $enabled,
+                    'label'                   => $service_id,
+                    'description'             => (string) $attrs['description'],
+                    'link'                    => (string) $attrs['link'],
+                    'is_in_new_tab'           => isset($attrs['is_in_new_tab']) && PHPCast::toBoolean($attrs['is_in_new_tab']),
+                    'project_defined_service' => true,
+                ];
             }
         }
 
@@ -83,7 +98,7 @@ class ProjectCreationDataServiceFromXmlInheritor
     protected function forceAdminServiceUsage(array $services_by_name, array $data_services): array
     {
         $service_id                 = $services_by_name[Service::ADMIN]->getId();
-        $data_services[$service_id] = ['is_used' => true];
+        $data_services[$service_id] = ['is_used' => true, 'project_defined_service' => false];
 
         return $data_services;
     }

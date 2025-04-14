@@ -152,7 +152,7 @@ class ProjectCreationData
      * @return array with:
      *     is_used => boolean telling if the service is used
      */
-    public function getServiceInfo(int $service_id): ?array
+    public function getServiceInfo(int|string $service_id): ?array
     {
         return isset($this->data_services[$service_id]) ?
             $this->data_services[$service_id] :

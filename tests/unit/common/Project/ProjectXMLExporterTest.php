@@ -31,6 +31,7 @@ use ProjectXMLExporter;
 use Psr\Log\NullLogger;
 use Service;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
+use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
@@ -278,20 +279,28 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'is_used'    => true,
             'short_name' => 's01',
         ];
-
         $data_02 = [
             'is_used'    => false,
             'short_name' => 's02',
         ];
+        $data_03 = [
+            'is_used'       => true,
+            'short_name'    => '',
+            'label'         => 'Custom service',
+            'description'   => 'Description',
+            'link'          => 'https://example.com',
+            'is_in_new_tab' => true,
+        ];
 
         $service_01 = new Service($this->project, $data_01);
         $service_02 = new Service($this->project, $data_02);
+        $service_03 = new ProjectDefinedService($this->project, $data_03);
 
         $project                = B\ProjectTestBuilder::aProject()
             ->withPublicName('Project01')
             ->withUnixName('myproject')
             ->withDescription('my short desc')
-            ->withServices($service_01, $service_02)
+            ->withServices($service_01, $service_02, $service_03)
             ->withAccess(\Project::ACCESS_PUBLIC)
             ->build();
         $project_ugroup_dynamic = B\ProjectUGroupTestBuilder::aCustomUserGroup(101)
@@ -306,19 +315,25 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dashboard_exporter->method('exportDashboards');
 
-        $xml       = $this->xml_exporter->export($project, $this->options, $this->user, $this->archive, $this->export_dir);
-        $xml_objet = simplexml_load_string($xml);
+        $xml        = $this->xml_exporter->export($project, $this->options, $this->user, $this->archive, $this->export_dir);
+        $xml_object = simplexml_load_string($xml);
 
-        self::assertEquals('myproject', (string) $xml_objet['unix-name']);
-        self::assertEquals('Project01', (string) $xml_objet['full-name']);
-        self::assertEquals('my short desc', (string) $xml_objet['description']);
-        self::assertEquals('public', (string) $xml_objet['access']);
+        self::assertEquals('myproject', (string) $xml_object['unix-name']);
+        self::assertEquals('Project01', (string) $xml_object['full-name']);
+        self::assertEquals('my short desc', (string) $xml_object['description']);
+        self::assertEquals('public', (string) $xml_object['access']);
 
-        self::assertNotNull($xml_objet->services);
-        self::assertEquals('1', (string) $xml_objet->services->service[0]['enabled']);
-        self::assertEquals('s01', (string) $xml_objet->services->service[0]['shortname']);
-        self::assertEquals('0', (string) $xml_objet->services->service[1]['enabled']);
-        self::assertEquals('s02', (string) $xml_objet->services->service[1]['shortname']);
+        self::assertNotNull($xml_object->services);
+        self::assertEquals('1', (string) $xml_object->services->service[0]['enabled']);
+        self::assertEquals('s01', (string) $xml_object->services->service[0]['shortname']);
+        self::assertEquals('0', (string) $xml_object->services->service[1]['enabled']);
+        self::assertEquals('s02', (string) $xml_object->services->service[1]['shortname']);
+        self::assertEquals('1', (string) $xml_object->services->{'project-defined-service'}[0]['enabled']);
+        self::assertEquals('', (string) $xml_object->services->{'project-defined-service'}[0]['shortname']);
+        self::assertEquals('Custom service', (string) $xml_object->services->{'project-defined-service'}[0]['label']);
+        self::assertEquals('Description', (string) $xml_object->services->{'project-defined-service'}[0]['description']);
+        self::assertEquals('https://example.com', (string) $xml_object->services->{'project-defined-service'}[0]['link']);
+        self::assertEquals('1', (string) $xml_object->services->{'project-defined-service'}[0]['is_in_new_tab']);
     }
 
     public function testItThrowExceptionIfProjectIsSuspended(): void

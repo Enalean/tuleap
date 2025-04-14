@@ -57,6 +57,7 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
                       <services>
                         <service shortname="admin" enabled="1"/>
                         <service shortname="plugin_git" enabled="1"/>
+                        <project-defined-service shortname="" enabled="1" label="Custom service" description="Description" link="https://example.com" is_in_new_tab="0"/>
                       </services>
                   </project>'
         );
@@ -66,8 +67,16 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
         $result = $this->service_inheritor->markUsedServicesFromXML($xml, $project);
 
         $expected_result = [
-            1  => ['is_used' => true],
-            10 => ['is_used' => true],
+            1                => ['is_used' => true, 'project_defined_service' => false],
+            10               => ['is_used' => true, 'project_defined_service' => false],
+            'Custom service' => [
+                'label'                   => 'Custom service',
+                'description'             => 'Description',
+                'link'                    => 'https://example.com',
+                'is_in_new_tab'           => false,
+                'project_defined_service' => true,
+                'is_used'                 => true,
+            ],
         ];
 
         self::assertEquals($expected_result, $result);
@@ -79,7 +88,7 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
             '<?xml version="1.0" encoding="UTF-8"?>
                   <project>
                       <services>
-                        <service shortname="plugin_git" enabled="1"/>
+                        <service shortname="plugin_git" enabled="1" project_defined_service="0"/>
                       </services>
                   </project>'
         );
@@ -89,8 +98,8 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
         $result = $this->service_inheritor->markUsedServicesFromXML($xml, $project);
 
         $expected_result = [
-            1  => ['is_used' => true],
-            10 => ['is_used' => true],
+            1  => ['is_used' => true, 'project_defined_service' => false],
+            10 => ['is_used' => true, 'project_defined_service' => false],
         ];
 
         self::assertEquals($expected_result, $result);
