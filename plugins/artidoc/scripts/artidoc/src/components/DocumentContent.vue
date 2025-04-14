@@ -26,7 +26,7 @@
     />
     <notification-container />
     <div class="tlp-card">
-        <ul>
+        <ul class="artidoc-sections-list">
             <li
                 v-for="section in sections_collection.sections.value"
                 v-bind:key="section.value.internal_id"
@@ -36,7 +36,6 @@
                 v-bind:data-test-type="`${section.value.type}-section`"
             >
                 <add-new-section-button
-                    class="artidoc-button-add-section-container"
                     v-if="has_add_button"
                     v-bind:position="{ before: section.value.id }"
                     v-bind:sections_inserter="sections_inserter"
@@ -55,7 +54,6 @@
             </li>
         </ul>
         <add-new-section-button
-            class="artidoc-button-add-section-container"
             v-if="has_add_button"
             v-bind:position="AT_THE_END"
             v-bind:sections_inserter="sections_inserter"
