@@ -570,6 +570,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         array $classes,
         bool $is_time_displayed,
         string $data_test,
+        bool $is_required,
     ): string {
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -599,6 +600,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                     id="' . $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) . '"
                     data-format="' . $format . '"
                     type="text"
+                    ' . ($is_required ? ' required ' : '') . '
                     value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '"
                     data-test="' . $hp->purify($data_test, CODENDI_PURIFIER_CONVERT_HTML) . '">
             </input>

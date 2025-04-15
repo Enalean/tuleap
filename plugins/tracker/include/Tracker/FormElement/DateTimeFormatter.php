@@ -95,7 +95,8 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
             [],
             $errors,
             true,
-            'date-time-' . $this->field->getName()
+            'date-time-' . $this->field->getName(),
+            $this->field->isRequired(),
         );
     }
 }
