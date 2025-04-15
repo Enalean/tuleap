@@ -466,7 +466,7 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-a
 %package plugin-jira-import
 Summary: Import Jira Projects
 Group: Development/Tools
-Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard, tuleap-plugin-projectmilestones
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-crosstracker, tuleap-plugin-roadmap, tuleap-plugin-agiledashboard, tuleap-plugin-projectmilestones
 %description plugin-jira-import
 %{summary}.
 
