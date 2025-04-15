@@ -44,55 +44,48 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
-import type { ColumnDefinition, Swimlane } from "../../../type";
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
+import type { Swimlane } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import ChildrenSwimlane from "./Swimlane/ChildrenSwimlane.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
+import {
+    useNamespacedActions,
+    useNamespacedGetters,
+    useNamespacedState,
+    useState,
+    useStore,
+} from "vuex-composition-helpers";
 
-const column = namespace("column");
-const swimlane = namespace("swimlane");
+const store = useStore();
 
-@Component({
-    components: {
-        ChildrenSwimlane,
-        InvalidMappingSwimlane,
-        SoloSwimlane,
-        SwimlaneSkeleton,
-        CollapsedSwimlane,
-    },
-})
-export default class TaskBoardBody extends Vue {
-    @State
-    readonly are_closed_items_displayed!: boolean;
+const { columns } = useNamespacedState("column", ["columns"]);
 
-    @column.State
-    readonly columns!: Array<ColumnDefinition>;
+const { loadSwimlanes } = useNamespacedActions("swimlane", ["loadSwimlanes"]);
 
-    @swimlane.State
-    readonly swimlanes!: Array<Swimlane>;
+const is_loading_swimlanes = computed((): boolean => {
+    return store.state.swimlane.is_loading_swimlanes;
+});
 
-    @swimlane.State
-    readonly is_loading_swimlanes!: boolean;
+const swimlanes = computed((): Swimlane[] => {
+    return store.state.swimlane.swimlanes;
+});
 
-    @swimlane.Action
-    loadSwimlanes!: () => void;
+const { are_closed_items_displayed } = useState(["are_closed_items_displayed"]);
 
-    @swimlane.Getter
-    readonly is_there_at_least_one_children_to_display!: (current_swimlane: Swimlane) => boolean;
+const { is_there_at_least_one_children_to_display } = useNamespacedGetters("swimlane", [
+    "is_there_at_least_one_children_to_display",
+]);
 
-    created(): void {
-        this.loadSwimlanes();
-    }
+onMounted(() => {
+    loadSwimlanes();
+});
 
-    hasInvalidMapping(swimlane: Swimlane): boolean {
-        return getColumnOfCard(this.columns, swimlane.card) === undefined;
-    }
+function hasInvalidMapping(swimlane: Swimlane): boolean {
+    return getColumnOfCard(columns.value, swimlane.card) === undefined;
 }
 </script>
