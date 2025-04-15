@@ -1559,7 +1559,7 @@
     </kanban_list>
   </agiledashboard>
   <dashboards>
-    <dashboard name="Features board">
+    <dashboard name="Dashboard">
       <line layout="one-column">
         <column>
           <widget name="plugin_roadmap_project_widget">
@@ -1577,20 +1577,28 @@
           </widget>
         </column>
       </line>
-      <line layout="two-columns">
+    </dashboard>
+    <dashboard name="Full Train view">
+      <line layout="one-column">
         <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R4234"/>
-              <value name="title">Features to study</value>
+          <widget name="crosstrackersearch">
+            <preference name="query">
+              <value name="is-default">1</value>
+              <value name="title"><![CDATA[All open artifacts]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+  FROM @project IN ('self', 'aggregated')
+  WHERE @status = OPEN()
+  ORDER BY @last_update_date DESC]]></value>
             </preference>
-          </widget>
-        </column>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R4232"/>
-              <value name="title">Features ready to plan</value>
+            <preference name="query">
+              <value name="is-default">0</value>
+              <value name="title"><![CDATA[Open artifacts assigned to me]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+FROM @project IN ('self', 'aggregated')
+WHERE @status = OPEN() AND @assigned_to = MYSELF()
+ORDER BY @last_update_date DESC]]></value>
             </preference>
           </widget>
         </column>

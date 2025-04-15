@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\Project;
 use PFUser;
 use Project;
 use Codendi_Request;
+use Psr\Log\LoggerInterface;
 use Tuleap\Dashboard\Dashboard;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
@@ -31,62 +32,40 @@ use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\XML\MappingsRegistry;
+use Widget;
 
 class ProjectDashboardXMLImporter
 {
-    /**
-     * @var ProjectDashboardSaver
-     */
-    private $project_dashboard_saver;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var WidgetFactory
-     */
-    private $widget_factory;
-    /**
-     * @var DashboardWidgetDao
-     */
-    private $widget_dao;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
+    private const NOT_CREATED = -1;
 
-    /**
-     * @var DisabledProjectWidgetsChecker
-     */
-    private $disabled_project_widgets_checker;
+    private LoggerInterface $logger;
 
     public function __construct(
-        ProjectDashboardSaver $project_dashboard_saver,
-        WidgetFactory $widget_factory,
-        DashboardWidgetDao $widget_dao,
-        \Psr\Log\LoggerInterface $logger,
-        \EventManager $event_manager,
-        DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
+        private readonly ProjectDashboardSaver $project_dashboard_saver,
+        private readonly WidgetFactory $widget_factory,
+        private readonly DashboardWidgetDao $widget_dao,
+        LoggerInterface $logger,
+        private readonly \EventManager $event_manager,
+        private readonly DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
     ) {
-        $this->project_dashboard_saver          = $project_dashboard_saver;
-        $this->widget_factory                   = $widget_factory;
-        $this->widget_dao                       = $widget_dao;
-        $this->logger                           = new \WrapperLogger($logger, 'Dashboards');
-        $this->event_manager                    = $event_manager;
-        $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
+        $this->logger = new \WrapperLogger($logger, 'Dashboards');
     }
 
-    public function import(\SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)
-    {
+    public function import(
+        \SimpleXMLElement $xml_element,
+        PFUser $user,
+        Project $project,
+        MappingsRegistry $mapping_registry,
+    ): void {
         $this->logger->info('Start import');
         if ($xml_element->dashboards) {
             foreach ($xml_element->dashboards->dashboard as $dashboard_xml) {
                 try {
                     $dashboard_name = trim((string) $dashboard_xml['name']);
                     $this->logger->info("Create dashboard $dashboard_name");
-                    $dashboard_id = $this->project_dashboard_saver->save($user, $project, $dashboard_name);
+                    $dashboard_id = self::NOT_CREATED;
                     $dashboard    = new Dashboard($dashboard_id, $dashboard_name);
-                    $this->importWidgets($dashboard, $project, $dashboard_xml, $mapping_registry);
+                    $this->importWidgets($dashboard, $user, $project, $dashboard_xml, $mapping_registry);
                 } catch (UserCanNotUpdateProjectDashboardException $e) {
                     $this->logger->warning($e->getMessage());
                 } catch (NameDashboardDoesNotExistException $e) {
@@ -99,8 +78,13 @@ class ProjectDashboardXMLImporter
         $this->logger->info('Import completed');
     }
 
-    private function importWidgets(Dashboard $dashboard, Project $project, \SimpleXMLElement $dashboard_xml, MappingsRegistry $mapping_registry)
-    {
+    private function importWidgets(
+        Dashboard $dashboard,
+        PFUser $user,
+        Project $project,
+        \SimpleXMLElement $dashboard_xml,
+        MappingsRegistry $mapping_registry,
+    ): void {
         $this->logger->info('Import widgets');
         if (! isset($dashboard_xml->line)) {
             return;
@@ -109,18 +93,35 @@ class ProjectDashboardXMLImporter
         $line_rank   = 1;
         $all_widgets = [];
         foreach ($dashboard_xml->line as $line) {
-            $this->createLine($line, $project, $dashboard, $line_rank, $all_widgets, $mapping_registry);
+            $this->createLine($line, $user, $project, $dashboard, $line_rank, $all_widgets, $mapping_registry);
             $line_rank++;
         }
         $this->logger->info('Import of widgets: Done');
     }
 
-    private function createLine(\SimpleXMLElement $line, Project $project, Dashboard $dashboard, $line_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
-    {
-        $line_id     = -1;
+    private function createLine(
+        \SimpleXMLElement $line,
+        PFUser $user,
+        Project $project,
+        Dashboard $dashboard,
+        int $line_rank,
+        array &$all_widgets,
+        MappingsRegistry $mapping_registry,
+    ): void {
+        $line_id     = self::NOT_CREATED;
         $column_rank = 1;
         foreach ($line->column as $column) {
-            $this->createColumn($column, $project, $dashboard, $line_id, $line_rank, $column_rank, $all_widgets, $mapping_registry);
+            $this->createColumn(
+                $column,
+                $user,
+                $project,
+                $dashboard,
+                $line_id,
+                $line_rank,
+                $column_rank,
+                $all_widgets,
+                $mapping_registry,
+            );
             $column_rank++;
         }
         $nb_columns = $column_rank - 1;
@@ -139,9 +140,18 @@ class ProjectDashboardXMLImporter
         }
     }
 
-    private function createColumn(\SimpleXMLElement $column, Project $project, Dashboard $dashboard, &$line_id, $line_rank, $column_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
-    {
-        $column_id   = -1;
+    private function createColumn(
+        \SimpleXMLElement $column,
+        PFUser $user,
+        Project $project,
+        Dashboard $dashboard,
+        int &$line_id,
+        int $line_rank,
+        int $column_rank,
+        array &$all_widgets,
+        MappingsRegistry $mapping_registry,
+    ): void {
+        $column_id   = self::NOT_CREATED;
         $widget_rank = 1;
         foreach ($column->widget as $widget_xml) {
             try {
@@ -149,8 +159,17 @@ class ProjectDashboardXMLImporter
                 if (! $this->isWidgetCreated($widget, $content_id)) {
                     continue;
                 }
+
+                if (! $this->isDashboardCreated($dashboard)) {
+                    $dashboard->setId($this->project_dashboard_saver->save($user, $project, $dashboard->getName()));
+                }
+
                 if (! $this->isLineCreated($line_id)) {
-                    $line_id = $this->widget_dao->createLine($dashboard->getId(), ProjectDashboardController::DASHBOARD_TYPE, $line_rank);
+                    $line_id = (int) $this->widget_dao->createLine(
+                        $dashboard->getId(),
+                        ProjectDashboardController::DASHBOARD_TYPE,
+                        $line_rank,
+                    );
                 }
                 if (! $this->isColumnCreated($line_id, $column_id)) {
                     $column_id = $this->widget_dao->createColumn($line_id, $column_rank);
@@ -162,32 +181,47 @@ class ProjectDashboardXMLImporter
                     $this->logger->warning("Impossible to create line or column, widget {$widget->getId()} not added");
                 }
                 $widget_rank++;
+            } catch (UserCanNotUpdateProjectDashboardException | NameDashboardDoesNotExistException | NameDashboardAlreadyExistsException $e) {
+                throw $e;
             } catch (\Exception $exception) {
                 $this->logger->warning('Impossible to create widget: ' . $exception->getMessage());
             }
         }
     }
 
-    private function isWidgetCreated($widget, $content_id)
+    /**
+     * @psalm-assert-if-true !null $widget
+     * @psalm-assert-if-true !null $content_id
+     */
+    private function isWidgetCreated(?Widget $widget, ?int $content_id): bool
     {
         return $widget !== null && $content_id !== null;
     }
 
-    private function isLineCreated($line_id)
+    private function isLineCreated(int $line_id): bool
     {
-        return $line_id !== -1;
+        return $line_id !== self::NOT_CREATED;
     }
 
-    private function isColumnCreated($line_id, $column_id)
+    private function isDashboardCreated(Dashboard $dashboard): bool
     {
-        return $line_id && $column_id !== -1;
+        return $dashboard->getId() !== self::NOT_CREATED;
+    }
+
+    private function isColumnCreated(int $line_id, int $column_id): bool
+    {
+        return $line_id && $column_id !== self::NOT_CREATED;
     }
 
     /**
-     * @return array
+     * @return array{0: ?Widget, 1: ?int}
      */
-    private function getWidget(Project $project, \SimpleXMLElement $widget_xml, array $all_widgets, MappingsRegistry $mapping_registry)
-    {
+    private function getWidget(
+        Project $project,
+        \SimpleXMLElement $widget_xml,
+        array $all_widgets,
+        MappingsRegistry $mapping_registry,
+    ): array {
         $widget_name = trim((string) $widget_xml['name']);
         $this->logger->info("Import widget $widget_name");
         $widget = $this->widget_factory->getInstanceByWidgetName($widget_name);
@@ -223,11 +257,7 @@ class ProjectDashboardXMLImporter
         return [$widget, (int) $content_id];
     }
 
-    /**
-     *
-     * @return null|false|int
-     */
-    private function configureWidget(\Widget $widget, \SimpleXMLElement $widget_xml)
+    private function configureWidget(Widget $widget, \SimpleXMLElement $widget_xml): false|int|null
     {
         $params = [];
         if (isset($widget_xml->preference)) {

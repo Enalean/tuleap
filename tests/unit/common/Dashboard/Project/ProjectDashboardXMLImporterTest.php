@@ -24,10 +24,25 @@ use SimpleXMLElement;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Widget\ProjectHeartbeat;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->event_manager->method('processEvent');
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturnCallback(
+            static fn (string $widget_name) => match ($widget_name) {
+                'projectheartbeat' => new ProjectHeartbeat(),
+                default => null,
+            }
+        );
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+    }
+
     public function testItLogsAWarningWhenUserDontHavePrivilegeToAddAProjectDashboard(): void
     {
         $user = UserTestBuilder::aUser()
@@ -38,7 +53,13 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <dashboards>
-                <dashboard name="Project dashboard" />
+                <dashboard name="Project dashboard">
+                    <line>
+                        <column>
+                            <widget name="projectheartbeat" />
+                        </column>
+                    </line>
+                </dashboard>
               </dashboards>
               </project>'
         );
@@ -60,7 +81,13 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <dashboards>
-                <dashboard name="" />
+                <dashboard name="">
+                    <line>
+                        <column>
+                            <widget name="projectheartbeat" />
+                        </column>
+                    </line>
+                </dashboard>
               </dashboards>
               </project>'
         );
@@ -83,18 +110,26 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <dashboards>
-                <dashboard name="test" />
+                <dashboard name="test">
+                    <line>
+                        <column>
+                            <widget name="projectheartbeat" />
+                        </column>
+                    </line>
+                </dashboard>
               </dashboards>
               </project>'
         );
 
         $expected_exception = new NameDashboardAlreadyExistsException();
 
+
+
         $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
         self::assertTrue($this->logger->hasWarning('[Dashboards] ' . $expected_exception->getMessage()));
     }
 
-    public function testItImportsAProjectDashboard(): void
+    public function testItImportsOnlyDashboardsWithValidWidgets(): void
     {
         $user = UserTestBuilder::aUser()
             ->withAdministratorOf($this->project)
@@ -106,13 +141,30 @@ final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterB
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <dashboards>
-                <dashboard name="dashboard 1" />
-                <dashboard name="dashboard 2" />
+                <dashboard name="dashboard 1">
+                    <line>
+                        <column>
+                            <widget name="projectheartbeat" />
+                        </column>
+                    </line>
+                </dashboard>
+                <dashboard name="dashboard 2">
+                    <line>
+                        <column>
+                            <widget name="unknown" />
+                        </column>
+                    </line>
+                </dashboard>
+                <dashboard name="dashboard 3">
+                </dashboard>
               </dashboards>
               </project>'
         );
 
-        $this->dao->expects(self::exactly(2))->method('save');
+        $this->dao->expects($this->exactly(1))->method('save');
+        $this->widget_dao->expects($this->once())->method('createLine')->willReturn(101);
+        $this->widget_dao->expects($this->once())->method('createColumn')->willReturn(102);
+        $this->widget_dao->method('insertWidgetInColumnWithRank');
         $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
         self::assertFalse($this->logger->hasWarningRecords());
     }

@@ -1744,57 +1744,30 @@
     </trackers>
   </cardwall>
   <dashboards>
-    <dashboard name="0 - Main Dashboard">
-      <line>
+    <dashboard name="Dashboard">
+      <line layout="two-columns-small-big">
         <column>
-          <widget name="projectdescription"/>
           <widget name="dashboardprojectmilestone"/>
         </column>
         <column>
-          <widget name="projectmembers"/>
-          <widget name="projectheartbeat"/>
-        </column>
-      </line>
-    </dashboard>
-    <dashboard name="1 - Product Owner">
-      <line>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R76426"></reference>
-              <value name="title">Releases</value>
+          <widget name="crosstrackersearch">
+            <preference name="query">
+              <value name="is-default">1</value>
+              <value name="title"><![CDATA[All open artifacts]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+  FROM @project = 'self'
+  WHERE @status = OPEN()
+  ORDER BY @last_update_date DESC]]></value>
             </preference>
-          </widget>
-        </column>
-      </line>
-    </dashboard>
-    <dashboard name="2 - Developers">
-      <line>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R1740"></reference>
-              <value name="title">New Submitted Bugs</value>
-            </preference>
-          </widget>
-        </column>
-      </line>
-    </dashboard>
-    <dashboard name="3 - QA">
-      <line>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R1685"></reference>
-              <value name="title">Test Cases Charts</value>
-            </preference>
-          </widget>
-        </column>
-        <column>
-          <widget name="plugin_tracker_projectrenderer">
-            <preference name="renderer">
-              <reference name="id" REF="R1686"></reference>
-              <value name="title">All tests execution status</value>
+            <preference name="query">
+              <value name="is-default">0</value>
+              <value name="title"><![CDATA[Open artifacts assigned to me]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+FROM @project = 'self'
+WHERE @status = OPEN() AND @assigned_to = MYSELF()
+ORDER BY @last_update_date DESC]]></value>
             </preference>
           </widget>
         </column>

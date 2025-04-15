@@ -65,4 +65,9 @@ class Dashboard
         $index = min($index, 4);
         return in_array($layout, self::$LAYOUTS[$index]);
     }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
 }

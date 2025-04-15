@@ -24,10 +24,12 @@ describe("Hide widget", function () {
 
         cy.get("[data-test=project-widgets-checkbox-projectheartbeat]").click({ force: true });
 
-        cy.createNewPublicProject("dashboard", "agile_alm");
-        cy.visit("/projects/dashboard");
+        const shortname = "dashboard-" + Date.now();
+        cy.createNewPublicProject(shortname, "agile_alm");
+        cy.visit("/projects/" + shortname);
 
-        cy.get("[data-test=dashboard-widget-projectnote]");
+        cy.get("[data-test=dashboard-widget-dashboardprojectmilestone]");
+        cy.get("[data-test=dashboard-widget-crosstrackersearch]");
         cy.get("[data-test=dashboard-widget-projectheartbeat]").should("not.exist");
 
         //enable heartbeat again
