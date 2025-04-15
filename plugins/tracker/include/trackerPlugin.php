@@ -154,6 +154,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
+use Tuleap\Tracker\Artifact\Workflow\GlobalRules\GlobalRulesHistoryEntry;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
@@ -1190,7 +1191,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             Tracker_FormElement::PROJECT_HISTORY_UPDATE,
             ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED,
             MarkTrackerAsDeletedController::PROJECT_HISTORY_TRACKER_DELETION_KEY,
-            HierarchyHistoryEntry::HierarchyUpdate->value
+            HierarchyHistoryEntry::HierarchyUpdate->value,
+            GlobalRulesHistoryEntry::AddGlobalRules->value,
+            GlobalRulesHistoryEntry::UpdateGlobalRules->value,
+            GlobalRulesHistoryEntry::DeleteGlobalRules->value,
         );
     }
 
@@ -1222,6 +1226,14 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 $history_entry->getLabel($event->parameters)
             );
         }
+
+        $global_rule_history_entry = GlobalRulesHistoryEntry::tryFrom($event->getKey());
+
+        if ($global_rule_history_entry !== null) {
+            $event->setLabel(
+                $global_rule_history_entry->getLabel($event->parameters)
+            );
+        }
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
@@ -1231,6 +1243,12 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         if ($history_entry) {
             $event->setValue(
                 $history_entry->getValue($event->getParameters())
+            );
+        }
+        $global_rule_history_entry = GlobalRulesHistoryEntry::tryFrom($event->getKey());
+        if ($global_rule_history_entry !== null) {
+            $event->setValue(
+                $global_rule_history_entry->getValue($event->getParameters())
             );
         }
     }

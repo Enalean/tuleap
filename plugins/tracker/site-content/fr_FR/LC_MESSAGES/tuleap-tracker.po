@@ -1654,6 +1654,15 @@ msgstr "Notification e-mail globale"
 msgid "Global Tracker Administrator"
 msgstr "Administrateur de trackers"
 
+msgid "Global rule added"
+msgstr "Règle globale ajoutée"
+
+msgid "Global rule deleted"
+msgstr "Règle globale supprimée"
+
+msgid "Global rule updated"
+msgstr "Règle globale mise à jour"
+
 msgid "Global rules"
 msgstr "Règles globales"
 
@@ -4194,8 +4203,29 @@ msgid "Tracker"
 msgstr "Outil de suivi"
 
 #, php-format
+msgid ""
+"Tracker #%d add rule #%d - source field #%s should be %s than target field "
+"#%s"
+msgstr ""
+"Outil de suivi #%d ajout de la règle #%d - le champ source #%s doit être %s "
+"au champ destination #%s"
+
+#, php-format
 msgid "Tracker #%d new children: %s (previous children: %s)"
 msgstr "Outil de suivi #%d nouveaux enfants: %s (enfant précédents: %s)"
+
+#, php-format
+msgid "Tracker #%d rule #%d deleted"
+msgstr "Outil de suivi #%d règle #%d supprimée"
+
+#, php-format
+msgid ""
+"Tracker #%d updated rule #%d - previous source field #%s should be %s than "
+"target field #%s - new source field #%s should be %s than target field #%s"
+msgstr ""
+"Outil de suivi #%d règle #%d mise à jour - le champ source précédent #%s "
+"devait être %s au champ destination #%s - le nouveau champ source #%s doit "
+"être %s au champ destination #%s"
 
 #, php-format
 msgid "Tracker %1$s not duplicated"

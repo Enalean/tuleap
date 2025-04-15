@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Workflow\GlobalRules\GlobalRulesHistoryEntry;
+
 require_once __DIR__ . '/../../../../../../src/www/include/html.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -38,7 +40,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private $url_query;
 
-    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, private CSRFSynchronizerToken $token)
+    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, private CSRFSynchronizerToken $token, private ProjectHistoryDao $project_history_dao)
     {
         parent::__construct($tracker);
         $this->rule_date_factory = $rule_date_factory;
@@ -121,26 +123,26 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return $source_field_is_date && $target_field_is_date;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
     {
         if ($this->shouldAddUpdateOrDeleteRules($request)) {
             // Verify CSRF Protection
             $this->token->check();
-            $this->addUpdateOrDeleteRules($request);
+            $this->addUpdateOrDeleteRules($request, $current_user);
             $GLOBALS['Response']->redirect($this->url_query);
         } else {
             $this->displayPane($layout);
         }
     }
 
-    private function addUpdateOrDeleteRules(Codendi_Request $request)
+    private function addUpdateOrDeleteRules(Codendi_Request $request, PFUser $user): void
     {
-        $this->updateRules($request);
-        $this->removeRules($request);
-        $this->addRule($request);
+        $this->updateRules($request, $user);
+        $this->removeRules($request, $user);
+        $this->addRule($request, $user);
     }
 
-    private function updateRules(Codendi_Request $request)
+    private function updateRules(Codendi_Request $request, PFUser $user)
     {
         $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
         if (! is_array($rules_to_update)) {
@@ -148,7 +150,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         }
         $nb_updated = 0;
         foreach ($rules_to_update as $rule_id => $new_values) {
-            if ($this->updateARule($rule_id, $new_values)) {
+            if ($this->updateARule($rule_id, $new_values, $user)) {
                 ++$nb_updated;
             }
         }
@@ -158,11 +160,29 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         }
     }
 
-    private function updateARule($rule_id, array $new_values)
+    private function updateARule($rule_id, array $new_values, PFUser $user)
     {
         $rule                                           = $this->rule_date_factory->getRule($this->tracker, (int) $rule_id);
         list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($new_values);
-        if ($this->shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)) {
+        if ($rule && $this->shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)) {
+            $this->project_history_dao->addHistory(
+                $this->tracker->getProject(),
+                $user,
+                new \DateTimeImmutable(),
+                GlobalRulesHistoryEntry::UpdateGlobalRules->value,
+                '',
+                [
+                    $this->tracker->getId(),
+                    $rule->getId(),
+                    $rule->getSourceFieldId(),
+                    $rule->getComparator(),
+                    $rule->getTargetFieldId(),
+                    $source_field->getId(),
+                    $comparator,
+                    $target_field->getId(),
+                ]
+            );
+
             $rule->setSourceField($source_field);
             $rule->setTargetField($target_field);
             $rule->setComparator($comparator);
@@ -199,37 +219,67 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return [$source_field, $target_field, $comparator];
     }
 
-    private function removeRules(Codendi_Request $request)
+    private function removeRules(Codendi_Request $request, PFUser $user): void
     {
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
         $nb_deleted   = 0;
-        if (is_array($remove_rules)) {
-            foreach ($remove_rules as $rule_id) {
-                if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int) $rule_id)) {
-                    ++$nb_deleted;
-                }
+        if (! is_array($remove_rules)) {
+            return;
+        }
+
+        foreach ($remove_rules as $rule_id) {
+            if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int) $rule_id)) {
+                $this->project_history_dao->addHistory(
+                    $this->tracker->getProject(),
+                    $user,
+                    new \DateTimeImmutable(),
+                    GlobalRulesHistoryEntry::DeleteGlobalRules->value,
+                    '',
+                    [
+                        $this->tracker->getId(),
+                        $rule_id,
+                    ]
+                );
+                ++$nb_deleted;
             }
-            if ($nb_deleted) {
-                $delete_msg = dgettext('tuleap-tracker', 'Rule(s) successfully deleted');
-                $GLOBALS['Response']->addFeedback('info', $delete_msg);
-            }
+        }
+        if ($nb_deleted) {
+            $delete_msg = dgettext('tuleap-tracker', 'Rule(s) successfully deleted');
+            $GLOBALS['Response']->addFeedback('info', $delete_msg);
         }
     }
 
-    private function addRule(Codendi_Request $request)
+    private function addRule(Codendi_Request $request, PFUser $user): void
     {
-        if ($this->shouldAddRule($request)) {
-            $add_values                                     = $request->get(self::PARAMETER_ADD_RULE);
-            list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($add_values);
-            $this->rule_date_factory->create(
-                $source_field->getId(),
-                $target_field->getId(),
-                $this->tracker->getId(),
-                $comparator
-            );
-            $create_msg = dgettext('tuleap-tracker', 'Rule successfully created');
-            $GLOBALS['Response']->addFeedback('info', $create_msg);
+        if (! $this->shouldAddRule($request)) {
+            return;
         }
+
+        $add_values                                     = $request->get(self::PARAMETER_ADD_RULE);
+        list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($add_values);
+        $rule                                           = $this->rule_date_factory->create(
+            $source_field->getId(),
+            $target_field->getId(),
+            $this->tracker->getId(),
+            $comparator
+        );
+        $this->project_history_dao->addHistory(
+            $this->tracker->getProject(),
+            $user,
+            new \DateTimeImmutable(),
+            GlobalRulesHistoryEntry::AddGlobalRules->value,
+            '',
+            [
+                $this->tracker->getId(),
+                $rule->getId(),
+                $source_field->getId(),
+                $comparator,
+                $target_field->getId(),
+            ]
+        );
+
+        $create_msg = dgettext('tuleap-tracker', 'Rule successfully created');
+        $GLOBALS['Response']->addFeedback('info', $create_msg);
     }
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout)
