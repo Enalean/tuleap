@@ -11,9 +11,17 @@ project_attributes =
 project_tags =
     element long-description { xsd:string } &
     element services {
-        element service {
+        (element service {
             attribute shortname { xsd:string },
             attribute enabled { xsd:boolean }
-        }*
-    }
+        }
 
+        | element project-defined-service {
+            attribute shortname { xsd:string },
+            attribute enabled { xsd:boolean },
+            attribute label { xsd:string },
+            attribute description { xsd:string },
+            attribute link { xsd:string },
+            attribute is_in_new_tab { xsd:boolean }
+        })*
+    }

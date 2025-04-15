@@ -28,6 +28,7 @@ use Project;
 use ReferenceManager;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\ProjectCreationData;
+use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
@@ -152,12 +153,20 @@ class ProjectServiceActivator
         }
 
         foreach ($data_services as $id => $is_used) {
-            $service_info = $data->getServiceInfo((int) $id);
+            $service_info = $data->getServiceInfo($id);
             if (! isset($service_info)) {
                 continue;
             }
 
-            $service = $this->service_manager->getService($id);
+            if (isset($service_info['project_defined_service']) && $service_info['project_defined_service']) {
+                $service                        = ProjectDefinedService::forProjectServiceCreation($project);
+                $service->data['label']         = $service_info['label'];
+                $service->data['description']   = $service_info['description'];
+                $service->data['link']          = $service_info['link'];
+                $service->data['is_in_new_tab'] = $service_info['is_in_new_tab'];
+            } else {
+                $service = $this->service_manager->getService($id);
+            }
 
             $short_name = $service->getShortName();
 

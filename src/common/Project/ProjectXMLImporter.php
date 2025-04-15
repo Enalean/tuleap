@@ -46,6 +46,9 @@ use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\ImportFromArchive;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Registration\Template\Upload\CheckArchiveContent;
+use Tuleap\Project\Service\ProjectDefinedService;
+use Tuleap\Project\Service\ServiceDao;
+use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
@@ -59,6 +62,7 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\XML\MappingsRegistry;
+use Tuleap\XML\PHPCast;
 
 class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -139,6 +143,8 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         XMLFileContentRetriever $XML_file_content_retriever,
         DescriptionFieldsFactory $description_fields_factory,
         private readonly \Tuleap\DB\ReconnectAfterALongRunningProcess $db_connection,
+        private readonly ServiceDao $service_dao,
+        private readonly ServiceLinkDataBuilder $link_data_builder,
     ) {
         $this->event_manager                       = $event_manager;
         $this->project_manager                     = $project_manager;
@@ -225,6 +231,8 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
                 new DescriptionFieldsDao()
             ),
             DBFactory::getMainTuleapDBConnection(),
+            new ServiceDao(),
+            new ServiceLinkDataBuilder(),
         );
     }
 
@@ -379,6 +387,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
     {
         $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
         $this->toggleServices($project, $xml_element);
+        $this->addCustomServices($project, $xml_element);
 
         $this->importContent($configuration, $project, $xml_element, $extraction_path);
     }
@@ -399,6 +408,33 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
             $services[Service::ADMIN]   = true;
             foreach ($services as $short_name => $enabled) {
                 $this->service_manager->toggleServiceUsage($project, $short_name, $enabled);
+            }
+        }
+    }
+
+    private function addCustomServices(Project $project, SimpleXMLElement $xml_element): void
+    {
+        if ($xml_element->services) {
+            foreach ($xml_element->services->{'project-defined-service'} as $service_info) {
+                $service                        = ProjectDefinedService::forProjectServiceCreation($project);
+                $service->data['label']         = (string) $service_info['label'];
+                $service->data['description']   = (string) $service_info['description'];
+                $service->data['link']          = (string) $service_info['link'];
+                $service->data['is_in_new_tab'] = isset($service_info['is_in_new_tab']) && PHPCast::toBoolean($service_info['is_in_new_tab']);
+
+                $this->service_dao->create(
+                    (int) $project->getID(),
+                    $service->getLabel(),
+                    $service->getIcon(),
+                    $service->getDescription(),
+                    $service->getShortName(),
+                    $this->link_data_builder->substituteVariablesInLink($project, $service->getUrl()),
+                    true,
+                    true,
+                    $service->getScope(),
+                    $service->getRank(),
+                    $service->isOpenedInNewTab()
+                );
             }
         }
     }

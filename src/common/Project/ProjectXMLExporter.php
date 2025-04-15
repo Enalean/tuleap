@@ -24,6 +24,7 @@ use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectIsInactiveException;
+use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
@@ -94,7 +95,18 @@ class ProjectXMLExporter
 
         $services_node = $project_node->addChild('services');
         foreach ($project->getServices() as $service) {
-            $service_node = $services_node->addChild('service');
+            $project_defined_service = $service instanceof ProjectDefinedService;
+
+            if ($project_defined_service) {
+                $service_node = $services_node->addChild('project-defined-service');
+                $service_node->addAttribute('label', $service->getLabel());
+                $service_node->addAttribute('description', $service->getDescription());
+                $service_node->addAttribute('link', $service->getUrl());
+                $service_node->addAttribute('is_in_new_tab', $service->isOpenedInNewTab() ? '1' : '0');
+            } else {
+                $service_node = $services_node->addChild('service');
+            }
+
             $service_node->addAttribute('shortname', $service->getShortName());
             if ($service->isUsed()) {
                 $service_node->addAttribute('enabled', '1');

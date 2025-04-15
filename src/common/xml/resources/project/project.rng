@@ -95,14 +95,36 @@
       </element>
       <element name="services">
         <zeroOrMore>
-          <element name="service">
-            <attribute name="shortname">
-              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-            <attribute name="enabled">
-              <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-          </element>
+          <choice>
+            <element name="service">
+              <attribute name="shortname">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="enabled">
+                <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </element>
+            <element name="project-defined-service">
+              <attribute name="shortname">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="enabled">
+                <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="label">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="description">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="link">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="is_in_new_tab">
+                <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </element>
+          </choice>
         </zeroOrMore>
       </element>
     </interleave>
