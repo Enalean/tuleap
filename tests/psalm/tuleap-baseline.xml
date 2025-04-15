@@ -45452,9 +45452,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Description.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$field]]></code>
-    </ArgumentTypeCoercion>
     <MissingPropertyType>
       <code><![CDATA[$_instances]]></code>
     </MissingPropertyType>
@@ -45473,18 +45470,12 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$field_id]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_DescriptionFactory.php">
     <PossiblyNullArrayAccess>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
     </PossiblyNullArrayAccess>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$to_title_field_id]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Status.php">
     <ArgumentTypeCoercion>
@@ -45535,9 +45526,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Title.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$field]]></code>
-    </ArgumentTypeCoercion>
     <MissingPropertyType>
       <code><![CDATA[$_instances]]></code>
     </MissingPropertyType>
@@ -45556,18 +45544,12 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$field_id]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_TitleFactory.php">
     <PossiblyNullArrayAccess>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
     </PossiblyNullArrayAccess>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$to_title_field_id]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLFieldsBasedSemantic.php">
     <PossiblyNullReference>
@@ -45632,7 +45614,6 @@
     <MissingReturnType>
       <code><![CDATA[delete]]></code>
       <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByTrackerId]]></code>
     </MissingReturnType>
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$row['nb']]]></code>
@@ -49163,13 +49144,6 @@
       <code><![CDATA[testItRaisesAnExceptionIfWeWantToMove1Before1]]></code>
       <code><![CDATA[testItStartsWithEmptyTable]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/tests/integration/Semantic/Description/Tracker_Semantic_DescriptionDaoTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[rowCount]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/tests/unit/Artifact/ArtifactsDeletion/PostArtifactMoveReferencesCleanerTest.php">
     <InternalMethod>
