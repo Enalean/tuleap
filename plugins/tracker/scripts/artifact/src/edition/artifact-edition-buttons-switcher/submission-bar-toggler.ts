@@ -66,3 +66,19 @@ export const toggleSubmitArtifactBar = (
 
     displaySubmissionBarIfNeeded(follow_up_comment_editor_instance, follow_up_new_comment, doc);
 };
+
+export const toggleSubmissionBarForCommentInCkeditor = (
+    doc: Document,
+    follow_up_comment_editor_instance: CKEDITOR.editor | null,
+): void => {
+    if (!follow_up_comment_editor_instance) {
+        return;
+    }
+    follow_up_comment_editor_instance.on("change", () => {
+        const comment_field = doc.getElementById("tracker_followup_comment_new");
+        if (!comment_field) {
+            return;
+        }
+        toggleSubmitArtifactBar(follow_up_comment_editor_instance, comment_field, doc);
+    });
+};

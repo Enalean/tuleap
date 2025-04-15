@@ -23,7 +23,10 @@ import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker";
-import { toggleSubmitArtifactBar } from "./artifact-edition-buttons-switcher/submission-bar-toggler";
+import {
+    toggleSubmissionBarForCommentInCkeditor,
+    toggleSubmitArtifactBar,
+} from "./artifact-edition-buttons-switcher/submission-bar-toggler";
 
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
@@ -379,7 +382,10 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     };
 
     var bindSubmissionBarToFollowups = function () {
-        toggleSubmissionBarForCommentInCkeditor();
+        toggleSubmissionBarForCommentInCkeditor(
+            document,
+            CKEDITOR.instances.tracker_followup_comment_new,
+        );
 
         $("#tracker_followup_comment_new").on("input propertychange", function () {
             toggleSubmitArtifactBar(
@@ -390,7 +396,10 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         });
 
         $("#rte_format_selectboxnew").on("change", function () {
-            toggleSubmissionBarForCommentInCkeditor();
+            toggleSubmissionBarForCommentInCkeditor(
+                document,
+                CKEDITOR.instances.tracker_followup_comment_new,
+            );
         });
 
         $("#tracker_artifact_canned_response_sb").on("change", function () {
@@ -400,18 +409,6 @@ tuleap.tracker.artifact.editionSwitcher = function () {
                 document,
             );
         });
-    };
-
-    var toggleSubmissionBarForCommentInCkeditor = function () {
-        if (CKEDITOR.instances.tracker_followup_comment_new) {
-            CKEDITOR.instances.tracker_followup_comment_new.on("change", function () {
-                toggleSubmitArtifactBar(
-                    CKEDITOR.instances.tracker_followup_comment_new,
-                    document.getElementById("tracker_followup_comment_new"),
-                    document,
-                );
-            });
-        }
     };
 
     var toggleHiddenImageViewing = function () {
