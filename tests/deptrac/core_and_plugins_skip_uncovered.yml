@@ -276,6 +276,7 @@ deptrac:
     TestManagement:
       - Core
       - Tracker
+      - CrossTracker
     TimeTracking:
       - Core
       - Tracker

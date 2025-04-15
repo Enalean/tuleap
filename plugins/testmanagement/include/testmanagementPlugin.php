@@ -21,6 +21,7 @@
 use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Config\ConfigClassProvider;
+use Tuleap\CrossTracker\Query\RetrievedQueryTrackerIds;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -1056,5 +1057,15 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
                 $history_entry->getValue($event->getParameters())
             );
         }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function retrievedQueryTrackerIds(RetrievedQueryTrackerIds $event): void
+    {
+        $dao = new ExecutionDao();
+
+        $event->setTrackerIds(
+            $dao->filterTrackerIdsThatAreUsedForTestExecution($event->getTrackerIds())
+        );
     }
 }

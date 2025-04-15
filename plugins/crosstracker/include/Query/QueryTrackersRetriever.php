@@ -111,8 +111,10 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
      */
     private function getTrackers(array $trackers_ids): array
     {
+        $event = $this->event_dispatcher->dispatch(new RetrievedQueryTrackerIds($trackers_ids));
+
         $trackers = [];
-        foreach ($trackers_ids as $id) {
+        foreach ($event->getTrackerIds() as $id) {
             $tracker = $this->tracker_factory->getTrackerById($id);
             if ($tracker === null) {
                 throw new LogicException("Tracker #$id found in db but unable to find it again");
