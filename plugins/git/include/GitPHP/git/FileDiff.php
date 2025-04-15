@@ -841,7 +841,7 @@ class FileDiff
         $toName   = '/dev/null';
         if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
             $fromBlob = $this->GetFromBlob();
-            $fromData = $fromBlob->GetData(false);
+            $fromData = $fromBlob->GetData();
             $isBinary = BinaryDetector::isBinary($fromData);
             $fromName = 'a/';
             if (! empty($file)) {
@@ -854,7 +854,7 @@ class FileDiff
         }
         if (empty($this->status) || ($this->status == 'M') || ($this->status == 'A')) {
             $toBlob   = $this->GetToBlob();
-            $toData   = $toBlob->GetData(false);
+            $toData   = $toBlob->GetData();
             $isBinary = $isBinary || BinaryDetector::isBinary($toData);
             $toName   = 'b/';
             if (! empty($file)) {

@@ -32,7 +32,7 @@
                 <tbody>
                     <tr>
                         <td class="git-repository-blame-line">
-                            {foreach from=$blob->GetData(true) item=blobline name=blob}
+                            {foreach from=$blob->getExplodedData() item=blobline name=blob}
                                 {if isset($blame[$smarty.foreach.blob.iteration])}
                                     {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
                                     {if $blamecommit}
