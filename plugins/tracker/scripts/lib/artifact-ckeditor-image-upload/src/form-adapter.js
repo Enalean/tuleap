@@ -37,7 +37,7 @@ function preventFormSubmissionListener(event) {
 }
 
 function findAllSubmitButtons(form) {
-    return form.querySelectorAll(".hidden-artifact-submit-button button");
+    return form.querySelectorAll(".tracker-artifact-submit-buttons-bar-container button");
 }
 
 export function disableFormSubmit(form) {

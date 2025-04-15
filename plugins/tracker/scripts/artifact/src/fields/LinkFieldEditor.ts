@@ -194,7 +194,11 @@ export const LinkFieldEditor = (
         if (edition_switcher !== null && parent !== null) {
             element.addEventListener("change", () => {
                 parent.classList.add("in-edition");
-                edition_switcher.toggleSubmissionBar();
+                edition_switcher.toggleSubmitArtifactBar(
+                    CKEDITOR.instances.tracker_followup_comment_new,
+                    document.getElementById("tracker_followup_comment_new"),
+                    document,
+                );
             });
         }
 

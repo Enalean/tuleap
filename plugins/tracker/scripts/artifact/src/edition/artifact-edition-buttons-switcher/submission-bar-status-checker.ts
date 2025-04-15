@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { checkElementVisibility } from "./check-element-visibility";
-
 export const submissionBarIsAlreadyActive = (doc: Document): boolean => {
-    const submit_buttons = doc.querySelectorAll(".hidden-artifact-submit-button");
+    const submit_buttons = doc.querySelectorAll(".tracker-artifact-submit-buttons-bar-container");
 
     return Array.from(submit_buttons).some(
-        (button) => button instanceof HTMLElement && checkElementVisibility(button),
+        (button) =>
+            button instanceof HTMLElement &&
+            button.classList.contains("tracker-artifact-submit-buttons-bar-container-display"),
     );
 };

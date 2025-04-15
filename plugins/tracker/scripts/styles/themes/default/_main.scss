@@ -2165,11 +2165,20 @@ td.first-column {
     }
 }
 
-.hidden-artifact-submit-button {
+.tracker-artifact-submit-buttons-bar-container {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .artifact-submit-button;
 
-    display: none;
+    visibility: hidden;
+    max-height: 0;
+    transition:
+        visibility 250ms ease-in-out,
+        max-height 250ms ease-in-out;
+
+    &.tracker-artifact-submit-buttons-bar-container-display {
+        visibility: visible;
+        max-height: 500px;
+    }
 }
 
 .tracker-artifact-submit-buttons-bar {
@@ -2199,12 +2208,12 @@ td.first-column {
 }
 
 body.sidebar-collapsed .artifact-submit-button,
-body.sidebar-collapsed .hidden-artifact-submit-button {
+body.sidebar-collapsed .tracker-artifact-submit-buttons-bar-container {
     padding-left: 45px;
 }
 
 body.sidebar-expanded .artifact-submit-button,
-body.sidebar-expanded .hidden-artifact-submit-button,
+body.sidebar-expanded .tracker-artifact-submit-buttons-bar-container,
 body.sidebar-expanded .artifact-copy-button {
     padding-left: 200px;
 }
