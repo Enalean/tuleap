@@ -44,14 +44,14 @@ final class Tracker_Semantic_TitleDaoTest extends TestIntegrationTestCase //phpc
     public function testCRUD(): void
     {
         $this->assertItRetrievesNothing();
-        $this->old_dao->save(self::TRACKER_ID, self::FIELD_ID);
+        $this->new_dao->save(self::TRACKER_ID, self::FIELD_ID);
 
         // Retrieve what we just saved
         $retrieved_field_id = $this->new_dao->searchByTrackerId(self::TRACKER_ID)->unwrapOr(0);
         self::assertSame(self::FIELD_ID, $retrieved_field_id);
 
         $other_field_id = 7733;
-        $this->old_dao->save(self::TRACKER_ID, $other_field_id);
+        $this->new_dao->save(self::TRACKER_ID, $other_field_id);
         $retrieved_other_field_id = $this->new_dao->searchByTrackerId(self::TRACKER_ID)->unwrapOr(0);
         self::assertSame($other_field_id, $retrieved_other_field_id);
 
@@ -85,8 +85,8 @@ final class Tracker_Semantic_TitleDaoTest extends TestIntegrationTestCase //phpc
             $this->old_dao->getTrackerIdsWithoutSemanticTitleDefined([$activities_id, $tasks_id])
         );
 
-        $this->old_dao->save($activities_id, 3355);
-        $this->old_dao->save($tasks_id, 4775);
+        $this->new_dao->save($activities_id, 3355);
+        $this->new_dao->save($tasks_id, 4775);
 
         // It finds zero tracker now that they have the title semantic set
         self::assertSame(0, $this->old_dao->getNbOfTrackerWithoutSemanticTitleDefined([

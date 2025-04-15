@@ -74,7 +74,6 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
      */
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
-        $old_dao = new \Tracker_Semantic_TitleDao();
         $new_dao = new TitleSemanticDAO();
         $new_dao->searchByTrackerId($from_tracker_id)
             ->andThen(function (int $from_title_field_id) use ($field_mapping): Option {
@@ -84,8 +83,8 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
                     }
                 }
                 return Option::nothing(\Psl\Type\int());
-            })->apply(function (int $to_title_field_id) use ($old_dao, $to_tracker_id): void {
-                $old_dao->save($to_tracker_id, $to_title_field_id);
+            })->apply(function (int $to_title_field_id) use ($new_dao, $to_tracker_id): void {
+                $new_dao->save($to_tracker_id, $to_title_field_id);
             });
     }
 }
