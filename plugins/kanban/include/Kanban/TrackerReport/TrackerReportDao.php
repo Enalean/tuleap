@@ -28,7 +28,7 @@ namespace Tuleap\Kanban\TrackerReport;
 
 use Tuleap\DB\DataAccessObject;
 
-final class TrackerReportDao extends DataAccessObject
+class TrackerReportDao extends DataAccessObject
 {
     public function save(int $kanban_id, array $tracker_report_ids): void
     {

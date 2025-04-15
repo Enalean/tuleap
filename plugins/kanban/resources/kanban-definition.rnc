@@ -8,5 +8,11 @@ kanban_list = attribute title { xsd:string }?,
          element column {
             attribute REF { xsd:IDREF },
             attribute wip { xsd:long }?
-         }*
+         }*,
+
+         element tracker-reports {
+            element tracker-report {
+               attribute id { xsd:string }
+            }*
+         }?
     }*

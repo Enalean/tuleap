@@ -23,15 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\XML;
 
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_Report;
+use Tracker_ReportFactory;
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use XML_RNGValidator;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class KanbanXMLExporterTest extends TestCase
 {
     public function testItExportsNothingIfNoKanban(): void
     {
@@ -45,6 +50,8 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $kanban_export = new KanbanXMLExporter(
             $this->createMock(KanbanFactory::class),
+            $this->createMock(Tracker_ReportFactory::class),
+            $this->createMock(TrackerReportDao::class),
             $this->createMock(XML_RNGValidator::class),
         );
         $kanban_export->export($xml_element, $project);
@@ -77,8 +84,23 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_validator = $this->createMock(XML_RNGValidator::class);
         $xml_validator->expects($this->once())->method('validate');
 
+        $tracker_report_dao = $this->createMock(TrackerReportDao::class);
+        $tracker_report_dao->method('searchReportIdsForKanban')->willReturnCallback(static fn(int $id) => match ($id) {
+            10 => [],
+            20 => [341],
+        });
+        $tracker_report_factory = $this->createMock(Tracker_ReportFactory::class);
+        $tracker_report_factory->method('getReportsByTrackerId')->willReturnCallback(static fn(int $id) => match ($id) {
+            1 => [],
+            2 => [
+                341 => new Tracker_Report(341, 'name', 'Public rapport', 0, 0, null, false, 2, 1, false, '', null, 0),
+            ],
+        });
+
         $kanban_export = new KanbanXMLExporter(
             $kanban_factory,
+            $tracker_report_factory,
+            $tracker_report_dao,
             $xml_validator,
         );
         $kanban_export->export($xml_element, $project);
@@ -100,6 +122,9 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('Bob task', (string) $kanban2_attributes->name);
         self::assertEquals('K20', (string) $kanban2_attributes->ID);
         self::assertEquals('false', (bool) $kanban2_attributes->is_promoted);
+        $kanban2_reports = $kanban2->{'tracker-reports'};
+        self::assertCount(1, $kanban2_reports);
+        self::assertSame('REPORT_341', (string) $kanban2_reports->{'tracker-report'}['id']);
     }
 
     public function testItUsesAlreadyCreatedAgiledashboardNode(): void
@@ -121,8 +146,15 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_validator = $this->createMock(XML_RNGValidator::class);
         $xml_validator->expects($this->once())->method('validate');
 
+        $tracker_report_dao = $this->createMock(TrackerReportDao::class);
+        $tracker_report_dao->method('searchReportIdsForKanban')->willReturn([]);
+        $tracker_report_factory = $this->createMock(Tracker_ReportFactory::class);
+        $tracker_report_factory->method('getReportsByTrackerId')->willReturn([]);
+
         $kanban_export = new KanbanXMLExporter(
             $kanban_factory,
+            $tracker_report_factory,
+            $tracker_report_dao,
             $xml_validator,
         );
         $kanban_export->export($xml_element, $project);

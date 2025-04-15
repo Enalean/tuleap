@@ -23,28 +23,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\XML;
 
-use Tuleap\Kanban\KanbanFactory;
+use Exception;
 use Project;
 use SimpleXMLElement;
+use Tracker_Report;
+use Tracker_ReportFactory;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Kanban\TrackerReport\TrackerReportBuilder;
+use Tuleap\Kanban\TrackerReport\TrackerReportDao;
+use XML_ParseException;
 use XML_RNGValidator;
 
-class KanbanXMLExporter
+final readonly class KanbanXMLExporter
 {
-    private const NODE_KANBAN_LST = 'kanban_list';
-    private const NODE_KANBAN     = 'kanban';
+    private const NODE_KANBAN_LIST     = 'kanban_list';
+    private const NODE_KANBAN          = 'kanban';
+    private const NODE_TRACKER_REPORTS = 'tracker-reports';
+    private const NODE_TRACKER_REPORT  = 'tracker-report';
 
     public const TRACKER_ID_PREFIX = 'T';
     public const KANBAN_ID_PREFIX  = 'K';
 
     public function __construct(
-        private readonly KanbanFactory $kanban_factory,
-        private readonly XML_RNGValidator $xml_validator,
+        private KanbanFactory $kanban_factory,
+        private Tracker_ReportFactory $tracker_report_factory,
+        private TrackerReportDao $tracker_report_dao,
+        private XML_RNGValidator $xml_validator,
     ) {
     }
 
     /**
-     * @throws \Tuleap\Kanban\SemanticStatusNotFoundException
+     * @throws XML_ParseException
+     * @throws Exception
      */
     public function export(SimpleXMLElement $xml_element, Project $project): void
     {
@@ -54,9 +65,9 @@ class KanbanXMLExporter
 
         $agiledashboard_node = $this->getAgiledashboardNode($xml_element);
 
-        $kanban_list_node = $agiledashboard_node->addChild(self::NODE_KANBAN_LST);
+        $kanban_list_node = $agiledashboard_node->addChild(self::NODE_KANBAN_LIST);
         if ($kanban_list_node === null) {
-            throw new \Exception('Unable to create kanban_list node');
+            throw new Exception('Unable to create kanban_list node');
         }
 
         $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds((int) $project->getID());
@@ -69,18 +80,50 @@ class KanbanXMLExporter
 
             $kanban_node = $kanban_list_node->addChild(self::NODE_KANBAN);
             if ($kanban_node === null) {
-                throw new \Exception('Unable to create kanban node');
+                throw new Exception('Unable to create kanban node');
             }
             $kanban_node->addAttribute('tracker_id', $this->getFormattedTrackerId($tracker_id));
             $kanban_node->addAttribute('name', $kanban->getName());
             $kanban_node->addAttribute('is_promoted', $kanban->is_promoted ? '1' : '0');
             $kanban_node->addAttribute('ID', $this->getFormattedKanbanId($kanban->getId()));
+
+            $report_builder = new TrackerReportBuilder($this->tracker_report_factory, $kanban, $this->tracker_report_dao);
+            $reports        = $report_builder->build(0);
+            if ($reports !== []) {
+                $reports_node = $kanban_node->addChild(self::NODE_TRACKER_REPORTS);
+                if ($reports_node === null) {
+                    throw new Exception('Unable to create tracker-reports node');
+                }
+                foreach ($reports as $report) {
+                    $this->addTrackerReportNode($reports_node, $report);
+                }
+            }
         }
 
         $rng_path = realpath(__DIR__ . '/../../../resources/kanban.rng');
         $this->xml_validator->validate($kanban_list_node, $rng_path);
     }
 
+    /**
+     * @throws Exception
+     */
+    private function addTrackerReportNode(SimpleXMLElement $reports_node, array $report): void
+    {
+        if (! isset($report['selectable']) || ! $report['selectable']) {
+            return;
+        }
+
+        $report_node = $reports_node->addChild(self::NODE_TRACKER_REPORT);
+        if ($report_node === null) {
+            throw new Exception('Unable to create tracker-report node');
+        }
+
+        $report_node->addAttribute('id', Tracker_Report::XML_ID_PREFIX . $report['id']);
+    }
+
+    /**
+     * @throws Exception
+     */
     private function getAgiledashboardNode(SimpleXMLElement $xml_element): SimpleXMLElement
     {
         $existing_agiledashboard_node = $xml_element->agiledashboard;
@@ -90,7 +133,7 @@ class KanbanXMLExporter
 
         $agiledashboard_node = $xml_element->addChild('agiledashboard');
         if ($agiledashboard_node === null) {
-            throw new \Exception('Unable to create agiledashboard node');
+            throw new Exception('Unable to create agiledashboard node');
         }
 
         return $agiledashboard_node;

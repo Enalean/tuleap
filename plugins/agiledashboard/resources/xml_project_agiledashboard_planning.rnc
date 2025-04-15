@@ -41,6 +41,12 @@ element kanban_list {
          element column {
             attribute REF { xsd:IDREF },
             attribute wip { xsd:long }?
-         }*
+         }*,
+
+         element tracker-reports {
+            element tracker-report {
+               attribute id { xsd:string }
+            }*
+         }?
     }*
 }?

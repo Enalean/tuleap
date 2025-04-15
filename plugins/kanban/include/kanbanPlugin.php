@@ -595,7 +595,8 @@ final class KanbanPlugin extends Plugin implements PluginWithService
             $this->getKanbanManager(),
             $this->getDashboardKanbanColumnManager(),
             $this->getKanbanFactory(),
-            $this->getKanbanColumnFactory()
+            $this->getKanbanColumnFactory(),
+            new TrackerReportUpdater(new TrackerReportDao()),
         );
         $kanban->import($xml, $tracker_mapping, $value_mapping, $user, $event->getMappingsRegistery());
     }
@@ -730,10 +731,9 @@ final class KanbanPlugin extends Plugin implements PluginWithService
     public function trackerEventExportStructureXML(TrackerEventExportStructureXML $event): void
     {
         (new KanbanXMLExporter(
-            new KanbanFactory(
-                TrackerFactory::instance(),
-                new KanbanDao()
-            ),
+            new KanbanFactory(TrackerFactory::instance(), new KanbanDao()),
+            Tracker_ReportFactory::instance(),
+            new TrackerReportDao(),
             new XML_RNGValidator(),
         ))->export(
             $event->getXmlElement(),
@@ -745,10 +745,9 @@ final class KanbanPlugin extends Plugin implements PluginWithService
     public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
     {
         (new KanbanXMLExporter(
-            new KanbanFactory(
-                TrackerFactory::instance(),
-                new KanbanDao()
-            ),
+            new KanbanFactory(TrackerFactory::instance(), new KanbanDao()),
+            Tracker_ReportFactory::instance(),
+            new TrackerReportDao(),
             new XML_RNGValidator(),
         ))->export(
             $event->getXmlElement(),
