@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
+use EventManager;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
@@ -84,14 +85,31 @@ class ScrumTemplate implements TuleapTemplate
             if (! is_dir($base_dir) && ! mkdir($base_dir, 0755) && ! is_dir($base_dir)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $base_dir));
             }
+
+            $base_project = $this->getIntermediatePath();
+            (new ScrumTemplateDashboardDefinition(EventManager::instance()))
+                ->overwriteProjectDashboards(self::PROJECT_XML, $base_project);
+
             $this->xml_path = \ForgeConfig::getCacheDir() . '/scrum_template/project.xml';
             $this->project_xml_merger->merge(
-                self::PROJECT_XML,
+                $base_project,
                 self::AGILEDASHBOARD_XML,
                 $this->xml_path,
             );
         }
         return $this->xml_path;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    private function getIntermediatePath(): string
+    {
+        $path = \ForgeConfig::getCacheDir() . '/scrum_template/base.xml';
+        // psalm don't manage to detect that the string is not empty…
+        assert($path !== '');
+
+        return $path;
     }
 
     public function getTitle(): string
