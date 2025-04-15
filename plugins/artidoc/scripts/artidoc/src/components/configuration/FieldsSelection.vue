@@ -55,8 +55,9 @@
         </tbody>
         <tbody v-else>
             <tr
-                v-for="(field, index) in selected_fields"
-                v-bind:key="index"
+                v-for="field in selected_fields"
+                v-bind:key="field.field_id"
+                class="row-field"
                 data-test="readonly-field-rows"
             >
                 <td></td>
@@ -82,7 +83,15 @@
                         {{ $gettext("Remove") }}
                     </button>
                 </td>
-                <td></td>
+                <td>
+                    <reorder-fields-arrows
+                        v-bind:field="field"
+                        v-bind:is_first="fields_reorderer.isFirstField(field)"
+                        v-bind:is_last="fields_reorderer.isLastField(field)"
+                        v-on:move-up="fields_reorderer.moveFieldUp(field)"
+                        v-on:move-down="fields_reorderer.moveFieldDown(field)"
+                    />
+                </td>
             </tr>
         </tbody>
     </table>
@@ -95,6 +104,8 @@ import { useGettext } from "vue3-gettext";
 import { createListPicker } from "@tuleap/list-picker";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { ListPicker } from "@tuleap/list-picker";
+import ReorderFieldsArrows from "@/components/configuration/ReorderFieldsArrows.vue";
+import { buildFieldsReorderer } from "@/sections/readonly-fields/FieldsReorderer";
 
 const { $gettext } = useGettext();
 
@@ -104,6 +115,8 @@ const props = defineProps<{
 }>();
 
 const selected_fields: Ref<ConfigurationField[]> = ref(props.selected_fields);
+const fields_reorderer = buildFieldsReorderer(selected_fields);
+
 const list_picker = ref<ListPicker | undefined>();
 const field_selector = ref<HTMLSelectElement>();
 
@@ -127,5 +140,22 @@ onBeforeUnmount(() => {
 <style scoped lang="scss">
 .tlp-table {
     margin-top: var(--tlp-medium-spacing);
+}
+
+.reorder-arrows {
+    transition: opacity ease-in-out 150ms;
+    opacity: 0;
+}
+
+.row-field {
+    &:hover .reorder-arrows,
+    &:focus-within .reorder-arrows {
+        opacity: 0.5;
+    }
+
+    &:hover .reorder-arrows:hover,
+    .reorder-arrows:focus-within {
+        opacity: 1;
+    }
 }
 </style>
