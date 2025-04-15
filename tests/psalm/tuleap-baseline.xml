@@ -21755,6 +21755,9 @@
       <code><![CDATA[$columns_attrs['REF']]]></code>
       <code><![CDATA[$columns_attrs['wip']]]></code>
     </PossiblyNullArrayAccess>
+    <PossiblyNullIterator>
+      <code><![CDATA[$xml_configuration->{'tracker-reports'}->children()]]></code>
+    </PossiblyNullIterator>
   </file>
   <file src="plugins/label/include/Label/REST/ResourcesInjector.php">
     <MissingReturnType>
@@ -45595,10 +45598,8 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveIds]]></code>
       <code><![CDATA[update]]></code>
@@ -45606,7 +45607,6 @@
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$trackers_id]]></code>
@@ -45657,11 +45657,9 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveIds]]></code>
       <code><![CDATA[update]]></code>
@@ -45671,12 +45669,10 @@
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[delete]]></code>
       <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByTrackerId]]></code>
     </MissingReturnType>
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$row['nb']]]></code>

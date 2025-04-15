@@ -20,27 +20,38 @@
 
 namespace Tuleap\Kanban\XML;
 
+use PFUser;
+use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
+use Tracker_Report;
+use TrackerXmlFieldsMapping;
 use Tuleap\Kanban\KanbanColumnFactory;
 use Tuleap\Kanban\KanbanColumnManager;
+use Tuleap\Kanban\KanbanColumnNotFoundException;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanManager;
-use Psr\Log\LoggerInterface;
-use PFUser;
-use SimpleXMLElement;
-use TrackerXmlFieldsMapping;
+use Tuleap\Kanban\KanbanNotFoundException;
+use Tuleap\Kanban\SemanticStatusNotFoundException;
+use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\XML\MappingsRegistry;
 
-final class KanbanXmlImporter
+final readonly class KanbanXmlImporter
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly KanbanManager $kanban_manager,
-        private readonly KanbanColumnManager $dashboard_kanban_column_manager,
-        private readonly KanbanFactory $dashboard_kanban_factory,
-        private readonly KanbanColumnFactory $dashboard_kanban_column_factory,
+        private LoggerInterface $logger,
+        private KanbanManager $kanban_manager,
+        private KanbanColumnManager $dashboard_kanban_column_manager,
+        private KanbanFactory $dashboard_kanban_factory,
+        private KanbanColumnFactory $dashboard_kanban_column_factory,
+        private TrackerReportUpdater $tracker_report_updater,
     ) {
     }
 
+    /**
+     * @throws SemanticStatusNotFoundException
+     * @throws KanbanNotFoundException
+     * @throws KanbanColumnNotFoundException
+     */
     public function import(
         SimpleXMLElement $xml,
         array $tracker_mapping,
@@ -64,12 +75,10 @@ final class KanbanXmlImporter
                 $tracker_mapping[(string) $attrs['tracker_id']],
             );
 
-            $kanban = $this->dashboard_kanban_factory->getKanbanForXmlImport(
-                $kanban_id
-            );
+            $kanban = $this->dashboard_kanban_factory->getKanbanForXmlImport($kanban_id);
             $mappings_registry->addReference((string) $attrs['ID'], $kanban);
 
-            foreach ($xml_configuration as $xml_columns) {
+            foreach ($xml_configuration->column as $xml_columns) {
                 $columns_attrs = $xml_columns->attributes();
                 $column        = $this->dashboard_kanban_column_factory->getColumnForAKanban(
                     $kanban,
@@ -84,6 +93,18 @@ final class KanbanXmlImporter
                     $column,
                     (int) $columns_attrs['wip']
                 );
+            }
+
+            if (isset($xml_configuration->{'tracker-reports'})) {
+                $reports_ids = [];
+                foreach ($xml_configuration->{'tracker-reports'}->children() as $tracker_report) {
+                    $report_id = (string) $tracker_report['id'];
+                    $report    = $mappings_registry->getReference($report_id);
+                    if ($report instanceof Tracker_Report) {
+                        $reports_ids[] = $report->getId();
+                    }
+                }
+                $this->tracker_report_updater->save($kanban, $reports_ids);
             }
         }
     }

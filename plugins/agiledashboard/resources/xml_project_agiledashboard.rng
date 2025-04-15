@@ -105,6 +105,17 @@
                   </optional>
                 </element>
               </zeroOrMore>
+              <optional>
+                <element name="tracker-reports">
+                  <zeroOrMore>
+                    <element name="tracker-report">
+                      <attribute name="id">
+                        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                      </attribute>
+                    </element>
+                  </zeroOrMore>
+                </element>
+              </optional>
             </element>
           </zeroOrMore>
         </element>
