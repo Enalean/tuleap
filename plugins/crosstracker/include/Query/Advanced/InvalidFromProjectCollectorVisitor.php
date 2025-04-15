@@ -161,18 +161,18 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
         $project         = $this->project_factory->getValidProjectById($row['project_id']);
         $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
         assert($linked_projects instanceof CollectLinkedProjects);
+        if (! $linked_projects->canAggregateProjects()) {
+            $parameters->collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                "You cannot use @project with 'aggregated' in a project without service Program enabled",
+            ));
+        }
         if (! $linked_projects->getParentProjects()->isEmpty()) {
             $parameters->collection->addInvalidFrom(dgettext(
                 'tuleap-crosstracker',
                 "You can use @project with 'aggregated' only in a Program project",
             ));
             return;
-        }
-        if ($linked_projects->getChildrenProjects()->isEmpty()) {
-            $parameters->collection->addInvalidFrom(dgettext(
-                'tuleap-crosstracker',
-                "You cannot use @project with 'aggregated' in a project without service Program enabled",
-            ));
         }
     }
 }

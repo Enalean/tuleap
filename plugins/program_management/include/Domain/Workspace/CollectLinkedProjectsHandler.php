@@ -26,17 +26,21 @@ use Tuleap\ProgramManagement\Domain\Events\CollectLinkedProjectsEvent;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 
-final class CollectLinkedProjectsHandler
+final readonly class CollectLinkedProjectsHandler
 {
     public function __construct(
         private VerifyIsProgram $program_verifier,
         private VerifyIsTeam $team_verifier,
+        private VerifyProgramServiceIsEnabled $service_verifier,
     ) {
     }
 
     public function handle(CollectLinkedProjectsEvent $event): void
     {
         $source_project_id = $event->getSourceProject()->getId();
+        if ($this->service_verifier->hasProgramEnabled($source_project_id)) {
+            $event->projectCanAggregateProjects();
+        }
         if ($this->program_verifier->isAProgram($source_project_id)) {
             $event->addTeams();
             return;

@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProgramServiceIsEnabledStub;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -53,7 +54,8 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
     {
         $handler = new CollectLinkedProjectsHandler(
             VerifyIsProgramStub::withValidProgram(),
-            VerifyIsTeamStub::withNotValidTeam()
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProgramServiceIsEnabledStub::withProgramServiceEnabled(),
         );
 
         $event = $this->buildEventForProgram();
@@ -62,13 +64,15 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
         $collection = $this->original_event->getChildrenProjects();
         self::assertFalse($collection->isEmpty());
         self::assertCount(2, $collection->getProjects());
+        self::assertTrue($this->original_event->canAggregateProjects());
     }
 
     public function testItBuildsACollectionOfProgramProjects(): void
     {
         $handler = new CollectLinkedProjectsHandler(
             VerifyIsProgramStub::withNotValidProgram(),
-            VerifyIsTeamStub::withValidTeam()
+            VerifyIsTeamStub::withValidTeam(),
+            VerifyProgramServiceIsEnabledStub::withProgramServiceEnabled(),
         );
 
         $event = $this->buildEventForTeam();
@@ -77,13 +81,15 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
         $collection = $this->original_event->getParentProjects();
         self::assertFalse($collection->isEmpty());
         self::assertCount(2, $collection->getProjects());
+        self::assertTrue($this->original_event->canAggregateProjects());
     }
 
     public function testDoesNothingWhenProjectIsNotAProgramAndNotATeam(): void
     {
         $handler = new CollectLinkedProjectsHandler(
             VerifyIsProgramStub::withNotValidProgram(),
-            VerifyIsTeamStub::withNotValidTeam()
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProgramServiceIsEnabledStub::withProgramServiceEnabled(),
         );
 
         $event = $this->buildEventForTeam();
@@ -96,6 +102,22 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
         $collection = $this->original_event->getChildrenProjects();
         self::assertTrue($collection->isEmpty());
         self::assertEmpty($collection->getProjects());
+
+        self::assertTrue($this->original_event->canAggregateProjects());
+    }
+
+    public function testWhenProgramServiceIsDisabled(): void
+    {
+        $handler = new CollectLinkedProjectsHandler(
+            VerifyIsProgramStub::withNotValidProgram(),
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProgramServiceIsEnabledStub::withProgramServiceDisabled(),
+        );
+
+        $event = $this->buildEventForTeam();
+        $handler->handle($event);
+
+        self::assertFalse($this->original_event->canAggregateProjects());
     }
 
     private function buildEventForProgram(): CollectLinkedProjectsProxy

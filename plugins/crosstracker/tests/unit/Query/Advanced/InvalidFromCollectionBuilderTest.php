@@ -158,6 +158,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
             $project,
             $user,
         );
+        $new_event->projectCanAggregateProjects();
         $new_event->addChildrenProjects($collection);
         $this->event_dispatcher = EventDispatcherStub::withCallback(static fn(object $event) => match ($event::class) {
             CollectLinkedProjects::class => $new_event,
@@ -217,6 +218,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
             $project,
             $user,
         );
+        $new_event->projectCanAggregateProjects();
         $new_event->addParentProjects($collection);
         $this->event_dispatcher = EventDispatcherStub::withCallback(static fn(object $event) => match ($event::class) {
             CollectLinkedProjects::class => $new_event,
@@ -240,6 +242,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
             $project,
             $user,
         );
+        $new_event->projectCanAggregateProjects();
         $new_event->addChildrenProjects($collection);
         $this->event_dispatcher = EventDispatcherStub::withCallback(static fn(object $event) => match ($event::class) {
             CollectLinkedProjects::class => $new_event,
