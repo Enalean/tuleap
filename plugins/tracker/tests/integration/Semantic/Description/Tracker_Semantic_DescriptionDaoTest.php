@@ -51,6 +51,11 @@ final class Tracker_Semantic_DescriptionDaoTest extends TestIntegrationTestCase 
         $retrieved_field_id = $this->new_dao->searchByTrackerId(self::TRACKER_ID)->unwrapOr(0);
         self::assertSame(self::FIELD_ID, $retrieved_field_id);
 
+        $other_field_id = 3144;
+        $this->old_dao->save(self::TRACKER_ID, $other_field_id);
+        $retrieved_other_field_id = $this->new_dao->searchByTrackerId(self::TRACKER_ID)->unwrapOr(0);
+        self::assertSame($other_field_id, $retrieved_other_field_id);
+
         $this->old_dao->delete(self::TRACKER_ID);
         // Do not retrieve what we just deleted
         $this->assertItRetrievesNothing();
