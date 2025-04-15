@@ -104,7 +104,7 @@ export function initConfigurationStore(
     const available_fields: Ref<ConfigurationField[]> = ref([]);
 
     if (selected_tracker) {
-        getAvailableFields(selected_tracker.id).match(
+        getAvailableFields(selected_tracker.id, selected_fields).match(
             (fields) => {
                 available_fields.value = fields;
             },

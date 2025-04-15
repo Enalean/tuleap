@@ -33,10 +33,12 @@ export type ConfigurationField = {
 
 export const getAvailableFields = (
     tracker_id: number,
+    selected_fields: ConfigurationField[],
 ): ResultAsync<ConfigurationField[], Fault> => {
     return getTracker(tracker_id).map((tracker): ConfigurationField[] => {
         const string_fields = getStringFields(tracker.fields);
-        return ignoreSemanticsTitle(tracker, string_fields);
+        const available_string_fields = ignoreSemanticsTitle(tracker, string_fields);
+        return ignoreAlreadySelectedFields(available_string_fields, selected_fields);
     });
 };
 
@@ -56,4 +58,16 @@ export function ignoreSemanticsTitle(
 ): ConfigurationField[] {
     const title_field_id = tracker.semantics.title?.field_id;
     return string_fields.filter((field) => field.field_id !== title_field_id);
+}
+
+export function ignoreAlreadySelectedFields(
+    available_fields: ConfigurationField[],
+    selected_fields: ConfigurationField[],
+): ConfigurationField[] {
+    return available_fields.filter(
+        (field) =>
+            selected_fields.findIndex(
+                (selected_field) => selected_field.field_id === field.field_id,
+            ) === -1,
+    );
 }

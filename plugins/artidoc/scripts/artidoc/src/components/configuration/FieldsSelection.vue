@@ -19,14 +19,13 @@
   -->
 
 <template>
-    <select ref="field_selector" multiple>
+    <select ref="field_selector" v-on:change="selectField" multiple>
         <option></option>
         <option
-            v-for="field in available_fields"
+            v-for="field in currently_available_fields"
             v-bind:key="field.field_id"
             v-bind:value="field.label"
             data-test="available-readonly-fields"
-            disabled
         >
             {{ field.label }}
         </option>
@@ -42,7 +41,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody v-if="selected_fields.length === 0">
+        <tbody v-if="currently_selected_fields.length === 0">
             <tr>
                 <td
                     colspan="5"
@@ -55,7 +54,7 @@
         </tbody>
         <tbody v-else>
             <tr
-                v-for="field in selected_fields"
+                v-for="field in currently_selected_fields"
                 v-bind:key="field.field_id"
                 class="row-field"
                 data-test="readonly-field-rows"
@@ -75,9 +74,9 @@
                 </td>
                 <td class="tlp-table-cell-actions">
                     <button
-                        disabled
                         type="button"
                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                        v-on:click="unselectField(field)"
                     >
                         <i class="tlp-button-icon fa-solid fa-trash fa-fw" aria-hidden="true"></i>
                         {{ $gettext("Remove") }}
@@ -98,7 +97,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from "vue";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useGettext } from "vue3-gettext";
 import { createListPicker } from "@tuleap/list-picker";
@@ -114,8 +112,9 @@ const props = defineProps<{
     available_fields: ConfigurationField[];
 }>();
 
-const selected_fields: Ref<ConfigurationField[]> = ref(props.selected_fields);
-const fields_reorderer = buildFieldsReorderer(selected_fields);
+const currently_selected_fields = ref<ConfigurationField[]>(props.selected_fields);
+const currently_available_fields = ref<ConfigurationField[]>(props.available_fields);
+const fields_reorderer = buildFieldsReorderer(currently_selected_fields);
 
 const list_picker = ref<ListPicker | undefined>();
 const field_selector = ref<HTMLSelectElement>();
@@ -135,6 +134,28 @@ onMounted(() => {
 onBeforeUnmount(() => {
     list_picker.value?.destroy();
 });
+
+function selectField(event: Event): void {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    const field_label = event.target.value;
+    const field_index = currently_available_fields.value.findIndex(
+        (field) => field_label === field.label,
+    );
+    const field = currently_available_fields.value[field_index];
+
+    currently_available_fields.value.splice(field_index, 1);
+    currently_selected_fields.value.push(field);
+}
+
+function unselectField(field: ConfigurationField): void {
+    const field_index = currently_selected_fields.value.indexOf(field);
+
+    currently_selected_fields.value.splice(field_index, 1);
+    currently_available_fields.value.push(field);
+}
 </script>
 
 <style scoped lang="scss">
