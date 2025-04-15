@@ -24,11 +24,12 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import type { RootState } from "../../../../store/type";
+import type { Vue } from "vue/types/vue";
 
 async function createWrapper(
     columns: ColumnDefinition[],
     swimlane: Swimlane,
-): Promise<Wrapper<SoloSwimlane>> {
+): Promise<Wrapper<Vue>> {
     return shallowMount(SoloSwimlane, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
