@@ -29,13 +29,21 @@ import {
 } from "@/components/configuration/configuration-modal";
 import type { Tracker } from "@/stores/configuration-store";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
+import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
+import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("ConfigurationModalTabs", () => {
-    let current_tab: ConfigurationTab, selected_tracker: Tracker | null;
+    let current_tab: ConfigurationTab,
+        selected_tracker: Tracker | null,
+        states_collection: SectionsStatesCollection;
 
     beforeEach(() => {
         current_tab = TRACKER_SELECTION_TAB;
         selected_tracker = { id: 102 } as Tracker;
+        states_collection = SectionsStatesCollectionStub.build();
     });
 
     const getWrapper = (): VueWrapper =>
@@ -47,6 +55,7 @@ describe("ConfigurationModalTabs", () => {
             global: {
                 provide: {
                     [ARE_FIELDS_ENABLED.valueOf()]: true,
+                    [SECTIONS_STATES_COLLECTION.valueOf()]: states_collection,
                 },
                 plugins: [createGettext({ silent: true })],
             },
@@ -109,5 +118,28 @@ describe("ConfigurationModalTabs", () => {
         expect(wrapper.emitted("switch-configuration-tab")).toStrictEqual([
             [READONLY_FIELDS_SELECTION_TAB],
         ]);
+    });
+
+    describe("Disabled fields selection tab", () => {
+        it("When no tracker has been configured, then it should be disabled", () => {
+            selected_tracker = null;
+            current_tab = TRACKER_SELECTION_TAB;
+
+            expect(
+                getWrapper().get("[data-test=fields-selection-tab]").attributes("disabled"),
+            ).toBeDefined();
+        });
+
+        it("When the document has unsaved content, then it should be disabled", () => {
+            selected_tracker = { id: 102 } as Tracker;
+            current_tab = TRACKER_SELECTION_TAB;
+            states_collection.createStateForSection(
+                ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.pending()),
+            );
+
+            expect(
+                getWrapper().get("[data-test=fields-selection-tab]").attributes("disabled"),
+            ).toBeDefined();
+        });
     });
 });

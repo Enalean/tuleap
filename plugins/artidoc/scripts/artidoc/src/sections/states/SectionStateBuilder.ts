@@ -26,10 +26,13 @@ import {
     isPendingSection,
 } from "@/helpers/artidoc-section.type";
 import type { OnGoingUploadFileWithId } from "@/sections/attachments/FileUploadsCollection";
-import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import type {
+    InternalArtidocSectionId,
+    ReactiveStoredArtidocSection,
+} from "@/sections/SectionsCollection";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 
-export type SectionState = {
+export type SectionState = InternalArtidocSectionId & {
     is_image_upload_allowed: ComputedRef<boolean>;
     is_section_editable: ComputedRef<boolean>;
     is_save_allowed: ComputedRef<boolean>;
@@ -58,6 +61,7 @@ export const getSectionStateBuilder = (
 ): BuildSectionState => {
     return {
         forSection: (section: ReactiveStoredArtidocSection): SectionState => ({
+            internal_id: section.value.internal_id,
             is_image_upload_allowed: computed(() => {
                 if (isFreetextSection(section.value)) {
                     return false;
