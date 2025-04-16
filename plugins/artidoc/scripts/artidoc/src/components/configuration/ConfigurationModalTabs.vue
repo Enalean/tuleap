@@ -31,9 +31,9 @@
         <button
             class="tlp-tab"
             type="button"
-            v-bind:disabled="!is_tracker_configured"
+            v-bind:disabled="is_fields_selection_button_disabled"
             v-bind:class="getFieldsTabClasses()"
-            v-bind:data-tlp-tooltip="$gettext('Please select a tracker first')"
+            v-bind:data-tlp-tooltip="tooltip_message"
             v-on:click="switchToTab(READONLY_FIELDS_SELECTION_TAB)"
             data-test="fields-selection-tab"
         >
@@ -44,16 +44,21 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import type { Tracker } from "@/stores/configuration-store";
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
+import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
+import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import {
     READONLY_FIELDS_SELECTION_TAB,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
 
 const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
+const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     current_tab: ConfigurationTab;
@@ -68,9 +73,27 @@ const is_tracker_configured = computed(() => {
     return props.selected_tracker !== null;
 });
 
+const is_fields_selection_button_disabled = computed(
+    () =>
+        !is_tracker_configured.value ||
+        states_collection.has_at_least_one_section_in_edit_mode.value,
+);
+
+const tooltip_message = computed(() => {
+    if (!is_tracker_configured.value) {
+        return $gettext("Please select a tracker first");
+    }
+
+    if (states_collection.has_at_least_one_section_in_edit_mode.value) {
+        return $gettext("The document is being edited. Please save your work beforehand.");
+    }
+
+    return "";
+});
+
 const getFieldsTabClasses = (): string[] => {
     return [
-        is_tracker_configured.value ? "" : "tlp-tooltip tlp-tooltip-right",
+        is_fields_selection_button_disabled.value ? "tlp-tooltip tlp-tooltip-right" : "",
         props.current_tab === READONLY_FIELDS_SELECTION_TAB ? "tlp-tab-active" : "",
     ];
 };

@@ -86,7 +86,7 @@ describe("SectionsStatesCollection", () => {
         expect(states_collection.has_at_least_one_section_in_edit_mode.value).toBe(false);
     });
 
-    it("has_at_least_one_section_in_edit_mode should be true when a pending section is added to the states collection ", () => {
+    it("has_at_least_one_section_in_edit_mode should be true when a pending section is added to the states collection", () => {
         expect(states_collection.has_at_least_one_section_in_edit_mode.value).toBe(false);
         states_collection.createStateForSection(
             ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.pending()),

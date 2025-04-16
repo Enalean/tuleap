@@ -18,10 +18,12 @@
  */
 
 import { ref, computed } from "vue";
+import { v4 as uuidv4 } from "uuid";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import { LEVEL_1, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
 
 const initial_state = {
+    internal_id: uuidv4(),
     is_image_upload_allowed: computed(() => true),
     is_section_editable: computed(() => true),
     is_save_allowed: computed(() => true),

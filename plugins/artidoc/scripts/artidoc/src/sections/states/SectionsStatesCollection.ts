@@ -18,7 +18,7 @@
  */
 
 import { computed, shallowRef, triggerRef } from "vue";
-import type { ComputedRef } from "vue";
+import type { ComputedRef, ShallowRef } from "vue";
 import type {
     ReactiveStoredArtidocSection,
     StoredArtidocSection,
@@ -37,10 +37,10 @@ export type SectionsStatesCollection = {
 export const getSectionsStatesCollection = (
     build_section_state: BuildSectionState,
 ): SectionsStatesCollection => {
-    const states = shallowRef(new Map<string, SectionState>());
+    const states: ShallowRef<SectionState[]> = shallowRef([]);
 
     const createNewState = (section: ReactiveStoredArtidocSection): void => {
-        states.value.set(section.value.internal_id, build_section_state.forSection(section));
+        states.value.push(build_section_state.forSection(section));
     };
 
     return {
@@ -52,22 +52,27 @@ export const getSectionsStatesCollection = (
             sections.forEach(createNewState);
         },
         getSectionState({ internal_id }): SectionState {
-            const state = states.value.get(internal_id);
+            const state = states.value.find((state) => state.internal_id === internal_id);
             if (!state) {
                 throw new Error(`No state found for section with internal id #${internal_id}`);
             }
             return state;
         },
         has_at_least_one_section_in_edit_mode: computed(() => {
-            return Array.from(states.value.values()).some(
-                (state) => state.is_section_in_edit_mode.value === true,
-            );
+            return states.value.some((state) => state.is_section_in_edit_mode.value === true);
         }),
         destroyAll(): void {
-            states.value.clear();
+            states.value = [];
         },
         destroySectionState({ internal_id }): void {
-            states.value.delete(internal_id);
+            const state_to_delete_index = states.value.findIndex(
+                (state) => state.internal_id === internal_id,
+            );
+            if (state_to_delete_index === -1) {
+                return;
+            }
+
+            states.value.splice(state_to_delete_index, 1);
         },
     };
 };
