@@ -45,7 +45,7 @@ export function useConfigurationScreenHelper(
         is_error,
         is_success,
         error_message,
-        saveConfiguration,
+        saveTrackerConfiguration,
         resetSuccessFlagFromPreviousCalls,
     } = configuration_store;
 
@@ -60,7 +60,7 @@ export function useConfigurationScreenHelper(
             no_allowed_trackers ||
             is_saving.value ||
             new_selected_tracker.value === NO_SELECTED_TRACKER ||
-            new_selected_tracker.value === selected_tracker.value,
+            new_selected_tracker.value.id === selected_tracker.value?.id,
     );
     const submit_button_icon = computed(() =>
         is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
@@ -68,7 +68,7 @@ export function useConfigurationScreenHelper(
 
     function onSubmit(): void {
         if (new_selected_tracker.value) {
-            saveConfiguration(new_selected_tracker.value);
+            saveTrackerConfiguration(new_selected_tracker.value);
         }
     }
 

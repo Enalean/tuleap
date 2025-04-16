@@ -46,7 +46,8 @@ export const ConfigurationStoreStub = {
         is_error: ref(false),
         is_success: ref(false),
         error_message: ref(""),
-        saveConfiguration: noop,
+        saveTrackerConfiguration: noop,
+        saveFieldsConfiguration: noop,
         resetSuccessFlagFromPreviousCalls: noop,
         current_project: ref(null),
     }),
@@ -73,10 +74,10 @@ export const ConfigurationStoreStub = {
         error_message: ref("Oh no!"),
     }),
 
-    withMockedSavedConfiguration: (
-        saveConfiguration: ConfigurationStore["saveConfiguration"],
+    withMockedSavedTrackerConfiguration: (
+        saveTrackerConfiguration: ConfigurationStore["saveTrackerConfiguration"],
     ): ConfigurationStore => ({
         ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
-        saveConfiguration,
+        saveTrackerConfiguration,
     }),
 };

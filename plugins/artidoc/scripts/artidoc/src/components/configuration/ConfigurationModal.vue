@@ -36,11 +36,10 @@
             v-bind:configuration_helper="configuration_helper"
         />
         <configure-readonly-fields
-            v-else-if="configuration_store.selected_tracker.value !== null"
+            v-else-if="configuration_store.selected_tracker.value !== null && is_modal_shown"
+            v-bind:configuration_store="configuration_store"
             v-bind:configuration_helper="configuration_helper"
             v-bind:selected_tracker="configuration_store.selected_tracker.value"
-            v-bind:selected_fields="configuration_store.selected_fields.value"
-            v-bind:available_fields="configuration_store.available_fields.value"
         />
     </div>
 </template>
@@ -80,6 +79,7 @@ strictInject(OPEN_CONFIGURATION_MODAL_BUS).registerHandler(openModal);
 provide(CLOSE_CONFIGURATION_MODAL, closeModal);
 
 let modal: Modal | null = null;
+const is_modal_shown = ref(false);
 
 function openModal(onSuccessfulSaved?: () => void): void {
     onSuccessfulSaveCallback = onSuccessfulSaved || noop;
@@ -90,12 +90,14 @@ function openModal(onSuccessfulSaved?: () => void): void {
     if (modal) {
         configuration_helper.resetSelection();
         modal.show();
+        is_modal_shown.value = true;
     }
 }
 
 function closeModal(): void {
     if (modal) {
         modal.hide();
+        is_modal_shown.value = false;
     }
 
     if (configuration_helper.is_success.value) {

@@ -32,18 +32,25 @@ import type { FileIdentifier } from "@tuleap/file-upload";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { Level } from "@/sections/levels/SectionsNumberer";
-import type { TrackerForFields } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import type {
+    ConfigurationField,
+    TrackerForFields,
+} from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 export function putConfiguration(
     document_id: number,
     selected_tracker_id: number,
+    selected_fields: ConfigurationField[],
 ): ResultAsync<Response, Fault> {
     return putResponse(
         uri`/api/artidoc/${document_id}/configuration`,
         {},
         {
             selected_tracker_ids: [selected_tracker_id],
-            fields: [],
+            fields: selected_fields.map((field) => ({
+                field_id: field.field_id,
+                display_type: field.display_type,
+            })),
         },
     );
 }
