@@ -35,48 +35,36 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
-import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
-import DropContainerCell from "./Cell/DropContainerCell.vue";
 import { getColumnOfCard } from "../../../../helpers/list-value-to-column-mapper";
 import SoloSwimlaneCell from "./Cell/SoloSwimlaneCell.vue";
+import { useStore } from "vuex-composition-helpers";
 
-const column_store = namespace("column");
+const props = defineProps<{
+    swimlane: Swimlane;
+}>();
 
-@Component({
-    components: {
-        SoloSwimlaneCell,
-        CardWithRemainingEffort,
-        DropContainerCell,
-        SwimlaneHeader,
-    },
-})
-export default class SoloSwimlane extends Vue {
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+const store = useStore();
 
-    @column_store.State
-    readonly columns!: Array<ColumnDefinition>;
+const columns = computed((): ColumnDefinition[] => {
+    return store.state.column.columns;
+});
 
-    get should_solo_card_be_displayed(): boolean {
-        return !this.column.is_collapsed;
+function getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {
+    const column = getColumnOfCard(columns.value, swimlane.card);
+    if (column === undefined) {
+        throw new Error("Solo card must have a mapping");
     }
-
-    get column(): ColumnDefinition {
-        return this.getColumnOfSoloCard(this.swimlane);
-    }
-
-    getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {
-        const column = getColumnOfCard(this.columns, swimlane.card);
-        if (column === undefined) {
-            throw new Error("Solo card must have a mapping");
-        }
-        return column;
-    }
+    return column;
 }
+const column = computed((): ColumnDefinition => {
+    return getColumnOfSoloCard(props.swimlane);
+});
+
+const should_solo_card_be_displayed = computed((): boolean => {
+    return !column.value.is_collapsed;
+});
 </script>
