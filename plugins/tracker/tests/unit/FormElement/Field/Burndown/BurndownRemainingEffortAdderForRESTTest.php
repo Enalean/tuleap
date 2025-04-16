@@ -18,74 +18,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Chart_Data_Burndown;
+use Tracker_FormElement_Field_Computed;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BurndownRemainingEffortAdderForRESTTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var Artifact
-     */
-    private $artifact;
-    /**
-     * @var BurndownRemainingEffortAdderForREST
-     */
-    private $adder;
-
-    /**
-     * @var ChartConfigurationFieldRetriever
-     */
-    private $field_retriever;
-    /**
-     * @var ComputedFieldDao
-     */
-    private $computed_cache;
+    private PFUser $user;
+    private Artifact $artifact;
+    private BurndownRemainingEffortAdderForREST $adder;
+    private ChartConfigurationFieldRetriever&MockObject $field_retriever;
+    private ComputedFieldDao&MockObject $computed_cache;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->field_retriever = Mockery::mock(ChartConfigurationFieldRetriever::class);
-        $this->computed_cache  = Mockery::mock(ComputedFieldDao::class);
+        $this->field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);
+        $this->computed_cache  = $this->createMock(ComputedFieldDao::class);
         $this->adder           = new BurndownRemainingEffortAdderForREST($this->field_retriever, $this->computed_cache);
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(101);
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('toRow');
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
+        $this->user     = UserTestBuilder::buildWithDefaults();
     }
 
-    public function testItDoesNotDoAnyAdditionWhenBurndownDoesNotHaveARemainingEffortField()
+    public function testItDoesNotDoAnyAdditionWhenBurndownDoesNotHaveARemainingEffortField(): void
     {
-        $date_period = Mockery::mock(DatePeriodWithOpenDays::class);
+        $date_period = $this->createMock(DatePeriodWithOpenDays::class);
         $capacity    = 10;
 
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
-        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn(null);
-        $date_period->shouldReceive('getStartDate')->never();
+        $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn(null);
+        $date_period->expects(self::never())->method('getStartDate');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
-        $this->assertEmpty($burndown_data->getRemainingEffortsAtDate());
+        self::assertEmpty($burndown_data->getRemainingEffortsAtDate());
     }
 
-    public function testItDoesNotDoAnyAdditionWhenStartDateIsInFuture()
+    public function testItDoesNotDoAnyAdditionWhenStartDateIsInFuture(): void
     {
         $date_in_future = strtotime('+1 month');
         $capacity       = 5;
@@ -94,149 +78,145 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
 
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
-        $remaining_effort_field->shouldReceive('getId')->andReturn(1);
-        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
+        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field->method('getId')->willReturn(1);
+        $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
 
-        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
-        $remaining_effort_field->shouldReceive('getComputedValue')->never();
+        $this->computed_cache->method('searchCachedDays')->willReturn([]);
+        $remaining_effort_field->expects(self::never())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
-        $this->assertEmpty($burndown_data->getRemainingEffortsAtDate());
+        self::assertEmpty($burndown_data->getRemainingEffortsAtDate());
     }
 
-    public function testItDoesNotDoAnyAdditionWhenNoChachedDays()
+    public function testItDoesNotDoAnyAdditionWhenNoChachedDays(): void
     {
         $field_id               = 1;
         $duration               = 5;
         $old_start_date         = strtotime('-3 month');
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
 
         $date_period   = DatePeriodWithOpenDays::buildFromDuration($old_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
 
-        $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
+        $remaining_effort_field->method('getId')->willReturn($field_id);
 
-        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
+        $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
 
-        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns([]);
+        $this->computed_cache->method('searchCachedDays')->willReturn([]);
 
-        $remaining_effort_field->shouldReceive('getCachedValue')->never();
-        $remaining_effort_field->shouldReceive('getComputedValue')->never();
+        $remaining_effort_field->expects(self::never())->method('getCachedValue');
+        $remaining_effort_field->expects(self::never())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
-        $this->assertEmpty($burndown_data->getRemainingEffortsAtDate());
+        self::assertEmpty($burndown_data->getRemainingEffortsAtDate());
     }
 
-    public function testItAddCachedValuesForAlreadyPastDays()
+    public function testItAddCachedValuesForAlreadyPastDays(): void
     {
         $field_id               = 1;
         $duration               = 5;
         $old_start_date         = strtotime('-3 month');
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
 
         $date_period   = DatePeriodWithOpenDays::buildFromDuration($old_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
 
-        $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
+        $remaining_effort_field->method('getId')->willReturn($field_id);
 
-        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
+        $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
 
-        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns(
+        $this->computed_cache->method('searchCachedDays')->willReturn([
             [
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+1 day', $old_start_date),
-                    'value'        => 10,
-                ],
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+2 day', $old_start_date),
-                    'value'       => 10,
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+1 day', $old_start_date),
+                'value'       => 10,
+            ],
+            [
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+2 day', $old_start_date),
+                'value'       => 10,
 
-                ],
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+3 day', $old_start_date),
-                    'value'       => 10,
+            ],
+            [
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+3 day', $old_start_date),
+                'value'       => 10,
 
-                ],
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+4 day', $old_start_date),
-                    'value'       => 10,
+            ],
+            [
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+4 day', $old_start_date),
+                'value'       => 10,
 
-                ],
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+5 day', $old_start_date),
-                    'value'       => 10,
+            ],
+            [
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+5 day', $old_start_date),
+                'value'       => 10,
 
-                ],
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+6 day', $old_start_date),
-                    'value'       => 10,
+            ],
+            [
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+6 day', $old_start_date),
+                'value'       => 10,
 
-                ],
-            ]
-        );
-        $remaining_effort_field->shouldReceive('getCachedValue');
-        $remaining_effort_field->shouldReceive('getComputedValue')->never();
+            ],
+        ]);
+        $remaining_effort_field->method('getCachedValue');
+        $remaining_effort_field->expects(self::never())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
-        $this->assertEquals(count($burndown_data->getRemainingEffort()), 6);
+        self::assertCount(6, $burndown_data->getRemainingEffort());
     }
 
-    public function testItAddTodayComputedValueForTheCurrentDay()
+    public function testItAddTodayComputedValueForTheCurrentDay(): void
     {
         $field_id               = 1;
         $duration               = 5;
         $recent_start_date      = strtotime('-3 days');
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
 
         $date_period   = DatePeriodWithOpenDays::buildFromDuration($recent_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
 
-        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
-        $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
+        $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
+        $remaining_effort_field->method('getId')->willReturn($field_id);
 
-        $this->computed_cache->shouldReceive('searchCachedDays')->andReturns(
+        $this->computed_cache->method('searchCachedDays')->willReturn([
             [
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+1 day', $recent_start_date),
-                    'value'       => 10,
-                ],
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+2 day', $recent_start_date),
-                    'value'       => 10,
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+1 day', $recent_start_date),
+                'value'       => 10,
+            ],
+            [
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+2 day', $recent_start_date),
+                'value'       => 10,
 
-                ],
-                [
-                    'artifact_id' => $this->artifact->getId(),
-                    'field_id'    => $field_id,
-                    'timestamp'   => strtotime('+3 day', $recent_start_date),
-                    'value'       => 10,
+            ],
+            [
+                'artifact_id' => $this->artifact->getId(),
+                'field_id'    => $field_id,
+                'timestamp'   => strtotime('+3 day', $recent_start_date),
+                'value'       => 10,
 
-                ],
-            ]
-        );
+            ],
+        ]);
 
-        $remaining_effort_field->shouldReceive('getCachedValue');
-        $remaining_effort_field->shouldReceive('getComputedValue')->once();
+        $remaining_effort_field->method('getCachedValue');
+        $remaining_effort_field->expects(self::once())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
     }

@@ -18,73 +18,72 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\Date;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CSVFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class CSVFormatterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const TIMESTAMP = 1540456782;
 
-    /** @var CSVFormatter */
-    private $formatter;
-    /** @var \Mockery\MockInterface */
-    private $user;
-    /** @var int */
-    private $timestamp = 1540456782;
+    private CSVFormatter $formatter;
+    private PFUser $user;
+    private StoreUserPreferenceStub $user_preference_store;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->formatter = new CSVFormatter();
-        $this->user      = Mockery::mock(\PFUser::class);
+        $this->formatter             = new CSVFormatter();
+        $this->user_preference_store = new StoreUserPreferenceStub();
+        $this->user                  = UserTestBuilder::anActiveUser()->withPreferencesStore($this->user_preference_store)->build();
     }
 
-    public function testFormatDateForCSVWithMonthFirst()
+    public function testFormatDateForCSVWithMonthFirst(): void
     {
-        $this->user->shouldReceive('getPreference')->withArgs(['user_csv_dateformat'])->andReturn('month_day_year');
+        $this->user_preference_store->set($this->user->getId(), 'user_csv_dateformat', 'month_day_year');
 
-        $result = $this->formatter->formatDateForCSVForUser($this->user, $this->timestamp, false);
+        $result = $this->formatter->formatDateForCSVForUser($this->user, self::TIMESTAMP, false);
 
-        $this->assertEquals('10/25/2018', $result);
+        self::assertEquals('10/25/2018', $result);
     }
 
-    public function testFormatDateForCSVWithDayFirst()
+    public function testFormatDateForCSVWithDayFirst(): void
     {
-        $this->user->shouldReceive('getPreference')->withArgs(['user_csv_dateformat'])->andReturn('day_month_year');
+        $this->user_preference_store->set($this->user->getId(), 'user_csv_dateformat', 'day_month_year');
 
-        $result = $this->formatter->formatDateForCSVForUser($this->user, $this->timestamp, false);
+        $result = $this->formatter->formatDateForCSVForUser($this->user, self::TIMESTAMP, false);
 
-        $this->assertEquals('25/10/2018', $result);
+        self::assertEquals('25/10/2018', $result);
     }
 
-    public function testFormatDateForCSVWithDayAndTime()
+    public function testFormatDateForCSVWithDayAndTime(): void
     {
-        $this->user->shouldReceive('getPreference')->andReturn('day_month_year');
+        $this->user_preference_store->set($this->user->getId(), 'user_csv_dateformat', 'day_month_year');
 
-        $result = $this->formatter->formatDateForCSVForUser($this->user, $this->timestamp, true);
+        $result = $this->formatter->formatDateForCSVForUser($this->user, self::TIMESTAMP, true);
 
-        $this->assertEquals('25/10/2018 10:39', $result);
+        self::assertEquals('25/10/2018 10:39', $result);
     }
 
-    public function testFormatDateForCSVWithMonthAndTime()
+    public function testFormatDateForCSVWithMonthAndTime(): void
     {
-        $this->user->shouldReceive('getPreference')->andReturn('month_day_year');
+        $this->user_preference_store->set($this->user->getId(), 'user_csv_dateformat', 'month_day_year');
 
-        $result = $this->formatter->formatDateForCSVForUser($this->user, $this->timestamp, true);
+        $result = $this->formatter->formatDateForCSVForUser($this->user, self::TIMESTAMP, true);
 
-        $this->assertEquals('10/25/2018 10:39', $result);
+        self::assertEquals('10/25/2018 10:39', $result);
     }
 
-    public function testFormatDateForCSVWithDefault()
+    public function testFormatDateForCSVWithDefault(): void
     {
-        $this->user->shouldReceive('getPreference');
+        $result = $this->formatter->formatDateForCSVForUser($this->user, self::TIMESTAMP, false);
 
-        $result = $this->formatter->formatDateForCSVForUser($this->user, $this->timestamp, false);
-
-        $this->assertEquals('10/25/2018', $result);
+        self::assertEquals('10/25/2018', $result);
     }
 }
