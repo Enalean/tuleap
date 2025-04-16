@@ -27,7 +27,7 @@
     >
         <configuration-modal-header v-bind:close_modal="closeModal" />
         <configuration-modal-tabs
-            v-on:switch-configuration-tab="(tab) => (current_tab = tab)"
+            v-on:switch-configuration-tab="switchTab"
             v-bind:current_tab="current_tab"
             v-bind:selected_tracker="configuration_store.selected_tracker.value"
         />
@@ -39,7 +39,7 @@
             v-else-if="configuration_store.selected_tracker.value !== null"
             v-bind:configuration_helper="configuration_helper"
             v-bind:selected_tracker="configuration_store.selected_tracker.value"
-            v-bind:selected_fields="configuration_store.selected_fields"
+            v-bind:selected_fields="configuration_store.selected_fields.value"
             v-bind:available_fields="configuration_store.available_fields.value"
         />
     </div>
@@ -102,6 +102,11 @@ function closeModal(): void {
     if (configuration_helper.is_success.value) {
         onSuccessfulSaveCallback();
     }
+}
+
+function switchTab(tab: ConfigurationTab): void {
+    current_tab.value = tab;
+    configuration_helper.resetSelection();
 }
 </script>
 
