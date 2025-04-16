@@ -39,6 +39,10 @@ function checkRadioButtonWithLabel(label: string): void {
         .check();
 }
 
+function getCriterionBlock(label: string): Cypress.Chainable<JQuery<HTMLLIElement>> {
+    return cy.getContains("[data-test=report-criteria-item]", label).closest("li");
+}
+
 function createArtifactWithValues(): void {
     cy.log("Create an artifact with all fields");
     getFieldWithLabel("Title").find("[data-test-field-input]").type("Title A");
@@ -124,180 +128,117 @@ function createArtifactWithValues(): void {
 }
 
 function updateTrackerReportCriterias(): void {
-    cy.intercept("POST", "*/tracker/*").as("advancedToggle");
+    cy.intercept({
+        method: "POST",
+        url: "/plugins/tracker/*",
+    }).as("advancedToggle");
 
     cy.log("Update report in order to have a query for every field of artifact");
     cy.log("Update criteria Title");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Title")
-        .closest("li")
-        .find("[data-test=alphanum-report-criteria]")
-        .type("Title A");
+    getCriterionBlock("Title").find("[data-test=alphanum-report-criteria]").type("Title A");
 
     cy.log("Update criteria Description");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Description")
-        .closest("li")
+    getCriterionBlock("Description")
         .find("[data-test=alphanum-report-criteria]")
         .type("Description A");
 
     cy.log("Update criteria String");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "String")
-        .closest("li")
-        .find("[data-test=alphanum-report-criteria]")
-        .type("String A");
+    getCriterionBlock("String").find("[data-test=alphanum-report-criteria]").type("String A");
 
     cy.log("Update criteria Text");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Text")
-        .closest("li")
-        .find("[data-test=alphanum-report-criteria]")
-        .type("Description A");
+    getCriterionBlock("Text").find("[data-test=alphanum-report-criteria]").type("Description A");
 
     cy.log("Update criteria Integer");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Integer")
-        .closest("li")
-        .find("[data-test=integer-report-criteria]")
-        .type("12");
+    getCriterionBlock("Integer").find("[data-test=integer-report-criteria]").type("12");
 
     cy.log("Update criteria Float");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Float")
-        .closest("li")
-        .find("[data-test=float-report-criteria]")
-        .type("5.12");
+    getCriterionBlock("Float").find("[data-test=float-report-criteria]").type("5.12");
 
     cy.log("Update criteria Date");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Date")
-        .closest("li")
-        .find("[data-test=date-time-date]")
-        .type("2025-02-01");
+    getCriterionBlock("Date").find("[data-test=date-time-date]").type("2025-02-01");
 
     cy.log("Update criteria Datetime");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Datetime")
-        .closest("li")
-        .find("[data-test=date-time-datetime]")
-        .type("2025-02-01");
+    getCriterionBlock("Datetime").find("[data-test=date-time-datetime]").type("2025-02-01");
 
     cy.log("Update criteria Attachments");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Attachments")
-        .closest("li")
+    getCriterionBlock("Attachments")
         .find("[data-test=file-report-criteria]")
         .type("My JSON attachment");
 
     cy.log("Update criteria Permissions");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Permissions")
-        .closest("li")
-        .within(() => {
-            cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
-            cy.wait("@advancedToggle");
-            cy.get("[data-test=permissions-report-criteria]").select([
-                "Project members",
-                "Integrators",
-            ]);
-        });
+    getCriterionBlock("Permissions")
+        .find("[data-test=tracker-report-criteria-advanced-toggle]")
+        .click();
+    cy.wait("@advancedToggle");
+    getCriterionBlock("Permissions")
+        .find("[data-test=permissions-report-criteria][multiple]")
+        .select(["Project members", "Integrators"]);
 
     cy.log("Update criteria Selectbox static");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Selectbox static")
-        .closest("li")
-        .find("[data-test=list-report-criteria]")
-        .select("Dos");
+    getCriterionBlock("Selectbox static").find("[data-test=list-report-criteria]").select("Dos");
 
     cy.log("Update criteria Selectbox users");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Selectbox users")
-        .closest("li")
+    getCriterionBlock("Selectbox users")
         .find("[data-test=list-report-criteria]")
         .select("ProjectMember (ProjectMember)");
 
     cy.log("Update criteria Selectbox ugroups");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Selectbox ugroups")
-        .closest("li")
+    getCriterionBlock("Selectbox ugroups")
         .find("[data-test=list-report-criteria]")
         .select("Integrators");
 
     cy.log("Update criteria Radio static");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Radio static")
-        .closest("li")
-        .find("[data-test=list-report-criteria]")
-        .select("二");
+    getCriterionBlock("Radio static").find("[data-test=list-report-criteria]").select("二");
 
     cy.log("Update criteria Radio users");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Radio users (members)")
-        .closest("li")
+    getCriterionBlock("Radio users (members)")
         .find("[data-test=list-report-criteria]")
         .select("ProjectMember (ProjectMember)");
 
     cy.log("Update criteria Radio ugroups");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Radio ugroups")
-        .closest("li")
+    getCriterionBlock("Radio ugroups")
         .find("[data-test=list-report-criteria]")
         .select("Integrators");
 
     cy.log("Update criteria MSB static");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "MSB static")
-        .closest("li")
-        .within(() => {
-            cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
-            cy.wait("@advancedToggle");
-            cy.get("[data-test=list-report-criteria]").select(["Deux", "Trois"]);
-        });
+    getCriterionBlock("MSB static")
+        .find("[data-test=tracker-report-criteria-advanced-toggle]")
+        .click();
+    cy.wait("@advancedToggle");
+    getCriterionBlock("MSB static")
+        .find("[data-test=list-report-criteria][multiple]")
+        .select(["Deux", "Trois"]);
 
     cy.log("Update criteria MSB users");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "MSB users (members)")
-        .closest("li")
+    getCriterionBlock("MSB users (members)")
         .find("[data-test=list-report-criteria]")
         .select("ProjectMember (ProjectMember)");
 
     cy.log("Update criteria MSB ugroups");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "MSB ugroups")
-        .closest("li")
-        .find("[data-test=list-report-criteria]")
-        .select("Integrators");
+    getCriterionBlock("MSB ugroups").find("[data-test=list-report-criteria]").select("Integrators");
 
     cy.log("Update criteria Checkbox static");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Checkbox static")
-        .closest("li")
-        .within(() => {
-            cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
-            cy.wait("@advancedToggle");
-            cy.get("[data-test=list-report-criteria]").select(["One", "Three"]);
-        });
+    getCriterionBlock("Checkbox static")
+        .find("[data-test=tracker-report-criteria-advanced-toggle]")
+        .click();
+    cy.wait("@advancedToggle");
+    getCriterionBlock("Checkbox static")
+        .find("[data-test=list-report-criteria][multiple]")
+        .select(["One", "Three"]);
 
     cy.log("Update criteria Checkbox users");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Checkbox users (members)")
-        .closest("li")
+    getCriterionBlock("Checkbox users (members)")
         .find("[data-test=list-report-criteria]")
         .select("ProjectMember (ProjectMember)");
 
     cy.log("Update criteria Checkbox ugroups");
-    cy.get("[data-test=report-criteria-item]")
-        .contains("label", "Checkbox ugroups")
-        .closest("li")
-        .within(() => {
-            cy.get("[data-test=tracker-report-criteria-advanced-toggle]").click();
-            cy.wait("@advancedToggle");
-            cy.get("[data-test=list-report-criteria]").select([
-                "Project administrators",
-                "Contributors",
-            ]);
-        });
+    getCriterionBlock("Checkbox ugroups")
+        .find("[data-test=tracker-report-criteria-advanced-toggle]")
+        .click();
+    cy.wait("@advancedToggle");
+    getCriterionBlock("Checkbox ugroups")
+        .find("[data-test=list-report-criteria][multiple]")
+        .select(["Project administrators", "Contributors"]);
 
     cy.log("Search ");
     cy.get("[data-test=submit-report-search]").click();
