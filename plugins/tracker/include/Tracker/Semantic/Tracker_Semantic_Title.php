@@ -156,12 +156,9 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
             }
         } elseif ($request->exist('delete')) {
             $this->getCSRFToken()->check();
-            if ($this->delete()) {
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Semantic title unset'));
-                $GLOBALS['Response']->redirect($this->getUrl());
-            } else {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Unable to save the title'));
-            }
+            $this->deleteTitle();
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Semantic title unset'));
+            $GLOBALS['Response']->redirect($this->getUrl());
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
@@ -173,10 +170,10 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
         return true;
     }
 
-    public function delete()
+    private function deleteTitle(): void
     {
-        $dao = new Tracker_Semantic_TitleDao();
-        return $dao->delete($this->tracker->getId());
+        $dao = new TitleSemanticDAO();
+        $dao->deleteForTracker($this->tracker->getId());
     }
 
     protected static $_instances; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore

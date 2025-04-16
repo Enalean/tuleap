@@ -44,4 +44,9 @@ final class TitleSemanticDAO extends DataAccessObject implements RetrieveTitleFi
             ['field_id']
         );
     }
+
+    public function deleteForTracker(int $tracker_id): void
+    {
+        $this->getDB()->delete('tracker_semantic_title', ['tracker_id' => $tracker_id]);
+    }
 }
