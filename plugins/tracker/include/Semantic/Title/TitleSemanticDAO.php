@@ -35,4 +35,13 @@ final class TitleSemanticDAO extends DataAccessObject implements RetrieveTitleFi
             ? Option::fromValue($field_id)
             : Option::nothing(\Psl\Type\int());
     }
+
+    public function save(int $tracker_id, int $field_id): void
+    {
+        $this->getDB()->insertOnDuplicateKeyUpdate(
+            'tracker_semantic_title',
+            ['tracker_id' => $tracker_id, 'field_id' => $field_id],
+            ['field_id']
+        );
+    }
 }

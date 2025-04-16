@@ -36,6 +36,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_SemanticFactory
 {
     /**
@@ -229,13 +230,11 @@ class Tracker_SemanticFactory
      *
      * @param Tracker_Semantic $semantic The semantic to save
      * @param Tracker          $tracker  The tracker
-     *
-     * @return bool true if the semantic is saved, false otherwise
      */
-    public function saveObject($semantic, $tracker)
+    public function saveObject($semantic, $tracker): void
     {
         $semantic->setTracker($tracker);
-        return $semantic->save();
+        $semantic->save();
     }
 
     /**
