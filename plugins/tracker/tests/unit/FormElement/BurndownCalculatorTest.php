@@ -23,26 +23,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use TestHelper;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BurndownCalculatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var BurndownCalculator
-     */
-    private $burndown_calculator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ComputedFieldDao
-     */
-    private $computed_dao;
+    private BurndownCalculator $burndown_calculator;
+    private ComputedFieldDao&MockObject $computed_dao;
 
     protected function setUp(): void
     {
-        $this->computed_dao        = Mockery::mock(ComputedFieldDao::class);
+        $this->computed_dao        = $this->createMock(ComputedFieldDao::class);
         $this->burndown_calculator = new BurndownCalculator($this->computed_dao);
     }
 
@@ -51,7 +46,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $already_seen = new ArtifactsAlreadyProcessedDuringComputationCollection();
         $already_seen->addArtifactAsAlreadyProcessed('1234');
 
-        $this->computed_dao->shouldReceive('getBurndownManualValueAtGivenTimestamp')->never();
+        $this->computed_dao->expects($this->never())->method('getBurndownManualValueAtGivenTimestamp');
 
         $expected = [
             'children'   => false,
@@ -67,7 +62,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $already_seen
         );
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     public function testItCollectManualValuesOfArtifactForBurndownCache(): void
@@ -75,8 +70,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $already_seen = new ArtifactsAlreadyProcessedDuringComputationCollection();
         $already_seen->addArtifactAsAlreadyProcessed('1234');
 
-        $this->computed_dao->shouldReceive('getBurndownManualValueAtGivenTimestamp')->once()
-            ->andReturn(['value' => 12]);
+        $this->computed_dao->expects($this->once())->method('getBurndownManualValueAtGivenTimestamp')->willReturn(['value' => 12]);
 
         $expected = [
             'children'   => false,
@@ -92,7 +86,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $already_seen
         );
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     public function testItCollectComputedValuesOfArtifactForBurndownCache(): void
@@ -100,11 +94,9 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $already_seen = new ArtifactsAlreadyProcessedDuringComputationCollection();
         $already_seen->addArtifactAsAlreadyProcessed('1234');
 
-        $this->computed_dao->shouldReceive('getBurndownManualValueAtGivenTimestamp')->once()
-            ->andReturn(null);
-        $dar = Mockery::mock(\DataAccessResult::class);
-        $this->computed_dao->shouldReceive('getBurndownComputedValueAtGivenTimestamp')->once()
-            ->andReturn($dar);
+        $this->computed_dao->expects($this->once())->method('getBurndownManualValueAtGivenTimestamp')->willReturn(null);
+        $dar = TestHelper::emptyDar();
+        $this->computed_dao->expects($this->once())->method('getBurndownComputedValueAtGivenTimestamp')->willReturn($dar);
 
         $expected = [
             'children'   => $dar,
@@ -120,6 +112,6 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $already_seen
         );
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 }
