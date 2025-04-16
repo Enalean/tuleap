@@ -158,7 +158,7 @@ function handleSwitchWriting(): void {
     if (!is_user_admin) {
         return;
     }
-    emitter.emit(EDIT_QUERY_EVENT, { query_to_edit: backend_query.value });
+    emitter.emit(EDIT_QUERY_EVENT, { query: backend_query.value });
 }
 
 function handleSwitchQuery(event: SwitchQueryEvent): void {

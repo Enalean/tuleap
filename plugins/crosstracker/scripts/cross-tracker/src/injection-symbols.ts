@@ -43,5 +43,4 @@ export const GET_SUGGESTED_QUERIES: StrictInjectionKey<SuggestedQueriesGetter> =
 export const DASHBOARD_TYPE: StrictInjectionKey<DashboardType> = Symbol();
 export const NEW_QUERY_CREATOR: StrictInjectionKey<PostNewQuery> = Symbol();
 export const QUERY_UPDATER: StrictInjectionKey<UpdateQuery> = Symbol();
-export const UPDATE_WIDGET_TITLE: StrictInjectionKey<WidgetTitleUpdater> = Symbol();
-export const DEFAULT_WIDGET_TITLE: StrictInjectionKey<string> = Symbol();
+export const WIDGET_TITLE_UPDATER: StrictInjectionKey<WidgetTitleUpdater> = Symbol();

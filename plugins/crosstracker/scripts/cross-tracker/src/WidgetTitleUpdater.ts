@@ -17,8 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Events, UpdateWidgetTitleEvent } from "./helpers/widget-events";
-import { UPDATE_WIDGET_TITLE_EVENT } from "./helpers/widget-events";
+import type {
+    CreatedQueryEvent,
+    EditedQueryEvent,
+    EditQueryEvent,
+    Events,
+    InitializedWithQueryEvent,
+    SwitchQueryEvent,
+} from "./helpers/widget-events";
+import {
+    CREATE_NEW_QUERY_EVENT,
+    EDIT_QUERY_EVENT,
+    INITIALIZED_WITH_QUERY_EVENT,
+    NEW_QUERY_CREATED_EVENT,
+    QUERY_EDITED_EVENT,
+    SWITCH_QUERY_EVENT,
+} from "./helpers/widget-events";
 import type { Emitter } from "mitt";
 
 export type WidgetTitleUpdater = {
@@ -29,17 +43,41 @@ export type WidgetTitleUpdater = {
 export const WidgetTitleUpdater = (
     emitter: Emitter<Events>,
     title_element: HTMLElement,
+    default_title: string,
 ): WidgetTitleUpdater => {
-    const updateTitle = (event: UpdateWidgetTitleEvent): void => {
-        title_element.textContent = event.new_title;
+    const updateTitle = (
+        event:
+            | SwitchQueryEvent
+            | InitializedWithQueryEvent
+            | CreatedQueryEvent
+            | EditedQueryEvent
+            | EditQueryEvent,
+    ): void => {
+        title_element.textContent = event.query.title;
+    };
+
+    const resetTitleToDefault = (): void => {
+        title_element.textContent = default_title;
     };
 
     return {
         listenToUpdateTitle(): void {
-            emitter.on(UPDATE_WIDGET_TITLE_EVENT, updateTitle);
+            emitter.on(SWITCH_QUERY_EVENT, updateTitle);
+            emitter.on(INITIALIZED_WITH_QUERY_EVENT, updateTitle);
+            emitter.on(NEW_QUERY_CREATED_EVENT, updateTitle);
+            emitter.on(QUERY_EDITED_EVENT, updateTitle);
+            emitter.on(EDIT_QUERY_EVENT, updateTitle);
+
+            emitter.on(CREATE_NEW_QUERY_EVENT, resetTitleToDefault);
         },
         removeListener(): void {
-            emitter.off(UPDATE_WIDGET_TITLE_EVENT, updateTitle);
+            emitter.off(SWITCH_QUERY_EVENT, updateTitle);
+            emitter.off(INITIALIZED_WITH_QUERY_EVENT, updateTitle);
+            emitter.off(NEW_QUERY_CREATED_EVENT, updateTitle);
+            emitter.off(QUERY_EDITED_EVENT, updateTitle);
+            emitter.off(EDIT_QUERY_EVENT, updateTitle);
+
+            emitter.off(CREATE_NEW_QUERY_EVENT, resetTitleToDefault);
         },
     };
 };

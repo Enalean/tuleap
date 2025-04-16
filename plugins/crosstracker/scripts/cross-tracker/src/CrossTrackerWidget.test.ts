@@ -17,29 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import {
-    DEFAULT_WIDGET_TITLE,
-    EMITTER,
-    IS_USER_ADMIN,
-    UPDATE_WIDGET_TITLE,
-} from "./injection-symbols";
+import { EMITTER, IS_USER_ADMIN, WIDGET_TITLE_UPDATER } from "./injection-symbols";
 import CreateNewQuery from "./components/query/creation/CreateNewQuery.vue";
 import ReadQuery from "./components/ReadQuery.vue";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
-import type { Events, UpdateWidgetTitleEvent } from "./helpers/widget-events";
+import type { Events } from "./helpers/widget-events";
 import {
-    SWITCH_QUERY_EVENT,
     EDIT_QUERY_EVENT,
     INITIALIZED_WITH_QUERY_EVENT,
-    UPDATE_WIDGET_TITLE_EVENT,
     NEW_QUERY_CREATED_EVENT,
     QUERY_EDITED_EVENT,
+    SWITCH_QUERY_EVENT,
 } from "./helpers/widget-events";
 import EditQuery from "./components/query/edition/EditQuery.vue";
 
@@ -48,25 +42,13 @@ vi.useFakeTimers();
 describe("CrossTrackerWidget", () => {
     let is_user_admin: boolean;
     let widget_title_element: HTMLSpanElement;
-    let dispatched_update_widget_title_event: UpdateWidgetTitleEvent[];
     let emitter: Emitter<Events>;
-
-    const registerDispatchedUpdateWidgetTitleEvent = (event: UpdateWidgetTitleEvent): void => {
-        dispatched_update_widget_title_event.push(event);
-    };
 
     beforeEach(() => {
         emitter = mitt<Events>();
-        dispatched_update_widget_title_event = [];
         widget_title_element = document.createElement("span");
         widget_title_element.textContent = "Cross trackers search";
         is_user_admin = true;
-
-        emitter.on(UPDATE_WIDGET_TITLE_EVENT, registerDispatchedUpdateWidgetTitleEvent);
-    });
-
-    afterEach(() => {
-        emitter.off(UPDATE_WIDGET_TITLE_EVENT, registerDispatchedUpdateWidgetTitleEvent);
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
@@ -75,11 +57,11 @@ describe("CrossTrackerWidget", () => {
                 provide: {
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                     [EMITTER.valueOf()]: emitter,
-                    [UPDATE_WIDGET_TITLE.valueOf()]: WidgetTitleUpdater(
+                    [WIDGET_TITLE_UPDATER.valueOf()]: WidgetTitleUpdater(
                         emitter,
                         widget_title_element,
+                        "Cross trackers search",
                     ),
-                    [DEFAULT_WIDGET_TITLE.valueOf()]: "Cross Tracker Search",
                 },
             },
         });
@@ -103,11 +85,12 @@ describe("CrossTrackerWidget", () => {
             expect(wrapper.findComponent(CreateNewQuery).exists()).toBe(true);
             expect(wrapper.findComponent(EditQuery).exists()).toBe(false);
         });
+
         it("Displays the edit query pane at create new query event", async () => {
             const wrapper = getWrapper();
 
             emitter.emit(EDIT_QUERY_EVENT, {
-                query_to_edit: {
+                query: {
                     id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
                     tql_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id > 15",
                     title: "Some artifacts",
@@ -124,32 +107,33 @@ describe("CrossTrackerWidget", () => {
     });
 
     describe(`Reacts on
-        INITIALIZE_WITH_QUERY_EVENT,
+        INITIALIZED_WITH_QUERY_EVENT,
         SWITCH_QUERY_EVENT,
         NEW_QUERY_CREATED_EVENT,
-        QUERY_EDITED_EVENT
+        QUERY_EDITED_EVENT,
     `, () => {
         it.each([
             INITIALIZED_WITH_QUERY_EVENT,
             SWITCH_QUERY_EVENT,
             NEW_QUERY_CREATED_EVENT,
             QUERY_EDITED_EVENT,
-        ])("emits an UPDATE_WIDGET_TITLE_EVENT on %s", (event: string) => {
-            getWrapper();
-            const title = "Some artifacts";
+        ])("sets the currently selected query on %s", async (event: string) => {
+            const wrapper = getWrapper();
+            const selected_query = {
+                id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
+                tql_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id > 15",
+                title: "Some artifacts",
+                description: "a query",
+                is_default: false,
+            };
 
-            emitter.emit(event as keyof Events, {
-                query: {
-                    id: "00000000-03e8-70c0-9e41-6ea7a4e2b78d",
-                    tql_query: "SELECT @pretty_title FROM @project = 'self' WHERE @id > 15",
-                    title,
-                    description: "a query",
-                    is_default: false,
-                },
-            });
+            emitter.emit(event as keyof Events, { query: selected_query });
 
-            expect(dispatched_update_widget_title_event).toHaveLength(1);
-            expect(dispatched_update_widget_title_event[0].new_title).toBe(title);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ReadQuery).props().selected_query).toStrictEqual(
+                selected_query,
+            );
         });
     });
 });
