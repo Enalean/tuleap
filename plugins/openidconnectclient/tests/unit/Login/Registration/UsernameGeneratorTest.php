@@ -157,7 +157,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule->method('isValid')->willReturn(true);
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
-        $this->userNameNormalizer->expects(self::never())->method('normalize');
+        $this->userNameNormalizer->expects($this->never())->method('normalize');
         $this->expectException(NotEnoughDataToGenerateUsernameException::class);
         $username_generator->getUsername([]);
     }

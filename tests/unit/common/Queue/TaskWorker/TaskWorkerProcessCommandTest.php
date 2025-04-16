@@ -53,7 +53,7 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_serialized_string = '{"event_name":"event.name","payload":{"id":2545}}';
         file_put_contents($path_to_file, $event_serialized_string);
 
-        $event_dispatcher->expects(self::never())->method('dispatch');
+        $event_dispatcher->expects($this->never())->method('dispatch');
 
         $command_tester = new CommandTester($command);
         $command_tester->execute(['input_file' => $path_to_file]);
@@ -70,7 +70,7 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_serialized_string = '{"event_name":"event.name","payload":{"id":2545}}';
         file_put_contents($path_to_file, $event_serialized_string);
 
-        $event_dispatcher->expects(self::atLeastOnce())->method('dispatch')->with(self::isInstanceOf(WorkerEvent::class));
+        $event_dispatcher->expects($this->atLeastOnce())->method('dispatch')->with(self::isInstanceOf(WorkerEvent::class));
 
         $command_tester = new CommandTester($command);
         $command_tester->execute(['input_file' => $path_to_file]);

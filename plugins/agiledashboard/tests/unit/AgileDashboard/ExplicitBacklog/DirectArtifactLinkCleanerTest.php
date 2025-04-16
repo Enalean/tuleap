@@ -83,7 +83,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withoutAnArtifactLinkField());
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
@@ -100,7 +100,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $this->milestone_factory->expects($this->once())->method('getBareMilestoneByArtifact')
             ->willReturn(null);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withoutAnArtifactLinkField());
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
@@ -120,7 +120,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getTracker')->willReturn($this->tracker);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withoutAnArtifactLinkField());
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
@@ -142,7 +142,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact->expects($this->once())->method('getLastChangeset')
             ->willReturn(null);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField(ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build()));
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
@@ -170,7 +170,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $changeset->setFieldValue($artifact_link_field);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField($artifact_link_field));
         $this->cleaner->cleanDirectlyMadeArtifactLinks(
@@ -199,7 +199,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact->expects($this->once())->method('getLastChangeset')
             ->willReturn($changeset);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('cleanUpDirectlyPlannedItemsInArtifact');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 
         $this->buildCleaner(RetrieveAnArtifactLinkFieldStub::withAnArtifactLinkField($artifact_link_field));
         $this->cleaner->cleanDirectlyMadeArtifactLinks(

@@ -54,7 +54,7 @@ class User_SSHKeyValidator_KeyValidationTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesntRaiseAnErrorWhenTheKeyIsValid(): void
     {
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
 
         $this->assertEquals(
             [$this->key1],
@@ -64,7 +64,7 @@ class User_SSHKeyValidator_KeyValidationTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesntRaiseAnErrorWhenAllTheKeysAreValid(): void
     {
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
 
         $this->assertEquals(
             [$this->key1, $this->key2],

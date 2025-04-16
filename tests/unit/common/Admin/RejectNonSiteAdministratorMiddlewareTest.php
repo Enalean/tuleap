@@ -60,7 +60,7 @@ final class RejectNonSiteAdministratorMiddlewareTest extends \Tuleap\Test\PHPUni
     public function testRequestIsRejectedWhenTheUserIsNotASiteAdministrator(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
         $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
         $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
 

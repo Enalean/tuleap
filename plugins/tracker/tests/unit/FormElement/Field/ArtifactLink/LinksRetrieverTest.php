@@ -77,7 +77,7 @@ class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $art_93->expects($this->once())->method('userCanView')->with($user)->willReturn(false);
         $art_103->expects($this->once())->method('userCanView')->with($user)->willReturn(true);
 
-        $this->tracker_artifact_factory->expects(self::exactly(3))
+        $this->tracker_artifact_factory->expects($this->exactly(3))
             ->method('getArtifactById')
             ->willReturnCallback(
                 fn (int $art_id): Artifact => match ($art_id) {

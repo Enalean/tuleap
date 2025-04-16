@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testArgPropagate(): void
     {
@@ -108,7 +107,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $r = $this->createMock(\Rule::class);
         $r->method('isValid')->willReturn(false);
-        $r->expects(self::never())->method('getErrorMessage');
+        $r->expects($this->never())->method('getErrorMessage');
         $v->addRule($r, 'warning', 'test');
 
         $v->validate('value');
@@ -117,21 +116,21 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNotRequiredEmptyCall(): void
     {
         $r1 = $this->createMock(\Rule::class);
-        $r1->expects(self::never())->method('isValid');
+        $r1->expects($this->never())->method('isValid');
         $v1 = new Valid();
         $v1->disableFeedback();
         $v1->addRule($r1);
         $v1->validate('');
 
         $r2 = $this->createMock(\Rule::class);
-        $r2->expects(self::never())->method('isValid');
+        $r2->expects($this->never())->method('isValid');
         $v2 = new Valid();
         $v2->addRule($r2);
         $v2->validate(false);
 
         $r3 = $this->createMock(\Rule::class);
         $v3 = new Valid();
-        $r3->expects(self::never())->method('isValid');
+        $r3->expects($this->never())->method('isValid');
         $v3->addRule($r3);
         $v3->validate(null);
     }
@@ -195,7 +194,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
         $v->disableFeedback();
-        $v->expects(self::never())->method('addFeedback');
+        $v->expects($this->never())->method('addFeedback');
 
         $r = $this->createMock(\Rule::class);
         $r->method('isValid')->willReturn(false);
@@ -270,7 +269,7 @@ final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFeedbackGlobalWithoutErrors(): void
     {
         $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
-        $v->expects(self::never())->method('addFeedback');
+        $v->expects($this->never())->method('addFeedback');
 
         $v->setErrorMessage('custom message');
 

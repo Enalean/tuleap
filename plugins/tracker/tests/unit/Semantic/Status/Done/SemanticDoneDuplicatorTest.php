@@ -103,8 +103,8 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getSelectedValues')
             ->willReturn([]);
 
-        $this->status_dao->expects(self::never())->method('searchByTrackerId');
-        $this->done_dao->expects(self::never())->method('addForTracker');
+        $this->status_dao->expects($this->never())->method('searchByTrackerId');
+        $this->done_dao->expects($this->never())->method('addForTracker');
 
         $this->duplicator->duplicate(101, 201, $mapping);
     }
@@ -135,7 +135,7 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('searchByTrackerId')
             ->willReturn(TestHelper::emptyDar());
 
-        $this->done_dao->expects(self::never())->method('addForTracker');
+        $this->done_dao->expects($this->never())->method('addForTracker');
 
         $this->duplicator->duplicate(101, 201, $mapping);
     }
@@ -168,7 +168,7 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'field_id' => '712',
             ]));
 
-        $this->done_dao->expects(self::never())->method('addForTracker');
+        $this->done_dao->expects($this->never())->method('addForTracker');
 
         $this->duplicator->duplicate(101, 201, $mapping);
     }

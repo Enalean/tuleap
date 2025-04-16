@@ -160,7 +160,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
 
-        $this->factory->expects(self::never())->method('save');
+        $this->factory->expects($this->never())->method('save');
 
         self::expectException(NotFoundException::class);
 
@@ -176,7 +176,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->factory->method('getLicenseAgreementById')->with($this->project, 0)->willReturn(new DefaultLicenseAgreement());
 
-        $this->factory->expects(self::never())->method('save');
+        $this->factory->expects($this->never())->method('save');
 
         self::expectException(ForbiddenException::class);
 

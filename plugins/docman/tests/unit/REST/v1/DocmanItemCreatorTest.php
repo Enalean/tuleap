@@ -272,10 +272,10 @@ final class DocmanItemCreatorTest extends TestCase
         $created_item->method('getId')->willReturn(12);
         $created_item->method('getParentId')->willReturn(11);
 
-        $this->item_factory->expects(self::never())->method('createWithoutOrdering');
+        $this->item_factory->expects($this->never())->method('createWithoutOrdering');
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->creator_visitor->expects(self::never())->method('visitOtherDocument');
-        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
+        $this->creator_visitor->expects($this->never())->method('visitOtherDocument');
+        $this->custom_metadata_checker->expects($this->never())->method('checkAndRetrieveFormattedRepresentation');
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
@@ -364,7 +364,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_factory->expects(self::never())->method('createWithoutOrdering');
+        $this->item_factory->expects($this->never())->method('createWithoutOrdering');
 
         $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
@@ -443,11 +443,11 @@ final class DocmanItemCreatorTest extends TestCase
         $file_properties_post_representation->file_name = 'myfile';
         $post_representation->file_properties           = $file_properties_post_representation;
 
-        $this->document_to_upload_creator->expects(self::never())->method('create');
+        $this->document_to_upload_creator->expects($this->never())->method('create');
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(true);
 
-        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
+        $this->custom_metadata_checker->expects($this->never())->method('checkAndRetrieveFormattedRepresentation');
 
         $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
 
@@ -705,7 +705,7 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(true);
 
-        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
+        $this->custom_metadata_checker->expects($this->never())->method('checkAndRetrieveFormattedRepresentation');
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
@@ -738,13 +738,13 @@ final class DocmanItemCreatorTest extends TestCase
             HardCodedMetadataException::itemStatusNotAvailable()
         );
 
-        $this->metadata_obsolesence_date_retriever->expects(self::never())->method('getTimeStampOfDateWithoutPeriodValidity');
+        $this->metadata_obsolesence_date_retriever->expects($this->never())->method('getTimeStampOfDateWithoutPeriodValidity');
 
-        $this->item_factory->expects(self::never())->method('createWithoutOrdering');
+        $this->item_factory->expects($this->never())->method('createWithoutOrdering');
 
         $this->item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
 
-        $this->creator_visitor->expects(self::never())->method('visitFolder');
+        $this->creator_visitor->expects($this->never())->method('visitFolder');
         $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
@@ -1077,7 +1077,7 @@ final class DocmanItemCreatorTest extends TestCase
             ->willReturn($obsolescence_date_time_stamp);
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
+        $this->custom_metadata_checker->expects($this->never())->method('checkAndRetrieveFormattedRepresentation');
 
         $metadata_to_create          = MetadataToCreate::buildMetadataRepresentation([], false);
         $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())

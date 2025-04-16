@@ -109,10 +109,10 @@ final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNewlyCreatedKeyAlreadyExpiredThrowsAnException(): void
     {
-        $this->hasher->expects(self::never())->method('computeHash');
-        $this->dao->expects(self::never())->method('create');
-        $this->store->expects(self::never())->method('storeLastGeneratedAccessKeyIdentifier');
-        $this->notifier->expects(self::never())->method('notifyCreation');
+        $this->hasher->expects($this->never())->method('computeHash');
+        $this->dao->expects($this->never())->method('create');
+        $this->store->expects($this->never())->method('storeLastGeneratedAccessKeyIdentifier');
+        $this->notifier->expects($this->never())->method('notifyCreation');
 
         $user = UserTestBuilder::aUser()->withId(102)->build();
 

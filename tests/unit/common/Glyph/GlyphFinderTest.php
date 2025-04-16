@@ -45,7 +45,7 @@ class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItFindsAGlyphInCore(): void
     {
         $event_manager = $this->createMock(EventManager::class);
-        $event_manager->expects(self::never())->method('processEvent');
+        $event_manager->expects($this->never())->method('processEvent');
 
         $glyph_finder = new GlyphFinder($event_manager);
         $glyph        = $glyph_finder->get('scrum');
@@ -61,7 +61,7 @@ class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
         file_put_contents($images_path . '/images/organization_logo.svg', '<svg></svg>');
 
         $event_manager = $this->createMock(EventManager::class);
-        $event_manager->expects(self::never())->method('processEvent');
+        $event_manager->expects($this->never())->method('processEvent');
 
         $glyph_finder = new GlyphFinder($event_manager);
         $glyph        = $glyph_finder->get('organization_logo');

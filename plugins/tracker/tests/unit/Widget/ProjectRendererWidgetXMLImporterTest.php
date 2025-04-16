@@ -87,7 +87,7 @@ final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\Te
           </widget>
         ');
 
-        $this->widget->expects(self::never())->method('create');
+        $this->widget->expects($this->never())->method('create');
 
         $this->expectException(RuntimeException::class);
 

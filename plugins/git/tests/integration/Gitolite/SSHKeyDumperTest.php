@@ -82,7 +82,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
     public function testRemoveUserKey(): void
     {
         $invalid_keys_collector = new InvalidKeysCollector();
-        $this->git_exec->expects(self::exactly(2))->method('push')->willReturn(true);
+        $this->git_exec->expects($this->exactly(2))->method('push')->willReturn(true);
 
         // User has 2 keys
         $user = new PFUser([

@@ -112,7 +112,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'https://example.com/jenkins/job01',
         ]);
         $polling_response->method('getBody')->willReturn('Response body');
-        $this->jenkins_client->expects(self::exactly(2))
+        $this->jenkins_client->expects($this->exactly(2))
             ->method('pushGitNotifications')
             ->with('https://example.com/jenkins', self::anything(), 'token', 'da39a3ee5e6b4b0d3255bfef95601890afd80709')
             ->willReturn($polling_response);
@@ -125,10 +125,10 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->log_creator->expects($this->once())->method('createForRepository');
-        $this->log_creator->expects(self::never())->method('createForProject');
+        $this->log_creator->expects($this->never())->method('createForProject');
 
         $this->logger->method('debug');
-        $this->logger->expects(self::never())->method('error');
+        $this->logger->expects($this->never())->method('error');
 
         $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([]);
 
@@ -152,7 +152,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'https://example.com/jenkins/job01',
         ]);
         $polling_response->method('getBody')->willReturn('Response body');
-        $this->jenkins_client->expects(self::exactly(2))
+        $this->jenkins_client->expects($this->exactly(2))
             ->method('pushGitNotifications')
             ->with('https://example.com/jenkins', self::anything(), 'token', null)
             ->willReturn($polling_response);
@@ -164,10 +164,10 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
         $this->log_creator->expects($this->once())->method('createForRepository');
-        $this->log_creator->expects(self::never())->method('createForProject');
+        $this->log_creator->expects($this->never())->method('createForProject');
 
         $this->logger->method('debug');
-        $this->logger->expects(self::never())->method('error');
+        $this->logger->expects($this->never())->method('error');
 
         $this->jenkins_server_factory->expects($this->once())->method('getJenkinsServerOfProject')->willReturn([]);
 
@@ -213,7 +213,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
         $this->log_creator->expects($this->once())->method('createForRepository');
-        $this->log_creator->expects(self::never())->method('createForProject');
+        $this->log_creator->expects($this->never())->method('createForProject');
 
         $this->logger->method('debug');
         $this->logger->expects($this->once())->method('error');
@@ -243,7 +243,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'https://example.com/jenkins/job01',
         ]);
         $polling_response->method('getBody')->willReturn('Response body');
-        $this->jenkins_client->expects(self::exactly(2))->method('pushGitNotifications')->willReturn($polling_response);
+        $this->jenkins_client->expects($this->exactly(2))->method('pushGitNotifications')->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
@@ -251,11 +251,11 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->expects(self::never())->method('createForRepository');
+        $this->log_creator->expects($this->never())->method('createForRepository');
         $this->log_creator->expects($this->once())->method('createForProject');
 
         $this->logger->method('debug');
-        $this->logger->expects(self::never())->method('error');
+        $this->logger->expects($this->never())->method('error');
 
         $date_time = new DateTimeImmutable();
 
@@ -301,7 +301,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->expects(self::never())->method('createForRepository');
+        $this->log_creator->expects($this->never())->method('createForRepository');
         $this->log_creator->expects($this->once())->method('createForProject');
 
         $this->logger->method('debug');
@@ -332,7 +332,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'https://example.com/jenkins/job01',
         ]);
         $polling_response->method('getBody')->willReturn('Response body');
-        $this->jenkins_client->expects(self::exactly(2))->method('pushGitNotifications')->willReturn($polling_response);
+        $this->jenkins_client->expects($this->exactly(2))->method('pushGitNotifications')->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
@@ -341,7 +341,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->jenkins_client->expects($this->once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
         $this->log_creator->expects($this->once())->method('createForRepository');
-        $this->log_creator->expects(self::never())->method('createForProject');
+        $this->log_creator->expects($this->never())->method('createForProject');
 
         $this->logger->method('debug');
 

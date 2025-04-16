@@ -136,7 +136,7 @@ final class PermissionCheckerTest extends TestCase
         $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
         $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $this->user->expects(self::never())->method('isMemberOfUGroup');
+        $this->user->expects($this->never())->method('isMemberOfUGroup');
 
         self::assertTrue($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
@@ -151,7 +151,7 @@ final class PermissionCheckerTest extends TestCase
         $this->user->expects($this->once())->method('isSuperUser')->willReturn(false);
         $this->user->expects($this->once())->method('isAdmin')->with(101)->willReturn(false);
 
-        $this->user->expects(self::never())->method('isMemberOfUGroup');
+        $this->user->expects($this->never())->method('isMemberOfUGroup');
 
         $this->comment = $this->buildComment(null);
 
@@ -296,8 +296,8 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::never())->method('isSuperUser');
-        $this->user->expects(self::never())->method('isAdmin')->with(101);
+        $this->user->expects($this->never())->method('isSuperUser');
+        $this->user->expects($this->never())->method('isAdmin')->with(101);
 
         $this->user->method('isMemberOfUGroup')
             ->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)
@@ -316,8 +316,8 @@ final class PermissionCheckerTest extends TestCase
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
             ->willReturn(true);
-        $this->user->expects(self::never())->method('isSuperUser');
-        $this->user->expects(self::never())->method('isAdmin')->with(101);
+        $this->user->expects($this->never())->method('isSuperUser');
+        $this->user->expects($this->never())->method('isAdmin')->with(101);
 
         $this->user->method('isMemberOfUGroup')
             ->with(self::callback(static fn(int $id) => in_array($id, [1, 2, 3])), 101)

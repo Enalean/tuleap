@@ -157,7 +157,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->method_builder->expects(self::never())->method('buildMethodBasedOnEffort');
+        $this->method_builder->expects($this->never())->method('buildMethodBasedOnEffort');
 
         $semantic = $this->progress_builder->getSemantic($this->tracker);
 

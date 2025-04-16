@@ -158,7 +158,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(self::NEW_CHANGESET_ID);
         $this->artifact_saver = SaveArtifactStub::withFailure();
-        $this->workflow->expects(self::never())->method('after');
+        $this->workflow->expects($this->never())->method('after');
         $this->comment_dao->method('createNewVersion')->willReturn(true);
 
         self::expectException(\Tracker_AfterSaveException::class);
@@ -167,7 +167,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset(): void
     {
-        $this->workflow->expects(self::never())->method('after');
+        $this->workflow->expects($this->never())->method('after');
         $this->changeset_saver->expects($this->once())->method('saveChangeset')
             ->willThrowException(new \Tracker_Artifact_Exception_CannotCreateNewChangeset());
 

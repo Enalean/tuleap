@@ -111,7 +111,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
         foreach ($expected as $distance => $e) {
-            $GLOBALS['Language']->expects(self::atLeast(2))->method('getText');
+            $GLOBALS['Language']->expects($this->atLeast(2))->method('getText');
             DateHelper::distanceOfTimeInWords($_SERVER['REQUEST_TIME'] - $distance, $_SERVER['REQUEST_TIME']);
             DateHelper::distanceOfTimeInWords($_SERVER['REQUEST_TIME'] - $distance, $_SERVER['REQUEST_TIME'], true);
         }

@@ -85,7 +85,7 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($this->an_active_project)->build();
 
         $this->user_permissions_dao->method('isUserPartOfProjectMembers')->with($this->an_active_project_id, $this->an_active_user_id)->willReturn(true);
-        $this->user_permissions_dao->expects(self::never())->method('addUserAsProjectMember');
+        $this->user_permissions_dao->expects($this->never())->method('addUserAsProjectMember');
 
         self::expectException(AlreadyProjectMemberException::class);
 
@@ -101,7 +101,7 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
 
-        $this->user_permissions_dao->expects(self::never())->method('addUserAsProjectMember');
+        $this->user_permissions_dao->expects($this->never())->method('addUserAsProjectMember');
 
         self::expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);
 
@@ -117,10 +117,10 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
 
-        $this->user_permissions_dao->expects(self::atLeastOnce())->method('addUserAsProjectMember');
-        $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with('project_admin_add_user', self::anything());
-        $this->history_dao->expects(self::atLeastOnce())->method('addHistory');
-        $this->ugroup_binding->expects(self::atLeastOnce())->method('reloadUgroupBindingInProject');
+        $this->user_permissions_dao->expects($this->atLeastOnce())->method('addUserAsProjectMember');
+        $this->event_manager->expects($this->atLeastOnce())->method('processEvent')->with('project_admin_add_user', self::anything());
+        $this->history_dao->expects($this->atLeastOnce())->method('addHistory');
+        $this->ugroup_binding->expects($this->atLeastOnce())->method('reloadUgroupBindingInProject');
         $this->user_permissions_dao
             ->method('isUserPartOfProjectMembers')
             ->with($this->an_active_project_id, $this->an_active_user_id)
@@ -138,10 +138,10 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
 
-        $this->user_permissions_dao->expects(self::atLeastOnce())->method('addUserAsProjectMember');
-        $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with('project_admin_add_user', self::anything());
-        $this->history_dao->expects(self::atLeastOnce())->method('addHistory');
-        $this->ugroup_binding->expects(self::atLeastOnce())->method('reloadUgroupBindingInProject');
+        $this->user_permissions_dao->expects($this->atLeastOnce())->method('addUserAsProjectMember');
+        $this->event_manager->expects($this->atLeastOnce())->method('processEvent')->with('project_admin_add_user', self::anything());
+        $this->history_dao->expects($this->atLeastOnce())->method('addHistory');
+        $this->ugroup_binding->expects($this->atLeastOnce())->method('reloadUgroupBindingInProject');
         $this->user_permissions_dao
             ->method('isUserPartOfProjectMembers')
             ->with($this->an_active_project_id, $this->an_active_user_id)
@@ -159,10 +159,10 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_admin = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
 
-        $this->user_permissions_dao->expects(self::atLeastOnce())->method('addUserAsProjectMember');
-        $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with('project_admin_add_user', self::anything());
-        $this->history_dao->expects(self::atLeastOnce())->method('addHistory');
-        $this->ugroup_binding->expects(self::atLeastOnce())->method('reloadUgroupBindingInProject');
+        $this->user_permissions_dao->expects($this->atLeastOnce())->method('addUserAsProjectMember');
+        $this->event_manager->expects($this->atLeastOnce())->method('processEvent')->with('project_admin_add_user', self::anything());
+        $this->history_dao->expects($this->atLeastOnce())->method('addHistory');
+        $this->ugroup_binding->expects($this->atLeastOnce())->method('reloadUgroupBindingInProject');
         $this->user_permissions_dao
             ->method('isUserPartOfProjectMembers')
             ->with($this->an_active_project_id, $this->an_active_user_id)
@@ -176,10 +176,10 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project_admin = UserTestBuilder::anActiveUser()->build();
 
-        $this->user_permissions_dao->expects(self::never())->method('addUserAsProjectMember');
-        $this->event_manager->expects(self::never())->method('processEvent')->with('project_admin_add_user', self::anything());
-        $this->history_dao->expects(self::never())->method('addHistory');
-        $this->ugroup_binding->expects(self::never())->method('reloadUgroupBindingInProject');
+        $this->user_permissions_dao->expects($this->never())->method('addUserAsProjectMember');
+        $this->event_manager->expects($this->never())->method('processEvent')->with('project_admin_add_user', self::anything());
+        $this->history_dao->expects($this->never())->method('addHistory');
+        $this->ugroup_binding->expects($this->never())->method('reloadUgroupBindingInProject');
         $this->user_permissions_dao
             ->method('isUserPartOfProjectMembers')
             ->with($this->an_active_project_id, $this->an_active_user_id)

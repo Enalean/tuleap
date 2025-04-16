@@ -48,7 +48,7 @@ final class OAuth2ScopeExtractorRESTEndpointTest extends \Tuleap\Test\PHPUnit\Te
         $api_method_info->metadata['oauth2-scope'] = $scope_identifier_key;
 
         $expected_scope = $this->createMock(AuthenticationScope::class);
-        $this->scope_builder->expects(self::atLeast(1))
+        $this->scope_builder->expects($this->atLeast(1))
             ->method('buildAuthenticationScopeFromScopeIdentifier')
             ->with(self::callback(function (AuthenticationScopeIdentifier $identifier) use ($scope_identifier_key): bool {
                 return $identifier->toString() === $scope_identifier_key;

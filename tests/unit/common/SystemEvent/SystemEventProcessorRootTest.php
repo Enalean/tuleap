@@ -115,7 +115,7 @@ final class SystemEventProcessorRootTest extends TestCase
         $this->system_event_dao->expects($this->once())->method('close');
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('getRow')->willReturn(['whatever']);
-        $this->system_event_dao->expects(self::exactly(2))->method('checkOutNextEvent')
+        $this->system_event_dao->expects($this->exactly(2))->method('checkOutNextEvent')
             ->willReturnOnConsecutiveCalls(
                 $dar,
                 null
@@ -147,7 +147,7 @@ final class SystemEventProcessorRootTest extends TestCase
         $this->system_event_dao->expects($this->once())->method('close');
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('getRow')->willReturn(['whatever']);
-        $this->system_event_dao->expects(self::exactly(2))->method('checkOutNextEvent')
+        $this->system_event_dao->expects($this->exactly(2))->method('checkOutNextEvent')
             ->willReturnOnConsecutiveCalls(
                 $dar,
                 null
@@ -177,7 +177,7 @@ final class SystemEventProcessorRootTest extends TestCase
         $this->system_event_dao->expects($this->once())->method('close');
         $dar = $this->createMock(DataAccessResult::class);
         $dar->method('getRow')->willReturn(['whatever']);
-        $this->system_event_dao->expects(self::exactly(2))->method('checkOutNextEvent')
+        $this->system_event_dao->expects($this->exactly(2))->method('checkOutNextEvent')
             ->willReturnOnConsecutiveCalls(
                 $dar,
                 null

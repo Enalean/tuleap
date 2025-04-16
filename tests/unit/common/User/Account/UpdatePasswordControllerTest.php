@@ -127,7 +127,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsExceptionWhenUserIsAnonymous(): void
     {
         $this->expectException(ForbiddenException::class);
-        $this->password_changer->expects(self::never())->method('changePassword');
+        $this->password_changer->expects($this->never())->method('changePassword');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),
@@ -155,7 +155,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_status_manager->method('checkStatus')->willThrowException(new User_StatusInvalidException());
 
-        $this->password_changer->expects(self::never())->method('changePassword');
+        $this->password_changer->expects($this->never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -179,7 +179,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         )->willReturn(false);
 
-        $this->password_changer->expects(self::never())->method('changePassword');
+        $this->password_changer->expects($this->never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -196,7 +196,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_verifier->method('verifyPassword')->with($this->user, new ConcealedString('the_old_password'))->willReturn(true);
 
-        $this->password_changer->expects(self::never())->method('changePassword');
+        $this->password_changer->expects($this->never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -218,7 +218,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_verifier->method('verifyPassword')->with($this->user, 'the_old_password')->willReturn(true);
 
-        $this->password_changer->expects(self::never())->method('changePassword');
+        $this->password_changer->expects($this->never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -243,7 +243,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->password_sanity_checker->method('check')->willReturn(false);
         $this->password_sanity_checker->method('getErrors')->willReturn(['some error about been pwned']);
 
-        $this->password_changer->expects(self::never())->method('changePassword');
+        $this->password_changer->expects($this->never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -298,8 +298,8 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->event_manager->disablePasswordChange();
 
-        $this->password_verifier->expects(self::never())->method('verifyPassword');
-        $this->password_changer->expects(self::never())->method('changePassword');
+        $this->password_verifier->expects($this->never())->method('verifyPassword');
+        $this->password_changer->expects($this->never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(

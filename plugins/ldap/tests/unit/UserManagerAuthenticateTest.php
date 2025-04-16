@@ -221,8 +221,8 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ldap->method('authenticate')->willReturn(true);
         $this->ldap->method('searchLogin')->willReturn($this->empty_ldap_result_iterator);
 
-        $this->user_manager->expects(self::never())->method('getUserByLdapId');
-        $this->ldap_user_manager->expects(self::never())->method('synchronizeUser');
+        $this->user_manager->expects($this->never())->method('getUserByLdapId');
+        $this->ldap_user_manager->expects($this->never())->method('synchronizeUser');
 
         $this->expectException(LDAP_UserNotFoundException::class);
 

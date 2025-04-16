@@ -85,7 +85,7 @@ final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
     public function testItCreatesTheToken(): void
     {
         $user_operation = $this->createMock(UserOperation::class);
-        $this->token_creator->expects(self::atLeastOnce())->method('createUserAuthorizationToken')->with(
+        $this->token_creator->expects($this->atLeastOnce())->method('createUserAuthorizationToken')->with(
             $this->repository,
             (new \DateTimeImmutable())->setTimestamp($this->current_time->getTimestamp() + SSHAuthenticateResponseBuilder::EXPIRES_IN_SECONDS),
             $this->user,

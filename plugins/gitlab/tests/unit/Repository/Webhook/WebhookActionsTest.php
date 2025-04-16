@@ -129,7 +129,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('info')
             ->with('Last update date successfully updated for GitLab repository #1');
         $this->logger
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('error');
 
         $this->post_push_webhook_action_processor
@@ -171,10 +171,10 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('info')
             ->with('Last update date successfully updated for GitLab repository #1');
 
-        $this->logger->expects(self::never())->method('error');
+        $this->logger->expects($this->never())->method('error');
 
         $this->post_push_webhook_action_processor
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('process');
 
         $this->post_merge_request_webhook_action_processor
@@ -214,7 +214,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $this->repository_integration_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('updateLastPushDateForIntegration');
 
         $this->logger

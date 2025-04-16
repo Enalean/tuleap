@@ -270,7 +270,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'some_feature', 'opened', 1611315112);
 
         $this->reference_manager
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
@@ -323,7 +323,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
@@ -624,7 +624,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->willThrowException($exception);
 
         $this->merge_request_reference_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setAuthorData');
 
         $this->bot_commenter
@@ -679,11 +679,11 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('saveGitlabMergeRequestInfo');
 
         $this->bot_commenter
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
@@ -747,17 +747,17 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->with(1, 2, 'My Title', '', 'some_feature', 'closed', 1611315112);
 
         $this->author_retriever
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data);
 
         $this->merge_request_reference_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setAuthorData')
             ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);

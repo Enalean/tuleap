@@ -95,7 +95,7 @@ final class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($this->an_artifact);
 
         $this->baseline_service
-            ->expects(self::atLeast(1))
+            ->expects($this->atLeast(1))
             ->method('create')
             ->willReturn(BaselineFactory::one()->build());
 
@@ -248,7 +248,7 @@ final class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($baseline);
 
         $this->baseline_service
-            ->expects(self::atLeast(1))
+            ->expects($this->atLeast(1))
             ->method('delete')
             ->with($this->current_user, $baseline);
 

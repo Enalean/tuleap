@@ -77,8 +77,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsItsConfigDescription(): void
     {
-        $this->start_date_field->expects(self::any())->method('getLabel')->willReturn('Start date');
-        $this->duration_field->expects(self::any())->method('getLabel')->willReturn('Duration');
+        $this->start_date_field->expects($this->any())->method('getLabel')->willReturn('Start date');
+        $this->duration_field->expects($this->any())->method('getLabel')->willReturn('Duration');
 
         $this->assertEquals(
             'Timeframe is based on start date field "Start date" and duration field "Duration".',
@@ -129,16 +129,16 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_duration): void
     {
-        $this->start_date_field->expects(self::any())->method('userCanRead')->willReturn($can_read_start_date);
-        $this->duration_field->expects(self::any())->method('userCanRead')->willReturn($can_read_duration);
+        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn($can_read_start_date);
+        $this->duration_field->expects($this->any())->method('userCanRead')->willReturn($can_read_duration);
 
         $this->assertNull($this->timeframe->exportToREST($this->user));
     }
 
     public function testItExportsToREST(): void
     {
-        $this->start_date_field->expects(self::any())->method('userCanRead')->willReturn(true);
-        $this->duration_field->expects(self::any())->method('userCanRead')->willReturn(true);
+        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects($this->any())->method('userCanRead')->willReturn(true);
 
         $this->assertEquals(
             new SemanticTimeframeWithDurationRepresentation(
@@ -404,8 +404,8 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenAtLeastOneFieldIsNotZero(): void
     {
-        $this->start_date_field->expects(self::exactly(3))->method('userCanRead')->willReturn(true);
-        $this->duration_field->expects(self::exactly(3))->method('userCanRead')->willReturn(true);
+        $this->start_date_field->expects($this->exactly(3))->method('userCanRead')->willReturn(true);
+        $this->duration_field->expects($this->exactly(3))->method('userCanRead')->willReturn(true);
 
         $start_date = '07/01/2013';
         $duration   = 10;
@@ -447,7 +447,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mock->expects(self::any())->method('getId')->willReturn($field_id);
+        $mock->expects($this->any())->method('getId')->willReturn($field_id);
 
         return $mock;
     }
@@ -458,7 +458,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mock->expects(self::any())->method('getId')->willReturn($field_id);
+        $mock->expects($this->any())->method('getId')->willReturn($field_id);
 
         return $mock;
     }

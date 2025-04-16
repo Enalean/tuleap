@@ -63,7 +63,7 @@ class SenderTest extends TestCase
         );
 
         $this->botMattermost_client
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('sendMessage');
 
         $this->sender->pushNotification($bot, $message, $channels);

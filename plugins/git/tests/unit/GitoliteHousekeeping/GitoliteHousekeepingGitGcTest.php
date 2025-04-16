@@ -64,7 +64,7 @@ final class GitoliteHousekeepingGitGcTest extends TestCase
     {
         $this->dao->method('isGitGcEnabled')->willReturn(false);
 
-        $this->gitgc->expects(self::never())->method('execGitGcAsAppAdm');
+        $this->gitgc->expects($this->never())->method('execGitGcAsAppAdm');
 
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
         self::assertTrue($this->logger->hasWarningThatContains(

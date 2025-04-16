@@ -201,7 +201,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($milestone_tracker);
         $this->search_mapped_field = SearchMappedFieldStub::withNoField();
 
-        $this->artifact_updater->expects(self::never())->method('update');
+        $this->artifact_updater->expects($this->never())->method('update');
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
         $this->update();
@@ -213,7 +213,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columnIsFound();
         $this->mockCanUserUpdateField(false);
 
-        $this->artifact_updater->expects(self::never())->method('update');
+        $this->artifact_updater->expects($this->never())->method('update');
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(403);
         $this->update();
@@ -226,7 +226,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockCanUserUpdateField(true);
         $this->search_values = SearchMappedFieldValuesForColumnStub::withNoMappedValue();
 
-        $this->artifact_updater->expects(self::never())->method('update');
+        $this->artifact_updater->expects($this->never())->method('update');
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
         $this->update();
@@ -272,7 +272,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new NoPossibleValueException()
         );
 
-        $this->artifact_updater->expects(self::never())->method('update');
+        $this->artifact_updater->expects($this->never())->method('update');
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -341,7 +341,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columnIsFound();
         $this->mockCanUserUpdateField(true);
 
-        $this->artifact_updater->expects(self::never())->method('update');
+        $this->artifact_updater->expects($this->never())->method('update');
         $this->update();
     }
 

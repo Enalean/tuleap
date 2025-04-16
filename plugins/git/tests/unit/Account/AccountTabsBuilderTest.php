@@ -96,7 +96,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory
             ->method('hasRemotesSetUp')->willReturn(false);
         $this->collection
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('add');
 
         $this->builder->addTabs($this->collection);

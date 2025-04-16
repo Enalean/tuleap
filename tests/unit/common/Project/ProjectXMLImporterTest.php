@@ -240,11 +240,11 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager->method('getDynamicUGoupIdByName');
         $this->ugroup_manager->method('getDynamicUGoupByName');
 
-        $ug01->expects(self::exactly(3))->method('addUser');
+        $ug01->expects($this->exactly(3))->method('addUser');
         $ug01->method('getId')->willReturn(555);
         $ug02->expects($this->once())->method('addUser');
         $ug02->method('getId')->willReturn(556);
-        $ug03->expects(self::never())->method('addUser');
+        $ug03->expects($this->never())->method('addUser');
         $ug03->method('getId')->willReturn(557);
 
         $this->event_manager->method('processEvent');
@@ -305,11 +305,11 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager->method('getDynamicUGoupIdByName');
         $this->ugroup_manager->method('getDynamicUGoupByName');
 
-        $ug01->expects(self::exactly(3))->method('addUser');
+        $ug01->expects($this->exactly(3))->method('addUser');
         $ug01->method('getId')->willReturn(555);
-        $ug02->expects(self::never())->method('addUser');
+        $ug02->expects($this->never())->method('addUser');
         $ug02->method('getId')->willReturn(556);
-        $ug03->expects(self::never())->method('addUser');
+        $ug03->expects($this->never())->method('addUser');
         $ug03->method('getId')->willReturn(557);
 
         $this->event_manager->method('processEvent');

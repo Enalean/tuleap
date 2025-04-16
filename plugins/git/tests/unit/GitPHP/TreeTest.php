@@ -41,7 +41,7 @@ final class TreeTest extends TestCase
         $project->method('GetObject')->with('f3bee1d2acaeed2c516f262a57928cde54fc4423')->willReturn(base64_decode(self::TREE_CONTENT_BASE64));
         $blob     = $this->createMock(Blob::class);
         $sub_tree = $this->createMock(Tree::class);
-        $project->expects(self::exactly(2))->method('GetBlob')
+        $project->expects($this->exactly(2))->method('GetBlob')
             ->with(self::callback(static fn(string $hash) => $hash === '81f8847ccc5c49931663dedfed16c2c3dc9ea69d' || $hash === '59c50daea6b2c23544c77629a2af4d1134ee0bc3'))
             ->willReturn($blob);
         $project->expects($this->once())->method('GetTree')->with('0543c7a05785554d8f80b7a4b40bc64add26b7d2')

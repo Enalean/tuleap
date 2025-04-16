@@ -119,7 +119,7 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
         $commit = $this->buildGitlabCommit('The Night King', 'knight-king@is-comming.com', 'dev/feature');
 
         $this->user_manager->method('getUserByEmail')->willReturn(null);
-        $this->user_helper->expects(self::never())->method('getDisplayNameFromUser');
+        $this->user_helper->expects($this->never())->method('getDisplayNameFromUser');
 
         $reference = $this->getCrossReferencePresenter();
 

@@ -87,7 +87,7 @@ final class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service->create($comparison, $this->current_user);
 
-        $this->comparison_repository->expects(self::never())->method('add');
+        $this->comparison_repository->expects($this->never())->method('add');
     }
 
     public function testDeleteDeletesGivenBaseline(): void
@@ -96,7 +96,7 @@ final class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $comparison = ComparisonFactory::one();
         $this->comparison_repository
-            ->expects(self::atLeast(1))
+            ->expects($this->atLeast(1))
             ->method('delete')
             ->with($comparison, $this->current_user);
 

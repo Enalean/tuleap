@@ -133,7 +133,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $velocity_field = $this->createMock(Tracker_FormElement_Field_Float::class);
 
         $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
-        $last_changeset->expects(self::never())->method('getValue')->with($velocity_field);
+        $last_changeset->expects($this->never())->method('getValue')->with($velocity_field);
 
         $linked_artifact = $this->createMock(Artifact::class);
         $linked_artifact->method('getTracker')->willReturn($tracker);
@@ -167,7 +167,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $sub_milestone->method('getArtifact')
             ->willReturn($linked_artifact);
 
-        $this->milestone_factory->expects(self::never())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
+        $this->milestone_factory->expects($this->never())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
         $this->milestone_factory
             ->method('getSubMilestones')
             ->with($this->user, $this->milestone)
@@ -205,7 +205,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn($timeframe_semantic);
 
         $semantic_velocity->method('getVelocityField')->willReturn(null);
-        $semantic_done->expects(self::never())->method('isDone');
+        $semantic_done->expects($this->never())->method('isDone');
         $timeframe_semantic
             ->method('isDefined')
             ->willReturn(true);
@@ -214,7 +214,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $sub_milestone->method('getArtifact')
             ->willReturn($linked_artifact);
 
-        $this->milestone_factory->expects(self::never())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
+        $this->milestone_factory->expects($this->never())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
         $this->milestone_factory
             ->method('getSubMilestones')
             ->with($this->user, $this->milestone)
@@ -330,7 +330,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $sub_milestone->method('getArtifact')
             ->willReturn($linked_artifact);
 
-        $this->milestone_factory->expects(self::never())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
+        $this->milestone_factory->expects($this->never())->method('updateMilestoneContextualInfo')->with($this->user, $sub_milestone);
         $this->milestone_factory
             ->method('getSubMilestones')
             ->with($this->user, $this->milestone)
@@ -402,7 +402,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
-        $this->milestone->expects(self::never())->method('getLinkedArtifacts');
+        $this->milestone->expects($this->never())->method('getLinkedArtifacts');
         self::assertCount(1, $collection->getVelocityRepresentations());
         self::assertCount(0, $collection->getInvalidArtifacts());
     }

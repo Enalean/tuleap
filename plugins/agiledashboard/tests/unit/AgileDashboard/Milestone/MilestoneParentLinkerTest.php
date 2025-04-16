@@ -77,7 +77,7 @@ final class MilestoneParentLinkerTest extends TestCase
 
         $this->milestone->method('getParent')->willReturn(null);
 
-        $parent_milestone_artifact->expects(self::never())->method('linkArtifact');
+        $parent_milestone_artifact->expects($this->never())->method('linkArtifact');
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,
@@ -102,7 +102,7 @@ final class MilestoneParentLinkerTest extends TestCase
         $this->backlog->method('getDescendantTrackers')->willReturn([$descendant_tracker]);
         $this->milestone->method('getParent')->willReturn($parent_milestone);
 
-        $parent_milestone_artifact->expects(self::never())->method('linkArtifact');
+        $parent_milestone_artifact->expects($this->never())->method('linkArtifact');
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,
@@ -130,7 +130,7 @@ final class MilestoneParentLinkerTest extends TestCase
         $parent_milestone_artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([$parent_linked_artifact]);
         $this->milestone->method('getParent')->willReturn($parent_milestone);
 
-        $parent_milestone_artifact->expects(self::never())->method('linkArtifact');
+        $parent_milestone_artifact->expects($this->never())->method('linkArtifact');
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,

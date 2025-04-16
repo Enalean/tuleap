@@ -373,7 +373,7 @@ class DatePeriodWithOpenDaysTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
         if ($expected_error_message === null) {
-            $logger->expects(self::never())->method('warning');
+            $logger->expects($this->never())->method('warning');
         } else {
             $logger->expects($this->once())->method('warning')->with($expected_error_message);
         }
@@ -440,7 +440,7 @@ class DatePeriodWithOpenDaysTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCreationFromEndDateWithNullValues(): void
     {
         $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
-        $logger->expects(self::never())->method('error');
+        $logger->expects($this->never())->method('error');
 
         $a_date = (new \DateTimeImmutable('2019-08-05'))->getTimestamp();
 

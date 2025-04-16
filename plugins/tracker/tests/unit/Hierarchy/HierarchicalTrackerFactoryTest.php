@@ -63,7 +63,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetPossibleChildren(): void
     {
         $dao = $this->createMock(HierarchyDAO::class);
-        $dao->expects(self::exactly(3))
+        $dao->expects($this->exactly(3))
             ->method('searchAncestorIds')
             ->willReturnCallback(static fn ($id) => match ($id) {
                 1 => [4],

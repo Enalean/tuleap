@@ -93,7 +93,7 @@ final class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->method('isAlive')->willReturn(true);
         $this->user_manager->method('getUserById')->willReturn($user);
 
-        $this->dao->expects(self::atLeastOnce())->method('searchAuthorizationByIDAndExpiration')->willReturn([
+        $this->dao->expects($this->atLeastOnce())->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -101,7 +101,7 @@ final class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id'         => 123,
             'operation_name'  => 'operation',
         ]);
-        $this->hasher->expects(self::atLeastOnce())->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
+        $this->hasher->expects($this->atLeastOnce())->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);

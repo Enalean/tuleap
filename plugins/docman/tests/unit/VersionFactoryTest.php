@@ -55,7 +55,7 @@ final class VersionFactoryTest extends TestCase
             'purgeDeletedVersion',
         ]);
         $versionFactory->method('_getVersionDao')->willReturn($dao);
-        $versionFactory->expects(self::never())->method('purgeDeletedVersion');
+        $versionFactory->expects($this->never())->method('purgeDeletedVersion');
 
         self::assertTrue($versionFactory->purgeDeletedVersions(1234567890));
     }
@@ -161,7 +161,7 @@ final class VersionFactoryTest extends TestCase
         ]);
         fopen($version->getPath(), 'w');
 
-        $versionFactory->expects(self::never())->method('archiveBeforePurge');
+        $versionFactory->expects($this->never())->method('archiveBeforePurge');
 
         self::assertTrue(file_exists($version->getPath()));
 
@@ -229,10 +229,10 @@ final class VersionFactoryTest extends TestCase
         );
 
         $em = $this->createMock(EventManager::class);
-        $em->expects(self::never())->method('processEvent')->with('plugin_docman_event_restore_version', self::anything());
+        $em->expects($this->never())->method('processEvent')->with('plugin_docman_event_restore_version', self::anything());
         $versionFactory->method('_getEventManager')->willReturn($em);
 
-        $dao->expects(self::never())->method('restore');
+        $dao->expects($this->never())->method('restore');
 
         $version = new Docman_Version(['item_id' => 1664, 'number' => 2, 'path' => $filePath]);
 
@@ -254,10 +254,10 @@ final class VersionFactoryTest extends TestCase
         );
 
         $em = $this->createMock(EventManager::class);
-        $em->expects(self::never())->method('processEvent')->with('plugin_docman_event_restore_version', self::anything());
+        $em->expects($this->never())->method('processEvent')->with('plugin_docman_event_restore_version', self::anything());
         $versionFactory->method('_getEventManager')->willReturn($em);
 
-        $dao->expects(self::never())->method('restore');
+        $dao->expects($this->never())->method('restore');
 
         $version = new Docman_Version(['item_id' => 1664, 'number' => 2]);
 

@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 use Tuleap\Tracker\TrackerColor;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
@@ -334,7 +333,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $tracker->shouldReceive('hasBlockingError')->andReturns(false);
 
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
         $tracker->isValidCSV($lines, $separator);
     }
 

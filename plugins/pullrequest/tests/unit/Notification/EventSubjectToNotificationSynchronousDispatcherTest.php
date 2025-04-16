@@ -62,9 +62,9 @@ final class EventSubjectToNotificationSynchronousDispatcherTest extends \Tuleap\
             $this->createMock(NotificationToProcess::class),
             $this->createMock(NotificationToProcess::class),
         ]);
-        $strategy_1->expects(self::exactly(2))->method('execute');
+        $strategy_1->expects($this->exactly(2))->method('execute');
         $builder_2->method('getNotificationsToProcess')->willReturn([]);
-        $strategy_2->expects(self::never())->method('execute');
+        $strategy_2->expects($this->never())->method('execute');
 
         self::assertSame($event, $dispatcher->dispatch($event));
     }

@@ -48,7 +48,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('');
 
-        $request->expects(self::never())->method('withMethod');
+        $request->expects($this->never())->method('withMethod');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);

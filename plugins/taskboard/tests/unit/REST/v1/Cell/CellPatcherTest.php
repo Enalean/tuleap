@@ -92,8 +92,8 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
-        $this->rank_orderer->expects(self::never())->method('reorder');
-        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
+        $this->rank_orderer->expects($this->never())->method('reorder');
+        $this->mapped_field_updater->expects($this->never())->method('updateCardMappedField');
         $this->patcher->patchCell(45, 7, CellPatchRepresentation::build(null, null));
     }
 
@@ -109,8 +109,8 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->rank_orderer->expects(self::never())->method('reorder');
-        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
+        $this->rank_orderer->expects($this->never())->method('reorder');
+        $this->mapped_field_updater->expects($this->never())->method('updateCardMappedField');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
@@ -126,7 +126,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
+        $this->mapped_field_updater->expects($this->never())->method('updateCardMappedField');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
@@ -145,7 +145,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->mapped_field_updater->expects(self::never())->method('updateCardMappedField');
+        $this->mapped_field_updater->expects($this->never())->method('updateCardMappedField');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
@@ -182,7 +182,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
-        $this->rank_orderer->expects(self::never())->method('reorder');
+        $this->rank_orderer->expects($this->never())->method('reorder');
         $this->patcher->patchCell(45, 7, $payload);
     }
 
@@ -203,7 +203,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
-        $this->rank_orderer->expects(self::never())->method('reorder');
+        $this->rank_orderer->expects($this->never())->method('reorder');
         $this->patcher->patchCell(45, 7, $payload);
     }
 

@@ -68,7 +68,7 @@ final class ParseLogTest extends TestCase
         $push_details->method('getRevisionList')->willReturn(['469eaa9', '5eb01f0']);
         $push_details->method('getRefnameType');
 
-        $this->extract_cross_ref->expects(self::exactly(2))->method('extractCommitReference');
+        $this->extract_cross_ref->expects($this->exactly(2))->method('extractCommitReference');
         $this->log_pushes->method('executeForRepository');
 
         $this->executeParseLog($push_details);

@@ -136,9 +136,9 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresSubmittedCategoryIfValueIsNotAnArray(): void
     {
-        $this->history_dao->expects(self::never())->method('groupAddHistory');
-        $this->factory->expects(self::never())->method('removeProjectTopCategoryValue');
-        $this->set_node_facade->expects(self::never())->method('setNode');
+        $this->history_dao->expects($this->never())->method('groupAddHistory');
+        $this->factory->expects($this->never())->method('removeProjectTopCategoryValue');
+        $this->set_node_facade->expects($this->never())->method('setNode');
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => '23']));
     }

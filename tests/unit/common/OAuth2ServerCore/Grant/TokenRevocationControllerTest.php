@@ -68,8 +68,8 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = $this->controller->handle(new NullServerRequest());
 
         self::assertSame(401, $response->getStatusCode());
-        $this->refresh_token_revoker->expects(self::never())->method('revokeGrantOfRefreshToken');
-        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
+        $this->refresh_token_revoker->expects($this->never())->method('revokeGrantOfRefreshToken');
+        $this->access_token_revoker->expects($this->never())->method('revokeGrantOfAccessToken');
         $this->assertTrue($response->hasHeader('WWW-Authenticate'));
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_client"}', $response->getBody()->getContents());
@@ -85,8 +85,8 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = $this->controller->handle($request);
 
         self::assertSame(400, $response->getStatusCode());
-        $this->refresh_token_revoker->expects(self::never())->method('revokeGrantOfRefreshToken');
-        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
+        $this->refresh_token_revoker->expects($this->never())->method('revokeGrantOfRefreshToken');
+        $this->access_token_revoker->expects($this->never())->method('revokeGrantOfAccessToken');
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
     }
@@ -125,7 +125,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 new class extends \RuntimeException implements OAuth2ServerException {
                 }
             );
-        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
+        $this->access_token_revoker->expects($this->never())->method('revokeGrantOfAccessToken');
 
         $response = $this->controller->handle($request);
         self::assertSame(200, $response->getStatusCode());
@@ -153,7 +153,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
         $this->refresh_token_revoker->expects($this->once())->method('revokeGrantOfRefreshToken');
-        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
+        $this->access_token_revoker->expects($this->never())->method('revokeGrantOfAccessToken');
 
         $response = $this->controller->handle($request);
         self::assertSame(200, $response->getStatusCode());

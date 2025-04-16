@@ -72,7 +72,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->semantic_timeframe_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
@@ -97,7 +97,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->semantic_timeframe_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
@@ -122,7 +122,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->semantic_timeframe_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
@@ -148,7 +148,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->formelement_factory->method('getUsedDateFieldById')->with($this->tracker, 1234)->willReturn(null);
         $this->semantic_timeframe_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
@@ -314,7 +314,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->semantic_timeframe_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
@@ -366,7 +366,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         )->willReturn($duration_field);
 
         $this->semantic_timeframe_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(
@@ -400,7 +400,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->semantic_timeframe_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('deleteTimeframeSemantic');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(

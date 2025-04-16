@@ -107,7 +107,7 @@ final class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($state)
             ->willThrowException(new NoTransitionForStateException());
 
-        $this->transition_replicator->expects(self::never())->method('replicate');
+        $this->transition_replicator->expects($this->never())->method('replicate');
 
         $this->creator->createTransitionInState(
             $state,

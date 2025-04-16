@@ -44,7 +44,7 @@ final class StatusActivityEmitterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testWebhookDoesNotTryToEmitWhenNoURLIsProvided(): void
     {
         $emitter = $this->createMock(Emitter::class);
-        $emitter->expects(self::never())->method('emit');
+        $emitter->expects($this->never())->method('emit');
 
         $status_activity_emitter = new StatusActivityEmitter($emitter);
 

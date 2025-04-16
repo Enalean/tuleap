@@ -75,11 +75,11 @@ final class ApprovalTableUpdaterTest extends TestCase
 
         $approval_file = $this->createMock(Docman_ApprovalTableFileFactory::class);
         $this->approval_table_retriever->method('hasApprovalTable')->with($item)->willReturn(false);
-        $this->approval_table_factory->expects(self::never())->method('getSpecificFactoryFromItem');
+        $this->approval_table_factory->expects($this->never())->method('getSpecificFactoryFromItem');
 
         $approval_action = 'copy';
 
-        $approval_file->expects(self::never())->method('createTable');
+        $approval_file->expects($this->never())->method('createTable');
 
         $approval_table_updater->updateApprovalTable($item, $user, $approval_action);
     }

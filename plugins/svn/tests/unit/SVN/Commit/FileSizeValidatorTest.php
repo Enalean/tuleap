@@ -64,7 +64,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '200');
 
-        $this->svnlook->expects(self::atLeast(1))->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->willReturn(150);
+        $this->svnlook->expects($this->atLeast(1))->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->willReturn(150);
 
         $this->validator->assertPathIsValid($this->repository, 't1-r1', 'U   trunk/README.mkd');
     }
@@ -90,7 +90,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $exception = $this->createMock(ProcessFailedException::class);
         $exception->method('getProcess')->willReturn($failed_command);
 
-        $this->svnlook->expects(self::atLeast(1))->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->willThrowException($exception);
+        $this->svnlook->expects($this->atLeast(1))->method('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->willThrowException($exception);
 
         $this->validator->assertPathIsValid($this->repository, 't1-r1', 'A   trunk/add/');
     }

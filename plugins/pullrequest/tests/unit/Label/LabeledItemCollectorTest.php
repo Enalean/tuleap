@@ -101,7 +101,7 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ['id' => 75],
             ['id' => 66],
         ]));
-        $this->item_collection->expects(self::never())->method('add');
+        $this->item_collection->expects($this->never())->method('add');
 
         $this->expectException(\LogicException::class);
 
@@ -126,7 +126,7 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->template_renderer->method('renderToString')->willReturn('');
         $this->html_url_builder->method('getPullRequestOverviewUrl');
 
-        $this->item_collection->expects(self::exactly(2))->method('add');
+        $this->item_collection->expects($this->exactly(2))->method('add');
         $this->item_collection->expects($this->once())->method('setTotalSize')->with(99);
 
         $collector = $this->instantiateCollector();
@@ -141,8 +141,8 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]));
 
         $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new UserCannotReadGitRepositoryException());
-        $this->item_collection->expects(self::never())->method('add');
-        $this->item_collection->expects(self::atLeast(1))->method('thereAreItemsUserCannotSee');
+        $this->item_collection->expects($this->never())->method('add');
+        $this->item_collection->expects($this->atLeast(1))->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
@@ -156,8 +156,8 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]));
 
         $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new \Project_AccessPrivateException());
-        $this->item_collection->expects(self::never())->method('add');
-        $this->item_collection->expects(self::atLeast(1))->method('thereAreItemsUserCannotSee');
+        $this->item_collection->expects($this->never())->method('add');
+        $this->item_collection->expects($this->atLeast(1))->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
@@ -171,8 +171,8 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]));
 
         $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new \GitRepoNotFoundException());
-        $this->item_collection->expects(self::never())->method('add');
-        $this->item_collection->expects(self::never())->method('thereAreItemsUserCannotSee');
+        $this->item_collection->expects($this->never())->method('add');
+        $this->item_collection->expects($this->never())->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);
@@ -186,8 +186,8 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]));
 
         $this->pullrequest_permission_checker->method('checkPullRequestIsReadableByUser')->willThrowException(new \Project_AccessProjectNotFoundException());
-        $this->item_collection->expects(self::never())->method('add');
-        $this->item_collection->expects(self::never())->method('thereAreItemsUserCannotSee');
+        $this->item_collection->expects($this->never())->method('add');
+        $this->item_collection->expects($this->never())->method('thereAreItemsUserCannotSee');
 
         $collector = $this->instantiateCollector();
         $collector->collect($this->item_collection);

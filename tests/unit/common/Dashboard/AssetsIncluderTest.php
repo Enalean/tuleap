@@ -143,7 +143,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     private function expectDependenciesScriptsWillNOTBeIncluded(): void
     {
         $this->layout->expects($this->once())->method('includeFooterJavascriptFile')->with('dashboards/dashboard.js');
-        $this->layout->expects(self::never())->method('includeFooterJavascriptSnippet');
+        $this->layout->expects($this->never())->method('includeFooterJavascriptSnippet');
     }
 
     /**

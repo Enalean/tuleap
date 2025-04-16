@@ -123,7 +123,7 @@ final class PlanningControllerTest extends TestCase
         $root_planning = PlanningBuilder::aPlanning(101)->withId(109)->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
         $this->planning_factory->expects($this->once())->method('deletePlanning')->with(42);
-        $this->explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfPlanning');
+        $this->explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfPlanning');
 
         $this->event_manager->expects($this->once())->method('dispatch');
 
@@ -191,13 +191,13 @@ final class PlanningControllerTest extends TestCase
         $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
-        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects($this->exactly(2))->method('getPlanning')->willReturn($planning);
         $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
         $this->update_request_validator->expects($this->once())->method('getValidatedPlanning')->willReturn(null);
 
         $GLOBALS['Response']->expects($this->once())->method('redirect');
 
-        $this->planning_updater->expects(self::never())->method('update');
+        $this->planning_updater->expects($this->never())->method('update');
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
             ->withProject($this->project)
@@ -218,14 +218,14 @@ final class PlanningControllerTest extends TestCase
         $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
-        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects($this->exactly(2))->method('getPlanning')->willReturn($planning);
         $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
         $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
         $this->root_planning_update_checker->expects($this->once())->method('checkUpdateIsAllowed')
             ->willThrowException(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
 
-        $this->planning_updater->expects(self::never())->method('update');
+        $this->planning_updater->expects($this->never())->method('update');
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
 
         $GLOBALS['Response']->expects($this->once())->method('redirect');
@@ -250,16 +250,16 @@ final class PlanningControllerTest extends TestCase
         $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
-        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects($this->exactly(2))->method('getPlanning')->willReturn($planning);
         $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
         $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid')->willThrowException(
             new TrackersHaveAtLeastOneHierarchicalLinkException('tracker01', 'tracker02')
         );
-        $this->root_planning_update_checker->expects(self::never())->method('checkUpdateIsAllowed');
+        $this->root_planning_update_checker->expects($this->never())->method('checkUpdateIsAllowed');
 
-        $this->planning_updater->expects(self::never())->method('update');
+        $this->planning_updater->expects($this->never())->method('update');
 
         $GLOBALS['Response']->expects($this->once())->method('redirect');
 
@@ -285,7 +285,7 @@ final class PlanningControllerTest extends TestCase
         $this->event_manager->expects($this->once())->method('dispatch');
 
         $planning = PlanningBuilder::aPlanning(101)->build();
-        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects($this->exactly(2))->method('getPlanning')->willReturn($planning);
         $this->planning_factory->expects($this->once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
         $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
@@ -315,7 +315,7 @@ final class PlanningControllerTest extends TestCase
 
         $this->planning_request_validator->method('isValid')->willReturn(false);
 
-        $this->planning_factory->expects(self::never())->method('createPlanning');
+        $this->planning_factory->expects($this->never())->method('createPlanning');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback');
         $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=new');
@@ -364,7 +364,7 @@ final class PlanningControllerTest extends TestCase
             ->withoutSiteAdministrator()
             ->build();
 
-        $this->planning_factory->expects(self::never())->method('createPlanning');
+        $this->planning_factory->expects($this->never())->method('createPlanning');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback');
         // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception

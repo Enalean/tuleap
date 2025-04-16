@@ -73,7 +73,7 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->willReturn(42);
 
         $this->config_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $has_been_redirected = false;
@@ -100,7 +100,7 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->willReturn(42);
 
         $this->config_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $has_been_redirected = false;
@@ -127,7 +127,7 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->willReturn(42);
 
         $this->config_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $has_been_redirected = false;

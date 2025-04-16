@@ -227,7 +227,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR, 'A deleted project can not be restored.');
         $GLOBALS['Response']->expects($this->once())->method('redirect');
 
-        $this->dao->expects(self::never())->method('updateProjectStatusAndType');
+        $this->dao->expects($this->never())->method('updateProjectStatusAndType');
 
         $this->project_edit_controller->updateProject($request);
     }
@@ -273,7 +273,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(Feedback::ERROR, 'Switching the project status back to "pending" is not possible.');
         $GLOBALS['Response']->expects($this->once())->method('redirect');
 
-        $this->dao->expects(self::never())->method('updateProjectStatusAndType');
+        $this->dao->expects($this->never())->method('updateProjectStatusAndType');
 
         $this->project_edit_controller->updateProject($request);
     }

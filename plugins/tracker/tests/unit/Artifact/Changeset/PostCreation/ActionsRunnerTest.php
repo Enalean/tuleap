@@ -57,7 +57,7 @@ final class ActionsRunnerTest extends TestCase
         $configuration = new PostCreationTaskConfiguration(true, []);
 
         $task_1->expects($this->once())->method('execute')->with($changeset, $configuration);
-        $task_2->expects(self::never())->method('execute');
+        $task_2->expects($this->never())->method('execute');
 
         $actions_runner->processSyncPostCreationActions($changeset, $configuration);
     }

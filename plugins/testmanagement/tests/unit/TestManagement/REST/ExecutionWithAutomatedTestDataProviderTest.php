@@ -84,7 +84,7 @@ final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPU
 
         $definition = $this->createMock(Artifact::class);
         $definition->method('getTrackerId')->willReturn(112);
-        $definition->expects(self::never())->method('getChangeset');
+        $definition->expects($this->never())->method('getChangeset');
         $definition->method('getValue')->willReturn($automated_test);
 
         $user  = $this->createMock(PFUser::class);
@@ -110,7 +110,7 @@ final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPU
 
         $definition = $this->createMock(Artifact::class);
         $definition->method('getTrackerId')->willReturn(112);
-        $definition->expects(self::never())->method('getChangeset');
+        $definition->expects($this->never())->method('getChangeset');
         $definition->method('getValue')->willReturn($automated_test);
 
         $user = $this->createMock(PFUser::class);

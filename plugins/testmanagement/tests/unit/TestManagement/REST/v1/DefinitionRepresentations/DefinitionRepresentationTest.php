@@ -53,7 +53,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $form_element_factory->method('getSelectboxFieldByNameForUser');
         $form_element_factory
-            ->expects(self::exactly(4))
+            ->expects($this->exactly(4))
             ->method('getUsedFieldByNameForUser')
             ->willReturnCallback(
                 static fn(int $called_tracker_id, string $called_field_name, PFUser $called_user) => match (true) {

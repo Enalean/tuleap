@@ -71,7 +71,7 @@ final class ArtifactChangesetSaverTest extends TestCase
 
         $this->changeset_dao->expects($this->once())->method('create')->willReturn(1234);
         $this->tracker_artifact_dao->expects($this->once())->method('updateLastChangsetId');
-        $this->changeset_from_xml_dao->expects(self::never())->method('saveChangesetIsCreatedFromXml');
+        $this->changeset_from_xml_dao->expects($this->never())->method('saveChangesetIsCreatedFromXml');
 
         $this->saver->saveChangeset($this->artifact, $this->user, $time->getTimestamp(), $import_config);
     }

@@ -120,7 +120,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddAndRemoveThrowExceptionWhenFeatureThatAreNotPartOfTheRequestedProgram(): void
     {
         $this->visible_feature_verifier = VerifyFeatureIsVisibleByProgramStub::withFeatureNotVisibleOrNotInProgram();
-        $this->dao->expects(self::never())->method('removeArtifactsFromExplicitTopBacklog');
+        $this->dao->expects($this->never())->method('removeArtifactsFromExplicitTopBacklog');
 
         $this->expectException(FeatureNotFoundException::class);
         $this->getProcessor()->processTopBacklogChangeForAProgram(
@@ -160,10 +160,10 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->story_verifier = VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory();
 
-        $this->artifact_factory->expects(self::never())->method('getArtifactById');
+        $this->artifact_factory->expects($this->never())->method('getArtifactById');
 
-        $this->dao->expects(self::never())->method('addArtifactsToTheExplicitTopBacklog');
-        $this->artifact_link_updater->expects(self::never())->method('updateArtifactLinks');
+        $this->dao->expects($this->never())->method('addArtifactsToTheExplicitTopBacklog');
+        $this->artifact_link_updater->expects($this->never())->method('updateArtifactLinks');
 
         $this->expectException(FeatureHasPlannedUserStoryException::class);
 
@@ -178,7 +178,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserThatCannotPrioritizeFeaturesCannotAskForATopBacklogChange(): void
     {
         $this->prioritize_features_permission_verifier = VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize();
-        $this->dao->expects(self::never())->method('removeArtifactsFromExplicitTopBacklog');
+        $this->dao->expects($this->never())->method('removeArtifactsFromExplicitTopBacklog');
 
         $this->expectException(CannotManipulateTopBacklog::class);
         $this->getProcessor()->processTopBacklogChangeForAProgram(
@@ -191,7 +191,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserCanReorderTheBacklog(): void
     {
-        $this->dao->expects(self::never())->method('removeArtifactsFromExplicitTopBacklog');
+        $this->dao->expects($this->never())->method('removeArtifactsFromExplicitTopBacklog');
 
         $element_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([964], 'before', 900);
 

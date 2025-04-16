@@ -449,7 +449,7 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
         $utils->method('isWriteEnabled')->willReturn(true);
         $utils->method('getDocmanItemFactory')->willReturn($docman_item_factory);
         $utils->method('retrieveName')->willReturn('name');
-        $utils->expects(self::never())->method('processDocmanRequest');
+        $utils->expects($this->never())->method('processDocmanRequest');
         $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
         $docmanPermissionManager->method('userCanAccess')->willReturn(true);
         $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);

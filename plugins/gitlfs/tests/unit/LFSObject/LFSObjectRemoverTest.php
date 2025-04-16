@@ -57,8 +57,8 @@ final class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->path_allocator->method('getPathForAvailableObject')->willReturn('object/path');
 
         $this->dao->expects($this->once())->method('deleteUnusableReferences')->with($deletion_delay);
-        $this->filesystem->expects(self::exactly(2))->method('delete');
-        $this->dao->expects(self::exactly(2))->method('deleteObjectByID');
+        $this->filesystem->expects($this->exactly(2))->method('delete');
+        $this->dao->expects($this->exactly(2))->method('deleteObjectByID');
 
         $lfs_object_remover->removeDanglingObjects($deletion_delay);
     }
@@ -80,7 +80,7 @@ final class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->expects($this->once())->method('deleteUnusableReferences')->with($deletion_delay);
         $this->filesystem->method('delete')->willThrowException(new UnableToDeleteFile());
-        $this->dao->expects(self::never())->method('deleteObjectByID');
+        $this->dao->expects($this->never())->method('deleteObjectByID');
 
         $this->expectException(UnableToDeleteFile::class);
         $lfs_object_remover->removeDanglingObjects($deletion_delay);

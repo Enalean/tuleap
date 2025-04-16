@@ -62,7 +62,7 @@ final class MetadataValueUpdatorTest extends TestCase
         $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
         $this->store->expects($this->once())->method('storeMetadata')->with($metadata_value, 102);
-        $this->store->expects(self::never())->method('updateMetadata');
+        $this->store->expects($this->never())->method('updateMetadata');
 
         $metadata_to_create = new Docman_Metadata();
         $metadata_to_create->setId(1);
@@ -84,7 +84,7 @@ final class MetadataValueUpdatorTest extends TestCase
 
         $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
-        $this->store->expects(self::never())->method('storeMetadata');
+        $this->store->expects($this->never())->method('storeMetadata');
         $this->store->expects($this->once())->method('updateMetadata')->with($metadata_value, 102);
 
         $metadata_to_create = new Docman_Metadata();

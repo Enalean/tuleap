@@ -126,7 +126,7 @@ final class PlanningFactoryDuplicationTest extends TestCase
         $group_id              = 123;
         $empty_tracker_mapping = [];
 
-        $this->planning_dao->expects(self::never())->method('createPlanning');
+        $this->planning_dao->expects($this->never())->method('createPlanning');
 
         $this->planning_factory->duplicatePlannings($this->user, $group_id, $empty_tracker_mapping, []);
     }

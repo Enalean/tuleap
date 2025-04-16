@@ -200,8 +200,8 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($integration)
             ->willReturn(null);
 
-        $this->reference_manager->expects(self::never())->method('insertCrossReference');
-        $this->tag_info_dao->expects(self::never())->method('saveGitlabTagInfo');
+        $this->reference_manager->expects($this->never())->method('insertCrossReference');
+        $this->tag_info_dao->expects($this->never())->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
             $integration,
@@ -254,8 +254,8 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($credentials, $integration, 'v1.0.2')
             ->willReturn($gitlab_tag);
 
-        $this->reference_manager->expects(self::never())->method('insertCrossReference');
-        $this->tag_info_dao->expects(self::never())->method('saveGitlabTagInfo');
+        $this->reference_manager->expects($this->never())->method('insertCrossReference');
+        $this->tag_info_dao->expects($this->never())->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
             $integration,
@@ -316,8 +316,8 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TuleapReferenceNotFoundException()
             );
 
-        $this->reference_manager->expects(self::never())->method('insertCrossReference');
-        $this->tag_info_dao->expects(self::never())->method('saveGitlabTagInfo');
+        $this->reference_manager->expects($this->never())->method('insertCrossReference');
+        $this->tag_info_dao->expects($this->never())->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
             $integration,

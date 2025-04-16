@@ -83,7 +83,7 @@ final class MilestoneSelectorControllerTest extends TestCase
         $event_manager = $this->createMock(EventManager::class);
         EventManager::setInstance($event_manager);
 
-        $event_manager->expects(self::atLeastOnce())->method('processEvent')->with(
+        $event_manager->expects($this->atLeastOnce())->method('processEvent')->with(
             Planning_MilestoneSelectorController::AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
             self::anything()
         );
@@ -100,7 +100,7 @@ final class MilestoneSelectorControllerTest extends TestCase
             PlanningBuilder::aPlanning(1)->build(),
         ));
 
-        $GLOBALS['Response']->expects(self::never())->method('redirect');
+        $GLOBALS['Response']->expects($this->never())->method('redirect');
         $controller = new Planning_MilestoneSelectorController($this->request, $milestone_factory);
         $controller->show();
     }

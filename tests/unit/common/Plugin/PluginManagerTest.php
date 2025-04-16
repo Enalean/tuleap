@@ -74,7 +74,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         //The plugin factory
         $plugin_factory = $this->createMock(\PluginFactory::class);
         $plugin_factory
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('isPluginEnabled')
             ->willReturnOnConsecutiveCalls(true, false);
 

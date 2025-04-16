@@ -178,7 +178,7 @@ final class XmlImportTest extends TestCase
                 }
             );
 
-        $this->new_changeset_creator->expects(self::exactly(2))->method('create')
+        $this->new_changeset_creator->expects($this->exactly(2))->method('create')
             ->with(
                 self::callback(function (NewChangeset $new_changeset) use ($artifact) {
                     if ($new_changeset->getArtifact() !== $artifact) {
@@ -254,7 +254,7 @@ final class XmlImportTest extends TestCase
         $ugroup_2 = ProjectUGroupTestBuilder::aCustomUserGroup(1)->withName('my_group')->build();
         $ugroup_3 = ProjectUGroupTestBuilder::aCustomUserGroup(2)->withName('my_other_group')->build();
 
-        $this->private_comment_extractor->expects(self::exactly(2))->method('extractUGroupsFromXML')
+        $this->private_comment_extractor->expects($this->exactly(2))->method('extractUGroupsFromXML')
             ->with(
                 $artifact,
                 self::callback(function (SimpleXMLElement $comment): bool {

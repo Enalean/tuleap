@@ -105,7 +105,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
     {
         $source_information = new MassChangeTopBacklogSourceInformation(102, [405], $this->user, 'unchanged');
 
-        $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
+        $this->top_backlog_change_processor->expects($this->never())->method('processTopBacklogChangeForAProgram');
 
         $mass_change_processor = new MassChangeTopBacklogActionProcessor(
             BuildProgramStub::stubValidProgram(),
@@ -119,7 +119,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
     {
         $source_information = new MassChangeTopBacklogSourceInformation(200, [406], $this->user, 'add');
 
-        $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
+        $this->top_backlog_change_processor->expects($this->never())->method('processTopBacklogChangeForAProgram');
 
         $mass_change_processor = new MassChangeTopBacklogActionProcessor(
             BuildProgramStub::stubInvalidProgram(),

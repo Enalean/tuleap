@@ -160,7 +160,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->event_manager->disable_real_name_change = true;
 
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -212,7 +212,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             return $user->getRealName() === 'Franck Zappa';
         }))->willReturn(true);
 
-        $this->avatar_generator->expects(self::never())->method('generate');
+        $this->avatar_generator->expects($this->never())->method('generate');
 
         $has_been_redirected = false;
         try {
@@ -235,7 +235,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesntUpdateRealNameWhenNothingChanged(): void
     {
         $this->csrf_token->method('check');
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $has_been_redirected = false;
         try {
@@ -259,7 +259,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItThrowsAnErrorWhenRealNameIsNotValid(): void
     {
         $this->csrf_token->method('check');
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $has_been_redirected = false;
         try {
@@ -307,7 +307,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
         $this->csrf_token->method('check');
         $this->event_manager->disable_email_change = true;
 
-        $this->email_updater->expects(self::never())->method('sendEmailChangeConfirm');
+        $this->email_updater->expects($this->never())->method('sendEmailChangeConfirm');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -346,7 +346,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItUpdatesEmailButDbUpdateFails(): void
     {
         $this->csrf_token->method('check');
-        $this->email_updater->expects(self::never())->method('sendEmailChangeConfirm');
+        $this->email_updater->expects($this->never())->method('sendEmailChangeConfirm');
         $this->user_manager->method('updateDb')->willReturn(false);
 
         $has_been_redirected = false;
@@ -397,7 +397,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesntUpdatesEmailWhenNoChanges(): void
     {
         $this->csrf_token->method('check');
-        $this->email_updater->expects(self::never())->method('sendEmailChangeConfirm');
+        $this->email_updater->expects($this->never())->method('sendEmailChangeConfirm');
 
         $has_been_redirected = false;
         try {
@@ -446,7 +446,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesntUpdateWithInvalidTimezone(): void
     {
         $this->csrf_token->method('check');
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $has_been_redirected = false;
         try {
@@ -469,7 +469,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItDoesntUpdateWithNoTimezoneChange(): void
     {
         $this->csrf_token->method('check');
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $has_been_redirected = false;
         try {

@@ -72,7 +72,7 @@ command="/bin/false user2",some-options ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF
         $keys->append($key2);
         $system_command = $this->createMock(System_Command::class);
         $counter        = 0;
-        $system_command->expects(self::exactly(3))->method('exec')
+        $system_command->expects($this->exactly(3))->method('exec')
             ->willReturnCallback(static function () use (&$counter) {
                 if (++$counter === 3) {
                     return true;

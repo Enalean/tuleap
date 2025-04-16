@@ -178,7 +178,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $tree->method('getUtils')->willReturn($utils);
 
         $node->expects($this->once())->method('setName');
-        $node->expects(self::never())->method('move');
+        $node->expects($this->never())->method('move');
 
         $tree->move('project1/package1/release1', 'project1/package1/release2');
     }
@@ -194,8 +194,8 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $utils->method('getDocmanItemFactory')->willReturn(null);
         $tree->method('getUtils')->willReturn($utils);
 
-        $node->expects(self::never())->method('setName');
-        $node->expects(self::never())->method('move');
+        $node->expects($this->never())->method('setName');
+        $node->expects($this->never())->method('move');
         $this->expectException(MethodNotAllowed::class);
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
@@ -212,7 +212,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $utils->method('getDocmanItemFactory')->willReturn(null);
         $tree->method('getUtils')->willReturn($utils);
 
-        $node->expects(self::never())->method('setName');
+        $node->expects($this->never())->method('setName');
         //$node->expectOnce('move');
         $this->expectException(MethodNotAllowed::class);
 
@@ -414,8 +414,8 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $dif = $this->createMock(\Docman_ItemFactory::class);
         $utils->method('getDocmanItemFactory')->willReturn($dif);
 
-        $dif->expects(self::never())->method('setNewParent');
-        $sourceItem->expects(self::never())->method('fireEvent');
+        $dif->expects($this->never())->method('setNewParent');
+        $sourceItem->expects($this->never())->method('fireEvent');
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
@@ -475,7 +475,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $dpm->method('userCanAccess')->willReturn(false);
         $dpm->method('userCanWrite')->willReturn(true);
         $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
-        $dpm->expects(self::never())->method('currentUserCanWriteSubItems');
+        $dpm->expects($this->never())->method('currentUserCanWriteSubItems');
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
@@ -502,7 +502,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $dpm->method('userCanAccess')->willReturn(true);
         $dpm->method('userCanWrite')->willReturn(false);
         $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
-        $dpm->expects(self::never())->method('currentUserCanWriteSubItems');
+        $dpm->expects($this->never())->method('currentUserCanWriteSubItems');
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');

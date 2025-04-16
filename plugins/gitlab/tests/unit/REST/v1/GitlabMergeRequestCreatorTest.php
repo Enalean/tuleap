@@ -348,7 +348,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->willThrowException($exception);
 
         $this->gitlab_api_client
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('postUrl');
 
         $this->expectException(RestException::class);

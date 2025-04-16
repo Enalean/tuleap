@@ -60,7 +60,7 @@ final class BeforeMoveCheckerTest extends TestCase
         $this->project = ProjectTestBuilder::aProject()->build();
         $this->user    = UserTestBuilder::aUser()->build();
 
-        $this->project_status_verificator->expects(self::atLeast(1))
+        $this->project_status_verificator->expects($this->atLeast(1))
             ->method('checkProjectStatusAllowsAllUsersToAccessIt')->with($this->project);
     }
 

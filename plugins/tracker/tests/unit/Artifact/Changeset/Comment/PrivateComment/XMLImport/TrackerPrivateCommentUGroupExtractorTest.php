@@ -66,7 +66,7 @@ final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
             EOS
         );
 
-        $this->dao->expects(self::never())->method('isTrackerEnabledPrivateComment');
+        $this->dao->expects($this->never())->method('isTrackerEnabledPrivateComment');
 
         self::assertCount(0, $this->extractor->extractUGroupsFromXML($this->artifact, $xml));
     }

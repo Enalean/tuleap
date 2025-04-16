@@ -93,7 +93,7 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard_01, $dashboard_02]);
 
-        $this->dao->expects(self::exactly(2))->method('duplicateDashboard');
+        $this->dao->expects($this->exactly(2))->method('duplicateDashboard');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
@@ -109,7 +109,7 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line_01, $line_02]);
 
-        $this->widget_dao->expects(self::exactly(2))->method('duplicateLine');
+        $this->widget_dao->expects($this->exactly(2))->method('duplicateLine');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
@@ -131,7 +131,7 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line]);
 
-        $this->widget_dao->expects(self::exactly(2))->method('duplicateColumn');
+        $this->widget_dao->expects($this->exactly(2))->method('duplicateColumn');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
@@ -171,7 +171,7 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->widget_dao->expects(self::exactly(2))->method('duplicateWidget');
+        $this->widget_dao->expects($this->exactly(2))->method('duplicateWidget');
         $widget_instance_01->expects($this->once())->method('cloneContent');
         $widget_instance_02->expects($this->once())->method('cloneContent');
         $matcher = $this->exactly(2);
@@ -227,7 +227,7 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->widget_dao->expects($this->once())->method('duplicateWidget');
         $widget_instance_01->expects($this->once())->method('cloneContent');
-        $widget_instance_02->expects(self::never())->method('cloneContent');
+        $widget_instance_02->expects($this->never())->method('cloneContent');
         $matcher = $this->exactly(2);
 
         $this->checker->expects($matcher)->method('isWidgetDisabled')->willReturnCallback(function (...$parameters) use ($matcher, $widget_instance_01, $widget_instance_02) {
@@ -265,9 +265,9 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn(null);
 
-        $this->widget_dao->expects(self::never())->method('duplicateWidget');
+        $this->widget_dao->expects($this->never())->method('duplicateWidget');
 
-        $this->checker->expects(self::never())->method('isWidgetDisabled');
+        $this->checker->expects($this->never())->method('isWidgetDisabled');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }

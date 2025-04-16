@@ -120,7 +120,7 @@ final class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\T
             ->willReturn($execution_1);
 
         $this->execution_with_automated_data_provider
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getExecutionWithAutomatedTestData');
 
         $this->definition_retriever->method('getDefinitionRepresentationForExecution')->willThrowException(
@@ -137,7 +137,7 @@ final class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\T
 
     public function testGetExecutionsWithAutomatedTestDataReturnEmptyIfNoExecution(): void
     {
-        $this->artifact_dao->expects(self::never())->method('searchExecutionArtifactsForCampaign');
+        $this->artifact_dao->expects($this->never())->method('searchExecutionArtifactsForCampaign');
 
         $this->config->method('getTestExecutionTrackerId')->willReturn(null);
 

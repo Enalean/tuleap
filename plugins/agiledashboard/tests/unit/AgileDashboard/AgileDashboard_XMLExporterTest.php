@@ -20,9 +20,8 @@
 
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var SimpleXMLElement
@@ -65,7 +64,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesASimpleXMlElement(): void
     {
         $this->explicit_backlog_xml_exporter->expects($this->once())->method('exportExplicitBacklogConfiguration');
-        $this->explicit_backlog_xml_exporter->expects(self::never())->method('exportExplicitBacklogContent');
+        $this->explicit_backlog_xml_exporter->expects($this->never())->method('exportExplicitBacklogContent');
         $this->planning_xml_exporter->expects($this->once())->method('exportPlannings');
 
         $this->xml_validator->expects($this->once())->method('validate');
@@ -99,7 +98,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotExportAttributeShouldSidebarDisplayLastMilestonesWhenTrueBecauseItIsTheDefault(): void
     {
         $this->explicit_backlog_xml_exporter->method('exportExplicitBacklogConfiguration');
-        $this->explicit_backlog_xml_exporter->expects(self::never())->method('exportExplicitBacklogContent');
+        $this->explicit_backlog_xml_exporter->expects($this->never())->method('exportExplicitBacklogContent');
         $this->planning_xml_exporter->method('exportPlannings');
 
         $this->xml_validator->method('validate');
@@ -118,7 +117,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsAttributeShouldSidebarDisplayLastMilestonesWhenFalse(): void
     {
         $this->explicit_backlog_xml_exporter->method('exportExplicitBacklogConfiguration');
-        $this->explicit_backlog_xml_exporter->expects(self::never())->method('exportExplicitBacklogContent');
+        $this->explicit_backlog_xml_exporter->expects($this->never())->method('exportExplicitBacklogContent');
         $this->planning_xml_exporter->method('exportPlannings');
 
         $this->xml_validator->method('validate');
@@ -137,7 +136,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsAttributeShouldSidebarDisplayLastMilestonesWhenFalseAndThereIsAlreadyExportedKanban(): void
     {
         $this->explicit_backlog_xml_exporter->method('exportExplicitBacklogConfiguration');
-        $this->explicit_backlog_xml_exporter->expects(self::never())->method('exportExplicitBacklogContent');
+        $this->explicit_backlog_xml_exporter->expects($this->never())->method('exportExplicitBacklogContent');
         $this->planning_xml_exporter->method('exportPlannings');
 
         $this->xml_validator->method('validate');
@@ -167,7 +166,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsAttributeShouldSidebarDisplayLastMilestonesWhenFalseWhenItIsAlreadyWronglyExported(): void
     {
         $this->explicit_backlog_xml_exporter->method('exportExplicitBacklogConfiguration');
-        $this->explicit_backlog_xml_exporter->expects(self::never())->method('exportExplicitBacklogContent');
+        $this->explicit_backlog_xml_exporter->expects($this->never())->method('exportExplicitBacklogContent');
         $this->planning_xml_exporter->method('exportPlannings');
 
         $this->xml_validator->method('validate');
@@ -197,7 +196,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesWronglyExportedAttributeWhenShouldSidebarDisplayLastMilestonesIsTrueBecauseItIsTheDefault(): void
     {
         $this->explicit_backlog_xml_exporter->method('exportExplicitBacklogConfiguration');
-        $this->explicit_backlog_xml_exporter->expects(self::never())->method('exportExplicitBacklogContent');
+        $this->explicit_backlog_xml_exporter->expects($this->never())->method('exportExplicitBacklogContent');
         $this->planning_xml_exporter->method('exportPlannings');
 
         $this->xml_validator->method('validate');

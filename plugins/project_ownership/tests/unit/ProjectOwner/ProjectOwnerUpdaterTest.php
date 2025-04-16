@@ -51,7 +51,7 @@ final class ProjectOwnerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProjectOwnerCannotBeSetIfNotAlreadyAProjectAdmin(): void
     {
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
 
         $user = $this->createMock(\PFUser::class);
         $user->method('getId')->willReturn('102');

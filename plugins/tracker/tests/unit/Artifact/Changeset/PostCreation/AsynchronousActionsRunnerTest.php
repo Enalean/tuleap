@@ -87,7 +87,7 @@ class AsynchronousActionsRunnerTest extends TestCase
         $logger       = new TestLogger();
         $worker_event = new WorkerEvent($logger, new WorkerEventContent('Event name', []));
 
-        $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
+        $this->actions_runner->expects($this->never())->method('processAsyncPostCreationActions');
 
         $async_actions_runner->process($worker_event);
         self::assertTrue($logger->hasWarningRecords());
@@ -104,7 +104,7 @@ class AsynchronousActionsRunnerTest extends TestCase
             new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true, 'mentioned_user_ids' => []])
         );
 
-        $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
+        $this->actions_runner->expects($this->never())->method('processAsyncPostCreationActions');
 
         $async_actions_runner->process($worker_event);
 
@@ -125,7 +125,7 @@ class AsynchronousActionsRunnerTest extends TestCase
             new WorkerEventContent('Event name', ['artifact_id' => 1, 'changeset_id' => 1, 'send_notifications' => true, 'mentioned_user_ids' => []])
         );
 
-        $this->actions_runner->expects(self::never())->method('processAsyncPostCreationActions');
+        $this->actions_runner->expects($this->never())->method('processAsyncPostCreationActions');
 
         $async_actions_runner->process($worker_event);
         self::assertTrue($logger->hasInfoRecords());

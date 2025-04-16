@@ -72,7 +72,7 @@ final class AddToTopBacklogValueUpdaterTest extends TestCase
         $this->collection->expects($this->once())->method('getExternalPostActionsValue')->willReturn([]);
 
         $this->value_repository->expects($this->once())->method('deleteAllByTransition');
-        $this->value_repository->expects(self::never())->method('create');
+        $this->value_repository->expects($this->never())->method('create');
 
         $this->value_updater->updateByTransition(
             $this->collection,

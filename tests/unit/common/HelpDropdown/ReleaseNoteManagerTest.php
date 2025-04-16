@@ -63,7 +63,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->release_note_dao->method('getReleaseLink')->willReturn($dao_links);
-        $this->user_preferences_dao->expects(self::never())->method('deletePreferenceForAllUsers');
+        $this->user_preferences_dao->expects($this->never())->method('deletePreferenceForAllUsers');
 
         self::assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink('11.17.99.666'));
     }
@@ -78,7 +78,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->release_note_dao->method('getReleaseLink')->willReturn($dao_links);
-        $this->user_preferences_dao->expects(self::never())->method('deletePreferenceForAllUsers');
+        $this->user_preferences_dao->expects($this->never())->method('deletePreferenceForAllUsers');
 
         self::assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink('11.17.99.666'));
     }
@@ -91,7 +91,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->release_note_dao->method('getReleaseLink')->willReturn($dao_links);
-        $this->user_preferences_dao->expects(self::never())->method('deletePreferenceForAllUsers');
+        $this->user_preferences_dao->expects($this->never())->method('deletePreferenceForAllUsers');
 
         self::assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink('11.17.99.666'));
     }

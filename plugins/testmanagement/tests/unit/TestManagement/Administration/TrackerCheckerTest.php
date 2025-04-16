@@ -128,8 +128,8 @@ final class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ttm_field_usage_detector->method('isArtifactLinksFieldUsed')->willReturn(true);
 
         $this->ttm_field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
-        $this->frozen_field_dao->expects(self::never())->method('isAFrozenFieldPostActionUsedInTracker');
-        $this->hidden_fieldset_dao->expects(self::never())->method('isAHiddenFieldsetPostActionUsedInTracker');
+        $this->frozen_field_dao->expects($this->never())->method('isAFrozenFieldPostActionUsedInTracker');
+        $this->hidden_fieldset_dao->expects($this->never())->method('isAHiddenFieldsetPostActionUsedInTracker');
 
         $this->expectException(TrackerDefinitionNotValidException::class);
 
@@ -144,8 +144,8 @@ final class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ttm_field_usage_detector->method('isStepExecutionFieldUsed')->willReturn(false);
 
-        $this->frozen_field_dao->expects(self::never())->method('isAFrozenFieldPostActionUsedInTracker');
-        $this->hidden_fieldset_dao->expects(self::never())->method('isAHiddenFieldsetPostActionUsedInTracker');
+        $this->frozen_field_dao->expects($this->never())->method('isAFrozenFieldPostActionUsedInTracker');
+        $this->hidden_fieldset_dao->expects($this->never())->method('isAHiddenFieldsetPostActionUsedInTracker');
 
         $this->expectException(TrackerExecutionNotValidException::class);
 

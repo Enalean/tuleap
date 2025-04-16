@@ -21,9 +21,8 @@
 /**
  * Test for project delete system event
  */
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Project delete Users fail
@@ -97,7 +96,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ['System', $backendSystem],
         ]);
 
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove project users');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
@@ -178,7 +177,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ['System', $backendSystem],
         ]);
 
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove membership request notification ugroups or message');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
@@ -259,7 +258,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ['System', $backendSystem],
         ]);
 
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove FRS items');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
@@ -340,7 +339,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ['System', $backendSystem],
         ]);
 
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not mark all trackers as deleted');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
@@ -421,7 +420,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ['System', $backendSystem],
         ]);
 
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not mark all wiki attachments as deleted');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
@@ -502,7 +501,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
             ['System', $backendSystem],
         ]);
 
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove ugroups binding');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
@@ -585,7 +584,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
 
         // Expect everything went OK
         $evt->expects($this->once())->method('done');
-        $evt->expects(self::never())->method('error');
+        $evt->expects($this->never())->method('error');
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 

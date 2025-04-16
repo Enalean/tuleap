@@ -237,7 +237,7 @@ final class FRSPackageFactoryTest extends TestCase
         $package        = $this->createMock(FRSPackage::class);
         $package->method('getPackageID');
         $packageFactory->method('getFRSPackagesFromDb')->willReturn([$package, $package, $package]);
-        $packageFactory->expects(self::exactly(3))->method('delete_package')->willReturn(true);
+        $packageFactory->expects($this->exactly(3))->method('delete_package')->willReturn(true);
         self::assertTrue($packageFactory->deleteProjectPackages(1));
     }
 }

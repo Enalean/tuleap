@@ -131,7 +131,7 @@ final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_changeset->method('getId')->willReturn($changeset_id);
 
         $this->velocity_computation_checker->method('shouldComputeCapacity')->willReturn(true);
-        $this->velocity_calculator->expects(self::never())->method('calculate');
+        $this->velocity_calculator->expects($this->never())->method('calculate');
 
         $before_event->method('forceFieldData');
 

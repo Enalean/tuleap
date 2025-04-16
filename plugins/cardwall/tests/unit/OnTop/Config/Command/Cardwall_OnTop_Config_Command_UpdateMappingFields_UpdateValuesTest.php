@@ -103,8 +103,8 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
         ));
         $this->dao->method('save')->willReturn(true);
         $this->value_dao->expects($this->once())->method('delete')->with($this->tracker_id, 69);
-        $this->value_dao->expects(self::never())->method('deleteAllFieldValues');
-        $this->value_dao->expects(self::never())->method('save');
+        $this->value_dao->expects($this->never())->method('deleteAllFieldValues');
+        $this->value_dao->expects($this->never())->method('save');
         $this->command->execute($request);
     }
 }

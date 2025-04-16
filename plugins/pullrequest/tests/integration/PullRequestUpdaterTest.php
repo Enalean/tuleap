@@ -122,7 +122,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repo);
         $this->git_exec_factory->method('getGitExec')->with($git_repo)->willReturn($this->git_exec);
 
-        $this->event_dispatcher->expects(self::atLeast(1))->method('dispatch')->with(self::isInstanceOf(PullRequestUpdatedEvent::class));
+        $this->event_dispatcher->expects($this->atLeast(1))->method('dispatch')->with(self::isInstanceOf(PullRequestUpdatedEvent::class));
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 

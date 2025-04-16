@@ -118,14 +118,14 @@ final class NotificationsManagerTest extends TestCase
     public function testItReturnsTrueWhenAtLeastOneUserIsNotified(): void
     {
         $this->users_retriever->expects($this->once())->method('doesNotificationExistByUserAndItemId')->willReturn(true);
-        $this->ugroups_retriever->expects(self::never())->method('doesNotificationExistByUGroupAndItemId');
+        $this->ugroups_retriever->expects($this->never())->method('doesNotificationExistByUGroupAndItemId');
 
         self::assertTrue($this->notification_manager->userExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION));
     }
 
     public function testItReturnsTrueWhenAtLeastAGroupIsNotified(): void
     {
-        $this->users_retriever->expects(self::never())->method('doesNotificationExistByUserAndItemId');
+        $this->users_retriever->expects($this->never())->method('doesNotificationExistByUserAndItemId');
         $this->ugroups_retriever->expects($this->once())->method('doesNotificationExistByUGroupAndItemId')->willReturn(true);
 
         self::assertTrue($this->notification_manager->ugroupExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION));

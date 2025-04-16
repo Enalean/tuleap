@@ -101,7 +101,7 @@ final class FileUploadDataProviderTest extends TestCase
 
         $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 
-        $this->frozen_field_detector->expects(self::never())->method('isFieldFrozen');
+        $this->frozen_field_detector->expects($this->never())->method('isFieldFrozen');
 
         $result = $this->file_upload_data_provider->getFileUploadData(
             $this->tracker,
@@ -139,7 +139,7 @@ final class FileUploadDataProviderTest extends TestCase
 
         $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 
-        $this->frozen_field_detector->expects(self::never())->method('isFieldFrozen');
+        $this->frozen_field_detector->expects($this->never())->method('isFieldFrozen');
 
         $result = $this->file_upload_data_provider->getFileUploadDataForSubmit($this->tracker, $this->user);
 

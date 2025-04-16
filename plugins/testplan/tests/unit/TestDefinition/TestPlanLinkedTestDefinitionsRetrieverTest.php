@@ -80,7 +80,7 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends \Tuleap\Test\PHPU
         $artifact_user_can_view->method('userCanView')->willReturn(true);
         $artifact_user_can_not_view = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_user_can_not_view->method('userCanView')->willReturn(false);
-        $this->artifact_factory->expects(self::exactly(2))->method('getInstanceFromRow')->willReturnOnConsecutiveCalls(
+        $this->artifact_factory->expects($this->exactly(2))->method('getInstanceFromRow')->willReturnOnConsecutiveCalls(
             $artifact_user_can_view,
             $artifact_user_can_not_view,
         );

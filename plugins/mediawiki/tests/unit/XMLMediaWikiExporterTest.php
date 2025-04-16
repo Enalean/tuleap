@@ -94,7 +94,7 @@ final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportMediawikiWhenItCannotBeExported(): void
     {
-        $this->language_manager->expects(self::never())->method('getUsedLanguageForProject');
+        $this->language_manager->expects($this->never())->method('getUsedLanguageForProject');
 
         $this->exportToXML(CheckXMLMediawikiExportabilityStub::withoutExportableMediawiki());
 

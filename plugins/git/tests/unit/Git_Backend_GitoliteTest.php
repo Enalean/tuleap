@@ -68,7 +68,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
         $backend->setDriver($driver);
 
         $bck = $this->createMock(Backend::class);
-        $bck->expects(self::never())->method('log');
+        $bck->expects($this->never())->method('log');
         $backend->method('getBackend')->willReturn($bck);
 
         self::assertTrue(is_dir($this->fixtureRenamePath . '/legacy'));
@@ -136,7 +136,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
 
         $driver->expects($this->once())->method('fork')->with($name, 'gpig/' . $old_namespace, 'gpig/' . $new_namespace)->willReturn(true);
         $driver->expects($this->once())->method('dumpProjectRepoConf')->with($project);
-        $driver->expects(self::never())->method('push');
+        $driver->expects($this->never())->method('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }
@@ -172,7 +172,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
 
         $driver->expects($this->once())->method('fork')->with($repo_name, $old_project_name . '/' . $namespace, $new_project_name . '/' . $namespace)->willReturn(true);
         $driver->expects($this->once())->method('dumpProjectRepoConf')->with($new_project);
-        $driver->expects(self::never())->method('push');
+        $driver->expects($this->never())->method('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }
@@ -207,12 +207,12 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
 
         $this->expectException(GitRepositoryAlreadyExistsException::class);
 
-        $backend->expects(self::never())->method('clonePermissions');
+        $backend->expects($this->never())->method('clonePermissions');
         $dao->method('save');
         $dao->method('isRepositoryExisting')->with($project_id, $new_repo_path)->willReturn(true);
-        $driver->expects(self::never())->method('fork');
-        $driver->expects(self::never())->method('dumpProjectRepoConf');
-        $driver->expects(self::never())->method('push');
+        $driver->expects($this->never())->method('fork');
+        $driver->expects($this->never())->method('dumpProjectRepoConf');
+        $driver->expects($this->never())->method('push');
 
         $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }

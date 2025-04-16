@@ -63,7 +63,7 @@ class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->project
             )->willReturn($mail);
 
-        $this->logger->expects(self::never())->method('Warning');
+        $this->logger->expects($this->never())->method('Warning');
 
         $this->project_creation_notifier->notifySiteAdmin($this->project);
     }

@@ -137,7 +137,7 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(false);
         $this->burnup_cache_dao->method('getCachedDaysTimestamps')->willReturn($this->expected_days);
 
-        $this->cache_generator->expects(self::never())->method('forceBurnupCacheGeneration')->with($this->artifact->getId());
+        $this->cache_generator->expects($this->never())->method('forceBurnupCacheGeneration')->with($this->artifact->getId());
         $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
         self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));

@@ -177,7 +177,7 @@ final class MilestoneResourceValidatorTest extends TestCase
         $this->planning_factory->method('getBacklogTrackersIds')
             ->with($this->milestone->getPlanning()->getId())
             ->willReturn([1, 2, 3]);
-        $this->tracker_artifact_factory->expects(self::atLeastOnce())->method('getArtifactById')->with(102)->willReturn($this->artifact1);
+        $this->tracker_artifact_factory->expects($this->atLeastOnce())->method('getArtifactById')->with(102)->willReturn($this->artifact1);
 
         $this->milestone_resource_validator->validateArtifactsFromBodyContent(
             $this->ids,
@@ -267,7 +267,7 @@ final class MilestoneResourceValidatorTest extends TestCase
     public function testItDoesntAddWhenArrayIsEmpty(): void
     {
         $resource_validator = $this->getMockedValidator();
-        $resource_validator->expects(self::never())->method('validateArtifactsFromBodyContentWithClosedItems');
+        $resource_validator->expects($this->never())->method('validateArtifactsFromBodyContentWithClosedItems');
 
         $resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent(
             $this->user,

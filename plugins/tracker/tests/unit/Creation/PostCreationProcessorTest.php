@@ -96,7 +96,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotAddTrackerInDropdown(): void
     {
         $settings = new TrackerCreationSettings(false, true, true);
-        $this->in_new_dropdown_dao->expects(self::never())->method('insert')->with($this->tracker->getId());
+        $this->in_new_dropdown_dao->expects($this->never())->method('insert')->with($this->tracker->getId());
 
         $this->processor->postCreationProcess($this->tracker, $settings);
     }

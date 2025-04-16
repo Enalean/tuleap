@@ -209,7 +209,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
-        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->exactly(2))->method('processEvent');
 
         $this->reference_manager->expects($this->once())->method('addSystemReferencesWithoutService');
         $this->synchronized_project_membership_duplicator->expects($this->once())->method('duplicate');
@@ -264,7 +264,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
-        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->exactly(2))->method('processEvent');
 
         $this->reference_manager->expects($this->once())->method('addSystemReferencesWithoutService');
         $this->synchronized_project_membership_duplicator->expects($this->once())->method('duplicate');
@@ -274,7 +274,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_activator->expects($this->once())->method('activateServicesFromTemplate');
 
-        $this->creator->expects(self::never())->method('autoActivateProject');
+        $this->creator->expects($this->never())->method('autoActivateProject');
 
         $this->creator->processProjectCreation($project_creation_data);
 

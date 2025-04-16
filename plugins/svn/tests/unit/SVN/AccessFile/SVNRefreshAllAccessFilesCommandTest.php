@@ -112,8 +112,8 @@ final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\Tes
             ]
         );
 
-        $this->access_file_history_factory->expects(self::exactly(3))->method('getCurrentVersion')->willReturn($this->createMock(AccessFileHistory::class));
-        $this->access_file_history_creator->expects(self::exactly(3))->method('saveAccessFile');
+        $this->access_file_history_factory->expects($this->exactly(3))->method('getCurrentVersion')->willReturn($this->createMock(AccessFileHistory::class));
+        $this->access_file_history_creator->expects($this->exactly(3))->method('saveAccessFile');
 
 
         $command_tester = new CommandTester($this->command);

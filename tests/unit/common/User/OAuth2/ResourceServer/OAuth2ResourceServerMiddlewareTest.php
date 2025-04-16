@@ -110,7 +110,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     public function testAccessIsNotAllowedWhenTheAuthorizationHeaderIsNotCorrect(string $bad_authorization_header_for_bearer_token): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $response = $this->middleware->process(
             $this->buildServerRequest($bad_authorization_header_for_bearer_token),
@@ -132,7 +132,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     public function testAccessIsNotAllowedWhenTheTokenCannotBeVerified(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $this->access_token_unserializer->method('getSplitToken')->willReturn(
             $this->createMock(SplitToken::class)
@@ -157,7 +157,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     public function testAccessIsNotAllowedWhenTheTokenCannotBeParsed(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $this->access_token_unserializer->method('getSplitToken')->willThrowException(
             new class extends SplitTokenException
@@ -180,7 +180,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     public function testAccessIsNotAllowedWhenTheUserCannotBeValidated(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $access_token = $this->createStub(SplitToken::class);
         $this->access_token_unserializer->method('getSplitToken')->willReturn(
@@ -209,7 +209,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     public function testAccessIsNotAllowedWhenTheGivenAccessTokenHasExpired(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $split_token = $this->createMock(SplitToken::class);
         $split_token->method('getID')->willReturn(1);
@@ -236,7 +236,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     public function testAccessIsNotAllowedWhenTheGivenAccessTokenDoesNotHaveTheRequiredScope(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $this->access_token_unserializer->method('getSplitToken')->willReturn(
             $this->createMock(SplitToken::class)

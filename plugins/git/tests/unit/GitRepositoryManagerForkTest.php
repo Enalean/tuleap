@@ -161,7 +161,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->method('fork')->willThrowException(new Exception('whatever'));
 
         $this->expectException(Exception::class);
-        $this->git_system_event_manager->expects(self::never())->method('queueRepositoryFork');
+        $this->git_system_event_manager->expects($this->never())->method('queueRepositoryFork');
 
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
@@ -172,7 +172,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->method('fork')->willReturn(false);
 
         $this->expectException(Exception::class);
-        $this->git_system_event_manager->expects(self::never())->method('queueRepositoryFork');
+        $this->git_system_event_manager->expects($this->never())->method('queueRepositoryFork');
 
         $this->manager->fork($this->repository, $this->project, $this->user, 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
@@ -222,7 +222,7 @@ final class GitRepositoryManagerForkTest extends TestCase
 
         $this->event_manager->method('processEvent');
         $this->git_system_event_manager->method('queueRepositoryFork');
-        $this->backend->expects(self::exactly(count($repo_ids)))->method('userCanRead')->with($this->user)->willReturn(true);
+        $this->backend->expects($this->exactly(count($repo_ids)))->method('userCanRead')->with($this->user)->willReturn(true);
         $this->backend->method('isNameValid')->with($namespace)->willReturn(true);
         $this->backend->method('fork')->willReturnOnConsecutiveCalls(667, 668, 669);
         self::assertTrue($this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null, $this->forkPermissions));
@@ -247,8 +247,8 @@ final class GitRepositoryManagerForkTest extends TestCase
             $repos[] = $repo;
         }
 
-        $this->backend->expects(self::exactly(count($repo_ids)))->method('userCanRead')->with($this->user)->willReturn(true);
-        $this->backend->expects(self::exactly(3))->method('fork');
+        $this->backend->expects($this->exactly(count($repo_ids)))->method('userCanRead')->with($this->user)->willReturn(true);
+        $this->backend->expects($this->exactly(3))->method('fork');
         $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
@@ -285,7 +285,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->method('formatValueForRepository');
         $this->project_history_dao->method('groupAddHistory');
 
-        $this->backend->expects(self::never())->method('fork');
+        $this->backend->expects($this->never())->method('fork');
         $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
@@ -353,7 +353,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->method('groupAddHistory');
         $this->git_system_event_manager->method('queueRepositoryFork');
 
-        $GLOBALS['Response']->expects(self::atLeastOnce())->method('addFeedback')->willReturnCallback(
+        $GLOBALS['Response']->expects($this->atLeastOnce())->method('addFeedback')->willReturnCallback(
             function (string $level, string $message): void {
                 match (true) {
                     $level === 'warning' &&
@@ -368,7 +368,7 @@ final class GitRepositoryManagerForkTest extends TestCase
         $this->backend->method('isNameValid')->willReturn(true);
 
         $counter = 0;
-        $this->backend->expects(self::exactly(2))->method('fork')->willReturnCallback(function () use (&$counter) {
+        $this->backend->expects($this->exactly(2))->method('fork')->willReturnCallback(function () use (&$counter) {
             if ($counter++ === 0) {
                 throw new GitRepositoryAlreadyExistsException('');
             }
@@ -399,7 +399,7 @@ final class GitRepositoryManagerForkTest extends TestCase
     public function testForkAssertNamespaceIsValid(): void
     {
         $this->backend->method('isNameValid')->willReturn(false);
-        $this->backend->expects(self::never())->method('fork');
+        $this->backend->expects($this->never())->method('fork');
 
         $this->expectException(Exception::class);
 

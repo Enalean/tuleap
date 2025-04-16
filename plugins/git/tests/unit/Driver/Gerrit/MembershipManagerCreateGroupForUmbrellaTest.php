@@ -97,7 +97,7 @@ final class MembershipManagerCreateGroupForUmbrellaTest extends TestCase
 
     public function testItCreateGroupOnAllGerritServersTheProjectAndItsChildrenUse(): void
     {
-        $this->remote_server_factory->expects(self::atLeastOnce())->method('getServersForProject')->willReturn(
+        $this->remote_server_factory->expects($this->atLeastOnce())->method('getServersForProject')->willReturn(
             [$this->buildGerritServer(3)],
             [$this->buildGerritServer(5)],
         );

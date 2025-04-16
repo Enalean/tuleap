@@ -64,13 +64,13 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
 
     public function testItBuildsAPresenterForASemanticImpliedFromAnotherTracker(): void
     {
-        $this->current_tracker->expects(self::any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
+        $this->current_tracker->expects($this->any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
 
         $another_tracker = $this->createMock(\Tracker::class);
-        $another_tracker->expects(self::any())->method('getName')->willReturn('Sprints');
-        $another_tracker->expects(self::any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
+        $another_tracker->expects($this->any())->method('getName')->willReturn('Sprints');
+        $another_tracker->expects($this->any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
 
-        $this->dao->expects(self::never())->method('getSemanticsImpliedFromGivenTracker');
+        $this->dao->expects($this->never())->method('getSemanticsImpliedFromGivenTracker');
         $this->dao->expects($this->once())->method('searchByTrackerId')->with(self::CURRENT_TRACKER_ID)->willReturn([
             'start_date_field_id' => null,
             'duration_field_id' => null,
@@ -115,13 +115,13 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
         $this->start_date_field->expects($this->once())->method('getLabel')->willReturn('Start date');
         $this->duration_field->expects($this->once())->method('getLabel')->willReturn('Duration');
 
-        $this->current_tracker->expects(self::any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
+        $this->current_tracker->expects($this->any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
 
         $another_tracker = $this->createMock(\Tracker::class);
-        $another_tracker->expects(self::any())->method('getName')->willReturn('User Story');
-        $another_tracker->expects(self::any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
+        $another_tracker->expects($this->any())->method('getName')->willReturn('User Story');
+        $another_tracker->expects($this->any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
 
-        $this->dao->expects(self::never())->method('searchByTrackerId');
+        $this->dao->expects($this->never())->method('searchByTrackerId');
         $this->dao->expects($this->once())->method('getSemanticsImpliedFromGivenTracker')->with(self::CURRENT_TRACKER_ID)->willReturn(
             [
                 [

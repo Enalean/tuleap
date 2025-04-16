@@ -40,7 +40,7 @@ final class FilteredOutboundHTTPResponseAlerterTest extends TestCase
         $dao     = $this->createMock(FilteredOutboundHTTPResponseAlerterDAO::class);
         $alerter = new FilteredOutboundHTTPResponseAlerter($logger, $dao);
 
-        $dao->expects(self::atLeastOnce())->method('markNewFilteredRequest');
+        $dao->expects($this->atLeastOnce())->method('markNewFilteredRequest');
 
         $alerter->handleRequest(
             HTTPFactoryBuilder::requestFactory()->createRequest('GET', '/'),

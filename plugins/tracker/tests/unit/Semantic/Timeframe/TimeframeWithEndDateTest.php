@@ -126,16 +126,16 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_end_date): void
     {
-        $this->start_date_field->expects(self::any())->method('userCanRead')->willReturn($can_read_start_date);
-        $this->end_date_field->expects(self::any())->method('userCanRead')->willReturn($can_read_end_date);
+        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn($can_read_start_date);
+        $this->end_date_field->expects($this->any())->method('userCanRead')->willReturn($can_read_end_date);
 
         $this->assertNull($this->timeframe->exportToREST($this->user));
     }
 
     public function testItExportsToREST(): void
     {
-        $this->start_date_field->expects(self::any())->method('userCanRead')->willReturn(true);
-        $this->end_date_field->expects(self::any())->method('userCanRead')->willReturn(true);
+        $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn(true);
+        $this->end_date_field->expects($this->any())->method('userCanRead')->willReturn(true);
 
         $this->assertEquals(
             new SemanticTimeframeWithEndDateRepresentation(
@@ -412,8 +412,8 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenAtLeastOneFieldIsNotZero(): void
     {
-        $this->start_date_field->expects(self::exactly(3))->method('userCanRead')->willReturn(true);
-        $this->end_date_field->expects(self::exactly(3))->method('userCanRead')->willReturn(true);
+        $this->start_date_field->expects($this->exactly(3))->method('userCanRead')->willReturn(true);
+        $this->end_date_field->expects($this->exactly(3))->method('userCanRead')->willReturn(true);
 
         $start_date = '07/01/2013';
         $end_date   = '07/15/2013';

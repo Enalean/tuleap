@@ -68,7 +68,7 @@ final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $foobar_scope    = $this->createMock(AuthenticationScope::class);
         $typevalue_scope = $this->createMock(AuthenticationScope::class);
-        $this->scope_builder->expects(self::exactly(2))->method('buildAuthenticationScopeFromScopeIdentifier')->with(
+        $this->scope_builder->expects($this->exactly(2))->method('buildAuthenticationScopeFromScopeIdentifier')->with(
             self::callback(
                 static function (AuthenticationScopeIdentifier $scope_identifier): bool {
                     $raw_scope_identifier = $scope_identifier->toString();

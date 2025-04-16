@@ -63,7 +63,7 @@ final class ArtidocFileBeingUploadedWriterTest extends TestCase
             $db_connection,
         );
 
-        $db_connection->expects(self::exactly(2))->method('reconnectAfterALongRunningProcess');
+        $db_connection->expects($this->exactly(2))->method('reconnectAfterALongRunningProcess');
 
         $content      = 'Body content';
         $input_stream = fopen('php://memory', 'rb+');

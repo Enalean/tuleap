@@ -59,8 +59,8 @@ final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extend
         $this->by_nature_organizer->method('getCrossReferencePresenters')
             ->willReturn([CrossReferencePresenterBuilder::get(1)->withType('tracker')->build()]);
 
-        $this->by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
-        $this->by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $this->by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
+        $this->by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
 
         $this->user_manager->method('getUserCollectionByEmails')->with([])->willReturn(new UserEmailCollection());
 
@@ -77,7 +77,7 @@ final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extend
 
         $this->information_builder->method('getCommitDetailsCrossReferenceInformation')->with($this->user, $ref)->willReturn(null);
 
-        $this->by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $this->by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
         $this->by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($ref);
 
         $this->user_manager->method('getUserCollectionByEmails')->with([])->willReturn(new UserEmailCollection());
@@ -126,7 +126,7 @@ final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extend
                 $another_ref => $another_information,
             });
 
-        $this->by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $this->by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
 
         $leeloo = UserTestBuilder::aUser()->withEmail('leeloo@example.com')->build();
         $korben = UserTestBuilder::aUser()->withEmail('korben@example.com')->build();
@@ -189,7 +189,7 @@ final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extend
                 $another_ref => $another_information,
             });
 
-        $this->by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $this->by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
 
         $leeloo = UserTestBuilder::aUser()->withEmail('leeloo@example.com')->build();
 

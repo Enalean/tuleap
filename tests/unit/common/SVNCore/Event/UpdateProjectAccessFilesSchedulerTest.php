@@ -67,7 +67,7 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
             [SystemEvent::TYPE_UGROUP_MODIFY, '103', false],
         ]);
 
-        $this->system_event_manager->expects(self::never())->method('createEvent');
+        $this->system_event_manager->expects($this->never())->method('createEvent');
 
         $project = ProjectTestBuilder::aProject()->withId(103)->build();
 
@@ -81,7 +81,7 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
             [SystemEvent::TYPE_UGROUP_MODIFY, '103', true],
         ]);
 
-        $this->system_event_manager->expects(self::never())->method('createEvent');
+        $this->system_event_manager->expects($this->never())->method('createEvent');
 
         $project = ProjectTestBuilder::aProject()->withId(103)->build();
 

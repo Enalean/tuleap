@@ -119,7 +119,7 @@ final class JiraAuthorRetrieverTest extends TestCase
 
     public function testItDoesNotCallUserManagerWhenUserExistsInCache(): void
     {
-        $this->user_manager->expects(self::never())->method('getAndEventuallyCreateUserByEmail');
+        $this->user_manager->expects($this->never())->method('getAndEventuallyCreateUserByEmail');
         $this->forge_user->setId(TrackerImporterUser::ID);
 
         $submitter = $this->retriever->retrieveUserFromAPIData([

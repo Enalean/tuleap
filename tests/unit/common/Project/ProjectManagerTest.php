@@ -122,7 +122,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $p = $this->createPartialMock(\ProjectManager::class, [
             'createProjectInstance',
         ]);
-        $p->expects(self::exactly(2))->method('createProjectInstance')->willReturnOnConsecutiveCalls($p1, $p2);
+        $p->expects($this->exactly(2))->method('createProjectInstance')->willReturnOnConsecutiveCalls($p1, $p2);
 
         $o1 = $p->getProject(1);
         $o2 = $p->getProject(1);
@@ -252,7 +252,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusDeleted()->build();
 
         $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
-        $this->project_dao->expects(self::never())->method('updateStatus');
+        $this->project_dao->expects($this->never())->method('updateStatus');
 
         self::expectException(DeletedProjectStatusChangeException::class);
         $this->project_manager_test_version->updateStatus($project, 'A');
@@ -263,7 +263,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusActive()->build();
 
         $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
-        $this->project_dao->expects(self::never())->method('updateStatus');
+        $this->project_dao->expects($this->never())->method('updateStatus');
 
         self::expectException(SwitchingBackToPendingException::class);
         $this->project_manager_test_version->updateStatus($project, 'P');

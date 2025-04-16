@@ -94,7 +94,7 @@ final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->form_element_factory->method('getAnArtifactLinkField')->willReturn(null);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
+        $this->artifact->expects($this->never())->method('createNewChangeset');
         $this->planner->planInOneMirror(
             $program_identifier,
             $mirrored_program_increment,

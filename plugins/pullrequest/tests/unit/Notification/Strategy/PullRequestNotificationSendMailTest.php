@@ -94,7 +94,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('/path/to/pr');
 
-        $this->mail_builder->expects(self::exactly(2))->method('buildAndSendEmail');
+        $this->mail_builder->expects($this->exactly(2))->method('buildAndSendEmail');
 
         $this->notification_strategy->execute($notification);
     }
@@ -150,7 +150,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->repository_factory->method('getRepositoryById')->willReturn(null);
 
-        $this->mail_builder->expects(self::never())->method('buildAndSendEmail');
+        $this->mail_builder->expects($this->never())->method('buildAndSendEmail');
 
         $this->notification_strategy->execute($notification);
     }

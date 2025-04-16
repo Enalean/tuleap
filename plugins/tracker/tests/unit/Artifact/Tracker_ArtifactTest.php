@@ -172,7 +172,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 
         $artifact = $this->createPartialMock(Artifact::class, ['getWorkflow', 'getWorkflowUpdateChecker', 'getTracker', 'getId', 'getLastChangeset', 'getChangeset']);
         $workflow = $this->createMock(Workflow::class);
-        $workflow->expects(self::exactly(2))->method('before');
+        $workflow->expects($this->exactly(2))->method('before');
         $workflow->method('after');
         $workflow->method('validate');
         $workflow->method('checkGlobalRules');
@@ -294,7 +294,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
     public function testDontCreateNewChangesetIfNoCommentOrNoChanges(): void
     {
         $comment_dao = $this->createMock(Tracker_Artifact_Changeset_CommentDao::class);
-        $comment_dao->expects(self::never())->method('createNewVersion');
+        $comment_dao->expects($this->never())->method('createNewVersion');
 
         $user = UserTestBuilder::anActiveUser()->withId(1234)->build();
 
@@ -308,19 +308,19 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $field1->method('isValid')->willReturn(true);
         $field1->method('isValidRegardingRequiredProperty')->willReturn(true);
         $field1->method('userCanUpdate')->willReturn(true);
-        $field1->expects(self::never())->method('saveNewChangeset');
+        $field1->expects($this->never())->method('saveNewChangeset');
         $field2 = $this->createPartialMock(Tracker_FormElement_Field_String::class, $fields_mock_methods);
         $field2->method('getId')->willReturn(102);
         $field2->method('isValid')->willReturn(true);
         $field2->method('isValidRegardingRequiredProperty')->willReturn(true);
         $field2->method('userCanUpdate')->willReturn(true);
-        $field2->expects(self::never())->method('saveNewChangeset');
+        $field2->expects($this->never())->method('saveNewChangeset');
         $field3 = $this->createPartialMock(Tracker_FormElement_Field_String::class, $fields_mock_methods);
         $field3->method('getId')->willReturn(103);
         $field3->method('isValid')->willReturn(true);
         $field3->method('isValidRegardingRequiredProperty')->willReturn(true);
         $field3->method('userCanUpdate')->willReturn(true);
-        $field3->expects(self::never())->method('saveNewChangeset');
+        $field3->expects($this->never())->method('saveNewChangeset');
         $factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
         $factory->method('getUsedArtifactLinkFields')->willReturn([]);
@@ -355,7 +355,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $artifact->method('getWorkflowUpdateChecker')->willReturn($workflow_checker);
 
         $workflow = $this->createMock(Workflow::class);
-        $workflow->expects(self::never())->method('before');
+        $workflow->expects($this->never())->method('before');
         $workflow->method('validate');
         $artifact->method('getWorkflow')->willReturn($workflow);
         $artifact->method('getWorkflowRetriever')->willReturn(RetrieveWorkflowStub::withWorkflow($workflow));
@@ -459,7 +459,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $art_factory->expects($this->once())->method('save')->willReturn(true);
 
         $workflow = $this->createMock(Workflow::class);
-        $workflow->expects(self::exactly(2))->method('before');
+        $workflow->expects($this->exactly(2))->method('before');
         $workflow->method('after');
         $workflow->method('validate');
         $workflow->method('checkGlobalRules');
@@ -488,7 +488,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $comment = 'It did solve my problem, I let you close the artifact.';
 
         $comment_dao = $this->createMock(Tracker_Artifact_Changeset_CommentDao::class);
-        $comment_dao->expects(self::never())->method('createNewVersion');
+        $comment_dao->expects($this->never())->method('createNewVersion');
 
         $user = UserTestBuilder::anActiveUser()->withId(1234)->build();
 
@@ -503,19 +503,19 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $field1->method('isValid')->willReturn(true);
         $field1->method('isValidRegardingRequiredProperty')->willReturn(true);
         $field1->method('userCanUpdate')->willReturn(true);
-        $field1->expects(self::never())->method('saveNewChangeset');
+        $field1->expects($this->never())->method('saveNewChangeset');
         $field2 = $this->createPartialMock(Tracker_FormElement_Field_String::class, $fields_mock_methods);
         $field2->method('getId')->willReturn(102);
         $field2->method('isValid')->willReturnCallback(static fn(Artifact $artifact, mixed $value) => $value === '123');
         $field2->method('isValidRegardingRequiredProperty')->willReturn(true);
         $field2->method('userCanUpdate')->willReturn(true);
-        $field2->expects(self::never())->method('saveNewChangeset');
+        $field2->expects($this->never())->method('saveNewChangeset');
         $field3 = $this->createPartialMock(Tracker_FormElement_Field_String::class, $fields_mock_methods);
         $field3->method('getId')->willReturn(103);
         $field3->method('isValid')->willReturn(true);
         $field3->method('isValidRegardingRequiredProperty')->willReturn(true);
         $field3->method('userCanUpdate')->willReturn(true);
-        $field3->expects(self::never())->method('saveNewChangeset');
+        $field3->expects($this->never())->method('saveNewChangeset');
         $factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
 
@@ -574,7 +574,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
                 $fields_data[102] = '456';
             });
         $artifact->method('getWorkflow')->willReturn($workflow);
-        $art_factory->expects(self::never())->method('save');
+        $art_factory->expects($this->never())->method('save');
         $artifact->method('getWorkflowRetriever')->willReturn(RetrieveWorkflowStub::withWorkflow($workflow));
 
         $fields_data = [
@@ -682,7 +682,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $artifact->method('getWorkflowUpdateChecker')->willReturn($workflow_checker);
 
         $workflow = $this->createMock(Workflow::class);
-        $workflow->expects(self::exactly(2))->method('before');
+        $workflow->expects($this->exactly(2))->method('before');
         $workflow->method('after');
         $workflow->method('validate');
         $workflow->method('checkGlobalRules');

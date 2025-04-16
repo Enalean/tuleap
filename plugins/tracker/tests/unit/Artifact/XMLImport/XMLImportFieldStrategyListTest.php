@@ -184,7 +184,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
                   <value/>
             </field_change>'
         );
-        $this->static_value_dao->expects(self::never())->method('searchValueByLabel');
+        $this->static_value_dao->expects($this->never())->method('searchValueByLabel');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
 
@@ -216,7 +216,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
               <value format="other"><![CDATA[104_2]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->expects(self::never())->method('getNewValueId');
+        $this->xml_fields_mapping->expects($this->never())->method('getNewValueId');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertNull($result[0]);
@@ -232,7 +232,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
                  <value><![CDATA[104_2]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->expects(self::never())->method('getNewValueId');
+        $this->xml_fields_mapping->expects($this->never())->method('getNewValueId');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact, PostCreationContext::withNoConfig(false));
         self::assertNull($result[0]);

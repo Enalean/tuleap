@@ -60,7 +60,7 @@ final class RegexpPermissionFilterTest extends TestCase
 
         $this->permission_factory->method('getBranchesFineGrainedPermissionsForRepository')->willReturn($patterns);
         $this->permission_factory->method('getTagsFineGrainedPermissionsForRepository')->willReturn([]);
-        $this->permission_destructor->expects(self::exactly(16))->method('deleteRepositoryPermissions');
+        $this->permission_destructor->expects($this->exactly(16))->method('deleteRepositoryPermissions');
 
         $this->permission_filter->filterNonRegexpPermissions($this->repository);
     }

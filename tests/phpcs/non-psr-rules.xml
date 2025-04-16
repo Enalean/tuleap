@@ -232,4 +232,5 @@
     <rule ref="SlevomatCodingStandard.Attributes.RequireAttributeAfterDocComment"/>
     <!-- Enforce some PHPUnit test behaviors -->
     <rule ref="./TuleapCodingStandard/Sniffs/Test/EnforcePHPUnitAttributesSniff.php"/>
+    <rule ref="./TuleapCodingStandard/Sniffs/Test/DisallowUsageOfSelfForMockExpectsSniff.php"/>
 </ruleset>

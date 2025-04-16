@@ -366,7 +366,7 @@ EOL
 
     public function testItReturnsValuesForUserGroupListField(): void
     {
-        $GLOBALS['Language']->expects(self::exactly(2))->method('getText')
+        $GLOBALS['Language']->expects($this->exactly(2))->method('getText')
             ->willReturnCallback(static fn(string $pagename, string $category) => match ($category) {
                 'ugroup_project_members' => 'Project members',
                 'ugroup_project_admins'  => 'Project admins',

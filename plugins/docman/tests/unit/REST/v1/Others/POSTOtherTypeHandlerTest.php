@@ -133,15 +133,15 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('userCanWrite');
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addNotificationEvents');
 
         $this->expectException(RestException::class);
@@ -177,11 +177,11 @@ final class POSTOtherTypeHandlerTest extends TestCase
             ->willReturn(false);
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addNotificationEvents');
 
         $this->expectException(RestException::class);
@@ -252,15 +252,15 @@ final class POSTOtherTypeHandlerTest extends TestCase
         );
 
         $this->permissions_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('userCanWrite');
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addNotificationEvents');
 
         $this->expectException(RestException::class);
@@ -296,11 +296,11 @@ final class POSTOtherTypeHandlerTest extends TestCase
             ->willReturn(false);
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addLogEvents');
 
         $this->event_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addNotificationEvents');
 
         $this->expectException(RestException::class);

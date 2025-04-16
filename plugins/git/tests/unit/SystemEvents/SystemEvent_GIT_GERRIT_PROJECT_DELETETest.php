@@ -111,8 +111,8 @@ final class SystemEvent_GIT_GERRIT_PROJECT_DELETETest extends TestCase // phpcs:
         $remote_server_id = 33;
         $this->event->setParameters("$repository_id::$remote_server_id");
 
-        $this->driver->expects(self::never())->method('deleteProject');
-        $this->backend->expects(self::never())->method('setGerritProjectAsDeleted');
+        $this->driver->expects($this->never())->method('deleteProject');
+        $this->backend->expects($this->never())->method('setGerritProjectAsDeleted');
 
         self::assertFalse($this->event->process());
     }

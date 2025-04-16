@@ -127,7 +127,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
 
         $dao = $this->createMock(\Tracker_Rule_List_Dao::class);
         $dao->method('searchByTrackerId')->willReturn([]);
-        $dao->expects(self::never())->method('create');
+        $dao->expects($this->never())->method('create');
 
         $factory = new Tracker_Rule_List_Factory($dao, $this->createMock(Tracker_FormElement_Field_List_BindFactory::class));
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
@@ -193,7 +193,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
 
         $dao = $this->createMock(\Tracker_Rule_List_Dao::class);
         $dao->method('searchByTrackerId')->willReturn([$db_data1, $db_data2, $db_data3]);
-        $dao->expects(self::exactly(3))->method('create')->willReturnCallback(static fn ($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id) => match (true) {
+        $dao->expects($this->exactly(3))->method('create')->willReturnCallback(static fn ($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id) => match (true) {
             $tracker_id === $to_tracker_id && $source_field_id === 888 && $source_value_id === 777 && $target_field_id === 999 && $target_value_id === 666,
             $tracker_id === $to_tracker_id && $source_field_id === 9999 && $source_value_id === 9998 && $target_field_id === 9997 && $target_value_id === 9996,
             $tracker_id === $to_tracker_id && $source_field_id === 9999 && $source_value_id === 9998 && $target_field_id === 9997 && $target_value_id === 9995 => true

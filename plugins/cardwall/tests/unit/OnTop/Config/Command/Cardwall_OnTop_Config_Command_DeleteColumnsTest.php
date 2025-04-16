@@ -67,7 +67,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
                 14 => ['label' => ''],
             ]
         );
-        $this->field_dao->expects(self::never())->method('deleteCardwall');
+        $this->field_dao->expects($this->never())->method('deleteCardwall');
         $this->value_dao->expects($this->once())->method('deleteForColumn')->with($this->tracker_id, 14);
         $this->dao->expects($this->once())->method('delete')->with($this->tracker_id, 14);
         $this->command->execute($request);
@@ -84,7 +84,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
                 14 => ['label' => ''],
             ]
         );
-        $this->field_dao->expects(self::never())->method('deleteCardwall');
+        $this->field_dao->expects($this->never())->method('deleteCardwall');
         $matcher = self::exactly(2);
         $this->value_dao->expects($matcher)
             ->method('deleteForColumn')->willReturnCallback(function (...$parameters) use ($matcher) {

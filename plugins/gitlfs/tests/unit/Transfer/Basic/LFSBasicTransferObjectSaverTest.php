@@ -108,7 +108,7 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn('path');
         $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(true);
 
-        $this->filesystem->expects(self::never())->method('move');
+        $this->filesystem->expects($this->never())->method('move');
 
         $object_saver->saveObject(
             $this->createStub(\GitRepository::class),

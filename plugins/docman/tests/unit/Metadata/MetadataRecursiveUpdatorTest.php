@@ -57,7 +57,7 @@ final class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->metadata_factory->method('getInheritableMdLabelArray')->willReturn([]);
         $this->updator->updateRecursiveMetadataOnFolder($collection, 3, 102);
 
-        $this->permissions_manager->expects(self::never())->method('currentUserCanWriteSubItems');
+        $this->permissions_manager->expects($this->never())->method('currentUserCanWriteSubItems');
     }
 
     public function testItDoNothingIfUserDoesNotHaveWritePermission(): void
@@ -68,7 +68,7 @@ final class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->updator->updateRecursiveMetadataOnFolder($collection, 3, 102);
 
-        $this->permissions_manager->expects(self::never())->method('getSubItemsWritableVisitor');
+        $this->permissions_manager->expects($this->never())->method('getSubItemsWritableVisitor');
     }
 
     public function testItThrowAnExceptionIsFolderIsEmpty(): void
@@ -95,7 +95,7 @@ final class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $visitor->method('getItemIdList')->willReturn([1, 2, 3]);
 
         $this->metadata_value_factory->expects($this->once())->method('massUpdateFromRow');
-        $this->reference_manager->expects(self::atLeast(1))->method('extractCrossRef');
+        $this->reference_manager->expects($this->atLeast(1))->method('extractCrossRef');
 
         $this->updator->updateRecursiveMetadataOnFolderAndItems($collection, 3, 102);
     }
@@ -111,7 +111,7 @@ final class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $visitor->method('getFolderIdList')->willReturn([5, 5]);
 
         $this->metadata_value_factory->expects($this->once())->method('massUpdateFromRow');
-        $this->reference_manager->expects(self::atLeast(1))->method('extractCrossRef');
+        $this->reference_manager->expects($this->atLeast(1))->method('extractCrossRef');
 
         $this->updator->updateRecursiveMetadataOnFolder($collection, 3, 102);
     }
@@ -127,7 +127,7 @@ final class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $visitor->method('getFolderIdList')->willReturn([5, 5]);
 
         $this->metadata_value_factory->expects($this->once())->method('massUpdateFromRow');
-        $this->reference_manager->expects(self::never())->method('extractCrossRef');
+        $this->reference_manager->expects($this->never())->method('extractCrossRef');
 
         $this->updator->updateRecursiveMetadataOnFolder($collection, 3, 102);
     }

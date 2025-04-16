@@ -86,10 +86,10 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
             ->with(self::isInstanceOf(CrossReferenceByNatureOrganizer::class))
             ->willReturn($by_nature_organizer);
 
-        $this->core_organizer->expects(self::exactly(2))->method('organizeCoreReferences');
-        $by_nature_organizer->expects(self::exactly(2))->method('organizeRemainingCrossReferences');
+        $this->core_organizer->expects($this->exactly(2))->method('organizeCoreReferences');
+        $by_nature_organizer->expects($this->exactly(2))->method('organizeRemainingCrossReferences');
 
-        $by_nature_organizer->expects(self::exactly(2))->method('getNatures')->willReturn([]);
+        $by_nature_organizer->expects($this->exactly(2))->method('getNatures')->willReturn([]);
 
 
         $presenter = $this->builder->build('PageName', 'wiki', 102, $user);

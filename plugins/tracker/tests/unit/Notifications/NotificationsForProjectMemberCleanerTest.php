@@ -71,8 +71,8 @@ final class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUni
         $this->unreadable_tracker->method('userCanView')->with($user)->willReturn(false);
         $this->readable_tracker->method('userCanView')->with($user)->willReturn(true);
 
-        $this->emails_to_notify_manager->expects(self::never())->method('removeAddressByTrackerId');
-        $this->users_to_notify_dao->expects(self::never())->method('deleteByTrackerIdAndUserId');
+        $this->emails_to_notify_manager->expects($this->never())->method('removeAddressByTrackerId');
+        $this->users_to_notify_dao->expects($this->never())->method('deleteByTrackerIdAndUserId');
 
         $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $user);
     }

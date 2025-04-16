@@ -110,7 +110,7 @@ final class MembershipManagerListGroupsCacheTest extends TestCase
         $remote_server2 = $this->createMock(Git_RemoteServer_GerritServer::class);
         $remote_server2->method('getId')->willReturn(37);
 
-        $this->driver->expects(self::exactly(2))->method('getAllGroups')->with(
+        $this->driver->expects($this->exactly(2))->method('getAllGroups')->with(
             self::callback(fn(Git_RemoteServer_GerritServer $server) => $server === $this->remote_server || $server === $remote_server2),
         )->willReturn([]);
         $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);

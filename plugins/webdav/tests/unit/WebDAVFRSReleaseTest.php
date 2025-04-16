@@ -1095,9 +1095,9 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $webDAVFRSRelease->expects($this->once())->method('unlinkFile')->willReturn(false);
-        $webDAVFRSRelease->expects(self::never())->method('openFile');
-        $webDAVFRSRelease->expects(self::never())->method('streamCopyToStream');
-        $webDAVFRSRelease->expects(self::never())->method('closeFile');
+        $webDAVFRSRelease->expects($this->never())->method('openFile');
+        $webDAVFRSRelease->expects($this->never())->method('streamCopyToStream');
+        $webDAVFRSRelease->expects($this->never())->method('closeFile');
         $this->expectException(Exception::class);
 
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
@@ -1112,10 +1112,10 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
             ['unlinkFile', 'openFile', 'streamCopyToStream', 'closeFile'],
         );
 
-        $webDAVFRSRelease->expects(self::never())->method('unlinkFile')->willReturn(true);
+        $webDAVFRSRelease->expects($this->never())->method('unlinkFile')->willReturn(true);
         $webDAVFRSRelease->expects($this->once())->method('openFile')->willReturn(false);
-        $webDAVFRSRelease->expects(self::never())->method('streamCopyToStream');
-        $webDAVFRSRelease->expects(self::never())->method('closeFile');
+        $webDAVFRSRelease->expects($this->never())->method('streamCopyToStream');
+        $webDAVFRSRelease->expects($this->never())->method('closeFile');
         $this->expectException(Exception::class);
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
@@ -1130,7 +1130,7 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
             ['unlinkFile', 'openFile', 'streamCopyToStream', 'closeFile'],
         );
 
-        $webDAVFRSRelease->expects(self::never())->method('unlinkFile')->willReturn(true);
+        $webDAVFRSRelease->expects($this->never())->method('unlinkFile')->willReturn(true);
         $webDAVFRSRelease->expects($this->once())->method('openFile')->willReturn(true);
         $webDAVFRSRelease->expects($this->once())->method('streamCopyToStream');
         $webDAVFRSRelease->expects($this->once())->method('closeFile')->willReturn(false);
@@ -1149,7 +1149,7 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
             ['unlinkFile', 'openFile', 'streamCopyToStream', 'closeFile'],
         );
 
-        $webDAVFRSRelease->expects(self::never())->method('unlinkFile');
+        $webDAVFRSRelease->expects($this->never())->method('unlinkFile');
         $webDAVFRSRelease->expects($this->once())->method('openFile')->willReturn(true);
         $webDAVFRSRelease->expects($this->once())->method('streamCopyToStream');
         $webDAVFRSRelease->expects($this->once())->method('closeFile')->willReturn(true);

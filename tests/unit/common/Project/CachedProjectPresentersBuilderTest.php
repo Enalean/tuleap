@@ -57,7 +57,7 @@ final class CachedProjectPresentersBuilderTest extends TestCase
 
         $builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $builder
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getProjectPresenters')
             ->willReturnCallback(
                 fn (\PFUser $user): array => match ($user) {

@@ -64,7 +64,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
 
-        $detector->expects(self::never())
+        $detector->expects($this->never())
             ->method('isLegacyOrganizationLogoCustomized');
 
         self::assertTrue($cache->isLegacyOrganizationLogoCustomized());
@@ -159,7 +159,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $logger   = new NullLogger();
         $detector = $this->createMock(CustomizedLogoDetector::class);
-        $detector->expects(self::never())
+        $detector->expects($this->never())
             ->method('isSvgOrganizationLogoCustomized');
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);

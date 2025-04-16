@@ -106,7 +106,7 @@ final class AdminGerritControllerTest extends TestCase
     {
         $this->request->set('action', 'add-gerrit-server');
         $this->request->set('server', false);
-        $this->factory->expects(self::never())->method('save');
+        $this->factory->expects($this->never())->method('save');
         $this->admin->process($this->request);
     }
 
@@ -122,7 +122,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', '');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
-        $this->factory->expects(self::never())->method('save');
+        $this->factory->expects($this->never())->method('save');
         $this->admin->process($this->request);
     }
 
@@ -138,7 +138,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', 0);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->factory->expects(self::never())->method('save');
+        $this->factory->expects($this->never())->method('save');
         $this->admin->process($this->request);
     }
 
@@ -154,7 +154,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', '');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
-        $this->factory->expects(self::never())->method('save');
+        $this->factory->expects($this->never())->method('save');
         $this->admin->process($this->request);
     }
 
@@ -240,7 +240,7 @@ final class AdminGerritControllerTest extends TestCase
         $this->request->set('action', 'delete-gerrit-server');
         $this->request->set('gerrit_server_id', 1);
         $this->factory->expects($this->once())->method('delete')->with($this->an_existing_server);
-        $this->factory->expects(self::never())->method('save')->with($this->an_existing_server);
+        $this->factory->expects($this->never())->method('save')->with($this->an_existing_server);
         $this->admin->process($this->request);
     }
 }

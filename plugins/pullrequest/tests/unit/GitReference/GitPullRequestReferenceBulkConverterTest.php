@@ -74,7 +74,7 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repository);
         $this->logger->method('debug');
 
-        $this->pull_request_ref_updater->expects(self::exactly(3))->method('updatePullRequestReference');
+        $this->pull_request_ref_updater->expects($this->exactly(3))->method('updatePullRequestReference');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
@@ -130,10 +130,10 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
         $this->git_repository_factory->method('getRepositoryById')->willReturn($git_repository);
         $this->logger->method('debug');
 
-        $this->pull_request_ref_updater->expects(self::exactly(2))->method('updatePullRequestReference')->willThrowException(
+        $this->pull_request_ref_updater->expects($this->exactly(2))->method('updatePullRequestReference')->willThrowException(
             $this->createMock(\Git_Command_Exception::class)
         );
-        $this->logger->expects(self::exactly(2))->method('error');
+        $this->logger->expects($this->exactly(2))->method('error');
 
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }

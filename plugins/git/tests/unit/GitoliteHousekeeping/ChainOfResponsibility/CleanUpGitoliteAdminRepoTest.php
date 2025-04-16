@@ -82,7 +82,7 @@ final class CleanUpGitoliteAdminRepoTest extends TestCase
 
         $this->response->expects($this->once())->method('error')->with("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.");
         $this->response->expects($this->once())->method('abort');
-        $next->expects(self::never())->method('execute');
+        $next->expects($this->never())->method('execute');
 
         $this->command->execute();
     }

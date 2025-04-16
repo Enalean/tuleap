@@ -44,7 +44,7 @@ final class SynchronizedProjectMembershipDuplicatorTest extends \Tuleap\Test\PHP
             ->withAccessPublic()
             ->build();
 
-        $this->dao->expects(self::atLeastOnce())->method('duplicateActivationFromTemplate')
+        $this->dao->expects($this->atLeastOnce())->method('duplicateActivationFromTemplate')
             ->with(104, 120);
 
         $this->duplicator->duplicate(104, $destination);
@@ -54,7 +54,7 @@ final class SynchronizedProjectMembershipDuplicatorTest extends \Tuleap\Test\PHP
     {
         $destination = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
 
-        $this->dao->expects(self::never())->method('duplicateActivationFromTemplate');
+        $this->dao->expects($this->never())->method('duplicateActivationFromTemplate');
 
         $this->duplicator->duplicate(104, $destination);
     }

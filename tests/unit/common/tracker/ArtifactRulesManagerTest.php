@@ -21,9 +21,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Tuleap\GlobalResponseMock;
 
@@ -216,7 +215,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         //self::assertEqual($GLOBALS['feedback'],  '');
         //S5
         $GLOBALS['Response'] = $this->createMock(\Response::class);
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('error', 'f_3(c_2) -> f_2(b_3)');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('error', 'f_3(c_2) -> f_2(b_3)');
         self::assertTrue(
             $arm->validate(
                 1,

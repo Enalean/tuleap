@@ -135,7 +135,7 @@ final class PostReceiveTest extends TestCase
     {
         $this->git_repository_factory->method('getFromFullPath')->willReturn(null);
 
-        $this->parse_log->expects(self::never())->method('execute');
+        $this->parse_log->expects($this->never())->method('execute');
         $this->executePostReceive();
     }
 

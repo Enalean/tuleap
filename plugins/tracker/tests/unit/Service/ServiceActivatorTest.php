@@ -111,7 +111,7 @@ final class ServiceActivatorTest extends TestCase
         $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
         $this->project_creation_data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
-        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -125,8 +125,8 @@ final class ServiceActivatorTest extends TestCase
         $this->tracker_plugin_service->method('isUsed')->willReturn(false);
         $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(false);
 
-        $this->project_creation_data->expects(self::never())->method('unsetProjectServiceUsage');
-        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('unsetProjectServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -137,8 +137,8 @@ final class ServiceActivatorTest extends TestCase
 
         $this->tracker_v3->method('available')->willReturn(false);
 
-        $this->project_creation_data->expects(self::never())->method('unsetProjectServiceUsage');
-        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('unsetProjectServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('forceServiceUsage');
         $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(false);
 
         $this->activator->unuseLegacyService($this->params);
@@ -178,7 +178,7 @@ final class ServiceActivatorTest extends TestCase
                 $project        => [$this->tracker_plugin_service],
             });
 
-        $this->service_creator->expects(self::never())->method('createService');
+        $this->service_creator->expects($this->never())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
@@ -196,7 +196,7 @@ final class ServiceActivatorTest extends TestCase
             });
         $this->service_manager->method('getListOfAllowedServicesForProject')->with($project)->willReturn([]);
 
-        $this->service_creator->expects(self::never())->method('createService');
+        $this->service_creator->expects($this->never())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
@@ -209,7 +209,7 @@ final class ServiceActivatorTest extends TestCase
         $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
         $this->project_creation_data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
-        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -221,8 +221,8 @@ final class ServiceActivatorTest extends TestCase
         $this->tracker_v3->method('available')->willReturn(true);
         $this->project_creation_data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->project_creation_data->expects(self::never())->method('unsetProjectServiceUsage');
-        $this->project_creation_data->expects(self::never())->method('forceServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('unsetProjectServiceUsage');
+        $this->project_creation_data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }

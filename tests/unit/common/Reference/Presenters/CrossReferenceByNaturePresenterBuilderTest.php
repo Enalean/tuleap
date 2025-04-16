@@ -100,8 +100,8 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             ->with([$this->cross_ref_link_1])
             ->willReturn($this->cross_reference_link_list);
 
-        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesBoth')->willReturn([]);
-        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects($this->exactly(2))->method('getCrossReferencesBoth')->willReturn([]);
+        $this->cross_ref_collection->expects($this->exactly(3))->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_1]);
         $this->cross_ref_collection->expects($this->once())->method('getCrossReferencesSource')->willReturn([]);
         $this->cross_ref_collection->expects($this->once())->method('getLabel')->willReturn('Tracker');
 
@@ -124,9 +124,9 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             ->with([$this->cross_ref_link_1])
             ->willReturn($this->cross_reference_link_list);
 
-        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesBoth')->willReturn([]);
-        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesTarget')->willReturn([]);
-        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesSource')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects($this->exactly(2))->method('getCrossReferencesBoth')->willReturn([]);
+        $this->cross_ref_collection->expects($this->exactly(2))->method('getCrossReferencesTarget')->willReturn([]);
+        $this->cross_ref_collection->expects($this->exactly(3))->method('getCrossReferencesSource')->willReturn([$this->cross_ref_target_1]);
         $this->cross_ref_collection->expects($this->once())->method('getLabel')->willReturn('Tracker');
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
@@ -148,7 +148,7 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             ->with([$this->cross_ref_link_1])
             ->willReturn($this->cross_reference_link_list);
 
-        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects($this->exactly(3))->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_1]);
         $this->cross_ref_collection->expects($this->once())->method('getCrossReferencesTarget')->willReturn([]);
         $this->cross_ref_collection->expects($this->once())->method('getCrossReferencesSource')->willReturn([]);
         $this->cross_ref_collection->expects($this->once())->method('getLabel')->willReturn('Tracker');
@@ -199,9 +199,9 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             ->with([$this->cross_ref_link_3])
             ->willReturn($this->cross_reference_link_list_3);
 
-        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_3]);
-        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_2]);
-        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesSource')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects($this->exactly(3))->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_3]);
+        $this->cross_ref_collection->expects($this->exactly(2))->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_2]);
+        $this->cross_ref_collection->expects($this->exactly(2))->method('getCrossReferencesSource')->willReturn([$this->cross_ref_target_1]);
         $this->cross_ref_collection->expects($this->once())->method('getLabel')->willReturn('Tracker');
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);

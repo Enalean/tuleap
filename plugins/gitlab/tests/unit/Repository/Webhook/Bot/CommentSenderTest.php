@@ -105,7 +105,7 @@ final class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException($exception);
 
         $this->notifier
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('notifyGitAdministratorsThatCredentialsAreInvalid');
 
         $this->expectExceptionObject($exception);

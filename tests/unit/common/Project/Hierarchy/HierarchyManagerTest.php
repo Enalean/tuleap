@@ -53,8 +53,8 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->hierarchy_manager->method('getParentProject')->willReturn(null);
         $this->hierarchy_manager->method('getAllParents')->willReturn([]);
 
-        $this->dao->expects(self::never())->method('removeParentProject');
-        $this->dao->expects(self::never())->method('updateParentProject');
+        $this->dao->expects($this->never())->method('removeParentProject');
+        $this->dao->expects($this->never())->method('updateParentProject');
 
         $set = $this->hierarchy_manager->setParentProject(185, 52);
         self::assertTrue($set);
@@ -69,8 +69,8 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hierarchy_manager->method('getParentProject')->willReturn($parent_project_already_saved);
 
-        $this->dao->expects(self::never())->method('removeParentProject');
-        $this->dao->expects(self::never())->method('addParentProject');
+        $this->dao->expects($this->never())->method('removeParentProject');
+        $this->dao->expects($this->never())->method('addParentProject');
 
         $set = $this->hierarchy_manager->setParentProject(185, 59);
         self::assertTrue($set);
@@ -85,8 +85,8 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hierarchy_manager->method('getParentProject')->willReturn($parent_project_already_saved);
 
-        $this->dao->expects(self::never())->method('addParentProject');
-        $this->dao->expects(self::never())->method('updateParentProject');
+        $this->dao->expects($this->never())->method('addParentProject');
+        $this->dao->expects($this->never())->method('updateParentProject');
 
         $set = $this->hierarchy_manager->setParentProject(185, null);
         self::assertTrue($set);

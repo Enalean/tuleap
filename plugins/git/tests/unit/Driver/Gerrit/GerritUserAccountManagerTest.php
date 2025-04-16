@@ -109,8 +109,8 @@ final class GerritUserAccountManagerTest extends TestCase
         $remote_gerrit_factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);
         $remote_gerrit_factory->method('getRemoteServersForUser')->with($this->user)->willReturn([]);
 
-        $this->gerrit_driver->expects(self::never())->method('addSSHKeyToAccount');
-        $this->gerrit_driver->expects(self::never())->method('removeSSHKeyFromAccount');
+        $this->gerrit_driver->expects($this->never())->method('addSSHKeyToAccount');
+        $this->gerrit_driver->expects($this->never())->method('removeSSHKeyFromAccount');
 
         $user_account_manager = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver_factory, $remote_gerrit_factory);
 
@@ -122,9 +122,9 @@ final class GerritUserAccountManagerTest extends TestCase
         $original_keys = [];
         $new_keys      = [];
 
-        $this->remote_gerrit_factory->expects(self::never())->method('getRemoteServersForUser')->with($this->user);
-        $this->gerrit_driver->expects(self::never())->method('addSSHKeyToAccount');
-        $this->gerrit_driver->expects(self::never())->method('removeSSHKeyFromAccount');
+        $this->remote_gerrit_factory->expects($this->never())->method('getRemoteServersForUser')->with($this->user);
+        $this->gerrit_driver->expects($this->never())->method('addSSHKeyToAccount');
+        $this->gerrit_driver->expects($this->never())->method('removeSSHKeyFromAccount');
 
         $this->user_account_manager->synchroniseSSHKeys($original_keys, $new_keys, $this->user);
     }
@@ -145,14 +145,14 @@ final class GerritUserAccountManagerTest extends TestCase
             'Im another new key',
         ];
 
-        $this->gerrit_driver->expects(self::atLeast(4))->method('addSSHKeyToAccount')
+        $this->gerrit_driver->expects($this->atLeast(4))->method('addSSHKeyToAccount')
             ->with(
                 self::callback(fn(Git_RemoteServer_GerritServer $server) => $server === $this->remote_server1 || $server === $this->remote_server2),
                 $this->gerrit_user,
                 self::callback(fn(string $key) => in_array($key, $added_keys)),
             );
 
-        $this->gerrit_driver->expects(self::exactly(10))->method('removeSSHKeyFromAccount')
+        $this->gerrit_driver->expects($this->exactly(10))->method('removeSSHKeyFromAccount')
             ->with(
                 self::callback(fn(Git_RemoteServer_GerritServer $server) => $server === $this->remote_server1 || $server === $this->remote_server2),
                 $this->gerrit_user,

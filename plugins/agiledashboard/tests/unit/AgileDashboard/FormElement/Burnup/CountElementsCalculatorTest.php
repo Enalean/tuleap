@@ -177,7 +177,7 @@ final class CountElementsCalculatorTest extends TestCase
             ->build();
         $changeset_task_02 = ChangesetTestBuilder::aChangeset(1)->build();
 
-        $this->artifact_factory->expects(self::exactly(5))->method('getArtifactById')
+        $this->artifact_factory->expects($this->exactly(5))->method('getArtifactById')
             ->willReturnMap([
                 [2, $epic],
                 [3, $user_story_01],
@@ -186,7 +186,7 @@ final class CountElementsCalculatorTest extends TestCase
                 [6, $task_02],
             ]);
 
-        $this->changeset_factory->expects(self::exactly(5))->method('getChangesetAtTimestamp')
+        $this->changeset_factory->expects($this->exactly(5))->method('getChangesetAtTimestamp')
             ->willReturnMap([
                 [$epic, $timestamp, $changeset_epic],
                 [$user_story_01, $timestamp, $changeset_user_story_01],
@@ -195,20 +195,20 @@ final class CountElementsCalculatorTest extends TestCase
                 [$task_02, $timestamp, $changeset_task_02],
             ]);
 
-        $this->form_element_factory->expects(self::exactly(5))->method('getUsedArtifactLinkFields')
+        $this->form_element_factory->expects($this->exactly(5))->method('getUsedArtifactLinkFields')
             ->willReturnMap([
                 [$epic_tracker, [$epic_artifact_link_field]],
                 [$this->user_story_tracker, [$user_story_artifact_link_field]],
                 [$this->task_tracker, []],
             ]);
 
-        $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+        $user_story_status_semantic->expects($this->exactly(2))->method('isOpenAtGivenChangeset')
             ->willReturnMap([
                 [$changeset_user_story_01, true],
                 [$changeset_user_story_02, false],
             ]);
 
-        $task_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+        $task_status_semantic->expects($this->exactly(2))->method('isOpenAtGivenChangeset')
             ->willReturnMap([
                 [$changeset_task_01, false],
                 [$changeset_task_02, false],
@@ -281,7 +281,7 @@ final class CountElementsCalculatorTest extends TestCase
             ->build();
         $changeset_task_02 = ChangesetTestBuilder::aChangeset(1)->build();
 
-        $this->artifact_factory->expects(self::exactly(6))->method('getArtifactById')
+        $this->artifact_factory->expects($this->exactly(6))->method('getArtifactById')
             ->willReturnMap([
                 [2, $epic],
                 [3, $user_story_01],
@@ -289,7 +289,7 @@ final class CountElementsCalculatorTest extends TestCase
                 [5, $task_01],
                 [6, $task_02],
             ]);
-        $this->changeset_factory->expects(self::exactly(5))->method('getChangesetAtTimestamp')
+        $this->changeset_factory->expects($this->exactly(5))->method('getChangesetAtTimestamp')
             ->willReturnMap([
                 [$epic, $timestamp, $changeset_epic],
                 [$user_story_01, $timestamp, $changeset_user_story_01],
@@ -297,7 +297,7 @@ final class CountElementsCalculatorTest extends TestCase
                 [$task_01, $timestamp, $changeset_task_01],
                 [$task_02, $timestamp, $changeset_task_02],
             ]);
-        $this->form_element_factory->expects(self::exactly(5))->method('getUsedArtifactLinkFields')
+        $this->form_element_factory->expects($this->exactly(5))->method('getUsedArtifactLinkFields')
             ->willReturnMap([
                 [$epic_tracker, [$epic_artifact_link_field]],
                 [$this->user_story_tracker, [$user_story_artifact_link_field]],
@@ -308,10 +308,10 @@ final class CountElementsCalculatorTest extends TestCase
             ->with($changeset_epic)
             ->willReturn(true);
 
-        $user_story_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+        $user_story_status_semantic->expects($this->exactly(2))->method('isOpenAtGivenChangeset')
             ->willReturnMap([[$changeset_user_story_01, true], [$changeset_user_story_02, false]]);
 
-        $task_status_semantic->expects(self::exactly(2))->method('isOpenAtGivenChangeset')
+        $task_status_semantic->expects($this->exactly(2))->method('isOpenAtGivenChangeset')
             ->willReturnMap([[$changeset_task_01, false], [$changeset_task_02, false]]);
     }
 

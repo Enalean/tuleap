@@ -62,7 +62,7 @@ final class RejectNonHTTPSRequestMiddlewareTest extends \Tuleap\Test\PHPUnit\Tes
             ->withUri($uri);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $response = $this->middleware->process($server_request, $handler);
         self::assertEquals(400, $response->getStatusCode());

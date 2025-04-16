@@ -135,7 +135,7 @@ final class TrackerCreatorTest extends TestCase
             'peggy-pink',
         )->willReturn(false);
 
-        $this->semantic_timeframe_duplicator->expects(self::never())->method('duplicateInSameProject');
+        $this->semantic_timeframe_duplicator->expects($this->never())->method('duplicateInSameProject');
 
         $this->expectException(TrackerCreationHasFailedException::class);
         $this->creator->duplicateTracker(
@@ -173,7 +173,7 @@ final class TrackerCreatorTest extends TestCase
             201 => $to_tracker,
         });
 
-        $this->semantic_timeframe_duplicator->expects(self::never())->method('duplicateInSameProject');
+        $this->semantic_timeframe_duplicator->expects($this->never())->method('duplicateInSameProject');
         $this->semantic_timeframe_duplicator->expects($this->once())->method('duplicateBasedOnFieldConfiguration');
 
         $this->creator->duplicateTracker(

@@ -172,7 +172,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         $condition_1->method('isUserAllowedToSeeTransition')->willReturn(true);
         $condition_2->method('isUserAllowedToSeeTransition')->willReturn(false);
 
-        $this->condition_factory->expects(self::exactly(2))->method('getPermissionsCondition')
+        $this->condition_factory->expects($this->exactly(2))->method('getPermissionsCondition')
             ->willReturnCallback(
                 fn (Transition $transition): \Workflow_Transition_Condition_Permissions => match ($transition) {
                     $transition_1 => $condition_1,

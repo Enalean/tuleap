@@ -46,7 +46,7 @@ final class PersistentQueueNoTransactionWrapperTest extends TestCase
         $content = 'content';
 
         $queue = $this->createMock(PersistentQueue::class);
-        $queue->expects(self::never())->method('pushSinglePersistentMessage');
+        $queue->expects($this->never())->method('pushSinglePersistentMessage');
 
         $this->expectException(\RuntimeException::class);
 

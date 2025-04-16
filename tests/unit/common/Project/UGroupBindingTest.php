@@ -70,7 +70,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->binding->method('getUGroupsByBindingSource')
             ->willReturn([]);
 
-        $this->ugroup_manager->expects(self::never())->method('updateUgroupBinding');
+        $this->ugroup_manager->expects($this->never())->method('updateUgroupBinding');
 
         self::assertTrue($this->binding->removeAllUGroupsBinding(200));
     }
@@ -185,7 +185,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $this->binding->method('getUGroupsByBindingSource')->willReturn([]);
 
-        $this->binding->expects(self::never())->method('reloadUgroupBinding');
+        $this->binding->expects($this->never())->method('reloadUgroupBinding');
 
         self::assertTrue($this->binding->updateBindedUGroups(200));
     }

@@ -143,7 +143,7 @@ final class TrackerCreationDataCheckerTest extends TestCase
         $tracker = $this->createMock(Tracker::class);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
         $project = ProjectTestBuilder::aProject()->withTypeTemplate()->build();
-        $tracker->expects(self::never())->method('userIsAdmin');
+        $tracker->expects($this->never())->method('userIsAdmin');
         $tracker->method('getProject')->willReturn($project);
 
         $this->checker->checkAtTrackerDuplication(

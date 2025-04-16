@@ -115,7 +115,7 @@ final class UmbrellaProjectManagerTest extends TestCase
                 (int) $this->project->getID()        => $this->parent_project,
                 (int) $this->parent_project->getID() => null,
             });
-        $this->driver->expects(self::exactly(2))->method('createProjectWithPermissionsOnly');
+        $this->driver->expects($this->exactly(2))->method('createProjectWithPermissionsOnly');
         $this->driver->method('resetProjectInheritance');
         $this->driver->method('setProjectInheritance');
         $this->membership_manager->method('createArrayOfGroupsForServer');
@@ -161,7 +161,7 @@ final class UmbrellaProjectManagerTest extends TestCase
         $this->driver->method('resetProjectInheritance');
         $this->driver->method('setProjectInheritance');
 
-        $this->membership_manager->expects(self::exactly(2))->method('createArrayOfGroupsForServer');
+        $this->membership_manager->expects($this->exactly(2))->method('createArrayOfGroupsForServer');
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
@@ -184,7 +184,7 @@ final class UmbrellaProjectManagerTest extends TestCase
     public function testItDoesntCallTheDriverToSetTheParentProjectIfNone(): void
     {
         $this->project_manager->method('getParentProject')->with($this->project->getID())->willReturn(null);
-        $this->driver->expects(self::never())->method('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName());
+        $this->driver->expects($this->never())->method('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName());
         $this->driver->method('createProjectWithPermissionsOnly');
         $this->driver->method('resetProjectInheritance');
         $this->membership_manager->method('createArrayOfGroupsForServer');

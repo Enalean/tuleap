@@ -346,7 +346,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $plugin->method('getServiceShortname')->willReturn('fooservice');
         $plugin->setIsRestricted(false);
-        $plugin->expects(self::never())->method('isAllowed');
+        $plugin->expects($this->never())->method('isAllowed');
         $services = [];
         $params   = [
             'project' => ProjectTestBuilder::aProject()->build(),

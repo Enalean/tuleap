@@ -62,7 +62,7 @@ final class MilestoneStatusCounterTest extends TestCase
 
     public function testItDoesntFetchAnythingWhenNoMilestoneId(): void
     {
-        $this->backlog_dao->expects(self::never())->method('getBacklogArtifacts');
+        $this->backlog_dao->expects($this->never())->method('getBacklogArtifacts');
         $result = $this->counter->getStatus($this->user, null);
         $this->assertEquals([
             Artifact::STATUS_OPEN   => 0,
@@ -83,7 +83,7 @@ final class MilestoneStatusCounterTest extends TestCase
     public function testItDoesntTryToFetchChildrenWhenNoBacklog(): void
     {
         $this->backlog_dao->method('getBacklogArtifacts')->willReturn([]);
-        $this->artifact_dao->expects(self::never())->method('getChildrenForArtifacts');
+        $this->artifact_dao->expects($this->never())->method('getChildrenForArtifacts');
         $this->counter->getStatus($this->user, 12);
     }
 

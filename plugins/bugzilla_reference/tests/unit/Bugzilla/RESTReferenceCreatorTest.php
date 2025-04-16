@@ -45,7 +45,7 @@ final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $logger->method('info');
-        $logger->expects(self::never())->method('error');
+        $logger->expects($this->never())->method('error');
 
         $cross_reference    = new CrossReference(
             '1000',

@@ -80,7 +80,7 @@ final class FileURLSubstitutorTest extends TestCase
     {
         $url_mapping = $this->createMock(CreatedFileURLMapping::class);
         $url_mapping->expects($this->once())->method('isEmpty')->willReturn(false);
-        $url_mapping->expects(self::never())->method('get')->with('/path/to/file1.png');
+        $url_mapping->expects($this->never())->method('get')->with('/path/to/file1.png');
 
         self::assertEquals(
             '<p><img src="/path/to/file1.png"',

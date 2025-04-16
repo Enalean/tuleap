@@ -55,7 +55,7 @@ final class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
         $build_params = new \Tuleap\HudsonSvn\BuildParams();
 
         $factory->method('getJobsByRepository')->willReturn($jobs);
-        $ci_client->expects(self::exactly($call_count))->method('launchJobBuild');
+        $ci_client->expects($this->exactly($call_count))->method('launchJobBuild');
         $ci_client->method('setToken');
 
         $launcher = new Launcher($factory, new NullLogger(), $ci_client, $build_params);

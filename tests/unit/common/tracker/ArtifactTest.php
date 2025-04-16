@@ -21,9 +21,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
@@ -55,7 +54,7 @@ final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
         $a->method('validArtifact')->willReturn(false);
         //$a->setReturnValue('existDependency', false);
         $changes = null;
-        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback');
+        $GLOBALS['Response']->expects($this->exactly(2))->method('addFeedback');
         self::assertFalse($a->addDependencies('99999', $changes, false), 'It should be possible to add a dependency like 99999 because it is not a valid artifact');
     }
 

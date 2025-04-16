@@ -133,8 +133,8 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
     public function testItOnlyDeletesReferencesWhenArtifactHasBeenMovedIntoATrackerOfTheSameProject(): void
     {
         $this->cross_references_dao->expects($this->once())->method('deleteReferencesWhenArtifactIsSource');
-        $this->cross_references_dao->expects(self::never())->method('updateReferencesWhenArtifactIsInTarget');
-        $this->artifact_linker->expects(self::never())->method('linkArtifact');
+        $this->cross_references_dao->expects($this->never())->method('updateReferencesWhenArtifactIsInTarget');
+        $this->artifact_linker->expects($this->never())->method('linkArtifact');
 
         $cleaner = new PostArtifactMoveReferencesCleaner(
             $this->retrieve_reverse_links,

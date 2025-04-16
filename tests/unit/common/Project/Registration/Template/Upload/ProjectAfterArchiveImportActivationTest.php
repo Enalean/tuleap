@@ -107,7 +107,7 @@ final class ProjectAfterArchiveImportActivationTest extends TestCase
 
         $project_dao = $this->createMock(\ProjectDao::class);
         $project_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('updateStatus');
 
         $site_admin_notifier    = NotifySiteAdminStub::build();

@@ -182,7 +182,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
         $this->dao->method('canBeDeleted')->with($this->project, $license)->willReturn(false);
 
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         self::expectException(InvalidLicenseAgreementException::class);
 
@@ -193,7 +193,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $license = new NoLicenseToApprove();
 
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         self::expectException(InvalidLicenseAgreementException::class);
 
@@ -204,7 +204,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $license = new DefaultLicenseAgreement();
 
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         self::expectException(InvalidLicenseAgreementException::class);
 
@@ -218,7 +218,7 @@ class LicenseAgreementFactoryTest extends TestCase
         $this->dao->expects($this->once())->method('getProjectLicenseAgreements')->with($template_project)->willReturn([]);
         $this->dao->expects($this->once())->method('getDefaultLicenseIdForProject')->with($template_project)->willReturn(false);
 
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
 
         $this->factory->duplicate($this->createMock(FRSPackageFactory::class), $this->project, $template_project, []);
     }

@@ -73,7 +73,7 @@ final class PlanningUpdaterTest extends TestCase
         $planning = PlanningBuilder::aPlanning(102)->withId(20)->build();
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeNoMoreSelectableItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeNoMoreSelectableItemsFromExplicitBacklogOfProject');
 
         $this->planning_updater->update($user, $project, $updated_planning_id, $planning_parameters);
     }

@@ -60,7 +60,7 @@ final class MetadataValueStoreTest extends TestCase
         $metadata_value->setFieldId(10);
 
         $this->metadata_value_dao->expects($this->once())->method('create');
-        $this->reference_manager->expects(self::never())->method('extractCrossRef');
+        $this->reference_manager->expects($this->never())->method('extractCrossRef');
         $this->store->storeMetadata($metadata_value, 102);
     }
 
@@ -100,7 +100,7 @@ final class MetadataValueStoreTest extends TestCase
         $this->metadata_value_dao->expects($this->once())->method('delete')->with(10, 1);
 
         $this->metadata_value_dao->expects($this->once())->method('create');
-        $this->reference_manager->expects(self::never())->method('extractCrossRef');
+        $this->reference_manager->expects($this->never())->method('extractCrossRef');
         $this->store->updateMetadata($metadata_value, 102);
     }
 

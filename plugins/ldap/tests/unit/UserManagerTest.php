@@ -103,7 +103,7 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
 
         $sem = $this->createMock(\SystemEventManager::class);
-        $sem->expects(self::never())->method('createEvent');
+        $sem->expects($this->never())->method('createEvent');
         $lum->method('getSystemEventManager')->willReturn($sem);
 
         $lum->triggerRenameOfUsers();

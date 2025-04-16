@@ -59,7 +59,7 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
         $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
         $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')->willReturn([]);
 
-        $this->response->expects(self::never())->method('addFeedback');
+        $this->response->expects($this->never())->method('addFeedback');
 
         $this->feedback_notifier->informUserOfOngoingMigrations($this->project, $this->response);
     }
@@ -84,7 +84,7 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
 
         $this->project->expects($this->once())->method('getTruncatedEmailsUsage')->willReturn(true);
 
-        $this->response->expects(self::exactly(2))->method('addFeedback')
+        $this->response->expects($this->exactly(2))->method('addFeedback')
             ->with('info', self::callback(static fn(string $message) => in_array($message, [
                 'Some migrations are being processed. Your new trackers will appear as soon as the migrations are completed.',
                 'An email not truncated will be sent at the end of the migration process.',

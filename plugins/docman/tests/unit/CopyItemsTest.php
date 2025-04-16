@@ -91,7 +91,7 @@ final class CopyItemsTest extends TestCase
         $cloneItemsVisitor->method('_getItemFactory')->willReturn($itemFactory);
         // - apply perms
         $dPm = $this->createMock(Docman_PermissionsManager::class);
-        $dPm->expects(self::never())->method('setDefaultItemPermissions');
+        $dPm->expects($this->never())->method('setDefaultItemPermissions');
         $dPm->expects($this->once())->method('cloneItemPermissions')->with($item_to_clone->getId(), $new_id, $dstGroupId);
         $cloneItemsVisitor->method('_getPermissionsManager')->willReturn($dPm);
 

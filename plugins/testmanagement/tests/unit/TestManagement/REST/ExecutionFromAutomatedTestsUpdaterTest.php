@@ -184,7 +184,7 @@ final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\
             ->willReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
 
         $this->execution_change_extractor
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getChanges')
             ->willReturnCallback(
                 fn (string $status,
@@ -214,7 +214,7 @@ final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\
             );
 
         $this->execution_status_updater
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('update')
             ->willReturnCallback(fn (
                 Artifact $execution_artifact,
@@ -240,11 +240,11 @@ final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\
 
         $execution_with_automated_test_1 = $this->createMock(ExecutionWithAutomatedTestData::class);
         $execution_with_automated_test_1->method('getAutomatedTest')->willReturn('notfirsttest');
-        $execution_with_automated_test_1->expects(self::never())->method('getExecution');
+        $execution_with_automated_test_1->expects($this->never())->method('getExecution');
 
         $execution_with_automated_test_2 = $this->createMock(ExecutionWithAutomatedTestData::class);
         $execution_with_automated_test_2->method('getAutomatedTest')->willReturn('notfailtest');
-        $execution_with_automated_test_2->expects(self::never())->method('getExecution');
+        $execution_with_automated_test_2->expects($this->never())->method('getExecution');
 
         $this->list_of_executions_with_automated_test_data_retriever->method(
             'getExecutionsWithAutomatedTestData'
@@ -270,9 +270,9 @@ final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\
             ->with($automated_tests_results)
             ->willReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
 
-        $this->execution_change_extractor->expects(self::never())->method('getChanges');
+        $this->execution_change_extractor->expects($this->never())->method('getChanges');
 
-        $this->execution_status_updater->expects(self::never())->method('update');
+        $this->execution_status_updater->expects($this->never())->method('update');
 
         $this->execution_from_automated_test_updater->updateExecutionFromAutomatedTests(
             $automated_tests_results,

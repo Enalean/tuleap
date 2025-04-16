@@ -63,7 +63,7 @@ final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionWhenDashboardExists(): void
     {
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
         $this->expectException('Tuleap\Dashboard\NameDashboardAlreadyExistsException');
 
         $this->user_saver->save($this->user, 'existing_dashboard');
@@ -71,7 +71,7 @@ final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionWhenNameDoesNotExist(): void
     {
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
         $this->expectException('Tuleap\Dashboard\NameDashboardDoesNotExistException');
 
         $this->user_saver->save($this->user, '');

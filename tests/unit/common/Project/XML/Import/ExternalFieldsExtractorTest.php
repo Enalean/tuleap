@@ -142,7 +142,7 @@ final class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     </tracker>'
         );
 
-        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->exactly(2))->method('processEvent');
         $this->external_field_extractor->extractExternalFieldsFromTracker($xml_input);
         self::assertEquals([], $xml_input->xpath('externalField'));
         self::assertEquals([], $xml_input->xpath('permission'));
@@ -201,7 +201,7 @@ final class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     </tracker>'
         );
 
-        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->exactly(2))->method('processEvent');
         $this->external_field_extractor->extractExternalFieldsFromTracker($xml_input);
         self::assertEquals([], $xml_input->xpath('externalField'));
         self::assertEquals([], $xml_input->xpath('permission'));
@@ -293,7 +293,7 @@ final class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 </project>'
         );
 
-        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->exactly(2))->method('processEvent');
         $this->external_field_extractor->extractExternalFieldFromProjectElement($xml_input);
         self::assertEquals([], $xml_input->xpath('externalField'));
         self::assertEquals([], $xml_input->xpath('permission'));

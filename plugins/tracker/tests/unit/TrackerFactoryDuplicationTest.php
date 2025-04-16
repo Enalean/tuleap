@@ -156,7 +156,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $trackers = [$t1];
         $this->tracker_factory->method('getTrackersByGroupId')->with(100)->willReturn($trackers);
 
-        $this->tracker_factory->expects(self::never())->method('create');
+        $this->tracker_factory->expects($this->never())->method('create');
 
         $this->tracker_factory->duplicate(
             UserTestBuilder::buildWithDefaults(),

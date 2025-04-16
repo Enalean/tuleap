@@ -92,7 +92,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
         );
 
         $this->reference_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('insertCrossReference');
 
         $this->logger
@@ -135,7 +135,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             ->willThrowException(new TuleapReferenceNotFoundException());
 
         $this->reference_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('insertCrossReference');
 
         $this->logger
@@ -190,7 +190,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             ->willThrowException(new TuleapReferencedArtifactNotFoundException(42));
 
         $this->reference_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('insertCrossReference');
 
         $this->logger
@@ -239,7 +239,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
         );
 
         $this->tuleap_reference_retriever
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('retrieveTuleapReference')
             ->willReturnMap(
                 [
@@ -275,7 +275,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
             );
 
         $this->reference_manager
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('insertCrossReference')
             ->willReturnCallback(
                 fn(CrossReference $cross_reference): bool => match (true) {

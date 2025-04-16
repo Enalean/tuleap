@@ -143,7 +143,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
     {
         $path_that_doesnt_exist = $this->getTmpDir() . '/' . bin2hex(random_bytes(32));
 
-        $this->backend->expects(self::never())->method('chmod');
+        $this->backend->expects($this->never())->method('chmod');
 
         $project = $this->createMock(Project::class);
         $project->method('getUnixNameMixedCase')->willReturn($path_that_doesnt_exist);
@@ -187,7 +187,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         $project = $this->createMock(Project::class);
         $project->method('getUnixName')->willReturn('toto');
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
-        $backend->expects(self::never())->method('log');
+        $backend->expects($this->never())->method('log');
 
         $backend->updateHooks(
             $project,

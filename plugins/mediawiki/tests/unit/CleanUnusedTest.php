@@ -120,27 +120,27 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->once())->method('getMediawikiDatabaseInUnusedServices')->willReturn([]);
         $this->dao->expects($this->once())->method('getAllMediawikiBasesNotReferenced')->willReturn([]);
 
-        $this->data_dir->expects(self::exactly(2))
+        $this->data_dir->expects($this->exactly(2))
             ->method('getMediawikiDir')
             ->willReturnCallback(static fn (Project $project) => match ($project) {
                 $project_2 => 'path/to/mediawiki_102',
                 $project_3 => 'path/to/mediawiki_103',
             });
 
-        $this->dao->expects(self::exactly(2))
+        $this->dao->expects($this->exactly(2))
             ->method('desactivateService')
             ->willReturnCallback(static fn (mixed $project_id, bool $dry_run) => match (true) {
                 $dry_run === false && ((int) $project_id === 102 || (int) $project_id === 103) => true,
             });
 
-        $this->media_wiki_dao->expects(self::exactly(3))
+        $this->media_wiki_dao->expects($this->exactly(3))
             ->method('getMediawikiPagesNumberOfAProject')
             ->willReturnCallback(static fn (Project $project) => match ($project) {
                 $project_1 => ['result' => 2],
                 $project_2, $project_3 => ['result' => 0],
             });
 
-        $this->dao->expects(self::exactly(2))->method('purge');
+        $this->dao->expects($this->exactly(2))->method('purge');
 
         $this->clean_unused->purge(false, [], true, null);
 
@@ -189,7 +189,7 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->expects($this->once())->method('desactivateService')->with(103, false);
 
-        $this->media_wiki_dao->expects(self::exactly(3))
+        $this->media_wiki_dao->expects($this->exactly(3))
             ->method('getMediawikiPagesNumberOfAProject')
             ->willReturnCallback(static fn (Project $project) => match ($project) {
                 $project_1 => ['result' => 2],
@@ -290,7 +290,7 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->expects($this->once())->method('desactivateService')->with(103, false);
 
-        $this->media_wiki_dao->expects(self::exactly(3))
+        $this->media_wiki_dao->expects($this->exactly(3))
             ->method('getMediawikiPagesNumberOfAProject')
             ->willReturnCallback(static fn (Project $project) => match ($project) {
                 $project_1 => ['result' => 2],

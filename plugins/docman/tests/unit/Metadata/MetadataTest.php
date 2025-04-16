@@ -55,7 +55,7 @@ final class MetadataTest extends TestCase
         $dstMdF->method('findByName')->willReturn($iter);
         $srcMdF->expects($this->once())->method('_getMetadataFactory')->with($dstGroupId)->willReturn($dstMdF);
 
-        $srcMdF->expects(self::never())->method('_getListOfValuesElementFactory');
+        $srcMdF->expects($this->never())->method('_getListOfValuesElementFactory');
 
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
         self::assertEquals(401, $metadataMapping['md'][301]);
@@ -136,8 +136,8 @@ final class MetadataTest extends TestCase
         $dstLoveF2 = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
         $dstLoveF2->method('cloneValues')->willReturn([103 => 203, 104 => 204]);
 
-        $srcMdF->expects(self::exactly(2))->method('_getMetadataFactory')->willReturnOnConsecutiveCalls($dstMdF1, $dstMdF2);
-        $srcMdF->expects(self::exactly(2))->method('_getListOfValuesElementFactory')->willReturnOnConsecutiveCalls($dstLoveF1, $dstLoveF2);
+        $srcMdF->expects($this->exactly(2))->method('_getMetadataFactory')->willReturnOnConsecutiveCalls($dstMdF1, $dstMdF2);
+        $srcMdF->expects($this->exactly(2))->method('_getListOfValuesElementFactory')->willReturnOnConsecutiveCalls($dstLoveF1, $dstLoveF2);
 
         // Run test
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd1, $metadataMapping);

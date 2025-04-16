@@ -164,10 +164,10 @@ final class GitActionsDeleteTest extends TestCase
         $this->controller->expects($this->once())->method('redirect');
 
         $this->repository->method('canBeDeleted')->willReturn(false);
-        $this->repository->expects(self::never())->method('markAsDeleted');
+        $this->repository->expects($this->never())->method('markAsDeleted');
         $this->repository->method('getRelativeHTTPUrl');
 
-        $this->git_system_event_manager->expects(self::never())->method('queueRepositoryDeletion');
+        $this->git_system_event_manager->expects($this->never())->method('queueRepositoryDeletion');
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }

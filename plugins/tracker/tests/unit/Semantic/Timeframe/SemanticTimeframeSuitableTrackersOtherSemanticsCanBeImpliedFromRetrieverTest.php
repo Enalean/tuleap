@@ -78,7 +78,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
                 ]
             );
 
-        $this->form_element_factory->expects(self::exactly(5))
+        $this->form_element_factory->expects($this->exactly(5))
             ->method('getUsedArtifactLinkFields')
             ->willReturnCallback(
                 fn (\Tracker $tracker): array => match ($tracker) {
@@ -87,7 +87,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
                 }
             );
 
-        $this->dao->expects(self::exactly(4))
+        $this->dao->expects($this->exactly(4))
             ->method('searchByTrackerId')
             ->willReturnCallback(
                 fn (int $tracker_id): ?array => match ($tracker_id) {
@@ -120,7 +120,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
     private function getMockedTracker(int $id)
     {
         $mock = $this->createMock(\Tracker::class);
-        $mock->expects(self::any())->method('getId')->willReturn($id);
+        $mock->expects($this->any())->method('getId')->willReturn($id);
         return $mock;
     }
 }

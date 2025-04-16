@@ -160,7 +160,7 @@ final class Tracker_HierarchyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase /
             '114' => '214',
         ];
 
-        $dao->expects(self::exactly(3))->method('duplicate');
+        $dao->expects($this->exactly(3))->method('duplicate');
 
         $factory->duplicate($tracker_mapping);
     }

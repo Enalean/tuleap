@@ -128,7 +128,7 @@ final class ItemRepresentationVisitorTest extends TestCase
 
         $this->item_representation_builder->expects($this->once())->method('buildItemRepresentation');
 
-        $this->link_version_factory->expects(self::never())->method('getLatestVersion');
+        $this->link_version_factory->expects($this->never())->method('getLatestVersion');
 
         $this->item_visitor->visitLink($item, $params);
     }
@@ -173,7 +173,7 @@ final class ItemRepresentationVisitorTest extends TestCase
 
         $this->docman_version_factory->expects($this->once())->method('getCurrentVersionForItem');
 
-        $this->event_manager->expects(self::never())->method('processEvent');
+        $this->event_manager->expects($this->never())->method('processEvent');
 
         $this->item_visitor->visitEmbeddedFile($item, $params);
     }

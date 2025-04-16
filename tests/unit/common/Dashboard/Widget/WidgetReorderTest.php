@@ -82,8 +82,8 @@ class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
         $widget_reorder   = new DashboardWidgetReorder($dao, $remover);
         $widget_to_update = new DashboardWidget(1, 'image', 10, 1, 0, 0);
 
-        $dao->expects(self::never())->method('updateColumnIdByWidgetId');
-        $dao->expects(self::atLeastOnce())->method('updateWidgetRankByWidgetId');
+        $dao->expects($this->never())->method('updateColumnIdByWidgetId');
+        $dao->expects($this->atLeastOnce())->method('updateWidgetRankByWidgetId');
 
         $widget_reorder->reorderWidgets($this->line_one_columns[0], $this->line_one_columns[0], $widget_to_update, 1);
     }
@@ -108,7 +108,7 @@ class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
         ]));
 
         $dao->expects($this->once())->method('updateColumnIdByWidgetId');
-        $dao->expects(self::atLeastOnce())->method('updateWidgetRankByWidgetId');
+        $dao->expects($this->atLeastOnce())->method('updateWidgetRankByWidgetId');
 
         $widget_reorder->reorderWidgets($this->line_one_columns[1], $this->line_one_columns[0], $this->widget_one, 2);
     }

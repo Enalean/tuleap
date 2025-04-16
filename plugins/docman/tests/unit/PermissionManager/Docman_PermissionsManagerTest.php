@@ -38,9 +38,8 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Docman_PermissionsManagerTest extends TestCase
+final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use ForgeConfigSandbox;
 
@@ -434,7 +433,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $user->method('getUgroups')->willReturn([]);
 
         $permission_manager = $this->createMock(PermissionsManager::class);
-        $permission_manager->expects(self::exactly(4))->method('userHasPermission')
+        $permission_manager->expects($this->exactly(4))->method('userHasPermission')
             ->willReturnCallback(static fn(string $item_id) => match ($item_id) {
                 '1515' => false,
                 '6667' => true,
@@ -475,7 +474,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $user->method('getUgroups')->willReturn([]);
 
         $permission_manager = $this->createMock(PermissionsManager::class);
-        $permission_manager->expects(self::exactly(3))->method('userHasPermission')
+        $permission_manager->expects($this->exactly(3))->method('userHasPermission')
             ->willReturnCallback(static fn(string $item_id) => match ($item_id) {
                 '1515' => false,
                 '6667' => true,
@@ -516,7 +515,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $user->method('getUgroups')->willReturn([]);
 
         $permission_manager = $this->createMock(PermissionsManager::class);
-        $permission_manager->expects(self::exactly(2))->method('userHasPermission')
+        $permission_manager->expects($this->exactly(2))->method('userHasPermission')
             ->willReturnCallback(static fn(string $item_id) => match ($item_id) {
                 '1515' => false,
                 '6667' => true,
@@ -556,7 +555,7 @@ final class Docman_PermissionsManagerTest extends TestCase
 
         // No need to fetch perms when admin
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
-        $dao->expects(self::never())->method('retrievePermissionsForItems');
+        $dao->expects($this->never())->method('retrievePermissionsForItems');
 
         $this->permissions_manager->method('getDao')->willReturn($dao);
 
@@ -578,7 +577,7 @@ final class Docman_PermissionsManagerTest extends TestCase
 
         // No need to fetch perms when admin
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
-        $dao->expects(self::never())->method('retrievePermissionsForItems');
+        $dao->expects($this->never())->method('retrievePermissionsForItems');
 
         $this->permissions_manager->method('getDao')->willReturn($dao);
 
@@ -593,12 +592,12 @@ final class Docman_PermissionsManagerTest extends TestCase
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
         // Ensure everything comes from cache
-        $this->permissions_manager->expects(self::never())->method('_isUserDocmanAdmin');
-        $this->permissions_manager->expects(self::never())->method('_getPermissionManagerInstance');
+        $this->permissions_manager->expects($this->never())->method('_isUserDocmanAdmin');
+        $this->permissions_manager->expects($this->never())->method('_getPermissionManagerInstance');
         $user = $this->createMock(PFUser::class);
         $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
-        $user->expects(self::never())->method('isSuperUser');
+        $user->expects($this->never())->method('isSuperUser');
         $user->method('getUgroups')->willReturn([]);
 
         $itemId = 1515;
@@ -612,12 +611,12 @@ final class Docman_PermissionsManagerTest extends TestCase
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
         // Ensure everything comes from cache
-        $this->permissions_manager->expects(self::never())->method('_isUserDocmanAdmin');
-        $this->permissions_manager->expects(self::never())->method('_getPermissionManagerInstance');
+        $this->permissions_manager->expects($this->never())->method('_isUserDocmanAdmin');
+        $this->permissions_manager->expects($this->never())->method('_getPermissionManagerInstance');
         $user = $this->createMock(PFUser::class);
         $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
-        $user->expects(self::never())->method('isSuperUser');
+        $user->expects($this->never())->method('isSuperUser');
         $user->method('getUgroups')->willReturn([]);
 
         $itemId = 1515;
@@ -630,12 +629,12 @@ final class Docman_PermissionsManagerTest extends TestCase
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
         // Ensure everything comes from cache
-        $this->permissions_manager->expects(self::never())->method('_isUserDocmanAdmin');
-        $this->permissions_manager->expects(self::never())->method('_getPermissionManagerInstance');
+        $this->permissions_manager->expects($this->never())->method('_isUserDocmanAdmin');
+        $this->permissions_manager->expects($this->never())->method('_getPermissionManagerInstance');
         $user = $this->createMock(PFUser::class);
         $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
-        $user->expects(self::never())->method('isSuperUser');
+        $user->expects($this->never())->method('isSuperUser');
         $user->method('getUgroups')->willReturn([]);
 
         $itemId = 1515;
@@ -775,7 +774,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $dao = $this->createMock(Docman_PermissionsManagerDao::class);
 
         $pm->expects($this->once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn(null);
-        $dao->expects(self::never())->method('getUgroupMembers');
+        $dao->expects($this->never())->method('getUgroupMembers');
         $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
         $this->permissions_manager->expects($this->once())->method('_getPermissionManagerInstance')->willReturn($pm);
         self::assertEquals([], $this->permissions_manager->getDocmanManagerUsers(1, $this->project));
@@ -831,7 +830,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $this->permissions_manager->method('getDao')->willReturn($dao);
 
         $pm->expects($this->once())->method('getUgroupIdByObjectIdAndPermissionType')->willReturn($dar);
-        $dao->expects(self::never())->method('getUgroupMembers');
+        $dao->expects($this->never())->method('getUgroupMembers');
         self::assertEquals([], $this->permissions_manager->getDocmanManagerUsers(1, $this->project));
     }
 
@@ -841,7 +840,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $this->permissions_manager->method('getDao')->willReturn($dao);
 
         $dao->expects($this->once())->method('getDocmanAdminUgroups')->willReturn(null);
-        $dao->expects(self::never())->method('getUgroupMembers');
+        $dao->expects($this->never())->method('getUgroupMembers');
         self::assertEquals([], $this->permissions_manager->getDocmanAdminUsers($this->project));
     }
 
@@ -888,7 +887,7 @@ final class Docman_PermissionsManagerTest extends TestCase
         $this->permissions_manager->expects($this->once())->method('getDao')->willReturn($dao);
 
         $dao->expects($this->once())->method('getDocmanAdminUgroups')->willReturn($dar);
-        $dao->expects(self::never())->method('getUgroupMembers');
+        $dao->expects($this->never())->method('getUgroupMembers');
         self::assertEquals([], $this->permissions_manager->getDocmanAdminUsers($this->project));
     }
 

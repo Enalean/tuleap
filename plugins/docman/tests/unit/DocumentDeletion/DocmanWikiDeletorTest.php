@@ -75,7 +75,7 @@ final class DocmanWikiDeletorTest extends TestCase
         $wiki_page->method('getId')->willReturn(69);
 
         $this->permissions_manager->method('userCanDelete')->willReturn(false);
-        $this->item_factory->expects(self::never())->method('delete');
+        $this->item_factory->expects($this->never())->method('delete');
 
         self::expectException(DeleteFailedException::class);
 
@@ -102,12 +102,12 @@ final class DocmanWikiDeletorTest extends TestCase
 
         $this->permissions_manager->method('userCanDelete')->willReturn(true);
 
-        $this->item_factory->expects(self::atLeastOnce())->method('delete')->with($wiki_to_delete);
+        $this->item_factory->expects($this->atLeastOnce())->method('delete')->with($wiki_to_delete);
         $this->item_factory->method('getIdInWikiOfWikiPageItem');
 
         $this->item_dao->method('isWikiPageReferenced');
 
-        $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with('wiki_page_updated', self::anything());
+        $this->event_manager->expects($this->atLeastOnce())->method('processEvent')->with('wiki_page_updated', self::anything());
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
@@ -132,8 +132,8 @@ final class DocmanWikiDeletorTest extends TestCase
 
         $this->permissions_manager->method('userCanDelete')->willReturn(true);
 
-        $this->item_factory->expects(self::atLeastOnce())->method('delete')->with($wiki_to_delete);
-        $this->item_factory->expects(self::atLeastOnce())->method('deleteWikiPage')->with('My kinky wiki', 104)->willReturn(true);
+        $this->item_factory->expects($this->atLeastOnce())->method('delete')->with($wiki_to_delete);
+        $this->item_factory->expects($this->atLeastOnce())->method('deleteWikiPage')->with('My kinky wiki', 104)->willReturn(true);
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
@@ -183,7 +183,7 @@ final class DocmanWikiDeletorTest extends TestCase
         $this->permissions_manager->method('userCanDelete')->willReturn(true);
 
         $this->item_factory->method('delete')->with($wiki_to_delete);
-        $this->item_factory->expects(self::never())->method('deleteWikiPage');
+        $this->item_factory->expects($this->never())->method('deleteWikiPage');
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,

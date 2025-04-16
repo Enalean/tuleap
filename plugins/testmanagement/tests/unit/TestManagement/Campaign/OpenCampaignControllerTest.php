@@ -159,9 +159,9 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 new ArtifactNotFoundException()
             );
 
-        $this->status_updater->expects(self::never())->method('openCampaign');
-        $layout->expects(self::never())->method('addFeedback');
-        $layout->expects(self::never())->method('redirect');
+        $this->status_updater->expects($this->never())->method('openCampaign');
+        $layout->expects($this->never())->method('addFeedback');
+        $layout->expects($this->never())->method('redirect');
 
         $this->expectException(NotFoundException::class);
 

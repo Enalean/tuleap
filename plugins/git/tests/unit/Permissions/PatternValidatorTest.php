@@ -57,7 +57,7 @@ final class PatternValidatorTest extends TestCase
         $this->regexp_retriever->method('areRegexpRepositoryConflitingWithPlateform');
 
         $this->regexp_validator->expects($this->once())->method('isPatternValid');
-        $this->validator->expects(self::never())->method('isPatternValid');
+        $this->validator->expects($this->never())->method('isPatternValid');
 
         $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
@@ -66,7 +66,7 @@ final class PatternValidatorTest extends TestCase
     {
         $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(false);
 
-        $this->regexp_validator->expects(self::never())->method('isPatternValid');
+        $this->regexp_validator->expects($this->never())->method('isPatternValid');
         $this->validator->expects($this->once())->method('isPatternValid');
 
         $this->pattern_validator->isValidForRepository($this->repository, 'master', false);
@@ -78,7 +78,7 @@ final class PatternValidatorTest extends TestCase
         $this->regexp_retriever->method('areRegexpRepositoryConflitingWithPlateform');
 
         $this->regexp_validator->expects($this->once())->method('isPatternValid');
-        $this->validator->expects(self::never())->method('isPatternValid');
+        $this->validator->expects($this->never())->method('isPatternValid');
 
         $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
@@ -88,7 +88,7 @@ final class PatternValidatorTest extends TestCase
         $this->regexp_retriever->method('areRegexpActivatedForRepository')->willReturn(true);
         $this->regexp_retriever->method('areRegexpRepositoryConflitingWithPlateform')->willReturn(true);
 
-        $this->regexp_validator->expects(self::never())->method('isPatternValid');
+        $this->regexp_validator->expects($this->never())->method('isPatternValid');
         $this->validator->expects($this->once())->method('isPatternValid');
 
         $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
@@ -100,7 +100,7 @@ final class PatternValidatorTest extends TestCase
         $this->regexp_retriever->method('areDefaultRegexpConflitingWithPlateform');
 
         $this->regexp_validator->expects($this->once())->method('isPatternValid');
-        $this->validator->expects(self::never())->method('isPatternValid');
+        $this->validator->expects($this->never())->method('isPatternValid');
 
         $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
     }
@@ -109,7 +109,7 @@ final class PatternValidatorTest extends TestCase
     {
         $this->regexp_retriever->method('areRegexpActivatedForDefault')->willReturn(false);
 
-        $this->regexp_validator->expects(self::never())->method('isPatternValid');
+        $this->regexp_validator->expects($this->never())->method('isPatternValid');
         $this->validator->expects($this->once())->method('isPatternValid');
 
         $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', false);
@@ -121,7 +121,7 @@ final class PatternValidatorTest extends TestCase
         $this->regexp_retriever->method('areDefaultRegexpConflitingWithPlateform');
 
         $this->regexp_validator->expects($this->once())->method('isPatternValid');
-        $this->validator->expects(self::never())->method('isPatternValid');
+        $this->validator->expects($this->never())->method('isPatternValid');
 
         $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
     }
@@ -131,7 +131,7 @@ final class PatternValidatorTest extends TestCase
         $this->regexp_retriever->method('areRegexpActivatedForDefault')->willReturn(true);
         $this->regexp_retriever->method('areDefaultRegexpConflitingWithPlateform')->willReturn(true);
 
-        $this->regexp_validator->expects(self::never())->method('isPatternValid');
+        $this->regexp_validator->expects($this->never())->method('isPatternValid');
         $this->validator->expects($this->once())->method('isPatternValid');
 
         $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);

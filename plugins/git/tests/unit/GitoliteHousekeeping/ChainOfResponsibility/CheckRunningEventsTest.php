@@ -63,7 +63,7 @@ final class CheckRunningEventsTest extends TestCase
     {
         $this->process_manager->method('isAlreadyRunning')->with($this->process)->willReturn(true);
 
-        $this->next->expects(self::never())->method('execute');
+        $this->next->expects($this->never())->method('execute');
 
         $this->response->method('error');
         $this->response->method('abort');

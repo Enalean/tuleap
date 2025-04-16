@@ -134,13 +134,13 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $semantic_timeframe      = new SemanticTimeframe($this->mocked_tracker, $timeframe_with_duration);
 
         $this->tracker_factory
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getTrackerById')
             ->with(111)
             ->willReturn($this->mocked_implied_from_tracker);
 
         $this->semantic_timeframe_builder
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getSemantic')
             ->with($this->mocked_implied_from_tracker)
             ->willReturn($semantic_timeframe);
@@ -181,7 +181,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $timeframe_not_configured->method('isDefined')->willReturn(false);
 
         $this->tracker_factory
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getTrackerById')
             ->with(111)
             ->willReturn(null);
@@ -189,7 +189,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $timeframe_not_configured->method('getName');
 
         $this->semantic_timeframe_builder
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('buildTimeframeSemanticNotConfigured')
             ->willReturn($implied_semantic);
 
@@ -228,13 +228,13 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $timeframe_implied->method('isDefined')->willReturn(false);
 
         $this->tracker_factory
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getTrackerById')
             ->with(111)
             ->willReturn($this->mocked_implied_from_tracker);
 
         $this->semantic_timeframe_builder
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getSemantic')
             ->with($this->mocked_implied_from_tracker)
             ->willReturn($implied_semantic_not_configured);
@@ -245,7 +245,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
 
         $this->semantic_timeframe_builder
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('buildTimeframeSemanticNotConfigured')
             ->willReturn($semantic_not_configured);
 
@@ -285,13 +285,13 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $timeframe_not_configured->method('isDefined')->willReturn(false);
 
         $this->tracker_factory
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getTrackerById')
             ->with(111)
             ->willReturn($this->mocked_implied_from_tracker);
 
         $this->semantic_timeframe_builder
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getSemantic')
             ->with($this->mocked_implied_from_tracker)
             ->willReturn($implied_semantic);
@@ -301,11 +301,11 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn('timeframe-implied-from-another-tracker');
 
         $this->semantic_timeframe_builder
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('buildTimeframeSemanticNotConfigured')
             ->willReturn($semantic_not_configured);
 
-        $this->tracker_factory->expects(self::any())->method('getTrackerById')->with(111)->willReturn($this->mocked_implied_from_tracker);
+        $this->tracker_factory->expects($this->any())->method('getTrackerById')->with(111)->willReturn($this->mocked_implied_from_tracker);
 
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
@@ -434,7 +434,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private function getMockedTracker(): \Tracker
     {
         $mock = $this->getMockBuilder(\Tracker::class)->disableOriginalConstructor()->getMock();
-        $mock->expects(self::any())->method('getId')->willReturn(113);
+        $mock->expects($this->any())->method('getId')->willReturn(113);
         return $mock;
     }
 }

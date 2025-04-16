@@ -206,7 +206,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
 
-        $ff->expects(self::never())->method('moveDeletedFileToStagingArea');
+        $ff->expects($this->never())->method('moveDeletedFileToStagingArea');
 
         self::assertTrue($ff->moveDeletedFilesToStagingArea($backend));
     }
@@ -376,7 +376,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
-        $ff->expects(self::never())->method('purgeFile');
+        $ff->expects($this->never())->method('purgeFile');
         $backend = $this->createMock(BackendSystem::class);
         self::assertTrue($ff->purgeFiles(1287504083, $backend));
     }
@@ -428,7 +428,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('_getFRSFileDao')->willReturn($dao);
 
         $backend = $this->createMock(BackendSystem::class);
-        $backend->expects(self::never())->method('log');
+        $backend->expects($this->never())->method('log');
         $ff->expects($this->once())->method('archiveBeforePurge')->with(
             self::callback(function (FRSFile $file) {
                 return $file->getFileID() === 12;
@@ -489,7 +489,7 @@ class FRSFileFactoryTest extends TestCase
         $file->method('getFileLocation')->willReturn(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/foobar.xls');
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::never())->method('setPurgeDate');
+        $dao->expects($this->never())->method('setPurgeDate');
         $ff->method('archiveBeforePurge')->willReturn(false);
 
         $backend = $this->createMock(BackendSystem::class);
@@ -520,7 +520,7 @@ class FRSFileFactoryTest extends TestCase
         $backend = $this->createMock(BackendSystem::class);
         $backend->expects($this->once())->method('log')->with('File ' . $filepath . ' not found on file system, automatically marked as purged', LogLevel::WARNING);
         self::assertTrue($ff->purgeFile($file, $backend));
-        $ff->expects(self::never())->method('archiveBeforePurge');
+        $ff->expects($this->never())->method('archiveBeforePurge');
     }
 
     private function createDeletedReleaseDir($release_name, $dir_name)
@@ -620,7 +620,7 @@ class FRSFileFactoryTest extends TestCase
         self::assertTrue(is_dir(dirname(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p1_r1/')));
 
         $dao = $this->createMock(FRSFileDao::class);
-        $dao->expects(self::never())->method('restoreFile');
+        $dao->expects($this->never())->method('restoreFile');
         $fileFactory->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
         $backend->method('chgrp')->willReturn(true);
@@ -820,7 +820,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::never())->method('restoreFile');
+        $ff->expects($this->never())->method('restoreFile');
 
         self::assertFalse($ff->restoreDeletedFiles($backend));
     }
@@ -839,7 +839,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->setLogger($this->createMock(LoggerInterface::class));
         $ff->method('_getFRSFileDao')->willReturn($dao);
         $backend = $this->createMock(BackendSystem::class);
-        $ff->expects(self::never())->method('restoreFile');
+        $ff->expects($this->never())->method('restoreFile');
 
         self::assertTrue($ff->restoreDeletedFiles($backend));
     }
@@ -1246,7 +1246,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('moveFileForge')->willReturn(true);
         $ff->method('create')->willReturn(true);
 
-        $ff->expects(self::never())->method('compareMd5Checksums');
+        $ff->expects($this->never())->method('compareMd5Checksums');
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
 
         unlink(ForgeConfig::get('ftp_incoming_dir') . '/toto.txt');

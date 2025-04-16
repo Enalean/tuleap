@@ -219,8 +219,8 @@ final class CardwallConfigXmlImportTest extends TestCase
     {
         $this->event_manager->method('processEvent');
 
-        $this->cardwall_ontop_dao->expects(self::exactly(2))->method('enable')->willReturn(true);
-        $this->cardwall_ontop_dao->expects(self::exactly(2))->method('enableFreestyleColumns');
+        $this->cardwall_ontop_dao->expects($this->exactly(2))->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->expects($this->exactly(2))->method('enableFreestyleColumns');
         $this->column_dao->method('createWithcolor');
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
@@ -317,8 +317,8 @@ final class CardwallConfigXmlImportTest extends TestCase
         $this->cardwall_ontop_dao->method('enableFreestyleColumns');
         $this->column_dao->method('createWithcolor');
 
-        $this->mapping_field_dao->expects(self::never())->method('create');
-        $this->mapping_field_value_dao->expects(self::never())->method('save');
+        $this->mapping_field_dao->expects($this->never())->method('create');
+        $this->mapping_field_value_dao->expects($this->never())->method('save');
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
@@ -374,7 +374,7 @@ final class CardwallConfigXmlImportTest extends TestCase
             ]
         );
 
-        $this->cardwall_ontop_dao->expects(self::exactly(2))->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->expects($this->exactly(2))->method('enable')->willReturn(true);
         $this->cardwall_ontop_dao->method('enableFreestyleColumns');
         $this->column_dao->method('createWithcolor');
 
@@ -400,7 +400,7 @@ final class CardwallConfigXmlImportTest extends TestCase
             $this->logger
         );
 
-        $this->event_manager->expects(self::never())->method('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, self::anything());
+        $this->event_manager->expects($this->never())->method('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, self::anything());
 
         self::expectException(CardwallFromXmlImportCannotBeEnabledException::class);
         $cardwall_config_xml_import->import($this->default_xml_input);

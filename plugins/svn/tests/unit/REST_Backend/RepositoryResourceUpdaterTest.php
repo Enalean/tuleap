@@ -211,7 +211,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hook_config_updater->expects($this->once())->method('updateHookConfig');
         $this->immutable_tag_creator->expects($this->once())->method('save');
-        $this->access_file_creator->expects(self::never())->method('create');
+        $this->access_file_creator->expects($this->never())->method('create');
 
         $this->updater->update($this->repository, $settings);
     }

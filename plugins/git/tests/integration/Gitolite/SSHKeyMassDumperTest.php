@@ -63,9 +63,9 @@ final class SSHKeyMassDumperTest extends GitoliteTestCase
     public function testItRemovesSshKeyFileWhenUserDeletedAllHisKeys(): void
     {
         $invalid_keys_collector = new InvalidKeysCollector();
-        $this->git_exec->expects(self::exactly(2))->method('push');
+        $this->git_exec->expects($this->exactly(2))->method('push');
 
-        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+        $this->user_manager->expects($this->exactly(2))->method('getUsersWithSshKey')
             ->willReturnOnConsecutiveCalls([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])], []);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
@@ -77,7 +77,7 @@ final class SSHKeyMassDumperTest extends GitoliteTestCase
     {
         $invalid_keys_collector = new InvalidKeysCollector();
         $this->git_exec->method('push')->willReturn(true);
-        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+        $this->user_manager->expects($this->exactly(2))->method('getUsersWithSshKey')
             ->willReturnOnConsecutiveCalls(
                 [new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])],
                 [new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])],
@@ -95,7 +95,7 @@ final class SSHKeyMassDumperTest extends GitoliteTestCase
     {
         $invalid_keys_collector = new InvalidKeysCollector();
         $this->git_exec->method('push')->willReturn(true);
-        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+        $this->user_manager->expects($this->exactly(2))->method('getUsersWithSshKey')
             ->willReturnOnConsecutiveCalls(
                 [new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'])],
                 [new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'do_john'])],
@@ -115,7 +115,7 @@ final class SSHKeyMassDumperTest extends GitoliteTestCase
     {
         $invalid_keys_collector = new InvalidKeysCollector();
         $this->git_exec->method('push')->willReturn(true);
-        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+        $this->user_manager->expects($this->exactly(2))->method('getUsersWithSshKey')
             ->willReturnOnConsecutiveCalls([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])], []);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
@@ -134,7 +134,7 @@ final class SSHKeyMassDumperTest extends GitoliteTestCase
     {
         $invalid_keys_collector = new InvalidKeysCollector();
         $this->git_exec->method('push')->willReturn(true);
-        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+        $this->user_manager->expects($this->exactly(2))->method('getUsersWithSshKey')
             ->willReturnOnConsecutiveCalls([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])], []);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 

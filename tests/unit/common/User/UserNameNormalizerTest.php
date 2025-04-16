@@ -76,7 +76,7 @@ final class UserNameNormalizerTest extends TestCase
 
         $this->rules->method('atLeastOneChar')->willReturn(true);
         $this->rules->method('isUnixValid')->with($slugified_username)->willReturn(false);
-        $this->rules->expects(self::never())->method('isValid');
+        $this->rules->expects($this->never())->method('isValid');
 
         $this->expectException(DataIncompatibleWithUsernameGenerationException::class);
 

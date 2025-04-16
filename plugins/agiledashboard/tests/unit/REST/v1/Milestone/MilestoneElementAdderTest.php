@@ -122,10 +122,10 @@ final class MilestoneElementAdderTest extends TestCase
 
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
 
-        $this->top_backlog_elements_to_add_checker->expects(self::never())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
-        $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
-        $this->resources_patcher->expects(self::never())->method('removeArtifactFromSource');
-        $this->explicit_backlog_dao->expects(self::never())->method('isProjectUsingExplicitBacklog');
+        $this->top_backlog_elements_to_add_checker->expects($this->never())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
+        $this->unplanned_artifact_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects($this->never())->method('removeArtifactFromSource');
+        $this->explicit_backlog_dao->expects($this->never())->method('isProjectUsingExplicitBacklog');
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }
@@ -142,9 +142,9 @@ final class MilestoneElementAdderTest extends TestCase
         $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->willThrowException(new ProvidedAddedIdIsNotInPartOfTopBacklogException([]));
 
-        $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
-        $this->resources_patcher->expects(self::never())->method('removeArtifactFromSource');
-        $this->explicit_backlog_dao->expects(self::never())->method('isProjectUsingExplicitBacklog');
+        $this->unplanned_artifact_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects($this->never())->method('removeArtifactFromSource');
+        $this->explicit_backlog_dao->expects($this->never())->method('isProjectUsingExplicitBacklog');
 
         self::expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
 
@@ -163,9 +163,9 @@ final class MilestoneElementAdderTest extends TestCase
         $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->willThrowException(new NoRootPlanningException());
 
-        $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
-        $this->resources_patcher->expects(self::never())->method('removeArtifactFromSource');
-        $this->explicit_backlog_dao->expects(self::never())->method('isProjectUsingExplicitBacklog');
+        $this->unplanned_artifact_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects($this->never())->method('removeArtifactFromSource');
+        $this->explicit_backlog_dao->expects($this->never())->method('isProjectUsingExplicitBacklog');
 
         self::expectException(NoRootPlanningException::class);
 

@@ -78,7 +78,7 @@ final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExportIfFieldUsedOnCumulativeChart(): void
     {
-        $this->chart->expects(self::atLeast(1))->method('exportToXML');
+        $this->chart->expects($this->atLeast(1))->method('exportToXML');
         $this->chart_factory->method('getCharts')->willReturn([$this->chart]);
         $this->form_element_factory->method('getUsedFormElementById')->willReturn(true);
 
@@ -87,7 +87,7 @@ final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNoExportIfFieldNotUsedOnCumulativeChart(): void
     {
-        $this->chart->expects(self::never())->method('exportToXML');
+        $this->chart->expects($this->never())->method('exportToXML');
         $this->chart_factory->method('getCharts')->willReturn([$this->chart]);
         $this->form_element_factory->method('getUsedFormElementById')->willReturn(false);
 
@@ -99,7 +99,7 @@ final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
         $chart = $this->createMock(GraphOnTrackersV5_Chart_Gantt::class);
         $chart->method('exportToXML');
         $this->chart_factory->method('getCharts')->willReturn([$chart]);
-        $this->form_element_factory->expects(self::never())->method('getUsedFormElementById');
+        $this->form_element_factory->expects($this->never())->method('getUsedFormElementById');
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);
     }
@@ -108,7 +108,7 @@ final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $chart = $this->createMock(GraphOnTrackersV5_Chart_Pie::class);
         $chart->method('exportToXML');
-        $this->form_element_factory->expects(self::never())->method('getUsedFormElementById');
+        $this->form_element_factory->expects($this->never())->method('getUsedFormElementById');
         $this->chart_factory->method('getCharts')->willReturn([$chart]);
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);
@@ -118,7 +118,7 @@ final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $chart = $this->createMock(GraphOnTrackersV5_Chart_Bar::class);
         $chart->method('exportToXML');
-        $this->form_element_factory->expects(self::never())->method('getUsedFormElementById');
+        $this->form_element_factory->expects($this->never())->method('getUsedFormElementById');
         $this->chart_factory->method('getCharts')->willReturn([$chart]);
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);

@@ -56,10 +56,10 @@ final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
 
     public function testReturnsNullIfTrackerDoesNotUsePrivateComment(): void
     {
-        $this->permission_dao->expects(self::never())->method('getUgroupIdsOfPrivateComment');
+        $this->permission_dao->expects($this->never())->method('getUgroupIdsOfPrivateComment');
         $this->tracker_private_comment_information_retriever->expects($this->once())
             ->method('doesTrackerAllowPrivateComments')->with($this->tracker)->willReturn(false);
-        $this->ugroup_manager->expects(self::never())->method('getById');
+        $this->ugroup_manager->expects($this->never())->method('getById');
 
         $ugroups = $this->retriever->getUGroupsCanSeePrivateComment($this->tracker, 5);
 
@@ -69,7 +69,7 @@ final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
     public function testReturnsNullIfThereIsNotUGroup(): void
     {
         $this->permission_dao->expects($this->once())->method('getUgroupIdsOfPrivateComment')->with(5)->willReturn([]);
-        $this->ugroup_manager->expects(self::never())->method('getById');
+        $this->ugroup_manager->expects($this->never())->method('getById');
         $this->tracker_private_comment_information_retriever->expects($this->once())
             ->method('doesTrackerAllowPrivateComments')
             ->with($this->tracker)
@@ -94,7 +94,7 @@ final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
         $ugroup_1 = ProjectUGroupTestBuilder::aCustomUserGroup(1)->build();
         $ugroup_2 = ProjectUGroupTestBuilder::aCustomUserGroup(2)->build();
 
-        $this->ugroup_manager->expects(self::exactly(2))->method('getById')->willReturnCallback(static fn(int $id) => match ($id) {
+        $this->ugroup_manager->expects($this->exactly(2))->method('getById')->willReturnCallback(static fn(int $id) => match ($id) {
             1 => $ugroup_1,
             2 => $ugroup_2,
         });

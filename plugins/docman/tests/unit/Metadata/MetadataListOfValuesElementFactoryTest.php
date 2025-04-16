@@ -21,9 +21,8 @@
 
 declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testCloneValues(): void
     {
@@ -93,7 +92,7 @@ final class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\
         $metadata_list_of_values_element_factory->method('getListByFieldId')->willReturn($loveArray);
 
         $dstLoveF = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF->expects(self::exactly(2))->method('create');
+        $dstLoveF->expects($this->exactly(2))->method('create');
         $metadata_list_of_values_element_factory->method('getMetadataListOfValuesElementFactory')->willReturn($dstLoveF);
 
         $metadata_list_of_values_element_factory->exportValues($srcMd, $dstMd, $valuesMapping);

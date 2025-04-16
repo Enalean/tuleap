@@ -88,7 +88,7 @@ final class XMLImporterTest extends TestCase
             </agiledashboard>
         ');
 
-        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
+        $this->explicit_backlog_dao->expects($this->never())->method('setProjectIsUsingExplicitBacklog');
 
         $this->importer->importConfiguration($xml, $this->project);
     }
@@ -115,7 +115,7 @@ final class XMLImporterTest extends TestCase
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><agiledashboard/>');
 
-        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->unplanned_artifacts_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
 
         $this->importer->importContent(
             $xml,
@@ -134,7 +134,7 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->willReturn(false);
 
-        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->unplanned_artifacts_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
 
         $this->importer->importContent(
             $xml,
@@ -161,7 +161,7 @@ final class XMLImporterTest extends TestCase
             ->with(101)
             ->willReturn(true);
 
-        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->unplanned_artifacts_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
 
         $this->top_backlog_elements_to_add_checker->expects($this->once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->willThrowException(new NoRootPlanningException());

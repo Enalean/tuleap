@@ -94,7 +94,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isAnonymous')->willReturn(false);
         $user->method('getLanguageID')->willReturn('fr_FR');
-        $user->expects(self::never())->method('setLanguageID');
+        $user->expects($this->never())->method('setLanguageID');
 
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
@@ -105,7 +105,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
+        $this->user_manager->expects($this->never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
@@ -139,7 +139,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isAnonymous')->willReturn(false);
         $user->method('getLanguageID')->willReturn('fr_FR');
-        $user->expects(self::never())->method('setLanguageID');
+        $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
             ['accessibility_mode', false],
@@ -149,7 +149,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
+        $this->user_manager->expects($this->never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -190,7 +190,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isAnonymous')->willReturn(false);
         $user->method('getLanguageID')->willReturn('fr_FR');
-        $user->expects(self::never())->method('setLanguageID');
+        $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
             ['accessibility_mode', false],
@@ -200,7 +200,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
+        $this->user_manager->expects($this->never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -237,7 +237,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isAnonymous')->willReturn(false);
         $user->method('getLanguageID')->willReturn('fr_FR');
-        $user->expects(self::never())->method('setLanguageID');
+        $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
             ['accessibility_mode', false],
@@ -247,7 +247,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
+        $this->user_manager->expects($this->never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
@@ -281,7 +281,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isAnonymous')->willReturn(false);
         $user->method('getLanguageID')->willReturn('fr_FR');
-        $user->expects(self::never())->method('setLanguageID');
+        $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
             ['accessibility_mode', false],
@@ -294,8 +294,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->theme_variant->expects($this->once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
         $this->theme_variant->expects($this->once())->method('getAllowedVariantColors')->willReturn([ThemeVariantColor::Orange]);
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -336,7 +336,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isAnonymous')->willReturn(false);
         $user->method('getLanguageID')->willReturn('fr_FR');
-        $user->expects(self::never())->method('setLanguageID');
+        $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
             ['accessibility_mode', false],
@@ -348,8 +348,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->theme_variant->expects($this->once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -395,8 +395,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -442,8 +442,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -489,7 +489,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
+        $this->user_manager->expects($this->never())->method('updateDB');
         $user->expects($this->once())->method('delPreference')->with('display_density');
 
         $request = HTTPRequestBuilder::get()
@@ -536,8 +536,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -583,8 +583,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -634,8 +634,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -685,8 +685,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -732,8 +732,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -779,8 +779,8 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
-        $user->expects(self::never())->method('setPreference');
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -826,7 +826,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->csrf_token->expects($this->once())->method('check');
 
-        $this->user_manager->expects(self::never())->method('updateDB');
+        $this->user_manager->expects($this->never())->method('updateDB');
         $user->expects($this->once())->method('setPreference')->with('accessibility_mode', '0');
 
         $request = HTTPRequestBuilder::get()

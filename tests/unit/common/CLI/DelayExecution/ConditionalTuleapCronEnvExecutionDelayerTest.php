@@ -45,7 +45,7 @@ final class ConditionalTuleapCronEnvExecutionDelayerTest extends \Tuleap\Test\PH
     {
         $delayer = $this->createMock(ExecutionDelayer::class);
 
-        $delayer->expects(self::never())->method('delay');
+        $delayer->expects($this->never())->method('delay');
 
         (new ConditionalTuleapCronEnvExecutionDelayer($delayer))->delay();
     }

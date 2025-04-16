@@ -272,7 +272,7 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
             );
 
         $this->tuleap_reference_retriever
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('retrieveTuleapReference')
             ->willReturnCallback(
                 fn (int $artifact_id): \Reference => match ($artifact_id) {

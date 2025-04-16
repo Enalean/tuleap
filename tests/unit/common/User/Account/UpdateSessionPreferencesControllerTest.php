@@ -66,7 +66,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItThrowsExceptionWhenUserIsAnonymous(): void
     {
         $this->expectException(ForbiddenException::class);
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),

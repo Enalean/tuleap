@@ -218,7 +218,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $this->dao->method('save');
         $this->widget_factory->method('getInstanceByWidgetName')->willReturn(null);
 
-        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
         self::assertTrue($this->logger->hasErrorRecords());
@@ -243,14 +243,14 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
               </project>'
         );
 
-        $this->widget_dao->expects(self::never())->method('createLine');
-        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->widget_dao->expects($this->never())->method('createLine');
+        $this->widget_dao->expects($this->never())->method('createColumn');
         $this->dao->method('save');
         $widget = $this->createMock(\Widget::class);
         $widget->method('getInstanceId')->willReturn(false);
         $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
-        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(true);
 
@@ -277,8 +277,8 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
               </project>'
         );
 
-        $this->widget_dao->expects(self::never())->method('createLine');
-        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->widget_dao->expects($this->never())->method('createLine');
+        $this->widget_dao->expects($this->never())->method('createColumn');
         $this->dao->method('save');
         $widget = $this->createMock(\Widget::class);
         $widget->method('getInstanceId')->willReturn(false);
@@ -287,7 +287,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('getId');
         $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
-        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -492,9 +492,9 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
               </project>'
         );
 
-        $this->widget_dao->expects(self::never())->method('createLine');
-        $this->widget_dao->expects(self::never())->method('createColumn');
-        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
+        $this->widget_dao->expects($this->never())->method('createLine');
+        $this->widget_dao->expects($this->never())->method('createColumn');
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
         $this->dao->method('save');
 
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn(null);
@@ -521,8 +521,8 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
               </project>'
         );
 
-        $this->widget_dao->expects(self::never())->method('createLine');
-        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->widget_dao->expects($this->never())->method('createLine');
+        $this->widget_dao->expects($this->never())->method('createColumn');
         $this->dao->method('save');
         $widget = $this->createMock(\Widget::class);
         $widget->method('getId')->willReturn('myprojects');
@@ -531,7 +531,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
         $widget->method('create');
         $this->widget_factory->method('getInstanceByWidgetName')->with('myprojects')->willReturn($widget);
 
-        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
@@ -751,7 +751,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
             }
         });
 
-        $this->widget_dao->expects(self::never())->method('updateLayout');
+        $this->widget_dao->expects($this->never())->method('updateLayout');
         $this->widget_dao->expects($this->once())->method('adjustLayoutAccordinglyToNumberOfWidgets');
 
         $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
@@ -841,8 +841,8 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
               </project>'
         );
 
-        $this->widget_dao->expects(self::never())->method('createLine');
-        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->widget_dao->expects($this->never())->method('createLine');
+        $this->widget_dao->expects($this->never())->method('createColumn');
         $this->dao->method('save');
 
         $this->mappings_registry->addReference('K123', 78998);
@@ -853,7 +853,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 
         $this->widget_factory->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn($widget);
 
-        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
+        $this->widget_dao->expects($this->never())->method('insertWidgetInColumnWithRank');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }

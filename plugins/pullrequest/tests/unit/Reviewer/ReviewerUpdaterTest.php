@@ -94,7 +94,7 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_change_id = 79;
         $this->dao->expects($this->once())->method('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)
             ->willReturn($expected_change_id);
-        $this->permissions_checker->expects(self::exactly(2))->method('checkPullRequestIsReadableByUser');
+        $this->permissions_checker->expects($this->exactly(2))->method('checkPullRequestIsReadableByUser');
 
         $this->event_dispatcher->method('dispatch')->with(
             self::callback(
@@ -122,7 +122,7 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects($this->once())->method('setReviewers')->willReturn(null);
         $this->permissions_checker->method('checkPullRequestIsReadableByUser');
 
-        $this->event_dispatcher->expects(self::never())->method('dispatch');
+        $this->event_dispatcher->expects($this->never())->method('dispatch');
 
         $this->reviewer_updater->updatePullRequestReviewers(
             $pull_request,

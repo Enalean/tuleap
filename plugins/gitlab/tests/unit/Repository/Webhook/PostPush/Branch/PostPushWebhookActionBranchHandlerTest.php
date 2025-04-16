@@ -139,12 +139,12 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->branch_info_dao->expects($this->once())
             ->method('saveGitlabBranchInfo');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('updateGitlabBranchInformation');
 
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('deleteBranchInGitlabIntegration');
-        $this->cross_reference_manager->expects(self::never())
+        $this->cross_reference_manager->expects($this->never())
             ->method('deleteEntity');
 
         $this->handler->parseBranchReference(
@@ -186,20 +186,20 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::never())
+        $this->tuleap_reference_retriever->expects($this->never())
             ->method('retrieveTuleapReference');
-        $this->cross_reference_dao->expects(self::never())
+        $this->cross_reference_dao->expects($this->never())
             ->method('existInDb');
-        $this->reference_manager->expects(self::never())
+        $this->reference_manager->expects($this->never())
             ->method('insertCrossReference');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('saveGitlabBranchInfo');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('updateGitlabBranchInformation');
 
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('deleteBranchInGitlabIntegration');
-        $this->cross_reference_manager->expects(self::never())
+        $this->cross_reference_manager->expects($this->never())
             ->method('deleteEntity');
 
         $this->handler->parseBranchReference(
@@ -241,20 +241,20 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             ]
         );
 
-        $this->tuleap_reference_retriever->expects(self::never())
+        $this->tuleap_reference_retriever->expects($this->never())
             ->method('retrieveTuleapReference');
-        $this->cross_reference_dao->expects(self::never())
+        $this->cross_reference_dao->expects($this->never())
             ->method('existInDb');
-        $this->reference_manager->expects(self::never())
+        $this->reference_manager->expects($this->never())
             ->method('insertCrossReference');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('saveGitlabBranchInfo');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('updateGitlabBranchInformation');
 
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('deleteBranchInGitlabIntegration');
-        $this->cross_reference_manager->expects(self::never())
+        $this->cross_reference_manager->expects($this->never())
             ->method('deleteEntity');
 
         $this->handler->parseBranchReference(
@@ -303,18 +303,18 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                 new TuleapReferencedArtifactNotFoundException(123)
             );
 
-        $this->cross_reference_dao->expects(self::never())
+        $this->cross_reference_dao->expects($this->never())
             ->method('existInDb');
-        $this->reference_manager->expects(self::never())
+        $this->reference_manager->expects($this->never())
             ->method('insertCrossReference');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('saveGitlabBranchInfo');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('updateGitlabBranchInformation');
 
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('deleteBranchInGitlabIntegration');
-        $this->cross_reference_manager->expects(self::never())
+        $this->cross_reference_manager->expects($this->never())
             ->method('deleteEntity');
 
         $this->handler->parseBranchReference(
@@ -377,17 +377,17 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('existInDb')
             ->willReturn(true);
 
-        $this->reference_manager->expects(self::never())
+        $this->reference_manager->expects($this->never())
             ->method('insertCrossReference');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('saveGitlabBranchInfo');
 
         $this->branch_info_dao->expects($this->once())
             ->method('updateGitlabBranchInformation');
 
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('deleteBranchInGitlabIntegration');
-        $this->cross_reference_manager->expects(self::never())
+        $this->cross_reference_manager->expects($this->never())
             ->method('deleteEntity');
 
         $this->handler->parseBranchReference(
@@ -446,13 +446,13 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
                 )
             );
 
-        $this->cross_reference_dao->expects(self::never())
+        $this->cross_reference_dao->expects($this->never())
             ->method('existInDb');
-        $this->reference_manager->expects(self::never())
+        $this->reference_manager->expects($this->never())
             ->method('insertCrossReference');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('saveGitlabBranchInfo');
-        $this->branch_info_dao->expects(self::never())
+        $this->branch_info_dao->expects($this->never())
             ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects($this->once())

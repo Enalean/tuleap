@@ -56,7 +56,7 @@ final class MeilisearchHandlerTest extends TestCase
         $item_1 = new PlaintextItemToIndex('type_1', 102, 'content', ['A' => 'A']);
         $item_2 = new PlaintextItemToIndex('type_2', 102, 'content', ['A' => 'A']);
 
-        $this->metadata_dao->expects(self::exactly(2))->method('saveItemMetadata')->willReturn('uuid1', 'uuid2');
+        $this->metadata_dao->expects($this->exactly(2))->method('saveItemMetadata')->willReturn('uuid1', 'uuid2');
         $this->client_index->expects($this->once())->method('addDocuments');
 
         $this->handler->indexItems($item_1, $item_2);
@@ -67,7 +67,7 @@ final class MeilisearchHandlerTest extends TestCase
         $item_1 = new PlaintextItemToIndex('type_1', 102, '', ['A' => 'A']);
         $item_2 = new PlaintextItemToIndex('type_2', 102, '', ['A' => 'B']);
 
-        $this->metadata_dao->expects(self::exactly(2))->method('searchMatchingEntries')->willReturnOnConsecutiveCalls([], ['uuid2']);
+        $this->metadata_dao->expects($this->exactly(2))->method('searchMatchingEntries')->willReturnOnConsecutiveCalls([], ['uuid2']);
         $this->metadata_dao->expects($this->once())->method('deleteIndexedItemsFromIDs')->with(['uuid2']);
         $this->client_index->expects($this->once())->method('deleteDocuments');
 
@@ -98,8 +98,8 @@ final class MeilisearchHandlerTest extends TestCase
     {
         $this->metadata_dao->method('searchMatchingEntries')->willReturn([]);
 
-        $this->client_index->expects(self::never())->method('deleteDocuments');
-        $this->metadata_dao->expects(self::never())->method('deleteIndexedItemsFromIDs');
+        $this->client_index->expects($this->never())->method('deleteDocuments');
+        $this->metadata_dao->expects($this->never())->method('deleteIndexedItemsFromIDs');
 
         $this->handler->deleteIndexedItems(new IndexedItemsToRemove('404', ['A' => 'A']));
     }

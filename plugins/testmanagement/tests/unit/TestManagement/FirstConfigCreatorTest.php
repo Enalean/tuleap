@@ -109,7 +109,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config->method('getTrackersFromTemplate')->willReturn(
             $trackers_from_template
         );
-        $this->testmanagement_trackers_configurator->expects(self::exactly(4))->method('configureTestmanagementTracker');
+        $this->testmanagement_trackers_configurator->expects($this->exactly(4))->method('configureTestmanagementTracker');
 
         $this->testmanagement_trackers_configurator->expects($this->once())->method('getTrackersConfiguration')->willReturn(
             $this->getNewTrackersConfiguration()
@@ -142,7 +142,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         $this->config
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setProjectConfiguration');
 
         $this->config_creator->createConfigForProjectFromTemplate(
@@ -173,7 +173,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($this->new_campaign_tracker);
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::exactly(4))
+            ->expects($this->exactly(4))
             ->method('configureTestmanagementTracker')
             ->willReturnMap([
                 ['campaign', 334, new TestmanagementConfigTracker('campaign', 'campaign', 334)],
@@ -219,7 +219,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::exactly(4))
+            ->expects($this->exactly(4))
             ->method('configureTestmanagementTracker');
 
         $this->testmanagement_trackers_configurator
@@ -267,7 +267,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::exactly(4))
+            ->expects($this->exactly(4))
             ->method('configureTestmanagementTracker');
 
         $this->testmanagement_trackers_configurator
@@ -323,7 +323,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project)
             ->willReturn(true);
 
-        $this->testmanagement_trackers_creator->expects(self::never())->method('createTrackerFromXML');
+        $this->testmanagement_trackers_creator->expects($this->never())->method('createTrackerFromXML');
 
         $this->expectException(TrackerComesFromLegacyEngineException::class);
 
@@ -360,7 +360,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(true);
 
         $this->testmanagement_trackers_configurator
-            ->expects(self::exactly(4))
+            ->expects($this->exactly(4))
             ->method('configureTestmanagementTracker');
 
         $this->testmanagement_trackers_configurator
@@ -377,7 +377,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
 
         $this->config
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setProjectConfiguration');
 
         $this->config_creator->createConfigForProjectFromTemplate(

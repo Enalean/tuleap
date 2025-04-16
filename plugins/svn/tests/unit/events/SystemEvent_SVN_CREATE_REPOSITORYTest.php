@@ -135,7 +135,7 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
         );
 
         $system_event->expects($this->once())->method('error');
-        $system_event->expects(self::never())->method('done');
+        $system_event->expects($this->never())->method('done');
         $system_event->setParameters(
             SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters(
                 SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()),
@@ -166,7 +166,7 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
         );
 
         $system_event->expects($this->once())->method('warning');
-        $system_event->expects(self::never())->method('done');
+        $system_event->expects($this->never())->method('done');
         $system_event->setParameters(
             SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters(
                 SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()),

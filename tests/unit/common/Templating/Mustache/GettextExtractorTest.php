@@ -28,7 +28,7 @@ final class GettextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $gettext_collector = $this->createMock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $gettext_collector->expects(self::never())->method('collectEntry');
+        $gettext_collector->expects($this->never())->method('collectEntry');
 
         $extractor = new GettextExtractor(new \Mustache_Parser(), new \Mustache_Tokenizer(), $gettext_collector);
         $extractor->extract('{{# foo }}{{ bar }}{{/ foo }}', $entries);

@@ -45,7 +45,7 @@ final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $db_connection = $this->createMock(DBConnection::class);
         $writer        = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
-        $db_connection->expects(self::exactly(2))->method('reconnectAfterALongRunningProcess');
+        $db_connection->expects($this->exactly(2))->method('reconnectAfterALongRunningProcess');
 
         $item_id          = (new UUIDFileIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
         $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);

@@ -151,7 +151,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->http->method('getValidated')->willReturn(null);
         $this->project_manager->method('getProjectFromAutocompleter')->willReturn(false);
 
-        $this->project_milestones_dao->expects(self::never())->method('create');
+        $this->project_milestones_dao->expects($this->never())->method('create');
 
         self::assertNull($this->retriever->create($this->http));
     }
@@ -173,7 +173,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->http->method('getValidated')->willReturn(null);
         $this->project_manager->method('getProjectFromAutocompleter')->willReturn(false);
 
-        $this->project_milestones_dao->expects(self::never())->method('updateProjectMilestoneId');
+        $this->project_milestones_dao->expects($this->never())->method('updateProjectMilestoneId');
 
         $this->retriever->updatePreferences($this->http);
     }

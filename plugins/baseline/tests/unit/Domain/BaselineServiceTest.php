@@ -83,7 +83,7 @@ final class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
             ->snapshotDate(null)
             ->build();
         $this->baseline_repository
-            ->expects(self::atLeast(1))
+            ->expects($this->atLeast(1))
             ->method('add')
             ->with($baseline, $this->current_user, $this->clock->now());
 
@@ -99,7 +99,7 @@ final class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
             ->snapshotDate($snapshot_date)
             ->build();
         $this->baseline_repository
-            ->expects(self::atLeast(1))
+            ->expects($this->atLeast(1))
             ->method('add')
             ->with($baseline, $this->current_user, $snapshot_date);
 
@@ -126,7 +126,7 @@ final class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $baseline = BaselineFactory::one()->build();
         $this->baseline_repository
-            ->expects(self::atLeast(1))
+            ->expects($this->atLeast(1))
             ->method('delete')
             ->with($baseline);
 

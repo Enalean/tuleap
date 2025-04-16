@@ -81,7 +81,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $feature_removal = $this->buildFeatureRemoval();
         $this->getProcessor()->removeFromAllProgramIncrements($feature_removal);
 
-        $this->artifact_link_updater->expects(self::never())->method('updateArtifactLinks');
+        $this->artifact_link_updater->expects($this->never())->method('updateArtifactLinks');
     }
 
     public function testItSkipsNonExistentProgramIncrements(): void
@@ -150,7 +150,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $feature_removal = $this->buildFeatureRemoval();
-        $this->artifact_link_updater->expects(self::exactly(2))->method('updateArtifactLinks');
+        $this->artifact_link_updater->expects($this->exactly(2))->method('updateArtifactLinks');
 
         $this->getProcessor()->removeFromAllProgramIncrements($feature_removal);
     }

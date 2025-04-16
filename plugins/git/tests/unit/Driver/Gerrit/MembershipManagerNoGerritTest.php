@@ -93,8 +93,8 @@ final class MembershipManagerNoGerritTest extends TestCase
     {
         $this->remote_server_factory_without_gerrit->method('getServersForUGroup')->willReturn([]);
 
-        $this->driver->expects(self::never())->method('addUserToGroup');
-        $this->driver->expects(self::never())->method('removeUserFromGroup');
+        $this->driver->expects($this->never())->method('addUserToGroup');
+        $this->driver->expects($this->never())->method('removeUserFromGroup');
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }

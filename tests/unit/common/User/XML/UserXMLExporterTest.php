@@ -125,7 +125,7 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCollectUserByMail(): void
     {
-        $this->collection->expects(self::never())->method('add');
+        $this->collection->expects($this->never())->method('add');
 
         $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');
     }

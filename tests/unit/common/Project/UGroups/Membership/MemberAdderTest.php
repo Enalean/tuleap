@@ -160,7 +160,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('addUserToStaticGroup')
             ->with(168, 24, 217);
-        $this->project_member_adder->expects(self::never())->method('addProjectMemberWithFeedback');
+        $this->project_member_adder->expects($this->never())->method('addProjectMemberWithFeedback');
 
         $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
     }
@@ -192,7 +192,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('addUserToStaticGroup')
             ->with(168, 24, 217);
-        $this->project_member_adder->expects(self::never())->method('addProjectMemberWithFeedback');
+        $this->project_member_adder->expects($this->never())->method('addProjectMemberWithFeedback');
 
         $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
     }

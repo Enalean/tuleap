@@ -120,7 +120,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($rows);
         $project_204 = new \Project(['group_id' => 204]);
         $project_205 = new \Project(['group_id' => 205]);
-        $this->project_manager->expects(self::exactly(2))->method('getValidProject')
+        $this->project_manager->expects($this->exactly(2))->method('getValidProject')
             ->willReturnCallback(
                 fn (int $project_id): \Project => match ($project_id) {
                     204 => $project_204,
@@ -161,7 +161,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($user)
             ->willReturn($rows);
         $project_204 = new \Project(['group_id' => 204]);
-        $this->project_manager->expects(self::exactly(2))->method('getValidProject')->willReturnCallback(
+        $this->project_manager->expects($this->exactly(2))->method('getValidProject')->willReturnCallback(
             static function (int $project_id) use ($project_204): \Project {
                 if ($project_id === 204) {
                     return $project_204;

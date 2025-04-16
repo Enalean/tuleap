@@ -51,7 +51,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([CrossReferencePresenterBuilder::get(1)->withType('git')->build()]);
-        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }
@@ -73,7 +73,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
-        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
         $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
@@ -110,7 +110,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
                 )),
                 ''
             );
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }
@@ -146,7 +146,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
                 )),
                 ''
             );
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
 
         $this->organizer->organizeArtifactReferences($by_nature_organizer);
     }

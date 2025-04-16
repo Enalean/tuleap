@@ -91,8 +91,8 @@ final class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestC
         $is_update_running = true;
         $project           = ProjectTestBuilder::aProject()->build();
 
-        $this->migrator->expects(self::never())->method('runUpdateScript');
-        $this->dao->expects(self::never())->method('saveMathActivationForProjectID');
+        $this->migrator->expects($this->never())->method('runUpdateScript');
+        $this->dao->expects($this->never())->method('saveMathActivationForProjectID');
 
         $can_plugin_be_loaded = $mediawiki_math_extension_enabler->canPluginBeLoaded(
             $this->mediawiki_installation_path->url(),
