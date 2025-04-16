@@ -23,8 +23,8 @@
         v-if="has_remaining_effort"
         class="taskboard-card-remaining-effort taskboard-no-text-selection"
         v-bind:class="additional_classes"
-        v-on:click="editRemainingEffort"
-        v-on:keyup.enter="editRemainingEffort"
+        v-on:click="updateRemainingEffort"
+        v-on:keyup.enter="updateRemainingEffort"
         v-bind:tabindex="tabindex"
         v-bind:role="role"
         v-bind:title="$gettext('Remaining effort')"
@@ -44,84 +44,80 @@
     </span>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Card } from "../../../../../type";
 import EditRemainingEffort from "./RemainingEffort/EditRemainingEffort.vue";
-@Component({
-    components: { EditRemainingEffort },
-})
-export default class ParentCardRemainingEffort extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
 
-    get has_remaining_effort(): boolean {
-        return (
-            this.card &&
-            this.card.remaining_effort !== null &&
-            this.card.remaining_effort.value !== null
-        );
+const props = defineProps<{
+    card: Card;
+}>();
+
+const has_remaining_effort = computed((): boolean => {
+    return (
+        props.card &&
+        props.card.remaining_effort !== null &&
+        props.card.remaining_effort.value !== null
+    );
+});
+
+const remaining_effort = computed((): string => {
+    if (!props.card.remaining_effort?.value) {
+        return "";
     }
 
-    get remaining_effort(): string {
-        if (!this.card.remaining_effort?.value) {
-            return "";
-        }
+    return String(props.card.remaining_effort.value);
+});
 
-        return String(this.card.remaining_effort.value);
+const can_update_remaining_effort = computed((): boolean => {
+    if (!props.card.remaining_effort) {
+        return false;
     }
 
-    get additional_classes(): string {
-        const classes = [`tlp-badge-${this.card.color}`, `tlp-swatch-${this.card.color}`];
-
-        if (this.can_update_remaining_effort) {
-            classes.push("taskboard-card-remaining-effort-editable");
-        }
-
-        if (this.is_in_edit_mode) {
-            classes.push("taskboard-card-remaining-effort-edit-mode");
-        }
-
-        return classes.join(" ");
+    return props.card.remaining_effort.can_update;
+});
+const is_in_edit_mode = computed((): boolean => {
+    if (!props.card.remaining_effort) {
+        return false;
     }
 
-    get can_update_remaining_effort(): boolean {
-        if (!this.card.remaining_effort) {
-            return false;
-        }
+    return props.card.remaining_effort.is_in_edit_mode;
+});
 
-        return this.card.remaining_effort.can_update;
+const additional_classes = computed((): string => {
+    const classes = [`tlp-badge-${props.card.color}`, `tlp-swatch-${props.card.color}`];
+
+    if (can_update_remaining_effort.value) {
+        classes.push("taskboard-card-remaining-effort-editable");
     }
 
-    get icon(): string {
-        if (this.card.remaining_effort && this.card.remaining_effort.is_being_saved) {
-            return "fa-circle-o-notch fa-spin";
-        }
-
-        return "fa-flag-checkered";
+    if (is_in_edit_mode.value) {
+        classes.push("taskboard-card-remaining-effort-edit-mode");
     }
 
-    get is_in_edit_mode(): boolean {
-        if (!this.card.remaining_effort) {
-            return false;
-        }
+    return classes.join(" ");
+});
 
-        return this.card.remaining_effort.is_in_edit_mode;
+const icon = computed((): string => {
+    if (props.card.remaining_effort && props.card.remaining_effort.is_being_saved) {
+        return "fa-circle-o-notch fa-spin";
     }
 
-    get role(): string {
-        return this.can_update_remaining_effort ? "button" : "";
-    }
+    return "fa-flag-checkered";
+});
 
-    get tabindex(): number {
-        return this.can_update_remaining_effort ? 0 : -1;
-    }
+const role = computed((): string => {
+    return can_update_remaining_effort.value ? "button" : "";
+});
 
-    editRemainingEffort(): void {
-        if (this.can_update_remaining_effort && this.card.remaining_effort) {
-            this.card.remaining_effort.is_in_edit_mode = true;
-        }
+const tabindex = computed((): number => {
+    return can_update_remaining_effort.value ? 0 : -1;
+});
+
+function updateRemainingEffort(): void {
+    if (can_update_remaining_effort.value && props.card.remaining_effort) {
+        // eslint-disable-next-line vue/no-mutating-props
+        props.card.remaining_effort.is_in_edit_mode = true;
     }
 }
 </script>

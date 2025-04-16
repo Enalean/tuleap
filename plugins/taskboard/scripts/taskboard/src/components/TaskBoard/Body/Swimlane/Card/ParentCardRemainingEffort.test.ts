@@ -23,10 +23,9 @@ import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
 import type { Card, RemainingEffort } from "../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
 import EditRemainingEffort from "./RemainingEffort/EditRemainingEffort.vue";
+import type { Vue } from "vue/types/vue";
 
-async function getWrapper(
-    remaining_effort: RemainingEffort | null,
-): Promise<Wrapper<ParentCardRemainingEffort>> {
+async function getWrapper(remaining_effort: RemainingEffort | null): Promise<Wrapper<Vue>> {
     return shallowMount(ParentCardRemainingEffort, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
