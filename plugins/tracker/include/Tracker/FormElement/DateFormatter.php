@@ -133,7 +133,8 @@ class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclar
             [],
             $errors,
             false,
-            'date-time-' . $this->field->getName()
+            'date-time-' . $this->field->getName(),
+            $this->field->isRequired(),
         );
     }
 }

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ProjectHistoryPresenter
+class ProjectHistoryPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var int */
     public $group_id;
@@ -91,7 +91,7 @@ class ProjectHistoryPresenter
         $this->forward_sub_events = $forward_sub_events;
     }
 
-    public function start_field_date()
+    public function start_field_date() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             'history-search-start',
@@ -100,11 +100,12 @@ class ProjectHistoryPresenter
             [],
             [],
             false,
-            'date-time-history-start-date'
+            'date-time-history-start-date',
+            false,
         );
     }
 
-    public function end_field_date()
+    public function end_field_date() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             'history-search-end',
@@ -113,7 +114,8 @@ class ProjectHistoryPresenter
             [],
             [],
             false,
-            'date-time-history-end-date'
+            'date-time-history-end-date',
+            false,
         );
     }
 
@@ -122,77 +124,77 @@ class ProjectHistoryPresenter
         return $GLOBALS['Language']->getText('project_admin_utils', 'g_change_history');
     }
 
-    public function toggle_search()
+    public function toggle_search() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'toggle_search');
     }
 
-    public function toggler_class_name()
+    public function toggler_class_name() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return Toggler::getClassname('history_search_title');
     }
 
-    public function history_search_title()
+    public function history_search_title() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'history_search_title');
     }
 
-    public function table_head_event()
+    public function table_head_event() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'event');
     }
 
-    public function table_head_val()
+    public function table_head_val() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'val');
     }
 
-    public function table_head_from()
+    public function table_head_from() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'from');
     }
 
-    public function table_head_to()
+    public function table_head_to() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'to');
     }
 
-    public function table_head_by()
+    public function table_head_by() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('global', 'by');
     }
 
-    public function choose_event_label()
+    public function choose_event_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'choose_event');
     }
 
-    public function has_history_rows()
+    public function has_history_rows() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->history_rows['numrows'] > 0;
     }
 
-    public function history_results()
+    public function history_results() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return displayProjectHistoryResults($this->group_id, $this->history_rows, false, $this->index);
     }
 
-    public function row_color()
+    public function row_color() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return util_get_alt_row_color($this->index++);
     }
 
-    public function has_offset()
+    public function has_offset() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->offset > 0;
     }
 
-    public function offset_minus_limit()
+    public function offset_minus_limit() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->offset - $this->limit;
     }
 
-    public function offset_plus_limit()
+    public function offset_plus_limit() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->offset + $this->limit;
     }
@@ -207,22 +209,22 @@ class ProjectHistoryPresenter
         return $GLOBALS['Language']->getText('project_admin_utils', 'next');
     }
 
-    public function max_rows_not_reached()
+    public function max_rows_not_reached() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return ($this->offset + $this->limit) < $this->history_rows['numrows'];
     }
 
-    public function no_change()
+    public function no_change() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'no_g_change');
     }
 
-    public function current_on_total()
+    public function current_on_total() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return ($this->offset + $this->index - 3) . '/' . $this->history_rows['numrows'];
     }
 
-    public function export_history()
+    public function export_history() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('project_admin_utils', 'export_history');
     }
