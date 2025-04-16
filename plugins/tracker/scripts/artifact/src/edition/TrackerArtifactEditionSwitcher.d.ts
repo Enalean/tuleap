@@ -19,8 +19,12 @@
 
 export interface EditionSwitcher {
     init(): void;
-    submissionBarIsAlreadyActive(): boolean;
-    toggleSubmissionBar(): void;
+    submissionBarIsAlreadyActive(doc: Document): boolean;
+    toggleSubmitArtifactBar(
+        follow_up_comment_editor_instance: CKEDITOR.editor | null,
+        follow_up_new_comment: HTMLElement | null,
+        doc: Document,
+    ): void;
 }
 
 export function initEditionSwitcher(): EditionSwitcher;

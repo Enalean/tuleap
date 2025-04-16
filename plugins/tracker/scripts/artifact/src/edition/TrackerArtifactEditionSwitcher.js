@@ -22,8 +22,8 @@ import $ from "jquery";
 import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
-import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker.js";
-import { somethingIsEdited } from "./artifact-edition-buttons-switcher/is-edited-checker.js";
+import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker";
+import { toggleSubmitArtifactBar } from "./artifact-edition-buttons-switcher/submission-bar-toggler";
 
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
@@ -303,7 +303,11 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         $(element).find(".back-to-autocompute").hide();
         $(element).off("click");
         toggleDependencyIfAny(element);
-        toggleSubmissionBar();
+        toggleSubmitArtifactBar(
+            CKEDITOR.instances.tracker_followup_comment_new,
+            document.getElementById("tracker_followup_comment_new"),
+            document,
+        );
         toggleHiddenImageViewing();
     };
 
@@ -377,27 +381,37 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     var bindSubmissionBarToFollowups = function () {
         toggleSubmissionBarForCommentInCkeditor();
 
-        $("#tracker_followup_comment_new").on("input propertychange", toggleSubmissionBar);
+        $("#tracker_followup_comment_new").on("input propertychange", function () {
+            toggleSubmitArtifactBar(
+                CKEDITOR.instances.tracker_followup_comment_new,
+                document.getElementById("tracker_followup_comment_new"),
+                document,
+            );
+        });
 
         $("#rte_format_selectboxnew").on("change", function () {
             toggleSubmissionBarForCommentInCkeditor();
         });
 
-        $("#tracker_artifact_canned_response_sb").on("change", toggleSubmissionBar);
+        $("#tracker_artifact_canned_response_sb").on("change", function () {
+            toggleSubmitArtifactBar(
+                CKEDITOR.instances.tracker_followup_comment_new,
+                document.getElementById("tracker_followup_comment_new"),
+                document,
+            );
+        });
     };
 
     var toggleSubmissionBarForCommentInCkeditor = function () {
         if (CKEDITOR.instances.tracker_followup_comment_new) {
-            CKEDITOR.instances.tracker_followup_comment_new.on("change", toggleSubmissionBar);
+            CKEDITOR.instances.tracker_followup_comment_new.on("change", function () {
+                toggleSubmitArtifactBar(
+                    CKEDITOR.instances.tracker_followup_comment_new,
+                    document.getElementById("tracker_followup_comment_new"),
+                    document,
+                );
+            });
         }
-    };
-
-    var toggleSubmissionBar = function () {
-        if (submissionBarIsAlreadyActive(document)) {
-            removeSubmissionBarIfNeeded();
-        }
-
-        displaySubmissionBarIfNeeded();
     };
 
     var toggleHiddenImageViewing = function () {
@@ -408,35 +422,10 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         new LyteBox();
     };
 
-    var displaySubmissionBarIfNeeded = function () {
-        if (
-            somethingIsEdited(
-                CKEDITOR.instances.tracker_followup_comment_new,
-                document.getElementById("tracker_followup_comment_new"),
-                document,
-            )
-        ) {
-            $(".hidden-artifact-submit-button").slideDown(50);
-        }
-    };
-
-    var removeSubmissionBarIfNeeded = function () {
-        if (
-            somethingIsEdited(
-                CKEDITOR.instances.tracker_followup_comment_new,
-                document.getElementById("tracker_followup_comment_new"),
-                document,
-            )
-        ) {
-            return;
-        }
-        $(".hidden-artifact-submit-button").slideUp(50);
-    };
-
     return {
         init: init,
         submissionBarIsAlreadyActive: submissionBarIsAlreadyActive,
-        toggleSubmissionBar: toggleSubmissionBar,
+        toggleSubmitArtifactBar: toggleSubmitArtifactBar,
     };
 };
 

@@ -26,23 +26,22 @@ describe("submissionBarIsAlreadyActive", () => {
         mockDocument = document.implementation.createHTMLDocument();
     });
 
-    it("returns true if at least one hidden-artifact-submit-button is visible", () => {
+    it("returns true if at least one tracker-artifact-submit-buttons-bar-container is visible", () => {
         const button = mockDocument.createElement("button");
-        button.className = "hidden-artifact-submit-button";
-        Object.defineProperty(button, "offsetWidth", { value: 100 });
-        Object.defineProperty(button, "offsetHeight", { value: 100 });
+        button.className =
+            "tracker-artifact-submit-buttons-bar-container tracker-artifact-submit-buttons-bar-container-display";
         mockDocument.body.appendChild(button);
 
         expect(submissionBarIsAlreadyActive(mockDocument)).toBe(true);
     });
 
-    it("returns false if no hidden-artifact-submit-button elements are present", () => {
+    it("returns false if no tracker-artifact-submit-buttons-bar-container elements are present", () => {
         expect(submissionBarIsAlreadyActive(mockDocument)).toBe(false);
     });
 
-    it("returns false if hidden-artifact-submit-button elements are not visible", () => {
+    it("returns false if tracker-artifact-submit-buttons-bar-container elements are not visible", () => {
         const button = mockDocument.createElement("button");
-        button.className = "hidden-artifact-submit-button";
+        button.className = "tracker-artifact-submit-buttons-bar-container";
         Object.defineProperty(button, "offsetWidth", { value: 0 });
         Object.defineProperty(button, "offsetHeight", { value: 0 });
         mockDocument.body.appendChild(button);
