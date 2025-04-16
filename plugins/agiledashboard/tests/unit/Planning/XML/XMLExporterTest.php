@@ -67,7 +67,7 @@ final class XMLExporterTest extends TestCase
 
     public function testItCreatesAnXMLEntryForEachPlanningShortAccess(): void
     {
-        $this->planning_permissions_manager->expects(self::exactly(2))->method('getGroupIdsWhoHasPermissionOnPlanning');
+        $this->planning_permissions_manager->expects($this->exactly(2))->method('getGroupIdsWhoHasPermissionOnPlanning');
 
         $this->exporter->exportPlannings($this->agiledasboard_node, $this->plannings);
 
@@ -86,7 +86,7 @@ final class XMLExporterTest extends TestCase
 
     public function testItAddsAttributesForEachPlanningShortAccess(): void
     {
-        $this->planning_permissions_manager->expects(self::exactly(2))->method('getGroupIdsWhoHasPermissionOnPlanning');
+        $this->planning_permissions_manager->expects($this->exactly(2))->method('getGroupIdsWhoHasPermissionOnPlanning');
 
         $this->exporter->exportPlannings($this->agiledasboard_node, $this->plannings);
 

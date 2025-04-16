@@ -82,13 +82,13 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->willReturn(null);
 
-        $this->logger->expects(self::never())->method('error');
+        $this->logger->expects($this->never())->method('error');
 
-        $this->gitlab_api_client->expects(self::never())->method('deleteUrl');
+        $this->gitlab_api_client->expects($this->never())->method('deleteUrl');
 
-        $this->dao->expects(self::never())->method('deleteGitlabRepositoryWebhook');
+        $this->dao->expects($this->never())->method('deleteGitlabRepositoryWebhook');
 
-        $this->logger->expects(self::never())->method('info');
+        $this->logger->expects($this->never())->method('info');
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
@@ -113,15 +113,15 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([]);
 
         $this->gitlab_api_client
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('deleteUrl');
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('deleteGitlabRepositoryWebhook');
 
         $this->logger
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('info');
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
@@ -147,11 +147,11 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(['gitlab_webhook_id' => 6]);
 
         $this->logger
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('error');
 
         $this->gitlab_api_client
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('deleteUrl');
 
         $this->dao
@@ -159,7 +159,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('deleteGitlabRepositoryWebhook');
 
         $this->logger
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('info');
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository(null, $integration);
@@ -295,7 +295,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new GitlabRequestException(404, 'Not found'));
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('storeWebhook');
 
         $this->logger

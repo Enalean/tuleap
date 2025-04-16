@@ -220,7 +220,7 @@ final class VersionUploadFinisherTest extends TestCase
         $item->method('getGroupId')->willReturn(101);
         $item->method('getId')->willReturn(20);
         $item->method('getParentId')->willReturn(3);
-        $item->expects(self::never())->method('setCurrentVersion');
+        $item->expects($this->never())->method('setCurrentVersion');
         $item->method('accept')->willReturn(true);
 
         $this->item_factory->method('getItemFromDb')->willReturn($item);
@@ -252,7 +252,7 @@ final class VersionUploadFinisherTest extends TestCase
 
         $this->approval_table_update_checker->method('checkAvailableUpdateAction')->with('copy')->willReturn(true);
 
-        $this->approval_table_updater->expects(self::never())->method('updateApprovalTable');
+        $this->approval_table_updater->expects($this->never())->method('updateApprovalTable');
         $this->lock_factory->method('unlock');
 
         $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
@@ -310,7 +310,7 @@ final class VersionUploadFinisherTest extends TestCase
         $item->method('getGroupId')->willReturn(101);
         $item->method('getId')->willReturn(20);
         $item->method('getParentId')->willReturn(3);
-        $item->expects(self::never())->method('setCurrentVersion');
+        $item->expects($this->never())->method('setCurrentVersion');
         $item->method('accept')->willReturn(true);
 
         $this->item_factory->method('getItemFromDb')->willReturn($item);
@@ -343,7 +343,7 @@ final class VersionUploadFinisherTest extends TestCase
 
         $this->approval_table_update_checker->method('checkAvailableUpdateAction')->with('blablabla')->willReturn(false);
 
-        $this->approval_table_updater->expects(self::never())->method('updateApprovalTable');
+        $this->approval_table_updater->expects($this->never())->method('updateApprovalTable');
 
         $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 

@@ -98,7 +98,7 @@ final class Gitolite3LogParserTest extends TestCase
         $this->user_manager->method('getUserByUserName')->willReturn($this->user);
         $this->file_logs_dao->method('getLastReadLine')->willReturn(['end_line' => 2259]);
 
-        $this->history_dao->expects(self::never())->method('addGitReadAccess');
+        $this->history_dao->expects($this->never())->method('addGitReadAccess');
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -108,7 +108,7 @@ final class Gitolite3LogParserTest extends TestCase
         $this->user_manager->method('getUserByUserName')->willReturn($this->user);
         $this->file_logs_dao->method('getLastReadLine');
 
-        $this->history_dao->expects(self::never())->method('addGitReadAccess');
+        $this->history_dao->expects($this->never())->method('addGitReadAccess');
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -118,7 +118,7 @@ final class Gitolite3LogParserTest extends TestCase
         $this->file_logs_dao->method('getLastReadLine')->willReturn(['end_line' => 1362]);
         $this->user_manager->method('getUserByUserName')->willReturn($this->user);
 
-        $this->history_dao->expects(self::never())->method('addGitReadAccess');
+        $this->history_dao->expects($this->never())->method('addGitReadAccess');
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -146,7 +146,7 @@ final class Gitolite3LogParserTest extends TestCase
     public function testItParsesWronglyFormattedLogsWithoutErrors(): void
     {
         $this->user_manager->method('getUserByUserName');
-        $this->factory->expects(self::atLeastOnce())->method('getFromFullPath')->willReturn($this->repository);
+        $this->factory->expects($this->atLeastOnce())->method('getFromFullPath')->willReturn($this->repository);
         $this->file_logs_dao->method('getLastReadLine');
         $this->parser->parseLogs(__DIR__ . '/_fixtures/gitolite-2017-11-broken.log');
     }
@@ -170,7 +170,7 @@ final class Gitolite3LogParserTest extends TestCase
         $this->file_logs_dao->method('getLastReadLine');
         $this->history_dao->method('addGitReadAccess');
 
-        $this->user_dao->expects(self::never())->method('storeLastAccessDate');
+        $this->user_dao->expects($this->never())->method('storeLastAccessDate');
 
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }

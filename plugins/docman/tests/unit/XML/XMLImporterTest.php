@@ -61,7 +61,7 @@ final class XMLImporterTest extends TestCase
         $parent_item = new Docman_Item();
         $item_factory->expects($this->once())->method('getRoot')->with(113)->willReturn($parent_item);
 
-        $node_importer->expects(self::exactly(2))->method('import')
+        $node_importer->expects($this->exactly(2))->method('import')
             ->with(
                 self::callback(static fn(SimpleXMLElement $node) => (string) $node['type'] === 'wiki' || (string) $node['type'] === 'file'),
                 $parent_item
@@ -94,7 +94,7 @@ final class XMLImporterTest extends TestCase
         $rng_validator->expects($this->once())->method('validate');
 
         $item_factory->expects($this->once())->method('getRoot')->with(113)->willReturn(null);
-        $node_importer->expects(self::never())->method('import');
+        $node_importer->expects($this->never())->method('import');
 
         $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
         $importer->import($node);

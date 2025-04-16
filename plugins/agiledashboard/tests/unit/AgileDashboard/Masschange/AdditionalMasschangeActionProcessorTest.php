@@ -95,9 +95,9 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->method('userIsAdmin')
             ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects($this->never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
         $this->processAction(
             $request,
@@ -120,9 +120,9 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             return $event;
         });
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects($this->never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
         $this->processAction(
             $request,
@@ -138,9 +138,9 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->method('userIsAdmin')
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects($this->never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
         $this->processAction(
             $request,
@@ -156,9 +156,9 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->method('userIsAdmin')
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
-        $this->planned_artifact_dao->expects(self::never())->method('isArtifactPlannedInAMilestoneOfTheProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
+        $this->planned_artifact_dao->expects($this->never())->method('isArtifactPlannedInAMilestoneOfTheProject');
 
         $this->processAction(
             $request,
@@ -175,7 +175,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->willReturn(true);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
         $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(false);
 
@@ -194,7 +194,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->willReturn(true);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('removeItemsFromExplicitBacklogOfProject')->with(101, ['125', '144']);
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
         $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(true);
 
@@ -212,7 +212,7 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->method('userIsAdmin')
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeItemsFromExplicitBacklogOfProject');
         $matcher = $this->exactly(2);
         $this->unplanned_artifacts_adder->expects($matcher)->method('addArtifactToTopBacklogFromIds')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -239,8 +239,8 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->method('userIsAdmin')
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeItemsFromExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
         $this->planned_artifact_dao->method('isArtifactPlannedInAMilestoneOfTheProject')->willReturn(false);
 
         $this->processAction(

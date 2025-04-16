@@ -121,7 +121,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
         $body_params = ['grant_type' => 'authorization_code'];
 
-        $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');
+        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -138,7 +138,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
         $body_params = ['grant_type' => 'authorization_code', 'code' => 'not_valid_auth_code'];
 
-        $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');
+        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -158,7 +158,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
             'code'       => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
         ];
 
-        $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');
+        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -179,7 +179,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
             'redirect_uri' => 'https://evil.example.com',
         ];
 
-        $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');
+        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -205,7 +205,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
             'redirect_uri' => $app->getRedirectEndpoint(),
         ];
 
-        $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');
+        $this->representation_builder->expects($this->never())->method('buildRepresentationFromAuthorizationCode');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($app, $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));

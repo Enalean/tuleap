@@ -89,7 +89,7 @@ final class ComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($comparison);
 
         $this->comparison_service
-            ->expects(self::atLeast(1))
+            ->expects($this->atLeast(1))
             ->method('delete')
             ->with($this->current_user, $comparison);
 

@@ -122,7 +122,7 @@ final class TrackerFormElementFactoryTest extends TestCase
 
         $event_manager = $this->createMock(EventManager::class);
         EventManager::setInstance($event_manager);
-        $event_manager->expects(self::once())->method('processEvent');
+        $event_manager->expects($this->once())->method('processEvent');
 
 
         $GLOBALS['Response']->method('addFeedback')

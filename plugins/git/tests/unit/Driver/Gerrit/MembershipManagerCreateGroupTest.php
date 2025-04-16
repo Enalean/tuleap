@@ -176,7 +176,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
             ->with($this->remote_server, 'w3c/coders')
             ->willReturn(true);
 
-        $this->driver->expects(self::never())->method('createGroup');
+        $this->driver->expects($this->never())->method('createGroup');
 
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
         self::assertEquals('w3c/coders', $gerrit_group_name);
@@ -242,7 +242,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
         $remote_server1->method('getId')->willReturn(666);
         $remote_server2->method('getId')->willReturn(667);
 
-        $this->dao->expects(self::exactly(2))->method('addReference')
+        $this->dao->expects($this->exactly(2))->method('addReference')
             ->with(1236, 25698, self::callback(static fn(int $id) => $id === 666 || $id === 667));
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
@@ -291,7 +291,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
 
         $this->driver->method('doesTheGroupExist')->willReturn(false);
         $counter = 0;
-        $this->driver->expects(self::exactly(2))->method('createGroup')
+        $this->driver->expects($this->exactly(2))->method('createGroup')
             ->willReturnCallback(function () use (&$counter) {
                 if ($counter++ === 0) {
                     throw new Exception('whatever');
@@ -304,7 +304,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItDoesntCreateGroupForSpecialNoneUGroup(): void
     {
-        $this->driver->expects(self::never())->method('createGroup');
+        $this->driver->expects($this->never())->method('createGroup');
 
         $ugroup            = new ProjectUGroup(['ugroup_id' => ProjectUGroup::NONE]);
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
@@ -313,7 +313,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItDoesntCreateGroupForSpecialWikiAdminGroup(): void
     {
-        $this->driver->expects(self::never())->method('createGroup');
+        $this->driver->expects($this->never())->method('createGroup');
 
         $ugroup            = new ProjectUGroup(['ugroup_id' => ProjectUGroup::WIKI_ADMIN]);
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);

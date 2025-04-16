@@ -88,7 +88,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
-        $this->app_dao->expects(self::never())->method('updateApp');
+        $this->app_dao->expects($this->never())->method('updateApp');
 
         self::assertSame($response, $this->controller->handle($request));
     }

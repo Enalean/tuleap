@@ -424,7 +424,7 @@ final class ItemFactoryTest extends TestCase
         $dao->method('listItemsToPurge')->willReturn(TestHelper::emptyDar());
 
         $itemFactory->method('_getItemDao')->willReturn($dao);
-        $itemFactory->expects(self::never())->method('purgeDeletedItem');
+        $itemFactory->expects($this->never())->method('purgeDeletedItem');
 
         self::assertTrue($itemFactory->PurgeDeletedItems(1234567890));
     }
@@ -543,16 +543,16 @@ final class ItemFactoryTest extends TestCase
         $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
         $dao = $this->createMock(Docman_ItemDao::class);
-        $dao->expects(self::never())->method('restore');
+        $dao->expects($this->never())->method('restore');
         $itemFactory->method('_getItemDao')->willReturn($dao);
 
         $versionFactory = $this->createMock(Docman_VersionFactory::class);
         $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn(false);
-        $versionFactory->expects(self::never())->method('restore');
+        $versionFactory->expects($this->never())->method('restore');
         $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
-        $itemFactory->expects(self::never())->method('_getEventManager');
+        $itemFactory->expects($this->never())->method('_getEventManager');
 
         self::assertFalse($itemFactory->restore($item));
     }
@@ -617,7 +617,7 @@ final class ItemFactoryTest extends TestCase
         $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
         $dao = $this->createMock(Docman_ItemDao::class);
-        $dao->expects(self::never())->method('restore');
+        $dao->expects($this->never())->method('restore');
         $itemFactory->method('_getItemDao')->willReturn($dao);
 
         $v1 = new Docman_Version();
@@ -638,7 +638,7 @@ final class ItemFactoryTest extends TestCase
         $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
-        $itemFactory->expects(self::never())->method('_getEventManager');
+        $itemFactory->expects($this->never())->method('_getEventManager');
 
         self::assertFalse($itemFactory->restore($item));
     }

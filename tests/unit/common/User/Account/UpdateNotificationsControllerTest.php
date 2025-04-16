@@ -189,7 +189,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -214,7 +214,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -297,7 +297,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->willReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
-        $this->user_manager->expects(self::never())->method('updateDb');
+        $this->user_manager->expects($this->never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(

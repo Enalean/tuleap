@@ -70,7 +70,7 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             </git>
         ');
 
-        $this->jenkins_server_adder->expects(self::exactly(2))->method('addServerInProject');
+        $this->jenkins_server_adder->expects($this->exactly(2))->method('addServerInProject');
 
         $this->logger->method('info');
 
@@ -86,7 +86,7 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <git/>
         ');
 
-        $this->jenkins_server_adder->expects(self::never())->method('addServerInProject');
+        $this->jenkins_server_adder->expects($this->never())->method('addServerInProject');
 
         $this->importer->import(
             $this->project,

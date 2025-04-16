@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var PHPUnit\Framework\MockObject\MockObject&SystemEvent_COMPUTE_MD5SUM
@@ -111,7 +110,7 @@ final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->evt->method('sendNotificationMail')->willReturn(true);
 
-        $this->evt->expects(self::never())->method('done');
+        $this->evt->expects($this->never())->method('done');
 
         self::assertFalse($this->evt->process());
 
@@ -127,7 +126,7 @@ final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
         // DB
         $this->evt->method('updateDB')->willReturn(false);
 
-        $this->evt->expects(self::never())->method('done');
+        $this->evt->expects($this->never())->method('done');
         self::assertFalse($this->evt->process());
 
         // Check errors
@@ -156,7 +155,7 @@ final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->evt->method('sendNotificationMail')->willReturn(false);
 
-        $this->evt->expects(self::never())->method('done');
+        $this->evt->expects($this->never())->method('done');
 
         self::assertFalse($this->evt->process());
 

@@ -122,8 +122,8 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->codendi_mail->method('getTo');
         $this->builder->method('getMailSender')->willReturn($this->codendi_mail);
 
-        $this->renderer->expects(self::exactly(4))->method('renderToString');
-        $this->mail_enhancer->expects(self::never())->method('enhanceMail');
+        $this->renderer->expects($this->exactly(4))->method('renderToString');
+        $this->mail_enhancer->expects($this->never())->method('enhanceMail');
 
         $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
@@ -138,8 +138,8 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->codendi_mail->method('getTo');
         $this->builder->method('getMailSender')->willReturn($this->codendi_mail);
 
-        $this->renderer->expects(self::never())->method('renderToString');
-        $this->mail_enhancer->expects(self::exactly(2))->method('enhanceMail');
+        $this->renderer->expects($this->never())->method('renderToString');
+        $this->mail_enhancer->expects($this->exactly(2))->method('enhanceMail');
 
         $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
@@ -161,7 +161,7 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $codendi_mail_2->method('setBodyText');
         $codendi_mail_2->method('setSubject');
 
-        $this->builder->expects(self::exactly(2))->method('getMailSender')->willReturnOnConsecutiveCalls($this->codendi_mail, $codendi_mail_2);
+        $this->builder->expects($this->exactly(2))->method('getMailSender')->willReturnOnConsecutiveCalls($this->codendi_mail, $codendi_mail_2);
 
         $sent = $this->builder->buildAndSendEmail(
             $project,
@@ -177,7 +177,7 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = $this->createMock(\Project::class);
         $project->method('getTruncatedEmailsUsage')->willReturn(false);
         $this->builder->method('getMailSender')->willReturn($this->codendi_mail);
-        $this->codendi_mail->expects(self::never())->method('send');
+        $this->codendi_mail->expects($this->never())->method('send');
         $this->codendi_mail->method('getTo');
 
         $sent = $this->builder->buildAndSendEmail(

@@ -99,7 +99,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
             ->with(101)
             ->willReturn(false);
 
-        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('searchByTransitionId');
+        $this->add_to_top_backlog_post_action_dao->expects($this->never())->method('searchByTransitionId');
 
         $post_actions = $this->factory->loadPostActions($this->transition);
         self::assertEmpty($post_actions);

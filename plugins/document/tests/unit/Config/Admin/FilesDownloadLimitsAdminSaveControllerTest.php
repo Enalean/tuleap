@@ -120,7 +120,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
 
         $this->token->expects($this->once())->method('check');
 
-        $this->config_dao->expects(self::never())
+        $this->config_dao->expects($this->never())
             ->method('save');
 
         $inspector = new LayoutInspector();
@@ -158,7 +158,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
         $this->token->expects($this->once())->method('check');
 
         $this->config_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $inspector = new LayoutInspector();

@@ -73,7 +73,7 @@ final class PendingJiraImportCleanerTest extends TestCase
 
         $this->dao->expects($this->once())->method('deleteExpiredImports')->with($expected_timestamp);
 
-        $this->notifier->expects(self::exactly(2))->method('warnUserAboutDeletion')
+        $this->notifier->expects($this->exactly(2))->method('warnUserAboutDeletion')
             ->with(self::callback(static fn(PendingJiraImport $import) => in_array($import, [$jira_import_1, $jira_import_2])));
 
         $this->cleaner->deleteDanglingPendingJiraImports($current_time);
@@ -93,7 +93,7 @@ final class PendingJiraImportCleanerTest extends TestCase
 
         $this->dao->expects($this->once())->method('deleteExpiredImports')->with($expected_timestamp);
 
-        $this->notifier->expects(self::never())->method('warnUserAboutDeletion');
+        $this->notifier->expects($this->never())->method('warnUserAboutDeletion');
 
         $this->cleaner->deleteDanglingPendingJiraImports($current_time);
     }

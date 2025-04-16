@@ -97,7 +97,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->config->method('isConfigNeeded')->willReturn(true);
 
         $this->execution_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('searchByExecutionTrackerId');
 
         $xml_content = $this->exporter->exportToXML($this->project);

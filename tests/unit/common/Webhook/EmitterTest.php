@@ -57,10 +57,10 @@ final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = $this->createMock(RequestInterface::class);
         $request->method('withHeader')->willReturnSelf();
         $request->method('withBody')->willReturnSelf();
-        $request_factory->expects(self::exactly(2))->method('createRequest')
+        $request_factory->expects($this->exactly(2))->method('createRequest')
             ->willReturn($request);
         $stream_factory->method('createStream')->willReturn($this->createMock(StreamInterface::class));
-        $status_logger->expects(self::exactly(2))->method('log');
+        $status_logger->expects($this->exactly(2))->method('log');
 
         $webhook_emitter->emit($payload, $webhook_1, $webhook_2);
     }

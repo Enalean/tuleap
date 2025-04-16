@@ -273,7 +273,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
             ->with('123')
             ->willReturn($backlog_item);
 
-        $this->artifact_link_updater->expects(self::never())->method('updateArtifactLinks');
+        $this->artifact_link_updater->expects($this->never())->method('updateArtifactLinks');
 
         $this->processor->process($request, $redirect, $artifact);
 

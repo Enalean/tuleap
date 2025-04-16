@@ -75,7 +75,7 @@ final class Docman_CloneItemsVisitorTest extends TestCase // phpcs:ignore Squiz.
         $project = ProjectTestBuilder::aProject()->withPublicName('project name')->build();
         $project_manager->method('getProject')->willReturn($project);
 
-        $link_version_factory->expects(self::atLeastOnce())->method('create');
+        $link_version_factory->expects($this->atLeastOnce())->method('create');
 
         $visitor->visitLink(
             $link_to_copy,

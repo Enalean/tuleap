@@ -93,7 +93,7 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($user, $project);
 
         $this->dao->expects($this->once())->method('enable');
-        $this->dao->expects(self::never())->method('disable');
+        $this->dao->expects($this->never())->method('disable');
 
         $this->layout->method('addFeedback');
         $this->layout->expects($this->once())->method('redirect')
@@ -128,7 +128,7 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($user, $project);
 
         $this->dao->expects($this->once())->method('disable');
-        $this->dao->expects(self::never())->method('enable');
+        $this->dao->expects($this->never())->method('enable');
 
         $this->layout->method('addFeedback');
         $this->layout->expects($this->once())->method('redirect')

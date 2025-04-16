@@ -86,7 +86,7 @@ final class ArtifactLinkerTest extends TestCase
             ChangesetTestBuilder::aChangeset(45)->build()
         );
 
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('error');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('error');
         self::assertTrue($this->linkArtifact());
         self::assertSame(1, $this->changeset_creator->getCallsCount());
     }

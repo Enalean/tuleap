@@ -147,7 +147,7 @@ final class InitialChangesetCreatorTest extends TestCase
             new Tracker_Artifact_Exception_CannotCreateNewChangeset()
         );
 
-        $this->workflow->expects(self::never())->method('after');
+        $this->workflow->expects($this->never())->method('after');
 
         $this->create();
     }
@@ -163,7 +163,7 @@ final class InitialChangesetCreatorTest extends TestCase
 
         $this->changeset_saver->expects($this->once())->method('saveChangeset')->willReturn(123);
 
-        $this->workflow->expects(self::never())->method('after');
+        $this->workflow->expects($this->never())->method('after');
 
         $this->create();
     }
@@ -183,8 +183,8 @@ final class InitialChangesetCreatorTest extends TestCase
         );
 
         $this->workflow->expects($this->once())->method('isDisabled')->willReturn(false);
-        $this->workflow->expects(self::never())->method('after');
-        $this->changeset_saver->expects(self::never())->method('saveChangeset');
+        $this->workflow->expects($this->never())->method('after');
+        $this->changeset_saver->expects($this->never())->method('saveChangeset');
         $creation = $this->create();
 
         self::assertNull($creation);
@@ -290,9 +290,9 @@ final class InitialChangesetCreatorTest extends TestCase
     {
         $this->workflow->method('isDisabled')->willReturn(true);
         $this->workflow->expects($this->once())->method('after');
-        $this->workflow->expects(self::never())->method('validate');
-        $this->workflow->expects(self::never())->method('before');
-        $this->workflow->expects(self::never())->method('checkGlobalRules');
+        $this->workflow->expects($this->never())->method('validate');
+        $this->workflow->expects($this->never())->method('before');
+        $this->workflow->expects($this->never())->method('checkGlobalRules');
 
         $this->setFields([$this->field]);
 

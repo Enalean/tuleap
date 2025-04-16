@@ -57,8 +57,8 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
 
         $request = new \HTTPRequest();
 
-        $this->dao->expects(self::never())->method('deleteBoardTypeByProjectId');
-        $this->dao->expects(self::never())->method('updateBoardTypeByProjectId');
+        $this->dao->expects($this->never())->method('deleteBoardTypeByProjectId');
+        $this->dao->expects($this->never())->method('updateBoardTypeByProjectId');
 
         $this->getController()->onSubmitCallback($request);
     }
@@ -106,7 +106,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
         $request = new \HTTPRequest();
         $request->set('scrum-board-type', 'cardwall');
 
-        $this->dao->expects(self::never())->method('create')->with(150, 'taskboard');
+        $this->dao->expects($this->never())->method('create')->with(150, 'taskboard');
 
         $this->getController()->onSubmitCallback($request);
     }

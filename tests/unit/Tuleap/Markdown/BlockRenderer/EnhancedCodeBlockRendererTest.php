@@ -55,10 +55,10 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotConvertFencedCodesThatAreNotMermaid(): void
     {
         $this->code_block_features
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('needsMermaid');
         $this->code_block_features
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('needsSyntaxHighlight');
 
         $result = $this->converter->convert(
@@ -101,7 +101,7 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('needsMermaid');
         $this->code_block_features
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('needsSyntaxHighlight');
 
         $result = $this->converter->convert(

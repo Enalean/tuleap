@@ -45,7 +45,7 @@ final class GitActionsProjectPrivacyTest extends TestCase
     public function testItDoesNothingWhenThereAreNoRepositories(): void
     {
         $project_id = 99;
-        $this->dao->expects(self::atLeastOnce())->method('getProjectRepositoryList')->with($project_id)->willReturn([]);
+        $this->dao->expects($this->atLeastOnce())->method('getProjectRepositoryList')->with($project_id)->willReturn([]);
         $this->changeProjectRepositoriesAccess($project_id, true);
         $this->changeProjectRepositoriesAccess($project_id, false);
     }
@@ -55,7 +55,7 @@ final class GitActionsProjectPrivacyTest extends TestCase
         $project_id = 99;
         $repo_id    = 333;
         $repo       = $this->createMock(GitRepository::class);
-        $repo->expects(self::never())->method('setAccess');
+        $repo->expects($this->never())->method('setAccess');
         $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id => null]);
         $this->factory->method('getRepositoryById')->with($repo_id)->willReturn($repo);
         $this->changeProjectRepositoriesAccess($project_id, false);
@@ -81,7 +81,7 @@ final class GitActionsProjectPrivacyTest extends TestCase
         $project_id = 99;
         $repo_id    = 333;
         $repo       = $this->createMock(GitRepository::class);
-        $repo->expects(self::never())->method('setAccess');
+        $repo->expects($this->never())->method('setAccess');
         $repo->method('getAccess')->willReturn(GitRepository::PRIVATE_ACCESS);
         $repo->method('changeAccess')->willReturn('whatever');
         $this->dao->method('getProjectRepositoryList')->with($project_id)->willReturn([$repo_id => null]);

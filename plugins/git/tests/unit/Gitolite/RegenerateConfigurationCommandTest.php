@@ -83,7 +83,7 @@ final class RegenerateConfigurationCommandTest extends TestCase
         $command_tester = new CommandTester($command);
 
         $this->project_manager->method('getValidProject')->willThrowException(new Project_NotFoundException());
-        $this->event_manager->expects(self::never())->method('queueProjectsConfigurationUpdate');
+        $this->event_manager->expects($this->never())->method('queueProjectsConfigurationUpdate');
 
         $command_tester->execute(['project_ids' => ['999999999999999999', '103']]);
         self::assertSame(1, $command_tester->getStatusCode());
@@ -94,7 +94,7 @@ final class RegenerateConfigurationCommandTest extends TestCase
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
 
-        $this->event_manager->expects(self::never())->method('queueProjectsConfigurationUpdate');
+        $this->event_manager->expects($this->never())->method('queueProjectsConfigurationUpdate');
 
         $command_tester->execute(['project_ids' => []]);
         self::assertSame(0, $command_tester->getStatusCode());

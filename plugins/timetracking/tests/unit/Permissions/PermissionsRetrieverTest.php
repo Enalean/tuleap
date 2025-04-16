@@ -185,7 +185,7 @@ final class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->tracker)
             ->willReturn([]);
 
-        $this->user->expects(self::never())->method('isMemberOfUGroup');
+        $this->user->expects($this->never())->method('isMemberOfUGroup');
 
         self::assertFalse(
             $this->retriever->userCanSeeAllTimesInTracker(
@@ -320,7 +320,7 @@ final class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->tracker)
             ->willReturn([]);
 
-        $this->user->expects(self::never())->method('isMemberOfUGroup');
+        $this->user->expects($this->never())->method('isMemberOfUGroup');
 
         self::assertFalse(
             $this->retriever->userCanAddTimeInTracker(

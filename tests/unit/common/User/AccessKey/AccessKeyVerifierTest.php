@@ -88,7 +88,7 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         if ($expect_to_log_access) {
             $this->dao->expects($this->once())->method('updateAccessKeyUsageByID');
         } else {
-            $this->dao->expects(self::never())->method('updateAccessKeyUsageByID');
+            $this->dao->expects($this->never())->method('updateAccessKeyUsageByID');
         }
 
         $this->verifier->getUser($this->access_key, $this->createMock(AuthenticationScope::class), '2001:db8::1777');

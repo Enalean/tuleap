@@ -92,7 +92,7 @@ class AdminSavePermissionsControllerTest extends TestCase
             );
 
         $history_dao
-            ->expects(self::exactly(3))
+            ->expects($this->exactly(3))
             ->method('groupAddHistory')
             ->willReturnCallback(
                 function (string $field_name, string $value, int $project_id): void {

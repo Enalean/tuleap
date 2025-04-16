@@ -42,7 +42,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheOriginalFilenameWhenThePatternIsNull(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
+        $this->docman_settings_bo->expects($this->never())->method('getMetadataUsage');
 
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithNoPattern(),
@@ -64,7 +64,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheOriginalFilenameWhenThePatternIsAnEmptyString(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
+        $this->docman_settings_bo->expects($this->never())->method('getMetadataUsage');
 
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern(''),
@@ -86,7 +86,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheNewFilenameWithTheTitleVariable(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
+        $this->docman_settings_bo->expects($this->never())->method('getMetadataUsage');
 
         $pattern          = 'Brand-${TITLE}';
         $filename_builder = new FilenameBuilder(
@@ -109,7 +109,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheNewFilenameWithTheItemIdVariable(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
+        $this->docman_settings_bo->expects($this->never())->method('getMetadataUsage');
 
         $pattern          = 'Brand-Mercedes-rejected-Not a Mercredes wow-#${ID}';
         $filename_builder = new FilenameBuilder(

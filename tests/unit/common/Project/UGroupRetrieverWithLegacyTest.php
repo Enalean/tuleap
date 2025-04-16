@@ -68,7 +68,7 @@ final class UGroupRetrieverWithLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetUgroupReturnNullIfGroupDoesntExist(): void
     {
-        $this->ugroup->expects(self::never())->method('getId');
+        $this->ugroup->expects($this->never())->method('getId');
         $this->ugroup_manager->method('getUGroupByName')->willReturn(null);
 
         self::assertNull($this->ugroup_retriever->getUGroupId($this->project, 'ugroup_project'));

@@ -303,17 +303,17 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->with(123)
             ->willThrowException(new TuleapReferencedArtifactNotFoundException(123));
 
-        $this->commit_tuleap_reference_dao->expects(self::never())->method('saveGitlabCommitInfo');
+        $this->commit_tuleap_reference_dao->expects($this->never())->method('saveGitlabCommitInfo');
 
         $this->commenter
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('handleArtifactClosure');
 
-        $this->reference_manager->expects(self::never())->method('insertCrossReference');
+        $this->reference_manager->expects($this->never())->method('insertCrossReference');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
 
@@ -358,17 +358,17 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->with(123)
             ->willThrowException(new TuleapReferenceNotFoundException());
 
-        $this->commit_tuleap_reference_dao->expects(self::never())->method('saveGitlabCommitInfo');
+        $this->commit_tuleap_reference_dao->expects($this->never())->method('saveGitlabCommitInfo');
 
         $this->commenter
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('handleArtifactClosure');
 
-        $this->reference_manager->expects(self::never())->method('insertCrossReference');
+        $this->reference_manager->expects($this->never())->method('insertCrossReference');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
 

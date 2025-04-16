@@ -89,7 +89,7 @@ final class ScrumPresenterBuilderTest extends TestCase
             ->withUsedService('plugin_agiledashboard')
             ->build();
 
-        $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn(false);
+        $this->planning_factory->expects($this->atLeastOnce())->method('getRootPlanning')->willReturn(false);
 
         $this->configuration_dao->expects($this->once())->method('isScrumActivated')->willReturn(false);
 
@@ -141,7 +141,7 @@ final class ScrumPresenterBuilderTest extends TestCase
             ->withMilestoneTracker($tracker)
             ->withName('tracker name')
             ->build();
-        $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn($planning);
+        $this->planning_factory->expects($this->atLeastOnce())->method('getRootPlanning')->willReturn($planning);
 
         $this->configuration_dao->expects($this->once())->method('isScrumActivated')->willReturn(true);
 

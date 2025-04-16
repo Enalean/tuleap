@@ -211,7 +211,7 @@ final class GerritServerFactoryTest extends TestCase
             default => [],
         });
 
-        $this->dao->expects(self::exactly(4))->method('searchAllByProjectId')->willReturn([]);
+        $this->dao->expects($this->exactly(4))->method('searchAllByProjectId')->willReturn([]);
 
         $this->factory->getServersForProject($parent);
     }
@@ -287,7 +287,7 @@ final class GerritServerFactoryTest extends TestCase
 
     public function testItDoesNotDeleteUsedServer(): void
     {
-        $this->dao->expects(self::never())->method('delete')->with($this->server_id);
+        $this->dao->expects($this->never())->method('delete')->with($this->server_id);
         $this->factory->delete($this->main_gerrit_server);
     }
 }

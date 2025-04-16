@@ -108,14 +108,14 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_source    = ProjectTestBuilder::aProject()->build();
         $this->repository_source = $this->createMock(GitRepository::class);
         $this->repository_source
-            ->expects(self::atMost(1))
+            ->expects($this->atMost(1))
             ->method('getProject')
             ->willReturn($this->project_source);
 
         $this->project_destination    = ProjectTestBuilder::aProject()->build();
         $this->repository_destination = $this->createMock(GitRepository::class);
         $this->repository_destination
-            ->expects(self::atMost(1))
+            ->expects($this->atMost(1))
             ->method('getProject')
             ->willReturn($this->project_destination);
 
@@ -216,7 +216,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->pull_request_closer
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('abandon')
             ->with($pull_request, $this->user);
 
@@ -236,7 +236,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockUserCannotAccessProject($this->project_source);
 
         $this->pull_request_closer
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('abandon')
             ->with($pull_request);
 
@@ -256,7 +256,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockUserCanOnlyAccessSourceProject($this->project_source, $this->project_destination);
 
         $this->pull_request_closer
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('abandon')
             ->with($pull_request);
 
@@ -299,7 +299,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new UserCannotMergePullRequestException($pull_request, $this->user));
 
         $this->pull_request_closer
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('doMerge')
             ->with(
                 $this->repository_destination,

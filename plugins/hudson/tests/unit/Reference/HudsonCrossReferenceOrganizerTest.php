@@ -62,11 +62,11 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn([CrossReferencePresenterBuilder::get(1)->withType('git')->build()]);
 
         $this->organizer_by_nature
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('removeUnreadableCrossReference');
 
         $this->organizer_by_nature
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
@@ -82,13 +82,13 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->method('getCrossReferencePresenters')
             ->willReturn([$ref_build, $ref_job]);
 
-        $this->user->expects(self::exactly(2))->method('isMember')->with(101)->willReturn(false);
+        $this->user->expects($this->exactly(2))->method('isMember')->with(101)->willReturn(false);
 
         $this->organizer_by_nature
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
-        $this->project_manager->expects(self::exactly(2))->method('getProject')->willReturn($this->project);
+        $this->project_manager->expects($this->exactly(2))->method('getProject')->willReturn($this->project);
         $matcher = $this->exactly(2);
 
         $this->organizer_by_nature->expects($matcher)
@@ -102,7 +102,7 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             });
 
         $this->organizer_by_nature
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);
@@ -117,16 +117,16 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->method('getCrossReferencePresenters')
             ->willReturn([$ref_build, $ref_job]);
 
-        $this->user->expects(self::exactly(2))->method('isMember')->with(101)->willReturn(true);
+        $this->user->expects($this->exactly(2))->method('isMember')->with(101)->willReturn(true);
 
         $this->organizer_by_nature
             ->method('getCurrentUser')
             ->willReturn($this->user);
 
-        $this->project_manager->expects(self::exactly(2))->method('getProject')->willReturn($this->project);
+        $this->project_manager->expects($this->exactly(2))->method('getProject')->willReturn($this->project);
 
         $this->organizer_by_nature
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('removeUnreadableCrossReference');
         $matcher = $this->exactly(2);
 

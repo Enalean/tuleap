@@ -67,7 +67,7 @@ final class TransitionUpdaterTest extends TestCase
         $state = new State(1, [$transition, $transition_02, $transition_03]);
 
         $this->condition_updater
-            ->expects(self::exactly(3))
+            ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
                 static fn (
@@ -124,7 +124,7 @@ final class TransitionUpdaterTest extends TestCase
         $post_actions = new PostActionCollection();
 
         $this->collection_updater
-            ->expects(self::exactly(3))
+            ->expects($this->exactly(3))
             ->method('updateByTransition')
             ->willReturnCallback(
                 static fn (

@@ -217,7 +217,7 @@ final class XMLExportVisitorTest extends TestCase
         $this->perms_exporter->expects($this->once())->method('exportPermissions');
 
         $this->version_factory->expects($this->once())->method('getAllVersionForItem')->willReturn([]);
-        $this->archive->expects(self::never())->method('addFile');
+        $this->archive->expects($this->never())->method('addFile');
 
         $this->visitor->export($xml, $file);
 
@@ -320,7 +320,7 @@ final class XMLExportVisitorTest extends TestCase
             new Docman_Folder(['title' => 'My sub folder', 'item_id' => 44]),
         ]));
 
-        $this->perms_exporter->expects(self::exactly(3))->method('exportPermissions');
+        $this->perms_exporter->expects($this->exactly(3))->method('exportPermissions');
 
         $this->visitor->export($xml, $folder);
 
@@ -375,12 +375,12 @@ final class XMLExportVisitorTest extends TestCase
 
         $project_admin  = UserTestBuilder::aUser()->withLdapId('103')->build();
         $project_member = UserTestBuilder::aUser()->withLdapId('104')->build();
-        $this->user_manager->expects(self::exactly(2))->method('getUserById')
+        $this->user_manager->expects($this->exactly(2))->method('getUserById')
             ->willReturnCallback(static fn(int $id) => match ($id) {
                 103 => $project_admin,
                 104 => $project_member,
             });
-        $this->user_collection->expects(self::exactly(2))->method('add')
+        $this->user_collection->expects($this->exactly(2))->method('add')
             ->with(self::callback(static fn(PFUser $user) => $user === $project_member || $user === $project_admin));
 
         $this->visitor->export($xml, $embedded_file);

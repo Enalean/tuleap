@@ -54,7 +54,7 @@ final class RestLockUpdaterTest extends TestCase
     {
         $this->lock_factory->method('itemIsLockedByItemId')->willReturn(true);
         self::expectException(I18NRestException::class);
-        $this->lock_factory->expects(self::never())->method('lock');
+        $this->lock_factory->expects($this->never())->method('lock');
         $this->updater->lockItem($this->item, $this->user);
     }
 

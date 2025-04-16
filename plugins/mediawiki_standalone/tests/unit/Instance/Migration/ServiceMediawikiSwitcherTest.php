@@ -66,7 +66,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
             );
 
 
-        $dao->expects(self::exactly(1))
+        $dao->expects($this->exactly(1))
             ->method('updateServiceUsageByShortName')
             ->with($project, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
         $dao->expects($this->once())
@@ -162,7 +162,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
                 },
             );
 
-        $dao->expects(self::exactly(1))
+        $dao->expects($this->exactly(1))
             ->method('updateServiceUsageByShortName')
             ->with($project, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
         $dao->expects($this->once())

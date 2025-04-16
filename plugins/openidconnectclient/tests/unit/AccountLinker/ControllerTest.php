@@ -135,10 +135,10 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('login')
             ->willReturn(UserTestBuilder::anAnonymousUser()->build());
         $user_mapping_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('create');
         $unlinked_account_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('removeById');
         $controller
             ->expects($this->once())

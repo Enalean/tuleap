@@ -100,7 +100,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
 
     public function testItDoesNothingWhenAValidTokenIsChecked(): void
     {
-        $GLOBALS['Response']->expects(self::never())->method('redirect');
+        $GLOBALS['Response']->expects($this->never())->method('redirect');
 
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',

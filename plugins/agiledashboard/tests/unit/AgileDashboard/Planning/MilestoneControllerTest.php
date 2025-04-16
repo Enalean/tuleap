@@ -148,9 +148,9 @@ final class MilestoneControllerTest extends TestCase
 
         $this->sprint->setAncestors([$this->release, $this->product]);
         $this->milestone_factory->method('getBareMilestone')->willReturn($this->sprint);
-        $this->milestone_factory->expects(self::exactly(3))->method('addMilestoneAncestors');
+        $this->milestone_factory->expects($this->exactly(3))->method('addMilestoneAncestors');
         $this->milestone_factory->method('getPaginatedSiblingMilestones')->willReturn(new PaginatedMilestones([], 0));
-        $this->pane_factory->expects(self::exactly(3))->method('getListOfPaneInfo')->willReturn([]);
+        $this->pane_factory->expects($this->exactly(3))->method('getListOfPaneInfo')->willReturn([]);
 
         $breadcrumbs = $this->milestone_controller->getBreadcrumbs();
 

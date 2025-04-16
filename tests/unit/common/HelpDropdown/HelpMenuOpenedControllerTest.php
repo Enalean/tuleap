@@ -50,7 +50,7 @@ final class HelpMenuOpenedControllerTest extends TestCase
         $current_user = $this->createMock(\PFUser::class);
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
 
-        $current_user->expects(self::atLeastOnce())->method('setPreference')->with('has_release_note_been_seen', '1');
+        $current_user->expects($this->atLeastOnce())->method('setPreference')->with('has_release_note_been_seen', '1');
 
         $response = $this->controller->handle(new NullServerRequest());
 

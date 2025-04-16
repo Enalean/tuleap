@@ -110,7 +110,7 @@ final class MilestoneReportCriterionProviderTest extends TestCase
 
     public function testItSelectsUnplannedOption(): void
     {
-        $this->milestone_id_provider->expects(self::never())->method('getMilestoneId');
+        $this->milestone_id_provider->expects($this->never())->method('getMilestoneId');
 
         $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(true);
 

@@ -156,7 +156,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
         $item = new \Docman_EmbeddedFile(['title' => 'foo']);
 
         $this->utils->method('isWriteEnabled')->willReturn(true);
-        $this->utils->expects(self::never())->method('processDocmanRequest');
+        $this->utils->expects($this->never())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, $item, $this->document_download, $this->utils);
 

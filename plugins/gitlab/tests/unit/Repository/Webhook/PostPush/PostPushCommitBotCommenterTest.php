@@ -98,15 +98,15 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNothingHappenIfNoReferences(): void
     {
         $this->credentials_retriever
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getCredentials');
 
         $this->logger
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('debug');
 
         $this->client_wrapper
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('postUrl');
 
         $this->commenter->addCommentOnCommit($this->webhook_data, $this->gitlab_repository, []);
@@ -131,7 +131,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(null);
 
         $this->client_wrapper
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('postUrl');
 
         $this->commenter->addCommentOnCommit(
@@ -144,7 +144,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testClientWrapperThrowErrorAndLogIt(): void
     {
         $this->webhook_data
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getSha1')
             ->willReturn('azer12563');
 
@@ -207,7 +207,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPOSTCommentOnCommit(): void
     {
         $this->webhook_data
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getSha1')
             ->willReturn('azer12563');
 

@@ -114,7 +114,7 @@ final class ArtifactLinkerTest extends TestCase
         $task     = ArtifactTestBuilder::anArtifact(2)->withAncestors([$story])->build();
 
         $story->method('getId')->willReturn($story_id);
-        $story->expects(self::never())->method('linkArtifact');
+        $story->expects($this->never())->method('linkArtifact');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -126,10 +126,10 @@ final class ArtifactLinkerTest extends TestCase
 
     public function testItLinksWithAllHierarchyWhenItWasLinkedToAnAssociatedTracker(): void
     {
-        $this->epic->expects(self::never())->method('linkArtifact');
-        $this->release->expects(self::never())->method('linkArtifact');
+        $this->epic->expects($this->never())->method('linkArtifact');
+        $this->release->expects($this->never())->method('linkArtifact');
         $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
-        $this->corp->expects(self::never())->method('linkArtifact');
+        $this->corp->expects($this->never())->method('linkArtifact');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -168,7 +168,7 @@ final class ArtifactLinkerTest extends TestCase
 
     public function testItDoesntLinkTheEpicWithCorpPlanningWhenCorpPlanningDoesntManageEpics(): void
     {
-        $this->corp->expects(self::never())->method('linkArtifact');
+        $this->corp->expects($this->never())->method('linkArtifact');
         $this->product->expects($this->once())->method('linkArtifact')->with($this->epic_id, $this->user);
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)

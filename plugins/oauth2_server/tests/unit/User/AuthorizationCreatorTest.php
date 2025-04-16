@@ -82,7 +82,7 @@ final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->authorization_dao->expects($this->once())->method('searchAuthorization')
             ->with($user, $app_id)
             ->willReturn(17);
-        $this->authorization_dao->expects(self::never())->method('create');
+        $this->authorization_dao->expects($this->never())->method('create');
         $this->scope_dao->expects($this->once())->method('deleteForAuthorization')
             ->with(17);
         $this->scope_dao->expects($this->once())->method('createMany')

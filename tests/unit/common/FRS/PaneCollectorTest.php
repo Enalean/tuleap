@@ -42,8 +42,8 @@ class PaneCollectorTest extends TestCase
 
         $selected_ugroup_id = null;
 
-        $service_builder->expects(self::never())->method('getPanePresenter');
-        $package_builder->expects(self::never())->method('getPanePresenter');
+        $service_builder->expects($this->never())->method('getPanePresenter');
+        $package_builder->expects($this->never())->method('getPanePresenter');
 
         $builder->collectPane($project, $selected_ugroup_id);
     }

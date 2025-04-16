@@ -51,7 +51,7 @@ final class VisitRecorderTest extends TestCase
 
     public function testVisitOfAnAnonymousUserIsNotSaved(): void
     {
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
 
         $user = UserTestBuilder::anAnonymousUser()->build();
 

@@ -95,7 +95,7 @@ final class VersionImporterTest extends TestCase
             EOS
         );
 
-        $this->docman_file_storage->expects(self::never())->method('copy')
+        $this->docman_file_storage->expects($this->never())->method('copy')
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1);
 
         self::expectException(InvalidDateException::class);

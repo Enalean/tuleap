@@ -61,9 +61,9 @@ final class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUni
 
         $selected_ugroup_id = null;
 
-        $this->ugroup_manager->expects(self::never())->method('getUGroup');
-        $this->wiki_permissions_manager->expects(self::never())->method('getWikiAdminsGroups');
-        $this->wiki_permissions_manager->expects(self::never())->method('getWikiServicePermissions');
+        $this->ugroup_manager->expects($this->never())->method('getUGroup');
+        $this->wiki_permissions_manager->expects($this->never())->method('getWikiAdminsGroups');
+        $this->wiki_permissions_manager->expects($this->never())->method('getWikiServicePermissions');
 
         $this->builder->getPaneContent($project, $selected_ugroup_id);
     }

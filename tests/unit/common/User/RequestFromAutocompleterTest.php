@@ -162,7 +162,7 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->getRequest('bla,jdoe@example.com,_ugroup:Secret,Unknown (seraph)');
 
-        $GLOBALS['Response']->expects(self::exactly(3))->method('addFeedback')->willReturnCallback(
+        $GLOBALS['Response']->expects($this->exactly(3))->method('addFeedback')->willReturnCallback(
             function (string $level, string $message): void {
                 if ($level !== \Feedback::WARN) {
                     throw new \LogicException('Unexpected feedback level: ' . $level);
@@ -185,6 +185,6 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getRequest('');
 
         $this->invalid_entries->generateWarningMessageForInvalidEntries();
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
     }
 }

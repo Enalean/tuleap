@@ -63,11 +63,11 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = UserTestBuilder::buildSiteAdministrator();
 
         // no _isUserDocmanAdmin call
-        $this->permissions_manager->expects(self::never())->method('_isUserDocmanAdmin');
+        $this->permissions_manager->expects($this->never())->method('_isUserDocmanAdmin');
 
         // no userHasPerms call
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::never())->method('userHasPermission');
+        $pm->expects($this->never())->method('userHasPermission');
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         $this->permissions_manager->userCanRead($user, 32432413);
@@ -82,11 +82,11 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->withAdministratorOf($this->project)->build();
 
         // no _isUserDocmanAdmin call
-        $this->permissions_manager->expects(self::never())->method('_isUserDocmanAdmin');
+        $this->permissions_manager->expects($this->never())->method('_isUserDocmanAdmin');
 
         // no userHasPerms call
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::never())->method('userHasPermission');
+        $pm->expects($this->never())->method('userHasPermission');
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         $this->permissions_manager->userCanRead($user, 32432413);
@@ -105,7 +105,7 @@ final class PermissionsManagerPerfTest extends TestCase
 
         // no userHasPerms call
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::never())->method('userHasPermission');
+        $pm->expects($this->never())->method('userHasPermission');
         $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         $this->permissions_manager->userCanRead($user, 32432413);
@@ -185,7 +185,7 @@ final class PermissionsManagerPerfTest extends TestCase
         $itemId = 78903;
 
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::exactly(3))->method('userHasPermission')->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
+        $pm->expects($this->exactly(3))->method('userHasPermission')->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
             $item_id === $itemId && $type === 'PLUGIN_DOCMAN_MANAGE' && $ugroups === ['test'] => true,
             default                                                                           => false,
         });
@@ -223,7 +223,7 @@ final class PermissionsManagerPerfTest extends TestCase
         // userCanWrite
         // 3. one for WRITE (and eventually lock, but not in this test).
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::exactly(3))->method('userHasPermission')->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
+        $pm->expects($this->exactly(3))->method('userHasPermission')->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
             $item_id === $itemId && $type === 'PLUGIN_DOCMAN_WRITE' && $ugroups === ['test'] => true,
             default                                                                          => false,
         });
@@ -252,7 +252,7 @@ final class PermissionsManagerPerfTest extends TestCase
 
         // 2 userHasPerm call
         $pm = $this->createMock(PermissionsManager::class);
-        $pm->expects(self::exactly(2))->method('userHasPermission')
+        $pm->expects($this->exactly(2))->method('userHasPermission')
             ->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
                 $item_id === $itemId && $type === 'PLUGIN_DOCMAN_MANAGE' && $ugroups === ['test'] => true,
                 default                                                                           => false,

@@ -21,9 +21,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Tuleap\GlobalLanguageMock;
 
@@ -145,13 +144,13 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao = $this->createMock(\UserDao::class);
         $dao->method('searchByUserId')->willReturn(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
-        $dao->expects(self::never())->method('searchByUserName');
+        $dao->expects($this->never())->method('searchByUserName');
 
         $user_manager = $this->createMock(\UserManager::class);
         $user_manager->method('isUserLoadedById')->with(123)->willReturn(false);
         $user_manager->method('isUserLoadedByUserName')->with('user_name')->willReturn(false);
-        $user_manager->expects(self::never())->method('getUserById');
-        $user_manager->expects(self::never())->method('getUserByUserName');
+        $user_manager->expects($this->never())->method('getUserById');
+        $user_manager->expects($this->never())->method('getUserByUserName');
 
         $user_helper = $this->getMockBuilder(\UserHelper::class)
             ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone', '_getUserDao'])
@@ -171,13 +170,13 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao = $this->createMock(\UserDao::class);
         $dao->method('searchByUserName')->willReturn(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
-        $dao->expects(self::never())->method('searchByUserId');
+        $dao->expects($this->never())->method('searchByUserId');
 
         $user_manager = $this->createMock(\UserManager::class);
         $user_manager->method('isUserLoadedById')->with(123)->willReturn(false);
         $user_manager->method('isUserLoadedByUserName')->with('user_name')->willReturn(false);
-        $user_manager->expects(self::never())->method('getUserById');
-        $user_manager->expects(self::never())->method('getUserByUserName');
+        $user_manager->expects($this->never())->method('getUserById');
+        $user_manager->expects($this->never())->method('getUserByUserName');
 
         $user_helper = $this->getMockBuilder(\UserHelper::class)
             ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone', '_getUserDao'])

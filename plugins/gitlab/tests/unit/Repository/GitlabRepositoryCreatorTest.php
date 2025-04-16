@@ -112,9 +112,9 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
             ->willReturn(true);
 
-        $this->repository_integration_factory->expects(self::never())->method('createRepositoryIntegration');
-        $this->webhook_creator->expects(self::never())->method('generateWebhookInGitlabProject');
-        $this->token_inserter->expects(self::never())->method('insertToken');
+        $this->repository_integration_factory->expects($this->never())->method('createRepositoryIntegration');
+        $this->webhook_creator->expects($this->never())->method('generateWebhookInGitlabProject');
+        $this->token_inserter->expects($this->never())->method('insertToken');
 
         $this->expectException(GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException::class);
 
@@ -134,9 +134,9 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, 12569, 'https://example.com/root/project01')
             ->willReturn(true);
 
-        $this->repository_integration_factory->expects(self::never())->method('createRepositoryIntegration');
-        $this->webhook_creator->expects(self::never())->method('generateWebhookInGitlabProject');
-        $this->token_inserter->expects(self::never())->method('insertToken');
+        $this->repository_integration_factory->expects($this->never())->method('createRepositoryIntegration');
+        $this->webhook_creator->expects($this->never())->method('generateWebhookInGitlabProject');
+        $this->token_inserter->expects($this->never())->method('insertToken');
 
         $this->expectException(GitlabRepositoryAlreadyIntegratedInProjectException::class);
 

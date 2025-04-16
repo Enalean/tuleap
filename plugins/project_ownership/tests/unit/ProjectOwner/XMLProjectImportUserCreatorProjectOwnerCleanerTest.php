@@ -63,7 +63,7 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends \Tuleap\T
         $ugroup = $this->createUGroupAdmin();
         $ugroup->method('getProject')->willReturn(null);
 
-        $updater->expects(self::never())->method('updateProjectOwner');
+        $updater->expects($this->never())->method('updateProjectOwner');
 
         $cleaner->updateProjectOwnership($this->createEvent($creator, $ugroup));
     }

@@ -95,7 +95,7 @@ final class PermissionsImporterTest extends TestCase
             EOS
         );
 
-        $this->ugroup_retriever_with_legacy->expects(self::exactly(2))->method('getUGroupId')
+        $this->ugroup_retriever_with_legacy->expects($this->exactly(2))->method('getUGroupId')
             ->willReturnCallback(static fn(Project $project, string $name) => match ($name) {
                 'UGROUP_REGISTERED' => 2,
                 'Developers'        => 101,
@@ -137,7 +137,7 @@ final class PermissionsImporterTest extends TestCase
         $this->ugroup_retriever_with_legacy->expects($this->once())->method('getUGroupId')
             ->with($this->project, 'unknown')->willReturn(null);
 
-        $this->permission_manager->expects(self::never())->method('addPermission');
+        $this->permission_manager->expects($this->never())->method('addPermission');
 
         $this->importer->importPermissions($this->parent_item, $this->item, $xml);
     }

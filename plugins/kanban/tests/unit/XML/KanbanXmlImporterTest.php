@@ -136,10 +136,10 @@ final class KanbanXmlImporterTest extends TestCase
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
         $this->kanban_manager->expects($this->once())->method('createKanban')->with('My personal kanban', 50, true)->willReturn(9);
-        $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
+        $this->kanban_column_manager->expects($this->exactly(3))->method('updateWipLimit');
 
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(Kanban::class));
-        $this->dashboard_kanban_column_factory->expects(self::exactly(3))
+        $this->dashboard_kanban_column_factory->expects($this->exactly(3))
             ->method('getColumnForAKanban')
             ->willReturn($this->createMock(KanbanColumn::class));
 
@@ -178,10 +178,10 @@ final class KanbanXmlImporterTest extends TestCase
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
         $this->kanban_manager->expects($this->once())->method('createKanban')->with('My personal kanban', false, 50)->willReturn(9);
-        $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
+        $this->kanban_column_manager->expects($this->exactly(3))->method('updateWipLimit');
 
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(Kanban::class));
-        $this->dashboard_kanban_column_factory->expects(self::exactly(3))
+        $this->dashboard_kanban_column_factory->expects($this->exactly(3))
             ->method('getColumnForAKanban')
             ->willReturn($this->createMock(KanbanColumn::class));
 
@@ -247,11 +247,11 @@ final class KanbanXmlImporterTest extends TestCase
         $field_mapping = $this->createMock(TrackerXmlFieldsMapping::class);
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
-        $this->kanban_manager->expects(self::exactly(2))->method('createKanban')->willReturn(9, 10);
-        $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
+        $this->kanban_manager->expects($this->exactly(2))->method('createKanban')->willReturn(9, 10);
+        $this->kanban_column_manager->expects($this->exactly(3))->method('updateWipLimit');
 
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(Kanban::class));
-        $this->dashboard_kanban_column_factory->expects(self::exactly(3))
+        $this->dashboard_kanban_column_factory->expects($this->exactly(3))
             ->method('getColumnForAKanban')
             ->willReturn($this->createMock(KanbanColumn::class));
 
@@ -291,12 +291,12 @@ final class KanbanXmlImporterTest extends TestCase
         $this->kanban_factory
             ->method('getKanbanForXmlImport')
             ->willReturn(new Kanban(11221, TrackerTestBuilder::aTracker()->build(), false, ''));
-        $this->dashboard_kanban_column_factory->expects(self::exactly(3))
+        $this->dashboard_kanban_column_factory->expects($this->exactly(3))
             ->method('getColumnForAKanban')
             ->willReturn($this->createMock(KanbanColumn::class));
 
-        $this->kanban_manager->expects(self::exactly(2))->method('createKanban')->willReturn(9, 10);
-        $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
+        $this->kanban_manager->expects($this->exactly(2))->method('createKanban')->willReturn(9, 10);
+        $this->kanban_column_manager->expects($this->exactly(3))->method('updateWipLimit');
 
         $this->kanban_xml_importer->import(
             $xml,
@@ -331,13 +331,13 @@ final class KanbanXmlImporterTest extends TestCase
 
         $kanban = new Kanban(11, TrackerTestBuilder::aTracker()->build(), false, '');
 
-        $this->kanban_manager->expects(self::once())->method('createKanban')->willReturn(11);
+        $this->kanban_manager->expects($this->once())->method('createKanban')->willReturn(11);
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($kanban);
 
         $this->mappings_registry->addReference('REPORT_588', new Tracker_Report(588, 'name', 'Public rapport', 0, 0, null, false, 2, 1, false, '', null, 0));
         $this->mappings_registry->addReference('REPORT_654', new Tracker_Report(654, 'name', 'Public rapport', 0, 0, null, false, 2, 1, false, '', null, 0));
 
-        $this->tracker_report_updater->expects(self::once())->method('save')->with($kanban, [588, 654]);
+        $this->tracker_report_updater->expects($this->once())->method('save')->with($kanban, [588, 654]);
 
         $this->kanban_xml_importer->import(
             $xml,

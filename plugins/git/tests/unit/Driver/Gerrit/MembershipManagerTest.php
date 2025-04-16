@@ -133,7 +133,7 @@ final class MembershipManagerTest extends TestCase
             }
         });
 
-        $this->driver->expects(self::exactly(3))->method('flushGerritCacheAccounts');
+        $this->driver->expects($this->exactly(3))->method('flushGerritCacheAccounts');
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
         $this->membership_manager->addUserToGroup($this->user, $this->u_group2);
@@ -169,7 +169,7 @@ final class MembershipManagerTest extends TestCase
             }
         });
 
-        $this->driver->expects(self::exactly(3))->method('flushGerritCacheAccounts');
+        $this->driver->expects($this->exactly(3))->method('flushGerritCacheAccounts');
 
         $this->membership_manager->removeUserFromGroup($this->user, $this->u_group);
         $this->membership_manager->removeUserFromGroup($this->user, $this->u_group2);
@@ -183,7 +183,7 @@ final class MembershipManagerTest extends TestCase
         $non_ldap_user->method('getUgroups')->willReturn([$this->u_group_id]);
 
         $this->gerrit_user_manager->method('getGerritUser')->willReturn(null);
-        $this->driver->expects(self::never())->method('addUserToGroup');
+        $this->driver->expects($this->never())->method('addUserToGroup');
 
         $this->membership_manager->addUserToGroup($non_ldap_user, $this->u_group);
     }
@@ -207,7 +207,7 @@ final class MembershipManagerTest extends TestCase
                 }
             });
 
-        $this->driver->expects(self::atLeastOnce())->method('flushGerritCacheAccounts')->with($remote_server2);
+        $this->driver->expects($this->atLeastOnce())->method('flushGerritCacheAccounts')->with($remote_server2);
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }

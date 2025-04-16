@@ -113,7 +113,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
             ])
             ->build();
 
-        $this->router->expects(self::atLeast(1))->method('executeAction')->with($this->planning_controller, 'update');
+        $this->router->expects($this->atLeast(1))->method('executeAction')->with($this->planning_controller, 'update');
         $this->router->route($request);
     }
 
@@ -164,7 +164,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
             ->willReturn($this->createMock(Planning_MilestoneController::class));
 
         $this->router->expects($this->once())->method('renderAction');
-        $this->router->expects(self::never())->method('executeAction');
+        $this->router->expects($this->never())->method('executeAction');
 
         $this->router->routeShowPlanning($request);
     }

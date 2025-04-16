@@ -57,7 +57,7 @@ final class AccessControlVerifierTest extends TestCase
 
         $this->user->method('hasPermission')->willReturn(true);
 
-        $this->system_command->expects(self::never())->method('exec');
+        $this->system_command->expects($this->never())->method('exec');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, 'master');
         self::assertTrue($can_write);
@@ -70,7 +70,7 @@ final class AccessControlVerifierTest extends TestCase
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->expects(self::never())->method('hasPermission');
+        $this->user->expects($this->never())->method('hasPermission');
         $this->user->method('getUserName')->willReturn('username');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, 'master');
@@ -84,7 +84,7 @@ final class AccessControlVerifierTest extends TestCase
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->expects(self::never())->method('hasPermission');
+        $this->user->expects($this->never())->method('hasPermission');
         $this->user->method('getUserName')->willReturn('username');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, 'master');
@@ -97,7 +97,7 @@ final class AccessControlVerifierTest extends TestCase
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->expects(self::never())->method('hasPermission');
+        $this->user->expects($this->never())->method('hasPermission');
 
         $can_write = $access_control_verifier->canWrite($this->user, $this->repository, '');
         self::assertFalse($can_write);
@@ -110,7 +110,7 @@ final class AccessControlVerifierTest extends TestCase
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
-        $this->user->expects(self::never())->method('hasPermission');
+        $this->user->expects($this->never())->method('hasPermission');
         $this->user->method('getUserName')->willReturn('not_replication_user');
         $this->repository->setRemoteServerId(1);
 

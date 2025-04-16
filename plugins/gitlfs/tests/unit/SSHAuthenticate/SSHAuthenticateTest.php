@@ -125,7 +125,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
 
         $repository = $this->createMock(\GitRepository::class);
-        $repository->expects(self::never())->method('userCanRead');
+        $repository->expects($this->never())->method('userCanRead');
         $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
         $this->user_manager->method('getUserByUserName')->with('mary')->willReturn(null);
@@ -146,7 +146,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
 
         $repository = $this->createMock(\GitRepository::class);
-        $repository->expects(self::never())->method('userCanRead');
+        $repository->expects($this->never())->method('userCanRead');
         $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
         $user = UserTestBuilder::aUser()->withStatus(\PFUser::STATUS_SUSPENDED)->build();

@@ -54,7 +54,7 @@ final class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit
         );
 
         $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
-        $purifier->expects(self::exactly(2))
+        $purifier->expects($this->exactly(2))
             ->method('purifyHTMLWithReferences')
             ->willReturnCallback(static fn (string $text): string => $text);
         $representation = StepDefinitionRepresentationBuilder::build(
@@ -89,7 +89,7 @@ final class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit
         );
 
         $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
-        $purifier->expects(self::exactly(2))
+        $purifier->expects($this->exactly(2))
             ->method('purifyHTMLWithReferences')
             ->willReturnCallback(static fn (string $text): string => $text);
         $representation = StepDefinitionRepresentationBuilder::build(
@@ -111,7 +111,7 @@ final class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit
         $expected_results               = 'The car should **also** turn to **avoid** the _cliff_';
         $expected_html_expected_results = '<p>The car should <strong>also</strong> turn to <strong>avoid</strong> the <i>cliff</i></p>';
 
-        $commonmark_interpreter->expects(self::exactly(2))
+        $commonmark_interpreter->expects($this->exactly(2))
             ->method('getInterpretedContentWithReferences')
             ->willReturnCallback(static fn (string $text): string => match ($text) {
                 $description => $expected_description,
@@ -136,7 +136,7 @@ final class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit
             1
         );
         $purifier                = $this->createMock(\Codendi_HTMLPurifier::class);
-        $purifier->expects(self::exactly(2))
+        $purifier->expects($this->exactly(2))
             ->method('purify')
             ->willReturnCallback(static fn (string $text): string => $text);
         $representation = StepDefinitionRepresentationBuilder::build(

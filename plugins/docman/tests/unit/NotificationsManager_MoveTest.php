@@ -259,7 +259,7 @@ final class NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.
         $dnmm->method('_getDocmanPath')->willReturn($docman_path);
 
         if ($res === 'none') {
-            $dnmm->expects(self::never())->method('_buildMessage');
+            $dnmm->expects($this->never())->method('_buildMessage');
         } else {
             self::expectNotToPerformAssertions();
         }

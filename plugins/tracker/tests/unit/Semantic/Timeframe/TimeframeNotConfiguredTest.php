@@ -83,7 +83,7 @@ final class TimeframeNotConfiguredTest extends TestCase
         $dao     = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
         $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $dao->expects(self::never())->method('save');
+        $dao->expects($this->never())->method('save');
 
         self::assertFalse(
             $this->timeframe->save($tracker, $dao)

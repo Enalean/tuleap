@@ -45,7 +45,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $response_generator_middleware = $this->createMock(MiddlewareInterface::class);
         $response_generator_middleware->expects($this->once())->method('process')->willReturn($expected_response);
         $never_called_middleware = $this->createMock(MiddlewareInterface::class);
-        $never_called_middleware->expects(self::never())->method('process');
+        $never_called_middleware->expects($this->never())->method('process');
 
         $dispatcher = new MiddlewareDispatcher(
             $passthrough_middleware,

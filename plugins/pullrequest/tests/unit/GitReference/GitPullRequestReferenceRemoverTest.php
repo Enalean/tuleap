@@ -55,7 +55,7 @@ final class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\Test
         $executor = $this->createMock(GitExec::class);
         $executor->expects($this->once())->method('getReferencesFromPattern')->willReturn([]);
 
-        $executor->expects(self::never())->method('removeReference');
+        $executor->expects($this->never())->method('removeReference');
 
         $reference_remover = new GitPullRequestReferenceRemover();
         $reference_remover->removeAll($executor);

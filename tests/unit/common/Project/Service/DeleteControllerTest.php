@@ -123,7 +123,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->administrator_checker->method('checkUserIsProjectAdministrator')
             ->with($this->project_admin, $this->default_template_project);
 
-        $this->layout->expects(self::exactly(2))->method('addFeedback')->with(Feedback::INFO, self::anything());
+        $this->layout->expects($this->exactly(2))->method('addFeedback')->with(Feedback::INFO, self::anything());
         $this->layout->expects($this->once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => (string) Project::DEFAULT_TEMPLATE_PROJECT_ID]);
@@ -135,7 +135,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_SYSTEM])
         );
 
-        $this->service_dao->expects(self::never())->method('delete');
+        $this->service_dao->expects($this->never())->method('delete');
         $this->project_retriever->method('getProjectFromId')
             ->with((string) $this->project_id)
             ->willReturn($this->project);

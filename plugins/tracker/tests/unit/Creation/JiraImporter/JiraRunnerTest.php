@@ -93,10 +93,10 @@ final class JiraRunnerTest extends TestCase
     public function testQueueJiraImportEvent(): void
     {
         $persistent_queue = $this->createMock(PersistentQueue::class);
-        $this->queue_factory->expects(self::atLeastOnce())->method('getPersistentQueue')
+        $this->queue_factory->expects($this->atLeastOnce())->method('getPersistentQueue')
             ->with('app_user_events')->willReturn($persistent_queue);
 
-        $persistent_queue->expects(self::atLeastOnce())->method('pushSinglePersistentMessage')
+        $persistent_queue->expects($this->atLeastOnce())->method('pushSinglePersistentMessage')
             ->with(
                 'tuleap.tracker.creation.jira',
                 [

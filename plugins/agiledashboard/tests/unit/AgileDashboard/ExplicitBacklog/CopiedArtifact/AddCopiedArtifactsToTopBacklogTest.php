@@ -73,7 +73,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
 
         $this->mockProjectDoesNotUseExplicitBacklog();
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
         $this->adder->addCopiedArtifactsToTopBacklog(
             new Tracker_XML_Importer_ArtifactImportedMapping(),
@@ -88,7 +88,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
         $this->mockProjectUsesExplicitBacklog();
         $this->mockArtifactIsNotPlanned(self::SOURCE_ARTIFACT_ID);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
         $this->adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithOneLevelContent(),
@@ -136,7 +136,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
             self::SOURCE_CHILD_ARTIFACT_ID,
         );
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::exactly(2))->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->exactly(2))->method('addArtifactToProjectBacklog');
 
         $this->adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithTwoLevelsContent(),

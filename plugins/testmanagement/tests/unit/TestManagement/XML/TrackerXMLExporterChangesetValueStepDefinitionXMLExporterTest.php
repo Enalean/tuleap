@@ -95,7 +95,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $values = [];
 
         $field = $this->createMock(StepDefinition::class);
-        $field->expects(self::never())->method('getName');
+        $field->expects($this->never())->method('getName');
 
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
         $changeset_value->expects($this->once())->method('getValue')->willReturn($values);

@@ -177,8 +177,8 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $generic_provider_dao
         );
 
-        $generic_provider_dao->expects(self::never())->method('create');
-        $generic_provider_dao->expects(self::never())->method('save');
+        $generic_provider_dao->expects($this->never())->method('create');
+        $generic_provider_dao->expects($this->never())->method('save');
         $this->expectException(ProviderMalformedDataException::class);
 
         $provider = new GenericProvider(

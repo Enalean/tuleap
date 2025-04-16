@@ -279,7 +279,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new GitlabRequestException(400, 'error at creation'));
 
         $this->token_inserter
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('insertToken');
 
         $this->logger

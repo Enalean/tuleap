@@ -43,12 +43,12 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
             ->expects($this->once())
             ->method('incrementPlatformInvitation');
         $instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $history_dao = $this->createMock(\ProjectHistoryDao::class);
         $history_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addHistory');
 
         $invitation_creator        = InvitationCreatorStub::buildSelf();
@@ -86,15 +86,15 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
 
         $instrumentation = $this->createMock(InvitationInstrumentation::class);
         $instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementPlatformInvitation');
         $instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $history_dao = $this->createMock(\ProjectHistoryDao::class);
         $history_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addHistory');
 
         $invitation_creator        = InvitationCreatorStub::buildSelf();
@@ -135,7 +135,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
 
         $instrumentation = $this->createMock(InvitationInstrumentation::class);
         $instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementPlatformInvitation');
         $instrumentation
             ->expects($this->once())
@@ -192,7 +192,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
 
         $instrumentation = $this->createMock(InvitationInstrumentation::class);
         $instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementPlatformInvitation');
         $instrumentation
             ->expects($this->once())
@@ -249,15 +249,15 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
 
         $instrumentation = $this->createMock(InvitationInstrumentation::class);
         $instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementPlatformInvitation');
         $instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $history_dao = $this->createMock(\ProjectHistoryDao::class);
         $history_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addHistory');
 
         $invitation_creator        = InvitationCreatorStub::buildSelf();

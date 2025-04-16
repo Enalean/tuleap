@@ -34,7 +34,7 @@ final class RouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $account_linker_controller = $this->createStub(\Tuleap\OpenIDConnectClient\AccountLinker\Controller::class);
         $request                   = HTTPRequestBuilder::get()->build();
 
-        $login_controller->expects(self::atLeastOnce())->method('login');
+        $login_controller->expects($this->atLeastOnce())->method('login');
 
         $router = new Router($login_controller, $account_linker_controller);
         $router->process($request, LayoutBuilder::build(), []);

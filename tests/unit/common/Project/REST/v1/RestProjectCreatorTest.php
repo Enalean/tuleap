@@ -190,7 +190,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTypeTemplate()
             ->build();
         $this->project_manager->method('getProject')->with($this->project_post_representation->template_id)->willReturn($template_project);
-        $this->project_creator->expects(self::atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
+        $this->project_creator->expects($this->atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
 
         $creator->create(
             $this->project_post_representation,
@@ -219,7 +219,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTypeTemplate()
             ->build();
         $this->project_manager->method('getProject')->with($this->project_post_representation->template_id)->willReturn($template_project);
-        $this->project_creator->expects(self::atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
+        $this->project_creator->expects($this->atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
 
         $creator->create(
             $this->project_post_representation,
@@ -339,7 +339,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->project_creator_for_archive
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('processProjectCreation')
             ->with($project_creation_data)
             ->willReturn(ProjectTestBuilder::aProject()->withId(1001)->build());

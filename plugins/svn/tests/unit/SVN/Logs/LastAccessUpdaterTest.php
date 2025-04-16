@@ -52,7 +52,7 @@ final class LastAccessUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $commit_info->method('getDate')->willReturn('This is not a valid commit date');
 
         $this->expectException(CannotGetCommitDateException::class);
-        $dao->expects(self::never())->method('updateLastCommitDate');
+        $dao->expects($this->never())->method('updateLastCommitDate');
 
         $last_access_updater->updateLastCommitDate($repository, $commit_info);
     }

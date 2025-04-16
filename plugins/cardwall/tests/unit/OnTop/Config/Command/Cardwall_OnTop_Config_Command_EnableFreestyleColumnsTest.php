@@ -60,7 +60,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends Tes
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '1');
         $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(true);
-        $this->dao->expects(self::never())->method('enableFreestyleColumns');
+        $this->dao->expects($this->never())->method('enableFreestyleColumns');
 
         $this->command->execute($request);
     }
@@ -80,7 +80,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends Tes
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '0');
         $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(false);
-        $this->dao->expects(self::never())->method('disableFreestyleColumns');
+        $this->dao->expects($this->never())->method('disableFreestyleColumns');
 
         $this->command->execute($request);
     }

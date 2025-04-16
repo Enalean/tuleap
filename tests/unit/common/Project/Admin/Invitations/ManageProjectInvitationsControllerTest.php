@@ -358,11 +358,11 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
         $history_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addHistory');
 
         $invitation_sender
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('send')
             ->willThrowException(new UserIsNotAllowedToManageProjectMembersException());
 
@@ -408,11 +408,11 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
         $history_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addHistory');
 
         $invitation_sender
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('send')
             ->willThrowException(new InvitationSenderGateKeeperException());
 
@@ -460,7 +460,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
         $history_dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addHistory');
 
         $invitation_sender
@@ -512,7 +512,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
         $invitation_sender
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('send')
             ->willReturnCallback(
                 function (
@@ -584,7 +584,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
         $invitation_sender
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('send')
             ->willReturnCallback(
                 function (

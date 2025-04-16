@@ -133,7 +133,7 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCa
 
         $xml = new SimpleXMLElement($xml_data);
 
-        $this->formelement_factory->expects(self::never())->method('getUsedFieldByName');
+        $this->formelement_factory->expects($this->never())->method('getUsedFieldByName');
 
         self::assertEmpty($this->artifact_fields_data_builder->getFieldsData($xml, $this->user, $this->artifact, $this->context));
     }

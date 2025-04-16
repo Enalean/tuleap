@@ -108,7 +108,7 @@ final class GitTest extends TestCase
         $request         = new HTTPRequest();
         $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
-        $git->expects(self::never())->method('_doDispatchForkRepositories');
+        $git->expects($this->never())->method('_doDispatchForkRepositories');
 
         $factory = $this->createMock(GitRepositoryFactory::class);
         $git->setFactory($factory);

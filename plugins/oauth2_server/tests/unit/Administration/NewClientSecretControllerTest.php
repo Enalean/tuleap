@@ -88,7 +88,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
-        $this->client_secret_updater->expects(self::never())->method('updateClientSecret');
+        $this->client_secret_updater->expects($this->never())->method('updateClientSecret');
 
         self::assertSame($response, $this->controller->handle($request));
     }

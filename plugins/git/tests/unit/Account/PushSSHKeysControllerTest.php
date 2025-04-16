@@ -72,7 +72,7 @@ final class PushSSHKeysControllerTest extends TestCase
     {
         $this->expectException(ForbiddenException::class);
 
-        $this->user_account_manager->expects(self::never())->method('pushSSHKeys');
+        $this->user_account_manager->expects($this->never())->method('pushSSHKeys');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),

@@ -362,7 +362,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS1ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
         $value_field_list = [
             '101' => 'A2',
             '102' => 'B3',
@@ -388,7 +388,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS3ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
         $value_field_list = [
             '101' => ['A1', 'A2'],
             '102' => 'B3',
@@ -400,7 +400,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS4ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
         $value_field_list = [
             '101' => ['A1', 'A2'],
             '102' => 'B2',
@@ -412,7 +412,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS5ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
 
         $value_field_list = [
             '101' => 'A1',

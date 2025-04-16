@@ -60,7 +60,7 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\
 
     public function testDoesNotTryToProcessTheDeletionAsynchronouslyWhenNoWorkerIsAvailable(): void
     {
-        $this->queue_factory->expects(self::never())->method('getPersistentQueue');
+        $this->queue_factory->expects($this->never())->method('getPersistentQueue');
         $task = $this->createMock(ArchiveAndDeleteArtifactTask::class);
         $task->expects($this->once())->method('archive');
         $this->task_builder->expects($this->once())->method('build')->willReturn($task);

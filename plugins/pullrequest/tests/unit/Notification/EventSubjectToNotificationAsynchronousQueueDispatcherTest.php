@@ -70,7 +70,7 @@ final class EventSubjectToNotificationAsynchronousQueueDispatcherTest extends \T
         {
         };
 
-        $this->queue_factory->expects(self::never())->method('getPersistentQueue');
+        $this->queue_factory->expects($this->never())->method('getPersistentQueue');
 
         self::assertSame($something, $this->dispatcher->dispatch($something));
     }

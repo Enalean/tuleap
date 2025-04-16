@@ -48,7 +48,7 @@ final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \T
         if ($should_enable) {
             $this->dao->expects($this->once())->method('enable')->with($project);
         } else {
-            $this->dao->expects(self::never())->method('enable');
+            $this->dao->expects($this->never())->method('enable');
         }
 
         $this->toggler->enableAccordingToVisibility($project, $old_visibility, $new_visibility);

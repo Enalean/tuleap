@@ -56,12 +56,12 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mail_builder = $this->createMock(\MailBuilder::class);
         $mail_builder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('buildAndSendEmail');
 
         $dao = $this->createMock(IntegrationApiTokenDao::class);
         $dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('storeTheFactWeAlreadySendEmailForInvalidToken');
 
         $notifier = new InvalidCredentialsNotifier(
@@ -93,12 +93,12 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mail_builder = $this->createMock(\MailBuilder::class);
         $mail_builder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('buildAndSendEmail');
 
         $dao = $this->createMock(IntegrationApiTokenDao::class);
         $dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('storeTheFactWeAlreadySendEmailForInvalidToken');
 
         $notifier = new InvalidCredentialsNotifier(

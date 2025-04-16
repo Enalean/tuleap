@@ -54,12 +54,12 @@ final class ArtifactDependenciesDeletorTest extends TestCase
         $this->post_move_deletor           = $this->createMock(PostArtifactMoveReferencesCleaner::class);
         $this->artifact_deletor            = $this->createMock(PostArtifactDeletionCleaner::class);
 
-        $permissions_manager->expects(self::atLeastOnce())->method('clearPermission');
-        $dao->expects(self::atLeastOnce())->method('deleteUnsubscribeNotificationForArtifact');
-        $tracker_artifact_priority_manager->expects(self::atLeastOnce())->method('deletePriority');
-        $computed_dao_cache->expects(self::atLeastOnce())->method('deleteAllArtifactCacheValues');
-        $recently_visited_dao->expects(self::atLeastOnce())->method('deleteVisitByArtifactId');
-        $artifact_removal->expects(self::atLeastOnce())->method('removeArtifact');
+        $permissions_manager->expects($this->atLeastOnce())->method('clearPermission');
+        $dao->expects($this->atLeastOnce())->method('deleteUnsubscribeNotificationForArtifact');
+        $tracker_artifact_priority_manager->expects($this->atLeastOnce())->method('deletePriority');
+        $computed_dao_cache->expects($this->atLeastOnce())->method('deleteAllArtifactCacheValues');
+        $recently_visited_dao->expects($this->atLeastOnce())->method('deleteVisitByArtifactId');
+        $artifact_removal->expects($this->atLeastOnce())->method('removeArtifact');
 
         $this->deletor = new ArtifactDependenciesCleaner(
             $permissions_manager,
@@ -80,7 +80,7 @@ final class ArtifactDependenciesDeletorTest extends TestCase
     {
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
 
-        $this->post_move_deletor->expects(self::never())->method('cleanReferencesAfterArtifactMove');
+        $this->post_move_deletor->expects($this->never())->method('cleanReferencesAfterArtifactMove');
         $this->artifact_deletor->expects($this->once())->method('cleanReferencesAfterSimpleArtifactDeletion');
         $this->deletor->cleanDependencies($artifact, DeletionContext::regularDeletion(self::PROJECT_ID), $this->user);
     }
@@ -90,7 +90,7 @@ final class ArtifactDependenciesDeletorTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
 
         $this->post_move_deletor->expects($this->once())->method('cleanReferencesAfterArtifactMove');
-        $this->artifact_deletor->expects(self::never())->method('cleanReferencesAfterSimpleArtifactDeletion');
+        $this->artifact_deletor->expects($this->never())->method('cleanReferencesAfterSimpleArtifactDeletion');
         $this->deletor->cleanDependencies($artifact, DeletionContext::moveContext(self::PROJECT_ID, 123456), $this->user);
     }
 }

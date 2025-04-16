@@ -103,7 +103,7 @@ final class MediawikiLanguageManagerTest extends TestCase
         ForgeConfig::set('sys_supported_languages', 'it_IT,ja_JP');
         $this->dao->method('getUsedLanguageForProject')->willReturn(false);
 
-        $this->dao->expects(self::never())->method('updateLanguageOption')->with(123, 'it_IT');
+        $this->dao->expects($this->never())->method('updateLanguageOption')->with(123, 'it_IT');
 
         $this->language_manager->getUsedLanguageForProject($this->project);
     }

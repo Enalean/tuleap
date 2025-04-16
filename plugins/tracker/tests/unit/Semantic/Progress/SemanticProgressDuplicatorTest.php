@@ -45,7 +45,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(null);
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->duplicator->duplicate(1, 2, [
@@ -75,7 +75,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]);
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->duplicator->duplicate(1, 2, [

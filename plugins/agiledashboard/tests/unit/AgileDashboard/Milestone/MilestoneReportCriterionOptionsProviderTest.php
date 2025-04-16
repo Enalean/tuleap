@@ -119,7 +119,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
             ->with($this->user, $this->task_tracker, $this->hierarchy_factory)
             ->willReturn(null);
 
-        $this->dao->expects(self::never())->method('getAllMilestoneByTrackers');
+        $this->dao->expects($this->never())->method('getAllMilestoneByTrackers');
 
         self::assertEmpty($this->provider->getSelectboxOptions($this->task_tracker, 0, $this->user));
     }
@@ -132,7 +132,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
         $this->release_tracker->method('userCanView')->with($this->user)->willReturn(true);
         $this->sprint_tracker->method('userCanView')->with($this->user)->willReturn(true);
 
-        $this->dao->expects(self::atLeastOnce())->method('getAllMilestoneByTrackers')
+        $this->dao->expects($this->atLeastOnce())->method('getAllMilestoneByTrackers')
             ->with([$this->sprint_tracker_id])
             ->willReturn($this->getDBResults());
 

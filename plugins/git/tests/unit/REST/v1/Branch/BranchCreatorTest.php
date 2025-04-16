@@ -94,7 +94,7 @@ final class BranchCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfUserCannotWriteInRepository(): void
     {
-        $this->branch_creation_executor->expects(self::never())
+        $this->branch_creation_executor->expects($this->never())
             ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
@@ -111,7 +111,7 @@ final class BranchCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfBranchNameIsNotValid(): void
     {
-        $this->branch_creation_executor->expects(self::never())
+        $this->branch_creation_executor->expects($this->never())
             ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
@@ -128,7 +128,7 @@ final class BranchCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfBranchWillBeCreatedFromATag(): void
     {
-        $this->branch_creation_executor->expects(self::never())
+        $this->branch_creation_executor->expects($this->never())
             ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
@@ -145,7 +145,7 @@ final class BranchCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfBranchAlreadyExists(): void
     {
-        $this->branch_creation_executor->expects(self::never())
+        $this->branch_creation_executor->expects($this->never())
             ->method('createNewBranch');
 
         $this->expectException(I18NRestException::class);
@@ -162,7 +162,7 @@ final class BranchCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfReferenceDoesNotExistInRepository(): void
     {
-        $this->branch_creation_executor->expects(self::never())
+        $this->branch_creation_executor->expects($this->never())
             ->method('createNewBranch');
 
         $this->git_exec->method('getObjectType')->with('0')->willThrowException(

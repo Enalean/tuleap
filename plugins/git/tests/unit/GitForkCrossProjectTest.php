@@ -177,7 +177,7 @@ final class GitForkCrossProjectTest extends TestCase
         $git->setPermissionsManager($permissions_manager);
         $git->setProjectManager($project_manager);
         $git->expects($this->once())->method('addError')->with('Only project administrator can create repositories');
-        $git->expects(self::never())->method('addAction');
+        $git->expects($this->never())->method('addAction');
 
         $git->_doDispatchForkCrossProject($request, $user);
     }

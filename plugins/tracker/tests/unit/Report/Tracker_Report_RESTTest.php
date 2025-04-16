@@ -132,7 +132,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
             ]
         );
 
-        $this->formelement_factory->expects(self::exactly(2))->method('getFormElementById');
+        $this->formelement_factory->expects($this->exactly(2))->method('getFormElementById');
 
         $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
             fn (int $tracker_id, string $field_name): Tracker_FormElement_Field => match (true) {
@@ -162,7 +162,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
             ]
         );
 
-        $this->formelement_factory->expects(self::exactly(3))->method('getFormElementById');
+        $this->formelement_factory->expects($this->exactly(3))->method('getFormElementById');
 
         $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
             fn (int $tracker_id, string $field_name): ?Tracker_FormElement_Field => match (true) {

@@ -88,7 +88,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->error_logging_helper->expects(self::atLeast(1))->method('logFileNotFoundException');
+        $this->error_logging_helper->expects($this->atLeast(1))->method('logFileNotFoundException');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -110,7 +110,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->error_logging_helper->expects(self::atLeast(1))->method('logFileNotReadableException');
+        $this->error_logging_helper->expects($this->atLeast(1))->method('logFileNotReadableException');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -137,7 +137,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->error_logging_helper->expects(self::atLeast(1))->method('logCorruptedFile');
+        $this->error_logging_helper->expects($this->atLeast(1))->method('logCorruptedFile');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }

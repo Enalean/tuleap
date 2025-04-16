@@ -223,11 +223,11 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($exported_tracker)
             ->willReturn(false);
 
-        $this->timetracking_ugroup_retriever->expects(self::never())->method('getReaderUgroupsForTracker');
-        $this->timetracking_ugroup_retriever->expects(self::never())->method('getWriterUgroupsForTracker');
-        $this->artifact_factory->expects(self::never())->method('getArtifactsByTrackerId');
-        $this->time_retriever->expects(self::never())->method('getTimesForUser');
-        $this->user_manager->expects(self::never())->method('getUserById');
+        $this->timetracking_ugroup_retriever->expects($this->never())->method('getReaderUgroupsForTracker');
+        $this->timetracking_ugroup_retriever->expects($this->never())->method('getWriterUgroupsForTracker');
+        $this->artifact_factory->expects($this->never())->method('getArtifactsByTrackerId');
+        $this->time_retriever->expects($this->never())->method('getTimesForUser');
+        $this->user_manager->expects($this->never())->method('getUserById');
 
         $this->export->export(
             $xml,

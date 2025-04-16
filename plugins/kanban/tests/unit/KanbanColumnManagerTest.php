@@ -100,7 +100,7 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             new KanbanUserNotAdminException($this->user)
         );
 
-        $this->column_dao->expects(self::never())->method('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit);
+        $this->column_dao->expects($this->never())->method('setColumnWipLimit')->with($this->kanban_id, $this->column_id, $this->wip_limit);
         $this->expectException(\Tuleap\Kanban\KanbanUserNotAdminException::class);
 
         $this->kanban_column_manager->updateWipLimit($this->user, $this->kanban, $this->column, $this->wip_limit);

@@ -129,7 +129,7 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $platform_configuration = new PlatformConfiguration();
         $issue_collection       = new IssueAPIRepresentationCollection();
 
-        $this->worklog_retriever->expects(self::never())->method('getIssueWorklogsFromAPI');
+        $this->worklog_retriever->expects($this->never())->method('getIssueWorklogsFromAPI');
 
         $this->exporter->exportJiraTimetracking(
             $xml_tracker,

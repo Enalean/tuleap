@@ -221,11 +221,11 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     return '😬';
                 }
             });
-        $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
-        $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
-        $request->expects(self::exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $request->expects($this->atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
+        $request->expects($this->atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
+        $request->expects($this->exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
+        $this->description_fields_factory->expects($this->exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
         $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
@@ -300,8 +300,8 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             });
         $current_user = $this->createMock(PFUser::class);
-        $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn($current_user);
-        $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
+        $request->expects($this->atLeastOnce())->method('getCurrentUser')->willReturn($current_user);
+        $request->expects($this->atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
 
         $project = $this->createMock(Project::class);
         $project->method('getAdmins')->willReturn([
@@ -310,9 +310,9 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getAccess')->willReturn(Project::ACCESS_PUBLIC);
         $project->method('getID')->willReturn(101);
         $current_user->method('isAdmin')->with(101)->willReturn(true);
-        $request->expects(self::exactly(2))->method('getProject')->willReturn($project);
+        $request->expects($this->exactly(2))->method('getProject')->willReturn($project);
 
-        $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
+        $this->description_fields_factory->expects($this->exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
         $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
@@ -383,11 +383,11 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     return 102;
                 }
             });
-        $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
-        $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
-        $request->expects(self::exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $request->expects($this->atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
+        $request->expects($this->atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
+        $request->expects($this->exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
+        $this->description_fields_factory->expects($this->exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
         $this->current_project->expects($this->once())->method('getProjectsDescFieldsValue')->willReturn([]);
 

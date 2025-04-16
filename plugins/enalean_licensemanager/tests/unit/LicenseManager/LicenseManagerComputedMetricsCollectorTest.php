@@ -30,7 +30,7 @@ final class LicenseManagerComputedMetricsCollectorTest extends \Tuleap\Test\PHPU
     public function testComputedMetricsAreSet(): void
     {
         $prometheus = $this->createMock(Prometheus::class);
-        $prometheus->expects(self::atLeast(1))->method('gaugeSet');
+        $prometheus->expects($this->atLeast(1))->method('gaugeSet');
 
         $collector = new LicenseManagerComputedMetricsCollector($prometheus, 10);
         $collector->collect();

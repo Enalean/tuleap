@@ -58,8 +58,8 @@ final class DocumentMetadataCreatorTest extends TestCase
 
     public function testItDoesNotStoreWhenMetadataIsAnEmptyArray(): void
     {
-        $this->metadata_dao->expects(self::never())->method('searchById');
-        $this->value_creator->expects(self::never())->method('createMetadataObject');
+        $this->metadata_dao->expects($this->never())->method('searchById');
+        $this->value_creator->expects($this->never())->method('createMetadataObject');
 
         $this->creator->storeItemCustomMetadata(1, []);
     }

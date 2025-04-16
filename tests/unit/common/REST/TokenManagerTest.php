@@ -108,7 +108,7 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->token_dao->method('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->willReturn(\TestHelper::emptyDar());
 
-        $this->token_dao->expects(self::never())->method('deleteToken')->with($this->token_value);
+        $this->token_dao->expects($this->never())->method('deleteToken')->with($this->token_value);
         $this->expectException(\Rest_Exception_InvalidTokenException::class);
 
         $this->token_manager->expireToken($this->token);

@@ -191,7 +191,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnErrorWhenActionIsNotKnown(): void
     {
-        $this->process_factory->expects(self::never())->method('getProcess');
+        $this->process_factory->expects($this->never())->method('getProcess');
 
         $this->command_tester->execute(['action' => 'foo', 'targets' => ['httpd']], ['capture_stderr_separately' => true]);
 
@@ -230,7 +230,7 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process->method('isSuccessful')->willReturn(true);
         $this->process->method('getExitCode')->willReturn(0);
 
-        $this->process_factory->expects(self::atLeast(1))
+        $this->process_factory->expects($this->atLeast(1))
             ->method('getProcess')
             ->with(['/usr/bin/systemctl', 'start', 'httpd', 'nginx'])
             ->willReturn($this->process);

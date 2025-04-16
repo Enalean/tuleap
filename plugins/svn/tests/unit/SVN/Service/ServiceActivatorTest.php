@@ -122,7 +122,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
         $this->data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
-        $this->data->expects(self::never())->method('forceServiceUsage');
+        $this->data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -135,8 +135,8 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
-        $this->data->expects(self::never())->method('unsetProjectServiceUsage');
-        $this->data->expects(self::never())->method('forceServiceUsage');
+        $this->data->expects($this->never())->method('unsetProjectServiceUsage');
+        $this->data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -152,7 +152,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(true);
 
         $this->data->expects($this->once())->method('unsetProjectServiceUsage')->with(101);
-        $this->data->expects(self::never())->method('forceServiceUsage');
+        $this->data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -167,8 +167,8 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->svn_plugin_service->method('isUsed')->willReturn(false);
         $this->data->method('projectShouldInheritFromTemplate')->willReturn(false);
 
-        $this->data->expects(self::never())->method('unsetProjectServiceUsage');
-        $this->data->expects(self::never())->method('forceServiceUsage');
+        $this->data->expects($this->never())->method('unsetProjectServiceUsage');
+        $this->data->expects($this->never())->method('forceServiceUsage');
 
         $this->activator->unuseLegacyService($this->params);
     }
@@ -227,7 +227,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$project, [$this->svn_plugin_service]],
         ]);
 
-        $this->service_creator->expects(self::never())->method('createService');
+        $this->service_creator->expects($this->never())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
@@ -242,7 +242,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$project, [$this->svn_plugin_service]],
         ]);
 
-        $this->service_creator->expects(self::never())->method('createService');
+        $this->service_creator->expects($this->never())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
@@ -257,7 +257,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$project, []],
         ]);
 
-        $this->service_creator->expects(self::never())->method('createService');
+        $this->service_creator->expects($this->never())->method('createService');
 
         $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }

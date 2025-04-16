@@ -54,8 +54,8 @@ final class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tv3->method('available')->willReturn(false);
 
-        $this->reference_dao->expects(self::never())->method('getSystemReferenceByNatureAndKeyword');
-        $this->reference_dao->expects(self::never())->method('create_ref_group');
+        $this->reference_dao->expects($this->never())->method('getSystemReferenceByNatureAndKeyword');
+        $this->reference_dao->expects($this->never())->method('create_ref_group');
 
         $this->creator->insertArtifactsReferencesFromLegacy($project);
     }
@@ -76,14 +76,14 @@ final class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->reference_dao
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getSystemReferenceByNatureAndKeyword')
             ->willReturnCallback(static fn (string $keyword, string $nature) => match (true) {
                 $keyword === 'art' && $nature === 'artifact' => ['id' => 1],
                 $keyword === 'artifact' && $nature === 'artifact' => ['id' => 2],
             });
 
-        $this->reference_dao->expects(self::exactly(2))
+        $this->reference_dao->expects($this->exactly(2))
             ->method('create_ref_group')
             ->willReturnCallback(static fn (int $refid, bool $is_active, mixed $group_id) => match (true) {
                 ($refid === 1 || $refid === 2) && $is_active && (int) $group_id === 101 => true,

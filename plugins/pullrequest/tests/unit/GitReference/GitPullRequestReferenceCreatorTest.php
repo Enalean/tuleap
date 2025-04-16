@@ -63,7 +63,7 @@ final class GitPullRequestReferenceCreatorTest extends \Tuleap\Test\PHPUnit\Test
         $repository_destination = $this->createMock(\GitRepository::class);
 
         $dao->expects($this->once())->method('createGitReferenceForPullRequest')->willReturn(1);
-        $dao->expects(self::exactly(2))->method('updateGitReferenceToNextAvailableOne')->willReturn(2, 3);
+        $dao->expects($this->exactly(2))->method('updateGitReferenceToNextAvailableOne')->willReturn(2, 3);
         $dao->expects($this->once())->method('updateStatusByPullRequestId');
         $namespace_checker->method('isAvailable')->willReturn(false, false, true);
         $executor_source->expects($this->once())->method('push');

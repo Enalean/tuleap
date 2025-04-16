@@ -23,9 +23,8 @@
 /**
  * Test for project delete system event
  */
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * ProjectUGroup modify Users fail
@@ -67,8 +66,8 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = $this->createMock(\Project::class);
 
-        $evt->expects(self::never())->method('getProject')->with('1')->willReturn($project);
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('getProject')->with('1')->willReturn($project);
+        $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not process binding to this user group (2)');
 
         // Launch the event
@@ -117,7 +116,7 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $evt->injectDependencies($scheduler);
 
         $evt->expects($this->once())->method('done');
-        $evt->expects(self::never())->method('error');
+        $evt->expects($this->never())->method('error');
 
         // Launch the event
         self::assertTrue($evt->process());
@@ -170,11 +169,11 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $evt->method('getUgroupBinding')->willReturn($ugroupbinding);
 
         $scheduler = $this->createMock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
-        $scheduler->expects(self::exactly(3))->method('scheduleUpdateOfProjectAccessFiles');
+        $scheduler->expects($this->exactly(3))->method('scheduleUpdateOfProjectAccessFiles');
         $evt->injectDependencies($scheduler);
 
         $evt->expects($this->once())->method('done');
-        $evt->expects(self::never())->method('error');
+        $evt->expects($this->never())->method('error');
 
         // Launch the event
         self::assertTrue($evt->process());

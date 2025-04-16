@@ -90,8 +90,8 @@ final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildPullRequest(PullRequest::STATUS_ABANDONED);
 
-        $this->dao->expects(self::never())->method('markAsAbandoned');
-        $this->timeline_event_creator->expects(self::never())->method('storeAbandonEvent');
+        $this->dao->expects($this->never())->method('markAsAbandoned');
+        $this->timeline_event_creator->expects($this->never())->method('storeAbandonEvent');
 
         $this->pull_request_closer->abandon($pull_request, $this->createMock(PFUser::class));
     }
@@ -130,9 +130,9 @@ final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = $this->buildPullRequest(PullRequest::STATUS_MERGED);
 
-        $this->pull_request_merger->expects(self::never())->method('doMergeIntoDestination');
-        $this->dao->expects(self::never())->method('markAsMerged');
-        $this->timeline_event_creator->expects(self::never())->method('storeMergeEvent');
+        $this->pull_request_merger->expects($this->never())->method('doMergeIntoDestination');
+        $this->dao->expects($this->never())->method('markAsMerged');
+        $this->timeline_event_creator->expects($this->never())->method('storeMergeEvent');
 
         $this->pull_request_closer->doMerge(
             $this->createMock(GitRepository::class),

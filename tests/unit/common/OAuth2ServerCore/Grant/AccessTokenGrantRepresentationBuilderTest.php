@@ -97,7 +97,7 @@ final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUn
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20'))
         );
         $this->refresh_token_creator->method('issueRefreshTokenIdentifierFromExistingRefreshToken')->willReturn(new ConcealedString('rt_token'));
-        $this->id_token_creator->expects(self::never())->method('issueIDTokenFromAuthorizationCode');
+        $this->id_token_creator->expects($this->never())->method('issueIDTokenFromAuthorizationCode');
 
         $representation = $this->builder->buildRepresentationFromRefreshToken(
             new \DateTimeImmutable('@10'),

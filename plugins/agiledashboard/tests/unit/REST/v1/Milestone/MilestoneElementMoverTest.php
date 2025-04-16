@@ -90,7 +90,7 @@ final class MilestoneElementMoverTest extends TestCase
 
         $this->milestone_validator->expects($this->once())->method('validateArtifactIdsCanBeAddedToBacklog')->willReturn($valid_to_add);
 
-        $milestone->expects(self::exactly(2))->method('getArtifact')->willReturn($artifact);
+        $milestone->expects($this->exactly(2))->method('getArtifact')->willReturn($artifact);
 
         $this->artifact_link_updater->expects($this->once())->method('updateArtifactLinks')
             ->with(
@@ -124,7 +124,7 @@ final class MilestoneElementMoverTest extends TestCase
 
         $this->resources_patcher->expects($this->once())->method('removeArtifactFromSource')->willReturn([$add]);
 
-        $this->tracker_artifact_factory->expects(self::exactly(2))->method('getArtifactById')->with($add)->willReturn($artifact);
+        $this->tracker_artifact_factory->expects($this->exactly(2))->method('getArtifactById')->with($add)->willReturn($artifact);
 
         $this->artifact_link_updater->expects($this->once())->method('updateArtifactLinks');
         $this->milestone_parent_linker->expects($this->once())->method('linkToMilestoneParent');

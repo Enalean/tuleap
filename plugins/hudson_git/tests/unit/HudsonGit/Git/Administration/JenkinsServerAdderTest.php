@@ -57,7 +57,7 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfProvidedURLIsNotAnURL(): void
     {
-        $this->git_jenkins_administration_server_dao->expects(self::never())->method('addJenkinsServer');
+        $this->git_jenkins_administration_server_dao->expects($this->never())->method('addJenkinsServer');
 
         $this->expectException(JenkinsServerURLNotValidException::class);
 
@@ -75,7 +75,7 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, 'https://url')
             ->willReturn(true);
 
-        $this->git_jenkins_administration_server_dao->expects(self::never())->method('addJenkinsServer');
+        $this->git_jenkins_administration_server_dao->expects($this->never())->method('addJenkinsServer');
 
         $this->expectException(JenkinsServerAlreadyDefinedException::class);
 

@@ -191,7 +191,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ->willReturn(true);
 
         $artifact
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getId')
             ->willReturn('89');
 

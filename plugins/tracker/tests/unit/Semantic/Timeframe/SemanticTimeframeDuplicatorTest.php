@@ -45,7 +45,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willReturn(null);
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->duplicator->duplicateInSameProject(1, 2, []);
@@ -60,7 +60,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willReturn(['start_date_field_id' => null, 'duration_field_id' => null, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->duplicator->duplicateInSameProject(1, 2, []);
@@ -75,7 +75,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->duplicator->duplicateInSameProject(1, 2, [['from' => 102, 'to' => 1002]]);
@@ -90,7 +90,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => 103, 'implied_from_tracker_id' => null]);
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->duplicator->duplicateInSameProject(1, 2, [['from' => 101, 'to' => 1001]]);
@@ -202,7 +202,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
         ?int $from_implied_from_tracker_id,
     ): void {
         $this->dao
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('searchByTrackerId')
             ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
                 50 => null,
@@ -275,7 +275,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
                 'implied_from_tracker_id' => 50,
             ]);
 
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
 
         $this->duplicator->duplicateBasedOnFieldConfiguration(
             101,

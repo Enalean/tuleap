@@ -115,7 +115,7 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $no_milestone_id = 0;
         $no_report_id    = 0;
 
-        $this->campaign_artifact->expects(self::never())->method('linkArtifact');
+        $this->campaign_artifact->expects($this->never())->method('linkArtifact');
 
         $this->campaign_creator->createCampaign(
             $this->user,
@@ -166,7 +166,7 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $report_id      = 5;
 
         $this->execution_creator
-            ->expects(self::exactly(count($test_definitions)))
+            ->expects($this->exactly(count($test_definitions)))
             ->method('createTestExecution')
             ->willReturn(ArtifactTestBuilder::anArtifact(124)->build());
 

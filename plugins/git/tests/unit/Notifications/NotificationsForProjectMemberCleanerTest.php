@@ -73,8 +73,8 @@ final class NotificationsForProjectMemberCleanerTest extends TestCase
     {
         $this->user->method('isMember')->with($this->project->getID())->willReturn(true);
 
-        $this->mails_to_notify_manager->expects(self::never())->method('removeMailByRepository');
-        $this->users_to_notify_dao->expects(self::never())->method('delete');
+        $this->mails_to_notify_manager->expects($this->never())->method('removeMailByRepository');
+        $this->users_to_notify_dao->expects($this->never())->method('delete');
 
         $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
     }

@@ -138,8 +138,8 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         self::expectException(\Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException::class);
-        $this->item_label_dao->expects(self::never())->method('addLabelsInTransaction');
-        $this->item_label_dao->expects(self::never())->method('removeLabelsInTransaction');
+        $this->item_label_dao->expects($this->never())->method('addLabelsInTransaction');
+        $this->item_label_dao->expects($this->never())->method('removeLabelsInTransaction');
         $this->project_label_dao->expects($this->once())->method('rollback');
 
         $this->updater->update($this->project_id, $this->item, $body);
@@ -155,8 +155,8 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->expectException(\Tuleap\Label\UnknownLabelException::class);
-        $this->item_label_dao->expects(self::never())->method('addLabelsInTransaction');
-        $this->item_label_dao->expects(self::never())->method('removeLabelsInTransaction');
+        $this->item_label_dao->expects($this->never())->method('addLabelsInTransaction');
+        $this->item_label_dao->expects($this->never())->method('removeLabelsInTransaction');
         $this->project_label_dao->expects($this->once())->method('rollback');
 
         $this->updater->update($this->project_id, $this->item, $body);
@@ -199,8 +199,8 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         self::expectException(\Tuleap\Label\REST\UnableToAddEmptyLabelException::class);
-        $this->project_label_dao->expects(self::never())->method('createIfNeededInTransaction');
-        $this->item_label_dao->expects(self::never())->method('addLabelsInTransaction');
+        $this->project_label_dao->expects($this->never())->method('createIfNeededInTransaction');
+        $this->item_label_dao->expects($this->never())->method('addLabelsInTransaction');
 
         $this->updater->update($this->project_id, $this->item, $body);
     }

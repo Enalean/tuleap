@@ -91,7 +91,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $html_purifier = $this->createMock(Codendi_HTMLPurifier::class);
-        $html_purifier->expects(self::atLeastOnce())->method('purifyTextWithReferences')->willReturn('description with processed ref');
+        $html_purifier->expects($this->atLeastOnce())->method('purifyTextWithReferences')->willReturn('description with processed ref');
 
         $dar_item_1         = [
             'item_id'     => 1,
@@ -293,7 +293,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
         });
 
         $html_purifier = $this->createMock(Codendi_HTMLPurifier::class);
-        $html_purifier->expects(self::atLeastOnce())->method('purifyTextWithReferences')->willReturn('description with processed ref');
+        $html_purifier->expects($this->atLeastOnce())->method('purifyTextWithReferences')->willReturn('description with processed ref');
 
         $representation1 = ItemRepresentation::build(
             $docman_folder1,

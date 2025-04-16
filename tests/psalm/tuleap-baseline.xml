@@ -77940,6 +77940,11 @@
       <code><![CDATA[$relying_party_id_hash]]></code>
     </PossiblyFalseOperand>
   </file>
+  <file src="tests/phpcs/TuleapCodingStandard/Sniffs/Test/DisallowUsageOfSelfForMockExpectsSniff.php">
+    <UndefinedConstant>
+      <code><![CDATA[T_SELF]]></code>
+    </UndefinedConstant>
+  </file>
   <file src="tests/unit/bootstrap.php">
     <PossiblyFalseIterator>
       <code><![CDATA[glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php')]]></code>

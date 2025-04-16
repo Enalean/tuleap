@@ -393,7 +393,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $data_writer->method('writeChunk')->willReturn($body_size);
 
-        $finisher->expects(self::never())->method('finishUpload')->with($file_information);
+        $finisher->expects($this->never())->method('finishUpload')->with($file_information);
 
         $server->handle($incomplete_upload_request);
     }
@@ -429,7 +429,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $locker->method('lock')->willReturn(false);
         $locker->method('unlock');
-        $this->data_store->expects(self::never())->method('getWriter');
+        $this->data_store->expects($this->never())->method('getWriter');
 
         $response = $server->handle($incoming_request);
 

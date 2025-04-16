@@ -20,9 +20,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\TemporaryTestDirectory;
@@ -307,7 +306,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasACommentVersions(): void
     {
-        $this->logger->expects(self::never())->method('warning');
+        $this->logger->expects($this->never())->method('warning');
         $this->exportTrackerDataFromFixture('artifact_with_comment_updates');
         self::assertCount(2, $this->xml->artifact->changeset);
         self::assertCount(3, $this->xml->artifact->changeset[1]->comments->comment);

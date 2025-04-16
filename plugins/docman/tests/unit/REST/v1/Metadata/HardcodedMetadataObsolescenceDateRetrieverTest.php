@@ -48,7 +48,7 @@ final class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
         $this->metadata_obsolescence_date_checker->expects($this->once())->method('checkObsolescenceDateUsageForDocument')
             ->with($obsolescence_date_formatted);
         $this->metadata_obsolescence_date_checker->method('isObsolescenceMetadataUsed')->willReturn(true);
-        $this->metadata_obsolescence_date_checker->expects(self::never())->method('checkDateValidity');
+        $this->metadata_obsolescence_date_checker->expects($this->never())->method('checkDateValidity');
 
         $time_stamp              = $retriever->getTimeStampOfDate($obsolescence_date_formatted);
         $expected_date_timestamp = $obsolescence_date->getTimestamp();
@@ -101,7 +101,7 @@ final class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
 
         $this->metadata_obsolescence_date_checker->expects($this->once())->method('checkObsolescenceDateUsageForDocument')->with($obsolescence_date_bad_format);
         $this->metadata_obsolescence_date_checker->method('isObsolescenceMetadataUsed')->willReturn(true);
-        $this->metadata_obsolescence_date_checker->expects(self::never())->method('checkDateValidity');
+        $this->metadata_obsolescence_date_checker->expects($this->never())->method('checkDateValidity');
 
         self::expectException(HardCodedMetadataException::class);
         self::expectExceptionMessage('obsolescence date format is incorrect');
@@ -127,7 +127,7 @@ final class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
         $this->metadata_obsolescence_date_checker->method('isObsolescenceMetadataUsed')->willReturn(false);
-        $this->metadata_obsolescence_date_checker->expects(self::never())->method('checkDateValidity');
+        $this->metadata_obsolescence_date_checker->expects($this->never())->method('checkDateValidity');
 
         $time_stamp = $retriever->getTimeStampOfDateWithoutPeriodValidity('2020-09-20', new DateTimeImmutable());
 

@@ -32,7 +32,7 @@ final class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUn
         $provider_manager = $this->createMock(ProviderManager::class);
         $provider_manager->method('getProvidersUsableToLogIn')->willReturn([$provider]);
         $login_url_generator = $this->createMock(LoginURLGenerator::class);
-        $login_url_generator->expects(self::atLeastOnce())->method('getLoginURL')
+        $login_url_generator->expects($this->atLeastOnce())->method('getLoginURL')
             ->with($provider, 'return_to')->willReturn('login_url');
 
         $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $login_url_generator);

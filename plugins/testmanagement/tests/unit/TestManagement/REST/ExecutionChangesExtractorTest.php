@@ -93,10 +93,10 @@ final class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetChangesShouldReturnVoidArrayIfTheirIsNoChange(): void
     {
         $this->formatted_changeset_value_for_file_field_retriever
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getFormattedChangesetValueForFieldFile');
         $this->formatted_changeset_value_for_int_field_retriever
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getFormattedChangesetValueForFieldInt');
         $this->formatted_changeset_value_for_text_field_retriever
             ->expects($this->once())

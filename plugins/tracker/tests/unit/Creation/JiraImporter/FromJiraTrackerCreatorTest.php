@@ -140,9 +140,9 @@ final class FromJiraTrackerCreatorTest extends TestCase
             ->onlyMethods(['getJiraExporter'])
             ->getMock();
 
-        $creator->expects(self::never())->method('getJiraExporter');
-        $this->tracker_xml_import->expects(self::never())->method('import');
-        $this->tracker_factory->expects(self::never())->method('getTrackerById');
+        $creator->expects($this->never())->method('getJiraExporter');
+        $this->tracker_xml_import->expects($this->never())->method('import');
+        $this->tracker_factory->expects($this->never())->method('getTrackerById');
 
         $this->expectException(TrackerCreationHasFailedException::class);
 

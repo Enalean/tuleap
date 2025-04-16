@@ -50,7 +50,7 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
         $user         = UserTestBuilder::anActiveUser()->build();
         $current_user = UserTestBuilder::anAnonymousUser()->build();
 
-        $emitter->expects(self::atLeast(1))
+        $emitter->expects($this->atLeast(1))
             ->method('emit')
             ->with(
                 self::callback(
@@ -105,7 +105,7 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
                 }
             });
 
-        $emitter->expects(self::atLeast(1))
+        $emitter->expects($this->atLeast(1))
             ->method('emit')
             ->with(
                 self::callback(

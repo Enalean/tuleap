@@ -46,10 +46,10 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
         $this->tracker = $this->createMock(\Tracker::class);
         $this->project = $this->createMock(\Project::class);
 
-        $this->field->expects(self::any())->method('getTracker')->willReturn($this->tracker);
-        $this->tracker->expects(self::any())->method('getId')->willReturn(self::TRACKER_ID);
-        $this->tracker->expects(self::any())->method('getProject')->willReturn($this->project);
-        $this->project->expects(self::any())->method('getID')->willReturn(140);
+        $this->field->expects($this->any())->method('getTracker')->willReturn($this->tracker);
+        $this->tracker->expects($this->any())->method('getId')->willReturn(self::TRACKER_ID);
+        $this->tracker->expects($this->any())->method('getProject')->willReturn($this->project);
+        $this->project->expects($this->any())->method('getID')->willReturn(140);
     }
 
     public function testItReturnsAnEmptyStringWhenThereIsNoSemanticsUsingTheField(): void
@@ -61,18 +61,18 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
     public function testItReturnsUsages(): void
     {
         $tracker_from_same_project = $this->createMock(\Tracker::class);
-        $tracker_from_same_project->expects(self::any())->method('getId')->willReturn(11);
-        $tracker_from_same_project->expects(self::any())->method('getProject')->willReturn($this->project);
-        $tracker_from_same_project->expects(self::any())->method('getName')->willReturn('User stories');
+        $tracker_from_same_project->expects($this->any())->method('getId')->willReturn(11);
+        $tracker_from_same_project->expects($this->any())->method('getProject')->willReturn($this->project);
+        $tracker_from_same_project->expects($this->any())->method('getName')->willReturn('User stories');
 
         $another_project = $this->createMock(\Project::class);
-        $another_project->expects(self::any())->method('getID')->willReturn(150);
-        $another_project->expects(self::any())->method('getPublicName')->willReturn('Project X');
+        $another_project->expects($this->any())->method('getID')->willReturn(150);
+        $another_project->expects($this->any())->method('getPublicName')->willReturn('Project X');
 
         $tracker_from_another_project = $this->createMock(\Tracker::class);
-        $tracker_from_another_project->expects(self::any())->method('getId')->willReturn(12);
-        $tracker_from_another_project->expects(self::any())->method('getProject')->willReturn($another_project);
-        $tracker_from_another_project->expects(self::any())->method('getName')->willReturn('Sprints');
+        $tracker_from_another_project->expects($this->any())->method('getId')->willReturn(12);
+        $tracker_from_another_project->expects($this->any())->method('getProject')->willReturn($another_project);
+        $tracker_from_another_project->expects($this->any())->method('getName')->willReturn('Sprints');
 
         $collection = new CollectionOfSemanticsUsingAParticularTrackerField(
             $this->field,
@@ -92,8 +92,8 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
     private function getMockedSemantic(string $semantic_label, \Tracker $tracker)
     {
         $semantic = $this->createMock(\Tracker_Semantic::class);
-        $semantic->expects(self::any())->method('getLabel')->willReturn($semantic_label);
-        $semantic->expects(self::any())->method('getTracker')->willReturn($tracker);
+        $semantic->expects($this->any())->method('getLabel')->willReturn($semantic_label);
+        $semantic->expects($this->any())->method('getTracker')->willReturn($tracker);
 
         return $semantic;
     }

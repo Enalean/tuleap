@@ -64,7 +64,7 @@ class RejectNonBaselineAdministratorMiddlewareTest extends TestCase
 
         $checker = $this->createMock(ProjectAdministratorChecker::class);
         $checker
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('checkUserIsProjectAdministrator')
             ->with($user, $project);
 
@@ -96,7 +96,7 @@ class RejectNonBaselineAdministratorMiddlewareTest extends TestCase
 
         $checker = $this->createMock(ProjectAdministratorChecker::class);
         $checker
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('checkUserIsProjectAdministrator')
             ->with($user, $project);
 
@@ -127,7 +127,7 @@ class RejectNonBaselineAdministratorMiddlewareTest extends TestCase
 
         $checker = $this->createMock(ProjectAdministratorChecker::class);
         $checker
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('checkUserIsProjectAdministrator')
             ->with($user, $project)
             ->willThrowException(new ForbiddenException());

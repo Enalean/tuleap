@@ -114,7 +114,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             self::NEW_ISSUE_TRACKER_ID,
         );
 
-        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
         $this->tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $this->tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
@@ -150,8 +150,8 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             self::NEW_ISSUE_TRACKER_ID,
         );
 
-        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
-        $this->tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $this->tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $this->getAdminController($request)->update();
@@ -177,9 +177,9 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
         $this->csrf_token->method('check');
-        $this->config->expects(self::never())->method('setProjectConfiguration');
+        $this->config->expects($this->never())->method('setProjectConfiguration');
 
-        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
         $this->tracker_checker->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($this->project, 999)
@@ -213,9 +213,9 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
         $this->csrf_token->method('check');
-        $this->config->expects(self::never())->method('setProjectConfiguration');
+        $this->config->expects($this->never())->method('setProjectConfiguration');
 
-        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
         $this->tracker_checker->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($this->project, 999)
@@ -258,9 +258,9 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
         $this->csrf_token->method('check');
-        $this->config->expects(self::never())->method('setProjectConfiguration');
+        $this->config->expects($this->never())->method('setProjectConfiguration');
 
-        $this->tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $this->tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
 
         $this->tracker_checker
             ->expects($this->once())
@@ -303,10 +303,10 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field_usage_detector->method('isStepDefinitionFieldUsed')->willReturn(false);
 
         $this->csrf_token->method('check');
-        $this->config->expects(self::never())->method('setProjectConfiguration');
+        $this->config->expects($this->never())->method('setProjectConfiguration');
 
         $this->tracker_checker
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('checkSubmittedTrackerCanBeUsed')
             ->willReturnCallback(function (Project $project, int $submitted_id): void {
                 if ($submitted_id === self::NEW_CAMPAIGN_TRACKER_ID) {

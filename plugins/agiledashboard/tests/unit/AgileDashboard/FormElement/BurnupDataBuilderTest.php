@@ -110,7 +110,7 @@ final class BurnupDataBuilderTest extends TestCase
 
         $this->mockBurnupCacheDao();
 
-        $this->count_cache_dao->expects(self::never())->method('searchCachedDaysValuesByArtifactId');
+        $this->count_cache_dao->expects($this->never())->method('searchCachedDaysValuesByArtifactId');
 
         $burnup_data = $this->burnup_data_builder->buildBurnupData($artifact, $user);
         $efforts     = $burnup_data->getEfforts();
@@ -167,8 +167,8 @@ final class BurnupDataBuilderTest extends TestCase
             ->with($artifact, self::anything(), $user)
             ->willReturn(true);
 
-        $this->burnup_cache_dao->expects(self::never())->method('searchCachedDaysValuesByArtifactId');
-        $this->count_cache_dao->expects(self::never())->method('searchCachedDaysValuesByArtifactId');
+        $this->burnup_cache_dao->expects($this->never())->method('searchCachedDaysValuesByArtifactId');
+        $this->count_cache_dao->expects($this->never())->method('searchCachedDaysValuesByArtifactId');
 
         $burnup_data = $this->burnup_data_builder->buildBurnupData($artifact, $user);
 

@@ -46,7 +46,7 @@ final class ConfigResetCommandTest extends TestCase
         \ForgeConfig::set('setting', 'value');
         $config_dao = $this->createMock(ConfigDao::class);
 
-        $config_dao->expects(self::atLeastOnce())->method('delete');
+        $config_dao->expects($this->atLeastOnce())->method('delete');
 
         $exit_code = $this->executeCommand(new ConfigResetCommand($config_keys, $config_dao));
 

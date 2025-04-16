@@ -277,7 +277,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
             'getKey',
             'validate',
         ]);
-        $v->expects(self::never())->method('required');
+        $v->expects($this->never())->method('required');
         $v->expects($this->once())->method('getKey')->willReturn('testkey_array_empty');
         $v->expects($this->once())->method('validate')->with(null)->willReturn(true);
         $r = new HTTPRequest();

@@ -95,7 +95,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tv3_tracker_factory->method('getArtifactTypesFromId')->with(101)->willReturn([$this->tracker_v3]);
 
         $this->project_history_dao->expects($this->once())->method('groupAddHistory');
-        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->exactly(2))->method('processEvent');
 
         $this->remover->removeUserFromProject($project_id, $user_id);
     }
@@ -118,7 +118,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project_history_dao->expects($this->once())->method('groupAddHistory');
         $this->project_history_dao->expects($this->once())->method('addHistory');
-        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->exactly(2))->method('processEvent');
         $this->event_manager->expects($this->once())->method('dispatch');
 
         $this->remover->forceRemoveAdminRestrictedUserFromProject($project, $user);
@@ -129,13 +129,13 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $user    = UserTestBuilder::anActiveUser()->withId(102)->build();
 
-        $this->user_permissions_dao->expects(self::never())->method('removeUserFromProjectAdmin');
-        $this->dao->expects(self::never())->method('removeNonAdminUserFromProject');
-        $this->dao->expects(self::never())->method('removeUserFromProjectUgroups');
-        $this->project_history_dao->expects(self::never())->method('groupAddHistory');
-        $this->tracker_v3->expects(self::never())->method('deleteUser');
-        $this->event_manager->expects(self::never())->method('processEvent');
-        $this->event_manager->expects(self::never())->method('dispatch');
+        $this->user_permissions_dao->expects($this->never())->method('removeUserFromProjectAdmin');
+        $this->dao->expects($this->never())->method('removeNonAdminUserFromProject');
+        $this->dao->expects($this->never())->method('removeUserFromProjectUgroups');
+        $this->project_history_dao->expects($this->never())->method('groupAddHistory');
+        $this->tracker_v3->expects($this->never())->method('deleteUser');
+        $this->event_manager->expects($this->never())->method('processEvent');
+        $this->event_manager->expects($this->never())->method('dispatch');
 
         $this->remover->forceRemoveAdminRestrictedUserFromProject($project, $user);
     }
@@ -148,10 +148,10 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
 
         $this->dao->expects($this->once())->method('removeNonAdminUserFromProject');
-        $this->dao->expects(self::never())->method('removeUserFromProjectUgroups');
-        $this->project_history_dao->expects(self::never())->method('groupAddHistory');
-        $this->tracker_v3->expects(self::never())->method('deleteUser');
-        $this->event_manager->expects(self::never())->method('processEvent');
+        $this->dao->expects($this->never())->method('removeUserFromProjectUgroups');
+        $this->project_history_dao->expects($this->never())->method('groupAddHistory');
+        $this->tracker_v3->expects($this->never())->method('deleteUser');
+        $this->event_manager->expects($this->never())->method('processEvent');
 
         $this->remover->removeUserFromProject($project_id, $user_id);
     }

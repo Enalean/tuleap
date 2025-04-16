@@ -265,12 +265,12 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->mockMilestoneBacklog();
 
         $this->agiledashboard_milestone_backlog_factory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getSelfBacklog')
             ->with($this->planning_virtual_top_milestone);
 
         $this->agiledashboard_milestone_backlog_item_collection_factory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getUnassignedOpenCollection')
             ->willReturn($this->agileDashboard_milestone_backlog_item_collection);
 

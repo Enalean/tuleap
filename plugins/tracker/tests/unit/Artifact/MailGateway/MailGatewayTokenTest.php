@@ -108,7 +108,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->tracker_config->method('isInsecureEmailgatewayEnabled')->willReturn(false);
         $this->tracker_config->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
         $this->incoming_message->method('isAFollowUp')->willReturn(false);
-        $this->artifact_creator->expects(self::never())->method('create');
+        $this->artifact_creator->expects($this->never())->method('create');
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -144,7 +144,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
+        $this->artifact->expects($this->never())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -157,7 +157,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->artifact->method('getId')->willReturn(101);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(false);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
+        $this->artifact->expects($this->never())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -181,7 +181,7 @@ final class MailGatewayTokenTest extends TestCase
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
+        $this->artifact->expects($this->never())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }

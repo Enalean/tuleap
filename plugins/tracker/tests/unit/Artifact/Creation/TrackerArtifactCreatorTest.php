@@ -179,7 +179,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->fields_validator->method('validate')->willReturn(false);
 
-        $this->dao->expects(self::never())->method('create');
+        $this->dao->expects($this->never())->method('create');
 
         $artifact_creator = $this->getCreator(
             CreateInitialChangesetStub::withNoChangesetCreationExpected(),
@@ -364,7 +364,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->send_notification = false;
         $this->bare_artifact->setId(1001);
 
-        $this->visit_recorder->expects(self::never())->method('record');
+        $this->visit_recorder->expects($this->never())->method('record');
 
         $this->event_dispatcher->expects($this->once())->method('dispatch');
 

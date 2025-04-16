@@ -50,7 +50,7 @@ final class ServiceInstrumentationMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
         $middleware = new ServiceInstrumentationMiddleware('service');
 
         $this->event_manager
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('processEvent')
             ->with(self::isInstanceOf(ServiceAccessEvent::class));
 

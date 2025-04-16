@@ -62,10 +62,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
 
         $project_member_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addProjectMember');
         $invitation_instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -103,10 +103,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
 
         $project_member_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addProjectMember');
         $invitation_instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -162,10 +162,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
 
         $project_member_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addProjectMember');
         $invitation_instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -213,10 +213,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
 
         $project_member_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addProjectMember');
         $invitation_instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -274,10 +274,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->willReturn(false);
 
         $project_member_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addProjectMember');
         $invitation_instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $adder->addUserToProjectAccordingToInvitation(
@@ -398,7 +398,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->willReturn(false);
 
         $project_member_adder
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('addProjectMember');
 
         $invitation_instrumentation
@@ -523,7 +523,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($just_created_user, $project));
 
         $invitation_instrumentation
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('incrementProjectInvitation');
 
         $email_notifier

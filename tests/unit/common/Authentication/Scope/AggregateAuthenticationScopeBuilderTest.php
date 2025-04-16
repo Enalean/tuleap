@@ -32,7 +32,7 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
         $builder_1 = $this->createMock(AuthenticationScopeBuilder::class);
         $builder_1->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn($this->createMock(AuthenticationScope::class));
         $builder_2 = $this->createMock(AuthenticationScopeBuilder::class);
-        $builder_2->expects(self::never())->method('buildAuthenticationScopeFromScopeIdentifier');
+        $builder_2->expects($this->never())->method('buildAuthenticationScopeFromScopeIdentifier');
 
         $aggregate_builder = AggregateAuthenticationScopeBuilder::fromBuildersList($builder_1, $builder_2);
 

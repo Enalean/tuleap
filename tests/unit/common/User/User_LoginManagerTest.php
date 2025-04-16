@@ -25,9 +25,8 @@ use Tuleap\User\AfterLocalStandardLogin;
 use Tuleap\User\BeforeStandardLogin;
 use Tuleap\User\UserAuthenticationSucceeded;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\GlobalLanguageMock;
 
@@ -115,7 +114,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->method('isPasswordlessOnly')->willReturn(false);
         $this->password_handler->method('isPasswordNeedRehash')->willReturn(false);
 
-        $this->user_manager->expects(self::exactly(2))->method('getUserByUserName')->with('john')->willReturn($this->buildUser(PFUser::STATUS_ACTIVE));
+        $this->user_manager->expects($this->exactly(2))->method('getUserByUserName')->with('john')->willReturn($this->buildUser(PFUser::STATUS_ACTIVE));
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
 
@@ -234,7 +233,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = $this->buildUser(PFUser::STATUS_DELETED);
 
-        $this->user_manager->expects(self::never())->method('setCurrentUser');
+        $this->user_manager->expects($this->never())->method('setCurrentUser');
 
         $this->expectException(User_StatusDeletedException::class);
         $this->login_manager->validateAndSetCurrentUser($user);

@@ -61,7 +61,7 @@ final class BotCreatorTest extends TestCase
     public function testItDoesNotCreateBotIfMandatoryBotNameIsMissing(): void
     {
         $this->bot_factory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
@@ -76,7 +76,7 @@ final class BotCreatorTest extends TestCase
     public function testItDoesNotCreateBotIfMandatoryWebhookURLIsMissing(): void
     {
         $this->bot_factory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
@@ -91,7 +91,7 @@ final class BotCreatorTest extends TestCase
     public function testItDoesNotCreateBotIfMandatoryWebhookURLIsNotAnHTTPURL(): void
     {
         $this->bot_factory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->expectException(ProvidedBotParameterIsNotValidException::class);
@@ -119,7 +119,7 @@ final class BotCreatorTest extends TestCase
     public function testItDoesNotCreateBotIfOptionalAvatarURLIsNotHTTPS(): void
     {
         $this->bot_factory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->expectException(ProvidedBotParameterIsNotValidException::class);

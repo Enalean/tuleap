@@ -80,7 +80,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->redirector->expects($this->once())->method('createResponseForUser')
             ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
             ->willReturn($response);
-        $this->app_remover->expects(self::never())->method('deleteAppByID');
+        $this->app_remover->expects($this->never())->method('deleteAppByID');
 
         self::assertSame($response, $this->controller->handle($request));
     }

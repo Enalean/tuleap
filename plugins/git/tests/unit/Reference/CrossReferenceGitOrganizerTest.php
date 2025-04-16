@@ -79,7 +79,7 @@ final class CrossReferenceGitOrganizerTest extends TestCase
                 $another_ref => $enhanced_another_ref,
             });
 
-        $by_nature_organizer->expects(self::exactly(2))->method('moveCrossReferenceToSection')
+        $by_nature_organizer->expects($this->exactly(2))->method('moveCrossReferenceToSection')
             ->with(
                 self::callback(static fn($reference) => $reference === $enhanced_ref || $reference === $enhanced_another_ref),
                 self::callback(static fn($label) => $label === 'a' || $label === 'b'),

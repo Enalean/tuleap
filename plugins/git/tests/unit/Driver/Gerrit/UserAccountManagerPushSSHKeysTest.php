@@ -85,8 +85,8 @@ final class UserAccountManagerPushSSHKeysTest extends TestCase
         $remote_gerrit_factory->method('getRemoteServersForUser')->with($this->user)->willReturn([]);
 
         $user_account_manager = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver_factory, $remote_gerrit_factory);
-        $this->gerrit_driver->expects(self::never())->method('addSSHKeyToAccount');
-        $this->gerrit_driver->expects(self::never())->method('removeSSHKeyFromAccount');
+        $this->gerrit_driver->expects($this->never())->method('addSSHKeyToAccount');
+        $this->gerrit_driver->expects($this->never())->method('removeSSHKeyFromAccount');
 
         $user_account_manager->pushSSHKeys($this->user);
     }
@@ -95,9 +95,9 @@ final class UserAccountManagerPushSSHKeysTest extends TestCase
     {
         $this->user->setAuthorizedKeys('');
 
-        $this->remote_gerrit_factory->expects(self::never())->method('getRemoteServersForUser')->with($this->user);
-        $this->gerrit_driver->expects(self::never())->method('addSSHKeyToAccount');
-        $this->gerrit_driver->expects(self::never())->method('removeSSHKeyFromAccount');
+        $this->remote_gerrit_factory->expects($this->never())->method('getRemoteServersForUser')->with($this->user);
+        $this->gerrit_driver->expects($this->never())->method('addSSHKeyToAccount');
+        $this->gerrit_driver->expects($this->never())->method('removeSSHKeyFromAccount');
 
         $this->user_account_manager->pushSSHKeys($this->user);
     }

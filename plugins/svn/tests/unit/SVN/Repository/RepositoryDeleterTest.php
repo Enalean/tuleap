@@ -141,7 +141,7 @@ final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project_history_dao->method('groupAddHistory');
 
-        $this->system_event_manager->expects(self::exactly(3))->method('createEvent');
+        $this->system_event_manager->expects($this->exactly(3))->method('createEvent');
         $this->repository_deleter->deleteProjectRepositories($this->project);
     }
 }

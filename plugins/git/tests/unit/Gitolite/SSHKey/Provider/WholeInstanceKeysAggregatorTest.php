@@ -33,9 +33,9 @@ final class WholeInstanceKeysAggregatorTest extends TestCase
         $gerrit_server_keys = $this->createMock(GerritServer::class);
         $user_keys          = $this->createMock(User::class);
 
-        $gitolite_admin_key->expects(self::atLeastOnce())->method('valid');
-        $gerrit_server_keys->expects(self::atLeastOnce())->method('valid');
-        $user_keys->expects(self::atLeastOnce())->method('valid');
+        $gitolite_admin_key->expects($this->atLeastOnce())->method('valid');
+        $gerrit_server_keys->expects($this->atLeastOnce())->method('valid');
+        $user_keys->expects($this->atLeastOnce())->method('valid');
         $gitolite_admin_key->method('rewind');
         $gerrit_server_keys->method('rewind');
         $user_keys->method('rewind');

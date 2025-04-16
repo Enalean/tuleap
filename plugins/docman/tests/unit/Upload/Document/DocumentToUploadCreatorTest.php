@@ -87,7 +87,7 @@ final class DocumentToUploadCreatorTest extends TestCase
 
         $obsolescence_date = DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
-        $metadata_creator->expects(self::never())->method('storeItemCustomMetadata');
+        $metadata_creator->expects($this->never())->method('storeItemCustomMetadata');
 
         if ($permissions_for_groups === null) {
             $this->permissions_manager->expects($this->once())->method('clonePermissions');

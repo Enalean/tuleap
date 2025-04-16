@@ -139,7 +139,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->incoming_message->method('isAFollowUp')->willReturn(true);
         $this->artifact->method('userCanUpdate')->with($this->user)->willReturn(true);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
+        $this->artifact->expects($this->never())->method('createNewChangeset');
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -180,7 +180,7 @@ final class MailGatewayInsecureTest extends TestCase
         $this->incoming_message->method('isAFollowUp')->willReturn(false);
         $this->tracker->method('userCanSubmitArtifact')->willReturn(true);
 
-        $this->artifact_creator->expects(self::never())->method('create');
+        $this->artifact_creator->expects($this->never())->method('create');
 
         $this->mailgateway->process($this->incoming_mail);
     }

@@ -356,7 +356,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->scope_extractor->expects($this->once())->method('extractScopes')
             ->willReturn([OAuth2TestScope::fromItself()]);
         $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
-        $this->form_renderer_builder->expects(self::never())->method('buildConsentRequiredResponse');
+        $this->form_renderer_builder->expects($this->never())->method('buildConsentRequiredResponse');
 
         $this->consent_checker
             ->expects($this->once())

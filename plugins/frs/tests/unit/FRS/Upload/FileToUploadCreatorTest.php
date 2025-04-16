@@ -116,7 +116,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('filename.txt', self::RELEASE_ID)
             ->willReturn(false);
 
-        $this->dao->expects(self::never())->method('saveFileOngoingUpload');
+        $this->dao->expects($this->never())->method('saveFileOngoingUpload');
 
         $this->expectException(UploadFileNameAlreadyExistsException::class);
 
@@ -142,7 +142,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('filename.txt', self::RELEASE_ID)
             ->willReturn(true);
 
-        $this->dao->expects(self::never())->method('saveFileOngoingUpload');
+        $this->dao->expects($this->never())->method('saveFileOngoingUpload');
 
         $this->expectException(UploadFileMarkedToBeRestoredException::class);
 
@@ -205,7 +205,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->dao->expects(self::never())->method('saveFileOngoingUpload');
+        $this->dao->expects($this->never())->method('saveFileOngoingUpload');
 
         $this->expectException(LogicException::class);
 

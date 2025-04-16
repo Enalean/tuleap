@@ -97,15 +97,15 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNothingHappenIfNoReferences(): void
     {
         $this->credentials_retriever
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getCredentials');
 
         $this->logger
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('debug');
 
         $this->client_wrapper
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('postUrl');
 
         $this->commenter->addCommentOnMergeRequest($this->webhook_data, $this->gitlab_repository, []);
@@ -129,7 +129,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(null);
 
         $this->client_wrapper
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('postUrl');
 
         $this->commenter->addCommentOnMergeRequest($this->webhook_data, $this->gitlab_repository, [

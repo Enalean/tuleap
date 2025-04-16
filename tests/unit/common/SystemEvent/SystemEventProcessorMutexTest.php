@@ -66,7 +66,7 @@ final class SystemEventProcessorMutexTest extends TestCase
     {
         $this->mutex->expects($this->once())->method('checkCurrentUserProcessOwner');
 
-        $this->db_connexion->expects(self::never())->method('reconnectAfterALongRunningProcess');
+        $this->db_connexion->expects($this->never())->method('reconnectAfterALongRunningProcess');
         $this->object->expects($this->once())->method('execute');
 
         $this->mutex->execute();
@@ -77,7 +77,7 @@ final class SystemEventProcessorMutexTest extends TestCase
         $this->mutex->expects($this->once())->method('checkCurrentUserProcessOwner')->willThrowException(new Exception());
 
         self::expectException(Exception::class);
-        $this->object->expects(self::never())->method('execute');
+        $this->object->expects($this->never())->method('execute');
 
         $this->mutex->execute();
     }

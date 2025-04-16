@@ -111,7 +111,7 @@ final class InvitationCleanerTest extends TestCase
             $this->invitation_instrumentation,
         );
 
-        $this->invitation_instrumentation->expects(self::never())->method('incrementExpiredInvitations');
+        $this->invitation_instrumentation->expects($this->never())->method('incrementExpiredInvitations');
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 

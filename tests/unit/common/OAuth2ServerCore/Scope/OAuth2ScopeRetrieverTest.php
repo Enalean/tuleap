@@ -60,7 +60,7 @@ final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $auth_scope = $this->createMock(AuthenticationScope::class);
-        $this->scope_builder->expects(self::exactly(2))->method('buildAuthenticationScopeFromScopeIdentifier')
+        $this->scope_builder->expects($this->exactly(2))->method('buildAuthenticationScopeFromScopeIdentifier')
             ->willReturnCallback(
                 static function (AuthenticationScopeIdentifier $scope_identifier) use ($auth_scope): AuthenticationScope {
                     $raw_scope_identifier = $scope_identifier->toString();

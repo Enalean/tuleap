@@ -72,7 +72,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
         $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $tracker_checker->expects($this->once())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
@@ -82,7 +82,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($project, 102, 103, 104, 101);
 
         $execution_dao
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('updateExecutionToUseSpecificVersionOfDefinition')
             ->willReturnCallback(static fn (
                 int $execution_artifact_id,
@@ -114,10 +114,10 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [];
 
-        $tracker_checker->expects(self::never())->method('checkSubmittedTrackerCanBeUsed');
-        $tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
-        $tracker_checker->expects(self::never())->method('checkSubmittedExecutionTrackerCanBeUsed');
-        $config->expects(self::never())->method('setProjectConfiguration');
+        $tracker_checker->expects($this->never())->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects($this->never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects($this->never())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $config->expects($this->never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
@@ -142,11 +142,11 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T3' => 103,
         ];
 
-        $tracker_checker->expects(self::never())->method('checkSubmittedTrackerCanBeUsed');
-        $tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
-        $tracker_checker->expects(self::never())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $tracker_checker->expects($this->never())->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects($this->never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects($this->never())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
-        $config->expects(self::never())->method('setProjectConfiguration');
+        $config->expects($this->never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
@@ -173,14 +173,14 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
         $tracker_checker->method('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($project, 103)
             ->willThrowException(new TrackerHasAtLeastOneFrozenFieldsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->expects(self::never())->method('setProjectConfiguration');
+        $config->expects($this->never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
@@ -207,14 +207,14 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
         $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->expects(self::never())->method('setProjectConfiguration');
+        $config->expects($this->never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
@@ -245,12 +245,12 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects($this->once())
             ->method('checkSubmittedTrackerCanBeUsed')
             ->willThrowException(new MissingArtifactLinkException());
-        $tracker_checker->expects(self::never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
-        $tracker_checker->expects(self::never())->method('checkSubmittedExecutionTrackerCanBeUsed');
+        $tracker_checker->expects($this->never())->method('checkSubmittedDefinitionTrackerCanBeUsed');
+        $tracker_checker->expects($this->never())->method('checkSubmittedExecutionTrackerCanBeUsed');
 
         $this->expectException(\Exception::class);
 
-        $config->expects(self::never())->method('setProjectConfiguration');
+        $config->expects($this->never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
@@ -277,14 +277,14 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
         $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->expects(self::never())->method('setProjectConfiguration');
+        $config->expects($this->never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,
@@ -311,14 +311,14 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'T4' => 104,
         ];
 
-        $tracker_checker->expects(self::exactly(2))->method('checkSubmittedTrackerCanBeUsed');
+        $tracker_checker->expects($this->exactly(2))->method('checkSubmittedTrackerCanBeUsed');
         $tracker_checker->expects($this->once())->method('checkSubmittedDefinitionTrackerCanBeUsed');
         $tracker_checker->method('checkSubmittedExecutionTrackerCanBeUsed')
             ->willThrowException(new TrackerHasAtLeastOneHiddenFieldsetsPostActionException());
 
         $this->expectException(\Exception::class);
 
-        $config->expects(self::never())->method('setProjectConfiguration');
+        $config->expects($this->never())->method('setProjectConfiguration');
 
         $xml_import->import(
             $project,

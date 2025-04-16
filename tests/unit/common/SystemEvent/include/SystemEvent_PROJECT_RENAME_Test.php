@@ -20,10 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Rename project 142 'TestProj' in 'FooBar'
@@ -136,7 +134,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $evt->expects($this->once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
 
         self::assertFalse($evt->process());
 
@@ -199,7 +197,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $evt->expects($this->once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
-        $evt->expects(self::never())->method('done');
+        $evt->expects($this->never())->method('done');
 
         self::assertFalse($evt->process());
     }

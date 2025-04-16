@@ -63,8 +63,8 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, 'My PR', 'a description', TimelineComment::FORMAT_TEXT);
 
         $this->pull_request_is_mergeable_checker->expects($this->once())->method('checkUserCanMerge')->willThrowException(new RestException(403, 'Forbidden'));
-        $this->factory->expects(self::never())->method('updateTitle');
-        $this->factory->expects(self::never())->method('updateDescription');
+        $this->factory->expects($this->never())->method('updateTitle');
+        $this->factory->expects($this->never())->method('updateDescription');
 
         $this->expectExceptionCode(403);
 
@@ -77,7 +77,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
         $project_id     = 104;
         $representation = new PullRequestPATCHRepresentation(PullRequest::STATUS_REVIEW, 'My PR', 'a description', TimelineComment::FORMAT_TEXT);
 
-        $this->pull_request_is_mergeable_checker->expects(self::never())->method('checkUserCanMerge');
+        $this->pull_request_is_mergeable_checker->expects($this->never())->method('checkUserCanMerge');
         $this->factory->expects($this->once())->method('updateTitle');
         $this->factory->expects($this->once())->method('updateDescription');
 

@@ -50,7 +50,7 @@ final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->expects(self::never())->method('deleteLock');
+        $this->lock_dao->expects($this->never())->method('deleteLock');
         $this->expectException(LockDestructionNotAuthorizedException::class);
 
         $this->lock_destructor->deleteLock($lock, $request_user);
@@ -69,7 +69,7 @@ final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->expects(self::atLeastOnce())->method('deleteLock')->with($lock->getId());
+        $this->lock_dao->expects($this->atLeastOnce())->method('deleteLock')->with($lock->getId());
 
         $this->lock_destructor->deleteLock($lock, $lock_owner);
     }

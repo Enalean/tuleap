@@ -90,7 +90,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'project_id' => self::PROJECT_ID,
             'name'       => 'existing_dashboard',
         ]);
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
 
         $this->expectException(NameDashboardAlreadyExistsException::class);
         $this->getSaver()->save($this->admin_user, $this->project, 'existing_dashboard');
@@ -98,7 +98,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionWhenNameDoesNotExist(): void
     {
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
 
         $this->expectException(NameDashboardDoesNotExistException::class);
         $this->getSaver()->save($this->admin_user, $this->project, '');
@@ -106,7 +106,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionWhenUserCanNotCreateDashboard(): void
     {
-        $this->dao->expects(self::never())->method('save');
+        $this->dao->expects($this->never())->method('save');
 
         $this->expectException(UserCanNotUpdateProjectDashboardException::class);
         $this->getSaver()->save($this->regular_user, $this->project, 'new_dashboard');
@@ -128,7 +128,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeleteByNonAdmin(): void
     {
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         $this->expectException(UserCanNotUpdateProjectDashboardException::class);
         try {

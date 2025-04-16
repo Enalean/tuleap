@@ -79,7 +79,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(false);
         $this->expectException(TimeTrackingNotAllowedToAddException::class);
 
-        $this->time_dao->expects(self::never())->method('addTime');
+        $this->time_dao->expects($this->never())->method('addTime');
 
         $this->time_updater->addTimeForUserInArtifact($this->user, $this->artifact, '2018-07-19', '11:11', 'oui');
     }
@@ -89,7 +89,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
         $this->expectException(TimeTrackingMissingTimeException::class);
 
-        $this->time_dao->expects(self::never())->method('addTime');
+        $this->time_dao->expects($this->never())->method('addTime');
 
         $this->time_updater->addTimeForUserInArtifact($this->user, $this->artifact, '2018-07-19', '', 'oui');
     }
@@ -113,7 +113,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(false);
         $this->expectException(TimeTrackingNotAllowedToEditException::class);
 
-        $this->time_dao->expects(self::never())->method('updateTime');
+        $this->time_dao->expects($this->never())->method('updateTime');
 
         $this->time_updater->updateTime($this->user, $this->artifact, $time, '2018-07-19', '11:12', 'step');
     }
@@ -125,7 +125,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
         $this->expectException(TimeTrackingMissingTimeException::class);
 
-        $this->time_dao->expects(self::never())->method('updateTime');
+        $this->time_dao->expects($this->never())->method('updateTime');
 
         $this->time_updater->updateTime($this->user, $this->artifact, $time, '2018-07-19', '', 'step');
     }
@@ -137,7 +137,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
         $this->expectException(TimeTrackingNotBelongToUserException::class);
 
-        $this->time_dao->expects(self::never())->method('updateTime');
+        $this->time_dao->expects($this->never())->method('updateTime');
 
         $this->time_updater->updateTime($this->user, $this->artifact, $time, '2018-07-19', '11:12', 'step');
     }
@@ -163,7 +163,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(false);
         $this->expectException(TimeTrackingNotAllowedToDeleteException::class);
 
-        $this->time_dao->expects(self::never())->method('deleteTime');
+        $this->time_dao->expects($this->never())->method('deleteTime');
 
         $this->time_updater->deleteTime($this->user, $this->artifact, $time);
     }
@@ -175,7 +175,7 @@ final class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
         $this->expectException(TimeTrackingNotBelongToUserException::class);
 
-        $this->time_dao->expects(self::never())->method('deleteTime');
+        $this->time_dao->expects($this->never())->method('deleteTime');
 
         $this->time_updater->deleteTime($this->user, $this->artifact, $time);
     }

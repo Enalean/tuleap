@@ -38,10 +38,10 @@ final class ParameterSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRejectsInvalidData(): void
     {
         $dao = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->expects(self::never())->method('save');
+        $dao->expects($this->never())->method('save');
 
         $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->expects(self::never())->method('processEvent');
+        $event_manager->expects($this->never())->method('processEvent');
 
         $this->expectException(\Tuleap\SVNCore\Cache\ParameterMalformedDataException::class);
 
@@ -56,7 +56,7 @@ final class ParameterSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->method('save')->willReturn(false);
 
         $event_manager = $this->createMock(\EventManager::class);
-        $event_manager->expects(self::never())->method('processEvent');
+        $event_manager->expects($this->never())->method('processEvent');
 
         $this->expectException(\Tuleap\SVNCore\Cache\ParameterDataAccessException::class);
 

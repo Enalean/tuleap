@@ -31,7 +31,7 @@ final class ConfigSetTest extends TestCase
     public function testExceptionIfKeyDoesNotExist(): void
     {
         $config_dao = $this->createMock(ConfigDao::class);
-        $config_dao->expects(self::never())
+        $config_dao->expects($this->never())
             ->method('save');
 
         $config_set = new ConfigSet($this->getConfigKeys([]), $config_dao);
@@ -43,7 +43,7 @@ final class ConfigSetTest extends TestCase
     public function testExceptionIfKeyIsNotModifiable(): void
     {
         $config_dao = $this->createMock(ConfigDao::class);
-        $config_dao->expects(self::never())
+        $config_dao->expects($this->never())
             ->method('save');
 
         $config_set = new ConfigSet($this->getConfigKeys(['foo' => $this->getMetadataNotModifiable()]), $config_dao);
@@ -66,7 +66,7 @@ final class ConfigSetTest extends TestCase
     public function testExceptionIfValueIsNotValid(): void
     {
         $config_dao = $this->createMock(ConfigDao::class);
-        $config_dao->expects(self::never())
+        $config_dao->expects($this->never())
             ->method('save');
 
         $config_set = new ConfigSet($this->getConfigKeys(['foo' => $this->getMetadataWithValidator()]), $config_dao);
@@ -78,7 +78,7 @@ final class ConfigSetTest extends TestCase
     public function testExceptionIfSecretIsNotValid(): void
     {
         $config_dao = $this->createMock(ConfigDao::class);
-        $config_dao->expects(self::never())
+        $config_dao->expects($this->never())
             ->method('save');
 
         $config_set = new ConfigSet($this->getConfigKeys(['foo' => $this->getSecretMetadataWithValidator()]), $config_dao);

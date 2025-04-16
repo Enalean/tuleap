@@ -207,7 +207,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $params['listeners_users_to_delete']   = true;
         $params['listeners_ugroups_to_delete'] = true;
         $params['item']                        = new Docman_Item();
-        $notificationsManager->expects(self::never())->method('removeUser');
+        $notificationsManager->expects($this->never())->method('removeUser');
         $actions->update_monitoring($params);
     }
 
@@ -253,7 +253,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
             }
             return false;
         });
-        $notificationsManager->expects(self::never())->method('removeUser');
+        $notificationsManager->expects($this->never())->method('removeUser');
         $actions->update_monitoring($params);
     }
 
@@ -288,8 +288,8 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $item                                  = new Docman_Item();
         $item->setId(10);
         $params['item'] = new Docman_Item();
-        $notificationsManager->expects(self::exactly(3))->method('userExists')->willReturn(true);
-        $notificationsManager->expects(self::exactly(3))->method('removeUser')->willReturn(false);
+        $notificationsManager->expects($this->exactly(3))->method('userExists')->willReturn(true);
+        $notificationsManager->expects($this->exactly(3))->method('removeUser')->willReturn(false);
         $actions->update_monitoring($params);
     }
 
@@ -312,8 +312,8 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
         $params['listeners_ugroups_to_delete'] = [];
         $params['item']                        = new Docman_Item();
-        $notificationsManager->expects(self::exactly(3))->method('userExists')->willReturn(true);
-        $notificationsManager->expects(self::exactly(6))->method('removeUser')->willReturn(true);
+        $notificationsManager->expects($this->exactly(3))->method('userExists')->willReturn(true);
+        $notificationsManager->expects($this->exactly(6))->method('removeUser')->willReturn(true);
         $actions->update_monitoring($params);
     }
 
@@ -325,7 +325,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $actions->_controler        = $controller;
         $params['listeners_to_add'] = true;
         $params['item']             = new Docman_Item();
-        $notificationsManager->expects(self::never())->method('addUser');
+        $notificationsManager->expects($this->never())->method('addUser');
         $actions->update_monitoring($params);
     }
 
@@ -354,8 +354,8 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         });
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(true);
-        $notificationsManager->expects(self::never())->method('addUser');
+        $notificationsManager->expects($this->exactly(2))->method('userExists')->willReturn(true);
+        $notificationsManager->expects($this->never())->method('addUser');
         $actions->update_monitoring($params);
     }
 
@@ -385,8 +385,8 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         });
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(false);
-        $notificationsManager->expects(self::exactly(2))->method('addUser')->willReturn(false);
+        $notificationsManager->expects($this->exactly(2))->method('userExists')->willReturn(false);
+        $notificationsManager->expects($this->exactly(2))->method('addUser')->willReturn(false);
         $actions->update_monitoring($params);
     }
 
@@ -399,7 +399,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getDocmanPermissionsManagerInstance']);
         $actions->_controler              = $controller;
         $docmanPermissionsManager         = $this->createMock(Docman_PermissionsManager::class);
-        $docmanPermissionsManager->expects(self::exactly(2))->method('userCanRead')->willReturnOnConsecutiveCalls(true, false);
+        $docmanPermissionsManager->expects($this->exactly(2))->method('userCanRead')->willReturnOnConsecutiveCalls(true, false);
         $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
         $actions->event_manager = $this->createMock(EventManager::class);
         $actions->event_manager->method('processEvent');
@@ -418,7 +418,7 @@ final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.Val
         });
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(false);
+        $notificationsManager->expects($this->exactly(2))->method('userExists')->willReturn(false);
         $notificationsManager->expects($this->once())->method('addUser')->willReturn(true);
         $actions->update_monitoring($params);
     }

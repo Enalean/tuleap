@@ -94,11 +94,11 @@ final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->expectException(ForbiddenException::class);
 
-        $this->csrf_token->expects(self::never())->method('check');
-        $this->custom_link_updater->expects(self::never())->method('updateReleaseNoteLink');
+        $this->csrf_token->expects($this->never())->method('check');
+        $this->custom_link_updater->expects($this->never())->method('updateReleaseNoteLink');
 
-        $this->layout->expects(self::never())->method('addFeedback');
-        $this->layout->expects(self::never())->method('redirect');
+        $this->layout->expects($this->never())->method('addFeedback');
+        $this->layout->expects($this->never())->method('redirect');
 
         $this->post_admin_release_note_controller->process($request, $this->layout, []);
     }

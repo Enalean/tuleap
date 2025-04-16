@@ -37,7 +37,7 @@ final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNothingWhenNoErrorsHaveBeenRegistered(): void
     {
         $zip = $this->createMock(ZipStream::class);
-        $zip->expects(self::never())->method('addFile');
+        $zip->expects($this->never())->method('addFile');
 
         $this->builder->addErrorsFileIfAnyToArchive($zip);
     }

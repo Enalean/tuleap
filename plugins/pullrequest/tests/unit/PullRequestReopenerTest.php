@@ -144,7 +144,7 @@ final class PullRequestReopenerTest extends TestCase
         $source_git_exec->method('getBranchSha1')->with('fork01')->willReturn('0000000000000000000000000000000000000000');
         $destination_git_exec->method('getBranchSha1')->with('main')->willReturn('0000000000000000000000000000000000000000');
 
-        $this->pull_request_updater->expects(self::never())->method('updatePullRequestWithNewSourceRev');
+        $this->pull_request_updater->expects($this->never())->method('updatePullRequestWithNewSourceRev');
         $this->dao->expects($this->once())->method('reopen');
         $this->timeline_event_creator->expects($this->once())->method('storeReopenEvent');
 
@@ -174,8 +174,8 @@ final class PullRequestReopenerTest extends TestCase
 
         $source_git_exec->method('getBranchSha1')->with('fork01')->willThrowException(new UnknownBranchNameException('fork01'));
 
-        $this->pull_request_updater->expects(self::never())->method('updatePullRequestWithNewSourceRev');
-        $this->dao->expects(self::never())->method('reopen');
+        $this->pull_request_updater->expects($this->never())->method('updatePullRequestWithNewSourceRev');
+        $this->dao->expects($this->never())->method('reopen');
 
         $this->reopener->reopen(
             $this->buildAnAbandonedPullRequest(),
@@ -204,8 +204,8 @@ final class PullRequestReopenerTest extends TestCase
         $source_git_exec->method('getBranchSha1')->with('fork01')->willReturn('0000000000000000000000000000000000000001');
         $destination_git_exec->method('getBranchSha1')->with('main')->willThrowException(new UnknownBranchNameException('main'));
 
-        $this->pull_request_updater->expects(self::never())->method('updatePullRequestWithNewSourceRev');
-        $this->dao->expects(self::never())->method('reopen');
+        $this->pull_request_updater->expects($this->never())->method('updatePullRequestWithNewSourceRev');
+        $this->dao->expects($this->never())->method('reopen');
 
         $this->reopener->reopen(
             $this->buildAnAbandonedPullRequest(),
@@ -265,7 +265,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $pull_request = $this->buildAnAbandonedPullRequest();
         $this->pull_request_updater->expects($this->once())->method('updatePullRequestWithNewSourceRev')->willThrowException(new GitReferenceNotFound($pull_request));
-        $this->dao->expects(self::never())->method('reopen');
+        $this->dao->expects($this->never())->method('reopen');
 
         $this->reopener->reopen(
             $pull_request,

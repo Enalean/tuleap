@@ -365,7 +365,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
         $field->method('getComputedValue')->willReturn(65);
-        $this->collection_factory->expects(self::never())->method('getInitialEffortField');
+        $this->collection_factory->expects($this->never())->method('getInitialEffortField');
         $this->collection_factory->expects($this->once())->method('userCanReadInitialEffortField')->willReturn(false);
 
         $this->artifact_factory->expects($this->once())->method('getTitleFromRowAsText')->willReturn('title');
@@ -455,9 +455,9 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
             ->userCannotView($user)
             ->build();
 
-        $this->backlog_item_builder->expects(self::exactly(6))->method('getCollection')->willReturn($backlog_item_collection);
+        $this->backlog_item_builder->expects($this->exactly(6))->method('getCollection')->willReturn($backlog_item_collection);
 
-        $this->remaining_effort_value_retriever->expects(self::exactly(4))->method('getRemainingEffortValue')->willReturn(12.6);
+        $this->remaining_effort_value_retriever->expects($this->exactly(4))->method('getRemainingEffortValue')->willReturn(12.6);
 
         $items_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
 
@@ -477,7 +477,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $backlog->expects($this->once())->method('getUnplannedArtifacts')->willReturn($top_backlog_collection);
 
-        $this->backlog_item_builder->expects(self::exactly(4))->method('getItem')->willReturnOnConsecutiveCalls(
+        $this->backlog_item_builder->expects($this->exactly(4))->method('getItem')->willReturnOnConsecutiveCalls(
             $item_presenter_artifact_10,
             $item_presenter_artifact_11,
             $item_presenter_artifact_10,
@@ -486,20 +486,20 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $backlog->expects($this->once())->method('getArtifacts')->willReturn($items_collection);
 
-        $this->artifact_factory->expects(self::exactly(2))->method('getParents')->willReturn([10 => $parent_can_be_seen, 11 => $parent_cannot_be_seen]);
-        $this->artifact_factory->expects(self::exactly(2))->method('setTitles');
-        $this->artifact_factory->expects(self::exactly(4))->method('getTitleFromRowAsText');
+        $this->artifact_factory->expects($this->exactly(2))->method('getParents')->willReturn([10 => $parent_can_be_seen, 11 => $parent_cannot_be_seen]);
+        $this->artifact_factory->expects($this->exactly(2))->method('setTitles');
+        $this->artifact_factory->expects($this->exactly(4))->method('getTitleFromRowAsText');
 
-        $this->dao->expects(self::exactly(2))->method('getArtifactsSemantics')->willReturn([
+        $this->dao->expects($this->exactly(2))->method('getArtifactsSemantics')->willReturn([
             ['id' => 10, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
             ['id' => 11, 'title' => 'title', 'title_format' => 'text', 'status' => 'open'],
         ]);
-        $this->collection_factory->expects(self::exactly(4))->method('getInitialEffortField')->willReturn(null);
-        $this->collection_factory->expects(self::exactly(6))->method('userCanReadBacklogTitleField')->willReturn(true);
-        $this->collection_factory->expects(self::exactly(4))->method('userCanReadBacklogStatusField')->willReturn(true);
-        $this->collection_factory->expects(self::exactly(4))->method('userCanReadInitialEffortField')->willReturn(true);
+        $this->collection_factory->expects($this->exactly(4))->method('getInitialEffortField')->willReturn(null);
+        $this->collection_factory->expects($this->exactly(6))->method('userCanReadBacklogTitleField')->willReturn(true);
+        $this->collection_factory->expects($this->exactly(4))->method('userCanReadBacklogStatusField')->willReturn(true);
+        $this->collection_factory->expects($this->exactly(4))->method('userCanReadInitialEffortField')->willReturn(true);
 
-        $this->milestone_factory->expects(self::exactly(2))->method('getSubMilestoneIds')->willReturn([]);
+        $this->milestone_factory->expects($this->exactly(2))->method('getSubMilestoneIds')->willReturn([]);
 
         $collection = $this->collection_factory->getOpenAndClosedCollection(
             $user,

@@ -159,7 +159,7 @@ final class EmailNotificationTaskTest extends TestCase
         $this->tracker->method('isNotificationStopped')->willReturn(true);
 
         $mail_sender = $this->createMock(MailSender::class);
-        $mail_sender->expects(self::never())->method('send');
+        $mail_sender->expects($this->never())->method('send');
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -180,7 +180,7 @@ final class EmailNotificationTaskTest extends TestCase
         $this->tracker->method('isNotificationStopped')->willReturn(false);
 
         $mail_sender = $this->createMock(MailSender::class);
-        $mail_sender->expects(self::never())->method('send');
+        $mail_sender->expects($this->never())->method('send');
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -239,7 +239,7 @@ final class EmailNotificationTaskTest extends TestCase
     public function testChangesetShouldUseUserLanguageInGetBody(): void
     {
         $user_language = $this->createMock(BaseLanguage::class);
-        $user_language->expects(self::atLeastOnce())->method('getText')->willReturn('Foo');
+        $user_language->expects($this->atLeastOnce())->method('getText')->willReturn('Foo');
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -265,7 +265,7 @@ final class EmailNotificationTaskTest extends TestCase
     public function testChangesetShouldUseUserLanguageInBuildMessage(): void
     {
         $user_language = $this->createMock(BaseLanguage::class);
-        $user_language->expects(self::atLeastOnce())->method('getText')->willReturn('');
+        $user_language->expects($this->atLeastOnce())->method('getText')->willReturn('');
 
         $preferences = new StoreUserPreferenceStub();
         $preferences->set(302, 'text', 'user_tracker_mailformat');

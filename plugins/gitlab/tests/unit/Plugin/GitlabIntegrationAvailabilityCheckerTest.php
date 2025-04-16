@@ -91,7 +91,7 @@ final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
             ->willReturn(false);
 
         $this->plugin_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('isPluginAllowedForProject');
 
         self::assertFalse(

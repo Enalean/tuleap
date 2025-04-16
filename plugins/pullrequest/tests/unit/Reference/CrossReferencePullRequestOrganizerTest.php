@@ -99,7 +99,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
                 CrossReferencePresenterBuilder::get(3)->withType('whatever')->build(),
             ],
         );
-        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
 
         $this->organizePullRequestReferences($by_nature_organizer);
     }

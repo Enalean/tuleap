@@ -272,11 +272,11 @@ final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->backend_svn->expects($this->once())->method('setUserAndGroup');
 
-        $this->notifications_emails_builder->expects(self::exactly(2))
+        $this->notifications_emails_builder->expects($this->exactly(2))
             ->method('transformNotificationEmailsStringAsArray')
             ->willReturn([]);
 
-        $this->mail_notification_manager->expects(self::exactly(2))->method('create');
+        $this->mail_notification_manager->expects($this->exactly(2))->method('create');
 
         $this->xml_user_checker->expects($this->once())->method('currentUserIsHTTPUser')->willReturn(false);
 

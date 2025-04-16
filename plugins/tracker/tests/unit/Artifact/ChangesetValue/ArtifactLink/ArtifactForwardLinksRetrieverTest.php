@@ -130,7 +130,7 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getLastChangeset')->willReturn($last_changeset);
 
-        $this->dao->expects(self::never())->method('searchChangesetValues');
+        $this->dao->expects($this->never())->method('searchChangesetValues');
 
         $forward_links = $this->retrieve($artifact);
         $links         = $forward_links->getArtifactLinks();

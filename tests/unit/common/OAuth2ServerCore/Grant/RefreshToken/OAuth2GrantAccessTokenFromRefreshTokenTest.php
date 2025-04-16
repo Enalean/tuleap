@@ -134,7 +134,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
     {
         $body_params = [];
 
-        $this->representation_builder->expects(self::never())->method('buildRepresentationFromRefreshToken');
+        $this->representation_builder->expects($this->never())->method('buildRepresentationFromRefreshToken');
         $response = $this->grant_access_from_refresh_token->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));

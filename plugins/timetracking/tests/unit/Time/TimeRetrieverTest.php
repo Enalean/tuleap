@@ -80,8 +80,8 @@ final class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->with($this->user, $this->tracker)->willReturn(false);
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(false);
 
-        $this->dao->expects(self::never())->method('getTimesAddedInArtifactByUser');
-        $this->dao->expects(self::never())->method('getAllTimesAddedInArtifact');
+        $this->dao->expects($this->never())->method('getTimesAddedInArtifactByUser');
+        $this->dao->expects($this->never())->method('getAllTimesAddedInArtifact');
 
         self::assertEmpty($this->retriever->getTimesForUser($this->user, $this->artifact));
     }
@@ -92,7 +92,7 @@ final class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
 
         $this->dao->expects($this->once())->method('getTimesAddedInArtifactByUser')->with(102, 200)->willReturn([]);
-        $this->dao->expects(self::never())->method('getAllTimesAddedInArtifact');
+        $this->dao->expects($this->never())->method('getAllTimesAddedInArtifact');
 
         $this->retriever->getTimesForUser($this->user, $this->artifact);
     }
@@ -103,7 +103,7 @@ final class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(false);
 
         $this->dao->expects($this->once())->method('getAllTimesAddedInArtifact')->with(200)->willReturn([]);
-        $this->dao->expects(self::never())->method('getTimesAddedInArtifactByUser');
+        $this->dao->expects($this->never())->method('getTimesAddedInArtifactByUser');
 
         $this->retriever->getTimesForUser($this->user, $this->artifact);
     }

@@ -42,7 +42,7 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDBIsLazilyCreated(): void
     {
         $db_creator = $this->createMock(DBCreator::class);
-        $db_creator->expects(self::never())->method('createDB');
+        $db_creator->expects($this->never())->method('createDB');
 
         $db_connection = new DBConnection($db_creator);
         $db_connection->reconnectAfterALongRunningProcess();

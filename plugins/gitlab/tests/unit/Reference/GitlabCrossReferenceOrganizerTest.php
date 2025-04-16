@@ -172,7 +172,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ]
         );
 
-        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
@@ -198,7 +198,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
         $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
@@ -249,7 +249,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->with($a_ref);
 
         $by_nature_organizer
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
@@ -341,9 +341,9 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref, $another_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('moveCrossReferenceToSection')
             ->willReturnCallback(
                 function (CrossReferencePresenter $cross_reference_presenter, string $section_label) use ($a_ref, $another_ref): void {
@@ -412,7 +412,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         $this->gitlab_merge_request_reference_retriever
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getGitlabMergeRequestInRepositoryWithId')
             ->willReturnMap([
                 [$integration, 14, $john_snow_merge_request],
@@ -431,8 +431,8 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->withProjectId(102)
             ->build();
 
-        $this->user_manager->expects(self::never())->method('getUserByEmail');
-        $this->user_helper->expects(self::never())->method('getDisplayNameFromUser');
+        $this->user_manager->expects($this->never())->method('getUserByEmail');
+        $this->user_helper->expects($this->never())->method('getDisplayNameFromUser');
 
         $user = $this->createStub(PFUser::class);
         $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
@@ -442,7 +442,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref, $another_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer->method('moveCrossReferenceToSection')
             ->willReturnCallback(
                 function (CrossReferencePresenter $xref): string {
@@ -546,7 +546,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
             ->expects($this->once())
             ->method('moveCrossReferenceToSection');
@@ -605,7 +605,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->willReturn(null);
 
         $this->user_helper
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getDisplayNameFromUser');
 
         $user = $this->createStub(PFUser::class);
@@ -616,7 +616,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
             ->expects($this->once())
             ->method('moveCrossReferenceToSection');
@@ -670,11 +670,11 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             ->build();
 
         $this->user_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getUserByEmail');
 
         $this->user_helper
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getDisplayNameFromUser');
 
         $user = $this->createStub(PFUser::class);
@@ -685,7 +685,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
             ->expects($this->once())
             ->method('moveCrossReferenceToSection');
@@ -743,7 +743,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
             ->expects($this->once())
             ->method('moveCrossReferenceToSection');
@@ -810,7 +810,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
             ->expects($this->once())
             ->method('moveCrossReferenceToSection');
@@ -872,7 +872,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
             ->expects($this->once())
             ->method('moveCrossReferenceToSection')

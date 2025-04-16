@@ -63,8 +63,8 @@ final class Docman_LockFactoryTest extends TestCase // phpcs:ignore Squiz.Classe
         $this->dao->method('searchLocksForProjectByItemId')->willReturn([['item_id' => 1]]);
         $this->lock_factory->_cacheLocksForProject($this->item->getId());
 
-        $this->dao->expects(self::never())->method('addLock');
-        $this->docman_log->expects(self::never())->method('log');
+        $this->dao->expects($this->never())->method('addLock');
+        $this->docman_log->expects($this->never())->method('log');
 
         $this->lock_factory->lock($this->item, $this->user);
     }
@@ -81,8 +81,8 @@ final class Docman_LockFactoryTest extends TestCase // phpcs:ignore Squiz.Classe
     public function testItemIsNotUnlockedAgainIfTheDocumentIsAlreadyUnlocked(): void
     {
         $this->dao->method('searchLocksForProjectByItemId')->willReturn([]);
-        $this->dao->expects(self::never())->method('delLock');
-        $this->docman_log->expects(self::never())->method('log');
+        $this->dao->expects($this->never())->method('delLock');
+        $this->docman_log->expects($this->never())->method('log');
 
         $this->lock_factory->unlock($this->item, $this->user);
     }

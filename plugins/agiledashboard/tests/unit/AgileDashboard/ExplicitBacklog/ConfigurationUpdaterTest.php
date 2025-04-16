@@ -110,12 +110,12 @@ class ConfigurationUpdaterTest extends TestCase
             'group_id' => '101',
         ]);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
-        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
-        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects($this->never())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects($this->never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->backlog_item_dao->expects($this->never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->expects($this->never())->method('deleteAllPostActionsInProject');
 
         $this->updater->updateScrumConfiguration($request);
     }
@@ -125,12 +125,12 @@ class ConfigurationUpdaterTest extends TestCase
         $this->request->method('exist')->with('use-explicit-top-backlog')->willReturn(true);
         $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('1');
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
-        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
-        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects($this->never())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects($this->never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->backlog_item_dao->expects($this->never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->expects($this->never())->method('deleteAllPostActionsInProject');
 
         $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
@@ -143,12 +143,12 @@ class ConfigurationUpdaterTest extends TestCase
     {
         $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('0');
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
-        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
-        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->expects($this->never())->method('setProjectIsUsingExplicitBacklog');
+        $this->milestone_report_criterion_dao->expects($this->never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->backlog_item_dao->expects($this->never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
+        $this->add_to_top_backlog_post_action_dao->expects($this->never())->method('deleteAllPostActionsInProject');
 
         $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
@@ -161,12 +161,12 @@ class ConfigurationUpdaterTest extends TestCase
     {
         $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('1');
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfProject');
         $this->explicit_backlog_dao->expects($this->once())->method('setProjectIsUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
-        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
+        $this->milestone_report_criterion_dao->expects($this->never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->add_to_top_backlog_post_action_dao->expects($this->never())->method('deleteAllPostActionsInProject');
         $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn([['id' => '201'], ['id' => '202']]);
-        $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds');
+        $this->unplanned_artifacts_adder->expects($this->exactly(2))->method('addArtifactToTopBacklogFromIds');
 
         $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
@@ -180,10 +180,10 @@ class ConfigurationUpdaterTest extends TestCase
         $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('0');
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('removeExplicitBacklogOfProject');
-        $this->explicit_backlog_dao->expects(self::never())->method('setProjectIsUsingExplicitBacklog');
+        $this->explicit_backlog_dao->expects($this->never())->method('setProjectIsUsingExplicitBacklog');
         $this->milestone_report_criterion_dao->expects($this->once())->method('updateAllUnplannedValueToAnyInProject');
-        $this->backlog_item_dao->expects(self::never())->method('getOpenUnplannedTopBacklogArtifacts');
-        $this->unplanned_artifacts_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->backlog_item_dao->expects($this->never())->method('getOpenUnplannedTopBacklogArtifacts');
+        $this->unplanned_artifacts_adder->expects($this->never())->method('addArtifactToTopBacklogFromIds');
         $this->add_to_top_backlog_post_action_dao->expects($this->once())->method('deleteAllPostActionsInProject');
         $this->add_to_top_backlog_post_action_dao->expects($this->once())->method('isAtLeastOnePostActionDefinedInProject');
 
@@ -199,12 +199,12 @@ class ConfigurationUpdaterTest extends TestCase
         $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('0');
         $this->event_dispatcher->is_planning_administration_delegated = true;
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfProject');
         $this->explicit_backlog_dao->expects($this->once())->method('setProjectIsUsingExplicitBacklog');
-        $this->milestone_report_criterion_dao->expects(self::never())->method('updateAllUnplannedValueToAnyInProject');
-        $this->add_to_top_backlog_post_action_dao->expects(self::never())->method('deleteAllPostActionsInProject');
+        $this->milestone_report_criterion_dao->expects($this->never())->method('updateAllUnplannedValueToAnyInProject');
+        $this->add_to_top_backlog_post_action_dao->expects($this->never())->method('deleteAllPostActionsInProject');
         $this->backlog_item_dao->method('getOpenUnplannedTopBacklogArtifacts')->willReturn([['id' => '201'], ['id' => '202']]);
-        $this->unplanned_artifacts_adder->expects(self::exactly(2))->method('addArtifactToTopBacklogFromIds');
+        $this->unplanned_artifacts_adder->expects($this->exactly(2))->method('addArtifactToTopBacklogFromIds');
 
         $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')
             ->with(101)

@@ -58,8 +58,8 @@ final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $updater = new WebhookUpdater($dao);
 
         self::expectException(\Tuleap\Project\Webhook\WebhookMalformedDataException::class);
-        $dao->expects(self::never())->method('createWebhook');
-        $dao->expects(self::never())->method('editWebhook');
+        $dao->expects($this->never())->method('createWebhook');
+        $dao->expects($this->never())->method('editWebhook');
 
         $updater->add('Webhook name', 'Not an URL');
         $updater->edit(1, 'Webhook name', 'Not an URL');

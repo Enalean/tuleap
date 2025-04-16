@@ -20,9 +20,8 @@
 
 use Tuleap\Project\ProjectAccessSuspendedException;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
+class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private $request;
     private $url_verification;
@@ -68,7 +67,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->url_verification->method('isException')->willReturn(true);
 
-        $this->url_verification->expects(self::never())->method('header');
+        $this->url_verification->expects($this->never())->method('header');
 
         $this->url_verification->assertValidUrl([], $this->request);
     }
@@ -80,7 +79,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->method('getUrl')->willReturn($url);
         $this->url_verification->method('isException')->willReturn(false);
         $this->url_verification->method('getUrlChunks')->willReturn(null);
-        $this->url_verification->expects(self::never())->method('header');
+        $this->url_verification->expects($this->never())->method('header');
         $this->url_verification->method('checkRestrictedAccess');
 
         $server = [
@@ -108,9 +107,9 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCheckNotActiveProjectApi(): void
     {
-        $this->url_verification->expects(self::never())->method('exitError');
-        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
-        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->expects($this->never())->method('exitError');
+        $this->url_verification->expects($this->never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects($this->never())->method('displayPrivateProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
         $url = $this->createMock(URL::class);
@@ -132,8 +131,8 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->method('userCanAccessProject')->willThrowException(new Project_AccessDeletedException());
 
         $this->url_verification->expects($this->once())->method('exitError');
-        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
-        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->expects($this->never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects($this->never())->method('displayPrivateProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
         $url = $this->createMock(URL::class);
@@ -173,9 +172,9 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->method('getProjectManager')->willReturn($project_manager);
         $this->url_verification->method('userCanAccessProject');
 
-        $this->url_verification->expects(self::never())->method('exitError');
-        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
-        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->expects($this->never())->method('exitError');
+        $this->url_verification->expects($this->never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects($this->never())->method('displayPrivateProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
         $url = $this->createMock(URL::class);
@@ -191,9 +190,9 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $url->method('getGroupIdFromUrl');
         $this->url_verification->method('getUrl')->willReturn($url);
 
-        $this->url_verification->expects(self::never())->method('exitError');
-        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
-        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->expects($this->never())->method('exitError');
+        $this->url_verification->expects($this->never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects($this->never())->method('displayPrivateProjectError');
         $this->url_verification->method('isException');
         $this->url_verification->method('getUrlChunks');
         $this->url_verification->method('checkRestrictedAccess');

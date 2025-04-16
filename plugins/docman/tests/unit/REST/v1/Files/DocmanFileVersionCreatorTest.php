@@ -78,7 +78,7 @@ final class DocmanFileVersionCreatorTest extends TestCase
         $version_to_upload = new VersionToUpload($version_id);
         $this->creator->expects($this->once())->method('create')->willReturn($version_to_upload);
 
-        $this->lock_factory->expects(self::never())->method('itemIsLocked');
+        $this->lock_factory->expects($this->never())->method('itemIsLocked');
 
         $created_version_representation = $this->version_creator->createFileVersion(
             $item,

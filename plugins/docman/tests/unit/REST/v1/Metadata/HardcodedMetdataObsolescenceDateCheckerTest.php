@@ -141,7 +141,7 @@ final class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
 
         $obsolescence_date = new DateTimeImmutable();
 
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
+        $this->docman_settings_bo->expects($this->never())->method('getMetadataUsage');
 
         $checker->checkDateValidity(
             (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE,

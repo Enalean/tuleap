@@ -62,7 +62,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
         $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn(null);
-        $date_period->expects(self::never())->method('getStartDate');
+        $date_period->expects($this->never())->method('getStartDate');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
@@ -83,7 +83,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
 
         $this->computed_cache->method('searchCachedDays')->willReturn([]);
-        $remaining_effort_field->expects(self::never())->method('getComputedValue');
+        $remaining_effort_field->expects($this->never())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
@@ -106,8 +106,8 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
 
         $this->computed_cache->method('searchCachedDays')->willReturn([]);
 
-        $remaining_effort_field->expects(self::never())->method('getCachedValue');
-        $remaining_effort_field->expects(self::never())->method('getComputedValue');
+        $remaining_effort_field->expects($this->never())->method('getCachedValue');
+        $remaining_effort_field->expects($this->never())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
@@ -172,7 +172,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
             ],
         ]);
         $remaining_effort_field->method('getCachedValue');
-        $remaining_effort_field->expects(self::never())->method('getComputedValue');
+        $remaining_effort_field->expects($this->never())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
@@ -216,7 +216,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
         ]);
 
         $remaining_effort_field->method('getCachedValue');
-        $remaining_effort_field->expects(self::once())->method('getComputedValue');
+        $remaining_effort_field->expects($this->once())->method('getComputedValue');
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
     }

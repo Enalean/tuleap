@@ -97,7 +97,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $GLOBALS['Language']->method('getText')->willReturn('Permission denied');
 
-        $this->configuration_dao->expects(self::never())->method('updateConfiguration');
+        $this->configuration_dao->expects($this->never())->method('updateConfiguration');
 
         $this->update();
     }

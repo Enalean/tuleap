@@ -72,7 +72,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
             ),
         ]);
 
-        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
     }
@@ -101,7 +101,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
-        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects($this->never())->method('moveCrossReferenceToSection');
         $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
@@ -143,7 +143,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
                     && $presenter->title_badge->color === 'inca-silver'
                 )
             ), '');
-        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');
 
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
     }

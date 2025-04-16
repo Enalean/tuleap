@@ -55,7 +55,7 @@ final class ProjectOwnerRemoverTest extends TestCase
         $private_project                = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
         $public_project_with_restricted = ProjectTestBuilder::aProject()->withAccessPublicIncludingRestricted()->build();
 
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         $this->remover->forceRemovalOfRestrictedProjectOwner(
             $public_project,
@@ -77,7 +77,7 @@ final class ProjectOwnerRemoverTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->withAccessPrivateWithoutRestricted()->build();
 
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         $this->remover->forceRemovalOfRestrictedProjectOwner(
             $project,
@@ -90,7 +90,7 @@ final class ProjectOwnerRemoverTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withAccessPrivateWithoutRestricted()->build();
 
         $this->project_owner_retriever->method('getProjectOwner')->willReturn(null);
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         $this->remover->forceRemovalOfRestrictedProjectOwner(
             $project,
@@ -105,7 +105,7 @@ final class ProjectOwnerRemoverTest extends TestCase
         $this->project_owner_retriever->method('getProjectOwner')->willReturn(
             UserTestBuilder::anActiveUser()->withId(103)->build()
         );
-        $this->dao->expects(self::never())->method('delete');
+        $this->dao->expects($this->never())->method('delete');
 
         $this->remover->forceRemovalOfRestrictedProjectOwner(
             $project,

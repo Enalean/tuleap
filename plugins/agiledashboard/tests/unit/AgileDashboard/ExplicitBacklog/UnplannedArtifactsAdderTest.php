@@ -68,7 +68,7 @@ class UnplannedArtifactsAdderTest extends TestCase
             ->with(101)
             ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
         $this->adder->addArtifactToTopBacklog($this->artifact);
     }
@@ -83,7 +83,7 @@ class UnplannedArtifactsAdderTest extends TestCase
             ->with(1, 101)
             ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('addArtifactToProjectBacklog');
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
         self::expectException(ArtifactAlreadyPlannedException::class);
 

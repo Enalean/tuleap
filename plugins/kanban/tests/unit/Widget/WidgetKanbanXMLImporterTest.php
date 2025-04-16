@@ -93,7 +93,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
               </widget>'
         );
 
-        $this->widget->expects(self::never())->method('create');
+        $this->widget->expects($this->never())->method('create');
 
         $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, ProjectTestBuilder::aProject()->build());
 
@@ -114,7 +114,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
               </widget>'
         );
 
-        $this->widget->expects(self::never())->method('create');
+        $this->widget->expects($this->never())->method('create');
 
         $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, ProjectTestBuilder::aProject()->build());
 

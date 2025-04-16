@@ -222,7 +222,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('isAdmin')
             ->with($project, $current_user)
             ->willReturn(true);
-        $layout->expects(self::exactly(2))
+        $layout->expects($this->exactly(2))
             ->method('addToolbarItem');
         // layout
         $layout->expects($this->once())->method('header');

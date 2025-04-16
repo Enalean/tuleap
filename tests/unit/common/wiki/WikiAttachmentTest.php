@@ -26,9 +26,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class WikiAttachmentTest extends TestCase
+class WikiAttachmentTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use TemporaryTestDirectory;
 
@@ -176,7 +175,7 @@ class WikiAttachmentTest extends TestCase
 
         $dao = $this->createMock(WikiAttachmentDao::class);
         $wa->method('getDao')->willReturn($dao);
-        $dao->expects(self::never())->method('delete');
+        $dao->expects($this->never())->method('delete');
         self::assertFalse($wa->deleteAttachment());
     }
 
@@ -200,7 +199,7 @@ class WikiAttachmentTest extends TestCase
 
         $dao = $this->createMock(WikiAttachmentDao::class);
         $wa->method('getDao')->willReturn($dao);
-        $dao->expects(self::never())->method('restoreAttachment');
+        $dao->expects($this->never())->method('restoreAttachment');
         self::assertFalse($wa->restoreDeletedAttachment(1));
     }
 
@@ -213,7 +212,7 @@ class WikiAttachmentTest extends TestCase
 
         $dao = $this->createMock(WikiAttachmentDao::class);
         $wa->method('getDao')->willReturn($dao);
-        $dao->expects(self::never())->method('restoreAttachment');
+        $dao->expects($this->never())->method('restoreAttachment');
         self::assertFalse($wa->restoreDeletedAttachment(1));
     }
 

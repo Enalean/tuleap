@@ -77,8 +77,8 @@ final class DocmanItemUpdatorTest extends TestCase
             ->with($item, $user, $approval_table_action);
 
         $this->lock_factory->expects($this->once())->method('lock')->with($item, $user);
-        $this->lock_factory->expects(self::never())->method('itemIsLocked');
-        $this->lock_factory->expects(self::never())->method('unlock');
+        $this->lock_factory->expects($this->never())->method('itemIsLocked');
+        $this->lock_factory->expects($this->never())->method('unlock');
 
         $this->post_update_event_adder->expects($this->once())->method('triggerPostUpdateEvents')
             ->with($item, $user, $version);
@@ -93,15 +93,15 @@ final class DocmanItemUpdatorTest extends TestCase
         $approval_table_action = null;
         $version               = new Docman_Version();
 
-        $this->docman_item_factory->expects(self::never())->method('update');
-        $this->docman_item_factory->expects(self::never())->method('getItemFromDb');
+        $this->docman_item_factory->expects($this->never())->method('update');
+        $this->docman_item_factory->expects($this->never())->method('getItemFromDb');
 
-        $this->approval_table_action_checker->expects(self::never())->method('checkAvailableUpdateAction');
-        $this->approval_table_updater->expects(self::never())->method('updateApprovalTable');
+        $this->approval_table_action_checker->expects($this->never())->method('checkAvailableUpdateAction');
+        $this->approval_table_updater->expects($this->never())->method('updateApprovalTable');
 
-        $this->lock_factory->expects(self::never())->method('lock');
+        $this->lock_factory->expects($this->never())->method('lock');
         $this->lock_factory->expects($this->once())->method('itemIsLocked')->willReturn(false);
-        $this->lock_factory->expects(self::never())->method('unlock');
+        $this->lock_factory->expects($this->never())->method('unlock');
 
         $this->post_update_event_adder->expects($this->once())->method('triggerPostUpdateEvents')
             ->with($item, $user, $version);
@@ -115,13 +115,13 @@ final class DocmanItemUpdatorTest extends TestCase
         $user    = UserTestBuilder::buildWithDefaults();
         $version = new Docman_Version();
 
-        $this->docman_item_factory->expects(self::never())->method('update');
-        $this->docman_item_factory->expects(self::never())->method('getItemFromDb');
+        $this->docman_item_factory->expects($this->never())->method('update');
+        $this->docman_item_factory->expects($this->never())->method('getItemFromDb');
 
-        $this->approval_table_action_checker->expects(self::never())->method('checkAvailableUpdateAction');
-        $this->approval_table_updater->expects(self::never())->method('updateApprovalTable');
+        $this->approval_table_action_checker->expects($this->never())->method('checkAvailableUpdateAction');
+        $this->approval_table_updater->expects($this->never())->method('updateApprovalTable');
 
-        $this->lock_factory->expects(self::never())->method('lock');
+        $this->lock_factory->expects($this->never())->method('lock');
         $this->lock_factory->expects($this->once())->method('itemIsLocked')->willReturn(true);
         $this->lock_factory->expects($this->once())->method('unlock')->with($item, $user);
 

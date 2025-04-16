@@ -74,7 +74,7 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
         $repository_destination->method('getId')->willReturn(1);
         $dao->method('getReferenceByPullRequestId')->willReturn([]);
 
-        $dao->expects(self::never())->method('updateStatusByPullRequestId');
+        $dao->expects($this->never())->method('updateStatusByPullRequestId');
         $this->expectException(GitReferenceNotFound::class);
 
         $reference_updater->updatePullRequestReference(
@@ -131,8 +131,8 @@ final class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\Test
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_BROKEN]
         );
 
-        $dao->expects(self::never())->method('updateStatusByPullRequestId');
-        $executor_source->expects(self::never())->method('push');
+        $dao->expects($this->never())->method('updateStatusByPullRequestId');
+        $executor_source->expects($this->never())->method('push');
 
         $reference_updater->updatePullRequestReference(
             $pull_request,

@@ -59,7 +59,7 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('isBound')->willReturn(false);
         $ugroup->method('isStatic')->willReturn(false);
 
-        $this->static_member_remover->expects(self::never())->method('removeUser');
+        $this->static_member_remover->expects($this->never())->method('removeUser');
         $this->dynamic_ugroup_members_updater->method('removeUser')->with(
             $project,
             $ugroup,
@@ -81,7 +81,7 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('isStatic')->willReturn(true);
 
         $this->static_member_remover->method('removeUser')->with($ugroup, $this->user_to_remove);
-        $this->dynamic_ugroup_members_updater->expects(self::never())->method('removeUser');
+        $this->dynamic_ugroup_members_updater->expects($this->never())->method('removeUser');
 
         $this->member_remover->removeMember($this->user_to_remove, $this->project_administrator, $ugroup);
     }
@@ -92,8 +92,8 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getId')->willReturn(202);
         $ugroup->method('isBound')->willReturn(true);
 
-        $this->static_member_remover->expects(self::never())->method('removeUser')->with($ugroup, $this->user_to_remove);
-        $this->dynamic_ugroup_members_updater->expects(self::never())->method('removeUser');
+        $this->static_member_remover->expects($this->never())->method('removeUser')->with($ugroup, $this->user_to_remove);
+        $this->dynamic_ugroup_members_updater->expects($this->never())->method('removeUser');
 
         self::expectException(CannotModifyBoundGroupException::class);
 

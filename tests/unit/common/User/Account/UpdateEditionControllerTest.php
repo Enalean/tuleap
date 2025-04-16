@@ -119,7 +119,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->csrf_token->expects($this->once())->method('check');
 
         $user
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setPreference')
             ->with('user_edition_default_format', 'html');
 
@@ -168,7 +168,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->csrf_token->expects($this->once())->method('check');
 
         $user
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setPreference')
             ->with('user_edition_default_format', 'html');
 
@@ -217,7 +217,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->csrf_token->expects($this->once())->method('check');
 
         $user
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setPreference')
             ->with('user_edition_default_format', 'html');
 

@@ -80,7 +80,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             ->method('addMediawikiUserGroupMapping')
             ->with($project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3');
 
-        $this->dao->expects(self::never())->method('removeMediawikiUserGroupMapping');
+        $this->dao->expects($this->never())->method('removeMediawikiUserGroupMapping');
 
         $this->mapper->saveMapping($new_mapping, $project);
     }
@@ -111,7 +111,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             ->method('removeMediawikiUserGroupMapping')
             ->with($project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3');
 
-        $this->dao->expects(self::never())->method('addMediawikiUserGroupMapping');
+        $this->dao->expects($this->never())->method('addMediawikiUserGroupMapping');
 
         $this->mapper->saveMapping($new_mapping, $project);
     }
@@ -132,8 +132,8 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             'bureaucrat' => [],
         ];
 
-        $this->dao->expects(self::never())->method('removeMediawikiUserGroupMapping');
-        $this->dao->expects(self::never())->method('addMediawikiUserGroupMapping');
+        $this->dao->expects($this->never())->method('removeMediawikiUserGroupMapping');
+        $this->dao->expects($this->never())->method('addMediawikiUserGroupMapping');
 
         $this->mapper->saveMapping($new_mapping, $project);
     }
@@ -155,8 +155,8 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             'bureaucrat' => [],
         ];
 
-        $this->dao->expects(self::never())->method('removeMediawikiUserGroupMapping');
-        $this->dao->expects(self::never())->method('addMediawikiUserGroupMapping');
+        $this->dao->expects($this->never())->method('removeMediawikiUserGroupMapping');
+        $this->dao->expects($this->never())->method('addMediawikiUserGroupMapping');
 
         $this->mapper->saveMapping($new_mapping, $project);
     }
@@ -208,14 +208,14 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             ],
         ];
 
-        $this->dao->expects(self::exactly(2))
+        $this->dao->expects($this->exactly(2))
             ->method('removeMediawikiUserGroupMapping')
             ->willReturnCallback(static fn(Project $called_project, string $unchecked_mw_group_name, int $unchecked_ugroup_id) => match (true) {
                 $called_project === $project && $unchecked_mw_group_name === MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP && $unchecked_ugroup_id === 4,
                 $called_project === $project && $unchecked_mw_group_name === MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT && $unchecked_ugroup_id === 4 => true
             });
 
-        $this->dao->expects(self::exactly(5))->method('addMediawikiUserGroupMapping');
+        $this->dao->expects($this->exactly(5))->method('addMediawikiUserGroupMapping');
 
         $this->mapper->saveMapping($new_mapping, $project);
     }

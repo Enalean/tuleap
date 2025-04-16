@@ -82,7 +82,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
 
         $this->form_element_factory
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getUsedDateFieldById')
             ->willReturnCallback(fn (Tracker $tracker, $field_id) => match (true) {
                 $tracker === $this->story_tracker && $field_id === 101 => $start_date_field,
@@ -196,7 +196,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->dao
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('searchByTrackerId')
             ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
                 self::STORY_TRACKER_ID => [
@@ -272,7 +272,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->dao
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('searchByTrackerId')
             ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
                 self::STORY_TRACKER_ID => [
@@ -323,7 +323,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->dao
-            ->expects(self::exactly(3))
+            ->expects($this->exactly(3))
             ->method('searchByTrackerId')
             ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
                 self::STORY_TRACKER_ID => [
@@ -347,7 +347,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         $this->tracker_factory
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getTrackerById')
             ->willReturnCallback(static fn (int $tracker_id) => match ($tracker_id) {
                 $release_tracker_id => $release_tracker,

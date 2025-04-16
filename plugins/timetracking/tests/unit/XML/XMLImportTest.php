@@ -336,7 +336,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_finder->method('getUser')
             ->willReturn($user);
 
-        $this->time_dao->expects(self::never())->method('addTime');
+        $this->time_dao->expects($this->never())->method('addTime');
 
         $this->mockLogInfo();
 
@@ -388,7 +388,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, 'project_members')
             ->willReturn($ugroup_project_members);
 
-        $this->timetracking_ugroup_saver->expects(self::never())->method('saveReaders');
+        $this->timetracking_ugroup_saver->expects($this->never())->method('saveReaders');
 
         $this->timetracking_ugroup_saver
             ->expects($this->once())
@@ -400,7 +400,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_finder->method('getUser')
             ->willReturn($user);
 
-        $this->time_dao->expects(self::never())->method('addTime');
+        $this->time_dao->expects($this->never())->method('addTime');
 
         $this->logger
             ->method('info')
@@ -517,13 +517,13 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->timetracking_enabler->expects(self::never())->method('enableTimetrackingForTracker');
-        $this->ugroup_manager->expects(self::never())->method('getUGroupByName');
-        $this->ugroup_manager->expects(self::never())->method('getUGroupByName');
-        $this->timetracking_ugroup_saver->expects(self::never())->method('saveReaders');
-        $this->timetracking_ugroup_saver->expects(self::never())->method('saveWriters');
-        $this->user_finder->expects(self::never())->method('getUser');
-        $this->time_dao->expects(self::never())->method('addTime');
+        $this->timetracking_enabler->expects($this->never())->method('enableTimetrackingForTracker');
+        $this->ugroup_manager->expects($this->never())->method('getUGroupByName');
+        $this->ugroup_manager->expects($this->never())->method('getUGroupByName');
+        $this->timetracking_ugroup_saver->expects($this->never())->method('saveReaders');
+        $this->timetracking_ugroup_saver->expects($this->never())->method('saveWriters');
+        $this->user_finder->expects($this->never())->method('getUser');
+        $this->time_dao->expects($this->never())->method('addTime');
 
         $this->xml_import->import(
             $xml,

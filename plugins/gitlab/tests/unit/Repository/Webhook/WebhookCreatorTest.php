@@ -347,7 +347,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException($this->createStub(GitlabRequestException::class));
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('storeWebhook');
 
         $this->expectException(GitlabRequestException::class);
@@ -401,7 +401,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([]);
 
         $this->dao
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('storeWebhook');
 
         $this->expectException(WebhookCreationException::class);

@@ -44,7 +44,7 @@ final class RejectNonProjectAdministratorMiddlewareTest extends \Tuleap\Test\PHP
     public function testProcessThrowsWhenProjectIsNotAnAttributeOfRequest(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects(self::never())->method('handle');
+        $handler->expects($this->never())->method('handle');
 
         $request = new NullServerRequest();
 

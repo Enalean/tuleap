@@ -115,7 +115,7 @@ final class AsyncJiraSchedulerTest extends TestCase
             ->willReturn(0);
 
         $jira_runner = $this->createMock(JiraRunner::class);
-        $jira_runner->expects(self::never())->method('queueJiraImportEvent');
+        $jira_runner->expects($this->never())->method('queueJiraImportEvent');
 
         $logger = new TestLogger();
 
@@ -144,10 +144,10 @@ final class AsyncJiraSchedulerTest extends TestCase
         $key_factory->method('getEncryptionKey')->willThrowException(new CannotPerformIOOperationException('Cannot read encryption key'));
 
         $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
-        $pending_jira_import_dao->expects(self::never())->method('create');
+        $pending_jira_import_dao->expects($this->never())->method('create');
 
         $jira_runner = $this->createMock(JiraRunner::class);
-        $jira_runner->expects(self::never())->method('queueJiraImportEvent');
+        $jira_runner->expects($this->never())->method('queueJiraImportEvent');
 
         $logger = new TestLogger();
 

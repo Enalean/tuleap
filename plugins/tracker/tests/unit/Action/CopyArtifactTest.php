@@ -234,7 +234,7 @@ XML;
     {
         $this->tracker->method('userCanSubmitArtifact')->with($this->user)->willReturn(false);
 
-        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
+        $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
 
         $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
@@ -299,8 +299,8 @@ XML;
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
-        $this->xml_updater->expects(self::never())->method('update');
+        $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects($this->never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -318,8 +318,8 @@ XML;
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
-        $this->xml_updater->expects(self::never())->method('update');
+        $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects($this->never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -338,8 +338,8 @@ XML;
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
-        $this->xml_updater->expects(self::never())->method('update');
+        $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects($this->never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -359,8 +359,8 @@ XML;
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
         $GLOBALS['Response']->expects($this->once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
-        $this->xml_exporter->expects(self::never())->method('exportSnapshotWithoutComments');
-        $this->xml_updater->expects(self::never())->method('update');
+        $this->xml_exporter->expects($this->never())->method('exportSnapshotWithoutComments');
+        $this->xml_updater->expects($this->never())->method('update');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -458,7 +458,7 @@ XML;
         $artifact123->expects($this->once())->method('createNewChangesetWithoutRequiredValidation');
 
         $this->xml_importer
-            ->expects(self::exactly(3))
+            ->expects($this->exactly(3))
             ->method('importBareArtifact')
             ->willReturnCallback(
                 static fn (
@@ -473,7 +473,7 @@ XML;
             );
 
         $this->xml_importer
-            ->expects(self::exactly(3))
+            ->expects($this->exactly(3))
             ->method('importChangesets')
             ->willReturnCallback(
                 static fn (

@@ -57,8 +57,8 @@ final class ChangesetFromXmlDisplayerTest extends TestCase
     public function testItReturnsAnEmptyStringIfChangesetDoesNotComeFromXmlImport(): void
     {
         $this->dao->method('searchChangeset')->willReturn(null);
-        $this->user_manager->expects(self::never())->method('getUserById');
-        $this->renderer->expects(self::never())->method('renderToString');
+        $this->user_manager->expects($this->never())->method('getUserById');
+        $this->renderer->expects($this->never())->method('renderToString');
 
         self::assertEquals('', $this->displayer->display(1234));
     }
@@ -67,7 +67,7 @@ final class ChangesetFromXmlDisplayerTest extends TestCase
     {
         $this->dao->method('searchChangeset')->willReturn(['user_id' => 101, 'timestamp' => 123456789]);
         $this->user_manager->expects($this->once())->method('getUserById')->willReturn(null);
-        $this->renderer->expects(self::never())->method('renderToString');
+        $this->renderer->expects($this->never())->method('renderToString');
 
         self::assertEquals('', $this->displayer->display(1234));
     }

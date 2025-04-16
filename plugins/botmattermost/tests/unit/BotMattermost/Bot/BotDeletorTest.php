@@ -83,7 +83,7 @@ final class BotDeletorTest extends TestCase
             );
 
         $this->event_manager
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('dispatch');
 
         $this->expectException(CannotDeleteBotException::class);

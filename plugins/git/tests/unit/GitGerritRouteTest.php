@@ -237,7 +237,7 @@ final class GitGerritRouteTest extends TestCase
         $git = $this->getGitDisconnect($request, $factory);
 
         $git->expects($this->once())->method('addError');
-        $git->expects(self::never())->method('addAction');
+        $git->expects($this->never())->method('addAction');
 
         $git->expects($this->once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
         $git->request();
@@ -335,7 +335,7 @@ final class GitGerritRouteTest extends TestCase
         $git = $this->getGitMigrate($request, $factory);
 
         $git->expects($this->once())->method('addError');
-        $git->expects(self::never())->method('addAction');
+        $git->expects($this->never())->method('addAction');
         $git->expects($this->once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
 
         $git->request();
@@ -353,7 +353,7 @@ final class GitGerritRouteTest extends TestCase
         $request->set('remote_server_id', $server_id);
         $git = $this->getGitMigrate($request, $factory);
 
-        $git->expects(self::never())->method('addAction');
+        $git->expects($this->never())->method('addAction');
         $git->method('addError');
         $git->expects($this->once())->method('redirect')->with('/plugins/git/' . $this->project_unix_name . '/');
 
@@ -382,8 +382,8 @@ final class GitGerritRouteTest extends TestCase
         $request->set('group_id', $this->group_id);
         $git = $this->getGitMigrate($request, $factory, $template_factory);
 
-        $git->expects(self::atLeastOnce())->method('addAction');
-        $git->expects(self::never())->method('redirect');
+        $git->expects($this->atLeastOnce())->method('addAction');
+        $git->expects($this->never())->method('redirect');
 
         $git->request();
     }

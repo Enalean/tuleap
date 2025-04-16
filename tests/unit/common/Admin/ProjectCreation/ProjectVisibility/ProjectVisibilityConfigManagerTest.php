@@ -52,7 +52,7 @@ final class ProjectVisibilityConfigManagerTest extends \Tuleap\Test\PHPUnit\Test
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $config_dao->expects(self::never())->method('save');
+        $config_dao->expects($this->never())->method('save');
 
         self::assertFalse($config_manager->updateDefaultProjectVisibility(Project::ACCESS_PRIVATE_WO_RESTRICTED));
     }
