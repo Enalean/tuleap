@@ -33,6 +33,11 @@
       <element name="long-description">
         <data type="string"/>
       </element>
+      <optional>
+        <element name="banner">
+          <data type="string"/>
+        </element>
+      </optional>
       <element name="services">
         <zeroOrMore>
           <choice>

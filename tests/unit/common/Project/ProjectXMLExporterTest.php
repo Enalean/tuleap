@@ -25,32 +25,37 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use EventManager;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use ProjectUGroup;
 use ProjectXMLExporter;
 use Psr\Log\NullLogger;
 use Service;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
 use Tuleap\Test\Builders as B;
+use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ProjectXMLExporterTest extends TestCase
 {
     private EventManager&MockObject $event_manager;
     private UGroupManager&MockObject $ugroup_manager;
-    private \Project $project;
+    private Project $project;
     private ProjectXMLExporter $xml_exporter;
     private string $export_dir;
-    private \PFUser $user;
+    private PFUser $user;
     private ExportOptions $options;
     private ArchiveInterface&MockObject $archive;
     private DashboardXMLExporter&MockObject $dashboard_exporter;
@@ -65,7 +70,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withPublicName('Project01')
             ->withUnixName('project01')
             ->withDescription('Wonderfull project')
-            ->withAccess(\Project::ACCESS_PRIVATE)
+            ->withAccess(Project::ACCESS_PRIVATE)
             ->withIcon('😬')
             ->withoutServices()
             ->build();
@@ -74,6 +79,8 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $membership_detector = $this->createMock(SynchronizedProjectMembershipDetector::class);
         $membership_detector->method('isSynchronizedWithProjectMembers')->willReturn(false);
+        $banner_retriever = $this->createMock(BannerRetriever::class);
+        $banner_retriever->method('getBannerForProject')->willReturn(null);
         $this->xml_exporter = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
@@ -81,7 +88,8 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $user_xml_exporter,
             $this->dashboard_exporter,
             $membership_detector,
-            new NullLogger()
+            new NullLogger(),
+            $banner_retriever,
         );
 
         $this->options    = new ExportOptions(
@@ -301,7 +309,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUnixName('myproject')
             ->withDescription('my short desc')
             ->withServices($service_01, $service_02, $service_03)
-            ->withAccess(\Project::ACCESS_PUBLIC)
+            ->withAccess(Project::ACCESS_PUBLIC)
             ->build();
         $project_ugroup_dynamic = B\ProjectUGroupTestBuilder::aCustomUserGroup(101)
             ->withName('ugroup_dynamic')

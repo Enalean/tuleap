@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
+use EventManager;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectCreator;
 use ProjectManager;
@@ -33,6 +35,9 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\Banner\Banner;
+use Tuleap\Project\Banner\BannerCreator;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Email\EmailCopier;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
@@ -44,11 +49,12 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\Registration\StoreProjectInformationStub;
 use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ProjectCreatorTest extends TestCase
 {
     public ProjectManager&MockObject $project_manager;
     public UserManager&MockObject $user_manager;
@@ -60,18 +66,20 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private UgroupDuplicator&MockObject $ugroup_duplicator;
     private SynchronizedProjectMembershipDuplicator&MockObject $synchronized_project_membership_duplicator;
     private ReferenceManager&MockObject $reference_manager;
-    private \EventManager&MockObject $event_manager;
+    private EventManager&MockObject $event_manager;
     private ProjectRegistrationChecker&MockObject $registration_checker;
     private ProjectCategoriesUpdater&MockObject $project_categories_updater;
     private EmailCopier&MockObject $email_copier;
     private StoreProjectInformationStub $store_project_information;
+    private BannerRetriever&MockObject $banner_retriever;
+    private BannerCreator&MockObject $banner_creator;
 
     protected function setUp(): void
     {
         $this->project_manager = $this->createMock(ProjectManager::class);
         $this->user_manager    = $this->createMock(UserManager::class);
 
-        $this->event_manager                              = $this->createMock(\EventManager::class);
+        $this->event_manager                              = $this->createMock(EventManager::class);
         $this->reference_manager                          = $this->createMock(ReferenceManager::class);
         $this->synchronized_project_membership_duplicator = $this->createMock(
             SynchronizedProjectMembershipDuplicator::class
@@ -85,6 +93,8 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_categories_updater                 = $this->createMock(ProjectCategoriesUpdater::class);
         $this->email_copier                               = $this->createMock(EmailCopier::class);
         $this->store_project_information                  = StoreProjectInformationStub::build();
+        $this->banner_retriever                           = $this->createMock(BannerRetriever::class);
+        $this->banner_creator                             = $this->createMock(BannerCreator::class);
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
@@ -221,6 +231,9 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->creator->expects($this->once())->method('autoActivateProject');
 
+        $this->banner_retriever->method('getBannerForProject')->willReturn(new Banner('Some message'));
+        $this->banner_creator->expects($this->once())->method('addBanner')->with(self::anything(), 'Some message');
+
         $this->creator->processProjectCreation($project_creation_data);
 
         self::assertTrue($this->store_project_information->isCalled());
@@ -276,6 +289,8 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->creator->expects($this->never())->method('autoActivateProject');
 
+        $this->banner_retriever->method('getBannerForProject')->willReturn(null);
+
         $this->creator->processProjectCreation($project_creation_data);
 
         self::assertTrue($this->store_project_information->isCalled());
@@ -302,6 +317,8 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->project_categories_updater,
                 $this->email_copier,
                 $this->store_project_information,
+                $this->banner_retriever,
+                $this->banner_creator,
                 $force_activation,
             ])
             ->onlyMethods([

@@ -10,6 +10,7 @@ project_attributes =
 
 project_tags =
     element long-description { xsd:string } &
+    element banner { xsd:string }? &
     element services {
         (element service {
             attribute shortname { xsd:string },

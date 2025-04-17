@@ -35,6 +35,8 @@ use SimpleXMLElement;
 use Tuleap\DB\ReconnectAfterALongRunningProcess;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\Banner\BannerCreator;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Email\EmailCopier;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Service\ServiceDao;
@@ -102,6 +104,8 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createMock(ProjectCategoriesUpdater::class),
             $this->createStub(EmailCopier::class),
             StoreProjectInformationStub::build(),
+            $this->createMock(BannerRetriever::class),
+            $this->createMock(BannerCreator::class),
             false
         );
 
@@ -128,6 +132,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createMock(ReconnectAfterALongRunningProcess::class),
             $this->createMock(ServiceDao::class),
             $this->createMock(ServiceLinkDataBuilder::class),
+            $this->createMock(BannerCreator::class),
         );
 
         $this->configuration = new Import\ImportConfig();

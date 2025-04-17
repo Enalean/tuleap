@@ -20,8 +20,10 @@
  * phpcs:disable PSR1.Classes.ClassDeclaration
  */
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Event\Events\ExportXmlProject;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\Service\ProjectDefinedService;
@@ -29,51 +31,25 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
 
-class ProjectXMLExporter
+final readonly class ProjectXMLExporter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const UGROUPS_MODE_SYNCHRONIZED = 'synchronized';
 
     public const LOG_IDENTIFIER = 'project_xml_export_syslog';
 
-    /** @var EventManager */
-    private $event_manager;
-
-    /** @var UGroupManager */
-    private $ugroup_manager;
-
-    /** @var XML_RNGValidator */
-    private $xml_validator;
-
-    /** @var UserXMLExporter */
-    private $user_xml_exporter;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-    /**
-     * @var SynchronizedProjectMembershipDetector
-     */
-    private $synchronized_project_membership_detector;
-    private DashboardXMLExporter $dashboard_xml_exporter;
-
     public function __construct(
-        EventManager $event_manager,
-        UGroupManager $ugroup_manager,
-        XML_RNGValidator $xml_validator,
-        UserXMLExporter $user_xml_exporter,
-        DashboardXMLExporter $dashboard_xml_exporter,
-        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
-        \Psr\Log\LoggerInterface $logger,
+        private EventManager $event_manager,
+        private UGroupManager $ugroup_manager,
+        private XML_RNGValidator $xml_validator,
+        private UserXMLExporter $user_xml_exporter,
+        private DashboardXMLExporter $dashboard_xml_exporter,
+        private SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
+        private LoggerInterface $logger,
+        private BannerRetriever $banner_retriever,
     ) {
-        $this->event_manager                            = $event_manager;
-        $this->ugroup_manager                           = $ugroup_manager;
-        $this->xml_validator                            = $xml_validator;
-        $this->user_xml_exporter                        = $user_xml_exporter;
-        $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
-        $this->logger                                   = $logger;
-        $this->dashboard_xml_exporter                   = $dashboard_xml_exporter;
     }
 
-    public static function getLogger(): \Psr\Log\LoggerInterface
+    public static function getLogger(): LoggerInterface
     {
         return BackendLogger::getDefaultLogger('project_xml_export_syslog');
     }
@@ -92,6 +68,11 @@ class ProjectXMLExporter
         }
 
         $project_node->addChild('long-description', '');
+
+        $banner = $this->banner_retriever->getBannerForProject($project);
+        if ($banner !== null) {
+            $project_node->addChild('banner', $banner->getMessage());
+        }
 
         $services_node = $project_node->addChild('services');
         foreach ($project->getServices() as $service) {
@@ -116,7 +97,7 @@ class ProjectXMLExporter
         }
     }
 
-    private function exportProjectUgroups(Project $project, ExportOptions $options, SimpleXMLElement $into_xml)
+    private function exportProjectUgroups(Project $project, ExportOptions $options, SimpleXMLElement $into_xml): void
     {
         $ugroups_node = $into_xml->addChild('ugroups');
         if ($this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)) {
@@ -141,7 +122,7 @@ class ProjectXMLExporter
         $this->xml_validator->validate($ugroups_node, $rng_path);
     }
 
-    private function exportProjectUgroup(SimpleXMLElement $ugroups_node, ExportOptions $options, ProjectUGroup $ugroup)
+    private function exportProjectUgroup(SimpleXMLElement $ugroups_node, ExportOptions $options, ProjectUGroup $ugroup): void
     {
         $this->logger->debug('Current ugroup: ' . $ugroup->getName());
 
@@ -167,7 +148,7 @@ class ProjectXMLExporter
         PFUser $user,
         ArchiveInterface $archive,
         $temporary_dump_path_on_filesystem,
-    ) {
+    ): void {
         $this->logger->info('Export plugins');
 
         $event = new ExportXmlProject(

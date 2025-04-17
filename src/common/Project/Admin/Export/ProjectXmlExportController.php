@@ -32,6 +32,8 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -138,6 +140,7 @@ final class ProjectXmlExportController extends DispatchablePSR15Compatible imple
             ),
             new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao()),
             \ProjectXMLExporter::getLogger(),
+            new BannerRetriever(new BannerDao()),
         );
 
         $archive = new ZipArchive($this->archive_name);
