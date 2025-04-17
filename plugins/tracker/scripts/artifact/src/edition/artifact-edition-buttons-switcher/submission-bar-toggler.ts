@@ -22,10 +22,18 @@ import { submissionBarIsAlreadyActive } from "./submission-bar-status-checker";
 
 const displaySubmissionBarIfNeeded = (
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    editor_format_selectbox: HTMLSelectElement | null,
     follow_up_new_comment: HTMLElement | null,
     doc: Document,
 ): void => {
-    if (!somethingIsEdited(follow_up_comment_editor_instance, follow_up_new_comment, doc)) {
+    if (
+        !somethingIsEdited(
+            follow_up_comment_editor_instance,
+            editor_format_selectbox,
+            follow_up_new_comment,
+            doc,
+        )
+    ) {
         return;
     }
 
@@ -39,10 +47,18 @@ const displaySubmissionBarIfNeeded = (
 
 const removeSubmissionBarIfNeeded = (
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    editor_format_selectbox: HTMLSelectElement | null,
     follow_up_new_comment: HTMLElement | null,
     doc: Document,
 ): void => {
-    if (somethingIsEdited(follow_up_comment_editor_instance, follow_up_new_comment, doc)) {
+    if (
+        somethingIsEdited(
+            follow_up_comment_editor_instance,
+            editor_format_selectbox,
+            follow_up_new_comment,
+            doc,
+        )
+    ) {
         return;
     }
 
@@ -56,29 +72,52 @@ const removeSubmissionBarIfNeeded = (
 
 export const toggleSubmitArtifactBar = (
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    editor_format_selectbox: HTMLSelectElement | null,
     follow_up_new_comment: HTMLElement | null,
     doc: Document,
 ): void => {
     if (submissionBarIsAlreadyActive(document)) {
-        removeSubmissionBarIfNeeded(follow_up_comment_editor_instance, follow_up_new_comment, doc);
+        removeSubmissionBarIfNeeded(
+            follow_up_comment_editor_instance,
+            editor_format_selectbox,
+            follow_up_new_comment,
+            doc,
+        );
         return;
     }
 
-    displaySubmissionBarIfNeeded(follow_up_comment_editor_instance, follow_up_new_comment, doc);
+    displaySubmissionBarIfNeeded(
+        follow_up_comment_editor_instance,
+        editor_format_selectbox,
+        follow_up_new_comment,
+        doc,
+    );
 };
 
 export const toggleSubmissionBarForCommentInCkeditor = (
     doc: Document,
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    editor_format_selectbox: HTMLSelectElement | null,
+    follow_up_new_comment: HTMLElement | null,
 ): void => {
     if (!follow_up_comment_editor_instance) {
         return;
     }
     follow_up_comment_editor_instance.on("change", () => {
-        const comment_field = doc.getElementById("tracker_followup_comment_new");
-        if (!comment_field) {
-            return;
-        }
-        toggleSubmitArtifactBar(follow_up_comment_editor_instance, comment_field, doc);
+        toggleSubmitArtifactBar(
+            follow_up_comment_editor_instance,
+            editor_format_selectbox,
+            follow_up_new_comment,
+            doc,
+        );
+    });
+
+    follow_up_comment_editor_instance.on("input", () => {
+        toggleSubmitArtifactBar(
+            follow_up_comment_editor_instance,
+            editor_format_selectbox,
+            follow_up_new_comment,
+            doc,
+        );
     });
 };

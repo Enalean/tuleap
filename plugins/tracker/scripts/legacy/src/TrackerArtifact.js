@@ -210,6 +210,15 @@ document.observe("dom:loaded", function () {
                         value +
                         "</p>",
                 );
+            } else {
+                const container = document.querySelector(
+                    ".tracker-artifact-submit-buttons-bar-container",
+                );
+                if (!(container instanceof HTMLElement)) {
+                    return;
+                }
+
+                container.classList.add("tracker-artifact-submit-buttons-bar-container-display");
             }
         });
     }

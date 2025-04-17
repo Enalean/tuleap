@@ -19,9 +19,10 @@
 
 export const isFollowUpEmpty = (
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    editor_format_selectbox: HTMLSelectElement | null,
     follow_up_new_comment: HTMLElement | null,
 ): boolean => {
-    if (follow_up_comment_editor_instance) {
+    if (follow_up_comment_editor_instance && editor_format_selectbox?.value === "html") {
         return follow_up_comment_editor_instance.getData().trim() === "";
     }
 
