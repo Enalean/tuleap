@@ -16,7 +16,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once __DIR__ .  '/../../www/include/service.php';
+require_once __DIR__ . '/../../www/include/service.php';
 require_once __DIR__ . '/../../www/forum/forum_utils.php';
 require_once __DIR__ . '/../../www/admin/admin_utils.php';
 require_once __DIR__ . '/../../www/include/trove.php';
@@ -39,8 +39,13 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Categories\TroveSetNodeFacade;
+use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\Banner\BannerCreator;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\Banner\UserCanEditBannerPermission;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -90,105 +95,28 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     public const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
 
-    /**
-     * @var UgroupDuplicator
-     */
-    private $ugroup_duplicator;
-
-    /**
-     * @var bool true to bypass manual activation
-     */
-    private $force_activation;
-
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    private $send_notifications;
-
-    /**
-     * @var FRSPermissionCreator
-     */
-    private $frs_permissions_creator;
-    /**
-     * @var ProjectDashboardDuplicator
-     */
-    private $dashboard_duplicator;
-    /**
-     * @var LabelDao
-     */
-    private $label_dao;
-    /**
-     * @var SynchronizedProjectMembershipDuplicator
-     */
-    private $synchronized_project_membership_duplicator;
-    /**
-     * @var \Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory
-     */
-    private $frs_license_agreement_factory;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var \Tuleap\Project\Admin\DescriptionFields\FieldUpdator
-     */
-    private $field_updator;
-    /**
-     * @var ProjectServiceActivator
-     */
-    private $project_service_activator;
-
-    private ProjectRegistrationChecker $registration_checker;
-    private ProjectCategoriesUpdater $project_categories_updater;
-
     public function __construct(
-        ProjectManager $projectManager,
-        ReferenceManager $reference_manager,
-        UserManager $user_manager,
-        UgroupDuplicator $ugroup_duplicator,
-        $send_notifications,
-        FRSPermissionCreator $frs_permissions_creator,
-        \Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory $frs_license_agreement_factory,
-        ProjectDashboardDuplicator $dashboard_duplicator,
-        LabelDao $label_dao,
-        SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
-        EventManager $event_manager,
-        \Tuleap\Project\Admin\DescriptionFields\FieldUpdator $field_updator,
-        ProjectServiceActivator $project_service_activator,
-        ProjectRegistrationChecker $registration_checker,
-        ProjectCategoriesUpdater $project_categories_updater,
-        private EmailCopier $email_copier,
+        private readonly ProjectManager $project_manager,
+        private readonly ReferenceManager $reference_manager,
+        private readonly UserManager $user_manager,
+        private readonly UgroupDuplicator $ugroup_duplicator,
+        private readonly bool $send_notifications,
+        private readonly FRSPermissionCreator $frs_permissions_creator,
+        private readonly LicenseAgreementFactory $frs_license_agreement_factory,
+        private readonly ProjectDashboardDuplicator $dashboard_duplicator,
+        private readonly LabelDao $label_dao,
+        private readonly SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
+        private readonly EventManager $event_manager,
+        private readonly FieldUpdator $field_updator,
+        private readonly ProjectServiceActivator $project_service_activator,
+        private readonly ProjectRegistrationChecker $registration_checker,
+        private readonly ProjectCategoriesUpdater $project_categories_updater,
+        private readonly EmailCopier $email_copier,
         private readonly StoreProjectInformation $store_project_information,
-        $force_activation = false,
+        private readonly BannerRetriever $banner_retriever,
+        private readonly BannerCreator $banner_creator,
+        private readonly bool $force_activation = false,
     ) {
-        $this->send_notifications                         = $send_notifications;
-        $this->force_activation                           = $force_activation;
-        $this->reference_manager                          = $reference_manager;
-        $this->user_manager                               = $user_manager;
-        $this->project_manager                            = $projectManager;
-        $this->frs_permissions_creator                    = $frs_permissions_creator;
-        $this->ugroup_duplicator                          = $ugroup_duplicator;
-        $this->dashboard_duplicator                       = $dashboard_duplicator;
-        $this->label_dao                                  = $label_dao;
-        $this->synchronized_project_membership_duplicator = $synchronized_project_membership_duplicator;
-        $this->frs_license_agreement_factory              = $frs_license_agreement_factory;
-        $this->event_manager                              = $event_manager;
-        $this->field_updator                              = $field_updator;
-        $this->project_service_activator                  = $project_service_activator;
-        $this->registration_checker                       = $registration_checker;
-        $this->project_categories_updater                 = $project_categories_updater;
     }
 
     public static function buildSelfByPassValidation(): self
@@ -275,6 +203,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         );
 
         $service_dao = new ServiceDao();
+        $banner_dao  = new BannerDao();
 
         return new self(
             ProjectManager::instance(),
@@ -292,7 +221,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new LabelDao(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
             $event_manager,
-            new \Tuleap\Project\Admin\DescriptionFields\FieldUpdator(
+            new FieldUpdator(
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
                 new \Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO(),
                 ProjectXMLImporter::getLogger(),
@@ -326,7 +255,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             ),
             new EmailCopier(),
             new ProjectCreationDao(),
-            $force_activation
+            new BannerRetriever($banner_dao),
+            new BannerCreator($banner_dao),
+            $force_activation,
         );
     }
 
@@ -412,13 +343,21 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'use_legacy_services'   => &$legacy,
         ]);
 
-        if ($template_group) {
+        if ($template_group !== null) {
             $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
             $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
             $this->initForumModuleFromTemplate($group_id, $template_group->getID());
 
             if ($legacy[Service::SVN] === true) {
                 $this->initSVNModuleFromTemplate($group_id, $template_group->getID());
+            }
+
+            $template_banner = $this->banner_retriever->getBannerForProject($template_group);
+            if ($template_banner !== null) {
+                $this->banner_creator->addBanner(
+                    new UserCanEditBannerPermission($group),
+                    $template_banner->getMessage(),
+                );
             }
 
             // Activate other system references not associated with any service
@@ -655,7 +594,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                     $ath_new = new ArtifactType($group, $new_at_id);
 
                     // not now. perhaps one day
-                        //if (!$ath_new->copyArtifacts($ath_temp->getID()) ) {
+                    //if (!$ath_new->copyArtifacts($ath_temp->getID()) ) {
                     //$GLOBALS['Response']->addFeedback('info', $ath_new->getErrorMessage());
                     //}
 
@@ -697,10 +636,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->dashboard_duplicator->duplicate($template, $new_project, $mapping_registry);
     }
 
-   /**
-    * Verify if the approbation of the new project is automatic or not
-    * protected for testing purpose
-    */
+    /**
+     * Verify if the approbation of the new project is automatic or not
+     * protected for testing purpose
+     */
     protected function autoActivateProject($group)
     {
         $auto_approval = ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;

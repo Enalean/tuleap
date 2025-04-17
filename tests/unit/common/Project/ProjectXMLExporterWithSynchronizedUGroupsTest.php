@@ -31,6 +31,7 @@ use ProjectUGroup;
 use ProjectXMLExporter;
 use Psr\Log\NullLogger;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
@@ -72,6 +73,8 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
 
         $dashboard_exporter = $this->createMock(DashboardXMLExporter::class);
         $dashboard_exporter->method('exportDashboards');
+        $banner_retriever = $this->createMock(BannerRetriever::class);
+        $banner_retriever->method('getBannerForProject')->with($this->project)->willReturn(null);
 
         $this->xml_exporter = new ProjectXMLExporter(
             $this->event_manager,
@@ -80,7 +83,8 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
             $user_xml_exporter,
             $dashboard_exporter,
             $this->synch_detector,
-            new NullLogger()
+            new NullLogger(),
+            $banner_retriever,
         );
 
         $this->options    = new ExportOptions('', false, ['tracker_id' => 10]);

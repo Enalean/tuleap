@@ -93,6 +93,11 @@
       <element name="long-description">
         <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
       </element>
+      <optional>
+        <element name="banner">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+      </optional>
       <element name="services">
         <zeroOrMore>
           <choice>

@@ -25,6 +25,8 @@ use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
@@ -149,6 +151,7 @@ try {
         ),
         new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao()),
         ProjectXMLExporter::getLogger(),
+        new BannerRetriever(new BannerDao()),
     );
 
     if (isset($arguments['dir'])) {

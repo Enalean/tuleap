@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/../../www/include/account.php';
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -29,6 +30,7 @@ use Tuleap\Dashboard\Project\RecentlyVisitedProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\DB\ReconnectAfterALongRunningProcess;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
@@ -40,6 +42,9 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
+use Tuleap\Project\Banner\BannerCreator;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\UserCanEditBannerPermission;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
@@ -63,109 +68,36 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\XML\PHPCast;
+use User\XML\Import\IFindUserFromXMLReference;
 
 class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /** @var EventManager */
-    private $event_manager;
-
-    /** @var $project_manager */
-    private $project_manager;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var XML_RNGValidator */
-    private $xml_validator;
-
-    /** @var UGroupManager */
-    private $ugroup_manager;
-
-    /** @var User\XML\Import\IFindUserFromXMLReference */
-    private $user_finder;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    /** @var ProjectCreator */
-    private $project_creator;
-
-    /** @var ServiceManager */
-    private $service_manager;
-
-    /** @var FRSPermissionCreator */
-    private $frs_permissions_creator;
-
-    /**
-     * @var UserRemover
-     */
-    private $user_remover;
-    /**
-     * @var UploadedLinksUpdater
-     */
-    private $uploaded_links_updater;
-
-    /**
-     * @var ProjectDashboardXMLImporter
-     */
-    private $dashboard_importer;
-    /**
-     * @var SynchronizedProjectMembershipDao
-     */
-    private $synchronized_project_membership_dao;
-    /**
-     * @var ProjectMemberAdder
-     */
-    private $project_member_adder;
-    /**
-     * @var XMLFileContentRetriever
-     */
-    private $XML_file_content_retriever;
-
-    private DescriptionFieldsFactory $description_fields_factory;
-
     public function __construct(
-        EventManager $event_manager,
-        ProjectManager $project_manager,
-        UserManager $user_manager,
-        XML_RNGValidator $xml_validator,
-        UGroupManager $ugroup_manager,
-        User\XML\Import\IFindUserFromXMLReference $user_finder,
-        ServiceManager $service_manager,
-        \Psr\Log\LoggerInterface $logger,
-        FRSPermissionCreator $frs_permissions_creator,
-        UserRemover $project_member_remover,
-        ProjectMemberAdder $project_member_adder,
-        ProjectCreator $project_creator,
-        UploadedLinksUpdater $uploaded_links_updater,
-        ProjectDashboardXMLImporter $dashboard_importer,
-        SynchronizedProjectMembershipDao $synchronized_project_membership_dao,
-        XMLFileContentRetriever $XML_file_content_retriever,
-        DescriptionFieldsFactory $description_fields_factory,
-        private readonly \Tuleap\DB\ReconnectAfterALongRunningProcess $db_connection,
+        private readonly EventManager $event_manager,
+        private readonly ProjectManager $project_manager,
+        private readonly UserManager $user_manager,
+        private readonly XML_RNGValidator $xml_validator,
+        private readonly UGroupManager $ugroup_manager,
+        private readonly IFindUserFromXMLReference $user_finder,
+        private readonly ServiceManager $service_manager,
+        private readonly LoggerInterface $logger,
+        private readonly FRSPermissionCreator $frs_permissions_creator,
+        private readonly UserRemover $user_remover,
+        private readonly ProjectMemberAdder $project_member_adder,
+        private readonly ProjectCreator $project_creator,
+        private readonly UploadedLinksUpdater $uploaded_links_updater,
+        private readonly ProjectDashboardXMLImporter $dashboard_importer,
+        private readonly SynchronizedProjectMembershipDao $synchronized_project_membership_dao,
+        private readonly XMLFileContentRetriever $XML_file_content_retriever,
+        private readonly DescriptionFieldsFactory $description_fields_factory,
+        private readonly ReconnectAfterALongRunningProcess $db_connection,
         private readonly ServiceDao $service_dao,
         private readonly ServiceLinkDataBuilder $link_data_builder,
+        private readonly BannerCreator $banner_creator,
     ) {
-        $this->event_manager                       = $event_manager;
-        $this->project_manager                     = $project_manager;
-        $this->user_manager                        = $user_manager;
-        $this->xml_validator                       = $xml_validator;
-        $this->ugroup_manager                      = $ugroup_manager;
-        $this->user_finder                         = $user_finder;
-        $this->logger                              = $logger;
-        $this->service_manager                     = $service_manager;
-        $this->frs_permissions_creator             = $frs_permissions_creator;
-        $this->user_remover                        = $project_member_remover;
-        $this->project_member_adder                = $project_member_adder;
-        $this->project_creator                     = $project_creator;
-        $this->uploaded_links_updater              = $uploaded_links_updater;
-        $this->dashboard_importer                  = $dashboard_importer;
-        $this->synchronized_project_membership_dao = $synchronized_project_membership_dao;
-        $this->XML_file_content_retriever          = $XML_file_content_retriever;
-        $this->description_fields_factory          = $description_fields_factory;
     }
 
-    public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder, ProjectCreator $project_creator, ?\Psr\Log\LoggerInterface $logger = null): self
+    public static function build(IFindUserFromXMLReference $user_finder, ProjectCreator $project_creator, ?LoggerInterface $logger = null): self
     {
         $event_manager  = EventManager::instance();
         $user_manager   = UserManager::instance();
@@ -233,10 +165,11 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
             DBFactory::getMainTuleapDBConnection(),
             new ServiceDao(),
             new ServiceLinkDataBuilder(),
+            new BannerCreator(new BannerDao()),
         );
     }
 
-    public static function getLogger(): \Psr\Log\LoggerInterface
+    public static function getLogger(): LoggerInterface
     {
         return BackendLogger::getDefaultLogger('project_xml_import_syslog');
     }
@@ -466,6 +399,13 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         $user_creator = $this->user_manager->getCurrentUser();
 
         $this->importUgroups($project, $xml_element, $user_creator);
+
+        if (isset($xml_element->banner)) {
+            $this->banner_creator->addBanner(
+                new UserCanEditBannerPermission($project),
+                (string) $xml_element->banner,
+            );
+        }
 
         $frs = new FRSXMLImporter(
             $this->logger,
