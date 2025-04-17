@@ -48,40 +48,35 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import { Styles } from "../../../helpers/styles";
 import type { Task } from "../../../type";
 
-@Component
-export default class MilestoneBar extends Vue {
-    @Prop({ required: true })
-    readonly left!: number;
+const props = defineProps<{
+    left: number;
+    task: Task;
+}>();
 
-    @Prop({ required: true })
-    readonly task!: Task;
+const width = computed((): number => {
+    return Styles.MILESTONE_WIDTH_IN_PX;
+});
 
-    get width(): number {
-        return Styles.MILESTONE_WIDTH_IN_PX;
-    }
+const height = computed((): number => {
+    return width.value;
+});
 
-    get height(): number {
-        return this.width;
-    }
+const viewbox = computed((): string => {
+    return `0 0 ${Styles.MILESTONE_WIDTH_IN_PX} ${Styles.MILESTONE_WIDTH_IN_PX}`;
+});
 
-    get viewbox(): string {
-        return `0 0 ${Styles.MILESTONE_WIDTH_IN_PX} ${Styles.MILESTONE_WIDTH_IN_PX}`;
-    }
+const style = computed((): string => {
+    return `left: ${props.left}px;`;
+});
 
-    get style(): string {
-        return `left: ${this.left}px;`;
-    }
-
-    get border_classes(): string {
-        return this.task.are_dates_implied
-            ? "roadmap-gantt-task-bar-milestone-border-with-dates-implied"
-            : "";
-    }
-}
+const border_classes = computed((): string => {
+    return props.task.are_dates_implied
+        ? "roadmap-gantt-task-bar-milestone-border-with-dates-implied"
+        : "";
+});
 </script>
