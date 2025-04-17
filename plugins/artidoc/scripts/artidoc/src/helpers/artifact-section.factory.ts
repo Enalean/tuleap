@@ -19,6 +19,7 @@
 
 import type { ArtifactSection } from "@/helpers/artidoc-section.type";
 import { v4 as uuidv4 } from "uuid";
+import type { ColorName } from "@tuleap/core-constants";
 
 const ArtifactSectionFactory = {
     create: (): ArtifactSection => ({
@@ -52,7 +53,7 @@ const ArtifactSectionFactory = {
         fields: [],
     }),
 
-    skeleton: (): ArtifactSection => {
+    skeleton(): ArtifactSection {
         const section = ArtifactSectionFactory.create();
 
         return {
@@ -71,6 +72,12 @@ const ArtifactSectionFactory = {
         ...ArtifactSectionFactory.create(),
         ...overrides,
     }),
+
+    withTrackerColor(color: ColorName): ArtifactSection {
+        const section = ArtifactSectionFactory.create();
+        section.artifact.tracker.color = color;
+        return section;
+    },
 };
 
 export default ArtifactSectionFactory;
