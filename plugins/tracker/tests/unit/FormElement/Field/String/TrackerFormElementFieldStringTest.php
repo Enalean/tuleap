@@ -18,146 +18,138 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\String;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Rule_NoCr;
 use Rule_String;
 use Tracker_FormElement_Field_String;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFormElementFieldStringTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementFieldStringTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Rule_String
-     */
-    private $rule_string;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Rule_NoCr
-     */
-    private $rule_nocr;
-    /**
-     * @var Mockery\Mock|Tracker_FormElement_Field_String
-     */
-    private $string;
+    private Artifact $artifact;
+    private Rule_String&MockObject $rule_string;
+    private Rule_NoCr&MockObject $rule_nocr;
+    private Tracker_FormElement_Field_String&MockObject $string;
 
     public function setUp(): void
     {
-        $this->string = Mockery::mock(Tracker_FormElement_Field_String::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->string = $this->createPartialMock(
+            Tracker_FormElement_Field_String::class,
+            ['getProperty', 'getRuleString', 'getRuleNoCr'],
+        );
 
-        $this->artifact    = Mockery::mock(Artifact::class);
-        $this->rule_string = Mockery::mock(Rule_String::class);
-        $this->rule_string->shouldReceive('isValid')->andReturns(true);
+        $this->artifact    = ArtifactTestBuilder::anArtifact(4153)->build();
+        $this->rule_string = $this->createMock(Rule_String::class);
+        $this->rule_string->method('isValid')->willReturn(true);
 
-        $this->rule_nocr = Mockery::mock(Rule_NoCr::class);
+        $this->rule_nocr = $this->createMock(Rule_NoCr::class);
     }
 
-    public function testNoDefaultValue()
+    public function testNoDefaultValue(): void
     {
-        $this->string->shouldReceive('getProperty')->andReturn(null);
-        $this->assertFalse($this->string->hasDefaultValue());
+        $this->string->method('getProperty')->willReturn(null);
+        self::assertFalse($this->string->hasDefaultValue());
     }
 
-    public function testDefaultValue()
+    public function testDefaultValue(): void
     {
-        $this->string->shouldReceive('getProperty')->with('default_value')->andReturns('foo');
-        $this->assertTrue($this->string->hasDefaultValue());
-        $this->assertEquals('foo', $this->string->getDefaultValue());
+        $this->string->method('getProperty')->with('default_value')->willReturn('foo');
+        self::assertTrue($this->string->hasDefaultValue());
+        self::assertEquals('foo', $this->string->getDefaultValue());
     }
 
-    public function testIsValid()
+    public function testIsValid(): void
     {
-        $this->rule_nocr->shouldReceive('isValid')->andReturns(true);
+        $this->rule_nocr->method('isValid')->willReturn(true);
 
-        $this->string->shouldReceive('getRuleString')->andReturns($this->rule_string);
-        $this->string->shouldReceive('getRuleNoCr')->andReturns($this->rule_nocr);
-        $this->string->shouldReceive('getProperty')->andReturns(null);
+        $this->string->method('getRuleString')->willReturn($this->rule_string);
+        $this->string->method('getRuleNoCr')->willReturn($this->rule_nocr);
+        $this->string->method('getProperty')->willReturn(null);
 
-        $this->assertTrue($this->string->isValid($this->artifact, 'Du texte'));
+        self::assertTrue($this->string->isValid($this->artifact, 'Du texte'));
     }
 
-    public function testIsValidCr()
+    public function testIsValidCr(): void
     {
-        $this->rule_nocr->shouldReceive('isValid')->andReturns(false);
+        $this->rule_nocr->method('isValid')->willReturn(false);
 
-        $this->string->shouldReceive('getRuleString')->andReturns($this->rule_string);
-        $this->string->shouldReceive('getRuleNoCr')->andReturns($this->rule_nocr);
-        $this->string->shouldReceive('getProperty')->andReturns(null);
+        $this->string->method('getRuleString')->willReturn($this->rule_string);
+        $this->string->method('getRuleNoCr')->willReturn($this->rule_nocr);
+        $this->string->method('getProperty')->willReturn(null);
 
-        $this->assertFalse($this->string->isValid($this->artifact, "Du texte \n sur plusieurs lignes"));
+        self::assertFalse($this->string->isValid($this->artifact, "Du texte \n sur plusieurs lignes"));
     }
 
-    public function testItAcceptsStringRespectingMaxCharsProperty()
+    public function testItAcceptsStringRespectingMaxCharsProperty(): void
     {
-        $this->rule_nocr->shouldReceive('isValid')->andReturns(true);
+        $this->rule_nocr->method('isValid')->willReturn(true);
 
-        $this->string->shouldReceive('getRuleString')->andReturns($this->rule_string);
-        $this->string->shouldReceive('getRuleNoCr')->andReturns($this->rule_nocr);
-        $this->string->shouldReceive('getProperty')->with('maxchars')->andReturn(6);
+        $this->string->method('getRuleString')->willReturn($this->rule_string);
+        $this->string->method('getRuleNoCr')->willReturn($this->rule_nocr);
+        $this->string->method('getProperty')->with('maxchars')->willReturn(6);
 
-        $this->assertTrue($this->string->isValid($this->artifact, 'Tuleap'));
+        self::assertTrue($this->string->isValid($this->artifact, 'Tuleap'));
     }
 
-    public function testItAcceptsStringWhenMaxCharsPropertyIsNotDefined()
+    public function testItAcceptsStringWhenMaxCharsPropertyIsNotDefined(): void
     {
-        $this->rule_nocr->shouldReceive('isValid')->andReturns(true);
+        $this->rule_nocr->method('isValid')->willReturn(true);
 
-        $this->string->shouldReceive('getRuleString')->andReturns($this->rule_string);
-        $this->string->shouldReceive('getRuleNoCr')->andReturns($this->rule_nocr);
-        $this->string->shouldReceive('getProperty')->with('maxchars')->andReturn(0);
+        $this->string->method('getRuleString')->willReturn($this->rule_string);
+        $this->string->method('getRuleNoCr')->willReturn($this->rule_nocr);
+        $this->string->method('getProperty')->with('maxchars')->willReturn(0);
 
-        $this->assertTrue($this->string->isValid($this->artifact, 'Tuleap'));
+        self::assertTrue($this->string->isValid($this->artifact, 'Tuleap'));
     }
 
-    public function testItRejectsStringNotRespectingMaxCharsProperty()
+    public function testItRejectsStringNotRespectingMaxCharsProperty(): void
     {
-        $this->rule_nocr->shouldReceive('isValid')->andReturns(true);
+        $this->rule_nocr->method('isValid')->willReturn(true);
 
-        $this->string->shouldReceive('getRuleString')->andReturns($this->rule_string);
-        $this->string->shouldReceive('getRuleNoCr')->andReturns($this->rule_nocr);
-        $this->string->shouldReceive('getProperty')->with('maxchars')->andReturn(1);
+        $this->string->method('getRuleString')->willReturn($this->rule_string);
+        $this->string->method('getRuleNoCr')->willReturn($this->rule_nocr);
+        $this->string->method('getProperty')->with('maxchars')->willReturn(1);
 
-        $this->assertFalse($this->string->isValid($this->artifact, 'Tuleap'));
+        self::assertFalse($this->string->isValid($this->artifact, 'Tuleap'));
     }
 
-    public function testGetFieldData()
+    public function testGetFieldData(): void
     {
-        $this->assertEquals('this is a string value', $this->string->getFieldData('this is a string value'));
-    }
-
-    /**
-     * @see https://tuleap.net/plugins/tracker?aid=6449
-     */
-    public function testItIsEmptyWhenThereIsNoContent()
-    {
-        $this->assertTrue($this->string->isEmpty('', $this->artifact));
+        self::assertEquals('this is a string value', $this->string->getFieldData('this is a string value'));
     }
 
     /**
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
-    public function testItIsEmptyWhenThereIsOnlyWhitespaces()
+    public function testItIsEmptyWhenThereIsNoContent(): void
     {
-        $this->assertTrue($this->string->isEmpty('  ', $this->artifact));
+        self::assertTrue($this->string->isEmpty('', $this->artifact));
     }
 
     /**
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
-    public function testItIsNotEmptyWhenThereIsContent()
+    public function testItIsEmptyWhenThereIsOnlyWhitespaces(): void
     {
-        $this->assertFalse($this->string->isEmpty('sdf', $this->artifact));
+        self::assertTrue($this->string->isEmpty('  ', $this->artifact));
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker?aid=6449
+     */
+    public function testItIsNotEmptyWhenThereIsContent(): void
+    {
+        self::assertFalse($this->string->isEmpty('sdf', $this->artifact));
     }
 }
