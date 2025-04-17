@@ -30,13 +30,6 @@ use Tuleap\User\UserNameNormalizer;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private UserNameNormalizer&\PHPUnit\Framework\MockObject\MockObject $userNameNormalizer;
-
-    protected function setUp(): void
-    {
-        $this->userNameNormalizer = $this->createMock(UserNameNormalizer::class);
-    }
-
     #[DataProvider('dataProviderUserInformationExpectedUserName')]
     public function testGeneratesUsernameFromUserInformation(array $user_information, string $expected_username): void
     {
@@ -62,92 +55,23 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ['email' => '"Some.na me"@example.com'],
                 'some_name',
             ],
+            'From a preferred username' => [
+                ['preferred_username' => 'mypreferredusername'],
+                'mypreferredusername',
+            ],
+            'From given and family names' => [
+                ['given_name' => 'Given Name', 'family_name' => 'Family Name'],
+                'gfamilyname',
+            ],
+            'From family name' => [
+                ['family_name' => 'Family Name'],
+                'familyname',
+            ],
+            'From given name' => [
+                ['given_name' => 'Given Name'],
+                'givenname',
+            ],
         ];
-    }
-
-    public function testItGeneratesUsernameFromPreferredUsername(): void
-    {
-        $rule = $this->createMock(\Rule_UserName::class);
-        $rule->method('isUnixValid')->willReturn(true);
-        $rule->method('isValid')->willReturn(true);
-
-        $username_generator = new UsernameGenerator($this->userNameNormalizer);
-
-        $username = 'mypreferredusername';
-        $this->userNameNormalizer->method('normalize')->with('mypreferredusername')->willReturn(
-            $username
-        );
-
-        $generated_username = $username_generator->getUsername(
-            [
-                'preferred_username' => $username,
-            ]
-        );
-
-        self::assertEquals($username, $generated_username);
-    }
-
-    public function testItGeneratesUsernameFromGivenAndFamilyNames(): void
-    {
-        $rule = $this->createMock(\Rule_UserName::class);
-        $rule->method('isUnixValid')->willReturn(true);
-        $rule->method('isValid')->willReturn(true);
-        $username_generator = new UsernameGenerator($this->userNameNormalizer);
-
-        $username = 'gfamilyname';
-
-        $this->userNameNormalizer->method('normalize')->with($username)->willReturn(
-            $username
-        );
-
-        $generated_username = $username_generator->getUsername(
-            [
-                'given_name'  => 'Given Name',
-                'family_name' => 'Family Name',
-            ]
-        );
-        self::assertEquals($username, $generated_username);
-    }
-
-    public function testItGeneratesUsernameFromFamilyName(): void
-    {
-        $rule = $this->createMock(\Rule_UserName::class);
-        $rule->method('isUnixValid')->willReturn(true);
-        $rule->method('isValid')->willReturn(true);
-        $username_generator = new UsernameGenerator($this->userNameNormalizer);
-
-        $username = 'familyname';
-
-        $this->userNameNormalizer->method('normalize')->with('familyname')->willReturn(
-            $username
-        );
-
-        $generated_username = $username_generator->getUsername(
-            [
-                'family_name' => 'Family Name',
-            ]
-        );
-        self::assertEquals($username, $generated_username);
-    }
-
-    public function testItGeneratesUsernameFromGivenName(): void
-    {
-        $rule = $this->createMock(\Rule_UserName::class);
-        $rule->method('isUnixValid')->willReturn(true);
-        $rule->method('isValid')->willReturn(true);
-        $username_generator = new UsernameGenerator($this->userNameNormalizer);
-
-        $username = 'givenname';
-
-        $this->userNameNormalizer->method('normalize')->with($username)->willReturn(
-            $username
-        );
-        $generated_username = $username_generator->getUsername(
-            [
-                'given_name' => 'Given Name',
-            ]
-        );
-        self::assertEquals($username, $generated_username);
     }
 
     public function testItNeedsAtLeastGivenOrFamilyNamesToGenerateUsername(): void
@@ -155,9 +79,8 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule = $this->createMock(\Rule_UserName::class);
         $rule->method('isUnixValid')->willReturn(true);
         $rule->method('isValid')->willReturn(true);
-        $username_generator = new UsernameGenerator($this->userNameNormalizer);
+        $username_generator = new UsernameGenerator(new UserNameNormalizer($rule, new Slugify()));
 
-        $this->userNameNormalizer->expects($this->never())->method('normalize');
         $this->expectException(NotEnoughDataToGenerateUsernameException::class);
         $username_generator->getUsername([]);
     }
@@ -167,9 +90,8 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule = $this->createMock(\Rule_UserName::class);
         $rule->method('isUnixValid')->willReturn(false);
         $rule->method('isValid')->willReturn(true);
-        $username_generator = new UsernameGenerator($this->userNameNormalizer);
+        $username_generator = new UsernameGenerator(new UserNameNormalizer($rule, new Slugify()));
 
-        $this->userNameNormalizer->method('normalize')->willThrowException(new DataIncompatibleWithUsernameGenerationException());
         $this->expectException(
             DataIncompatibleWithUsernameGenerationException::class
         );
