@@ -28,15 +28,6 @@ class Tracker_Semantic_TitleDao extends DataAccessObject //phpcs:ignore PSR1.Cla
         $this->table_name = 'tracker_semantic_title';
     }
 
-    public function delete($tracker_id)
-    {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $sql = "DELETE FROM $this->table_name WHERE tracker_id = $tracker_id";
-
-        return $this->update($sql);
-    }
-
     public function getNbOfTrackerWithoutSemanticTitleDefined(array $trackers_id): int
     {
         $trackers_id = $this->da->escapeIntImplode($trackers_id);
