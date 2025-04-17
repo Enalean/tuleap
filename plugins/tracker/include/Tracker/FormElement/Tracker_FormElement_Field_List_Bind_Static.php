@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
-use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticXmlExporter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
@@ -581,18 +580,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     {
         assert($value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
 
-        $event = new IsFieldUsedInASemanticEvent($this->field);
-
-        EventManager::instance()->processEvent($event);
-
-        $is_used_in_semantics = $event->isUsed();
         if (isset($this->decorators[$value->getId()])) {
-            $decorator = $this->decorators[$value->getId()]->decorateEdit($is_used_in_semantics);
+            $decorator = $this->decorators[$value->getId()]->decorateEdit();
         } else {
             $decorator = Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit(
                 $this->field->id,
-                $value->getId(),
-                $is_used_in_semantics
+                $value->getId()
             );
         }
 

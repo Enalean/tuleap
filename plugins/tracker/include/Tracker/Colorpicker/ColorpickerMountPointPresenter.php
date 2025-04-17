@@ -25,12 +25,19 @@ namespace Tuleap\Tracker\Colorpicker;
  */
 final class ColorpickerMountPointPresenter
 {
+    public bool $is_unsupported_color = false;
+
     public function __construct(
         public readonly string $current_color,
         public readonly string $input_name,
         public readonly string $input_id,
-        public readonly bool $is_switch_disabled,
-        public readonly bool $is_old_palette_enabled,
     ) {
+         $this->is_unsupported_color = ! $this->isATlpColor($current_color);
+    }
+
+    private function isATlpColor(string $color): bool
+    {
+        return strpos($color, 'rgb') === false
+            && strpos($color, '#') === false;
     }
 }

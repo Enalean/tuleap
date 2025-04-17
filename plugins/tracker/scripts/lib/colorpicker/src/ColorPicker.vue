@@ -19,44 +19,15 @@
 
 <template>
     <div class="dropdown tracker-colorpicker">
-        <a
-            class="dropdown-toggle"
-            href="#"
-            data-target="#"
-            data-toggle="dropdown"
-            v-on:click.prevent="showRightPalette"
-        >
-            <old-color-picker-preview v-if="show_old_preview" v-bind:color="color" />
-            <color-picker-preview v-else v-bind:color="color" />
+        <a class="dropdown-toggle" href="#" data-target="#" data-toggle="dropdown">
+            <color-picker-preview
+                v-bind:color="color"
+                v-bind:is_unsupported_color="is_unsupported_color"
+            />
         </a>
 
         <div class="dropdown-menu" role="menu">
-            <color-picker-palette
-                v-if="!is_old_palette_shown"
-                v-on:color-update="setColor"
-                v-bind:current_color="color"
-            />
-
-            <old-color-picker-palette v-if="is_old_palette_shown" v-on:color-update="setColor" />
-
-            <!-- Set transparent when clicked -->
-            <p v-if="is_old_palette_shown" class="old-color-preview">
-                <old-color-picker-preview
-                    v-bind:color="color"
-                    class="colorpicker-transparent-preview"
-                    v-on:color-update="setColor"
-                />
-                <span class="old-colorpicker-no-color-label" v-on:click="setColor()">
-                    {{ $gettext("No color") }}
-                </span>
-            </p>
-
-            <color-picker-switch
-                v-if="is_old_palette_enabled"
-                v-bind:is_switch_disabled="is_switch_disabled"
-                v-bind:is_old_palette_shown="is_old_palette_shown"
-                v-on:switch-palette="switchPalettes"
-            />
+            <color-picker-palette v-on:color-update="setColor" v-bind:current_color="color" />
         </div>
         <input
             class="colorpicker-input"
@@ -72,41 +43,20 @@
 
 <script setup lang="ts">
 import ColorPickerPalette from "./ColorPickerPalette.vue";
-import ColorPickerSwitch from "./ColorPickerSwitch.vue";
 
-import OldColorPickerPreview from "./OldColorPickerPreview.vue";
-import OldColorPickerPalette from "./OldColorPickerPalette.vue";
 import ColorPickerPreview from "./ColorPickerPreview.vue";
-import { computed, ref } from "vue";
-import { useGettext } from "vue3-gettext";
-
-const { $gettext } = useGettext();
+import { ref } from "vue";
 
 const props = defineProps<{
     input_name: string;
     input_id: string;
     current_color: string;
-    is_switch_disabled: boolean;
-    is_old_palette_enabled: boolean;
+    is_unsupported_color: boolean;
 }>();
 
 const color = ref<string>(props.current_color);
 
-const is_hexa_color = computed((): boolean => color.value.includes("#"));
-const show_old_preview = computed((): boolean => color.value.length === 0 || is_hexa_color.value);
-const is_old_palette_shown = ref<boolean>(
-    props.is_old_palette_enabled && is_hexa_color.value && !props.is_switch_disabled,
-);
-
 function setColor(new_color = ""): void {
     color.value = new_color;
-}
-
-function switchPalettes(): void {
-    is_old_palette_shown.value = props.is_old_palette_enabled && !is_old_palette_shown.value;
-}
-function showRightPalette(): void {
-    is_old_palette_shown.value =
-        props.is_old_palette_enabled && is_hexa_color.value && !props.is_switch_disabled;
 }
 </script>
