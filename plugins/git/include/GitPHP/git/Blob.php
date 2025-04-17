@@ -105,22 +105,24 @@ class Blob extends FilesystemObject
      * GetData
      *
      * Gets the blob data
-     *
-     * @access public
-     * @param bool $explode true to explode data into an array of lines
-     * @return string blob data
      */
-    public function GetData($explode = false) // @codingStandardsIgnoreLine
+    public function GetData(): string // @codingStandardsIgnoreLine
     {
         if (! $this->dataRead) {
             $this->ReadData();
         }
 
-        if ($explode) {
-            return explode("\n", $this->data);
-        } else {
-            return $this->data;
-        }
+        return (string) $this->data;
+    }
+
+    /**
+     * GetData
+     *
+     * @return list<string>
+     */
+    public function getExplodedData(): array
+    {
+        return explode("\n", $this->GetData());
     }
 
     /**
