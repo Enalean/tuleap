@@ -137,6 +137,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
@@ -1410,15 +1411,21 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $program_dao     = new ProgramDaoProject();
         $team_dao        = new TeamDao();
         $project_manager = ProjectManager::instance();
-        $handler         = new CollectLinkedProjectsHandler(
-            $program_dao,
-            $team_dao,
-        );
 
         $project_manager_adapter = new ProjectManagerAdapter(
             $project_manager,
             new UserManagerAdapter(UserManager::instance())
         );
+
+        $handler = new CollectLinkedProjectsHandler(
+            $program_dao,
+            $team_dao,
+            new ProgramServiceIsEnabledVerifier(
+                $project_manager_adapter,
+                new ProgramServiceIsEnabledCertifier(),
+            ),
+        );
+
 
         $event_proxy = CollectLinkedProjectsProxy::fromCollectLinkedProjects(
             new TeamsSearcher($program_dao, $project_manager_adapter),

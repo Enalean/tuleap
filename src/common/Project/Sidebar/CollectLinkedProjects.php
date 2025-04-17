@@ -31,6 +31,8 @@ final class CollectLinkedProjects implements Dispatchable
 {
     public const NAME = 'collectLinkedProjects';
 
+    private bool $can_aggregate_projects = false;
+
     /**
      * @psalm-readonly
      */
@@ -102,5 +104,15 @@ final class CollectLinkedProjects implements Dispatchable
     public function getCurrentUser(): \PFUser
     {
         return $this->current_user;
+    }
+
+    public function projectCanAggregateProjects(): void
+    {
+        $this->can_aggregate_projects = true;
+    }
+
+    public function canAggregateProjects(): bool
+    {
+        return $this->can_aggregate_projects;
     }
 }

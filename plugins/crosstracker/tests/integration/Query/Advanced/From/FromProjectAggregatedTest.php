@@ -117,6 +117,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
             $this->top_project,
             $this->user,
         );
+        $new_event->projectCanAggregateProjects();
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturnCallback(
             static fn (object $event) => match (true) {
@@ -141,6 +142,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
             $this->top_project,
             $this->user,
         );
+        $new_event->projectCanAggregateProjects();
         $new_event->addChildrenProjects($collection);
         $this->event_manager->method('dispatch')->willReturnCallback(
             static fn (object $event) => match (true) {

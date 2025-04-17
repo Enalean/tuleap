@@ -87,4 +87,9 @@ final class CollectLinkedProjectsProxy implements CollectLinkedProjectsEvent
         );
         $this->linked_projects->addParentProjects($collection);
     }
+
+    public function projectCanAggregateProjects(): void
+    {
+        $this->linked_projects->projectCanAggregateProjects();
+    }
 }
