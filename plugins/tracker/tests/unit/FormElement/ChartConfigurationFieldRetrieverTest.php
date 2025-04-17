@@ -18,124 +18,87 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tracker;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
+use Tracker_FormElement_Field_Date;
+use Tracker_FormElement_Field_Integer;
+use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ChartConfigurationFieldRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $form_element_field_factoy;
-
-    /**
-     * @var \Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var ChartConfigurationFieldRetriever
-     */
-    private $configuration_retriever;
-
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
-     * @var \Tracker_FormElement_Field_Integer
-     */
-    private $field_duration;
-
-    /**
-     * @var \Tracker_FormElement_Field_Integer
-     */
-    private $field_capacity;
-
-    /**
-     * @var \Tracker_FormElement_Field_Integer
-     */
-    private $field_remaining_effort;
-
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-
-    private $field_start_date;
-
-    private $logger;
+    private Tracker_FormElementFactory&MockObject $form_element_field_factoy;
+    private Tracker&MockObject $tracker;
+    private ChartConfigurationFieldRetriever $configuration_retriever;
+    private Artifact $artifact;
+    private PFUser $user;
+    private Tracker_FormElement_Field_Integer $field_duration;
+    private Tracker_FormElement_Field_Integer $field_capacity;
+    private Tracker_FormElement_Field_Integer $field_remaining_effort;
+    private SemanticTimeframeBuilder&MockObject $semantic_timeframe_builder;
+    private Tracker_FormElement_Field_Date $field_start_date;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->form_element_field_factoy = $this->createPartialMock(
+            Tracker_FormElementFactory::class,
+            ['getNumericFieldByNameForUser', 'getNumericFieldByName', 'getUsedFieldByName'],
+        );
 
-        $this->form_element_field_factoy = \Mockery::mock(\Tracker_FormElementFactory::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getId')->willReturn(101);
+        $this->tracker->method('getName')->willReturn('Scrum');
 
-        $this->tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(101);
-        $this->tracker->shouldReceive('getName')->andReturn('Scrum');
+        $this->artifact = ArtifactTestBuilder::anArtifact(65431)->inTracker($this->tracker)->build();
+        $this->user     = UserTestBuilder::anActiveUser()->build();
 
-        $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->user = \Mockery::mock(\PFUser::class);
+        $this->field_duration         = IntFieldBuilder::anIntField(65413)->withName('duration')->build();
+        $this->field_capacity         = IntFieldBuilder::anIntField(65414)->withName('capacity')->build();
+        $this->field_remaining_effort = IntFieldBuilder::anIntField(65415)->withName('remaining_effort')->build();
+        $this->field_start_date       = DateFieldBuilder::aDateField(65416)->withName('start_date')->build();
 
-        $this->field_duration         = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $this->field_capacity         = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $this->field_remaining_effort = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $this->field_start_date       = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
 
-        $this->field_duration->shouldReceive('getName')->andReturn('duration');
-        $this->field_capacity->shouldReceive('getName')->andReturn('capacity');
-        $this->field_remaining_effort->shouldReceive('getName')->andReturn('remaining_effort');
-        $this->field_start_date->shouldReceive('getName')->andReturn('start_date');
-
-        $this->semantic_timeframe_builder = \Mockery::mock(SemanticTimeframeBuilder::class);
-
-        $this->logger                  = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->configuration_retriever = new ChartConfigurationFieldRetriever(
             $this->form_element_field_factoy,
             $this->semantic_timeframe_builder,
-            $this->logger
+            new NullLogger(),
         );
     }
 
-    public function testItThrowsAnExceptionWhenDurationFieldDoesNotExist()
+    public function testItThrowsAnExceptionWhenDurationFieldDoesNotExist(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'duration',
             ['int', 'float', 'computed']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->form_element_field_factoy->shouldReceive('getNumericFieldByNameForUser')->with(
-            $this->artifact->getTracker(),
+        $this->form_element_field_factoy->method('getNumericFieldByNameForUser')->with(
+            $this->tracker,
             $this->user,
             'duration'
-        )->andReturn(null);
+        )->willReturn(null);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
-            new SemanticTimeframe(
-                $this->tracker,
-                new TimeframeNotConfigured()
-            )
-        );
+        $this->semantic_timeframe_builder->method('getSemantic')
+            ->willReturn(new SemanticTimeframe($this->tracker, new TimeframeNotConfigured()));
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
         $this->expectExceptionMessage(
@@ -145,20 +108,20 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->configuration_retriever->getDurationField($this->tracker, $this->user);
     }
 
-    public function testItThrowsAnExceptionWhenDurationFieldExistsButUserCannotReadIt()
+    public function testItThrowsAnExceptionWhenDurationFieldExistsButUserCannotReadIt(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'duration',
             ['int', 'float', 'computed']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->form_element_field_factoy->shouldReceive('getNumericFieldByNameForUser')->with(
-            $this->artifact->getTracker(),
+        $this->form_element_field_factoy->method('getNumericFieldByNameForUser')->with(
+            $this->tracker,
             $this->user,
             'duration'
-        )->andReturn(null);
+        )->willReturn(null);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
+        $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,
                 new TimeframeWithDuration(
@@ -168,7 +131,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->field_duration->shouldReceive('userCanRead')->andReturn(false);
+        $this->field_duration->setUserCanRead($this->user, false);
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
 
@@ -179,20 +142,20 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->configuration_retriever->getDurationField($this->tracker, $this->user);
     }
 
-    public function testItReturnsDurationFieldWhenDurationFieldExistsAnUserCanReadIt()
+    public function testItReturnsDurationFieldWhenDurationFieldExistsAnUserCanReadIt(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'duration',
             ['int', 'float', 'computed']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->form_element_field_factoy->shouldReceive('getNumericFieldByNameForUser')->with(
-            $this->artifact->getTracker(),
+        $this->form_element_field_factoy->method('getNumericFieldByNameForUser')->with(
+            $this->tracker,
             $this->user,
             'duration'
-        )->andReturn($this->field_duration);
+        )->willReturn($this->field_duration);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
+        $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,
                 new TimeframeWithDuration(
@@ -202,7 +165,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->field_duration->shouldReceive('userCanRead')->andReturn(true);
+        $this->field_duration->setUserCanRead($this->user, true);
 
         self::assertSame(
             $this->configuration_retriever->getDurationField($this->tracker, $this->user),
@@ -210,14 +173,14 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItThrowsAnExceptionWhenStartDateFieldDoesNotExist()
+    public function testItThrowsAnExceptionWhenStartDateFieldDoesNotExist(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'start_date',
             ['date']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
+        $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,
                 new TimeframeNotConfigured()
@@ -233,14 +196,14 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->configuration_retriever->getStartDateField($this->tracker, $this->user);
     }
 
-    public function testItThrowsAnExceptionWhenStartDateFieldExistsButUserCannotReadIt()
+    public function testItThrowsAnExceptionWhenStartDateFieldExistsButUserCannotReadIt(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'start_date',
             ['date']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
+        $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,
                 new TimeframeWithDuration(
@@ -250,7 +213,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->field_start_date->shouldReceive('userCanRead')->andReturn(false);
+        $this->field_start_date->setUserCanRead($this->user, false);
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
 
@@ -261,14 +224,14 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->configuration_retriever->getStartDateField($this->tracker, $this->user);
     }
 
-    public function testItReturnsStartDateFieldWhenStartDateFieldExistsAnUserCanReadIt()
+    public function testItReturnsStartDateFieldWhenStartDateFieldExistsAnUserCanReadIt(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'start_date',
             ['date']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
+        $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,
                 new TimeframeWithDuration(
@@ -278,7 +241,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->field_start_date->shouldReceive('userCanRead')->andReturn(true);
+        $this->field_start_date->setUserCanRead($this->user, true);
 
         self::assertSame(
             $this->field_start_date,
@@ -286,19 +249,17 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItThrowsAnExceptionWhenCapacityFieldDoesNotExist()
+    public function testItThrowsAnExceptionWhenCapacityFieldDoesNotExist(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'capacity',
             ['int', 'float', 'computed']
-        )->andReturn(false);
+        )->willReturn(false);
 
-        $this->form_element_field_factoy->shouldReceive('getNumericFieldByName')->with(
+        $this->form_element_field_factoy->method('getNumericFieldByName')->with(
             $this->tracker,
             'capacity'
-        )->andReturn(null);
-
-        $this->logger->shouldReceive('info');
+        )->willReturn(null);
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
 
@@ -309,17 +270,17 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->configuration_retriever->getCapacityField($this->tracker);
     }
 
-    public function testItReturnsCapacityFieldWhenFieldExist()
+    public function testItReturnsCapacityFieldWhenFieldExist(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'capacity',
             ['int', 'float', 'computed']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->form_element_field_factoy->shouldReceive('getNumericFieldByName')->with(
+        $this->form_element_field_factoy->method('getNumericFieldByName')->with(
             $this->tracker,
             'capacity'
-        )->andReturn($this->field_capacity);
+        )->willReturn($this->field_capacity);
 
         self::assertSame(
             $this->configuration_retriever->getCapacityField($this->tracker),
@@ -327,64 +288,68 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsNullWhenRemainingEffortFieldDoesNotExist()
+    public function testItReturnsNullWhenRemainingEffortFieldDoesNotExist(): void
     {
-        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
 
         $configuration_retriever = new ChartConfigurationFieldRetriever(
             $form_element_factory,
             $this->semantic_timeframe_builder,
-            $this->logger
+            new NullLogger(),
         );
 
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'remaining_effort',
             ['int', 'float', 'computed']
-        )->andReturn(false);
+        )->willReturn(false);
 
         $this->assertNull($configuration_retriever->getBurndownRemainingEffortField($this->artifact, $this->user));
     }
 
-    public function testItReturnsNullWhenRemainingEffortFieldExistsAndUserCanNotReadIt()
+    public function testItReturnsNullWhenRemainingEffortFieldExistsAndUserCanNotReadIt(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'remaining_effort',
             ['int', 'float', 'computed']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->form_element_field_factoy->shouldReceive('getNumericFieldByName')->with(
+        $this->form_element_field_factoy->method('getNumericFieldByName')->with(
             $this->tracker,
             'remaining_effort'
-        )->andReturn($this->field_remaining_effort);
+        )->willReturn($this->field_remaining_effort);
 
-        $this->form_element_field_factoy->shouldReceive('getUsedFieldByName')->with(
+        $this->form_element_field_factoy->method('getNumericFieldByNameForUser')->willReturn(null);
+
+        $this->form_element_field_factoy->method('getUsedFieldByName')->with(
             $this->tracker->getId(),
             'remaining_effort'
-        )->andReturn($this->field_remaining_effort);
+        )->willReturn($this->field_remaining_effort);
 
-        $this->field_remaining_effort->shouldReceive('userCanRead')->andReturn(false);
+        $this->field_remaining_effort->setUserCanRead($this->user, false);
 
         $this->assertNull($this->configuration_retriever->getBurndownRemainingEffortField($this->artifact, $this->user));
     }
 
-    public function testItReturnsFieldWhenRemainingEffortFieldExistsAndUserCanReadIt()
+    public function testItReturnsFieldWhenRemainingEffortFieldExistsAndUserCanReadIt(): void
     {
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')->with(
+        $this->tracker->method('hasFormElementWithNameAndType')->with(
             'remaining_effort',
             ['int', 'float', 'computed']
-        )->andReturn(true);
+        )->willReturn(true);
 
-        $this->form_element_field_factoy->shouldReceive('getNumericFieldByName')->with(
+        $this->form_element_field_factoy->method('getNumericFieldByName')->with(
             $this->tracker,
             'remaining_effort'
-        )->andReturn($this->field_remaining_effort);
+        )->willReturn($this->field_remaining_effort);
 
-        $this->form_element_field_factoy->shouldReceive('getUsedFieldByName')->with(
+        $this->form_element_field_factoy->method('getNumericFieldByNameForUser')->willReturn($this->field_remaining_effort);
+
+        $this->form_element_field_factoy->method('getUsedFieldByName')->with(
             $this->tracker->getId(),
             'remaining_effort'
-        )->andReturn($this->field_remaining_effort);
+        )->willReturn($this->field_remaining_effort);
 
-        $this->field_remaining_effort->shouldReceive('userCanRead')->andReturn(true);
+        $this->field_remaining_effort->setUserCanRead($this->user, true);
 
         self::assertSame(
             $this->field_remaining_effort,
