@@ -9,7 +9,7 @@ let
 
     src = ./tuleap-smokescreen;
 
-    vendorHash = "sha256-hrOuwh3fF02k1YHCRyj0D3NkFlXg8vaAl8CNspA84Vs=";
+    vendorHash = "sha256-9TFT2XCXGN6NMMpGF4tdjBFaDBh2HaiOvf5U28mymmk=";
 
     env.CGO_ENABLED=0;
 
