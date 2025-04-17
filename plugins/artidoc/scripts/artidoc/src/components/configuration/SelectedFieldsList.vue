@@ -1,0 +1,237 @@
+<!--
+  - Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<template>
+    <tbody ref="fields_list" data-is-container="true">
+        <tr
+            v-for="field in currently_selected_fields"
+            v-bind:key="field.field_id"
+            v-bind:data-field-id="field.field_id"
+            v-bind:class="{
+                'with-hidden-controls': is_drag_and_dropping,
+                'row-field': true,
+            }"
+            data-test="readonly-field-rows"
+            draggable="true"
+        >
+            <td class="dragndrop-grip"><dragndrop-grip-illustration /></td>
+            <td>{{ field.label }}</td>
+            <td>
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        disabled
+                        type="checkbox"
+                        value="1"
+                        v-bind:checked="field.display_type === 'block'"
+                        data-not-drag-handle="true"
+                        draggable="false"
+                    />
+                    {{ $gettext("Full row") }}
+                </label>
+            </td>
+            <td class="tlp-table-cell-actions">
+                <button
+                    type="button"
+                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                    data-not-drag-handle="true"
+                    v-on:click="emit('unselect-field', field)"
+                >
+                    <i class="tlp-button-icon fa-solid fa-trash fa-fw" aria-hidden="true"></i>
+                    {{ $gettext("Remove") }}
+                </button>
+            </td>
+            <td data-not-drag-handle="true" draggable="false">
+                <reorder-fields-arrows
+                    v-bind:field="field"
+                    v-bind:is_first="fields_reorderer.isFirstField(field)"
+                    v-bind:is_last="fields_reorderer.isLastField(field)"
+                    v-on:move-up="fields_reorderer.moveFieldUp(field)"
+                    v-on:move-down="fields_reorderer.moveFieldDown(field)"
+                />
+            </td>
+        </tr>
+    </tbody>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import type {
+    Drekkenov,
+    SuccessfulDropCallbackParameter,
+    DragCallbackParameter,
+} from "@tuleap/drag-and-drop";
+import { init } from "@tuleap/drag-and-drop";
+import DragndropGripIllustration from "@/components/dnd/DragndropGripIllustration.vue";
+import ReorderFieldsArrows from "@/components/configuration/ReorderFieldsArrows.vue";
+import type { FieldsReorderer } from "@/sections/readonly-fields/FieldsReorderer";
+import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+
+const props = defineProps<{
+    currently_selected_fields: ConfigurationField[];
+    fields_reorderer: FieldsReorderer;
+}>();
+
+const emit = defineEmits<{
+    (e: "unselect-field", field: ConfigurationField): void;
+}>();
+
+const fields_list = ref<HTMLElement>();
+const is_drag_and_dropping = ref(false);
+
+let drek: Drekkenov | undefined = undefined;
+
+onMounted(() => {
+    if (!fields_list.value) {
+        return;
+    }
+
+    drek = init({
+        mirror_container: fields_list.value,
+        isDropZone: (element: HTMLElement) => element === fields_list.value,
+        isDraggable: (element: HTMLElement) => element.draggable,
+        isInvalidDragHandle: (handle: HTMLElement) =>
+            Boolean(handle.closest("[data-not-drag-handle]")),
+        isConsideredInDropzone: (child: Element) => child.hasAttribute("draggable"),
+        doesDropzoneAcceptDraggable: () => true,
+        onDragStart: (context: DragCallbackParameter): void => {
+            if (context.dragged_element.dataset.fieldId === undefined) {
+                return;
+            }
+
+            is_drag_and_dropping.value = true;
+        },
+        onDrop: (context: SuccessfulDropCallbackParameter): void => {
+            const dropped_field_id = Number.parseInt(
+                context.dropped_element.dataset.fieldId ?? "",
+                10,
+            );
+            if (!dropped_field_id) {
+                return;
+            }
+
+            const dropped_field = props.currently_selected_fields.find(
+                (field) => field.field_id === dropped_field_id,
+            );
+            if (!dropped_field) {
+                return;
+            }
+
+            const next_sibling_field_id =
+                context.next_sibling instanceof HTMLElement
+                    ? Number.parseInt(context.next_sibling.dataset.fieldId ?? "", 10)
+                    : null;
+
+            if (next_sibling_field_id === null) {
+                props.fields_reorderer.moveFieldAtTheEnd(dropped_field);
+                return;
+            }
+
+            const next_sibling = props.currently_selected_fields.find(
+                (field) => field.field_id === next_sibling_field_id,
+            );
+            if (!next_sibling) {
+                return;
+            }
+
+            props.fields_reorderer.moveFieldBeforeSibling(dropped_field, next_sibling);
+        },
+        cleanupAfterDragCallback: (): void => {
+            is_drag_and_dropping.value = false;
+        },
+    });
+});
+
+onBeforeUnmount(() => {
+    drek?.destroy();
+});
+</script>
+
+<style scoped lang="scss">
+@use "pkg:@tuleap/drag-and-drop";
+
+.reorder-arrows {
+    transition: opacity ease-in-out 150ms;
+    opacity: 0;
+}
+
+.row-field {
+    &:hover .reorder-arrows,
+    &:focus-within .reorder-arrows {
+        opacity: 0.5;
+    }
+
+    &:hover .reorder-arrows:hover,
+    .reorder-arrows:focus-within {
+        opacity: 1;
+    }
+
+    &:has(> .dragndrop-grip:hover) {
+        transition: background ease-in-out 150ms;
+        background: var(--tlp-main-color-lighter-90);
+    }
+
+    &:hover > .dragndrop-grip {
+        background: var(--tlp-main-color);
+        color: var(--tlp-main-color-lighter-90);
+    }
+}
+
+.dragndrop-grip {
+    width: var(--tlp-medium-spacing);
+    height: 100%;
+    transition:
+        opacity ease-in-out 150ms,
+        background ease-in-out 150ms,
+        color ease-in-out 150ms;
+    background: inherit;
+    color: var(--tlp-white-color);
+    cursor: move;
+
+    &:hover {
+        background: var(--tlp-main-color);
+        color: var(--tlp-main-color-lighter-90);
+    }
+
+    &.dragndrop-grip-when-sections-loading {
+        visibility: hidden;
+    }
+}
+
+.with-hidden-move-controls {
+    .dragndrop-grip {
+        visibility: hidden;
+    }
+
+    .reorder-arrows {
+        opacity: 0;
+    }
+}
+
+.drek-ghost {
+    border-radius: 0;
+
+    > td {
+        visibility: hidden;
+    }
+}
+
+.drek-hide {
+    display: none;
+}
+</style>

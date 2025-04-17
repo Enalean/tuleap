@@ -28,10 +28,12 @@ export const ConfigurationFieldStub = {
         };
     },
 
-    withFieldId: (field_id: number): ConfigurationField => {
-        return {
-            ...ConfigurationFieldStub.build(),
-            field_id,
-        };
-    },
+    withFieldId: (field_id: number): ConfigurationField => ({
+        ...ConfigurationFieldStub.build(),
+        field_id,
+    }),
+    withLabel: (label: string): ConfigurationField => ({
+        ...ConfigurationFieldStub.build(),
+        label,
+    }),
 };

@@ -58,11 +58,11 @@ import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
 import ConfigureTracker from "@/components/configuration/ConfigureTracker.vue";
 import ConfigureReadonlyFields from "@/components/configuration/ConfigureReadonlyFields.vue";
-import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import {
     CLOSE_CONFIGURATION_MODAL,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
+import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import ConfigurationModalTabs from "@/components/configuration/ConfigurationModalTabs.vue";
 
 const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
@@ -89,7 +89,6 @@ function openModal(onSuccessfulSaved?: () => void): void {
 
     if (modal) {
         configuration_helper.resetSelection();
-        current_tab.value = TRACKER_SELECTION_TAB;
         modal.show();
     }
 }

@@ -25,9 +25,11 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import SelectedFieldsList from "@/components/configuration/SelectedFieldsList.vue";
+import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
 
-const label_1 = "First field";
-const label_2 = "Second field";
+const field_1 = ConfigurationFieldStub.withLabel("Field 1");
+const field_2 = ConfigurationFieldStub.withLabel("Field 2");
 
 describe("FieldsSelection", () => {
     let available_fields: ConfigurationField[];
@@ -35,10 +37,7 @@ describe("FieldsSelection", () => {
     let list_picker_instance: ListPicker;
 
     beforeEach(() => {
-        available_fields = [
-            { label: label_1 } as ConfigurationField,
-            { label: label_2 } as ConfigurationField,
-        ];
+        available_fields = [field_1, field_2];
         selected_fields = [];
 
         list_picker_instance = {
@@ -64,18 +63,11 @@ describe("FieldsSelection", () => {
         expect(empty_state_table.exists()).toBe(true);
     });
 
-    it("should display a table with two fields if two fields are selected", () => {
-        selected_fields = [
-            { label: label_1 } as ConfigurationField,
-            { label: label_2 } as ConfigurationField,
-        ];
+    it("should display the selected fields", () => {
+        selected_fields = [field_1, field_2];
 
         const wrapper = getWrapper();
-        const readonly_fields = wrapper.findAll("[data-test=readonly-field-rows]");
-
-        expect(readonly_fields.length).toBe(2);
-        expect(readonly_fields[0].html()).toContain(label_1);
-        expect(readonly_fields[1].html()).toContain(label_2);
+        expect(wrapper.findComponent(SelectedFieldsList).exists()).toBe(true);
     });
 
     it("should display the available fields in the list picker", () => {
@@ -83,7 +75,7 @@ describe("FieldsSelection", () => {
         const available_fields = wrapper.findAll("[data-test=available-readonly-fields]");
 
         expect(available_fields.length).toBe(2);
-        expect(available_fields[0].html()).toContain(label_1);
-        expect(available_fields[1].html()).toContain(label_2);
+        expect(available_fields[0].html()).toContain(field_1.label);
+        expect(available_fields[1].html()).toContain(field_2.label);
     });
 });
