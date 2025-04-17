@@ -40,7 +40,7 @@ export const ConfigurationStoreStub = {
     withoutAllowedTrackers: (): ConfigurationStore => ({
         selected_tracker: ref(null),
         allowed_trackers: [],
-        selected_fields: [],
+        selected_fields: ref([]),
         available_fields: ref([]),
         is_saving: ref(false),
         is_error: ref(false),

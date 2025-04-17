@@ -74,6 +74,7 @@ export function useConfigurationScreenHelper(
 
     function resetSelection(): void {
         new_selected_tracker.value = selected_tracker.value;
+
         resetSuccessFlagFromPreviousCalls();
     }
 
