@@ -28,11 +28,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIs
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyTimeframeIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\Tracker\Semantic\Title\SearchTrackersWithoutTitleSemantic;
 
-final class SemanticsVerifier implements VerifySemanticsAreConfigured
+final readonly class SemanticsVerifier implements VerifySemanticsAreConfigured
 {
     public function __construct(
-        private \Tracker_Semantic_TitleDao $semantic_title_dao,
+        private SearchTrackersWithoutTitleSemantic $title_verifier,
         private \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         private VerifyStatusIsAligned $status_verifier,
         private VerifyTimeframeIsAligned $timeframe_verifier,
@@ -48,7 +49,7 @@ final class SemanticsVerifier implements VerifySemanticsAreConfigured
 
         $has_error = false;
 
-        if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
+        if ($this->title_verifier->countTrackersWithoutTitleSemantic($tracker_ids) > 0) {
             $this->buildSemanticError(
                 $configuration_errors,
                 $this->getProgramTrackersWithoutTitleDefined($source_tracker_collection),
@@ -114,7 +115,7 @@ final class SemanticsVerifier implements VerifySemanticsAreConfigured
 
     private function getProgramTrackersWithoutTitleDefined(SourceTrackerCollection $source_tracker_collection): array
     {
-        $trackers_ids_without_title = $this->semantic_title_dao->getTrackerIdsWithoutSemanticTitleDefined(
+        $trackers_ids_without_title = $this->title_verifier->getTrackerIdsWithoutTitleSemantic(
             $source_tracker_collection->getSourceTrackerIds()
         );
 

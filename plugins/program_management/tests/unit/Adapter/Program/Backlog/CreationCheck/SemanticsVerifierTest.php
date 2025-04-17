@@ -36,16 +36,13 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerSt
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\SearchTrackersWithoutTitleSemanticStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
     private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_TitleDao
-     */
-    private $title_dao;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Semantic_DescriptionDao
      */
@@ -81,7 +78,6 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $user_identifier
         );
 
-        $this->title_dao       = $this->createMock(\Tracker_Semantic_TitleDao::class);
         $this->description_dao = $this->createMock(\Tracker_Semantic_DescriptionDao::class);
     }
 
@@ -89,17 +85,13 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
 
-        $this->title_dao->expects($this->once())
-            ->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
-            ->willReturn(0);
         $this->description_dao->expects($this->once())
             ->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(0);
 
         $verifier = new SemanticsVerifier(
-            $this->title_dao,
+            SearchTrackersWithoutTitleSemanticStub::withAllTrackersHaveTitle(),
             $this->description_dao,
             new class implements VerifyStatusIsAligned {
                 public function isStatusWellConfigured(
@@ -135,17 +127,13 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
 
-        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->willReturn(1);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->willReturn(1);
-        $this->title_dao->method('getTrackerIdsWithoutSemanticTitleDefined')
-            ->willReturn([101]);
         $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
             ->willReturn([101]);
 
         $verifier = new SemanticsVerifier(
-            $this->title_dao,
+            SearchTrackersWithoutTitleSemanticStub::withTrackersThatDoNotHaveTitle(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID),
             $this->description_dao,
             new class implements VerifyStatusIsAligned {
                 public function isStatusWellConfigured(
@@ -185,17 +173,13 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStopsAtFirstErrorFound(): void
     {
-        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->willReturn(1);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->willReturn(1);
-        $this->title_dao->method('getTrackerIdsWithoutSemanticTitleDefined')
-            ->willReturn([101]);
         $this->description_dao->method('getTrackerIdsWithoutSemanticDescriptionDefined')
             ->willReturn([101]);
 
         $verifier = new SemanticsVerifier(
-            $this->title_dao,
+            SearchTrackersWithoutTitleSemanticStub::withTrackersThatDoNotHaveTitle(self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID),
             $this->description_dao,
             new class implements VerifyStatusIsAligned {
                 public function isStatusWellConfigured(

@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Title;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
 
-final class TitleSemanticDAO extends DataAccessObject implements RetrieveTitleField
+final class TitleSemanticDAO extends DataAccessObject implements RetrieveTitleField, SearchTrackersWithoutTitleSemantic
 {
     public function searchByTrackerId(int $tracker_id): Option
     {
@@ -48,5 +49,28 @@ final class TitleSemanticDAO extends DataAccessObject implements RetrieveTitleFi
     public function deleteForTracker(int $tracker_id): void
     {
         $this->getDB()->delete('tracker_semantic_title', ['tracker_id' => $tracker_id]);
+    }
+
+    public function countTrackersWithoutTitleSemantic(array $tracker_ids): int
+    {
+        return count($this->getTrackerIdsWithoutTitleSemantic($tracker_ids));
+    }
+
+    public function getTrackerIdsWithoutTitleSemantic(array $tracker_ids): array
+    {
+        if ($tracker_ids === []) {
+            return [];
+        }
+        $in_statement = EasyStatement::open()->in('tracker.id IN (?*)', $tracker_ids);
+
+        $sql = <<<SQL
+            SELECT tracker.id
+            FROM tracker
+                 LEFT JOIN tracker_semantic_title AS title
+            ON (tracker.id = title.tracker_id)
+            WHERE $in_statement AND title.tracker_id IS NULL
+            SQL;
+
+        return $this->getDB()->column($sql, $in_statement->values());
     }
 }
