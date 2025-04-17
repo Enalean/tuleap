@@ -17,6 +17,8 @@ kevin.traini@enalean.com valid-after="20240102" sk-ecdsa-sha2-nistp256@openssh.c
 thomas.gorka@enalean.com valid-after="20241024" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBOu/lx1jsmOvAsWjfSPYe2FSMu3c4UdaCMxUHZiVKZRMVvVpzb0lAI+Eb/jYxjh/c5RLF/J9DEVAa3alydOQA/AAAAAEc3NoOg==
 # Clarisse DESCHAMPS
 clarisse.deschamps@enalean.com valid-after="20250221" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBJcECpAUO7OvbU7BB1tVG7ur3wUl4TS5wgMyk9x2eRp1MZ2zPgLctu6WvNz2mWLuCn4cvKpsV/3CBWjdr4utoWwAAAAEc3NoOg==
+# Martin GOYOT
+martin.goyot@enalean.com valid-after="20250417" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBJOrwTaB41MtuEjmsV55JvUkAbbnwqIEl9ULKNwIV7/Q1rwoSkFWLmmatMDTKjTaCSYZioeq6mvklROBMu/mtusAAAAEc3NoOg==
 
 ## Archive
 # Benjamin DAUTON
