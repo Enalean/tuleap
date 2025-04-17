@@ -5,7 +5,11 @@
         </div>
         <section class="tlp-pane-section-for-cards">
             {{# aggregated_teams }}
-                <a class="tlp-card tlp-card-selectable program-management-card-teams" href="{{ url }}">
+                <a
+                    class="tlp-card tlp-card-selectable program-management-card-teams"
+                    href="{{ url }}"
+                    data-test="linked-team"
+                >
                     {{# project_icon}}
                         <span class="program-management-card-teams-icon" aria-hidden="true">{{project_icon}}</span>
                     {{/ project_icon}}

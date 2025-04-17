@@ -19,11 +19,15 @@
 
 import type { ConditionPredicate } from "@tuleap/cypress-utilities-support";
 
+function getCurrentTimestampInSeconds(): string {
+    return String(Date.now()).slice(0, -4);
+}
+
 describe("Program management", () => {
     let program_project_name: string, team_project_name: string, other_team_project_name: string;
 
     beforeEach(function () {
-        const now = Date.now();
+        const now = getCurrentTimestampInSeconds();
         program_project_name = "program-" + now;
         team_project_name = "team-" + now;
         other_team_project_name = "z-other-team-" + now;
@@ -88,6 +92,7 @@ function configureProgram(program_project_name: string, team_project_name: strin
     cy.get("[data-test=program-management-add-team-button]").click({ force: true });
 
     cy.wait("@linkTeamToProgram");
+    cy.get("[data-test=linked-team]").should("contain.text", team_project_name);
 
     cy.log("Edit configuration");
     cy.get("[data-test=admin-program-increment-label]").should("be.visible");
@@ -116,18 +121,12 @@ function createAndLinkUserStory(
 
     cy.get("[data-test=current-artifact-id]").then(($input) => {
         const user_story_id = String($input.val());
-        planFeatureIntoProgramIncrement(
-            program_project_name,
-            team_project_name,
-            feature_id,
-            user_story_id,
-        );
+        planFeatureIntoProgramIncrement(program_project_name, feature_id, user_story_id);
     });
 }
 
 function planFeatureIntoProgramIncrement(
     program_project_name: string,
-    team_project_name: string,
     feature_id: string,
     user_story_id: string,
 ): void {
