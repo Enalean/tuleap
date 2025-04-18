@@ -52,10 +52,6 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'src/creation/create-view.ts')
         );
 
-        $GLOBALS['HTML']->addJavascriptAsset(
-            new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'src/edition/artifact-edition-buttons-switcher/disable-submit-buttons.ts')
-        );
-
         $breadcrumbs = [
             [
                 'title' => sprintf(dgettext('tuleap-tracker', 'New %s'), $this->tracker->getItemName()),

@@ -25,6 +25,7 @@ import { getLocaleWithDefault } from "@tuleap/gettext";
 import { reopenFieldsetsWithInvalidInput } from "../edition/reopen-fieldsets-with-invalid-input";
 import { initLinkField } from "../fields/LinkFieldEditor";
 import { initListFields } from "../fields/list-fields";
+import { disableSubmitAfterArtifactEdition } from "../edition/artifact-edition-buttons-switcher/disable-submit-buttons";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_locale = getLocaleWithDefault(document);
@@ -36,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     creator.createTextFieldEditors();
     initListFields();
     initLinkField(user_locale, null);
+    disableSubmitAfterArtifactEdition(document);
 
     const submit_buttons = document.querySelectorAll(
         `.artifact-form input[name="submit_and_continue"],

@@ -48,7 +48,3 @@ export const disableSubmitAfterArtifactEdition = (doc: Document): void => {
         });
     });
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-    disableSubmitAfterArtifactEdition(document);
-});
