@@ -21,6 +21,7 @@ import { ref } from "vue";
 import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import { noop } from "@/helpers/noop";
+import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 const tasks: Tracker = {
     ...TrackerStub.withoutTitleAndDescription(),
@@ -79,5 +80,10 @@ export const ConfigurationStoreStub = {
     ): ConfigurationStore => ({
         ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
         saveTrackerConfiguration,
+    }),
+
+    withSelectedFields: (selected_fields: ConfigurationField[]): ConfigurationStore => ({
+        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
+        selected_fields: ref(selected_fields),
     }),
 };
