@@ -175,7 +175,7 @@ Once you have a `package.json` file, you will also need a `tsconfig.json` file t
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["ES2021", "DOM"], // Add values like "DOM" if your lib interacts with the DOM
+        "lib": ["ES2023", "DOM"], // Add values like "DOM" if your lib interacts with the DOM
         "types": ["jest"],  // Add global types needed by your lib
     },
     "include": ["src/**/*"]

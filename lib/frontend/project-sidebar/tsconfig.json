@@ -1,8 +1,7 @@
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "module": "es2020",
-        "lib": ["ES2021", "DOM", "DOM.Iterable"],
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
         "types": ["vite/client"],
         "incremental": false
     },

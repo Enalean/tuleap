@@ -1,7 +1,7 @@
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["es2015", "DOM"]
+        "lib": ["ES2023", "DOM"]
     },
     "include": ["src/**/*"]
 }

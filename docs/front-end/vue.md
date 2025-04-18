@@ -148,7 +148,6 @@ Once you have a `package.json` file, you will also need a
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
-        "module": "es2020",
         "types": ["ckeditor"], // Add global types needed by your application
     },
     "include": ["src/**/*"]

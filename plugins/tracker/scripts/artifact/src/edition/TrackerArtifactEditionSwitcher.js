@@ -18,6 +18,7 @@
  */
 
 import codendi from "codendi";
+// eslint-disable-next-line import/no-extraneous-dependencies -- jquery is included in FlamingParrot
 import $ from "jquery";
 import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
