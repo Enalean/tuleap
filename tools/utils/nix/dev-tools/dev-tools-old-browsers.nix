@@ -17,14 +17,14 @@ in
 [
   (startOldBrowserScript rec {
     browserName = "firefox";
-    browserPackageName = "firefox-esr-91";
-    nixpkgsRev = "c2c0373ae7abf25b7d69b2df05d3ef8014459ea3";
-    commandToLaunch = "${browserName} -no-remote -new-instance -profile ";
+    browserPackageName = "firefox-esr";
+    nixpkgsRev = "199169a2135e6b864a888e89a2ace345703c025d";
+    commandToLaunch = "${browserName}-esr -no-remote -new-instance -profile ";
   })
   (startOldBrowserScript rec {
     browserName = "chromium";
     browserPackageName = browserName;
-    nixpkgsRev = "f597e7e9fcf37d8ed14a12835ede0a7d362314bd";
+    nixpkgsRev = "5fd95c7be6eee20988f8e4208154ad4ed33660d1";
     commandToLaunch = "${browserName} --user-data-dir=";
   })
 ]
