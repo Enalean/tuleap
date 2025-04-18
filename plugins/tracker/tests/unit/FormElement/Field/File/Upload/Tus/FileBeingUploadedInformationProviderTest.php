@@ -22,39 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload\Tus;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
-use Tuleap\Upload\PathAllocator;
+use Tuleap\Upload\UploadPathAllocator;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FileBeingUploadedInformationProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testFileInformationCanBeProvided(): void
     {
-        $path_allocator = \Mockery::mock(PathAllocator::class);
-        $path_allocator->shouldReceive('getPathForItemBeingUploaded')->andReturn('/path/to/file');
+        $path_allocator = new UploadPathAllocator('/base_path');
 
-        $dao          = \Mockery::mock(FileOngoingUploadDao::class);
-        $current_user = \Mockery::mock(\PFUser::class);
+        $dao          = $this->createMock(FileOngoingUploadDao::class);
+        $current_user = UserTestBuilder::buildWithId(102);
         $data_store   = new FileBeingUploadedInformationProvider($path_allocator, $dao, new CurrentRequestUserProviderStub($current_user));
 
-        $dao->shouldReceive('searchFileOngoingUploadByIDUserIDAndExpirationDate')->andReturns(
-            [
-                'filesize' => 123456,
-                'filename' => 'readme.md',
-            ]
-        );
+        $dao->method('searchFileOngoingUploadByIDUserIDAndExpirationDate')->willReturn([
+            'filesize' => 123456,
+            'filename' => 'readme.md',
+        ]);
 
         $item_id        = 12;
-        $server_request = (new NullServerRequest())
-            ->withAttribute('id', (string) $item_id);
-        $current_user->shouldReceive('getID')->andReturn('102');
+        $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id);
 
         $file_information = $data_store->getFileInformation($server_request);
 
@@ -66,21 +59,18 @@ final class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUni
     public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing(): void
     {
         $data_store = new FileBeingUploadedInformationProvider(
-            \Mockery::mock(PathAllocator::class),
-            \Mockery::mock(FileOngoingUploadDao::class),
+            new UploadPathAllocator('/base_path'),
+            $this->createStub(FileOngoingUploadDao::class),
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults())
         );
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->andReturns(null);
-
-        $this->assertNull($data_store->getFileInformation($request));
+        self::assertNull($data_store->getFileInformation(new NullServerRequest()));
     }
 
     public function testFileInformationCannotBeFoundIfNoCurrentUserIsAssociatedWithTheRequest(): void
     {
         $provider = new FileBeingUploadedInformationProvider(
-            $this->createStub(PathAllocator::class),
+            new UploadPathAllocator('/base_path'),
             $this->createStub(FileOngoingUploadDao::class),
             new CurrentRequestUserProviderStub(null)
         );
@@ -90,16 +80,18 @@ final class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUni
 
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
     {
-        $dao          = \Mockery::mock(FileOngoingUploadDao::class);
-        $current_user = \Mockery::mock(\PFUser::class);
-        $data_store   = new FileBeingUploadedInformationProvider(\Mockery::mock(PathAllocator::class), $dao, new CurrentRequestUserProviderStub($current_user));
+        $dao          = $this->createMock(FileOngoingUploadDao::class);
+        $current_user = UserTestBuilder::buildWithId(102);
+        $data_store   = new FileBeingUploadedInformationProvider(
+            new UploadPathAllocator('/base_path'),
+            $dao,
+            new CurrentRequestUserProviderStub($current_user),
+        );
 
-        $dao->shouldReceive('searchFileOngoingUploadByIDUserIDAndExpirationDate')->andReturns([]);
+        $dao->method('searchFileOngoingUploadByIDUserIDAndExpirationDate')->willReturn([]);
 
-        $current_user->shouldReceive('getId')->andReturn('102');
-        $server_request = (new NullServerRequest())
-            ->withAttribute('id', '12');
+        $server_request = (new NullServerRequest())->withAttribute('id', '12');
 
-        $this->assertNull($data_store->getFileInformation($server_request));
+        self::assertNull($data_store->getFileInformation($server_request));
     }
 }

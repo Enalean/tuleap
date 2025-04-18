@@ -23,58 +23,50 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class GetFieldDataTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\Mock&\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField
-     */
-    private $field;
-    /**
-     * @var int
-     */
-    private $last_changset_id;
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
+    private const LAST_CHANGESET_ID = 1234;
+
+    private ArtifactLinkField&MockObject $field;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->field = \Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->field = $this->createPartialMock(ArtifactLinkField::class, ['getChangesetValues']);
 
-        $this->last_changset_id = 1234;
-        $this->artifact         = new Artifact(147, 65, 102, 1, null);
-        $last_changeset         = new Tracker_Artifact_Changeset($this->last_changset_id, $this->artifact, '', '', '');
+        $this->artifact = new Artifact(147, 65, 102, 1, false);
+        $last_changeset = new Tracker_Artifact_Changeset(self::LAST_CHANGESET_ID, $this->artifact, '', '', '');
         $this->artifact->setChangesets([$last_changeset]);
     }
 
     public function testGetValuesFromArtifactChangesetWhenThereIsAnArtifact(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->with(\Mockery::any(), $this->last_changset_id)->once()->andReturn([]);
+        $this->field->expects($this->once())->method('getChangesetValues')->with(self::anything(), self::LAST_CHANGESET_ID)->willReturn([]);
 
         $this->field->getFieldData('55', $this->artifact);
     }
 
     public function testDoesntFetchValuesWhenNoArtifactGiven(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->with(\Mockery::any(), $this->last_changset_id)->never();
+        $this->field->expects($this->never())->method('getChangesetValues')->with(self::anything(), self::LAST_CHANGESET_ID);
 
         $this->field->getFieldData('55');
     }
 
     public function testOnlyAddsNewValuesWhenNoArtifactGiven(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ['new_values' => '55', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55')
         );
@@ -82,10 +74,10 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testOnlyAddsNewValuesWhenEmptyArtifactGivenAtCSVArtifactCreation(): void
     {
-        $artifact_without_changeset = new Artifact(148, 65, 102, 1, null);
+        $artifact_without_changeset = new Artifact(148, 65, 102, 1, false);
         $artifact_without_changeset->setChangesets([]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['new_values' => '55,56', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55, 56', $artifact_without_changeset)
         );
@@ -93,8 +85,8 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddsOneValue(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn([]);
-        $this->assertEquals(
+        $this->field->method('getChangesetValues')->willReturn([]);
+        self::assertEquals(
             ['new_values' => '55', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55', $this->artifact)
         );
@@ -102,8 +94,8 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddsTwoNewValues(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn([]);
-        $this->assertEquals(
+        $this->field->method('getChangesetValues')->willReturn([]);
+        self::assertEquals(
             ['new_values' => '55,66', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55, 66', $this->artifact)
         );
@@ -111,13 +103,11 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIgnoresAddOfArtifactThatAreAlreadyLinked(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn(
-            [
-                new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
-            ]
-        );
+        $this->field->method('getChangesetValues')->willReturn([
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+        ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['new_values' => '66', 'removed_values' => [], 'types' => []],
             $this->field->getFieldData('55, 66', $this->artifact),
         );
@@ -125,18 +115,16 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemovesAllExistingArtifactLinks(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn(
-            [
-                new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
-            ]
-        );
+        $this->field->method('getChangesetValues')->willReturn([
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+        ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
-                'new_values'   => '',
+                'new_values'     => '',
                 'removed_values' => [55 => ['55'], 66 => ['66']],
-                'types'        => [],
+                'types'          => [],
             ],
             $this->field->getFieldData('', $this->artifact),
         );
@@ -144,15 +132,13 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemovesFirstArtifactLink(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn(
-            [
-                new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
-            ]
-        );
+        $this->field->method('getChangesetValues')->willReturn([
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
+        ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['new_values' => '', 'removed_values' => [55 => ['55']], 'types' => []],
             $this->field->getFieldData('66,77', $this->artifact),
         );
@@ -160,15 +146,13 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemovesMiddleArtifactLink(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn(
-            [
-                new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
-            ]
-        );
+        $this->field->method('getChangesetValues')->willReturn([
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
+        ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['new_values' => '', 'removed_values' => [66 => ['66']], 'types' => []],
             $this->field->getFieldData('55,77', $this->artifact)
         );
@@ -176,15 +160,13 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemovesLastArtifactLink(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn(
-            [
-                new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
-            ]
-        );
+        $this->field->method('getChangesetValues')->willReturn([
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
+        ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['new_values' => '', 'removed_values' => [77 => ['77']], 'types' => []],
             $this->field->getFieldData('55,66', $this->artifact)
         );
@@ -192,15 +174,13 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddsAndRemovesInOneCall(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->andReturn(
-            [
-                new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
-                new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
-            ]
-        );
+        $this->field->method('getChangesetValues')->willReturn([
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
+        ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['new_values' => '88', 'removed_values' => [77 => ['77']], 'types' => []],
             $this->field->getFieldData('55,66,88', $this->artifact),
         );

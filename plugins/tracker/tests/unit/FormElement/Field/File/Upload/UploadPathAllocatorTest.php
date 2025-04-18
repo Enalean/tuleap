@@ -22,32 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElementFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class UploadPathAllocatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID(): void
     {
-        $dao = \Mockery::mock(FileOngoingUploadDao::class);
-        $dao->shouldReceive('searchFileOngoingUploadById')
-            ->with(1)
-            ->andReturn(['field_id' => 42]);
+        $dao = $this->createMock(FileOngoingUploadDao::class);
+        $dao->method('searchFileOngoingUploadById')->with(1)->willReturn(['field_id' => 42]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $field->shouldReceive('getRootPath')->andReturn('/var/tmp');
+        $field = FileFieldBuilder::aFileField(641)->build();
 
-        $factory = \Mockery::mock(Tracker_FormElementFactory::class);
-        $factory->shouldReceive('getFieldById')
-            ->with(42)
-            ->andReturn($field);
-        $factory->shouldReceive('isFieldAFileField')
-            ->with($field)
-            ->andReturn(true);
+        $factory = $this->createMock(Tracker_FormElementFactory::class);
+        $factory->method('getFieldById')->with(42)->willReturn($field);
+        $factory->method('isFieldAFileField')->with($field)->willReturn(true);
 
         $allocator = new UploadPathAllocator($dao, $factory);
 
