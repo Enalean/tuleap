@@ -52,6 +52,10 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'src/creation/create-view.ts')
         );
 
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset($include_assets, 'src/edition/artifact-edition-buttons-switcher/disable-submit-buttons.ts')
+        );
+
         $breadcrumbs = [
             [
                 'title' => sprintf(dgettext('tuleap-tracker', 'New %s'), $this->tracker->getItemName()),
@@ -78,9 +82,9 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $html .= '<div class="artifact-submit-button">';
         $html .= '<input type="hidden" id="submit-type" />';
         $html .= '<div class="tracker-artifact-submit-buttons-bar">
-                <button class="btn btn-large btn-primary" type="submit" data-test="artifact-submit-button">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
-                <button type="submit" name="submit_and_stay" value="1" class="btn btn-large btn-outline-primary" data-test="artifact-submit-and-stay">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '</button>
-                <button type="submit" name="submit_and_continue" value="1" class="btn btn-large btn-outline-primary" data-test="submit-and-continue">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') . '</button>
+                <button class="btn btn-large btn-primary submit-artifact-button" type="submit" data-test="artifact-submit-button">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
+                <button type="submit" name="submit_and_stay" value="1" class="btn btn-large btn-outline-primary submit-artifact-button" data-test="artifact-submit-and-stay">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '</button>
+                <button type="submit" name="submit_and_continue" value="1" class="btn btn-large btn-outline-primary submit-artifact-button" data-test="submit-and-continue">' . $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') . '</button>
             </div>';
         $html .= '<div class="btn-group dropup tracker-artifact-submit-buttons-bar-condensed">';
         $html .= '<button class="btn btn-large btn-primary" type="submit">'
