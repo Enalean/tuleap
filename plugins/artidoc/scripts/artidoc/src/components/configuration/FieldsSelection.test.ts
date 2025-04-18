@@ -56,11 +56,11 @@ describe("FieldsSelection", () => {
         });
     }
 
-    it("should display an empty table if no fields are selected", () => {
+    it("should display an empty state when no fields are selected", () => {
         const wrapper = getWrapper();
-        const empty_state_table = wrapper.find("[data-test=readonly-fields-empty-state]");
+        const empty_state = wrapper.find("[data-test=readonly-fields-empty-state]");
 
-        expect(empty_state_table.exists()).toBe(true);
+        expect(empty_state.exists()).toBe(true);
     });
 
     it("should display the selected fields", () => {

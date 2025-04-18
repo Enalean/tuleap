@@ -74,6 +74,8 @@ function onDown(): void {
 </script>
 
 <style scoped lang="scss">
+@use "@/themes/includes/size";
+
 .reorder-arrows {
     display: flex;
     flex-direction: column;
@@ -81,11 +83,9 @@ function onDown(): void {
     gap: 4px;
 }
 
-$button-size: 14px;
-
 button {
-    width: $button-size;
-    height: $button-size;
+    width: size.$reorder-arrow-size;
+    height: size.$reorder-arrow-size;
     padding: 0;
     border-radius: 50%;
     font-size: 0.625rem;

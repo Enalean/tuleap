@@ -18,8 +18,8 @@
   -->
 
 <template>
-    <tbody ref="fields_list" data-is-container="true">
-        <tr
+    <div ref="fields_list" data-is-container="true">
+        <div
             v-for="field in currently_selected_fields"
             v-bind:key="field.field_id"
             v-bind:data-field-id="field.field_id"
@@ -30,9 +30,9 @@
             data-test="readonly-field-rows"
             draggable="true"
         >
-            <td class="dragndrop-grip"><dragndrop-grip-illustration /></td>
-            <td>{{ field.label }}</td>
-            <td>
+            <div class="dragndrop-grip"><dragndrop-grip-illustration /></div>
+            <div class="field-label">{{ field.label }}</div>
+            <div class="field-display-type">
                 <label class="tlp-label tlp-checkbox">
                     <input
                         disabled
@@ -44,8 +44,8 @@
                     />
                     {{ $gettext("Full row") }}
                 </label>
-            </td>
-            <td class="tlp-table-cell-actions">
+            </div>
+            <div class="field-actions">
                 <button
                     type="button"
                     class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
@@ -55,8 +55,8 @@
                     <i class="tlp-button-icon fa-solid fa-trash fa-fw" aria-hidden="true"></i>
                     {{ $gettext("Remove") }}
                 </button>
-            </td>
-            <td data-not-drag-handle="true" draggable="false">
+            </div>
+            <div data-not-drag-handle="true" draggable="false" class="field-reorder-arrows">
                 <reorder-fields-arrows
                     v-bind:field="field"
                     v-bind:is_first="fields_reorderer.isFirstField(field)"
@@ -64,9 +64,9 @@
                     v-on:move-up="fields_reorderer.moveFieldUp(field)"
                     v-on:move-down="fields_reorderer.moveFieldDown(field)"
                 />
-            </td>
-        </tr>
-    </tbody>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -164,6 +164,7 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 @use "pkg:@tuleap/drag-and-drop";
+@use "@/themes/includes/size";
 
 .reorder-arrows {
     transition: opacity ease-in-out 150ms;
@@ -171,6 +172,13 @@ onBeforeUnmount(() => {
 }
 
 .row-field {
+    display: flex;
+    flex-direction: row;
+
+    &:hover {
+        background: var(--tlp-main-color-hover-background);
+    }
+
     &:hover .reorder-arrows,
     &:focus-within .reorder-arrows {
         opacity: 0.5;
@@ -192,9 +200,40 @@ onBeforeUnmount(() => {
     }
 }
 
+.field-display-type > .tlp-label {
+    margin: 0;
+}
+
+.field-label {
+    flex: 1 1 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.field-display-type {
+    width: size.$fields-selection-display-type-column-width;
+}
+
+.field-actions {
+    width: size.$fields-selection-action-button-column-width;
+}
+
+.field-reorder-arrows {
+    width: size.$reorder-arrow-size;
+}
+
+.field-label,
+.field-display-type,
+.field-actions {
+    padding: var(--tlp-small-spacing);
+}
+
 .dragndrop-grip {
-    width: var(--tlp-medium-spacing);
-    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: size.$drag-and-drop-handle-width;
     transition:
         opacity ease-in-out 150ms,
         background ease-in-out 150ms,
@@ -226,7 +265,7 @@ onBeforeUnmount(() => {
 .drek-ghost {
     border-radius: 0;
 
-    > td {
+    > div {
         visibility: hidden;
     }
 }
