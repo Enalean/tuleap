@@ -27,39 +27,16 @@ use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_HierarchyFactory;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
-use UserManager;
+use Tuleap\User\ProvideCurrentUser;
 
 class ChartMessageFetcher
 {
-    /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-    /**
-     * @var ChartConfigurationFieldRetriever
-     */
-    private $configuration_field_retriever;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
     public function __construct(
-        Tracker_HierarchyFactory $hierarchy_factory,
-        ChartConfigurationFieldRetriever $configuration_field_retriever,
-        EventManager $event_manager,
-        UserManager $user_manager,
+        private readonly Tracker_HierarchyFactory $hierarchy_factory,
+        private readonly ChartConfigurationFieldRetriever $configuration_field_retriever,
+        private readonly EventManager $event_manager,
+        private readonly ProvideCurrentUser $current_user_provider,
     ) {
-        $this->hierarchy_factory             = $hierarchy_factory;
-        $this->configuration_field_retriever = $configuration_field_retriever;
-        $this->event_manager                 = $event_manager;
-        $this->user_manager                  = $user_manager;
     }
 
     /**
@@ -69,7 +46,7 @@ class ChartMessageFetcher
     {
         $tracker = $field->getTracker();
         assert($tracker instanceof Tracker);
-        $user = $this->user_manager->getCurrentUser();
+        $user = $this->current_user_provider->getCurrentUser();
 
         $warnings = [];
         if ($usage->getUseStartDate()) {

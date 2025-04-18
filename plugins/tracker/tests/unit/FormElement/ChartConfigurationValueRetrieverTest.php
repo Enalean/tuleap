@@ -18,104 +18,73 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tracker;
+use Tracker_FormElement_Field_Integer;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ChartConfigurationValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ChartConfigurationValueRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const CAPACITY = 20;
 
-    /**
-     * @var ChartConfigurationValueRetriever
-     */
-    private $field_retriever;
-
-    /**
-     * @var \Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact_sprint;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
-     * @var ChartConfigurationValueRetriever
-     */
-    private $configuration_value_retriever;
-
-    /**
-     * @var \Tracker_FormElement_Field_Integer
-     */
-    private $capacity_value;
-
-    /**
-     * @var \Tracker_Artifact_ChangesetValue_Integer
-     */
-    private $capacity_field;
-
-    private $capacity;
+    private ChartConfigurationFieldRetriever&MockObject $field_retriever;
+    private Tracker $tracker;
+    private Artifact $artifact_sprint;
+    private PFUser $user;
+    private ChartConfigurationValueRetriever $configuration_value_retriever;
+    private Tracker_FormElement_Field_Integer&MockObject $capacity_field;
 
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);
+        $this->tracker         = TrackerTestBuilder::aTracker()->build();
+        $this->artifact_sprint = ArtifactTestBuilder::anArtifact(201)->inTracker($this->tracker)->build();
+        $this->user            = UserTestBuilder::buildWithDefaults();
 
-        $this->field_retriever = \Mockery::mock(\Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever::class);
-        $this->tracker         = \Mockery::mock(\Tracker::class);
-        $this->artifact_sprint = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->user            = \Mockery::mock(\PFUser::class);
-
-        $this->artifact_sprint->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->artifact_sprint->shouldReceive('getId')->andReturn(201);
-
-        $this->capacity_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $this->capacity_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Integer::class);
-        $this->capacity       = 20;
+        $this->capacity_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $this->capacity_field->method('getId')->willReturn(645);
+        $changeset = ChangesetTestBuilder::aChangeset(452)->build();
+        $changeset->setFieldValue($this->capacity_field, ChangesetValueIntegerTestBuilder::aValue(1, $changeset, $this->capacity_field)->build());
+        $this->artifact_sprint->setLastChangeset($changeset);
 
         $this->configuration_value_retriever = new ChartConfigurationValueRetriever(
             $this->field_retriever,
-            Mockery::mock(IComputeTimeframes::class),
-            \Mockery::mock(\Psr\Log\LoggerInterface::class)
+            $this->createStub(IComputeTimeframes::class),
+            new NullLogger(),
         );
     }
 
-    public function testItReturnsNullWhenCapacityIsEmpty()
+    public function testItReturnsNullWhenCapacityIsEmpty(): void
     {
-        $this->field_retriever->shouldReceive('getCapacityField')
-            ->with($this->tracker)
-            ->andReturn($this->capacity_field);
+        $this->field_retriever->method('getCapacityField')->with($this->tracker)->willReturn($this->capacity_field);
 
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->capacity_field)
-            ->andReturn($this->capacity_value);
+        $this->capacity_field->method('getComputedValue')->willReturn(null);
 
-        $this->capacity_field->shouldReceive('getComputedValue')->andReturnNull();
-
-        $this->assertNull($this->configuration_value_retriever->getCapacity($this->artifact_sprint, $this->user));
+        self::assertNull($this->configuration_value_retriever->getCapacity($this->artifact_sprint, $this->user));
     }
 
-    public function testItReturnsCapacityWhenCapacityIsSet()
+    public function testItReturnsCapacityWhenCapacityIsSet(): void
     {
-        $this->field_retriever->shouldReceive('getCapacityField')
-            ->with($this->tracker)
-            ->andReturn($this->capacity_field);
+        $this->field_retriever->method('getCapacityField')->with($this->tracker)->willReturn($this->capacity_field);
 
-        $this->capacity_field->shouldReceive('getComputedValue')->andReturn($this->capacity);
+        $this->capacity_field->method('getComputedValue')->willReturn(self::CAPACITY);
 
-        self::assertSame(
-            $this->configuration_value_retriever->getCapacity($this->artifact_sprint, $this->user),
-            $this->capacity
-        );
+        self::assertSame(self::CAPACITY, $this->configuration_value_retriever->getCapacity($this->artifact_sprint, $this->user));
     }
 }

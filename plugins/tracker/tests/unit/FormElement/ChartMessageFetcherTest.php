@@ -18,124 +18,94 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use UserManager;
+use EventManager;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Tracker_FormElement_Chart_Field_Exception;
+use Tracker_FormElement_Field_Integer;
+use Tracker_HierarchyFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ChartMessageFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ChartMessageFetcherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var ChartMessageFetcher
-     */
-    private $message_fetcher;
-
-    private $field;
-
-    private $configuration_field_retriever;
-
-    private $hierarchy_factory;
+    private ChartMessageFetcher $message_fetcher;
+    private Tracker_FormElement_Field_Integer $field;
+    private ChartConfigurationFieldRetriever&MockObject $configuration_field_retriever;
+    private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->hierarchy_factory             = \Mockery::mock(\Tracker_HierarchyFactory::class);
-        $this->configuration_field_retriever = \Mockery::mock(ChartConfigurationFieldRetriever::class);
-        $user_manager                        = Mockery::mock(UserManager::class);
+        $this->hierarchy_factory             = $this->createMock(Tracker_HierarchyFactory::class);
+        $this->configuration_field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);
+        $event_manager                       = $this->createStub(EventManager::class);
         $this->message_fetcher               = new ChartMessageFetcher(
             $this->hierarchy_factory,
             $this->configuration_field_retriever,
-            \Mockery::spy(\EventManager::class),
-            $user_manager
+            $event_manager,
+            ProvideCurrentUserStub::buildCurrentUserByDefault(),
         );
+        $event_manager->method('processEvent');
 
-        $this->tracker = \Mockery::mock(\Tracker::class);
-        $this->field   = \Mockery::mock(\Tracker_FormElement_Field::class);
-
-        $this->field->shouldReceive('getTracker')->andReturn($this->tracker);
-
-        $user_manager->shouldReceive('getCurrentUser')->andReturn(Mockery::mock(PFUser::class));
+        $tracker     = TrackerTestBuilder::aTracker()->withId(123)->build();
+        $this->field = IntFieldBuilder::anIntField(685)->inTracker($tracker)->build();
     }
 
-    public function testItDisplaysWarningsWhenFieldsAreMissingInChartConfiguration()
+    public function testItDisplaysWarningsWhenFieldsAreMissingInChartConfiguration(): void
     {
         $chart_configuration = new ChartFieldUsage(true, true, false, false, false);
 
-        $this->configuration_field_retriever->shouldReceive('getStartDateField')->andThrow(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->configuration_field_retriever->shouldReceive('getEndDateField')->andThrow(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->configuration_field_retriever->shouldReceive('getDurationField')->andThrow(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->configuration_field_retriever->method('getStartDateField')->willThrowException(new Tracker_FormElement_Chart_Field_Exception());
+        $this->configuration_field_retriever->method('getEndDateField')->willThrowException(new Tracker_FormElement_Chart_Field_Exception());
+        $this->configuration_field_retriever->method('getDurationField')->willThrowException(new Tracker_FormElement_Chart_Field_Exception());
 
         $expected_warning = '<ul class="feedback_warning">';
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             $expected_warning,
             $this->message_fetcher->fetchWarnings($this->field, $chart_configuration)
         );
     }
 
-    public function testItDoesNotDisplayAnyErrorsWhenNoFieldsAreMissingInChartConfiguration()
+    public function testItDoesNotDisplayAnyErrorsWhenNoFieldsAreMissingInChartConfiguration(): void
     {
         $chart_configuration = new ChartFieldUsage(true, true, false, false, false);
 
-        $this->mockStartDateField();
-        $this->mockDurationField();
+        $start_date_field = DateFieldBuilder::aDateField(985)->build();
 
-        $this->assertNull(
-            $this->message_fetcher->fetchWarnings($this->field, $chart_configuration)
-        );
+        $this->configuration_field_retriever->method('getStartDateField')->willReturn($start_date_field);
+        $duration_field = IntFieldBuilder::anIntField(3543)->build();
+
+        $this->configuration_field_retriever->method('getDurationField')->willReturn($duration_field);
+
+        self::assertNull($this->message_fetcher->fetchWarnings($this->field, $chart_configuration));
     }
 
-    public function testItRendersAWarningForAnyTrackerChildThatHasNoEffortField()
+    public function testItRendersAWarningForAnyTrackerChildThatHasNoEffortField(): void
     {
         $chart_configuration = new ChartFieldUsage(false, false, false, false, true);
 
-        $bugs = \Mockery::mock(\Tracker::class);
-        $bugs->shouldReceive('getId')->andReturn(124);
-        $bugs->shouldReceive('getName')->andReturn('Bugs');
-
-        $chores = \Mockery::mock(\Tracker::class);
-        $chores->shouldReceive('getId')->andReturn(125);
-        $chores->shouldReceive('getName')->andReturn('Chores');
+        $bugs   = TrackerTestBuilder::aTracker()->withId(124)->withName('Bugs')->build();
+        $chores = TrackerTestBuilder::aTracker()->withId(125)->withName('Chores')->build();
 
         $tracker_id = 123;
-        $this->tracker->shouldReceive('getId')->andReturn($tracker_id);
-        $this->hierarchy_factory->shouldReceive('getChildren')->with($tracker_id)->andReturn([$bugs, $chores]);
+        $this->hierarchy_factory->method('getChildren')->with($tracker_id)->willReturn([$bugs, $chores]);
 
-        $this->configuration_field_retriever->shouldReceive('doesRemainingEffortFieldExists')->with($bugs)->andReturn(false);
-        $this->configuration_field_retriever->shouldReceive('doesRemainingEffortFieldExists')->with($chores)->andReturn(true);
+        $this->configuration_field_retriever->method('doesRemainingEffortFieldExists')
+            ->willReturnCallback(static fn(Tracker $tracker) => $tracker === $chores);
 
         $html = $this->message_fetcher->fetchWarnings($this->field, $chart_configuration);
 
-        $this->assertStringNotContainsString('Bugs', $html);
-        $this->assertStringContainsString('Chores', $html);
-    }
-
-    private function mockStartDateField(): void
-    {
-        $start_date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
-
-        $this->configuration_field_retriever->shouldReceive('getStartDateField')->andReturn(
-            $start_date_field
-        );
-    }
-
-    private function mockDurationField(): void
-    {
-        $duration_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-
-        $this->configuration_field_retriever->shouldReceive('getDurationField')->andReturn(
-            $duration_field
-        );
+        self::assertStringNotContainsString('Bugs', $html);
+        self::assertStringContainsString('Chores', $html);
     }
 }
