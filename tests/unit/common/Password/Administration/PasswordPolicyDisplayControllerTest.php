@@ -29,6 +29,8 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -46,16 +48,15 @@ final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->controller              = new PasswordPolicyDisplayController(
             $this->admin_renderer,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $this->configuration_retriever
+            $this->configuration_retriever,
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
         $_SERVER['REQUEST_URI']        = '/some_page';
     }
 
     protected function tearDown(): void
     {
-        if (isset($GLOBALS['_SESSION'])) {
-            unset($GLOBALS['_SESSION']);
-        }
         unset($_SERVER['REQUEST_URI']);
     }
 

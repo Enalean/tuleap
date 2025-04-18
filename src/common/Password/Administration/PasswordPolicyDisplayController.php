@@ -26,6 +26,8 @@ use HTTPRequest;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\CSRF\CSRFSessionKeyStorage;
+use Tuleap\CSRF\CSRFSigningKeyStorage;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -51,6 +53,8 @@ final class PasswordPolicyDisplayController implements DispatchableWithRequest
         AdminPageRenderer $admin_page_renderer,
         TemplateRendererFactory $template_renderer_factory,
         PasswordConfigurationRetriever $password_configuration_retriever,
+        private readonly CSRFSigningKeyStorage $csrf_signing_key_storage,
+        private readonly CSRFSessionKeyStorage $csrf_session_key_storage,
     ) {
         $this->admin_page_renderer              = $admin_page_renderer;
         $this->template_renderer                = $template_renderer_factory->getRenderer(
@@ -74,7 +78,7 @@ final class PasswordPolicyDisplayController implements DispatchableWithRequest
         $this->template_renderer->renderToPage(
             'password_policy',
             new PasswordPolicyPresenter(
-                new \CSRFSynchronizerToken($request->getFromServer('REQUEST_URI')),
+                new \CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'), \CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, $this->csrf_signing_key_storage, $this->csrf_session_key_storage),
                 $this->password_configuration_retriever->getPasswordConfiguration()->isBreachedPasswordVerificationEnabled()
             )
         );

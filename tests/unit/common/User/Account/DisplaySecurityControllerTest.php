@@ -33,6 +33,8 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -83,8 +85,7 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager = $this->createMock(\UserManager::class);
         $user_manager->method('getUserAccessInfo')->willReturn(['last_auth_success' => 1, 'last_auth_failure' => 1, 'nb_auth_failure' => 1, 'prev_auth_success' => 1]);
 
-        $csrf_storage     = [];
-        $this->csrf_token = new CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage);
+        $this->csrf_token = new CSRFSynchronizerToken('some_url', 'token_name', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
         $this->controller = new DisplaySecurityController(
             $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),

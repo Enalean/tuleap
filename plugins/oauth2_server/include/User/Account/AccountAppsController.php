@@ -68,6 +68,7 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         AppsPresenterBuilder $presenter_builder,
         \TemplateRendererFactory $renderer_factory,
         \UserManager $user_manager,
+        private readonly \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -102,7 +103,7 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         $layout->addJavascriptAsset(new JavascriptViteAsset($assets, 'scripts/src/user-preferences.ts'));
         $presenter = $this->presenter_builder->build(
             $user,
-            CSRFSynchronizerTokenPresenter::fromToken(self::getCSRFToken())
+            CSRFSynchronizerTokenPresenter::fromToken($this->csrf_token)
         );
         ob_start();
         (new UserPreferencesHeader())->display(dgettext('tuleap-oauth2_server', 'OAuth2 Apps'), $layout, ['user-preferences-frame-wide']);

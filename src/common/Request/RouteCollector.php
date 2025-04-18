@@ -68,9 +68,12 @@ use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Config\FeatureFlagController;
 use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
+use Tuleap\CookieManager;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
+use Tuleap\CSRF\CSRFSessionKeyCookieStorage;
+use Tuleap\CSRF\CSRFSigningKeyDBStorage;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Date\Admin\RelativeDatesDisplayController;
 use Tuleap\Date\Admin\RelativeDatesDisplaySaveController;
@@ -313,12 +316,14 @@ class RouteCollector
         );
     }
 
-    public static function getAdminPasswordPolicy()
+    public static function getAdminPasswordPolicy(): PasswordPolicyDisplayController
     {
         return new PasswordPolicyDisplayController(
             new AdminPageRenderer(),
             TemplateRendererFactory::build(),
-            new PasswordConfigurationRetriever(new PasswordConfigurationDAO())
+            new PasswordConfigurationRetriever(new PasswordConfigurationDAO()),
+            new CSRFSigningKeyDBStorage(new ConfigDao()),
+            new CSRFSessionKeyCookieStorage(new CookieManager()),
         );
     }
 

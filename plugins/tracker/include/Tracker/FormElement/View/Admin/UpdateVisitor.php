@@ -44,14 +44,14 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
      * @param TrackerManager  $tracker_manager The tracker manager
      * @param HTTPRequest     $request         The data coming from the user
      */
-    public function display(TrackerManager $tracker_manager, HTTPRequest $request): void
+    public function display(TrackerManager $tracker_manager, HTTPRequest $request, ?CSRFSynchronizerToken $csrf_token = null): void
     {
         $label = $this->element->getLabel();
         $title = sprintf(dgettext('tuleap-tracker', 'Update Field \'%1$s\''), $label);
         $url   = $this->element->getAdminEditSubmitUrl();
 
         $form_content  = $this->fetchForm();
-        $form_content .= $this->element->getCSRFTokenForElementUpdate()->fetchHTMLInput();
+        $form_content .= ($csrf_token ?? $this->element->getCSRFTokenForElementUpdate())->fetchHTMLInput();
         $this->displayForm($tracker_manager, $request, $url, $title, $form_content, $this->adminElement->fetchTypeForUpdate());
     }
 }

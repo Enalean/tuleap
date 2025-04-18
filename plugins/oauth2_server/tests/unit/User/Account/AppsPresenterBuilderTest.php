@@ -31,6 +31,8 @@ use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
 use Tuleap\OAuth2Server\User\AuthorizedScopeFactory;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -61,11 +63,6 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->app_factory,
             $this->authorized_scope_factory
         );
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['_SESSION']);
     }
 
     public function testBuildTransformsAppsIntoPresenters(): void
@@ -109,7 +106,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     $received_user === $user && $app === $site_level_app => [$foobar_scope],
                 }
             );
-        $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
+        $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('apps', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub()));
 
         $this->assertEquals(
             new AppsPresenter(

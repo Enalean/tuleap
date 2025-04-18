@@ -35,8 +35,9 @@ class CookieManager
 
     public function setCookie(string $name, string $value, int $expire = 0): void
     {
+        $cookie_name = self::getCookieName($name);
         setcookie(
-            self::getCookieName($name),
+            $cookie_name,
             $value,
             [
                 'path'     => '/',
@@ -46,6 +47,7 @@ class CookieManager
                 'samesite' => 'Lax',
             ]
         );
+        $_COOKIE[$cookie_name] = $value;
     }
 
     public function getCookie(string $name): ?string

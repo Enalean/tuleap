@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -82,7 +84,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['HTML'], $GLOBALS['_SESSION']);
+        unset($GLOBALS['HTML']);
     }
 
     public function testSaveObject(): void
@@ -182,15 +184,16 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private function whenIDisplayCreateFormElement(): string
     {
         $tracker_manager = Mockery::spy(\TrackerManager::class);
-        $user            = Mockery::spy(\PFUser::class);
         $request         = Mockery::spy(\HTTPRequest::class);
         $tracker         = Mockery::spy(\Tracker::class);
 
         $this->dao->shouldReceive('searchUsedByTrackerId')->andReturn([]);
         $this->factory->shouldReceive('getDao')->andReturn($this->dao);
 
+        $csrf_token = new CSRFSynchronizerToken('form_element', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
+
         ob_start();
-        $this->factory->displayAdminCreateFormElement($tracker_manager, $request, $user, 'separator', $tracker);
+        $this->factory->displayAdminCreateFormElement($tracker_manager, $request, 'separator', $tracker, $csrf_token);
         $content = ob_get_contents();
         ob_end_clean();
 

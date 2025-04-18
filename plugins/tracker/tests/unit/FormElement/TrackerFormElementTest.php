@@ -37,8 +37,9 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TestLayout;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -57,7 +58,7 @@ final class TrackerFormElementTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['HTML'], $GLOBALS['_SESSION']);
+        unset($GLOBALS['HTML']);
     }
 
     public function testGetOriginalProjectAndOriginalTracker(): void
@@ -132,7 +133,7 @@ final class TrackerFormElementTest extends TestCase
         $form_element->displayAdminFormElement(
             $this->createMock(TrackerManager::class),
             new HTTPRequest(),
-            UserTestBuilder::buildWithDefaults(),
+            new \CSRFSynchronizerToken('update_form', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub()),
         );
         $content = ob_get_contents();
         ob_end_clean();

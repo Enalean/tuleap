@@ -116,7 +116,7 @@ $plugin_loader  = new PluginLoader(
 );
 $cookie_manager = new CookieManager();
 
-$loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_loader);
+$loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_loader, new \Tuleap\CSRF\CSRFSessionKeyCookieStorage($cookie_manager));
 $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT, $_SERVER);
 
 if (! IS_SCRIPT) {

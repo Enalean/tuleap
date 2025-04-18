@@ -30,6 +30,8 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -82,7 +84,6 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
         $redirect_uri         = 'https://example.com/redirect';
-        $csrf_storage         = [];
         $form_data            = new AuthorizationFormData(
             new OAuth2App(
                 1,
@@ -91,7 +92,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                 true,
                 new \Project(['group_id' => 101, 'group_name' => 'Test Project'])
             ),
-            new \CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage),
+            new \CSRFSynchronizerToken('some_url', 'token_name', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub()),
             $redirect_uri,
             'xyz',
             'pkce_chall',

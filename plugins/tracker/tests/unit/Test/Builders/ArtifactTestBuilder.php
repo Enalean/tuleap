@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use PFUser;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
@@ -220,6 +222,11 @@ final class ArtifactTestBuilder
                     return $this->user_can_view[(int) $user->getId()];
                 }
                 return parent::userCanView($user);
+            }
+
+            public function getCSRFTokenForTrackerViewArtifactManipulation(): \CSRFSynchronizerToken
+            {
+                return new \CSRFSynchronizerToken('/art?id=' . $this->id, 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
             }
         };
 

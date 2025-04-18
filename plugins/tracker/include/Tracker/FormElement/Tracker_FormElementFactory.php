@@ -1435,7 +1435,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return false;
     }
 
-    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user, $type, Tracker $tracker)
+    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, $type, Tracker $tracker, ?CSRFSynchronizerToken $csrf_token = null): void
     {
         $row = [
             'formElement_type'  => $type,
@@ -1473,7 +1473,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             $visitor->setLabel($label);
 
             $form_element->accept($visitor);
-            $visitor->display($tracker_manager, $request);
+            $visitor->display($tracker_manager, $request, $csrf_token);
         }
     }
 

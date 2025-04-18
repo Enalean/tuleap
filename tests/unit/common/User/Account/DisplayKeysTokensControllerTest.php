@@ -21,7 +21,6 @@
 
 namespace Tuleap\User\Account;
 
-use CSRFSynchronizerToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\KeyFactory;
@@ -32,6 +31,8 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -57,7 +58,7 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 return $event;
             }
         };
-        $csrf_token                          = new CSRFSynchronizerToken('something');
+        $csrf_token                          = new \CSRFSynchronizerToken('something', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
         $this->access_keys_presenter_builder = $this->createMock(AccessKeyPresenterBuilder::class);
         $this->svn_token_handler             = $this->createStub(\SVN_TokenHandler::class);
         $svn_tokens_presenter_builder        = new SVNTokensPresenterBuilder(
