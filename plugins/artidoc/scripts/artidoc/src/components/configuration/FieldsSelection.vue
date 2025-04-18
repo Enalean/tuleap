@@ -52,47 +52,12 @@
                 </td>
             </tr>
         </tbody>
-        <tbody v-else>
-            <tr
-                v-for="field in currently_selected_fields"
-                v-bind:key="field.field_id"
-                class="row-field"
-                data-test="readonly-field-rows"
-            >
-                <td></td>
-                <td>{{ field.label }}</td>
-                <td>
-                    <label class="tlp-label tlp-checkbox">
-                        <input
-                            disabled
-                            type="checkbox"
-                            value="1"
-                            v-bind:checked="field.display_type === 'block'"
-                        />
-                        {{ $gettext("Full row") }}
-                    </label>
-                </td>
-                <td class="tlp-table-cell-actions">
-                    <button
-                        type="button"
-                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
-                        v-on:click="unselectField(field)"
-                    >
-                        <i class="tlp-button-icon fa-solid fa-trash fa-fw" aria-hidden="true"></i>
-                        {{ $gettext("Remove") }}
-                    </button>
-                </td>
-                <td>
-                    <reorder-fields-arrows
-                        v-bind:field="field"
-                        v-bind:is_first="fields_reorderer.isFirstField(field)"
-                        v-bind:is_last="fields_reorderer.isLastField(field)"
-                        v-on:move-up="fields_reorderer.moveFieldUp(field)"
-                        v-on:move-down="fields_reorderer.moveFieldDown(field)"
-                    />
-                </td>
-            </tr>
-        </tbody>
+        <selected-fields-list
+            v-else
+            v-bind:currently_selected_fields="currently_selected_fields"
+            v-bind:fields_reorderer="fields_reorderer"
+            v-on:unselect-field="unselectField"
+        />
     </table>
 </template>
 
@@ -100,10 +65,10 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useGettext } from "vue3-gettext";
 import { createListPicker } from "@tuleap/list-picker";
-import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { ListPicker } from "@tuleap/list-picker";
-import ReorderFieldsArrows from "@/components/configuration/ReorderFieldsArrows.vue";
 import { buildFieldsReorderer } from "@/sections/readonly-fields/FieldsReorderer";
+import SelectedFieldsList from "@/components/configuration/SelectedFieldsList.vue";
+import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 const { $gettext } = useGettext();
 
@@ -118,22 +83,6 @@ const fields_reorderer = buildFieldsReorderer(currently_selected_fields);
 
 const list_picker = ref<ListPicker | undefined>();
 const field_selector = ref<HTMLSelectElement>();
-
-onMounted(() => {
-    if (!(field_selector.value instanceof HTMLSelectElement)) {
-        return;
-    }
-
-    list_picker.value = createListPicker(field_selector.value, {
-        locale: document.body.dataset.userLocale,
-        placeholder: $gettext("Select fields..."),
-        is_filterable: true,
-    });
-});
-
-onBeforeUnmount(() => {
-    list_picker.value?.destroy();
-});
 
 function selectField(event: Event): void {
     if (!(event.target instanceof HTMLSelectElement)) {
@@ -156,27 +105,26 @@ function unselectField(field: ConfigurationField): void {
     currently_selected_fields.value.splice(field_index, 1);
     currently_available_fields.value.push(field);
 }
+
+onMounted(() => {
+    if (!(field_selector.value instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    list_picker.value = createListPicker(field_selector.value, {
+        locale: document.body.dataset.userLocale,
+        placeholder: $gettext("Select fields..."),
+        is_filterable: true,
+    });
+});
+
+onBeforeUnmount(() => {
+    list_picker.value?.destroy();
+});
 </script>
 
 <style scoped lang="scss">
 .tlp-table {
     margin-top: var(--tlp-medium-spacing);
-}
-
-.reorder-arrows {
-    transition: opacity ease-in-out 150ms;
-    opacity: 0;
-}
-
-.row-field {
-    &:hover .reorder-arrows,
-    &:focus-within .reorder-arrows {
-        opacity: 0.5;
-    }
-
-    &:hover .reorder-arrows:hover,
-    .reorder-arrows:focus-within {
-        opacity: 1;
-    }
 }
 </style>

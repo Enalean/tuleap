@@ -28,9 +28,9 @@ import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub"
 describe("FieldsReorderer", () => {
     let fields_reorderer: FieldsReorderer, selected_fields: Ref<ConfigurationField[]>;
 
-    const field_1 = ConfigurationFieldStub.build();
-    const field_2 = ConfigurationFieldStub.build();
-    const field_3 = ConfigurationFieldStub.build();
+    const field_1 = ConfigurationFieldStub.withFieldId(1);
+    const field_2 = ConfigurationFieldStub.withFieldId(2);
+    const field_3 = ConfigurationFieldStub.withFieldId(3);
 
     beforeEach(() => {
         selected_fields = ref([field_1, field_2, field_3]);
@@ -82,6 +82,28 @@ describe("FieldsReorderer", () => {
             fields_reorderer.moveFieldDown(field_2);
 
             expect(selected_fields.value).toStrictEqual([field_1, field_3, field_2]);
+        });
+    });
+
+    describe("moveFieldBeforeSibling", () => {
+        it("Given a field and a next sibling field, When the field is after the expected sibling field, then it should move the field before the next sibling", () => {
+            fields_reorderer.moveFieldBeforeSibling(field_3, field_1);
+
+            expect(selected_fields.value).toStrictEqual([field_3, field_1, field_2]);
+        });
+
+        it("Given a field and a next sibling field, When the field is before the expected sibling field, then it should move the field before the next sibling", () => {
+            fields_reorderer.moveFieldBeforeSibling(field_1, field_3);
+
+            expect(selected_fields.value).toStrictEqual([field_2, field_1, field_3]);
+        });
+    });
+
+    describe("moveFieldAtTheEnd", () => {
+        it("Given a field, then it should move it at the end of the collection", () => {
+            fields_reorderer.moveFieldAtTheEnd(field_1);
+
+            expect(selected_fields.value).toStrictEqual([field_2, field_3, field_1]);
         });
     });
 });

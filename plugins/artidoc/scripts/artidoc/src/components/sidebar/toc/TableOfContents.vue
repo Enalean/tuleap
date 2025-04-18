@@ -108,11 +108,15 @@ import { isArtifactSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-s
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
-import DragndropGripIllustration from "@/components/sidebar/toc/DragndropGripIllustration.vue";
+import DragndropGripIllustration from "@/components/dnd/DragndropGripIllustration.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
 import { init } from "@tuleap/drag-and-drop";
-import type { Drekkenov, SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
+import type {
+    Drekkenov,
+    SuccessfulDropCallbackParameter,
+    DragCallbackParameter,
+} from "@tuleap/drag-and-drop";
 import type {
     InternalArtidocSectionId,
     ReactiveStoredArtidocSection,
@@ -125,7 +129,6 @@ import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-co
 import { isCannotReorderSectionsFault } from "@/sections/reorder/CannotReorderSectionsFault";
 import { buildSectionsReorderer } from "@/sections/reorder/SectionsReorderer";
 import { getSectionsStructurer } from "@/sections/reorder/SectionsStructurer";
-import type { DragCallbackParameter } from "@tuleap/drag-and-drop/src";
 
 const { $gettext } = useGettext();
 
@@ -234,7 +237,7 @@ onMounted(() => {
 
     drek = init({
         mirror_container: list.value,
-        isDropZone: (element: HTMLElement) => Boolean(element.dataset.isContainer),
+        isDropZone: (element: HTMLElement) => element === list.value,
         isDraggable: (element: HTMLElement) => element.draggable,
         isInvalidDragHandle: (handle: HTMLElement) =>
             Boolean(handle.closest("[data-not-drag-handle]")),

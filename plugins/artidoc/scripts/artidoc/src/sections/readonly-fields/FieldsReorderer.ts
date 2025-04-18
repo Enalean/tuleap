@@ -25,6 +25,8 @@ export type FieldsReorderer = {
     isLastField(field: ConfigurationField): boolean;
     moveFieldUp(field: ConfigurationField): void;
     moveFieldDown(field: ConfigurationField): void;
+    moveFieldBeforeSibling(field: ConfigurationField, sibling: ConfigurationField): void;
+    moveFieldAtTheEnd(field: ConfigurationField): void;
 };
 
 export const buildFieldsReorderer = (
@@ -60,10 +62,35 @@ export const buildFieldsReorderer = (
         selected_fields.value[next_field_index] = field;
     }
 
+    function moveFieldAtTheEnd(field: ConfigurationField): void {
+        const field_index = selected_fields.value.indexOf(field);
+        if (field_index === -1) {
+            return;
+        }
+
+        selected_fields.value.splice(field_index, 1);
+        selected_fields.value.push(field);
+    }
+
+    function moveFieldBeforeSibling(field: ConfigurationField, sibling: ConfigurationField): void {
+        const field_index = selected_fields.value.indexOf(field);
+        const sibling_index = selected_fields.value.indexOf(sibling);
+        if (sibling_index === -1 || field_index === -1) {
+            return;
+        }
+
+        const new_field_index = field_index > sibling_index ? sibling_index : sibling_index - 1;
+
+        selected_fields.value.splice(field_index, 1);
+        selected_fields.value.splice(new_field_index, 0, field);
+    }
+
     return {
         isFirstField: isFirst,
         isLastField: isLast,
         moveFieldUp,
         moveFieldDown,
+        moveFieldBeforeSibling,
+        moveFieldAtTheEnd,
     };
 };
