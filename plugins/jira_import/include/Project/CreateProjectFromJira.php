@@ -28,11 +28,11 @@ use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Tuleap\CrossTracker\Widget\CrossTrackerSearchXmlWidgetForProjectTemplate;
 use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\Projects\JiraBoardProjectsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\IssuesLinkedToEpicsRetriever;
-use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
 use Tuleap\JiraImport\JiraAgile\JiraEpicFromIssueTypeRetrieverFromAPI;
@@ -56,7 +56,6 @@ use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
-use Tuleap\ProjectMilestones\Widget\DashboardProjectMilestones;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraAllIssuesInXmlExporterBuilder;
@@ -73,7 +72,6 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Widget\ProjectHeartbeat;
-use Tuleap\Widget\ProjectMembers\ProjectMembers;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
 
@@ -411,7 +409,6 @@ final class CreateProjectFromJira
 
                     $xml_element = $this->addWidgetOnDashboard(
                         $xml_element,
-                        $board,
                         $jira_issue_types,
                         $jira_epic_issue_type,
                         $logger
@@ -427,7 +424,6 @@ final class CreateProjectFromJira
      */
     private function addWidgetOnDashboard(
         \SimpleXMLElement $xml_element,
-        ?JiraBoard $board,
         array $jira_issue_types,
         string $jira_epic_issue_type,
         LoggerInterface $logger,
@@ -436,14 +432,15 @@ final class CreateProjectFromJira
         $xml_dashboard  = $xml_dashboards->addChild('dashboard');
         $xml_dashboard->addAttribute('name', 'Dashboard');
 
-        $xml_dashboard_line     = $xml_dashboard->addChild('line');
+        $xml_dashboard_line = $xml_dashboard->addChild('line');
+        $xml_dashboard_line->addAttribute('layout', 'two-columns-small-big');
         $xml_dashboard_column01 = $xml_dashboard_line->addChild('column');
-        if ($board !== null) {
-            $xml_dashboard_column01->addChild('widget')->addAttribute('name', DashboardProjectMilestones::NAME);
-        }
-        $xml_dashboard_column01->addChild('widget')->addAttribute('name', ProjectMembers::NAME);
+        $xml_dashboard_column01->addChild('widget')->addAttribute('name', ProjectHeartbeat::NAME);
+
         $xml_dashboard_column02 = $xml_dashboard_line->addChild('column');
-        $xml_dashboard_column02->addChild('widget')->addAttribute('name', ProjectHeartbeat::NAME);
+        if ($xml_dashboard_column02 !== null) {
+            CrossTrackerSearchXmlWidgetForProjectTemplate::build()->export($xml_dashboard_column02);
+        }
 
         $this->roadmap_dashboard_creator->createRoadmapDashboard(
             $xml_element,

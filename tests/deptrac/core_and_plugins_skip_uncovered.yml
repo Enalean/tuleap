@@ -239,6 +239,7 @@ deptrac:
       - Core
       - AgileDashboard
       - Cardwall
+      - CrossTracker
       - Kanban
       - ProjectMilestones
       - RoadMap
