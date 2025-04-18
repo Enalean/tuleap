@@ -48,6 +48,11 @@ import type {
     UserWithEmailAndStatus,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactLinkFieldIdentifier } from "@tuleap/plugin-tracker-constants";
+
+export const A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA = 9638;
+export const A4_LANDSCAPE_APPROXIMATE_WIDTH_IN_DXA =
+    (A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA * 29.7) / 21;
+
 export type {
     StructureFormat,
     UserWithEmailAndStatus as ArtifactReportResponseUserRepresentation,
