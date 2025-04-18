@@ -125,7 +125,7 @@ class AgileALMTemplate implements TuleapTemplate
         if ($this->available === null) {
             $this->available = $this->consistency_checker->areAllServicesAvailable(
                 $this->getXMLPath(),
-                ['graphontrackersv5']
+                ['graphontrackersv5', 'crosstracker']
             );
         }
         return $this->available;
