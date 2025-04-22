@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
@@ -38,6 +38,8 @@ import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStore
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import TableOfContents from "./TableOfContents.vue";
 import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
+import ReorderArrows from "@/components/sidebar/toc/ReorderArrows.vue";
+import { LEVEL_1, LEVEL_2 } from "@/sections/levels/SectionsNumberer";
 
 const display_level_section1 = "1.";
 const display_level_section2 = "2.";
@@ -157,6 +159,60 @@ describe("TableOfContents", () => {
             expect(list[0].find("a").text()).toBe("Technologies section");
             expect(list[1].find("a").text()).toBe("Technologies section");
             expect(list[2].find("a").text()).toBe("Freetext section");
+        });
+
+        it(`should show visual cues that it is being saved`, async () => {
+            vi.useFakeTimers();
+
+            const wrapper = getWrapper();
+            const first_section = wrapper.findAll("li").at(0);
+            if (first_section === undefined) {
+                throw Error("Expected to find the first section");
+            }
+
+            const arrows = first_section.findComponent(ReorderArrows);
+            arrows.vm.$emit("moving-section-up-or-down", [
+                { internal_id: first_section.attributes("data-internal-id") },
+            ]);
+            await wrapper.vm.$nextTick();
+            expect(first_section.classes()).toContain("section-being-saved");
+            expect(first_section.classes()).toContain("with-hidden-move-controls");
+
+            arrows.vm.$emit("moved-section-up-or-down", [
+                { internal_id: first_section.attributes("data-internal-id") },
+            ]);
+            await wrapper.vm.$nextTick();
+            expect(first_section.classes()).toContain("section-saved-with-success");
+            expect(first_section.classes()).toContain("with-hidden-move-controls");
+
+            vi.runOnlyPendingTimers();
+            await wrapper.vm.$nextTick();
+            expect(first_section.classes()).not.toContain("section-saved-with-success");
+            expect(first_section.classes()).not.toContain("with-hidden-move-controls");
+        });
+
+        it(`should show a CSS class when its parent section is hovered`, async () => {
+            sections = [
+                ReactiveStoredArtidocSectionStub.fromSection(
+                    FreetextSectionFactory.override({ level: LEVEL_1 }),
+                ),
+                ReactiveStoredArtidocSectionStub.fromSection(
+                    ArtifactSectionFactory.override({ level: LEVEL_2 }),
+                ),
+            ];
+
+            const wrapper = getWrapper();
+            const parent_section = wrapper.findAll("[data-test=dragndrop-grip]").at(0);
+            if (parent_section === undefined) {
+                throw Error("Expected to find the parent section");
+            }
+            await parent_section.trigger("pointerenter");
+
+            const child_section = wrapper.findAll("li").at(1);
+            if (child_section === undefined) {
+                throw Error("Expected to find the child section");
+            }
+            expect(child_section.classes()).toContain("child-of-hovered-parent");
         });
 
         it(`should show an icon to warn user of sections below artifacts`, () => {
