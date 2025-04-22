@@ -2,7 +2,10 @@
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
         "types": ["jest"],
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "target": "ES2020",
+        "module": "es2020",
+        "lib": ["ES2021", "DOM"]
     },
     "include": ["src/**/*"]
 }
