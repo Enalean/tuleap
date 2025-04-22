@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="taskboard">
+    <div class="taskboard" ref="taskboard">
         <taskboard-button-bar />
         <task-board-header />
         <task-board-body />
@@ -27,10 +27,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { Getter, Mutation, namespace, State } from "vuex-class";
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import type {
     DragCallbackParameter,
     DragDropCallbackParameter,
@@ -39,7 +37,7 @@ import type {
     SuccessfulDropCallbackParameter,
 } from "@tuleap/drag-and-drop";
 import { init } from "@tuleap/drag-and-drop";
-import type { ArrowKey, Card, ColumnDefinition, Swimlane } from "../../type";
+import type { ArrowKey } from "../../type";
 import {
     canMove,
     checkCellAcceptsDrop,
@@ -48,153 +46,128 @@ import {
     invalid,
 } from "../../helpers/drag-drop";
 import { focusDraggedCard, getContext } from "../../helpers/keyboard-drop";
-import type { HandleDropPayload } from "../../store/swimlane/type";
 import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
 import TaskBoardBody from "./Body/TaskBoardBody.vue";
 import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
 import ErrorModal from "../GlobalError/ErrorModal.vue";
 import { KeyboardShortcuts } from "../../keyboard-navigation/keyboard-navigation";
-import type { DraggedCard } from "../../store/type";
-import type { PointerLeavesColumnPayload } from "../../store/column/type";
+import {
+    useGetters,
+    useMutations,
+    useNamespacedActions,
+    useNamespacedMutations,
+    useNamespacedState,
+    useStore,
+} from "vuex-composition-helpers";
+import type { ErrorState } from "../../store/error/type";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const error = namespace("error");
-const column = namespace("column");
-const swimlane = namespace("swimlane");
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
 
-@Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar, ErrorModal },
-})
-export default class TaskBoard extends Vue {
-    @error.State
-    readonly has_modal_error!: boolean;
+const store = useStore();
+const gettext_provider = useGettext();
 
-    @State
-    readonly card_being_dragged!: DraggedCard | null;
+const { pointerEntersColumn } = useNamespacedMutations("column", ["pointerEntersColumn"]);
 
-    @column.Mutation
-    readonly pointerEntersColumn!: (column: ColumnDefinition) => void;
+const { column_of_cell } = useGetters(["column_of_cell"]);
 
-    @column.Mutation
-    readonly pointerLeavesColumn!: (payload: PointerLeavesColumnPayload) => void;
+const { setIdOfCardBeingDragged, resetIdOfCardBeingDragged } = useMutations([
+    "setIdOfCardBeingDragged",
+    "resetIdOfCardBeingDragged",
+]);
 
-    @swimlane.Getter
-    readonly cards_in_cell!: (
-        current_swimlane: Swimlane,
-        current_column: ColumnDefinition,
-    ) => Card[];
+const { handleDrop } = useNamespacedActions("swimlane", ["handleDrop"]);
 
-    @Getter
-    readonly column_and_swimlane_of_cell!: (cell: HTMLElement) => {
-        swimlane?: Swimlane;
-        column?: ColumnDefinition;
-    };
+const { unsetDropZoneRejectingDrop } = useNamespacedMutations("swimlane", [
+    "unsetDropZoneRejectingDrop",
+]);
 
-    @Getter
-    readonly column_of_cell!: (cell: HTMLElement) => ColumnDefinition | undefined;
+const drek = ref<Drekkenov | undefined>(undefined);
+const taskboard = ref();
 
-    @Mutation
-    readonly setIdOfCardBeingDragged!: (card: Element) => void;
+onBeforeUnmount(() => {
+    drek.value?.destroy();
+});
 
-    @Mutation
-    readonly resetIdOfCardBeingDragged!: () => void;
-
-    @swimlane.Action
-    handleDrop!: (payload: HandleDropPayload) => void;
-
-    @swimlane.Mutation
-    readonly unsetDropZoneRejectingDrop!: () => void;
-
-    private drek!: Drekkenov | undefined;
-
-    beforeDestroy(): void {
-        if (this.drek) {
-            this.drek.destroy();
-        }
-    }
-
-    mounted(): void {
-        this.drek = init({
-            mirror_container: this.$el,
-            isDropZone: isContainer,
-            isDraggable: canMove,
-            isInvalidDragHandle: invalid,
-            isConsideredInDropzone,
-            doesDropzoneAcceptDraggable: (context: PossibleDropCallbackParameter): boolean => {
-                return checkCellAcceptsDrop(this.$store, {
-                    dropped_card: context.dragged_element,
-                    source_cell: context.source_dropzone,
-                    target_cell: context.target_dropzone,
-                });
-            },
-            onDragStart: this.onDragStartHandler,
-            onDragEnter: (context: PossibleDropCallbackParameter): void => {
-                const { target_dropzone } = context;
-                target_dropzone.dataset.drekOver = "1";
-                const column = this.column_of_cell(target_dropzone);
-                if (!column) {
-                    return;
-                }
-                this.pointerEntersColumn(column);
-            },
-            onDragLeave: (context: DragDropCallbackParameter): void => {
-                const { target_dropzone } = context;
-                delete target_dropzone.dataset.drekOver;
-            },
-            onDrop: this.onDropHandler,
-            cleanupAfterDragCallback: this.cleanupAfterDragCallback,
-        });
-
-        const gettext_provider = {
-            $gettext: Vue.prototype.$gettext,
-            $pgettext: Vue.prototype.$pgettext,
-        };
-
-        const keyboard_shortcuts = new KeyboardShortcuts(document, gettext_provider);
-        keyboard_shortcuts.setNavigation((event: KeyboardEvent, direction: ArrowKey) => {
-            const card = event.target;
-            if (!(card instanceof HTMLElement) || !canMove(card)) {
+onMounted(() => {
+    drek.value = init({
+        mirror_container: taskboard.value,
+        isDropZone: isContainer,
+        isDraggable: canMove,
+        isInvalidDragHandle: invalid,
+        isConsideredInDropzone,
+        doesDropzoneAcceptDraggable: (context: PossibleDropCallbackParameter): boolean => {
+            return checkCellAcceptsDrop(store, {
+                dropped_card: context.dragged_element,
+                source_cell: context.source_dropzone,
+                target_cell: context.target_dropzone,
+            });
+        },
+        onDragStart: onDragStartHandler,
+        onDragEnter: (context: PossibleDropCallbackParameter): void => {
+            const { target_dropzone } = context;
+            target_dropzone.dataset.drekOver = "1";
+            const column = column_of_cell.value(target_dropzone);
+            if (!column) {
                 return;
             }
+            pointerEntersColumn(column);
+        },
+        onDragLeave: (context: DragDropCallbackParameter): void => {
+            const { target_dropzone } = context;
+            delete target_dropzone.dataset.drekOver;
+        },
+        onDrop: onDropHandler,
+        cleanupAfterDragCallback: cleanupAfterDragCallback,
+    });
 
-            this.handleMoveCardWithKeyboard(card, direction).then(() => {
-                focusDraggedCard(document, this.$store.state);
-                this.cleanupAfterDragCallback();
-            });
-        });
-        keyboard_shortcuts.setQuickAccess();
-    }
-
-    onDropHandler = (context: SuccessfulDropCallbackParameter): void => {
-        const sibling_card =
-            context.next_sibling instanceof HTMLElement ? context.next_sibling : undefined;
-        this.handleDrop({
-            dropped_card: context.dropped_element,
-            target_cell: context.target_dropzone,
-            source_cell: context.source_dropzone,
-            sibling_card,
-        });
-    };
-
-    onDragStartHandler = (context: DragCallbackParameter): void => {
-        this.setIdOfCardBeingDragged(context.dragged_element);
-    };
-
-    cleanupAfterDragCallback = (): void => {
-        this.resetIdOfCardBeingDragged();
-        this.unsetDropZoneRejectingDrop();
-    };
-
-    handleMoveCardWithKeyboard = async (card: HTMLElement, direction: ArrowKey): Promise<void> => {
-        this.onDragStartHandler({
-            dragged_element: card,
-        });
-
-        const context = getContext(document, this.$store.state, direction);
-        if (!context) {
+    const keyboard_shortcuts = new KeyboardShortcuts(document, gettext_provider);
+    keyboard_shortcuts.setNavigation((event: KeyboardEvent, direction: ArrowKey) => {
+        const card = event.target;
+        if (!(card instanceof HTMLElement) || !canMove(card)) {
             return;
         }
 
-        await this.onDropHandler(context);
-    };
+        handleMoveCardWithKeyboard(card, direction).then(() => {
+            focusDraggedCard(document, store.state);
+            cleanupAfterDragCallback();
+        });
+    });
+    keyboard_shortcuts.setQuickAccess();
+});
+
+function onDropHandler(context: SuccessfulDropCallbackParameter): void {
+    const sibling_card =
+        context.next_sibling instanceof HTMLElement ? context.next_sibling : undefined;
+    handleDrop({
+        dropped_card: context.dropped_element,
+        target_cell: context.target_dropzone,
+        source_cell: context.source_dropzone,
+        sibling_card,
+    });
+}
+
+function onDragStartHandler(context: DragCallbackParameter): void {
+    setIdOfCardBeingDragged(context.dragged_element);
+}
+
+function cleanupAfterDragCallback(): void {
+    resetIdOfCardBeingDragged();
+    unsetDropZoneRejectingDrop();
+}
+
+async function handleMoveCardWithKeyboard(card: HTMLElement, direction: ArrowKey): Promise<void> {
+    onDragStartHandler({
+        dragged_element: card,
+    });
+
+    const context = getContext(document, store.state, direction);
+    if (!context) {
+        return;
+    }
+
+    await onDropHandler(context);
 }
 </script>
