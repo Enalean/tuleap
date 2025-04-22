@@ -44,10 +44,6 @@ export default vite.defineAppConfig(
                     "children-view": path.resolve(__dirname, "src/children-view.ts"),
                     "create-view": path.resolve(__dirname, "src/creation/create-view.ts"),
                     "edit-view": path.resolve(__dirname, "src/edition/edit-view.ts"),
-                    "disable-submit-buttons": path.resolve(
-                        __dirname,
-                        "src/edition/artifact-edition-buttons-switcher/disable-submit-buttons.ts",
-                    ),
                     "link-tab-view": path.resolve(__dirname, "src/link-tab/link-tab-view.ts"),
                     "artifact-links-field": path.resolve(
                         __dirname,
