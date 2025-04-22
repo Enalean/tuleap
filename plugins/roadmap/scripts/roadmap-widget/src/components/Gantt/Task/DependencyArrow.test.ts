@@ -33,7 +33,7 @@ describe("DependencyArrow", () => {
         percentage: string,
         is_text_displayed_outside_bar: boolean,
         is_error_sign_displayed_outside_bar: boolean,
-    ): Wrapper<DependencyArrow> {
+    ): Wrapper<Vue> {
         const time_period = new TimePeriodMonth(
             DateTime.fromISO("2020-04-09T22:00:00.000Z"),
             DateTime.fromISO("2020-04-24T22:00:00.000Z"),
