@@ -23,25 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use TestHelper;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FieldCalculatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FieldCalculator
-     */
-    private $field_calculator;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ComputedFieldCalculator
-     */
-    private $provider;
+    private FieldCalculator $field_calculator;
+    private ComputedFieldCalculator&MockObject $provider;
 
     protected function setUp(): void
     {
-        $this->provider         = \Mockery::mock(ComputedFieldCalculator::class);
+        $this->provider         = $this->createMock(ComputedFieldCalculator::class);
         $this->field_calculator = new FieldCalculator($this->provider);
     }
 
@@ -50,27 +45,22 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $child_one = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 5, 'parent_id' => '233'];
         $child_two = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '233'];
 
-        $children = \TestHelper::arrayToDar($child_one, $child_two);
+        $children = TestHelper::arrayToDar($child_one, $child_two);
 
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    ['233'],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $children,
-                    'manual_sum' => null,
-                ]
-            );
+        $this->provider->method('fetchChildrenAndManualValuesOfArtifacts')->with(
+            ['233'],
+            self::anything(),
+            true,
+            'effort',
+            '109',
+            self::isInstanceOf(ArtifactsAlreadyProcessedDuringComputationCollection::class),
+        )->willReturn([
+            'children'   => $children,
+            'manual_sum' => null,
+        ]);
 
         $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
-        $this->assertEquals(20, $value);
+        self::assertEquals(20, $value);
     }
 
     public function testItComputesTreeValues(): void
@@ -79,50 +69,33 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $child_two   = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '233'];
         $child_three = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '233'];
         $child_four  = ['id' => '777', 'artifact_link_id' => '777', 'type' => 'computed', 'parent_id' => '233'];
+        $children    = TestHelper::arrayToDar($child_one, $child_two, $child_three, $child_four);
 
-        $children = \TestHelper::arrayToDar($child_one, $child_two, $child_three, $child_four);
+        $child_five     = ['id' => '752', 'artifact_link_id' => 752, 'type' => 'int', 'int_value' => 10, 'parent_id' => '766'];
+        $child_six      = ['id' => '753', 'artifact_link_id' => 753, 'type' => 'int', 'int_value' => 10, 'parent_id' => '777'];
+        $other_children = TestHelper::arrayToDar($child_five, $child_six);
 
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    ['233'],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $children,
-                    'manual_sum' => null,
-                ]
-            );
-
-        $child_five = ['id' => '752', 'artifact_link_id' => 752, 'type' => 'int', 'int_value' => 10, 'parent_id' => '766'];
-        $child_six  = ['id' => '753', 'artifact_link_id' => 753, 'type' => 'int', 'int_value' => 10, 'parent_id' => '777'];
-
-        $other_children = \TestHelper::arrayToDar($child_five, $child_six);
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    [766, 777],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $other_children,
-                    'manual_sum' => null,
-                ]
-            );
+        $this->provider->method('fetchChildrenAndManualValuesOfArtifacts')->with(
+            self::anything(),
+            self::anything(),
+            true,
+            'effort',
+            '109',
+            self::isInstanceOf(ArtifactsAlreadyProcessedDuringComputationCollection::class),
+        )->willReturnCallback(static fn(array $artifact_ids) => match ($artifact_ids) {
+            ['233']        => [
+                'children'   => $children,
+                'manual_sum' => null,
+            ],
+            ['766', '777'] => [
+                'children'   => $other_children,
+                'manual_sum' => null,
+            ],
+        });
 
         $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
-        $this->assertEquals(40, $value);
+        self::assertEquals(40, $value);
     }
 
     public function testItDoesntMakeLoopInGraph(): void
@@ -131,48 +104,33 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $child_two   = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '233'];
         $child_three = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '233'];
         $child_four  = ['id' => '777', 'artifact_link_id' => '777', 'type' => 'computed', 'parent_id' => '233'];
-        $children    = \TestHelper::arrayToDar($child_one, $child_two, $child_three, $child_four);
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    ['233'],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $children,
-                    'manual_sum' => null,
-                ]
-            );
+        $children    = TestHelper::arrayToDar($child_one, $child_two, $child_three, $child_four);
 
-        $child_five = ['id' => '752', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 10, 'parent_id' => '766'];
-        $child_six  = ['id' => '753', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 10, 'parent_id' => '777'];
+        $child_five     = ['id' => '752', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 10, 'parent_id' => '766'];
+        $child_six      = ['id' => '753', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 10, 'parent_id' => '777'];
+        $other_children = TestHelper::arrayToDar($child_five, $child_six, $child_three, $child_four);
 
-        $other_children = \TestHelper::arrayToDar($child_five, $child_six, $child_three, $child_four);
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    [766, 777],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $other_children,
-                    'manual_sum' => null,
-                ]
-            );
+        $this->provider->method('fetchChildrenAndManualValuesOfArtifacts')->with(
+            self::anything(),
+            self::anything(),
+            true,
+            'effort',
+            '109',
+            self::isInstanceOf(ArtifactsAlreadyProcessedDuringComputationCollection::class),
+        )->willReturnCallback(static fn(array $artifact_ids) => match ($artifact_ids) {
+            ['233']        => [
+                'children'   => $children,
+                'manual_sum' => null,
+            ],
+            ['766', '777'] => [
+                'children'   => $other_children,
+                'manual_sum' => null,
+            ],
+        });
 
         $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
-        $this->assertEquals(40, $value);
+        self::assertEquals(40, $value);
     }
 
     /**
@@ -186,165 +144,100 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $child_two   = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '233'];
         $child_three = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '233'];
         $child_four  = ['id' => '777', 'artifact_link_id' => '777', 'type' => 'computed', 'parent_id' => '233'];
-        $children    = \TestHelper::arrayToDar($child_one, $child_two, $child_three, $child_four);
+        $children    = TestHelper::arrayToDar($child_one, $child_two, $child_three, $child_four);
 
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    ['233'],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $children,
-                    'manual_sum' => null,
-                ]
-            );
+        $child_five     = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 5, 'parent_id' => '766'];
+        $child_six      = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '766'];
+        $child_seven    = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '777'];
+        $other_children = TestHelper::arrayToDar($child_five, $child_six, $child_seven);
 
-        $child_five  = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 5, 'parent_id' => '766'];
-        $child_six   = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '766'];
-        $child_seven = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '777'];
-
-        $other_children = \TestHelper::arrayToDar($child_five, $child_six, $child_seven);
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    [766],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $other_children,
-                    'manual_sum' => null,
-                ]
-            );
-
-        $other_children = \TestHelper::arrayToDar($child_five, $child_six, $child_seven);
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    [766, 777],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $other_children,
-                    'manual_sum' => null,
-                ]
-            );
+        $this->provider->method('fetchChildrenAndManualValuesOfArtifacts')->with(
+            self::anything(),
+            self::anything(),
+            true,
+            'effort',
+            '109',
+            self::isInstanceOf(ArtifactsAlreadyProcessedDuringComputationCollection::class),
+        )->willReturnCallback(static fn(array $artifact_ids) => match ($artifact_ids) {
+            ['233']                 => [
+                'children'   => $children,
+                'manual_sum' => null,
+            ],
+            ['766', '777'], ['766'] => [
+                'children'   => $other_children,
+                'manual_sum' => null,
+            ],
+        });
 
 
         $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
-        $this->assertEquals(20, $value);
+        self::assertEquals(20, $value);
     }
 
     public function testItStopsWhenAManualValueIsSet(): void
     {
         $child_one = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '233'];
-        $children  = \TestHelper::arrayToDar($child_one);
+        $children  = TestHelper::arrayToDar($child_one);
 
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    ['233'],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $children,
-                    'manual_sum' => null,
-                ]
-            );
+        $child_two      = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'value' => 4, 'parent_id' => '766'];
+        $child_three    = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 5, 'parent_id' => '766'];
+        $child_four     = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '766'];
+        $other_children = TestHelper::arrayToDar($child_two, $child_three, $child_four);
 
-        $child_two   = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'value' => 4, 'parent_id' => '766'];
-        $child_three = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 5, 'parent_id' => '766'];
-        $child_four  = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '766'];
+        $this->provider->method('fetchChildrenAndManualValuesOfArtifacts')->with(
+            self::anything(),
+            self::anything(),
+            true,
+            'effort',
+            '109',
+            self::isInstanceOf(ArtifactsAlreadyProcessedDuringComputationCollection::class),
+        )->willReturnCallback(static fn(array $artifact_ids) => match ($artifact_ids) {
+            ['233'] => [
+                'children'   => $children,
+                'manual_sum' => null,
+            ],
+            ['766'] => [
+                'children'   => $other_children,
+                'manual_sum' => null,
+            ],
+        });
 
-        $other_children = \TestHelper::arrayToDar($child_two, $child_three, $child_four);
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    [766],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $other_children,
-                    'manual_sum' => null,
-                ]
-            );
         $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
-        $this->assertEquals(4, $value);
+        self::assertEquals(4, $value);
     }
 
     public function testItCanAddManuallySetValuesAndComputedValues(): void
     {
         $child_one = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '233', 'value' => 4.7500];
         $child_two = ['id' => '777', 'artifact_link_id' => '777', 'type' => 'computed', 'parent_id' => null];
-        $children  = \TestHelper::arrayToDar($child_one, $child_two);
+        $children  = TestHelper::arrayToDar($child_one, $child_two);
 
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    ['233'],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $children,
-                    'manual_sum' => null,
-                ]
-            );
+        $child_three    = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'float', 'float_value' => 5.2500, 'parent_id' => '777'];
+        $child_four     = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'float', 'float_value' => 15, 'parent_id' => '777'];
+        $other_children = TestHelper::arrayToDar($child_three, $child_four);
 
-        $child_three = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'float', 'float_value' => 5.2500, 'parent_id' => '777'];
-        $child_four  = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'float', 'float_value' => 15, 'parent_id' => '777'];
-
-        $other_children = \TestHelper::arrayToDar($child_three, $child_four);
-        $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
-            ->withArgs(
-                [
-                    [777],
-                    \Mockery::any(),
-                    true,
-                    'effort',
-                    '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
-                ]
-            )->andReturn(
-                [
-                    'children'   => $other_children,
-                    'manual_sum' => null,
-                ]
-            );
+        $this->provider->method('fetchChildrenAndManualValuesOfArtifacts')->with(
+            self::anything(),
+            self::anything(),
+            true,
+            'effort',
+            '109',
+            self::isInstanceOf(ArtifactsAlreadyProcessedDuringComputationCollection::class),
+        )->willReturnCallback(static fn(array $artifact_ids) => match ($artifact_ids) {
+            ['233'] => [
+                'children'   => $children,
+                'manual_sum' => null,
+            ],
+            ['777'] => [
+                'children'   => $other_children,
+                'manual_sum' => null,
+            ],
+        });
 
         $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
-        $this->assertEquals(25, $value);
+        self::assertEquals(25, $value);
     }
 }
