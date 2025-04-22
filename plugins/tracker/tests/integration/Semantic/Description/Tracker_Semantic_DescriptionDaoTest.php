@@ -46,13 +46,13 @@ final class Tracker_Semantic_DescriptionDaoTest extends TestIntegrationTestCase 
     public function testCRUD(): void
     {
         $this->assertItRetrievesNothing();
-        $this->old_dao->save(self::TRACKER_ID, self::FIELD_ID);
+        $this->new_dao->save(self::TRACKER_ID, self::FIELD_ID);
 
         // Retrieve what we just saved
         self::assertSame(self::FIELD_ID, $this->new_dao->searchByTrackerId(self::TRACKER_ID)->unwrapOr(0));
 
         $other_field_id = 3144;
-        $this->old_dao->save(self::TRACKER_ID, $other_field_id);
+        $this->new_dao->save(self::TRACKER_ID, $other_field_id);
         self::assertSame($other_field_id, $this->new_dao->searchByTrackerId(self::TRACKER_ID)->unwrapOr(0));
 
         $this->old_dao->delete(self::TRACKER_ID);
@@ -67,7 +67,7 @@ final class Tracker_Semantic_DescriptionDaoTest extends TestIntegrationTestCase 
 
     public function testDuplication(): void
     {
-        $this->old_dao->save(self::TRACKER_ID, self::FIELD_ID);
+        $this->new_dao->save(self::TRACKER_ID, self::FIELD_ID);
 
         $factory       = new Tracker_Semantic_DescriptionFactory();
         $to_tracker_id = 868;
@@ -99,8 +99,8 @@ final class Tracker_Semantic_DescriptionDaoTest extends TestIntegrationTestCase 
             $this->old_dao->getTrackerIdsWithoutSemanticDescriptionDefined([$activities_id, $tasks_id])
         );
 
-        $this->old_dao->save($activities_id, 4075);
-        $this->old_dao->save($tasks_id, 9398);
+        $this->new_dao->save($activities_id, 4075);
+        $this->new_dao->save($tasks_id, 9398);
 
         // It finds zero tracker now that they have the description semantic set
         self::assertSame(0, $this->old_dao->getNbOfTrackerWithoutSemanticDescriptionDefined([

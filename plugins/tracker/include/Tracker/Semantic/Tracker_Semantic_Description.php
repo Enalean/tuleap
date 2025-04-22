@@ -183,15 +183,11 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
-    /**
-     * Save this semantic
-     *
-     * @return bool true if success, false otherwise
-     */
-    public function save()
+    public function save(): bool
     {
-        $dao = new Tracker_Semantic_DescriptionDao();
-        return $dao->save($this->tracker->getId(), $this->getFieldId());
+        $dao = new DescriptionSemanticDAO();
+        $dao->save($this->tracker->getId(), $this->getFieldId());
+        return true;
     }
 
     public function delete()
