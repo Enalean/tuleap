@@ -75,3 +75,7 @@ $artidoc-title-height: 40px; // line-height of TLP h1
 $artidoc-header-title-height: calc(
     $artidoc-title-height + #{whitespace.$header-title-padding-top} + #{whitespace.$header-title-padding-bottom}
 );
+$drag-and-drop-handle-width: var(--tlp-medium-spacing);
+$reorder-arrow-size: 14px;
+$fields-selection-display-type-column-width: 115px;
+$fields-selection-action-button-column-width: 100px;

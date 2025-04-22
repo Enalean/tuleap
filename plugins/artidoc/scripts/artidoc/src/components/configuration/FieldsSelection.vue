@@ -31,34 +31,28 @@
         </option>
     </select>
 
-    <table class="tlp-table" data-test="artidoc-configuration-fields-table">
-        <thead>
-            <tr>
-                <th></th>
-                <th>{{ $gettext("Field") }}</th>
-                <th>{{ $gettext("Display") }}</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody v-if="currently_selected_fields.length === 0">
-            <tr>
-                <td
-                    colspan="5"
-                    class="tlp-table-cell-empty"
-                    data-test="readonly-fields-empty-state"
-                >
-                    {{ $gettext("No fields selected") }}
-                </td>
-            </tr>
-        </tbody>
+    <div data-test="artidoc-configuration-fields-table">
+        <div class="fields-selection-header">
+            <div class="header-dnd-handle"></div>
+            <div class="header-field">{{ $gettext("Field") }}</div>
+            <div class="header-display-type">{{ $gettext("Display") }}</div>
+            <div class="header-actions"></div>
+            <div class="header-reorder-arrows"></div>
+        </div>
+        <div
+            v-if="currently_selected_fields.length === 0"
+            class="fields-selection-empty-state"
+            data-test="readonly-fields-empty-state"
+        >
+            {{ $gettext("No fields selected") }}
+        </div>
         <selected-fields-list
             v-else
             v-bind:currently_selected_fields="currently_selected_fields"
             v-bind:fields_reorderer="fields_reorderer"
             v-on:unselect-field="unselectField"
         />
-    </table>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -124,7 +118,46 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.tlp-table {
+@use "@/themes/includes/size";
+
+.fields-selection-header {
+    display: flex;
     margin-top: var(--tlp-medium-spacing);
+    border-bottom: 2px solid var(--tlp-main-color);
+    color: var(--tlp-main-color);
+    font-weight: 600;
+
+    > div {
+        padding: var(--tlp-small-spacing);
+    }
+}
+
+.header-dnd-handle {
+    width: size.$drag-and-drop-handle-width;
+}
+
+.header-field {
+    flex: 1;
+}
+
+.header-actions {
+    width: size.$fields-selection-action-button-column-width;
+}
+
+.header-display-type {
+    width: size.$fields-selection-display-type-column-width;
+}
+
+.header-reorder-arrows {
+    width: size.$reorder-arrow-size;
+}
+
+.fields-selection-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    color: var(--tlp-dimmed-color);
+    font-style: italic;
 }
 </style>

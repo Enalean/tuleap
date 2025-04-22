@@ -309,6 +309,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 @use "pkg:@tuleap/drag-and-drop";
 @use "@/themes/includes/viewport-breakpoint";
+@use "@/themes/includes/size";
 
 @keyframes blink-toc-item {
     0% {
@@ -435,7 +436,7 @@ li[draggable="false"] {
     left: 0;
     align-items: center;
     justify-content: center;
-    width: var(--tlp-medium-spacing);
+    width: size.$drag-and-drop-handle-width;
     height: 100%;
     transition:
         opacity ease-in-out 250ms,
