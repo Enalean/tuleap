@@ -17,97 +17,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, type VueWrapper } from "@vue/test-utils";
 import ParentCell from "./ParentCell.vue";
-import NoMappingMessage from "./Header/NoMappingMessage.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Swimlane } from "../../../../type";
-import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 
 describe("ParentCell", () => {
-    it("displays the parent card in its own cell", () => {
-        const wrapper = shallowMount(ParentCell, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        fullscreen: {
-                            is_taskboard_in_fullscreen_mode: false,
-                        },
-                    },
-                    getters: {
-                        "fullscreen/fullscreen_class": "",
-                    },
-                }),
-            },
-            propsData: {
-                swimlane: {
-                    card: {
-                        id: 43,
-                        has_children: true,
-                    },
-                } as Swimlane,
-            },
+    function getWrapper(swimlane: Swimlane): VueWrapper<InstanceType<typeof ParentCell>> {
+        return shallowMount(ParentCell, {
+            props: { swimlane },
         });
+    }
 
-        expect(wrapper.findComponent(CardWithRemainingEffort).exists()).toBe(true);
-        expect(wrapper.findComponent(NoMappingMessage).exists()).toBe(false);
+    it("renders the parent card when it has children", () => {
+        const wrapper = getWrapper({
+            card: { id: 43, has_children: true },
+        } as Swimlane);
+
+        expect(wrapper.vm.should_no_mapping_message_be_displayed).toBe(false);
+        expect(wrapper.vm.edit_mode_class).toStrictEqual([]);
     });
 
-    it("displays a no mapping message if card does not have any children", () => {
-        const wrapper = shallowMount(ParentCell, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        fullscreen: {
-                            is_taskboard_in_fullscreen_mode: false,
-                        },
-                    },
-                    getters: {
-                        "fullscreen/fullscreen_class": "",
-                    },
-                }),
-            },
-            propsData: {
-                swimlane: {
-                    card: {
-                        id: 43,
-                        has_children: false,
-                    },
-                } as Swimlane,
-            },
-        });
+    it("renders the no mapping message when the card has no children", () => {
+        const wrapper = getWrapper({
+            card: { id: 43, has_children: false },
+        } as Swimlane);
 
-        expect(wrapper.findComponent(CardWithRemainingEffort).exists()).toBe(true);
-        expect(wrapper.findComponent(NoMappingMessage).exists()).toBe(true);
+        expect(wrapper.vm.should_no_mapping_message_be_displayed).toBe(true);
+        expect(wrapper.vm.edit_mode_class).toStrictEqual(["taskboard-cell-parent-card-no-mapping"]);
     });
 
-    it("the parent card has an 'edit-mode' class when it is being edited", () => {
-        const wrapper = shallowMount(ParentCell, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        fullscreen: {
-                            is_taskboard_in_fullscreen_mode: false,
-                        },
-                    },
-                    getters: {
-                        "fullscreen/fullscreen_class": "",
-                    },
-                }),
-            },
-            propsData: {
-                swimlane: {
-                    card: {
-                        id: 43,
-                        has_children: false,
-                        is_in_edit_mode: true,
-                    },
-                } as Swimlane,
-            },
-        });
+    it("adds an 'edit-mode' class when the card is being edited", () => {
+        const wrapper = getWrapper({
+            card: { id: 43, has_children: false, is_in_edit_mode: true },
+        } as Swimlane);
 
-        expect(wrapper.findComponent(CardWithRemainingEffort).classes()).toContain(
+        expect(wrapper.vm.edit_mode_class).toStrictEqual([
+            "taskboard-cell-parent-card-no-mapping",
             "taskboard-cell-parent-card-edit-mode",
-        );
+        ]);
     });
 });

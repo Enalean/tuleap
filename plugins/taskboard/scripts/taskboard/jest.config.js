@@ -30,7 +30,7 @@ export default {
     displayName: "taskboard",
     transform: {
         ...jest_base_config.transform,
-        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+        "^.+\\.vue$": "@vue/vue3-jest",
     },
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,

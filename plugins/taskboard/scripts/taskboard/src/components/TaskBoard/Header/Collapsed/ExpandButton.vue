@@ -34,7 +34,7 @@
 import { computed } from "vue";
 import type { ColumnDefinition } from "../../../../type";
 import { useNamespacedActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext, interpolate } = useGettext();
 

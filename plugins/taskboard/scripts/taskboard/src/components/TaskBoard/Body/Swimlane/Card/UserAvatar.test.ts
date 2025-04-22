@@ -24,7 +24,7 @@ import UserAvatar from "./UserAvatar.vue";
 describe("UserAvatar", () => {
     it("displays an empty list", () => {
         const wrapper = shallowMount(UserAvatar, {
-            propsData: {
+            props: {
                 user: {
                     id: 101,
                     display_name: "Steeve",

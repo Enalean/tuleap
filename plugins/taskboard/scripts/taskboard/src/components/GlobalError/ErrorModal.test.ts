@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Vue } from "vue/types/vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import ErrorModal from "./ErrorModal.vue";
 import * as tlp from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
@@ -34,18 +32,18 @@ jest.mock("@tuleap/tlp-modal", () => {
 });
 
 describe("ErrorModal", () => {
-    let local_vue: typeof Vue;
-
-    beforeEach(async () => {
-        local_vue = await createTaskboardLocalVue();
-    });
-
-    function createWrapper(error_message: string): Wrapper<Vue> {
+    function createWrapper(error_message: string): VueWrapper<InstanceType<typeof ErrorModal>> {
         return shallowMount(ErrorModal, {
-            localVue: local_vue,
-            mocks: {
-                $store: createStoreMock({
-                    state: { error: { modal_error_message: error_message } },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        error: {
+                            state: {
+                                modal_error_message: error_message,
+                            },
+                            namespaced: true,
+                        },
+                    },
                 }),
             },
         });

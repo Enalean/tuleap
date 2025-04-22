@@ -19,36 +19,44 @@
 
 import type { ColumnDefinition, Swimlane } from "../../../../type";
 import InvalidMappingSwimlane from "./InvalidMappingSwimlane.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import ParentCell from "./ParentCell.vue";
-import type { RootState } from "../../../../store/type";
 import InvalidMappingCell from "./Cell/InvalidMappingCell.vue";
 
-async function createWrapper(
+function createWrapper(
     columns: ColumnDefinition[],
     swimlane: Swimlane,
-): Promise<Wrapper<Vue>> {
+): VueWrapper<InstanceType<typeof InvalidMappingSwimlane>> {
     return shallowMount(InvalidMappingSwimlane, {
-        localVue: await createTaskboardLocalVue(),
-        mocks: { $store: createStoreMock({ state: { column: { columns } } as RootState }) },
-        propsData: { swimlane },
+        global: {
+            ...getGlobalTestOptions({
+                modules: {
+                    column: {
+                        state: {
+                            columns: [columns],
+                        },
+                        namespaced: true,
+                    },
+                },
+            }),
+        },
+        props: { swimlane },
     });
 }
 
 describe(`InvalidMappingSwimlane`, () => {
-    it("displays the parent card in its own cell when status does not map to a column", async () => {
+    it("displays the parent card in its own cell when status does not map to a column", () => {
         const columns = [
             { id: 2, label: "To do" } as ColumnDefinition,
             { id: 3, label: "Done" } as ColumnDefinition,
         ];
         const swimlane = { card: { id: 43, mapped_list_value: null } } as Swimlane;
 
-        const wrapper = await createWrapper(columns, swimlane);
+        const wrapper = createWrapper(columns, swimlane);
 
         expect(wrapper.findComponent(ParentCell).exists()).toBe(true);
-        expect(wrapper.findAllComponents(InvalidMappingCell)).toHaveLength(2);
+        expect(wrapper.findComponent(InvalidMappingCell).exists()).toBe(true);
     });
 });

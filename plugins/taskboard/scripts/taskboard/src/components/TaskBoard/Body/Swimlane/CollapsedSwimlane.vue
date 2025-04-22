@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useNamespacedActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { Swimlane } from "../../../../type";
 import CardXrefLabel from "./Card/CardXrefLabel.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";

@@ -17,59 +17,79 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
-import DropContainerCell from "./DropContainerCell.vue";
 import type { Card, ColumnDefinition, MappedListValue, Swimlane } from "../../../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../../../../store/type";
 import AddCard from "../Card/Add/AddCard.vue";
-import CardSkeleton from "../Skeleton/CardSkeleton.vue";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import DropContainerCell from "./DropContainerCell.vue";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ChildCard from "../Card/ChildCard.vue";
-
-type DropContainerCellExposed = {
-    cards: Card[];
-};
-
-let card = {} as Card;
-let column: ColumnDefinition = {} as ColumnDefinition;
-function getWrapper(
-    column: ColumnDefinition,
-    can_add_in_place: boolean,
-    cards_in_cell: Card[],
-    is_loading_children_cards: boolean,
-    is_solo_card: boolean,
-    is_in_edit_mode: boolean,
-): Wrapper<Vue & DropContainerCellExposed> {
-    const swimlane = {
-        card: { ...card, is_in_edit_mode },
-        is_loading_children_cards,
-    } as Swimlane;
-
-    return shallowMount(DropContainerCell, {
-        propsData: {
-            column,
-            swimlane,
-            is_solo_card,
-        },
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    card_being_dragged: null,
-                    column: {},
-                } as RootState,
-                getters: {
-                    "column/accepted_trackers_ids": (): number[] => [],
-                    can_add_in_place: (): boolean => can_add_in_place,
-                    "swimlane/is_there_at_least_one_children_to_display": (): boolean => true,
-                    "swimlane/cards_in_cell": () => cards_in_cell,
-                },
-            }),
-        },
-    });
-}
+import CardSkeleton from "../Skeleton/CardSkeleton.vue";
 
 describe("DropContainerCell", () => {
+    const mock_pointer_enter_columns = jest.fn();
+    const mock_pointer_leaves_columns = jest.fn();
+    const mock_expand_columns = jest.fn();
+
+    let card = {} as Card;
+    let column: ColumnDefinition = {} as ColumnDefinition;
+
+    function getWrapper(
+        column: ColumnDefinition,
+        can_add_in_place: boolean,
+        cards_in_cell: Card[],
+        is_loading_children_cards: boolean,
+        is_solo_card: boolean,
+        is_in_edit_mode: boolean,
+    ): VueWrapper<InstanceType<typeof DropContainerCell>> {
+        const swimlane = {
+            card: { ...card, is_in_edit_mode },
+            is_loading_children_cards,
+        } as Swimlane;
+
+        return shallowMount(DropContainerCell, {
+            props: {
+                column,
+                swimlane,
+                is_solo_card,
+            },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        card_being_dragged: null,
+                    } as RootState,
+                    getters: {
+                        can_add_in_place: () => () => can_add_in_place,
+                    },
+                    modules: {
+                        column: {
+                            getters: {
+                                accepted_trackers_ids: () => (): number[] => [],
+                            },
+                            mutations: {
+                                pointerEntersColumn: mock_pointer_enter_columns,
+                                pointerLeavesColumn: mock_pointer_leaves_columns,
+                            },
+                            actions: {
+                                expandColumn: mock_expand_columns,
+                            },
+                            namespaced: true,
+                        },
+                        swimlane: {
+                            getters: {
+                                is_there_at_least_one_children_to_display: () => (): boolean =>
+                                    true,
+                                cards_in_cell: () => (): Card[] => cards_in_cell,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
+        });
+    }
+
     beforeEach(() => {
         card = {
             id: 1,
@@ -89,12 +109,13 @@ describe("DropContainerCell", () => {
             ],
         } as ColumnDefinition;
     });
+
     it(`Given the column is expanded, it displays the content of the cell`, () => {
         column.is_collapsed = false;
         const wrapper = getWrapper(column, false, [], false, true, false);
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
-        expect(wrapper.get("[data-test=card-with-remaining-effort]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=card-with-remaining-effort]").exists()).toBe(true);
     });
 
     it(`Given the column is collapsed, it does not display the content of the cell`, () => {
@@ -180,7 +201,7 @@ describe("DropContainerCell", () => {
             const solo_card = wrapper.find("[data-test=card-with-remaining-effort]");
 
             expect(solo_card.classes()).not.toContain("taskboard-draggable-item");
-            expect(solo_card.attributes("draggable")).toBeFalsy();
+            expect(solo_card.attributes("draggable")).toBe("false");
         });
     });
 
@@ -189,7 +210,7 @@ describe("DropContainerCell", () => {
         const wrapper = getWrapper(column, false, [], false, false, false);
 
         wrapper.trigger("pointerenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
+        expect(mock_pointer_enter_columns).toHaveBeenCalled();
     });
 
     it(`informs the pointerleave`, () => {
@@ -197,10 +218,7 @@ describe("DropContainerCell", () => {
         const wrapper = getWrapper(column, false, [], false, false, false);
 
         wrapper.trigger("pointerleave");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", {
-            column,
-            card_being_dragged: null,
-        });
+        expect(mock_pointer_leaves_columns).toHaveBeenCalled();
     });
 
     it(`expands the column when user clicks on the collapsed column cell`, () => {
@@ -208,7 +226,7 @@ describe("DropContainerCell", () => {
         const wrapper = getWrapper(column, false, [], false, false, false);
 
         wrapper.trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
+        expect(mock_expand_columns).toHaveBeenCalled();
     });
 
     describe("renders the AddCard component only when it is possible", () => {

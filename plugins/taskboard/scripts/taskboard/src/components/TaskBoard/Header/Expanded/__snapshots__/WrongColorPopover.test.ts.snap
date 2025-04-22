@@ -13,26 +13,21 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
       class="fas fa-exclamation-triangle"
     />
   </span>
-   
   <section
     class="tlp-popover tlp-popover-warning taskboard-header-wrong-color-popover"
   >
     <div
       class="tlp-popover-arrow"
     />
-     
     <div
       class="tlp-popover-header"
     >
       <span
         class="tlp-popover-title"
       >
-        
-                Incompatible usage of color
-            
+        Incompatible usage of color
       </span>
     </div>
-     
     <div
       class="tlp-popover-body taskboard-header-wrong-color-body"
     >
@@ -51,11 +46,9 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
         </span>
         ) from the legacy palette.
       </p>
-       
       <p>
         Only colors from the new palette can be used.
       </p>
-       
       <p>
         Please 
         <a

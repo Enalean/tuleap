@@ -24,7 +24,7 @@ import type { Card } from "../../../../../type";
 describe("CardXrefLabel", () => {
     it("displays the xref and the label of a card", () => {
         const wrapper = shallowMount(CardXrefLabel, {
-            propsData: {
+            props: {
                 card: {
                     id: 43,
                     label: "Story 2",
@@ -41,7 +41,7 @@ describe("CardXrefLabel", () => {
 
     it("displays the xref and the label using the background color if it exists", () => {
         const wrapper = shallowMount(CardXrefLabel, {
-            propsData: {
+            props: {
                 card: {
                     id: 43,
                     label: "Story 2",
@@ -59,7 +59,7 @@ describe("CardXrefLabel", () => {
 
     it("hides the label when card is in edit mode", () => {
         const wrapper = shallowMount(CardXrefLabel, {
-            propsData: {
+            props: {
                 card: {
                     id: 43,
                     label: "Story 2",

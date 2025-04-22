@@ -22,15 +22,16 @@ import CardWithRemainingEffort from "./CardWithRemainingEffort.vue";
 import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
 import ParentCard from "./ParentCard.vue";
 import EditCardButtons from "./EditMode/EditCardButtons.vue";
+import type { Card, RemainingEffort } from "../../../../../type";
 
 describe("CardWithRemainingEffort", () => {
     it("displays the solo card in its own cell", () => {
         const wrapper = shallowMount(CardWithRemainingEffort, {
-            propsData: {
+            props: {
                 card: {
                     id: 43,
-                    remaining_effort: 2.5,
-                },
+                    remaining_effort: { value: 2.5 } as RemainingEffort,
+                } as Card,
             },
         });
 
@@ -42,8 +43,11 @@ describe("CardWithRemainingEffort", () => {
     it("focuses the card when receiving the `editor-closed` event", () => {
         const wrapper = shallowMount(CardWithRemainingEffort, {
             attachTo: document.body,
-            propsData: {
-                card: { id: 43, remaining_effort: 2.5 },
+            props: {
+                card: {
+                    id: 43,
+                    remaining_effort: { value: 2.5 } as RemainingEffort,
+                } as Card,
             },
         });
 

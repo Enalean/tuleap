@@ -17,41 +17,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import AddCard from "./AddCard.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import AddButton from "./AddButton.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { RootState } from "../../../../../../store/type";
 import type { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 import type { SwimlaneState } from "../../../../../../store/swimlane/type";
 import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
+import { getGlobalTestOptions } from "../../../../../../helpers/global-options-for-test";
 
 jest.useFakeTimers();
 
-type AddCardExposed = { label: string };
-
-function getWrapper(
-    swimlane_state: SwimlaneState = {} as SwimlaneState,
-): Wrapper<Vue & AddCardExposed> {
-    return shallowMount(AddCard, {
-        propsData: {
-            column: { id: 42 } as ColumnDefinition,
-            swimlane: { card: { id: 69 } } as Swimlane,
-        },
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    swimlane: swimlane_state,
-                } as RootState,
-            }),
-        },
-    });
-}
-
 describe("AddCard", () => {
+    const mock_is_adding_in_place = jest.fn();
+    const mock_clear_is_adding_in_place = jest.fn();
+    const mock_add_card = jest.fn();
+    function getWrapper(
+        swimlane_state: SwimlaneState = {} as SwimlaneState,
+    ): VueWrapper<InstanceType<typeof AddCard>> {
+        return shallowMount(AddCard, {
+            props: {
+                column: { id: 42 } as ColumnDefinition,
+                swimlane: { card: { id: 69 } } as Swimlane,
+                button_label: "",
+            },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        swimlane: {
+                            state: swimlane_state,
+                            actions: {
+                                addCard: mock_add_card,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                    mutations: {
+                        setIsACellAddingInPlace: mock_is_adding_in_place,
+                        clearIsACellAddingInPlace: mock_clear_is_adding_in_place,
+                        setBacklogItemsHaveChildren: jest.fn(),
+                    },
+                }),
+            },
+        });
+    }
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("Displays add button and no editor yet", () => {
         const wrapper = getWrapper();
 
@@ -67,7 +83,7 @@ describe("AddCard", () => {
 
         expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
         expect(wrapper.findComponent(LabelEditor).props("readonly")).toBe(false);
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setIsACellAddingInPlace");
+        expect(mock_is_adding_in_place).toHaveBeenCalled();
     });
 
     it("Given the cancel button is pressed, Then it displays back the button and hide the editor", async () => {
@@ -80,7 +96,7 @@ describe("AddCard", () => {
 
         expect(wrapper.findComponent(LabelEditor).exists()).toBe(false);
         expect(wrapper.findComponent(AddButton).exists()).toBe(true);
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("clearIsACellAddingInPlace");
+        expect(mock_clear_is_adding_in_place).toHaveBeenCalled();
     });
 
     it(`Given the editor is displayed,
@@ -89,13 +105,13 @@ describe("AddCard", () => {
         And the editor is cleared to enter a new card`, async () => {
         const wrapper = getWrapper();
 
-        wrapper.findComponent(AddButton).vm.$emit("click");
-        await wrapper.setData({ label: "Lorem ipsum" });
+        await wrapper.findComponent(AddButton).vm.$emit("click");
+        wrapper.vm.label = "Lorem ipsum";
 
         expect(wrapper.vm.label).toBe("Lorem ipsum");
         wrapper.findComponent(LabelEditor).vm.$emit("save");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
+        expect(mock_add_card).toHaveBeenCalledWith(expect.anything(), {
             swimlane: wrapper.vm.$props.swimlane,
             column: wrapper.vm.$props.column,
             label: "Lorem ipsum",
@@ -115,13 +131,13 @@ describe("AddCard", () => {
         And the editor is cleared to enter a new card`, async () => {
         const wrapper = getWrapper();
 
-        wrapper.findComponent(AddButton).vm.$emit("click");
-        await wrapper.setData({ label: "Lorem ipsum" });
+        await wrapper.findComponent(AddButton).vm.$emit("click");
+        wrapper.findComponent(LabelEditor).vm.$emit("input", "Lorem ipsum");
 
         expect(wrapper.vm.label).toBe("Lorem ipsum");
         wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
+        expect(mock_add_card).toHaveBeenCalledWith(expect.anything(), {
             swimlane: wrapper.vm.$props.swimlane,
             column: wrapper.vm.$props.column,
             label: "Lorem ipsum",
@@ -141,21 +157,20 @@ describe("AddCard", () => {
         Then save action is not performed`, async () => {
         const wrapper = getWrapper();
 
-        wrapper.findComponent(AddButton).vm.$emit("click");
-        await wrapper.setData({ label: "" });
+        await wrapper.findComponent(AddButton).vm.$emit("click");
+        wrapper.findComponent(LabelEditor).vm.$emit("input", "");
 
         expect(wrapper.vm.label).toBe("");
         wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+        expect(mock_add_card).not.toHaveBeenCalled();
     });
 
     it("Blocks the creation of a new card if one is ongoing", async () => {
         const wrapper = getWrapper({
             is_card_creation_blocked_due_to_ongoing_creation: true,
         } as SwimlaneState);
-        wrapper.findComponent(AddButton).vm.$emit("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.findComponent(AddButton).vm.$emit("click");
 
         expect(wrapper.findComponent(LabelEditor).props("readonly")).toBe(true);
     });

@@ -17,36 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ChildrenSwimlane from "./ChildrenSwimlane.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Card, ColumnDefinition, Swimlane } from "../../../../type";
-import type { RootState } from "../../../../store/type";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
-function createWrapper(swimlane: Swimlane): Wrapper<Vue> {
+function createWrapper(swimlane: Swimlane): VueWrapper<InstanceType<typeof ChildrenSwimlane>> {
     return shallowMount(ChildrenSwimlane, {
-        mocks: {
-            $store: createStoreMock({
-                state: {
+        global: {
+            ...getGlobalTestOptions({
+                modules: {
                     column: {
-                        columns: [
-                            {
-                                id: 2,
-                                label: "To do",
-                                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }],
-                            } as ColumnDefinition,
-                            {
-                                id: 3,
-                                label: "Done",
-                                mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }],
-                            } as ColumnDefinition,
-                        ],
+                        state: {
+                            columns: [
+                                {
+                                    id: 2,
+                                    label: "To do",
+                                    mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }],
+                                } as ColumnDefinition,
+                                {
+                                    id: 3,
+                                    label: "Done",
+                                    mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }],
+                                } as ColumnDefinition,
+                            ],
+                        },
+                        namespaced: true,
                     },
-                } as RootState,
+                },
             }),
         },
-        propsData: { swimlane },
+        props: { swimlane },
     });
 }
 

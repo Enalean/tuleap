@@ -49,7 +49,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useState } from "vuex-composition-helpers";
 import { createPopover } from "@tuleap/tlp-popovers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { State } from "../../../../store/type";
 
 const gettext_provider = useGettext();

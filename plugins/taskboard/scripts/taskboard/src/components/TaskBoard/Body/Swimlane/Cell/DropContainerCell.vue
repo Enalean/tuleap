@@ -60,7 +60,7 @@
             v-bind:swimlane="swimlane"
             v-bind:button_label="add_button_label"
         />
-        <cell-disallows-drop-overlay v-bind:is-column-collapsed="column.is_collapsed" />
+        <cell-disallows-drop-overlay v-bind:is_column_collapsed="column.is_collapsed" />
     </div>
 </template>
 
@@ -73,7 +73,7 @@ import {
     useNamespacedMutations,
     useStore,
 } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import type { Card, ColumnDefinition, Swimlane } from "../../../../../type";

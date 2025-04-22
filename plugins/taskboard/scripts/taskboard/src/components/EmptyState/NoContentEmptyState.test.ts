@@ -18,13 +18,13 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import NoContentEmptyState from "./NoContentEmptyState.vue";
 
 describe("NoContentEmptyState", () => {
-    it("displays a cell that span on the whole table", async () => {
+    it("displays a cell that span on the whole table", () => {
         const wrapper = shallowMount(NoContentEmptyState, {
-            localVue: await createTaskboardLocalVue(),
+            global: { ...getGlobalTestOptions({}) },
         });
         expect(wrapper.element).toMatchSnapshot();
     });

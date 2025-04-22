@@ -9,37 +9,28 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
   >
     <global-app-error-illustration-stub />
   </div>
-   
   <h1
     class="empty-state-title"
   >
-    
-        Oops, there's an issue
-    
+    Oops, there's an issue
   </h1>
-   
   <p
     class="empty-state-text"
   >
-    
-        It seems an action you tried to perform can't be done.
-    
+    It seems an action you tried to perform can't be done.
   </p>
-   
+  
   <p
     class="empty-state-text taskboard-error-link"
   >
     <a
       data-test="show-details"
     >
-      
-                Show error details
-            
+      Show error details
     </a>
   </p>
-   
-  <!---->
-   
+  <!--v-if-->
+  
   <button
     class="tlp-button-primary empty-state-action"
     type="button"
@@ -48,9 +39,7 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
       aria-hidden="true"
       class="fas fa-sync tlp-button-icon"
     />
-    
-        Reload the page
-    
+     Reload the page
   </button>
 </section>
 `;

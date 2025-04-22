@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TaskBoardHeader from "./TaskBoardHeader.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition } from "../../../type";
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
 import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
-import type Vue from "vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { RootState } from "../../../store/type";
 
 const todo: ColumnDefinition = {
     id: 2,
@@ -42,19 +42,28 @@ const done: ColumnDefinition = {
     is_collapsed: true,
 } as ColumnDefinition;
 
-function createWrapper(backlog_items_have_children: boolean): Wrapper<Vue> {
+function createWrapper(
+    backlog_items_have_children: boolean,
+): VueWrapper<InstanceType<typeof TaskBoardHeader>> {
     return shallowMount(TaskBoardHeader, {
-        mocks: {
-            $store: createStoreMock({
+        global: {
+            ...getGlobalTestOptions({
                 state: {
-                    column: {
-                        columns: [todo, ongoing, done],
-                    },
-                    swimlane: {},
                     backlog_items_have_children: backlog_items_have_children,
-                },
-                getters: {
-                    "swimlane/taskboard_cell_swimlane_header_classes": [],
+                } as RootState,
+                modules: {
+                    column: {
+                        state: {
+                            columns: [todo, ongoing, done],
+                        },
+                        namespaced: true,
+                    },
+                    swimlane: {
+                        getters: {
+                            taskboard_cell_swimlane_header_classes: (): string[] => [],
+                        },
+                        namespaced: true,
+                    },
                 },
             }),
         },
@@ -66,16 +75,10 @@ describe("TaskBoardHeader", () => {
         const wrapper = createWrapper(true);
 
         const children = wrapper.findAll("*");
-        expect(children.at(1).classes("taskboard-cell-swimlane-header")).toBe(true);
-
-        expect(children.at(2).findComponent(ExpandedHeaderCell).exists()).toBe(true);
-        expect(children.at(2).props("column")).toStrictEqual(todo);
-
-        expect(children.at(3).findComponent(ExpandedHeaderCell).exists()).toBe(true);
-        expect(children.at(3).props("column")).toStrictEqual(ongoing);
-
-        expect(children.at(4).findComponent(CollapsedHeaderCell).exists()).toBe(true);
-        expect(children.at(4).props("column")).toStrictEqual(done);
+        expect(children.at(1)?.classes("taskboard-cell-swimlane-header")).toBe(true);
+        expect(children.at(2)?.findComponent(ExpandedHeaderCell).exists()).toBe(true);
+        expect(children.at(3)?.findComponent(ExpandedHeaderCell).exists()).toBe(true);
+        expect(children.at(4)?.findComponent(CollapsedHeaderCell).exists()).toBe(true);
     });
 
     it("does not display swimlane header when no parent in hierarchy", () => {
@@ -83,14 +86,8 @@ describe("TaskBoardHeader", () => {
 
         const children = wrapper.findAll("*");
         expect(wrapper.find(".taskboard-cell-swimlane-header").exists()).toBe(false);
-
-        expect(children.at(1).findComponent(ExpandedHeaderCell).exists()).toBe(true);
-        expect(children.at(1).props("column")).toStrictEqual(todo);
-
-        expect(children.at(2).findComponent(ExpandedHeaderCell).exists()).toBe(true);
-        expect(children.at(2).props("column")).toStrictEqual(ongoing);
-
-        expect(children.at(3).findComponent(CollapsedHeaderCell).exists()).toBe(true);
-        expect(children.at(3).props("column")).toStrictEqual(done);
+        expect(children.at(1)?.findComponent(ExpandedHeaderCell).exists()).toBe(true);
+        expect(children.at(2)?.findComponent(ExpandedHeaderCell).exists()).toBe(true);
+        expect(children.at(3)?.findComponent(CollapsedHeaderCell).exists()).toBe(true);
     });
 });

@@ -19,17 +19,18 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CardInitialEffort from "./CardInitialEffort.vue";
-import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import type { Card } from "../../../../../type";
 
 describe("CardInitialEffort", () => {
-    it("displays the initial effort of the card in a badge", async () => {
+    it("displays the initial effort of the card in a badge", () => {
         const wrapper = shallowMount(CardInitialEffort, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 card: {
                     initial_effort: 666,
                     color: "lake-placid-blue",
-                },
+                } as Card,
             },
         });
         expect(wrapper.element).toMatchSnapshot();
@@ -37,13 +38,14 @@ describe("CardInitialEffort", () => {
 
     it("displays nothing if the card has no initial effort", () => {
         const wrapper = shallowMount(CardInitialEffort, {
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 card: {
                     initial_effort: null,
                     color: "lake-placid-blue",
-                },
+                } as Card,
             },
         });
-        expect(wrapper.html()).toBe("");
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 });

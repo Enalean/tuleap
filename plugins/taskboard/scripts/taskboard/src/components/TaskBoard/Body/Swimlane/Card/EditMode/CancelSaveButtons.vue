@@ -50,8 +50,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount } from "vue";
-import { TaskboardEvent } from "../../../../../../type";
-import EventBus from "../../../../../../helpers/event-bus";
+import emitter from "../../../../../../helpers/emitter";
 
 const props = withDefaults(
     defineProps<{
@@ -72,11 +71,11 @@ const save_icon = computed((): string => {
 });
 
 onMounted((): void => {
-    EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, cancel);
+    emitter.on("esc-key-pressed", cancel);
 });
 
 onBeforeUnmount((): void => {
-    EventBus.$off(TaskboardEvent.ESC_KEY_PRESSED, cancel);
+    emitter.off("esc-key-pressed", cancel);
 });
 
 function cancel(): void {

@@ -19,18 +19,19 @@
 
 import { shallowMount } from "@vue/test-utils";
 import OpenClosedSwitcher from "./OpenClosedSwitcher.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { RootState } from "../../../store/type";
 
 describe("OpenClosedSwitcher", () => {
-    it("toggles the right button when closed items should be displayed", async () => {
+    const mock_display_closed_items = jest.fn();
+    const mock_hide_closed_items = jest.fn();
+    it("toggles the right button when closed items should be displayed", () => {
         const wrapper = shallowMount(OpenClosedSwitcher, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         are_closed_items_displayed: true,
-                    },
+                    } as RootState,
                 }),
             },
         });
@@ -43,13 +44,15 @@ describe("OpenClosedSwitcher", () => {
         expect(radio_hide.checked).toBe(false);
     });
 
-    it("toggles the right button when closed items should not be displayed", async () => {
+    it("toggles the right button when closed items should not be displayed", () => {
         const wrapper = shallowMount(OpenClosedSwitcher, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         are_closed_items_displayed: false,
+                    } as RootState,
+                    actions: {
+                        displayClosedItems: mock_display_closed_items,
                     },
                 }),
             },
@@ -63,35 +66,42 @@ describe("OpenClosedSwitcher", () => {
         expect(radio_hide.checked).toBe(true);
     });
 
-    it("Mutates the store when user decides to display closed items", async () => {
+    it("Mutates the store when user decides to display closed items", () => {
         const wrapper = shallowMount(OpenClosedSwitcher, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         are_closed_items_displayed: false,
+                    } as RootState,
+                    actions: {
+                        displayClosedItems: mock_display_closed_items,
                     },
                 }),
             },
         });
-        wrapper.get("#button-bar-show-closed").setChecked();
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("displayClosedItems");
+        const checkbox = wrapper.get("#button-bar-show-closed");
+        checkbox.setValue(true);
+        checkbox.trigger("change");
+
+        expect(mock_display_closed_items).toHaveBeenCalled();
     });
 
-    it("Mutates the store when user decides to hide closed items", async () => {
+    it("Mutates the store when user decides to hide closed items", () => {
         const wrapper = shallowMount(OpenClosedSwitcher, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         are_closed_items_displayed: false,
+                    } as RootState,
+                    actions: {
+                        hideClosedItems: mock_hide_closed_items,
                     },
                 }),
             },
         });
         const hide_button = wrapper.get("#button-bar-hide-closed");
-        hide_button.setChecked();
+        hide_button.setValue(true);
         hide_button.trigger("change");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("hideClosedItems");
+        expect(mock_hide_closed_items).toHaveBeenCalled();
     });
 });

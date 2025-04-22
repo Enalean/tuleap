@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-export default new Vue();
+import mitt from "mitt";
+import type { Card } from "../type";
+
+export type Events = {
+    "cancel-card-edition": Card;
+    "save-card-edition": Card;
+    "esc-key-pressed": void;
+};
+export default mitt<Events>();

@@ -1,6 +1,6 @@
 {
     "name": "taskboard",
-    "gettext-vue": {
+    "gettext-vue3": {
         "taskboard": {
             "src": "scripts/taskboard",
             "po": "scripts/taskboard/po"

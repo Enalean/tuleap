@@ -13,11 +13,8 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       class="tlp-modal-title"
       id="taskboard-error-modal-title"
     >
-      
-            Oops, there's an issue
-        
+      Oops, there's an issue
     </h1>
-     
     <button
       aria-label="Close"
       class="tlp-modal-close"
@@ -30,26 +27,22 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       />
     </button>
   </div>
-   
   <div
     class="tlp-modal-body"
   >
     <p>
       It seems an action you tried to perform can't be done
     </p>
-     
+    
     <a
       class="taskboard-error-modal-link"
       data-test="show-details"
     >
-      
-                Show error details
-            
+      Show error details
     </a>
-     
-    <!---->
+    <!--v-if-->
+    
   </div>
-   
   <div
     class="tlp-modal-footer"
   >
@@ -58,11 +51,8 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       data-dismiss="modal"
       type="button"
     >
-      
-            Close
-        
+      Close
     </button>
-     
     <button
       class="tlp-button-danger tlp-modal-action"
       type="button"
@@ -71,9 +61,7 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
         aria-hidden="true"
         class="fas fa-sync tlp-button-icon"
       />
-      
-            Reload the page
-        
+       Reload the page
     </button>
   </div>
 </div>

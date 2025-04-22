@@ -11,13 +11,10 @@ exports[`CellDisallowsDropOverlay displays div with an icon and an error message
       aria-hidden="true"
       class="fa fa-ban taskboard-drop-not-accepted-icon"
     />
-     
     <p
       data-test="overlay-error-message"
     >
-      
-            This column does not allow to drop this card here.
-        
+      This column does not allow to drop this card here.
     </p>
   </div>
 </div>

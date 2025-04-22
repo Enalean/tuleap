@@ -123,12 +123,6 @@ export type Direction = "before" | "after";
 export const BEFORE: Direction = "before";
 export const AFTER: Direction = "after";
 
-export const TaskboardEvent = {
-    CANCEL_CARD_EDITION: "cancel-card-edition",
-    SAVE_CARD_EDITION: "save-card-edition",
-    ESC_KEY_PRESSED: "esc-key-pressed",
-};
-
 export type ArrowKey = typeof DOWN | typeof UP | typeof RIGHT | typeof LEFT;
 export const DOWN = "DOWN";
 export const UP = "UP";

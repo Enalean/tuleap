@@ -26,48 +26,56 @@
     margin: var(--tlp-small-spacing) 0 0;
 }
 
-.taskboard-card-edit-mode-assignees {
+@mixin -unset-button-style {
+    padding: 0;
+    border: unset;
+    background: unset;
+    color: unset;
+    text-align: unset;
+}
+
+.taskboard-card-assignees-button {
+    @include -unset-button-style;
+
+    display: flex;
     flex-flow: row wrap;
     align-items: center;
     justify-content: flex-end;
     margin-bottom: -10px;
     transition: color ease-in-out 100ms;
     color: var(--tlp-main-color);
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        color: var(--tlp-main-color-darker-15);
+    }
 
     > .taskboard-card-assignees-avatars:last-child {
         margin: -3px 0 8px 5px;
     }
+}
 
-    &.taskboard-card-assignees-editable {
-        cursor: pointer;
+.taskboard-card-assignees-edit-mode {
+    position: absolute;
+    z-index: 11;
+    bottom: calc(100% - 30px);
+    left: 12px;
+    width: calc(100% - 2 * var(--tlp-small-spacing) - 2px);
 
-        &:hover,
-        &:focus {
-            color: var(--tlp-main-color-darker-15);
-        }
+    /* stylelint-disable-next-line selector-class-pattern */
+    .select2-search__field {
+        width: 100% !important;
     }
 
-    &.taskboard-card-assignees-edit-mode {
-        position: absolute;
-        z-index: 11;
-        bottom: calc(100% - 30px);
-        left: 12px;
-        width: calc(100% - 2 * var(--tlp-small-spacing) - 2px);
-
-        /* stylelint-disable-next-line selector-class-pattern */
-        .select2-search__field {
-            width: 100% !important;
-        }
-
-        /* stylelint-disable-next-line selector-class-pattern */
-        .select2-selection--multiple > .select2-selection__rendered > .select2-selection__choice {
-            padding-top: 2px;
-            padding-bottom: 2px;
-        }
+    /* stylelint-disable-next-line selector-class-pattern */
+    .select2-selection--multiple > .select2-selection__rendered > .select2-selection__choice {
+        padding-top: 2px;
+        padding-bottom: 2px;
     }
 }
 
-.taskboard-cell:last-child .taskboard-card-edit-mode-assignees.taskboard-card-assignees-edit-mode {
+.taskboard-cell:last-child .taskboard-card-assignees-edit-mode {
     right: 10px;
     left: auto;
 }

@@ -17,158 +17,177 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
+import type { VueWrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../../../../../helpers/global-options-for-test";
 import EditRemainingEffort from "./EditRemainingEffort.vue";
-import type { RootState } from "../../../../../../store/type";
 import type { Card } from "../../../../../../type";
-import { TaskboardEvent } from "../../../../../../type";
-import EventBus from "../../../../../../helpers/event-bus";
-
-async function getWrapper(is_being_saved = false): Promise<Wrapper<Vue>> {
-    return shallowMount(EditRemainingEffort, {
-        localVue: await createTaskboardLocalVue(),
-        propsData: {
-            card: {
-                id: 42,
-                color: "fiesta-red",
-                remaining_effort: {
-                    value: 3.14,
-                    is_in_edit_mode: true,
-                    is_being_saved,
-                },
-            } as Card,
-        },
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    swimlane: {},
-                } as RootState,
-            }),
-        },
-    });
-}
+import emitter from "../../../../../../helpers/emitter";
 
 describe("EditRemainingEffort", () => {
-    it("Displays a text input", async () => {
-        const wrapper = await getWrapper();
+    const mock_remove_remaining_effort_from_edit_mode = jest.fn();
+    const mock_save_remaining_effort = jest.fn();
+
+    function getWrapper(
+        is_being_saved = false,
+    ): VueWrapper<InstanceType<typeof EditRemainingEffort>> {
+        return shallowMount(EditRemainingEffort, {
+            props: {
+                card: {
+                    id: 42,
+                    color: "fiesta-red",
+                    remaining_effort: {
+                        value: 3.14,
+                        is_in_edit_mode: true,
+                        is_being_saved,
+                    },
+                } as Card,
+            },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        swimlane: {
+                            mutations: {
+                                removeRemainingEffortFromEditMode:
+                                    mock_remove_remaining_effort_from_edit_mode,
+                            },
+                            actions: {
+                                saveRemainingEffort: mock_save_remaining_effort,
+                                loadSwimlanes: jest.fn(),
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
+        });
+    }
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("Displays a text input", () => {
+        const wrapper = getWrapper();
 
         expect(wrapper.attributes("type")).toBe("text");
         expect(wrapper.attributes("aria-label")).toBe("New remaining effort");
     });
 
     it("Does not save anything if user hit enter but didn't change the initial value", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         await wrapper.trigger("keyup.enter");
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
-        const card = wrapper.props("card");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "swimlane/removeRemainingEffortFromEditMode",
-            card,
-        );
+        expect(mock_remove_remaining_effort_from_edit_mode).not.toHaveBeenCalled();
     });
 
     it(`Does not save anything if the remaining effort is already being saved`, async () => {
-        const wrapper = await getWrapper(true);
+        const wrapper = getWrapper(true);
 
         await wrapper.trigger("keyup.enter");
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+        expect(mock_save_remaining_effort).not.toHaveBeenCalled();
     });
 
     it("Saves the new value if the user hits enter", async () => {
-        const wrapper = await getWrapper();
-
+        const wrapper = getWrapper();
         const value = 42;
-        await wrapper.setData({ value });
+        const input = wrapper.get<HTMLInputElement>("[data-test=remaining-effort]");
+        await input.setValue(value);
         await wrapper.trigger("keyup.enter");
 
         const card = wrapper.props("card");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
+        expect(mock_save_remaining_effort).toHaveBeenCalledWith(expect.anything(), {
             card,
             value,
         });
-        expect(card.remaining_effort.is_in_edit_mode).toBe(true);
+        expect(card.remaining_effort?.is_in_edit_mode).toBe(true);
     });
 
     it(`Saves the new value if the user clicks on save button (that is outside of this component)`, async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const value = 42;
-        await wrapper.setData({ value });
+        const input = wrapper.get<HTMLInputElement>("[data-test=remaining-effort]");
+        await input.setValue(value);
 
         const card = wrapper.props("card");
-        EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, card);
+        emitter.emit("save-card-edition", card);
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
+        expect(mock_save_remaining_effort).toHaveBeenCalledWith(expect.anything(), {
             card,
             value,
         });
     });
 
     it(`Cancels the edition of the remaining effort if the user clicks on cancel button (that is outside of this component)`, async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const value = 42;
-        await wrapper.setData({ value });
+        const input = wrapper.get<HTMLInputElement>("[data-test=remaining-effort]");
+        await input.setValue(value);
 
         const card = wrapper.props("card");
-        EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
+        emitter.emit("cancel-card-edition", card);
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "swimlane/removeRemainingEffortFromEditMode",
+        expect(mock_remove_remaining_effort_from_edit_mode).toHaveBeenCalledWith(
+            expect.anything(),
             card,
         );
-        expect(card.remaining_effort.value).toBe(3.14);
+        expect(card.remaining_effort?.value).toBe(3.14);
     });
 
     it(`does not save anynthing if user clicks on save button for another card`, async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const value = 42;
-        await wrapper.setData({ value });
+        const input = wrapper.get<HTMLInputElement>("[data-test=remaining-effort]");
+        await input.setValue(value);
 
         const card = wrapper.props("card");
-        EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, {} as Card);
+        emitter.emit("save-card-edition", {} as Card);
 
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
-        expect(card.remaining_effort.is_in_edit_mode).toBe(true);
+        expect(mock_remove_remaining_effort_from_edit_mode).not.toHaveBeenCalled();
+        expect(card.remaining_effort?.is_in_edit_mode).toBe(true);
     });
 
     it(`does not cancel the edition of the remaining effort if user clicks on cancel button for another card`, async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const value = 42;
-        await wrapper.setData({ value });
+        const input = wrapper.get<HTMLInputElement>("[data-test=remaining-effort]");
+        await input.setValue(value);
 
         const card = wrapper.props("card");
-        EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, {} as Card);
+        emitter.emit("cancel-card-edition", {} as Card);
 
-        expect(card.remaining_effort.is_in_edit_mode).toBe(true);
+        expect(card.remaining_effort?.is_in_edit_mode).toBe(true);
     });
 
     it("Adjust the size of the input whenever user enters digits", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
-        await wrapper.setData({ value: "3" });
+        let value = "3";
+        const input = wrapper.get<HTMLInputElement>("[data-test=remaining-effort]");
+        await input.setValue(value);
         expect(wrapper.classes()).toStrictEqual(["taskboard-card-remaining-effort-input"]);
 
-        await wrapper.setData({ value: "3.14" });
+        value = "3.14";
+        await input.setValue(value);
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-40");
 
-        await wrapper.setData({ value: "3.14159265358979323846264338327950288" });
+        value = "3.14159265358979323846264338327950288";
+        await input.setValue(value);
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-60");
     });
 
     it("emits the `editor-closed` event after saving", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const value = 42;
-        await wrapper.setData({ value });
+        const input = wrapper.get<HTMLInputElement>("[data-test=remaining-effort]");
+        await input.setValue(value);
         await wrapper.trigger("keyup.enter");
 
-        expect(wrapper.emitted("editor-closed")).toBeTruthy();
+        expect(wrapper.emitted()).toHaveProperty("editor-closed");
     });
 });

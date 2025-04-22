@@ -26,7 +26,12 @@
         v-on:click="expandColumn(column)"
         data-navigation="cell"
     >
-        <add-card v-if="is_add_card_rendered" v-bind:column="column" v-bind:swimlane="swimlane" />
+        <add-card
+            v-if="is_add_card_rendered"
+            v-bind:column="column"
+            v-bind:swimlane="swimlane"
+            v-bind:button_label="``"
+        />
     </div>
 </template>
 <script setup lang="ts">

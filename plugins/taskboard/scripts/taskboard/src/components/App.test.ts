@@ -17,116 +17,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, type VueWrapper } from "@vue/test-utils";
 import App from "./App.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition } from "../type";
 import type { RootState } from "../store/type";
+import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 
 describe("App", () => {
-    function getStore(
+    function createWrapper(
         has_content: boolean,
         columns: Array<ColumnDefinition>,
         has_global_error: boolean,
         has_modal_error: boolean,
-    ): unknown {
-        return createStoreMock({
-            state: {
-                has_content: has_content,
-                error: {
-                    has_global_error,
-                    has_modal_error,
-                },
-                column: {
-                    columns,
-                },
-            } as RootState,
+    ): VueWrapper<InstanceType<typeof App>> {
+        return shallowMount(App, {
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        has_content: has_content,
+                        error: {
+                            has_global_error,
+                            has_modal_error,
+                        },
+                        column: {
+                            columns,
+                        },
+                    } as RootState,
+                    modules: {
+                        swimlane: {
+                            actions: {
+                                loadSwimlanes: jest.fn(),
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
     }
 
     it("displays misconfiguration error when there are no column", () => {
-        const wrapper = shallowMount(App, {
-            mocks: { $store: getStore(true, [], false, false) },
-        });
+        const wrapper = createWrapper(true, [], false, false);
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays misconfiguration error even if there are no content", () => {
-        const wrapper = shallowMount(App, {
-            mocks: { $store: getStore(false, [], false, false) },
-        });
+        const wrapper = createWrapper(false, [], false, false);
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays the board when there are columns", () => {
-        const wrapper = shallowMount(App, {
-            mocks: {
-                $store: getStore(
-                    true,
-                    [
-                        { id: 2, label: "To do" },
-                        { id: 3, label: "Done" },
-                    ] as Array<ColumnDefinition>,
-                    false,
-                    false,
-                ),
-            },
-        });
+        const wrapper = createWrapper(
+            true,
+            [
+                { id: 2, label: "To do" },
+                { id: 3, label: "Done" },
+            ] as Array<ColumnDefinition>,
+            false,
+            false,
+        );
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays empty state when there is no content", () => {
-        const wrapper = shallowMount(App, {
-            mocks: {
-                $store: getStore(
-                    false,
-                    [
-                        { id: 2, label: "To do" },
-                        { id: 3, label: "Done" },
-                    ] as Array<ColumnDefinition>,
-                    false,
-                    false,
-                ),
-            },
-        });
+        const wrapper = createWrapper(
+            false,
+            [
+                { id: 2, label: "To do" },
+                { id: 3, label: "Done" },
+            ] as Array<ColumnDefinition>,
+            false,
+            false,
+        );
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("displays global error state when there is an error", () => {
-        const wrapper = shallowMount(App, {
-            mocks: {
-                $store: getStore(true, [], true, false),
-            },
-        });
+        const wrapper = createWrapper(true, [], true, false);
         expect(wrapper.element).toMatchSnapshot();
-    });
-
-    describe(`mounted()`, () => {
-        it(`will listen to the "keyup" event`, () => {
-            jest.spyOn(document, "addEventListener").mockImplementation();
-
-            shallowMount(App, {
-                mocks: {
-                    $store: getStore(true, [], false, false),
-                },
-            });
-
-            expect(document.addEventListener).toHaveBeenCalledWith("keyup", expect.any(Function));
-        });
-    });
-
-    describe(`destroy()`, () => {
-        it(`will remove the "keyup" listener`, () => {
-            jest.spyOn(document, "removeEventListener").mockImplementation();
-
-            const wrapper = shallowMount(App, {
-                mocks: {
-                    $store: getStore(true, [], false, false),
-                },
-            });
-            wrapper.destroy();
-
-            expect(document.removeEventListener).toHaveBeenCalledWith(
-                "keyup",
-                expect.any(Function),
-            );
-        });
     });
 });

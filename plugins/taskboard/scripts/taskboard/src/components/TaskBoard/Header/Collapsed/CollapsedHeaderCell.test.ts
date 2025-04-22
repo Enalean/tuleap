@@ -25,7 +25,7 @@ import ExpandButton from "./ExpandButton.vue";
 describe("CollapsedHeaderCell", () => {
     it("displays a cell with expand button", () => {
         const wrapper = shallowMount(CollapsedHeaderCell, {
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -42,7 +42,7 @@ describe("CollapsedHeaderCell", () => {
 
     it("displays a cell with color", () => {
         const wrapper = shallowMount(CollapsedHeaderCell, {
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -57,7 +57,7 @@ describe("CollapsedHeaderCell", () => {
 
     it(`Given the column has hover, then it shows its label`, () => {
         const wrapper = shallowMount(CollapsedHeaderCell, {
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -72,7 +72,7 @@ describe("CollapsedHeaderCell", () => {
 
     it(`Given the column does not have hover, then it does not shows its label`, () => {
         const wrapper = shallowMount(CollapsedHeaderCell, {
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",

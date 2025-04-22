@@ -41,7 +41,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useNamespacedActions, useState, useStore } from "vuex-composition-helpers";
 import type { Swimlane } from "../../../../../type";
 import type { State } from "../../../../../store/type";

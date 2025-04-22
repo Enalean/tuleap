@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,23 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import type { Vue } from "vue/types/vue";
-import Vuex from "vuex";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import type { StoreOptions } from "vuex";
+import type { RootState } from "../store/type";
+import { createStore } from "vuex";
 
-export async function createTaskboardLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-    local_vue.use(Vuex);
-    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
-    local_vue.use(VueDOMPurifyHTML);
-
-    return local_vue;
+export function getGlobalTestOptions(
+    store_options: StoreOptions<RootState>,
+): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true }), createStore(store_options)],
+    };
 }

@@ -7,8 +7,8 @@ exports[`LabelEditor Displays a texteara with its mirror to edit the label 1`] =
   <textarea
     class="tlp-textarea taskboard-card-label-input-mirror"
     rows="1"
+    value="Lorem ipsum doloret"
   />
-   
   <textarea
     aria-label="Set card label"
     class="tlp-textarea taskboard-card-label-input"
@@ -16,6 +16,7 @@ exports[`LabelEditor Displays a texteara with its mirror to edit the label 1`] =
     data-test="label-editor"
     placeholder="Card label…"
     rows="1"
+    value="Lorem ipsum doloret"
   />
 </div>
 `;

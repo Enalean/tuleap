@@ -17,36 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SoloSwimlane from "./SoloSwimlane.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
-import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import type { RootState } from "../../../../store/type";
-import type { Vue } from "vue/types/vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
-async function createWrapper(
+function createWrapper(
     columns: ColumnDefinition[],
     swimlane: Swimlane,
-): Promise<Wrapper<Vue>> {
+): VueWrapper<InstanceType<typeof SoloSwimlane>> {
     return shallowMount(SoloSwimlane, {
-        localVue: await createTaskboardLocalVue(),
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    column: { columns },
-                } as RootState,
+        props: { swimlane },
+        global: {
+            ...getGlobalTestOptions({
+                modules: {
+                    column: {
+                        state: {
+                            columns,
+                        },
+                        namespaced: true,
+                    },
+                },
             }),
         },
-        propsData: { swimlane },
     });
 }
 
 describe("SoloSwimlane", () => {
     it(`Given the solo card is in the Done column
         and that column is collapsed
-        then the solo swimlane is not displayed at all`, async () => {
+        then the solo swimlane is not displayed at all`, () => {
         const columns = [
             {
                 id: 2,
@@ -62,8 +63,8 @@ describe("SoloSwimlane", () => {
             } as ColumnDefinition,
         ];
         const swimlane = { card: { id: 43, mapped_list_value: { id: 103 } } } as Swimlane;
-        const wrapper = await createWrapper(columns, swimlane);
+        const wrapper = createWrapper(columns, swimlane);
 
-        expect(wrapper.html()).toBe("");
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 });

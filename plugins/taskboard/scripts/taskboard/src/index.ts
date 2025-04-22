@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
+import { createApp } from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./store";
 import App from "./components/App.vue";
-import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue2-gettext-init";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
 import type { ColumnDefinition, Tracker } from "./type";
-import Vuex from "vuex";
 import type { UserState } from "./store/user/type";
 import type { RootState } from "./store/type";
 import type { ColumnState } from "./store/column/type";
 import { pinHeaderWhileScrolling } from "@tuleap/pinned-header";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -58,16 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.trackers)
             : [];
 
-    await initVueGettext(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
-    Vue.use(Vuex);
-    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
-    Vue.use(VueDOMPurifyHTML);
-
-    const AppComponent = Vue.extend(App);
-
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const initial_root_state: RootState = {
         admin_url,
@@ -91,9 +81,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         columns,
     };
 
-    new AppComponent({
-        store: createStore(initial_root_state, initial_user_state, initial_column_state),
-    }).$mount(vue_mount_point);
+    const store = createStore(initial_root_state, initial_user_state, initial_column_state);
+
+    const app = createApp(App);
+
+    const gettext_plugin = await initVueGettext(
+        createGettext,
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+    );
+
+    app.use(store).use(VueDOMPurifyHTML).use(gettext_plugin).mount(vue_mount_point);
 
     const distance_between_top_and_swimlanes_header_magic_value = 190;
     pinHeaderWhileScrolling(

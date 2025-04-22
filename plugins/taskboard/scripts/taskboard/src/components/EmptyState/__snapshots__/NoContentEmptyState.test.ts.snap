@@ -9,13 +9,10 @@ exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = 
   >
     <no-content-empty-state-illustration-stub />
   </div>
-   
   <h1
     class="empty-state-title"
   >
-    
-        This taskboard is empty
-    
+    This taskboard is empty
   </h1>
 </section>
 `;

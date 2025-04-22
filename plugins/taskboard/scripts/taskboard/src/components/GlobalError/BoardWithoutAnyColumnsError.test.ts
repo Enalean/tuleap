@@ -19,12 +19,24 @@
 
 import { shallowMount } from "@vue/test-utils";
 import BoardWithoutAnyColumnsError from "./BoardWithoutAnyColumnsError.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { UserState } from "../../store/user/type";
 
 describe("BoardWithoutAnyColumnsError", () => {
     it("is displays misconfiguration error for regular user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsError, {
-            mocks: { $store: createStoreMock({ state: { user: { user_is_admin: false } } }) },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        user: {
+                            state: {
+                                user_is_admin: false,
+                            } as UserState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
         expect(wrapper.element).toMatchInlineSnapshot(
             `<board-without-any-columns-error-for-users-stub />`,
@@ -32,7 +44,18 @@ describe("BoardWithoutAnyColumnsError", () => {
     });
     it("is displays misconfiguration error for admin user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsError, {
-            mocks: { $store: createStoreMock({ state: { user: { user_is_admin: true } } }) },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        user: {
+                            state: {
+                                user_is_admin: true,
+                            } as UserState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
         expect(wrapper.element).toMatchInlineSnapshot(
             `<board-without-any-columns-error-for-admin-stub />`,

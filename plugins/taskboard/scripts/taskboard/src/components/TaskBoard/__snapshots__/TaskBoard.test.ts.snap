@@ -5,11 +5,8 @@ exports[`TaskBoard displays a table with header and body 1`] = `
   class="taskboard"
 >
   <taskboard-button-bar-stub />
-   
   <task-board-header-stub />
-   
   <task-board-body-stub />
-   
-  <!---->
+  <!--v-if-->
 </div>
 `;

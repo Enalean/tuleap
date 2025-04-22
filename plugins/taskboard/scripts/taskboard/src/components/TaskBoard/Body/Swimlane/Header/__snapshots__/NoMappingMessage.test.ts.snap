@@ -8,7 +8,6 @@ exports[`NoMappingMessage displays a message when card has a status 1`] = `
     aria-hidden="true"
     class="fas fa-exclamation-triangle"
   />
-   
   <span>
     This card has status 
     <strong>
@@ -16,9 +15,7 @@ exports[`NoMappingMessage displays a message when card has a status 1`] = `
     </strong>
      that does not map to current taskboard columns.
   </span>
-  
-    Please edit the card to change the status, or add children if possible.
-
+   Please edit the card to change the status, or add children if possible.
 </p>
 `;
 
@@ -30,12 +27,9 @@ exports[`NoMappingMessage displays another message when card has no status 1`] =
     aria-hidden="true"
     class="fas fa-exclamation-triangle"
   />
-   
   <span>
     This card does not have any status.
   </span>
-  
-    Please edit the card to change the status, or add children if possible.
-
+   Please edit the card to change the status, or add children if possible.
 </p>
 `;
