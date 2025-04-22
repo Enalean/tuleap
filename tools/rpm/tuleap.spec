@@ -473,7 +473,7 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-t
 %package plugin-program_management
 Summary: Program Management
 Group: Development/Tools
-Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard, tuleap-plugin-crosstracker, tuleap-plugin-roadmap, tuleap-plugin-graphontrackers, tuleap-plugin-document, tuleap-plugin-git, tuleap-plugin-testmanagement
 %description plugin-program_management
 %{summary}.
 

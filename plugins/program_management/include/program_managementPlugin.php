@@ -309,7 +309,17 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
     public function getDependencies(): array
     {
-        return ['tracker', 'agiledashboard', 'cardwall'];
+        $templates_dependencies = [
+            'crosstracker',
+            'roadmap',
+            'graphontrackersv5',
+            'docman',
+            'git',
+            'testmanagement',
+            'kanban',
+        ];
+
+        return array_merge(['tracker', 'agiledashboard', 'cardwall'], $templates_dependencies);
     }
 
     protected function getServiceClass(): string
