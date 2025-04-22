@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { ref } from "vue";
+import { createGettext } from "vue3-gettext";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionContainer from "@/components/section/SectionContainer.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
@@ -24,78 +27,68 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
 
 describe("SectionContainer", () => {
-    it("should use the color of the artifact tracker", () => {
-        const wrapper = shallowMount(SectionContainer, {
+    let artidoc_section: ArtidocSection;
+    beforeEach(() => {
+        artidoc_section = ArtifactSectionFactory.create();
+    });
+
+    function getWrapper(is_bad: boolean = false): VueWrapper {
+        const reactive_section = ReactiveStoredArtidocSectionStub.fromSection(artidoc_section);
+        const sections_below_artifacts = is_bad ? [reactive_section.value.internal_id] : [];
+
+        return shallowMount(SectionContainer, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [SECTIONS_BELOW_ARTIFACTS.valueOf()]: ref(sections_below_artifacts),
+                },
+            },
             props: {
-                section: ReactiveStoredArtidocSectionStub.fromSection(
-                    ArtifactSectionFactory.create(),
-                ),
+                section: reactive_section,
             },
         });
+    }
 
-        expect(wrapper.classes()).toStrictEqual([
+    it("should use the color of the artifact tracker", () => {
+        artidoc_section = ArtifactSectionFactory.withTrackerColor("red-wine");
+        expect(getWrapper().classes()).toStrictEqual([
             "artidoc-section-container",
-            "tlp-swatch-fiesta-red",
+            "tlp-swatch-red-wine",
         ]);
     });
 
     it("should use the color of the pending artifact tracker", () => {
-        const wrapper = shallowMount(SectionContainer, {
-            props: {
-                section: ReactiveStoredArtidocSectionStub.fromSection(
-                    PendingArtifactSectionFactory.create(),
-                ),
-            },
-        });
-
-        expect(wrapper.classes()).toStrictEqual([
+        artidoc_section = PendingArtifactSectionFactory.create();
+        expect(getWrapper().classes()).toStrictEqual([
             "artidoc-section-container",
             "tlp-swatch-flamingo-pink",
         ]);
     });
 
-    it("should not use the tlp-swatch palette if it is not an artifact section", () => {
-        const wrapper = shallowMount(SectionContainer, {
-            props: {
-                section: ReactiveStoredArtidocSectionStub.fromSection({} as ArtidocSection),
-            },
-        });
-
-        expect(wrapper.classes()).toStrictEqual([
-            "artidoc-section-container",
-            "artidoc-section-container-without-border",
-        ]);
-    });
-
     it("should not use the tlp-swatch palette if it is a skeleton", () => {
-        const wrapper = shallowMount(SectionContainer, {
-            props: {
-                section: ReactiveStoredArtidocSectionStub.fromSection(
-                    ArtifactSectionFactory.skeleton(),
-                ),
-            },
-        });
-
-        expect(wrapper.classes()).toStrictEqual([
+        artidoc_section = ArtifactSectionFactory.skeleton();
+        expect(getWrapper().classes()).toStrictEqual([
             "artidoc-section-container",
             "artidoc-section-container-without-border",
         ]);
     });
 
     it("should not use the tlp-swatch palette if it is a Freetext section", () => {
-        const wrapper = shallowMount(SectionContainer, {
-            props: {
-                section: ReactiveStoredArtidocSectionStub.fromSection(
-                    FreetextSectionFactory.create(),
-                ),
-            },
-        });
-
-        expect(wrapper.classes()).toStrictEqual([
+        artidoc_section = FreetextSectionFactory.create();
+        expect(getWrapper().classes()).toStrictEqual([
             "artidoc-section-container",
             "artidoc-section-container-without-border",
+        ]);
+    });
+
+    it(`should show a class when it is below an artifact section (which is not allowed)`, () => {
+        expect(getWrapper(true).classes()).toStrictEqual([
+            "artidoc-section-container",
+            "tlp-swatch-fiesta-red",
+            "section-with-artifact-parent",
         ]);
     });
 });

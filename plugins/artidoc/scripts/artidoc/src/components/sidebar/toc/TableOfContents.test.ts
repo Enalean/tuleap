@@ -37,6 +37,7 @@ import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCol
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import TableOfContents from "./TableOfContents.vue";
+import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
 
 const display_level_section1 = "1.";
 const display_level_section2 = "2.";
@@ -45,12 +46,13 @@ const display_level_section3 = "2.1.";
 describe("TableOfContents", () => {
     let can_user_edit_document: boolean,
         is_loading_sections: boolean,
-        sections: ReactiveStoredArtidocSection[];
-
+        sections: ReactiveStoredArtidocSection[],
+        section_below_artifacts: string[];
     beforeEach(() => {
         can_user_edit_document = true;
         is_loading_sections = true;
         sections = [];
+        section_below_artifacts = [];
     });
 
     const getWrapper = (): VueWrapper =>
@@ -66,6 +68,7 @@ describe("TableOfContents", () => {
                     [IS_LOADING_SECTIONS.valueOf()]: ref(is_loading_sections),
                     [SECTIONS_STATES_COLLECTION.valueOf()]:
                         SectionsStatesCollectionStub.fromReactiveStoredArtifactSections(sections),
+                    [SECTIONS_BELOW_ARTIFACTS.valueOf()]: ref(section_below_artifacts),
                 },
             },
         });
@@ -154,6 +157,13 @@ describe("TableOfContents", () => {
             expect(list[0].find("a").text()).toBe("Technologies section");
             expect(list[1].find("a").text()).toBe("Technologies section");
             expect(list[2].find("a").text()).toBe("Freetext section");
+        });
+
+        it(`should show an icon to warn user of sections below artifacts`, () => {
+            section_below_artifacts = [sections[1].value.internal_id];
+
+            const wrapper = getWrapper();
+            expect(wrapper.find("[data-test=warning-icon]").exists()).toBe(true);
         });
 
         it("should have an url to redirect to the section", () => {

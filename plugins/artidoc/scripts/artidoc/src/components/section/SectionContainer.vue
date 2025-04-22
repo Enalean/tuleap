@@ -19,17 +19,37 @@
   -->
 <template>
     <div class="artidoc-section-container" v-bind:class="additional_class">
+        <p class="section-with-artifact-parent-error" v-if="has_artifact_parent">
+            <i class="fa-solid fa-exclamation-circle alert-icon" aria-hidden="true"></i
+            >{{
+                $gettext(
+                    "This section cannot be on a level below an Artifact section, please either change its heading level to the same level or a higher level.",
+                )
+            }}
+        </p>
         <section-content v-bind:section="section" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { useGettext } from "vue3-gettext";
 import SectionContent from "./SectionContent.vue";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
+import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
+
+const { $gettext } = useGettext();
+
+const bad_sections = strictInject(SECTIONS_BELOW_ARTIFACTS);
 
 const props = defineProps<{ section: ReactiveStoredArtidocSection }>();
+
+const has_artifact_parent = computed((): boolean =>
+    bad_sections.value.includes(props.section.value.internal_id),
+);
+
 const additional_class = computed(() => {
     const color = isArtifactSection(props.section.value)
         ? props.section.value.artifact.tracker.color
@@ -37,7 +57,13 @@ const additional_class = computed(() => {
           ? props.section.value.tracker.color
           : "";
 
-    return color !== "" ? `tlp-swatch-${color}` : "artidoc-section-container-without-border";
+    const color_class =
+        color !== "" ? `tlp-swatch-${color}` : "artidoc-section-container-without-border";
+
+    if (has_artifact_parent.value) {
+        return [color_class, "section-with-artifact-parent"];
+    }
+    return [color_class];
 });
 </script>
 
@@ -116,6 +142,19 @@ const additional_class = computed(() => {
     &:has(.document-section-is-outdated) {
         --tuleap-artidoc-section-background: var(--tlp-alert-warning-background);
     }
+}
+
+.section-with-artifact-parent {
+    --tuleap-artidoc-section-background: var(--tlp-alert-danger-background);
+}
+
+.section-with-artifact-parent-error {
+    padding: 0 var(--tlp-jumbo-spacing) 0 0;
+    color: var(--tlp-danger-color);
+}
+
+.alert-icon {
+    margin: 0 5px 0 0;
 }
 
 @media screen and (min-width: #{viewport-breakpoint.$small-screen-size}) and (max-width: #{viewport-breakpoint.$medium-screen-size-when-document-sidebar-is-expanded}) {
