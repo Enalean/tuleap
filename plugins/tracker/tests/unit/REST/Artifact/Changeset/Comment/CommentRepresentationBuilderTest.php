@@ -22,38 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectUGroup;
-use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CommentRepresentationBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ContentInterpretor
-     */
-    private $interpreter;
-
-    protected function setUp(): void
-    {
-        $this->interpreter = \Mockery::spy(ContentInterpretor::class);
-        $this->builder     = new CommentRepresentationBuilder($this->interpreter);
-    }
-
     public function testItBuildsTextCommentRepresentation(): void
     {
-        $representation = $this->builder->buildRepresentation(
+        $interpreter    = ContentInterpretorStub::withInterpretedText('Blah');
+        $builder        = new CommentRepresentationBuilder($interpreter);
+        $representation = $builder->buildRepresentation(
             $this->buildComment('A text comment', CommentFormatIdentifier::TEXT->value),
             new UserIsNotAllowedToSeeUGroups()
         );
@@ -65,7 +51,9 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsTextCommentRepresentationWithPrivateUgroups(): void
     {
-        $representation = $this->builder->buildRepresentation(
+        $interpreter    = ContentInterpretorStub::withInterpretedText('Blah');
+        $builder        = new CommentRepresentationBuilder($interpreter);
+        $representation = $builder->buildRepresentation(
             $this->buildComment('A text comment', CommentFormatIdentifier::TEXT->value),
             [$this->buildProjectUGroup()]
         );
@@ -78,7 +66,9 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsHTMLCommentRepresentation(): void
     {
-        $representation = $this->builder->buildRepresentation(
+        $interpreter    = ContentInterpretorStub::withInterpretedText('Blah');
+        $builder        = new CommentRepresentationBuilder($interpreter);
+        $representation = $builder->buildRepresentation(
             $this->buildComment('<p>An HTML comment</p>', CommentFormatIdentifier::HTML->value),
             new UserIsNotAllowedToSeeUGroups()
         );
@@ -90,7 +80,9 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsHTMLCommentRepresentationWithPrivateComment(): void
     {
-        $representation = $this->builder->buildRepresentation(
+        $interpreter    = ContentInterpretorStub::withInterpretedText('Blah');
+        $builder        = new CommentRepresentationBuilder($interpreter);
+        $representation = $builder->buildRepresentation(
             $this->buildComment('<p>An HTML comment</p>', CommentFormatIdentifier::HTML->value),
             [$this->buildProjectUGroup()]
         );
@@ -103,10 +95,9 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsCommonMarkCommentRepresentation(): void
     {
-        $this->interpreter->shouldReceive('getInterpretedContentWithReferences')
-            ->andReturn('<p>A <strong>CommonMark</strong> comment');
-
-        $representation = $this->builder->buildRepresentation(
+        $interpreter    = ContentInterpretorStub::withInterpretedText('<p>A <strong>CommonMark</strong> comment');
+        $builder        = new CommentRepresentationBuilder($interpreter);
+        $representation = $builder->buildRepresentation(
             $this->buildComment('A **CommonMark** comment', CommentFormatIdentifier::COMMONMARK->value),
             new UserIsNotAllowedToSeeUGroups()
         );
@@ -118,10 +109,9 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsCommonMarkCommentRepresentationWithPrivateUgroups(): void
     {
-        $this->interpreter->shouldReceive('getInterpretedContentWithReferences')
-            ->andReturn('<p>A <strong>CommonMark</strong> comment');
-
-        $representation = $this->builder->buildRepresentation(
+        $interpreter    = ContentInterpretorStub::withInterpretedText('<p>A <strong>CommonMark</strong> comment');
+        $builder        = new CommentRepresentationBuilder($interpreter);
+        $representation = $builder->buildRepresentation(
             $this->buildComment('A **CommonMark** comment', CommentFormatIdentifier::COMMONMARK->value),
             [$this->buildProjectUGroup()]
         );
@@ -134,19 +124,20 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItThrowsWhenFormatIsUnknown(): void
     {
+        $interpreter = ContentInterpretorStub::withInterpretedText('Blah');
+        $builder     = new CommentRepresentationBuilder($interpreter);
         $this->expectException(InvalidCommentFormatException::class);
-        $this->builder->buildRepresentation($this->buildComment('Irrelevant', 'invalid'), []);
+        $builder->buildRepresentation($this->buildComment('Irrelevant', 'invalid'), []);
     }
 
     private function buildComment(string $body, string $format): \Tracker_Artifact_Changeset_Comment
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(110);
-        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
-        $artifact = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getArtifact')->andReturn($artifact);
+        $tracker   = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(110)->build())
+            ->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(1001)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset(10001)->ofArtifact($artifact)->build();
+
         return new \Tracker_Artifact_Changeset_Comment(
             23,
             $changeset,
