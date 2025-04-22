@@ -18,29 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_NumericTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\Tracker\FormElement\Field\Numeric;
+
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_Float;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_NumericTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItDelegatesRetrievalOfTheOldValueToTheDaoWhenNoTimestampGiven(): void
     {
         $user      = new PFUser(['language_id' => 'en']);
-        $value_dao = \Mockery::spy(
-            \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao::class
-        )
-            ->shouldReceive('getLastValue')->andReturns(['value' => '123.45'])->getMock();
-        $artifact  = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(123);
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('userCanRead')->with($user)->andReturns(true);
-        $field->shouldReceive('getValueDao')->andReturns($value_dao);
+        $value_dao = $this->createMock(FloatValueDao::class);
+        $value_dao->method('getLastValue')->willReturn(['value' => '123.45']);
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['userCanRead', 'getValueDao']);
+        $field->method('userCanRead')->with($user)->willReturn(true);
+        $field->method('getValueDao')->willReturn($value_dao);
 
         $actual_value = $field->getComputedValue($user, $artifact);
-        $this->assertEquals('123.45', $actual_value);
+        self::assertEquals('123.45', $actual_value);
     }
 
     public function testItDelegatesRetrievalOfTheOldValueToTheDaoWhenGivenATimestamp(): void
@@ -48,22 +52,16 @@ final class Tracker_FormElement_Field_NumericTest extends \Tuleap\Test\PHPUnit\T
         $artifact_id = 123;
         $field_id    = 195;
         $user        = new PFUser(['language_id' => 'en']);
-        $value_dao   = \Mockery::mock(
-            \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao::class
-        );
-        $artifact    =  Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $field     = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $timestamp = 9340590569;
-        $value     = 67.89;
+        $value_dao   = $this->createMock(FloatValueDao::class);
+        $artifact    = ArtifactTestBuilder::anArtifact($artifact_id)->build();
+        $field       = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getId', 'userCanRead', 'getValueDao']);
+        $timestamp   = 9340590569;
+        $value       = 67.89;
 
-        $field->shouldReceive('getId')->andReturns($field_id);
-        $field->shouldReceive('getValueDao')->andReturns($value_dao);
-        $field->shouldReceive('userCanRead')->with($user)->andReturns(true);
-        $value_dao->shouldReceive('getValueAt')->with($artifact_id, $field_id, $timestamp)->andReturns(
-            ['value' => $value]
-        );
+        $field->method('getId')->willReturn($field_id);
+        $field->method('getValueDao')->willReturn($value_dao);
+        $field->method('userCanRead')->with($user)->willReturn(true);
+        $value_dao->method('getValueAt')->with($artifact_id, $field_id, $timestamp)->willReturn(['value' => $value]);
 
         self::assertSame($value, $field->getComputedValue($user, $artifact, $timestamp));
     }
@@ -71,12 +69,10 @@ final class Tracker_FormElement_Field_NumericTest extends \Tuleap\Test\PHPUnit\T
     public function testItReturnsZeroWhenUserDoesntHavePermissions(): void
     {
         $user     = new PFUser(['language_id' => 'en']);
-        $artifact =  Mockery::mock(Artifact::class);
-        $field    = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('userCanRead')->with($user)->andReturns(false);
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
+        $field    = FloatFieldBuilder::aFloatField(64512)->withReadPermission($user, false)->build();
 
         $actual_value = $field->getComputedValue($user, $artifact);
-        $this->assertEquals(0, $actual_value);
+        self::assertEquals(0, $actual_value);
     }
 }
