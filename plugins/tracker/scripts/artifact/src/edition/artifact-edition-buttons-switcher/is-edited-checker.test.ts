@@ -30,10 +30,14 @@ describe("Is edited", () => {
     } as unknown as CKEDITOR.editor;
     let doc: Document;
     let textarea: HTMLTextAreaElement;
+    let select_ckeditor_format: HTMLSelectElement;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         textarea = doc.createElement("textarea");
+        select_ckeditor_format = doc.createElement("select");
+        select_ckeditor_format.id = "rte_format_selectboxnew";
+        select_ckeditor_format.value = "HTML";
     });
 
     describe("nothingIsEdited", () => {
@@ -41,27 +45,37 @@ describe("Is edited", () => {
             (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
             (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
 
-            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(true);
+            expect(
+                nothingIsEdited(mock_editor_instance, select_ckeditor_format, textarea, doc),
+            ).toBe(true);
         });
 
         it("should return false when follow-up is not empty, regardless of fields status", () => {
             (isFollowUpEmpty as jest.Mock).mockReturnValue(false);
             (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
 
-            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+            expect(
+                nothingIsEdited(mock_editor_instance, select_ckeditor_format, textarea, doc),
+            ).toBe(false);
 
             (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
-            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+            expect(
+                nothingIsEdited(mock_editor_instance, select_ckeditor_format, textarea, doc),
+            ).toBe(false);
         });
 
         it("should return false when fields are in edition, regardless of follow-up status", () => {
             (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
             (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
 
-            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+            expect(
+                nothingIsEdited(mock_editor_instance, select_ckeditor_format, textarea, doc),
+            ).toBe(false);
 
             (isFollowUpEmpty as jest.Mock).mockReturnValue(false);
-            expect(nothingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+            expect(
+                nothingIsEdited(mock_editor_instance, select_ckeditor_format, textarea, doc),
+            ).toBe(false);
         });
     });
 
@@ -70,14 +84,18 @@ describe("Is edited", () => {
             (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
             (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(false);
 
-            expect(somethingIsEdited(mock_editor_instance, textarea, doc)).toBe(true);
+            expect(
+                somethingIsEdited(mock_editor_instance, select_ckeditor_format, textarea, doc),
+            ).toBe(true);
         });
 
         it("should return false when a field is switch to edited", () => {
             (isFollowUpEmpty as jest.Mock).mockReturnValue(true);
             (noFieldIsSwitchedToEdit as jest.Mock).mockReturnValue(true);
 
-            expect(somethingIsEdited(mock_editor_instance, textarea, doc)).toBe(false);
+            expect(
+                somethingIsEdited(mock_editor_instance, select_ckeditor_format, textarea, doc),
+            ).toBe(false);
         });
     });
 });

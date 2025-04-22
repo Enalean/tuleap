@@ -35,10 +35,15 @@ jest.mock("./is-edited-checker", () => ({
 describe("submission bar tooggler", () => {
     let doc: Document;
     let mock_editor_instance = {} as CKEDITOR.editor;
-    const mock_comment_element = {} as HTMLElement;
+    let select_ckeditor_format: HTMLSelectElement;
+    let textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
+        textarea = doc.createElement("textarea");
+
+        select_ckeditor_format = doc.createElement("select");
+        select_ckeditor_format.id = "rte_format_selectboxnew";
     });
 
     describe("toggleSubmitArtifactBar", () => {
@@ -50,7 +55,7 @@ describe("submission bar tooggler", () => {
             button.className = "tracker-artifact-submit-buttons-bar-container";
             doc.body.appendChild(button);
 
-            toggleSubmitArtifactBar(mock_editor_instance, mock_comment_element, doc);
+            toggleSubmitArtifactBar(mock_editor_instance, select_ckeditor_format, textarea, doc);
 
             expect(button.classList.contains("tracker-artifact-submit-buttons-bar-display")).toBe(
                 false,
@@ -65,7 +70,7 @@ describe("submission bar tooggler", () => {
             button.className = "tracker-artifact-submit-buttons-bar-container";
             doc.body.appendChild(button);
 
-            toggleSubmitArtifactBar(mock_editor_instance, mock_comment_element, doc);
+            toggleSubmitArtifactBar(mock_editor_instance, select_ckeditor_format, textarea, doc);
 
             expect(button.classList.contains("tracker-artifact-submit-buttons-bar-display")).toBe(
                 false,
@@ -80,7 +85,7 @@ describe("submission bar tooggler", () => {
             button.className = "tracker-artifact-submit-buttons-bar-container";
             doc.body.appendChild(button);
 
-            toggleSubmitArtifactBar(mock_editor_instance, mock_comment_element, doc);
+            toggleSubmitArtifactBar(mock_editor_instance, select_ckeditor_format, textarea, doc);
 
             // wait for the transaction css before performing assertions
             setTimeout(() => {
@@ -98,7 +103,7 @@ describe("submission bar tooggler", () => {
             button.className = "tracker-artifact-submit-buttons-bar-container";
             doc.body.appendChild(button);
 
-            toggleSubmitArtifactBar(mock_editor_instance, mock_comment_element, doc);
+            toggleSubmitArtifactBar(mock_editor_instance, select_ckeditor_format, textarea, doc);
 
             expect(button.classList.contains("tracker-artifact-submit-buttons-bar-display")).toBe(
                 false,
@@ -120,15 +125,20 @@ describe("submission bar tooggler", () => {
         });
 
         it("should do nothing if no editor instance exists", () => {
-            toggleSubmissionBarForCommentInCkeditor(doc, null);
+            toggleSubmissionBarForCommentInCkeditor(doc, null, select_ckeditor_format, textarea);
 
             expect(mock_on_change).not.toHaveBeenCalled();
         });
 
         it("should register a change event on the CKEDITOR instance", () => {
-            toggleSubmissionBarForCommentInCkeditor(doc, mock_editor_instance);
+            toggleSubmissionBarForCommentInCkeditor(
+                doc,
+                mock_editor_instance,
+                select_ckeditor_format,
+                textarea,
+            );
 
-            expect(mock_on_change).toHaveBeenCalledTimes(1);
+            expect(mock_on_change).toHaveBeenCalled();
             expect(mock_on_change).toHaveBeenCalledWith("change", expect.any(Function));
         });
 
@@ -137,7 +147,12 @@ describe("submission bar tooggler", () => {
             button.className = "hidden-artifact-submit-button";
             doc.body.appendChild(button);
 
-            toggleSubmissionBarForCommentInCkeditor(doc, mock_editor_instance);
+            toggleSubmissionBarForCommentInCkeditor(
+                doc,
+                mock_editor_instance,
+                select_ckeditor_format,
+                textarea,
+            );
 
             const change_callback = mock_on_change.mock.calls[0][1];
             change_callback();
@@ -149,7 +164,12 @@ describe("submission bar tooggler", () => {
         it("should display the button bar", () => {
             (submissionBarIsAlreadyActive as jest.Mock).mockReturnValue(false);
             (somethingIsEdited as jest.Mock).mockReturnValue(true);
-            toggleSubmissionBarForCommentInCkeditor(doc, mock_editor_instance);
+            toggleSubmissionBarForCommentInCkeditor(
+                doc,
+                mock_editor_instance,
+                select_ckeditor_format,
+                textarea,
+            );
 
             const button = doc.createElement("button");
             button.className = "hidden-artifact-submit-button";

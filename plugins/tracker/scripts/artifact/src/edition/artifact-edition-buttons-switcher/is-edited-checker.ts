@@ -22,19 +22,29 @@ import { noFieldIsSwitchedToEdit } from "./fields-checker";
 
 export const nothingIsEdited = (
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    editor_format_selectbox: HTMLSelectElement | null,
     follow_up_new_comment: HTMLElement | null,
     doc: Document,
 ): boolean => {
     return (
-        isFollowUpEmpty(follow_up_comment_editor_instance, follow_up_new_comment) &&
-        noFieldIsSwitchedToEdit(doc)
+        isFollowUpEmpty(
+            follow_up_comment_editor_instance,
+            editor_format_selectbox,
+            follow_up_new_comment,
+        ) && noFieldIsSwitchedToEdit(doc)
     );
 };
 
 export const somethingIsEdited = (
     follow_up_comment_editor_instance: CKEDITOR.editor | null,
+    editor_format_selectbox: HTMLSelectElement | null,
     follow_up_new_comment: HTMLElement | null,
     doc: Document,
 ): boolean => {
-    return !nothingIsEdited(follow_up_comment_editor_instance, follow_up_new_comment, doc);
+    return !nothingIsEdited(
+        follow_up_comment_editor_instance,
+        editor_format_selectbox,
+        follow_up_new_comment,
+        doc,
+    );
 };

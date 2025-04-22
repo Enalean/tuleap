@@ -20,12 +20,30 @@
 import { isFollowUpEmpty } from "./follow-up-checker";
 
 describe("isFollowUpEmpty", () => {
+    let doc: Document;
+    let select_ckeditor_format: HTMLSelectElement;
+    beforeEach(() => {
+        doc = document.implementation.createHTMLDocument();
+
+        select_ckeditor_format = doc.createElement("select");
+        select_ckeditor_format.id = "rte_format_selectboxnew";
+
+        const html_option = document.createElement("option");
+        html_option.value = "html";
+
+        const markdown_option = document.createElement("option");
+        markdown_option.value = "markdown";
+
+        select_ckeditor_format.appendChild(html_option);
+        select_ckeditor_format.appendChild(markdown_option);
+    });
+
     it("should return true if the CKEDITOR instance has empty content", () => {
         const mock_editor_instance = {
             getData: jest.fn().mockReturnValue("   "),
         } as unknown as CKEDITOR.editor;
 
-        expect(isFollowUpEmpty(mock_editor_instance, null)).toBe(true);
+        expect(isFollowUpEmpty(mock_editor_instance, select_ckeditor_format, null)).toBe(true);
     });
 
     it("should return false if the CKEDITOR instance has content", () => {
@@ -33,24 +51,25 @@ describe("isFollowUpEmpty", () => {
             getData: jest.fn().mockReturnValue("Some content"),
         } as unknown as CKEDITOR.editor;
 
-        expect(isFollowUpEmpty(mock_editor_instance, null)).toBe(false);
+        select_ckeditor_format.value = "html";
+        expect(isFollowUpEmpty(mock_editor_instance, select_ckeditor_format, null)).toBe(false);
     });
 
     it("should return true if follow_up_new_comment is a textarea but empty", () => {
         const mock_comment = document.createElement("textarea");
         mock_comment.value = "   ";
 
-        expect(isFollowUpEmpty(null, mock_comment)).toBe(true);
+        expect(isFollowUpEmpty(null, select_ckeditor_format, mock_comment)).toBe(true);
     });
 
     it("should return false if follow_up_new_comment is a textarea and has content", () => {
         const mock_comment = document.createElement("textarea");
         mock_comment.value = "Some content";
 
-        expect(isFollowUpEmpty(null, mock_comment)).toBe(false);
+        expect(isFollowUpEmpty(null, select_ckeditor_format, mock_comment)).toBe(false);
     });
 
     it("should return true if both CKEDITOR instance and follow_up_new_comment are null", () => {
-        expect(isFollowUpEmpty(null, null)).toBe(true);
+        expect(isFollowUpEmpty(null, select_ckeditor_format, null)).toBe(true);
     });
 });

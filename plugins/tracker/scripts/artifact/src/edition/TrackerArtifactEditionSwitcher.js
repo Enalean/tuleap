@@ -23,11 +23,9 @@ import $ from "jquery";
 import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
-import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker";
-import {
-    toggleSubmissionBarForCommentInCkeditor,
-    toggleSubmitArtifactBar,
-} from "./artifact-edition-buttons-switcher/submission-bar-toggler";
+import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker.js";
+import { toggleSubmitArtifactBar } from "./artifact-edition-buttons-switcher/submission-bar-toggler.js";
+import { bindSubmissionBarToFollowups } from "./artifact-edition-buttons-switcher/bind-submission-bar-to-followups.js";
 
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.artifact = tuleap.tracker.artifact || {};
@@ -43,7 +41,12 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         initDoubleArtifactFormSubmitionGuard();
 
         if ($("#artifact_informations").size() > 0) {
-            bindSubmissionBarToFollowups();
+            bindSubmissionBarToFollowups(
+                document,
+                CKEDITOR.instances.tracker_followup_comment_new,
+                document.getElementById("rte_format_selectboxnew"),
+                document.getElementById("tracker_followup_comment_new"),
+            );
             disableWarnBeforeUnloadOnSubmitForm();
             toggleFieldsIfAlreadySubmittedArtifact();
             toggleEmptyMandatoryFields();
@@ -309,6 +312,7 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         toggleDependencyIfAny(element);
         toggleSubmitArtifactBar(
             CKEDITOR.instances.tracker_followup_comment_new,
+            document.getElementById("rte_format_selectboxnew"),
             document.getElementById("tracker_followup_comment_new"),
             document,
         );
@@ -380,36 +384,6 @@ tuleap.tracker.artifact.editionSwitcher = function () {
 
     var fieldIsCreatable = function (element) {
         return $(".add-field", element).size() > 0;
-    };
-
-    var bindSubmissionBarToFollowups = function () {
-        toggleSubmissionBarForCommentInCkeditor(
-            document,
-            CKEDITOR.instances.tracker_followup_comment_new,
-        );
-
-        $("#tracker_followup_comment_new").on("input propertychange", function () {
-            toggleSubmitArtifactBar(
-                CKEDITOR.instances.tracker_followup_comment_new,
-                document.getElementById("tracker_followup_comment_new"),
-                document,
-            );
-        });
-
-        $("#rte_format_selectboxnew").on("change", function () {
-            toggleSubmissionBarForCommentInCkeditor(
-                document,
-                CKEDITOR.instances.tracker_followup_comment_new,
-            );
-        });
-
-        $("#tracker_artifact_canned_response_sb").on("change", function () {
-            toggleSubmitArtifactBar(
-                CKEDITOR.instances.tracker_followup_comment_new,
-                document.getElementById("tracker_followup_comment_new"),
-                document,
-            );
-        });
     };
 
     var toggleHiddenImageViewing = function () {
