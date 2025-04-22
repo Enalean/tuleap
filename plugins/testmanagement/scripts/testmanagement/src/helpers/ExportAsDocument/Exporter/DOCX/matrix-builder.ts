@@ -39,14 +39,14 @@ import {
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
 import {
+    A4_LANDSCAPE_APPROXIMATE_WIDTH_IN_DXA,
     buildCellContentOptions,
     getAnchorToArtifactContent,
     TABLE_MARGINS,
-} from "@tuleap/plugin-docgen-docx/src";
+} from "@tuleap/plugin-docgen-docx";
 import { buildCellContentResult, TABLE_BORDERS, TABLE_LABEL_SHADING } from "./Table/table-builder";
 import { computeRequirementStatus } from "./matrix-compute-requirement-status";
 import type { GettextProvider } from "@tuleap/gettext";
-import { A4_LANDSCAPE_APPROXIMATE_WIDTH_IN_DXA } from "./hardcoded-page-width";
 
 export function getTraceabilityMatrixTitle(gettext_provider: GettextProvider): {
     id: string;

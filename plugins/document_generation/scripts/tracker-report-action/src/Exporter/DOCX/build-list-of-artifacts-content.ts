@@ -17,39 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { XmlComponent } from "docx";
+import type { XmlComponent, Table } from "docx";
 import {
     Bookmark,
-    BorderStyle,
-    convertInchesToTwip,
     ExternalHyperlink,
     HeadingLevel,
     InternalHyperlink,
     PageBreak,
     Paragraph,
     ShadingType,
-    Table,
     TableCell,
-    TableLayoutType,
     TableRow,
     TextRun,
-    WidthType,
 } from "docx";
-import {
-    getAnchorToArtifactContent,
-    transformLargeContentIntoParagraphs,
-    HTML_ORDERED_LIST_NUMBERING,
-    HTML_UNORDERED_LIST_NUMBERING,
-    buildCellContentStatus,
-} from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactContainer,
     ArtifactFieldShortValue,
     ArtifactFieldValue,
     ArtifactFieldValueStepDefinition,
+    ArtifactFieldValueStepDefinitionContent,
     FormattedArtifact,
     ReadonlyArrayWithAtLeastOneElement,
-    ArtifactFieldValueStepDefinitionContent,
+} from "@tuleap/plugin-docgen-docx";
+import {
+    buildCellContentStatus,
+    buildLabelValueTable,
+    buildTable,
+    getAnchorToArtifactContent,
+    HTML_ORDERED_LIST_NUMBERING,
+    HTML_UNORDERED_LIST_NUMBERING,
+    TABLE_MARGINS,
+    transformLargeContentIntoParagraphs,
 } from "@tuleap/plugin-docgen-docx";
 import type { GettextProvider } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
@@ -59,44 +57,6 @@ const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
     color: "auto",
     fill: "EEEEEE",
-};
-const TABLE_MARGINS = {
-    top: convertInchesToTwip(0.05),
-    bottom: convertInchesToTwip(0.05),
-    left: convertInchesToTwip(0.05),
-    right: convertInchesToTwip(0.05),
-};
-const TABLE_BORDERS = {
-    top: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    right: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    bottom: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    left: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    insideHorizontal: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    insideVertical: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
 };
 
 export async function buildListOfArtifactsContent(
@@ -254,7 +214,7 @@ async function buildFieldValuesDisplayZone(
                     );
                     step_number++;
                 }
-                display_zone_long_fields.push(buildTable(step_exec_table_rows));
+                display_zone_long_fields.push(buildLabelValueTable(step_exec_table_rows));
                 for (const step of field.steps) {
                     display_zone_long_fields.push(
                         new Paragraph({
@@ -265,7 +225,7 @@ async function buildFieldValuesDisplayZone(
                                 ),
                             ],
                         }),
-                        buildTable([
+                        buildLabelValueTable([
                             new TableRow({
                                 children: [
                                     buildTableCellLabel(gettext_provider.gettext("Status")),
@@ -473,25 +433,7 @@ function buildShortFieldValuesDisplayZone(
         }
     }
 
-    return buildTable(fields_rows);
-}
-
-function buildTable(fields_rows: TableRow[]): Table {
-    return new Table({
-        rows: fields_rows,
-        // Some readers such as Google Docs does not deal properly with automatic table column widths.
-        // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
-        // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
-        // we set the size of the labels column 3000 and the size of the values column to 6638 so
-        // (3000 + 6638) = 9638 DXA
-        width: {
-            size: 100,
-            type: WidthType.PERCENTAGE,
-        },
-        borders: TABLE_BORDERS,
-        columnWidths: [3000, 6638],
-        layout: TableLayoutType.FIXED,
-    });
+    return buildLabelValueTable(fields_rows);
 }
 
 function buildTableCellHeaderLabel(name: string): TableCell {

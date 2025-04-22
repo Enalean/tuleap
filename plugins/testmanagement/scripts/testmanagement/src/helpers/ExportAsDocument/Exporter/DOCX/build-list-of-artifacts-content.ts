@@ -17,23 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { XmlComponent } from "docx";
+import type { XmlComponent, Table } from "docx";
 import {
     Bookmark,
-    BorderStyle,
-    convertInchesToTwip,
     ExternalHyperlink,
     HeadingLevel,
     InternalHyperlink,
     PageBreak,
     Paragraph,
     ShadingType,
-    Table,
     TableCell,
-    TableLayoutType,
     TableRow,
     TextRun,
-    WidthType,
 } from "docx";
 import type {
     ArtifactContainer,
@@ -44,9 +39,12 @@ import type {
     ReadonlyArrayWithAtLeastOneElement,
 } from "@tuleap/plugin-docgen-docx";
 import {
+    buildLabelValueTable,
+    buildTable,
     getAnchorToArtifactContent,
     HTML_ORDERED_LIST_NUMBERING,
     HTML_UNORDERED_LIST_NUMBERING,
+    TABLE_MARGINS,
     transformLargeContentIntoParagraphs,
 } from "@tuleap/plugin-docgen-docx";
 import { sprintf } from "sprintf-js";
@@ -54,50 +52,11 @@ import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
 import { buildCellContentResult } from "./Table/table-builder";
 import type { GettextProvider } from "@tuleap/gettext";
-import { A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA } from "./hardcoded-page-width";
 
 const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
     color: "auto",
     fill: "EEEEEE",
-};
-const TABLE_MARGINS = {
-    top: convertInchesToTwip(0.05),
-    bottom: convertInchesToTwip(0.05),
-    left: convertInchesToTwip(0.05),
-    right: convertInchesToTwip(0.05),
-};
-const TABLE_BORDERS = {
-    top: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    right: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    bottom: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    left: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    insideHorizontal: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
-    insideVertical: {
-        style: BorderStyle.NONE,
-        size: 0,
-        color: "FFFFFF",
-    },
 };
 
 export async function buildListOfArtifactsContent(
@@ -503,50 +462,6 @@ function buildShortFieldValuesDisplayZone(
     }
 
     return buildLabelValueTable(fields_rows);
-}
-
-function buildLabelValueTable(fields_rows: TableRow[]): Table {
-    // Some readers such as Google Docs does not deal properly with automatic table column widths.
-    // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
-    // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
-    // we set the size of the labels column 3000 and the size of the values column to 6638 so
-    // (3000 + 6638) = 9638 DXA
-
-    const first_column_width_in_dxa = 3000;
-    const second_column_width_in_dxa =
-        A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA - first_column_width_in_dxa;
-
-    return buildTableWithGivenColumnWidths(fields_rows, [
-        first_column_width_in_dxa,
-        second_column_width_in_dxa,
-    ]);
-}
-
-function buildTable(fields_rows: TableRow[]): Table {
-    // Some readers such as Google Docs does not deal properly with automatic table column widths.
-    // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
-    // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
-    // we set the same size for every columns
-
-    const nb_columns = fields_rows.length > 0 ? fields_rows[0].cells.length : 0;
-
-    return buildTableWithGivenColumnWidths(
-        fields_rows,
-        Array(nb_columns).fill(A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA / nb_columns),
-    );
-}
-
-function buildTableWithGivenColumnWidths(rows: TableRow[], widths: number[]): Table {
-    return new Table({
-        rows,
-        width: {
-            size: 100,
-            type: WidthType.PERCENTAGE,
-        },
-        borders: TABLE_BORDERS,
-        columnWidths: widths,
-        layout: TableLayoutType.FIXED,
-    });
 }
 
 function buildTableCellHeaderLabel(name: string): TableCell {
