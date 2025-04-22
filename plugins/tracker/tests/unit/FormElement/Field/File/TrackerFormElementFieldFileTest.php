@@ -19,14 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use DataAccessResult;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue_File;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use TestHelper;
+use Tracker_Artifact_Changeset_Null;
 use Tracker_FileInfo;
 use Tracker_FileInfoFactory;
 use Tracker_FormElement_Field_File;
@@ -34,24 +34,20 @@ use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\TemporaryTestDirectory;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementFieldFileTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
     use TemporaryTestDirectory;
 
-    /**
-     * @var string
-     */
-    private $tmp_name;
-    /**
-     * @var string
-     */
-    private $another_tmp_name;
+    private string $tmp_name;
+    private string $another_tmp_name;
 
     protected function setUp(): void
     {
@@ -67,312 +63,269 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
         unlink($this->another_tmp_name);
     }
 
-    public function testGetChangesetValue()
+    public function testGetChangesetValue(): void
     {
-        $value_dao = Mockery::mock(FileFieldValueDao::class);
+        $value_dao = $this->createMock(FileFieldValueDao::class);
 
-        $value_dao->shouldReceive('searchById')->andReturn(
-            [
-                ['changesetvalue_id' => 123, 'fileinfo_id' => 101],
-                ['changesetvalue_id' => 123, 'fileinfo_id' => 102],
-                ['changesetvalue_id' => 123, 'fileinfo_id' => 103],
-            ]
-        );
-        $tracker_file_info_factory = Mockery::mock(Tracker_FileInfoFactory::class);
-        $tracker_file_info_factory->shouldReceive('getById')->andReturn(Mockery::mock(Tracker_FileInfo::class));
+        $value_dao->method('searchById')->willReturn([
+            ['changesetvalue_id' => 123, 'fileinfo_id' => 101],
+            ['changesetvalue_id' => 123, 'fileinfo_id' => 102],
+            ['changesetvalue_id' => 123, 'fileinfo_id' => 103],
+        ]);
+        $tracker_file_info_factory = $this->createMock(Tracker_FileInfoFactory::class);
+        $file_field                = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getValueDao', 'getTrackerFileInfoFactory']);
+        $tracker_file_info_factory->method('getById')->willReturn(new Tracker_FileInfo(1, $file_field, 101, '', '', 1, ''));
 
-        $file_field = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $file_field->shouldReceive('getValueDao')->andReturns($value_dao);
-        $file_field->shouldReceive('getTrackerFileInfoFactory')->andReturns($tracker_file_info_factory);
+        $file_field->method('getValueDao')->willReturn($value_dao);
+        $file_field->method('getTrackerFileInfoFactory')->willReturn($tracker_file_info_factory);
 
-        $changeset_value = $file_field->getChangesetValue(Mockery::mock(Tracker_Artifact_Changeset::class), 123, false);
-        $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_File::class, $changeset_value);
-        $this->assertEquals(3, count($changeset_value->getFiles()));
+        $changeset_value = $file_field->getChangesetValue(ChangesetTestBuilder::aChangeset(6521)->build(), 123, false);
+        self::assertEquals(3, count($changeset_value->getFiles()));
     }
 
-    public function testGetChangesetValueDoesntExist()
+    public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = Mockery::mock(FileFieldValueDao::class);
-        $dar       = Mockery::mock(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturn(false);
-        $dar->shouldReceive('rewind');
-        $dar->shouldReceive('valid');
-        $value_dao->shouldReceive('searchById')->andReturn($dar);
+        $value_dao = $this->createMock(FileFieldValueDao::class);
+        $value_dao->method('searchById')->willReturn(TestHelper::emptyDar());
 
-        $file_field = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $file_field->shouldReceive('getValueDao')->andReturn($value_dao);
-        $file_field->shouldReceive('getTrackerFileInfoFactory')->andReturn(
-            Mockery::mock(Tracker_FileInfoFactory::class)
-        );
+        $file_field = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getValueDao', 'getTrackerFileInfoFactory']);
+        $file_field->method('getValueDao')->willReturn($value_dao);
+        $file_field->method('getTrackerFileInfoFactory')->willReturn($this->createStub(Tracker_FileInfoFactory::class));
 
-        $changeset_value = $file_field->getChangesetValue(Mockery::mock(Tracker_Artifact_Changeset::class), 123, false);
-        $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_File::class, $changeset_value);
-        $this->assertEquals(0, count($changeset_value->getFiles()));
+        $changeset_value = $file_field->getChangesetValue(ChangesetTestBuilder::aChangeset(6521)->build(), 123, false);
+        self::assertEquals(0, count($changeset_value->getFiles()));
     }
 
-    public function testAugmentDataFromRequestNull()
+    public function testAugmentDataFromRequestNull(): void
     {
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(null);
-        $f->shouldReceive('getId')->andReturns(66);
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getSubmittedInfoFromFILES', 'getId']);
+        $f->method('getSubmittedInfoFromFILES')->willReturn(null);
+        $f->method('getId')->willReturn(66);
 
-        $fields_data = [
-            '102' => '123',
-        ];
-        $this->assertNull($f->augmentDataFromRequest($fields_data));
+        $fields_data = ['102' => '123'];
+        $f->augmentDataFromRequest($fields_data);
         self::assertSame([], $fields_data[66]);
     }
 
-    public function testAugmentDataFromRequestEmptyarray()
+    public function testAugmentDataFromRequestEmptyarray(): void
     {
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns([]);
-        $f->shouldReceive('getId')->andReturns(66);
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getSubmittedInfoFromFILES', 'getId']);
+        $f->method('getSubmittedInfoFromFILES')->willReturn([]);
+        $f->method('getId')->willReturn(66);
 
-        $fields_data = [
-            '102' => '123',
-        ];
-        $this->assertNull($f->augmentDataFromRequest($fields_data));
+        $fields_data = ['102' => '123'];
+        $f->augmentDataFromRequest($fields_data);
         self::assertSame([], $fields_data[66]);
     }
 
-    public function testAugmentDataFromRequestOneFileBelongingToField()
+    public function testAugmentDataFromRequestOneFileBelongingToField(): void
     {
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(
-            [
-                'name'     => [
-                    66 => [
-                        0 => ['file' => 'toto.gif'],
-                    ],
-                ],
-                'type'     => [
-                    66 => [
-                        0 => ['file' => 'image/gif'],
-                    ],
-                ],
-                'error'    => [
-                    66 => [
-                        0 => ['file' => 0],
-                    ],
-                ],
-                'tmp_name' => [
-                    66 => [
-                        0 => ['file' => 'dtgjio'],
-                    ],
-                ],
-            ]
-        );
-        $f->shouldReceive('getId')->andReturns(66);
-
-        $fields_data = [
-            '102' => '123',
-        ];
-        $this->assertNull($f->augmentDataFromRequest($fields_data));
-        self::assertSame(
-            [
-                0 => [
-                    'name'     => 'toto.gif',
-                    'type'     => 'image/gif',
-                    'error'    => 0,
-                    'tmp_name' => 'dtgjio',
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getSubmittedInfoFromFILES', 'getId']);
+        $f->method('getSubmittedInfoFromFILES')->willReturn([
+            'name'     => [
+                66 => [
+                    0 => ['file' => 'toto.gif'],
                 ],
             ],
-            $fields_data[66]
-        );
-    }
-
-    public function testAugmentDataFromRequestTwofilesbelongingToField()
-    {
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(
-            [
-                'name'     => [
-                    66 => [
-                        0 => ['file' => 'toto.gif'],
-                        1 => ['file' => 'Spec.doc'],
-                    ],
-                ],
-                'type'     => [
-                    66 => [
-                        0 => ['file' => 'image/gif'],
-                        1 => ['file' => 'application/word'],
-                    ],
-                ],
-                'error'    => [
-                    66 => [
-                        0 => ['file' => 0],
-                        1 => ['file' => 1],
-                    ],
-                ],
-                'tmp_name' => [
-                    66 => [
-                        0 => ['file' => 'dtgjio'],
-                        1 => ['file' => ''],
-                    ],
-                ],
-            ]
-        );
-        $f->shouldReceive('getId')->andReturns(66);
-
-        $fields_data = [
-            '102' => '123',
-        ];
-        $this->assertNull($f->augmentDataFromRequest($fields_data));
-        self::assertSame(
-            [
-                0 => [
-                    'name'     => 'toto.gif',
-                    'type'     => 'image/gif',
-                    'error'    => 0,
-                    'tmp_name' => 'dtgjio',
-                ],
-                1 => [
-                    'name'     => 'Spec.doc',
-                    'type'     => 'application/word',
-                    'error'    => 1,
-                    'tmp_name' => '',
+            'type'     => [
+                66 => [
+                    0 => ['file' => 'image/gif'],
                 ],
             ],
-            $fields_data[66]
-        );
-    }
-
-    public function testAugmentDataFromRequestTwoFilesBelongingToFieldAndOneFileNot()
-    {
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(
-            [
-                'name'     => [
-                    66  => [
-                        0 => ['file' => 'toto.gif'],
-                        1 => ['file' => 'Spec.doc'],
-                    ],
-                    111 => [
-                        0 => ['file' => 'Screenshot.png'],
-                    ],
-                ],
-                'type'     => [
-                    66  => [
-                        0 => ['file' => 'image/gif'],
-                        1 => ['file' => 'application/word'],
-                    ],
-                    111 => [
-                        0 => ['file' => 'image/png'],
-                    ],
-                ],
-                'error'    => [
-                    66  => [
-                        0 => ['file' => 0],
-                        1 => ['file' => 1],
-                    ],
-                    111 => [
-                        0 => ['file' => 0],
-                    ],
-                ],
-                'tmp_name' => [
-                    66  => [
-                        0 => ['file' => 'dtgjio'],
-                        1 => ['file' => ''],
-                    ],
-                    111 => [
-                        0 => ['file' => 'aoeeg'],
-                    ],
-                ],
-            ]
-        );
-        $f->shouldReceive('getId')->andReturns(66);
-
-        $fields_data = [
-            '102' => '123',
-        ];
-        $this->assertNull($f->augmentDataFromRequest($fields_data));
-        self::assertSame(
-            [
-                0 => [
-                    'name'     => 'toto.gif',
-                    'type'     => 'image/gif',
-                    'error'    => 0,
-                    'tmp_name' => 'dtgjio',
-                ],
-                1 => [
-                    'name'     => 'Spec.doc',
-                    'type'     => 'application/word',
-                    'error'    => 1,
-                    'tmp_name' => '',
+            'error'    => [
+                66 => [
+                    0 => ['file' => 0],
                 ],
             ],
-            $fields_data[66]
-        );
-        $this->assertFalse(isset($fields_data[111]));
+            'tmp_name' => [
+                66 => [
+                    0 => ['file' => 'dtgjio'],
+                ],
+            ],
+        ]);
+        $f->method('getId')->willReturn(66);
+
+        $fields_data = ['102' => '123'];
+        $f->augmentDataFromRequest($fields_data);
+        self::assertSame([
+            0 => [
+                'name'     => 'toto.gif',
+                'type'     => 'image/gif',
+                'error'    => 0,
+                'tmp_name' => 'dtgjio',
+            ],
+        ], $fields_data[66]);
     }
 
-    public function testAugmentDataFromRequestOneFileDoesNotBelongToField()
+    public function testAugmentDataFromRequestTwofilesbelongingToField(): void
     {
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(
-            [
-                'name'     => [
-                    111 => [
-                        0 => ['file' => 'toto.gif'],
-                    ],
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getSubmittedInfoFromFILES', 'getId']);
+        $f->method('getSubmittedInfoFromFILES')->willReturn([
+            'name'     => [
+                66 => [
+                    0 => ['file' => 'toto.gif'],
+                    1 => ['file' => 'Spec.doc'],
                 ],
-                'type'     => [
-                    111 => [
-                        0 => ['file' => 'image/gif'],
-                    ],
+            ],
+            'type'     => [
+                66 => [
+                    0 => ['file' => 'image/gif'],
+                    1 => ['file' => 'application/word'],
                 ],
-                'error'    => [
-                    111 => [
-                        0 => ['file' => 0],
-                    ],
+            ],
+            'error'    => [
+                66 => [
+                    0 => ['file' => 0],
+                    1 => ['file' => 1],
                 ],
-                'tmp_name' => [
-                    111 => [
-                        0 => ['file' => 'dtgjio'],
-                    ],
+            ],
+            'tmp_name' => [
+                66 => [
+                    0 => ['file' => 'dtgjio'],
+                    1 => ['file' => ''],
                 ],
-            ]
-        );
-        $f->shouldReceive('getId')->andReturns(66);
+            ],
+        ]);
+        $f->method('getId')->willReturn(66);
 
-        $fields_data = [
-            '102' => '123',
-        ];
-        $this->assertNull($f->augmentDataFromRequest($fields_data));
+        $fields_data = ['102' => '123'];
+        $f->augmentDataFromRequest($fields_data);
+        self::assertSame([
+            0 => [
+                'name'     => 'toto.gif',
+                'type'     => 'image/gif',
+                'error'    => 0,
+                'tmp_name' => 'dtgjio',
+            ],
+            1 => [
+                'name'     => 'Spec.doc',
+                'type'     => 'application/word',
+                'error'    => 1,
+                'tmp_name' => '',
+            ],
+        ], $fields_data[66]);
+    }
+
+    public function testAugmentDataFromRequestTwoFilesBelongingToFieldAndOneFileNot(): void
+    {
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getSubmittedInfoFromFILES', 'getId']);
+        $f->method('getSubmittedInfoFromFILES')->willReturn([
+            'name'     => [
+                66  => [
+                    0 => ['file' => 'toto.gif'],
+                    1 => ['file' => 'Spec.doc'],
+                ],
+                111 => [
+                    0 => ['file' => 'Screenshot.png'],
+                ],
+            ],
+            'type'     => [
+                66  => [
+                    0 => ['file' => 'image/gif'],
+                    1 => ['file' => 'application/word'],
+                ],
+                111 => [
+                    0 => ['file' => 'image/png'],
+                ],
+            ],
+            'error'    => [
+                66  => [
+                    0 => ['file' => 0],
+                    1 => ['file' => 1],
+                ],
+                111 => [
+                    0 => ['file' => 0],
+                ],
+            ],
+            'tmp_name' => [
+                66  => [
+                    0 => ['file' => 'dtgjio'],
+                    1 => ['file' => ''],
+                ],
+                111 => [
+                    0 => ['file' => 'aoeeg'],
+                ],
+            ],
+        ]);
+        $f->method('getId')->willReturn(66);
+
+        $fields_data = ['102' => '123'];
+        $f->augmentDataFromRequest($fields_data);
+        self::assertSame([
+            0 => [
+                'name'     => 'toto.gif',
+                'type'     => 'image/gif',
+                'error'    => 0,
+                'tmp_name' => 'dtgjio',
+            ],
+            1 => [
+                'name'     => 'Spec.doc',
+                'type'     => 'application/word',
+                'error'    => 1,
+                'tmp_name' => '',
+            ],
+        ], $fields_data[66]);
+        self::assertFalse(isset($fields_data[111]));
+    }
+
+    public function testAugmentDataFromRequestOneFileDoesNotBelongToField(): void
+    {
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getSubmittedInfoFromFILES', 'getId']);
+        $f->method('getSubmittedInfoFromFILES')->willReturn([
+            'name'     => [
+                111 => [
+                    0 => ['file' => 'toto.gif'],
+                ],
+            ],
+            'type'     => [
+                111 => [
+                    0 => ['file' => 'image/gif'],
+                ],
+            ],
+            'error'    => [
+                111 => [
+                    0 => ['file' => 0],
+                ],
+            ],
+            'tmp_name' => [
+                111 => [
+                    0 => ['file' => 'dtgjio'],
+                ],
+            ],
+        ]);
+        $f->method('getId')->willReturn(66);
+
+        $fields_data = ['102' => '123'];
+        $f->augmentDataFromRequest($fields_data);
         self::assertSame([], $fields_data[66]);
     }
 
-    public function testAugmentDataFromRequestDontOverrideDescription()
+    public function testAugmentDataFromRequestDontOverrideDescription(): void
     {
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(
-            [
-                'name'     => [
-                    66 => [
-                        0 => ['file' => 'toto.gif'],
-                    ],
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getSubmittedInfoFromFILES', 'getId']);
+        $f->method('getSubmittedInfoFromFILES')->willReturn([
+            'name'     => [
+                66 => [
+                    0 => ['file' => 'toto.gif'],
                 ],
-                'type'     => [
-                    66 => [
-                        0 => ['file' => 'image/gif'],
-                    ],
+            ],
+            'type'     => [
+                66 => [
+                    0 => ['file' => 'image/gif'],
                 ],
-                'error'    => [
-                    66 => [
-                        0 => ['file' => 0],
-                    ],
+            ],
+            'error'    => [
+                66 => [
+                    0 => ['file' => 0],
                 ],
-                'tmp_name' => [
-                    66 => [
-                        0 => ['file' => 'dtgjio'],
-                    ],
+            ],
+            'tmp_name' => [
+                66 => [
+                    0 => ['file' => 'dtgjio'],
                 ],
-            ]
-        );
-        $f->shouldReceive('getId')->andReturns(66);
+            ],
+        ]);
+        $f->method('getId')->willReturn(66);
 
         $fields_data = [
             '102' => '123',
@@ -382,13 +335,13 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 ],
             ],
         ];
-        $this->assertNull($f->augmentDataFromRequest($fields_data));
-        $this->assertEquals('The description of the file', $fields_data[66][0]['description']);
+        $f->augmentDataFromRequest($fields_data);
+        self::assertEquals('The description of the file', $fields_data[66][0]['description']);
     }
 
-    public function testIsValidNotFilled()
+    public function testIsValidNotFilled(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(645)->build();
         $value    = [
             [
                 'description' => '',
@@ -400,21 +353,19 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
-        $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired', 'isPreviousChangesetEmpty']);
+        $required_file->method('isRequired')->willReturn(true);
+        $required_file->method('isPreviousChangesetEmpty')->willReturn(true);
+        self::assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
 
-    public function testIsValidTwoNotFilled()
+    public function testIsValidTwoNotFilled(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(6845)->build();
         $value    = [
             [
                 'description' => '',
@@ -434,21 +385,19 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
-        $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired', 'isPreviousChangesetEmpty']);
+        $required_file->method('isRequired')->willReturn(true);
+        $required_file->method('isPreviousChangesetEmpty')->willReturn(true);
+        self::assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
 
-    public function testIsValidOnlyDescriptionFilled()
+    public function testIsValidOnlyDescriptionFilled(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
         $value    = [
             [
                 'description' => 'User sets the description but the file is not submitted (missing, ... ?)',
@@ -460,20 +409,18 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $this->assertFalse($required_file->isValid($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $required_file->method('isRequired')->willReturn(true);
+        self::assertFalse($required_file->isValid($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertFalse($not_required_file->isValid($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertFalse($not_required_file->isValid($artifact, $value));
     }
 
-    public function testIsValidDescriptionFilledButErrorWithFileUpload()
+    public function testIsValidDescriptionFilledButErrorWithFileUpload(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
         $value    = [
             [
                 'description' => 'User sets the description but the file has error (network, ... ?)',
@@ -485,20 +432,18 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $this->assertFalse($required_file->isValid($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $required_file->method('isRequired')->willReturn(true);
+        self::assertFalse($required_file->isValid($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertFalse($not_required_file->isValid($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertFalse($not_required_file->isValid($artifact, $value));
     }
 
-    public function testIsValidDescriptionFilledAndFileOk()
+    public function testIsValidDescriptionFilledAndFileOk(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -510,20 +455,18 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $this->assertTrue($required_file->isValid($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $required_file->method('isRequired')->willReturn(true);
+        self::assertTrue($required_file->isValid($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertTrue($not_required_file->isValid($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertTrue($not_required_file->isValid($artifact, $value));
     }
 
-    public function itIsValidWhenFieldIsRequiredButHasAFileFromPreviousChangeset()
+    public function testItIsValidWhenFieldIsRequiredButHasAFileFromPreviousChangeset(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -535,16 +478,15 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(false);
-        $this->assertTrue($required_file->isValid($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired', 'isPreviousChangesetEmpty']);
+        $required_file->method('isRequired')->willReturn(true);
+        $required_file->method('isPreviousChangesetEmpty')->willReturn(false);
+        self::assertTrue($required_file->isValid($artifact, $value));
     }
 
-    public function testIsValidTwoFilesOk()
+    public function testIsValidTwoFilesOk(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -564,20 +506,18 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $this->assertTrue($required_file->isValid($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $required_file->method('isRequired')->willReturn(true);
+        self::assertTrue($required_file->isValid($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertTrue($not_required_file->isValid($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertTrue($not_required_file->isValid($artifact, $value));
     }
 
-    public function testIsValidOneFileOkAmongTwo()
+    public function testIsValidOneFileOkAmongTwo(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -597,20 +537,18 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $this->assertFalse($required_file->isValid($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $required_file->method('isRequired')->willReturn(true);
+        self::assertFalse($required_file->isValid($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertFalse($not_required_file->isValid($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertFalse($not_required_file->isValid($artifact, $value));
     }
 
-    public function testIsValidOneFileOkAndOneEmpty()
+    public function testIsValidOneFileOkAndOneEmpty(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -630,29 +568,29 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $required_file->shouldReceive('isRequired')->andReturns(true);
-        $this->assertTrue($required_file->isValid($artifact, $value));
+        $required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $required_file->method('isRequired')->willReturn(true);
+        self::assertTrue($required_file->isValid($artifact, $value));
 
-        $not_required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $not_required_file->shouldReceive('isRequired')->andReturns(false);
-        $this->assertTrue($not_required_file->isValid($artifact, $value));
+        $not_required_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['isRequired']);
+        $not_required_file->method('isRequired')->willReturn(false);
+        self::assertTrue($not_required_file->isValid($artifact, $value));
     }
 
-    public function testGetRootPath()
+    public function testGetRootPath(): void
     {
         ForgeConfig::set('sys_data_dir', dirname(__FILE__) . '/data');
-        $f = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('getId')->andReturns(123);
-        $this->assertEquals(ForgeConfig::get('sys_data_dir') . '/tracker/123', $f->getRootPath());
+        $f = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['getId']);
+        $f->method('getId')->willReturn(123);
+        self::assertEquals(ForgeConfig::get('sys_data_dir') . '/tracker/123', $f->getRootPath());
     }
 
-    public function testItReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAnEmptyPreviousChangeset()
+    public function testItReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAnEmptyPreviousChangeset(): void
     {
-        $formelement_field_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $formelement_field_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, [
+            'checkThatAtLeastOneFileIsUploaded',
+            'isPreviousChangesetEmpty',
+        ]);
         $submitted_value        = [
             [
                 'description' => '',
@@ -664,18 +602,20 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
 
-        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturn(false);
-        $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturn(true);
+        $formelement_field_file->method('checkThatAtLeastOneFileIsUploaded')->willReturn(false);
+        $formelement_field_file->method('isPreviousChangesetEmpty')->willReturn(true);
 
-        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
+        self::assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
 
-    public function testItReturnsFalseWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangeset()
+    public function testItReturnsFalseWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangeset(): void
     {
-        $formelement_field_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $formelement_field_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, [
+            'checkThatAtLeastOneFileIsUploaded',
+            'isPreviousChangesetEmpty',
+        ]);
         $submitted_value        = [
             [
                 'description' => '',
@@ -687,22 +627,24 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $file       = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
-        $changesets = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class);
-        $changesets->shouldReceive('getFiles')->andReturn([$file]);
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->andReturn($changesets);
+        $file            = new Tracker_FileInfo(123, $formelement_field_file, '*', 'Description 123', 'file123.txt', 123, 'text/xml');
+        $changeset       = ChangesetTestBuilder::aChangeset(54)->build();
+        $changeset_value = ChangesetValueFileTestBuilder::aValue(1, $changeset, $formelement_field_file)->withFiles([$file])->build();
+        $changeset->setFieldValue($formelement_field_file, $changeset_value);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->withChangesets($changeset)->build();
 
-        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
-        $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(false);
+        $formelement_field_file->method('checkThatAtLeastOneFileIsUploaded')->willReturn(false);
+        $formelement_field_file->method('isPreviousChangesetEmpty')->willReturn(false);
 
-        $this->assertFalse($formelement_field_file->isEmpty($submitted_value, $artifact));
+        self::assertFalse($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
 
-    public function testItReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangesetWhichIsDeleted()
+    public function testItReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangesetWhichIsDeleted(): void
     {
-        $formelement_field_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $formelement_field_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, [
+            'checkThatAtLeastOneFileIsUploaded',
+            'isPreviousChangesetEmpty',
+        ]);
         $submitted_value        = [
             'delete' => [123],
             [
@@ -715,32 +657,28 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
         ];
 
-        $file       = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
-        $changesets = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class);
-        $changesets->shouldReceive('getFiles')->andReturn([$file]);
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->andReturn($changesets);
+        $file            = new Tracker_FileInfo(123, $formelement_field_file, '*', 'Description 123', 'file123.txt', 123, 'text/xml');
+        $changeset       = ChangesetTestBuilder::aChangeset(54)->build();
+        $changeset_value = ChangesetValueFileTestBuilder::aValue(1, $changeset, $formelement_field_file)->withFiles([$file])->build();
+        $changeset->setFieldValue($formelement_field_file, $changeset_value);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->withChangesets($changeset)->build();
 
-        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
-        $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
+        $formelement_field_file->method('checkThatAtLeastOneFileIsUploaded')->willReturn(false);
+        $formelement_field_file->method('isPreviousChangesetEmpty')->willReturn(true);
 
-        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
+        self::assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
 
-    public function testItReturnsTrueWhenTheFieldIsEmptyAtArtifactCreation()
+    public function testItReturnsTrueWhenTheFieldIsEmptyAtArtifactCreation(): void
     {
-        $formelement_field_file = Mockery::mock(Tracker_FormElement_Field_File::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $formelement_field_file = $this->createPartialMock(Tracker_FormElement_Field_File::class, ['checkThatAtLeastOneFileIsUploaded']);
         $submitted_value        = [];
 
-        $no_changeset = Mockery::mock(\Tracker_Artifact_Changeset_Null::class);
-        $artifact     = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->andReturn($no_changeset);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->withChangesets(new Tracker_Artifact_Changeset_Null())->build();
 
-        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
+        $formelement_field_file->method('checkThatAtLeastOneFileIsUploaded')->willReturn(false);
 
-        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
+        self::assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
 
     public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
