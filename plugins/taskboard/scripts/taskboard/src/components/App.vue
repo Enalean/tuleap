@@ -27,71 +27,64 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { namespace, State, Getter } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { ColumnDefinition } from "../type";
-import { TaskboardEvent } from "../type";
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted } from "vue";
+import { type ColumnDefinition, TaskboardEvent } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
 import EventBus from "./../helpers/event-bus";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
 import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
 import GlobalAppError from "./GlobalError/GlobalAppError.vue";
+import {
+    useGetters,
+    useNamespacedGetters,
+    useNamespacedState,
+    useState,
+    useStore,
+} from "vuex-composition-helpers";
+import type { ErrorState } from "../store/error/type";
 
-const column = namespace("column");
-const error = namespace("error");
-const swimlane = namespace("swimlane");
+const store = useStore();
 
-@Component({
-    components: {
-        NoContentEmptyState,
-        TaskBoard,
-        BoardWithoutAnyColumnsError,
-        GlobalAppError,
-    },
-})
-export default class App extends Vue {
-    @column.State
-    readonly columns!: Array<ColumnDefinition>;
+const columns = computed((): ColumnDefinition[] => {
+    return store.state.column.columns;
+});
 
-    @State
-    readonly has_content!: boolean;
+const { has_global_error } = useNamespacedState<Pick<ErrorState, "has_global_error">>("error", [
+    "has_global_error",
+]);
 
-    @error.State
-    readonly has_global_error!: boolean;
+const { has_at_least_one_card_in_edit_mode } = useNamespacedGetters("swimlane", [
+    "has_at_least_one_card_in_edit_mode",
+]);
 
-    @swimlane.Getter
-    readonly has_at_least_one_card_in_edit_mode!: boolean;
+const { has_content } = useState(["has_content"]);
+const { has_at_least_one_cell_in_add_mode } = useGetters(["has_at_least_one_cell_in_add_mode"]);
 
-    @Getter
-    readonly has_at_least_one_cell_in_add_mode!: boolean;
+const has_at_least_one_column = computed((): boolean => {
+    return columns.value.length > 0;
+});
 
-    get has_at_least_one_column(): boolean {
-        return this.columns.length > 0;
+onMounted(() => {
+    window.addEventListener("beforeunload", beforeUnload);
+    document.addEventListener("keyup", keyup);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener("beforeunload", beforeUnload);
+    document.removeEventListener("keyup", keyup);
+});
+
+function beforeUnload(event: Event): void {
+    if (has_at_least_one_card_in_edit_mode.value || has_at_least_one_cell_in_add_mode.value) {
+        event.preventDefault();
+        event.returnValue = false;
     }
+}
 
-    mounted(): void {
-        window.addEventListener("beforeunload", this.beforeUnload);
-        document.addEventListener("keyup", this.keyup);
-    }
-
-    beforeDestroy(): void {
-        window.removeEventListener("beforeunload", this.beforeUnload);
-        document.removeEventListener("keyup", this.keyup);
-    }
-
-    beforeUnload(event: Event): void {
-        if (this.has_at_least_one_card_in_edit_mode || this.has_at_least_one_cell_in_add_mode) {
-            event.preventDefault();
-            event.returnValue = false;
-        }
-    }
-
-    keyup(event: KeyboardEvent): void {
-        if (event.key === "Escape") {
-            EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
-        }
+function keyup(event: KeyboardEvent): void {
+    if (event.key === "Escape") {
+        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
     }
 }
 </script>
