@@ -54,6 +54,18 @@ ORDER BY @last_update_date DESC]]></value>
         </column>
       </line>
     </dashboard>
+    <dashboard name="Roadmap">
+      <line layout="one-column">
+        <column>
+          <widget name="plugin_roadmap_project_widget">
+            <preference name="roadmap">
+              <value name="title">Portfolio Roadmap</value>
+              <value name="tracker_id">T1089</value>
+            </preference>
+          </widget>
+        </column>
+      </line>
+    </dashboard>
   </dashboards>
   <trackers use-natures="true">
     <tracker id="T1089" parent_id="0" instantiate_for_new_projects="1" notifications_level="1" is_displayed_in_new_dropdown="1">
