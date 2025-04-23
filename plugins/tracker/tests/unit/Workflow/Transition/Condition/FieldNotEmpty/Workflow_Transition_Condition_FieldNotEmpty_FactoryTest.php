@@ -20,33 +20,39 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
-    private $field_id = 3;
-    private $field;
-    private $dao;
-    private $factory;
-    private $transition;
-    private $field_string;
-    private $field_string_f15;
-    private $xml_mapping;
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+{
+    private int $field_id = 3;
+    private Tracker_FormElement_Field_String $field;
+    private Workflow_Transition_Condition_FieldNotEmpty_Dao&MockObject $dao;
+    private Workflow_Transition_Condition_FieldNotEmpty_Factory $factory;
+    private Transition $transition;
+    private Tracker_FormElement_Field_String $field_string;
+    private Tracker_FormElement_Field_String $field_string_f15;
+    private array $xml_mapping;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->field     = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns($this->field_id)->getMock();
-        $element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $element_factory->shouldReceive('getFormElementById')->with($this->field_id)->andReturns($this->field);
+        $this->field     = StringFieldBuilder::aStringField($this->field_id)->build();
+        $element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $element_factory->method('getFormElementById')->with($this->field_id)->willReturn($this->field);
         Tracker_FormElementFactory::setInstance($element_factory);
-        $this->dao              = \Mockery::spy(\Workflow_Transition_Condition_FieldNotEmpty_Dao::class);
+        $this->dao              = $this->createMock(\Workflow_Transition_Condition_FieldNotEmpty_Dao::class);
         $this->factory          = new Workflow_Transition_Condition_FieldNotEmpty_Factory($this->dao, $element_factory);
-        $this->transition       = \Mockery::spy(\Transition::class)->shouldReceive('getId')->andReturns(42)->getMock();
-        $this->field_string     = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(0)->getMock();
-        $this->field_string_f15 = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(1)->getMock();
+        $this->transition       = new \Transition(
+            42,
+            101,
+            null,
+            ListStaticValueBuilder::aStaticValue('Done')->build(),
+        );
+        $this->field_string     = StringFieldBuilder::aStringField(1)->build();
+        $this->field_string_f15 = StringFieldBuilder::aStringField(2)->build();
         $this->xml_mapping      = [
             'F14' => $this->field_string,
             'F15' => $this->field_string_f15,
@@ -90,13 +96,13 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tul
         $new_transition_id = 2;
         $field_mapping     = ['some fields mapping'];
 
-        $this->dao->shouldReceive('duplicate')->with($this->transition->getId(), $new_transition_id, $field_mapping)->once();
+        $this->dao->expects($this->once())->method('duplicate')->with($this->transition->getId(), $new_transition_id, $field_mapping);
         $this->factory->duplicate($this->transition, $new_transition_id, $field_mapping);
     }
 
     public function testItChecksThatFieldIsNotUsed(): void
     {
-        $this->dao->shouldReceive('isFieldUsed')->with($this->field_id)->once()->andReturns(true);
+        $this->dao->expects($this->once())->method('isFieldUsed')->with($this->field_id)->willReturn(true);
         $this->assertTrue($this->factory->isFieldUsedInConditions($this->field));
     }
 }

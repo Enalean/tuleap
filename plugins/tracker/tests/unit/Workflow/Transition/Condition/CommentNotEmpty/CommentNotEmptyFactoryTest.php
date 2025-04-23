@@ -18,48 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\Transition\Condition\CommentNotEmpty;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Value;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 use Workflow_Transition_Condition_CommentNotEmpty_Factory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private Workflow_Transition_Condition_CommentNotEmpty_Factory $factory;
 
-    /**
-     * @var Workflow_Transition_Condition_CommentNotEmpty_Factory
-     */
-    private $factory;
-
-    private $dao;
+    private Workflow_Transition_Condition_CommentNotEmpty_Dao&MockObject $dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao     = Mockery::mock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
+        $this->dao     = $this->createMock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
         $this->factory = new Workflow_Transition_Condition_CommentNotEmpty_Factory($this->dao);
     }
 
-    public function testItReturnsTheConditionForAConditionInXML()
+    public function testItReturnsTheConditionForAConditionInXML(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <condition type="commentnotempty" is_comment_required="1"/>'
         );
 
-        $value_01 = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $value_02 = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-
-        $value_01->shouldReceive('getId')->andReturn(101);
-        $value_02->shouldReceive('getId')->andReturn(102);
+        $value_01 = ListStaticValueBuilder::aStaticValue('abc')->build();
+        $value_02 = ListStaticValueBuilder::aStaticValue('def')->build();
 
         $transition_id = 1;
         $workflow_id   = 1;
@@ -77,15 +70,14 @@ class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue((bool) $condition->isCommentRequired());
     }
 
-    public function testItReturnsNullForAConditionFromNewInXML()
+    public function testItReturnsNullForAConditionFromNewInXML(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <condition type="commentnotempty" is_comment_required="1"/>'
         );
 
-        $value_01 = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $value_01->shouldReceive('getId')->andReturn(101);
+        $value_01 = ListStaticValueBuilder::aStaticValue('abc')->build();
 
         $from_new_artifact = null;
         $transition_id     = 1;
@@ -103,13 +95,10 @@ class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($condition);
     }
 
-    public function testItReturnsTheConditionForACondition()
+    public function testItReturnsTheConditionForACondition(): void
     {
-        $value_01 = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $value_02 = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-
-        $value_01->shouldReceive('getId')->andReturn(101);
-        $value_02->shouldReceive('getId')->andReturn(102);
+        $value_01 = ListStaticValueBuilder::aStaticValue('abc')->build();
+        $value_02 = ListStaticValueBuilder::aStaticValue('def')->build();
 
         $transition_id = 1;
         $workflow_id   = 1;
@@ -121,9 +110,9 @@ class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $value_02
         );
 
-        $this->dao->shouldReceive('searchByTransitionId')
+        $this->dao->method('searchByTransitionId')
             ->with(1)
-            ->andReturn([
+            ->willReturn([
                 'transition_id' => 1,
                 'is_comment_required' => 1,
             ]);
@@ -133,10 +122,9 @@ class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertInstanceOf(Workflow_Transition_Condition_CommentNotEmpty::class, $condition);
     }
 
-    public function testItReturnsNullForAConditionFromNew()
+    public function testItReturnsNullForAConditionFromNew(): void
     {
-        $value_01 = Mockery::mock(Tracker_FormElement_Field_List_Value::class);
-        $value_01->shouldReceive('getId')->andReturn(101);
+        $value_01 = ListStaticValueBuilder::aStaticValue('abc')->build();
 
         $from_new_artifact = null;
         $transition_id     = 1;

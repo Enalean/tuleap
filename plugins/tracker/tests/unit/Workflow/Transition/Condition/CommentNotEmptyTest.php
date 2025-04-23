@@ -18,60 +18,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\Transition\Condition;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Transition;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CommentNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommentNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
-    private $empty_data = '';
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $current_user;
-    /**
-     * @var Workflow_Transition_Condition_CommentNotEmpty_Dao&Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var Transition&Mockery\MockInterface
-     */
-    private $transition;
-    /**
-     * @var Artifact&Mockery\MockInterface
-     */
-    private $artifact;
+    private string $empty_data = '';
+    private \PFUser $current_user;
+    private Workflow_Transition_Condition_CommentNotEmpty_Dao&MockObject $dao;
+    private Transition $transition;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao          = Mockery::mock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
-        $this->transition   = Mockery::mock(Transition::class);
-        $this->artifact     = Mockery::mock(Artifact::class);
-        $this->current_user = \Mockery::spy(\PFUser::class);
-
-        $this->transition->shouldReceive('getId')->andReturn(42);
-
-        $GLOBALS['Response'] = \Mockery::spy(\Layout::class);
+        $this->dao          = $this->createMock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
+        $this->transition   = new Transition(
+            42,
+            101,
+            null,
+            ListStaticValueBuilder::aStaticValue('Done')->build(),
+        );
+        $this->artifact     = ArtifactTestBuilder::anArtifact(101)->build();
+        $this->current_user = UserTestBuilder::buildWithDefaults();
     }
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
-
-        parent::tearDown();
-    }
-
-    public function testItReturnsTrueIfCommentIsNotRequired()
+    public function testItReturnsTrueIfCommentIsNotRequired(): void
     {
         $is_comment_required = false;
         $condition           = new Workflow_Transition_Condition_CommentNotEmpty(
@@ -84,7 +71,7 @@ class CommentNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($condition->validate($this->empty_data, $this->artifact, '', $this->current_user));
     }
 
-    public function testItReturnsFalseIfCommentIsRequiredAndNoCommentIsProvided()
+    public function testItReturnsFalseIfCommentIsRequiredAndNoCommentIsProvided(): void
     {
         $is_comment_required = true;
         $condition           = new Workflow_Transition_Condition_CommentNotEmpty(
@@ -96,7 +83,7 @@ class CommentNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($condition->validate($this->empty_data, $this->artifact, '', $this->current_user));
     }
 
-    public function testItReturnsTrueIfCommentIsRequiredAndCommentIsProvided()
+    public function testItReturnsTrueIfCommentIsRequiredAndCommentIsProvided(): void
     {
         $is_comment_required = true;
         $condition           = new Workflow_Transition_Condition_CommentNotEmpty(

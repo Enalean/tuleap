@@ -20,36 +20,39 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private array $xml_mapping = [];
 
-    private $xml_mapping = [];
+    private Workflow_Transition_Condition_Permissions_Factory $permissions_factory;
 
-    /** @var Workflow_Transition_Condition_Permissions_Factory */
-    private $permissions_factory;
+    private Transition $transition;
 
-    /** @var Transition */
-    private $transition;
-
-    private $permissions_manager;
-    private $ugroup_manager;
-    private $project;
+    private PermissionsManager&MockObject $permissions_manager;
+    private UGroupManager&MockObject $ugroup_manager;
+    private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
+        $this->permissions_manager = $this->createMock(PermissionsManager::class);
         PermissionsManager::setInstance($this->permissions_manager);
 
-        $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
-        $this->project        = \Mockery::spy(\Project::class);
+        $this->ugroup_manager = $this->createMock(UGroupManager::class);
+        $this->project        = ProjectTestBuilder::aProject()->build();
 
-        $this->transition          = \Mockery::spy(\Transition::class)->shouldReceive('getId')->andReturns(123)->getMock();
+        $this->transition          = new Transition(
+            123,
+            101,
+            null,
+            ListStaticValueBuilder::aStaticValue('Done')->build(),
+        );
         $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory($this->ugroup_manager);
     }
 
@@ -93,7 +96,9 @@ final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tulea
 
         $mapping = DuplicationUserGroupMapping::fromNewProjectWithMapping([103 => 122]);
 
-        $this->permissions_manager->shouldReceive('duplicatePermissions')->with($this->transition->getId(), $new_transition_id, [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION], $mapping)->once();
+        $this->permissions_manager->expects($this->once())
+            ->method('duplicatePermissions')
+            ->with($this->transition->getId(), $new_transition_id, [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION], $mapping);
         $this->permissions_factory->duplicate($this->transition, $new_transition_id, $mapping);
     }
 }

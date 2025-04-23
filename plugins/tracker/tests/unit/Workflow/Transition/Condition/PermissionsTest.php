@@ -18,53 +18,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\Transition\Condition;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Workflow_WorkflowUser;
 use Transition;
 use Workflow_Transition_Condition_Permissions;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $permission_manager;
-    private $condition;
-    private $user;
-    private $workflow_user;
-    private $transition;
-    private $tracker;
+    private PermissionsManager&MockObject $permission_manager;
+    private Workflow_Transition_Condition_Permissions $condition;
+    private PFUser&MockObject $user;
+    private Tracker_Workflow_WorkflowUser $workflow_user;
+    private Transition&MockObject $transition;
+    private Tracker&MockObject $tracker;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = $this->createMock(PFUser::class);
 
-        $this->workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
-        $this->user->shouldReceive('getId')->andReturn(101);
+        $this->workflow_user = new Tracker_Workflow_WorkflowUser();
+        $this->user->method('getId')->willReturn(101);
 
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getGroupId')->andReturn(103);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getGroupId')->willReturn(103);
 
-        $this->permission_manager = Mockery::mock(PermissionsManager::class);
-        $this->permission_manager->shouldReceive('getAuthorizedUgroups')
+        $this->permission_manager = $this->createMock(PermissionsManager::class);
+        $this->permission_manager->method('getAuthorizedUgroups')
             ->with(
                 303,
                 Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION
             )
-            ->andReturn([['ugroup_id' => 404]]);
+            ->willReturn([['ugroup_id' => 404]]);
 
         PermissionsManager::setInstance($this->permission_manager);
 
-        $this->transition = Mockery::mock(Transition::class);
-        $this->transition->shouldReceive('getId')->andReturn(303);
+        $this->transition = $this->createMock(Transition::class);
+        $this->transition->method('getId')->willReturn(303);
 
         $this->condition = new Workflow_Transition_Condition_Permissions($this->transition);
     }
@@ -78,30 +77,30 @@ class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueIfUserCanSeeTransition(): void
     {
-        $this->user->shouldReceive('isMemberOfUGroup')->andReturn(true);
-        $this->tracker->shouldReceive('userIsAdmin')->with($this->user)->andReturnFalse();
+        $this->user->method('isMemberOfUGroup')->willReturn(true);
+        $this->tracker->method('userIsAdmin')->with($this->user)->willReturn(false);
 
         $this->assertTrue($this->condition->isUserAllowedToSeeTransition($this->user, $this->tracker));
     }
 
     public function testItReturnsFalseIfUserCannotSeeTransition(): void
     {
-        $this->user->shouldReceive('isMemberOfUGroup')->andReturn(false);
-            $this->tracker->shouldReceive('userIsAdmin')->with($this->user)->andReturnFalse();
+        $this->user->method('isMemberOfUGroup')->willReturn(false);
+            $this->tracker->method('userIsAdmin')->with($this->user)->willReturn(false);
 
         $this->assertFalse($this->condition->isUserAllowedToSeeTransition($this->user, $this->tracker));
     }
 
     public function testItReturnsTrueIfUserCanAdministrateTracker(): void
     {
-        $this->tracker->shouldReceive('userIsAdmin')->with($this->user)->once()->andReturnTrue();
+        $this->tracker->expects($this->once())->method('userIsAdmin')->with($this->user)->willReturn(true);
 
         $this->assertTrue($this->condition->isUserAllowedToSeeTransition($this->user, $this->tracker));
     }
 
     public function testItReturnsTrueIfWorkFlowTrackerUserCanAdministrateTracker(): void
     {
-        $this->tracker->shouldReceive('userIsAdmin')->with($this->workflow_user)->never();
+        $this->tracker->expects($this->never())->method('userIsAdmin')->with($this->workflow_user);
 
         $this->assertTrue($this->condition->isUserAllowedToSeeTransition($this->workflow_user, $this->tracker));
     }
