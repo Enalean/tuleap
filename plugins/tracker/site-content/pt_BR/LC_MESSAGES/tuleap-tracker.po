@@ -909,6 +909,12 @@ msgstr ""
 msgid "Copy with children"
 msgstr ""
 
+msgid "Corresponding Reference Pattern Deleted"
+msgstr ""
+
+msgid "Corresponding widgets deleted"
+msgstr ""
+
 msgid "Could not match an user with your email."
 msgstr ""
 
@@ -1346,6 +1352,14 @@ msgid "Fail to retrieve the full collection of issues in selected tracker."
 msgstr ""
 
 msgid "Fail to retrieve the full collection of projects."
+msgstr ""
+
+#, php-format
+msgid "Failed to remove widget on dashboard of project #%d"
+msgstr ""
+
+#, php-format
+msgid "Failed to remove widget on dashboard of user #%d"
 msgstr ""
 
 msgid "Field"

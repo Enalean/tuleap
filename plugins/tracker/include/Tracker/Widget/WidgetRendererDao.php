@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Widget;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Tracker\Widget\SearchWidgetsByTrackerId;
 
-class WidgetRendererDao extends DataAccessObject
+class WidgetRendererDao extends DataAccessObject implements SearchWidgetsByTrackerId
 {
     /**
      * @psalm-return array{title: string, renderer_id: int}|null
@@ -46,9 +47,9 @@ class WidgetRendererDao extends DataAccessObject
         return (int) $this->getDB()->insertReturnId(
             'tracker_widget_renderer',
             [
-                'owner_id' => $owner_id,
-                'owner_type' => $owner_type,
-                'title' => $title,
+                'owner_id'    => $owner_id,
+                'owner_type'  => $owner_type,
+                'title'       => $title,
                 'renderer_id' => $renderer_id,
             ]
         );
@@ -71,5 +72,29 @@ class WidgetRendererDao extends DataAccessObject
         );
 
         return (int) $this->getDB()->lastInsertId();
+    }
+
+    public function searchByTrackerId(int $tracker_id): array
+    {
+        $sql = <<<SQL
+        SELECT
+            dlcw.id                                                      AS widget_id,
+            dl.dashboard_id                                              AS dashboard_id,
+            dl.dashboard_type                                            AS dashboard_type,
+            IF(dl.dashboard_type = 'project', pd.project_id, ud.user_id) AS owner_id
+        FROM tracker_widget_renderer AS twr
+            INNER JOIN tracker_report_renderer AS trr ON trr.id = twr.renderer_id
+            INNER JOIN tracker_report AS tr ON tr.id = trr.report_id
+
+            INNER JOIN dashboards_lines_columns_widgets AS dlcw ON dlcw.content_id = twr.id
+            INNER JOIN dashboards_lines_columns AS dlc ON dlc.id = dlcw.column_id
+            INNER JOIN dashboards_lines AS dl ON dl.id = dlc.line_id
+            LEFT JOIN user_dashboards AS ud ON ud.id = dl.dashboard_id
+            LEFT JOIN project_dashboards AS pd ON pd.id = dl.dashboard_id
+
+        WHERE tr.tracker_id = ?
+        SQL;
+
+        return $this->getDB()->q($sql, $tracker_id);
     }
 }

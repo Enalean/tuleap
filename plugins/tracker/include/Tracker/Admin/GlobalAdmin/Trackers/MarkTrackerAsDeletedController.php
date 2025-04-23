@@ -22,22 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
+use DateTimeImmutable;
 use EventManager;
+use Exception;
 use Feedback;
 use ForgeConfig;
 use HTTPRequest;
+use PFUser;
+use Project;
+use ProjectHistoryDao;
 use ReferenceManager;
 use Tracker;
 use TrackerFactory;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\Tracker\Widget\SearchWidgetsByTrackerId;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
-class MarkTrackerAsDeletedController implements DispatchableWithRequest
+final readonly class MarkTrackerAsDeletedController implements DispatchableWithRequest
 {
     /**
      * Event emitted to delete tracker
@@ -52,14 +59,16 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
     public const PROJECT_HISTORY_TRACKER_DELETION_KEY = 'plugin_tracker_tracker_deletion';
 
     public function __construct(
-        private readonly TrackerFactory $tracker_factory,
-        private readonly GlobalAdminPermissionsChecker $permissions_checker,
-        private readonly CSRFSynchronizerTokenProvider $token_provider,
-        private readonly EventManager $event_manager,
-        private readonly ReferenceManager $reference_manager,
-        private readonly FieldDao $field_dao,
-        private readonly TriggersDao $triggers_dao,
-        private readonly \ProjectHistoryDao $project_history_dao,
+        private TrackerFactory $tracker_factory,
+        private GlobalAdminPermissionsChecker $permissions_checker,
+        private CSRFSynchronizerTokenProvider $token_provider,
+        private EventManager $event_manager,
+        private ReferenceManager $reference_manager,
+        private FieldDao $field_dao,
+        private TriggersDao $triggers_dao,
+        private ProjectHistoryDao $project_history_dao,
+        private SearchWidgetsByTrackerId $widgets_retriever,
+        private DashboardWidgetDao $dashboard_widget_dao,
     ) {
     }
 
@@ -106,6 +115,9 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         $layout->redirect(TrackersDisplayController::getURL($project));
     }
 
+    /**
+     * @throws NotFoundException
+     */
     private function getTracker(array $variables): Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['id']);
@@ -121,9 +133,9 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
     }
 
     private function markTrackerAsDeleted(
-        \Project $project,
+        Project $project,
         Tracker $tracker,
-        \PFUser $current_user,
+        PFUser $current_user,
         BaseLayout $layout,
     ): void {
         if (! $this->tracker_factory->markAsDeleted($tracker->getId())) {
@@ -160,11 +172,12 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         );
 
         $this->deleteTrackerReference($tracker, $layout);
+        $this->deleteWidgets($tracker, $layout);
 
         $this->project_history_dao->addHistory(
             $project,
             $current_user,
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             self::PROJECT_HISTORY_TRACKER_DELETION_KEY,
             $tracker->getName() . ' (' . $tracker->getItemName() . ')',
         );
@@ -184,7 +197,44 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         if ($this->reference_manager->deleteReference($ref)) {
             $layout->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('project_reference', 't_r_deleted')
+                dgettext('tuleap-tracker', 'Corresponding Reference Pattern Deleted'),
+            );
+        }
+    }
+
+    private function deleteWidgets(Tracker $tracker, BaseLayout $layout): void
+    {
+        $widgets = $this->widgets_retriever->searchByTrackerId($tracker->getId());
+        $success = $widgets !== [];
+        foreach ($widgets as $widget) {
+            try {
+                $this->dashboard_widget_dao->deleteWidget($widget['owner_id'], $widget['dashboard_id'], $widget['dashboard_type'], $widget['widget_id']);
+            } catch (Exception) {
+                $success = false;
+                if ($widget['dashboard_type'] === 'project') {
+                    $layout->addFeedback(
+                        Feedback::WARN,
+                        sprintf(
+                            dgettext('tuleap-tracker', 'Failed to remove widget on dashboard of project #%d'),
+                            $widget['owner_id'],
+                        ),
+                    );
+                } else {
+                    $layout->addFeedback(
+                        Feedback::WARN,
+                        sprintf(
+                            dgettext('tuleap-tracker', 'Failed to remove widget on dashboard of user #%d'),
+                            $widget['owner_id'],
+                        ),
+                    );
+                }
+            }
+        }
+
+        if ($success) {
+            $layout->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-tracker', 'Corresponding widgets deleted'),
             );
         }
     }

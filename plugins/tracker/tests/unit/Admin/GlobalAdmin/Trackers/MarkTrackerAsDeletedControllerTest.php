@@ -22,14 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
+use Codendi_HTMLPurifier;
+use DateTimeImmutable;
 use EventManager;
 use Feedback;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use ProjectHistoryDao;
 use Reference;
 use ReferenceManager;
 use Tracker;
 use TrackerFactory;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
@@ -37,61 +43,44 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker\Widget\SearchWidgetsByTrackerId;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class MarkTrackerAsDeletedControllerTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $event_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var MarkTrackerAsDeletedController
-     */
-    private $controller;
+    private TrackerFactory&MockObject $tracker_factory;
+    private EventManager&MockObject $event_manager;
+    private ReferenceManager&MockObject $reference_manager;
+    private MarkTrackerAsDeletedController $controller;
     private PFUser $user;
     private Project $project;
-    /**
-     * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $csrf;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GlobalAdminPermissionsChecker
-     */
-    private $permissions_checker;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&FieldDao
-     */
-    private $field_dao;
-
-    private TriggersDao&\PHPUnit\Framework\MockObject\MockObject $triggers_dao;
-    private \ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
+    private GlobalAdminPermissionsChecker&MockObject $permissions_checker;
+    private FieldDao&MockObject $field_dao;
+    private TriggersDao&MockObject $triggers_dao;
+    private ProjectHistoryDao&MockObject $project_history_dao;
+    private SearchWidgetsByTrackerId&MockObject $widgets_retriever;
+    private DashboardWidgetDao&MockObject $dashboard_widget_dao;
 
     protected function setUp(): void
     {
-        $token_provider            = $this->createMock(CSRFSynchronizerTokenProvider::class);
-        $this->tracker_factory     = $this->createMock(TrackerFactory::class);
-        $this->event_manager       = $this->createMock(EventManager::class);
-        $this->reference_manager   = $this->createMock(ReferenceManager::class);
-        $this->permissions_checker = $this->createMock(GlobalAdminPermissionsChecker::class);
-        $this->field_dao           = $this->createMock(FieldDao::class);
-        $this->triggers_dao        = $this->createMock(TriggersDao::class);
-        $this->project_history_dao = $this->createMock(\ProjectHistoryDao::class);
+        $token_provider             = $this->createMock(CSRFSynchronizerTokenProvider::class);
+        $this->tracker_factory      = $this->createMock(TrackerFactory::class);
+        $this->event_manager        = $this->createMock(EventManager::class);
+        $this->reference_manager    = $this->createMock(ReferenceManager::class);
+        $this->permissions_checker  = $this->createMock(GlobalAdminPermissionsChecker::class);
+        $this->field_dao            = $this->createMock(FieldDao::class);
+        $this->triggers_dao         = $this->createMock(TriggersDao::class);
+        $this->project_history_dao  = $this->createMock(ProjectHistoryDao::class);
+        $this->widgets_retriever    = $this->createMock(SearchWidgetsByTrackerId::class);
+        $this->dashboard_widget_dao = $this->createMock(DashboardWidgetDao::class);
 
         $this->controller = new MarkTrackerAsDeletedController(
             $this->tracker_factory,
@@ -102,13 +91,14 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             $this->field_dao,
             $this->triggers_dao,
             $this->project_history_dao,
+            $this->widgets_retriever,
+            $this->dashboard_widget_dao,
         );
 
         $this->user    = UserTestBuilder::aUser()->build();
         $this->project = ProjectTestBuilder::aProject()->withId(42)->build();
 
-        $this->csrf = $this->createMock(\CSRFSynchronizerToken::class);
-        $token_provider->method('getCSRF')->willReturn($this->csrf);
+        $token_provider->method('getCSRF')->willReturn(CSRFSynchronizerTokenStub::buildSelf());
     }
 
     public function testItThrowsExceptionIfTrackerCannotBeFound(): void
@@ -129,7 +119,7 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItThrowsExceptionIfTrackerIsDeleted(): void
     {
-        $tracker = TrackerTestBuilder::aTracker()->withDeletionDate((new \DateTimeImmutable())->getTimestamp())->build();
+        $tracker = TrackerTestBuilder::aTracker()->withDeletionDate((new DateTimeImmutable())->getTimestamp())->build();
 
         $this->tracker_factory
             ->expects($this->once())
@@ -192,10 +182,6 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->method('getTrackerById')
             ->willReturn($tracker);
 
-        $this->csrf
-            ->expects($this->once())
-            ->method('check');
-
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
@@ -219,10 +205,6 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
-
-        $this->csrf
-            ->expects($this->once())
-            ->method('check');
 
         $this->field_dao
             ->expects($this->once())
@@ -253,10 +235,6 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
-
-        $this->csrf
-            ->expects($this->once())
-            ->method('check');
 
         $this->field_dao
             ->expects($this->once())
@@ -293,10 +271,6 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->expects($this->once())
             ->method('getTrackerById')
             ->willReturn($tracker);
-
-        $this->csrf
-            ->expects($this->once())
-            ->method('check');
 
         $this->field_dao
             ->expects($this->once())
@@ -346,10 +320,6 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->method('getTrackerById')
             ->willReturn($tracker);
 
-        $this->csrf
-            ->expects($this->once())
-            ->method('check');
-
         $this->field_dao
             ->expects($this->once())
             ->method('doesTrackerHaveSourceSharedFields')
@@ -385,14 +355,18 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->with($reference)
             ->willReturn(true);
 
-        $GLOBALS['Language']
-            ->expects($this->once())
-            ->method('getText')
-            ->with('project_reference', 't_r_deleted')
-            ->willReturn('Corresponding Reference Pattern Deleted');
+        $this->widgets_retriever->expects($this->once())->method('searchByTrackerId')->willReturn([
+            [
+                'owner_id'       => 101,
+                'widget_id'      => 645,
+                'dashboard_id'   => 5,
+                'dashboard_type' => 'project',
+            ],
+        ]);
+        $this->dashboard_widget_dao->expects($this->once())->method('deleteWidget')->with(101, 5, 'project', 645);
 
         $layout  = $this->createMock(BaseLayout::class);
-        $matcher = $this->exactly(3);
+        $matcher = $this->exactly(4);
         $layout->expects($matcher)
             ->method('addFeedback')->willReturnCallback(function (...$parameters) use ($matcher) {
                 if ($matcher->numberOfInvocations() === 1) {
@@ -401,11 +375,15 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
                 }
                 if ($matcher->numberOfInvocations() === 2) {
                     self::assertSame(Feedback::INFO, $parameters[0]);
-                    self::assertSame(\Codendi_HTMLPurifier::CONFIG_LIGHT, $parameters[2]);
+                    self::assertSame(Codendi_HTMLPurifier::CONFIG_LIGHT, $parameters[2]);
                 }
                 if ($matcher->numberOfInvocations() === 3) {
                     self::assertSame(Feedback::INFO, $parameters[0]);
                     self::assertSame('Corresponding Reference Pattern Deleted', $parameters[1]);
+                }
+                if ($matcher->numberOfInvocations() === 4) {
+                    self::assertSame(Feedback::INFO, $parameters[0]);
+                    self::assertSame('Corresponding widgets deleted', $parameters[1]);
                 }
             });
 
@@ -420,7 +398,7 @@ final class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    private function buildMockTracker(): Tracker&\PHPUnit\Framework\MockObject\MockObject
+    private function buildMockTracker(): Tracker&MockObject
     {
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(102);

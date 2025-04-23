@@ -1046,6 +1046,12 @@ msgstr "Copier dans le presse-papier"
 msgid "Copy with children"
 msgstr "Copier avec les enfants"
 
+msgid "Corresponding Reference Pattern Deleted"
+msgstr "Modèle de référence correspondant détruit"
+
+msgid "Corresponding widgets deleted"
+msgstr "Widgets correspondant détruits"
+
 msgid "Could not match an user with your email."
 msgstr "Aucun utilisateur correspond à votre adresse email."
 
@@ -1532,6 +1538,17 @@ msgstr ""
 
 msgid "Fail to retrieve the full collection of projects."
 msgstr "Echec lors de la récupération de la collection de tous les projets."
+
+#, php-format
+msgid "Failed to remove widget on dashboard of project #%d"
+msgstr ""
+"Echec lors de la suppression du widget du tableau de bord du project #%d"
+
+#, php-format
+msgid "Failed to remove widget on dashboard of user #%d"
+msgstr ""
+"Echec lors de la suppression du widget du tableau de bord de l'utilisateur "
+"#%d"
 
 msgid "Field"
 msgstr "Champs"
