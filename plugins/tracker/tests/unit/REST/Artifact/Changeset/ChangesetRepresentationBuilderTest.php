@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_Artifact_Changeset;
+use Tracker_FormElementFactory;
 use Tracker_UserWithReadAllPermission;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -35,55 +37,35 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
+use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ChangesetRepresentationBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PermissionChecker
-     */
-    private $comment_permission_checker;
+    private ChangesetRepresentationBuilder $builder;
+    private UserManager&MockObject $user_manager;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private PermissionChecker&MockObject $comment_permission_checker;
 
     protected function setUp(): void
     {
-        $this->user_manager               = \Mockery::mock(\UserManager::class);
-        $this->form_element_factory       = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->comment_permission_checker = \Mockery::mock(PermissionChecker::class);
+        $this->user_manager               = $this->createMock(\UserManager::class);
+        $this->form_element_factory       = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->comment_permission_checker = $this->createMock(PermissionChecker::class);
         $this->builder                    = new ChangesetRepresentationBuilder(
             $this->user_manager,
             $this->form_element_factory,
             new CommentRepresentationBuilder(
-                \Mockery::spy(ContentInterpretor::class)
+                $this->createMock(ContentInterpretor::class)
             ),
             $this->comment_permission_checker,
             ProvideUserAvatarUrlStub::build(),
         );
 
-        $this->comment_permission_checker
-            ->shouldReceive('isPrivateCommentForUser')
-            ->andReturnFalse()
-            ->byDefault();
-
-        $this->comment_permission_checker
-            ->shouldReceive('getUgroupsThatUserCanSeeOnComment')
-            ->andReturn(new UserIsNotAllowedToSeeUGroups())
-            ->byDefault();
-
-        \UserHelper::setInstance(\Mockery::spy(\UserHelper::class));
+        $user_helper = $this->createMock(\UserHelper::class);
+        $user_helper->method('getUserUrl');
+        $user_helper->method('getDisplayNameFromUser');
+        \UserHelper::setInstance($user_helper);
     }
 
     protected function tearDown(): void
@@ -96,19 +78,25 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $string_field->shouldReceive('userCanRead')->andReturnTrue();
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $string_field->method('userCanRead')->willReturn(true);
         $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
-        $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
-        $int_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $int_field->shouldReceive('userCanRead')->andReturnTrue();
+        $string_field->method('getRESTValue')->willReturn($string_value);
+        $int_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $int_field->method('userCanRead')->willReturn(true);
         $int_value = new ArtifactFieldValueFullRepresentation();
         $int_value->build(10001, 'int', 'Initial effort', 8);
-        $int_field->shouldReceive('getRESTValue')->andReturn($int_value);
+        $int_field->method('getRESTValue')->willReturn($int_value);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
-            ->once()
-            ->andReturn([$string_field, $int_field]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')
+            ->willReturn([$string_field, $int_field]);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -134,17 +122,23 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $permission_on_artifact_field = \Mockery::mock(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $permission_on_artifact_field->shouldReceive('userCanRead')->andReturnTrue();
-        $permission_on_artifact_field->shouldReceive('getRESTValue')->andReturnNull();
-        $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $string_field->shouldReceive('userCanRead')->andReturnTrue();
+        $permission_on_artifact_field = $this->createMock(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $permission_on_artifact_field->method('userCanRead')->willReturn(true);
+        $permission_on_artifact_field->method('getRESTValue')->willReturn(null);
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $string_field->method('userCanRead')->willReturn(true);
         $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
-        $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
+        $string_field->method('getRESTValue')->willReturn($string_value);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
-            ->once()
-            ->andReturn([$permission_on_artifact_field, $string_field]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')
+            ->willReturn([$permission_on_artifact_field, $string_field]);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -161,16 +155,22 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $int_field_user_can_not_read = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $int_field_user_can_not_read->shouldReceive('userCanRead')->andReturnFalse();
-        $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $string_field->shouldReceive('userCanRead')->andReturnTrue();
+        $int_field_user_can_not_read = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $int_field_user_can_not_read->method('userCanRead')->willReturn(false);
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $string_field->method('userCanRead')->willReturn(true);
         $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
-        $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
+        $string_field->method('getRESTValue')->willReturn($string_value);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
-            ->once()
-            ->andReturn([$int_field_user_can_not_read, $string_field]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')
+            ->willReturn([$int_field_user_can_not_read, $string_field]);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -188,10 +188,9 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $changeset          = $this->mockChangeset();
         $previous_changeset = $this->mockChangeset();
 
-        $this->comment_permission_checker
-            ->shouldReceive('isPrivateCommentForUser')
-            ->once()
-            ->andReturnTrue();
+        $this->comment_permission_checker->expects($this->once())
+            ->method('isPrivateCommentForUser')
+            ->willReturn(true);
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -203,12 +202,9 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         self::assertNull($representation);
     }
 
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact_Changeset
-     */
-    private function mockChangeset()
+    private function mockChangeset(): Tracker_Artifact_Changeset&MockObject
     {
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
 
         $comment = new \Tracker_Artifact_Changeset_Comment(
             201,
@@ -223,18 +219,18 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             []
         );
 
-        $changeset->shouldReceive('getComment')->andReturn($comment);
-        $changeset->shouldReceive('getSubmittedBy')->andReturn(101);
-        $changeset->shouldReceive('getSubmittedOn')->andReturn(1234567890);
+        $changeset->method('getComment')->willReturn($comment);
+        $changeset->method('getSubmittedBy')->willReturn(101);
+        $changeset->method('getSubmittedOn')->willReturn(1234567890);
 
-        $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $string_field->shouldReceive('userCanRead')->andReturnFalse();
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $string_field->method('userCanRead')->willReturn(false);
 
-        $value = \Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $value->shouldReceive('getField')->andReturn($string_field);
-        $value->shouldReceive('hasChanged')->andReturnTrue();
-        $changeset->shouldReceive('getValues')->andReturn([$value]);
-        $changeset->shouldReceive('getChangesetValuesHasChanged')->andReturn([$value]);
+        $value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
+        $value->method('getField')->willReturn($string_field);
+        $value->method('hasChanged')->willReturn(true);
+        $changeset->method('getValues')->willReturn([$value]);
+        $changeset->method('getChangesetValuesHasChanged')->willReturn([$value]);
 
         return $changeset;
     }
@@ -244,6 +240,13 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
+
         $representation = $this->builder->buildWithFields(
             $changeset,
             \Tracker_Artifact_Changeset::FIELDS_COMMENTS,
@@ -251,16 +254,22 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             null
         );
 
-        $this->form_element_factory->shouldNotHaveReceived('getUsedFieldsForREST');
+        $this->form_element_factory->expects($this->never())->method('getUsedFieldsForREST');
         self::assertEmpty($representation->values);
         self::assertNotEmpty($representation->last_comment);
     }
 
     public function testItSetsSubmittedByToNullWhenThereIsNone(): void
     {
-        $user = $this->buildUser();
-        $this->user_manager->shouldReceive('getUserById')->with(0)->andReturnNull();
+        $user      = $this->buildUser();
         $changeset = $this->buildChangeset(true, 0);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -273,9 +282,15 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItSetsLastModifiedByToNullWhenThereIsNone(): void
     {
-        $user = $this->buildUser();
-        $this->user_manager->shouldReceive('getUserById')->with(0)->andReturnNull();
+        $user      = $this->buildUser();
         $changeset = $this->buildChangeset(true, 101, 0);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -290,6 +305,13 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     {
         $user      = UserTestBuilder::aUser()->withId(101)->build();
         $changeset = $this->buildChangeset(false);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -306,12 +328,11 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->never();
+        $this->form_element_factory->expects($this->never())->method('getUsedFieldsForREST');
 
-        $this->comment_permission_checker
-            ->shouldReceive('isPrivateCommentForUser')
-            ->once()
-            ->andReturnTrue();
+        $this->comment_permission_checker->expects($this->once())
+            ->method('isPrivateCommentForUser')
+            ->willReturn(true);
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -328,14 +349,15 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
-            ->once()
-            ->andReturn([]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')
+            ->willReturn([]);
 
+        $this->comment_permission_checker->expects($this->once())
+            ->method('isPrivateCommentForUser')
+            ->willReturn(true);
         $this->comment_permission_checker
-            ->shouldReceive('isPrivateCommentForUser')
-            ->once()
-            ->andReturnTrue();
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -357,16 +379,24 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
-            ->once()
-            ->andReturn([]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')
+            ->willReturn([]);
 
-        $project_ugroup = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1, 'getName' => 'MyGroup', 'getNormalizedName' => 'MyGroup']);
+        $project_ugroup = $this->createMock(\ProjectUGroup::class);
+        $project_ugroup->method('getId')->willReturn(1);
+        $project_ugroup->method('getName')->willReturn('MyGroup');
+        $project_ugroup->method('getNormalizedName')->willReturn('MyGroup');
+
+        $this->comment_permission_checker->expects($this->once())
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn([$project_ugroup]);
 
         $this->comment_permission_checker
-            ->shouldReceive('getUgroupsThatUserCanSeeOnComment')
-            ->once()
-            ->andReturn([$project_ugroup]);
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFields(
             $changeset,
@@ -404,9 +434,15 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->with(self::isInstanceOf(Tracker_UserWithReadAllPermission::class), $changeset)
             ->willReturn($int_value);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
-            ->once()
-            ->andReturn([$string_field, $int_field]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')
+            ->willReturn([$string_field, $int_field]);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFieldValuesWithoutPermissions($changeset, $user);
 
@@ -419,15 +455,21 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $permission_on_artifact_field = \Mockery::mock(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
-        $permission_on_artifact_field->shouldReceive('getRESTValue')->andReturnNull();
-        $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
+        $permission_on_artifact_field = $this->createMock(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $permission_on_artifact_field->method('getRESTValue')->willReturn(null);
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'overcompensation', 'text');
-        $string_field->shouldReceive('getRESTValue')->andReturn($string_value);
+        $string_field->method('getRESTValue')->willReturn($string_value);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
-            ->once()
-            ->andReturn([$permission_on_artifact_field, $string_field]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')
+            ->willReturn([$permission_on_artifact_field, $string_field]);
+
+        $this->comment_permission_checker
+            ->method('isPrivateCommentForUser')
+            ->willReturn(false);
+        $this->comment_permission_checker
+            ->method('getUgroupsThatUserCanSeeOnComment')
+            ->willReturn(new UserIsNotAllowedToSeeUGroups());
 
         $representation = $this->builder->buildWithFieldValuesWithoutPermissions($changeset, $user);
 
@@ -439,11 +481,11 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         int $submitted_by = 101,
         int $last_modified_by = 101,
     ): \Tracker_Artifact_Changeset {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(110);
-        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
-        $artifact = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getGroupId')->willReturn(110);
+        $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(24, $artifact, $submitted_by, 1234567890, null);
         $comment   = new \Tracker_Artifact_Changeset_Comment(
             201,
@@ -464,9 +506,12 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private function buildUser(): \PFUser
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
-        $this->user_manager->shouldReceive('getUserById')
-            ->with(101)
-            ->andReturn($user);
+        $this->user_manager->method('getUserById')
+            ->willReturnCallback(static fn (int $id) => match ($id) {
+                101 => $user,
+                default => null,
+            });
+
         return $user;
     }
 }
