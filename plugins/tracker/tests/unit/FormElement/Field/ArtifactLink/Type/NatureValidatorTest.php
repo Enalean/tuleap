@@ -18,28 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class NatureValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class NatureValidatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var TypeValidator
-     */
-    private $validator;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TypeDao
-     */
-    private $dao;
+    private TypeValidator $validator;
+    private TypeDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao::class);
-
+        $this->dao       = $this->createMock(TypeDao::class);
         $this->validator = new TypeValidator($this->dao);
     }
 
@@ -73,25 +68,25 @@ final class NatureValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotComplainIfShortnameIsValid(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->validator->checkShortname('fixed_in');
-        $this->addToAssertionCount(1);
     }
 
     public function testItDoesNothComplainIfForwardLabelIsValid(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->validator->checkForwardLabel('Fixed In');
-        $this->addToAssertionCount(1);
     }
 
     public function testItDoesNothComplainIfReverseLabelIsValid(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->validator->checkReverseLabel('Fixed');
-        $this->addToAssertionCount(1);
     }
 
     public function testItThrowsAnExceptionIfNatureIsAlreadyUsed(): void
     {
-        $this->dao->shouldReceive('isOrHasBeenUsed')->andReturns(true);
+        $this->dao->method('isOrHasBeenUsed')->willReturn(true);
 
         $this->expectException(UnableToDeleteTypeException::class);
 
