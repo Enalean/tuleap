@@ -23,41 +23,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker_Artifact_Changeset;
-use Tuleap\Tracker\Artifact\Artifact;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class PostSaveNewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class PostSaveNewChangesetTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testExecutesProcessChildrenTriggersCommand(): void
     {
-        $artifact           = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $user               = Mockery::mock(\PFUser::class);
-        $new_changeset      = Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $artifact           = ArtifactTestBuilder::anArtifact(2541)->build();
+        $user               = UserTestBuilder::buildWithDefaults();
+        $new_changeset      = ChangesetTestBuilder::aChangeset(456)->build();
         $previous_changeset = null;
-        $command            = Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class);
-        $field              = Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getProcessChildrenTriggersCommand')->andReturn($command);
-        $field->shouldReceive('getPostSaveNewChangesetLinkParentArtifact')->andReturn(
-            new class (Mockery::mock(ParentLinkAction::class)) extends PostSaveNewChangesetLinkParentArtifact {
-                public function execute(
-                    Artifact $artifact,
-                    PFUser $submitter,
-                    Tracker_Artifact_Changeset $new_changeset,
-                    array $fields_data,
-                    ?Tracker_Artifact_Changeset $previous_changeset = null,
-                ): void {
-                    return;
-                }
-            }
-        );
+        $command            = $this->createMock(Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class);
+        $field              = $this->createPartialMock(ArtifactLinkField::class, [
+            'getProcessChildrenTriggersCommand',
+            'getPostSaveNewChangesetLinkParentArtifact',
+        ]);
+        $field->method('getProcessChildrenTriggersCommand')->willReturn($command);
+        $save_changeset = $this->createStub(PostSaveNewChangesetLinkParentArtifact::class);
+        $field->method('getPostSaveNewChangesetLinkParentArtifact')->willReturn($save_changeset);
+        $save_changeset->method('execute');
 
-        $command->shouldReceive('execute')->with($artifact, $user, $new_changeset, [], $previous_changeset)->once();
+        $command->expects($this->once())->method('execute')->with($artifact, $user, $new_changeset, [], $previous_changeset);
 
         $field->postSaveNewChangeset($artifact, $user, $new_changeset, [], $previous_changeset);
     }

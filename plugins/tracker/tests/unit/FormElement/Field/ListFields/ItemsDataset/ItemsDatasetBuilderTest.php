@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,19 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_List_Value;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ItemsDatasetBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsDataAttributesForFieldListValue(): void
     {
-        $field            = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $field_list_value = \Mockery::mock(\Tracker_FormElement_Field_List_Value::class);
-        $field_list_value->shouldReceive('getDataset')->andReturn([
-            'data-user-id' => 102,
+        $field            = ListFieldBuilder::aListField(452)->build();
+        $field_list_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
+        $field_list_value->method('getDataset')->willReturn([
+            'data-user-id'    => 102,
             'data-avatar-url' => 'some_url',
             'data-color-name' => 'peggy-pink',
         ]);
@@ -48,14 +49,11 @@ class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnEmptyStringWhenThereIsNoDataToBind(): void
     {
-        $field            = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $field_list_value = \Mockery::mock(\Tracker_FormElement_Field_List_Value::class);
-        $field_list_value->shouldReceive('getDataset')->andReturn([]);
+        $field            = ListFieldBuilder::aListField(452)->build();
+        $field_list_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
+        $field_list_value->method('getDataset')->willReturn([]);
 
         $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field, $field_list_value);
-        self::assertSame(
-            '',
-            $data_attributes
-        );
+        self::assertSame('', $data_attributes);
     }
 }

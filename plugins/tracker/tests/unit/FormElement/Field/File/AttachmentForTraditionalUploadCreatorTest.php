@@ -22,27 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Mockery;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Rule_File;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class AttachmentForTraditionalUploadCreatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItCreatesAttachment(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'move_uploaded_file', '/var/tmp')
-            ->andReturn(true);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'move_uploaded_file', '/var/tmp')->willReturn(true);
 
         $submitted_value_info = [
             'description' => '',
@@ -54,31 +51,29 @@ final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUn
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([$mover, $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $creator->shouldReceive('save')->andReturn(true);
+        $creator->method('save')->willReturn(true);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertEquals(101, $attachment->getSubmittedBy());
+        self::assertEquals(101, $attachment->getSubmittedBy());
     }
 
     public function testItCreatesAttachmentWithCopyInCaseOfArtifactImport(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'copy', '/var/tmp')
-            ->andReturn(true);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'copy', '/var/tmp')->willReturn(true);
 
         $submitted_value_info = [
             'description' => '',
@@ -91,31 +86,29 @@ final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUn
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([$mover, $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $creator->shouldReceive('save')->andReturn(true);
+        $creator->method('save')->willReturn(true);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertEquals(101, $attachment->getSubmittedBy());
+        self::assertEquals(101, $attachment->getSubmittedBy());
     }
 
     public function testItStoreMappingBetweenXMIdAndFileInfoId(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'copy', '/var/tmp')
-            ->andReturn(true);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'copy', '/var/tmp')->willReturn(true);
 
         $submitted_value_info = [
             'description'          => '',
@@ -129,40 +122,36 @@ final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUn
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([$mover, $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $creator->shouldReceive('save')->andReturn(true);
+        $creator->method('save')->willReturn(true);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
 
         // When Tracker_FileInfo saves itself, it updates its id (initially set to 0) to the new id.
         // Since the Tracker_FileInfo instance is created in the method under test, there is no mean
         // to know the new id, therefore we trust Tracker_FileInfo code and test with default id 0.
-        $url_mapping
-            ->shouldReceive('add')
-            ->with('/plugins/tracker/attachments/123-readme.mkd', '/plugins/tracker/attachments/0-readme.mkd')
-            ->once();
+        $url_mapping->expects($this->once())->method('add')
+            ->with('/plugins/tracker/attachments/123-readme.mkd', '/plugins/tracker/attachments/0-readme.mkd');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertEquals(101, $attachment->getSubmittedBy());
+        self::assertEquals(101, $attachment->getSubmittedBy());
     }
 
     public function testItUsesSubmittedByFromValueInfoInsteadOfCurrentUser(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
         $another_user = UserTestBuilder::aUser()->withId(666)->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'move_uploaded_file', '/var/tmp')
-            ->andReturn(true);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'move_uploaded_file', '/var/tmp')->willReturn(true);
 
         $submitted_value_info = [
             'description'  => '',
@@ -175,31 +164,29 @@ final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUn
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([$mover, $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $creator->shouldReceive('save')->andReturn(true);
+        $creator->method('save')->willReturn(true);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertEquals(666, $attachment->getSubmittedBy());
+        self::assertEquals(666, $attachment->getSubmittedBy());
     }
 
     public function testItReturnsNullIfAttachmentCannotBeSavedInDb(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'move_uploaded_file', '/var/tmp')
-            ->andReturn(true);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'move_uploaded_file', '/var/tmp')->willReturn(true);
 
         $submitted_value_info = [
             'description' => '',
@@ -211,31 +198,29 @@ final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUn
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([$mover, $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $creator->shouldReceive('save')->andReturn(false);
+        $creator->method('save')->willReturn(false);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 
     public function testItReturnsNullIfAttachmentCannotBeMovedToFinalPlace(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'move_uploaded_file', '/var/tmp')
-            ->andReturn(false);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'move_uploaded_file', '/var/tmp')->willReturn(false);
 
         $submitted_value_info = [
             'description' => '',
@@ -247,76 +232,75 @@ final class AttachmentForTraditionalUploadCreatorTest extends \Tuleap\Test\PHPUn
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([$mover, $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $creator->shouldReceive('save')->andReturn(true);
+        $creator->method('save')->willReturn(true);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 
     public function testItReturnsNullIfFileIsNotValid(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(false);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(false);
 
         $current_user = UserTestBuilder::aUser()->build();
 
-        $mover                = Mockery::mock(AttachmentToFinalPlaceMover::class);
         $submitted_value_info = [];
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([new AttachmentToFinalPlaceMover(), $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 
     public function testItCreatesAttachmentWithMove(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'rename', '/var/tmp')
-            ->andReturn(true);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'rename', '/var/tmp')->willReturn(true);
 
         $submitted_value_info = [
             'description' => '',
-            'name' => 'readme.mkd',
-            'size' => 123,
-            'type' => 'text/plain',
-            'tmp_name' => '/var/tmp',
-            'is_moved' => true,
+            'name'        => 'readme.mkd',
+            'size'        => 123,
+            'type'        => 'text/plain',
+            'tmp_name'    => '/var/tmp',
+            'is_moved'    => true,
         ];
 
         $field = FileFieldBuilder::aFileField(1234)->build();
 
-        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
-        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+        $creator = $this->getMockBuilder(AttachmentForTraditionalUploadCreator::class)
+            ->setConstructorArgs([$mover, $rule_file])
+            ->onlyMethods(['save'])
+            ->getMock();
 
-        $creator->shouldReceive('save')->andReturn(true);
+        $creator->method('save')->willReturn(true);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertEquals(101, $attachment->getSubmittedBy());
+        self::assertEquals(101, $attachment->getSubmittedBy());
     }
 }

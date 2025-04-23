@@ -22,66 +22,65 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ColinODell\PsrTestLogger\TestLogger;
+use DateTimeImmutable;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FileUploadCleanerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDeleteDanglingFilesToUpload(): void
     {
-        $dao                  = \Mockery::mock(FileOngoingUploadDao::class);
-        $form_element_factory = \Mockery::mock(Tracker_FormElementFactory::class);
-        $logger               = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $field                = \Mockery::mock(\Tracker_FormElement_Field_File::class);
-
-        $logger->shouldReceive('info');
+        $dao                  = $this->createMock(FileOngoingUploadDao::class);
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $logger               = new TestLogger();
+        $field                = $this->createMock(Tracker_FormElement_Field_File::class);
 
         $base_path = vfsStream::setup()->url();
         mkdir($base_path . '/field/thumbnails', 0777, true);
-        \touch($base_path . '/field/11');
-        \touch($base_path . '/field/thumbnails/11');
-        \touch($base_path . '/field/12');
-        \touch($base_path . '/field/13');
+        touch($base_path . '/field/11');
+        touch($base_path . '/field/thumbnails/11');
+        touch($base_path . '/field/12');
+        touch($base_path . '/field/13');
 
-        $dao->shouldReceive('deleteUnusableFiles');
-        $dao->shouldReceive('searchUnusableFiles')->andReturn(
+        $dao->method('deleteUnusableFiles');
+        $dao->method('searchUnusableFiles')->willReturn([
             [
-                [
-                    'id'           => 11,
-                    'filename'     => 'TaylorSwift.jpg',
-                    'description'  => '',
-                    'filesize'     => 123,
-                    'filetype'     => 'image/jpg',
-                    'field_id'     => 1001,
-                    'submitted_by' => 101,
-                ],
-                [
-                    'id'           => 13,
-                    'filename'     => 'Readme.mkd',
-                    'description'  => '',
-                    'filesize'     => 94830,
-                    'filetype'     => 'text/plain',
-                    'field_id'     => 1001,
-                    'submitted_by' => 101,
-                ],
-            ]
-        );
+                'id'           => 11,
+                'filename'     => 'TaylorSwift.jpg',
+                'description'  => '',
+                'filesize'     => 123,
+                'filetype'     => 'image/jpg',
+                'field_id'     => 1001,
+                'submitted_by' => 101,
+            ],
+            [
+                'id'           => 13,
+                'filename'     => 'Readme.mkd',
+                'description'  => '',
+                'filesize'     => 94830,
+                'filetype'     => 'text/plain',
+                'field_id'     => 1001,
+                'submitted_by' => 101,
+            ],
+        ]);
 
-        $form_element_factory->shouldReceive('getFieldById')->andReturn($field);
+        $form_element_factory->method('getFieldById')->willReturn($field);
 
-        $field->shouldReceive('getRootPath')->andReturn($base_path . '/field');
+        $field->method('getRootPath')->willReturn($base_path . '/field');
 
         (new FileUploadCleaner($logger, $dao, $form_element_factory, new DBTransactionExecutorPassthrough()))
-            ->deleteDanglingFilesToUpload(new \DateTimeImmutable());
+            ->deleteDanglingFilesToUpload(new DateTimeImmutable());
 
-        $this->assertFileDoesNotExist($base_path . '/field/11');
-        $this->assertFileDoesNotExist($base_path . '/field/thumbnails/11');
-        $this->assertFileExists($base_path . '/field/12');
-        $this->assertFileDoesNotExist($base_path . '/field/13');
+        self::assertFileDoesNotExist($base_path . '/field/11');
+        self::assertFileDoesNotExist($base_path . '/field/thumbnails/11');
+        self::assertFileExists($base_path . '/field/12');
+        self::assertFileDoesNotExist($base_path . '/field/13');
+        self::assertTrue($logger->hasInfoRecords());
     }
 }

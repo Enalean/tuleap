@@ -22,41 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-use BaseLanguage;
-use Mockery;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use SimpleXMLElement;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\NoneStaticValueBuilder;
+use XML_SimpleXMLCDATAFactory;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BindStaticXmlExporterTest extends TestCase
 {
     use GlobalLanguageMock;
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var BindStaticXmlExporter
-     */
-    private $exporter;
-    /**
-     * @var array
-     */
-    private $default_values;
-
-    /**
-     * @var \SimpleXMLElement
-     */
-    private $xml;
+    private BindStaticXmlExporter $exporter;
+    private array $default_values;
+    private SimpleXMLElement $xml;
 
     protected function setUp(): void
     {
-        $this->xml            = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $this->xml            = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
         $this->default_values = [1 => true];
 
-        $this->exporter      = new BindStaticXmlExporter(new \XML_SimpleXMLCDATAFactory());
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('None');
+        $this->exporter = new BindStaticXmlExporter(new XML_SimpleXMLCDATAFactory());
+        $GLOBALS['Language']->method('getText')->willReturn('None');
     }
 
     public function testItExportBindWithoutNoneValue(): void
@@ -76,23 +67,23 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
-        $this->assertNotNull($items_node);
+        self::assertNotNull($items_node);
 
         $value_A = $items_node->item[0];
-        $this->assertLabelAttributeIsSame('Value A', $value_A);
+        self::assertLabelAttributeIsSame('Value A', $value_A);
 
 
         $value_B = $items_node->item[1];
-        $this->assertLabelAttributeIsSame('Value B', $value_B);
+        self::assertLabelAttributeIsSame('Value B', $value_B);
 
         $decorators_node = $this->xml->decorators->decorator;
-        $this->assertNotNull($decorators_node);
+        self::assertNotNull($decorators_node);
 
         $decorator_A = $decorators_node[0];
-        $this->assertTlpColor($value_a->getUuid(), 'inca-silver', $decorator_A);
+        self::assertTlpColor($value_a->getUuid(), 'inca-silver', $decorator_A);
 
         $decorator_B = $decorators_node[1];
-        $this->assertLegacyColor($value_b->getUuid(), '123', '456', '789', $decorator_B);
+        self::assertLegacyColor($value_b->getUuid(), '123', '456', '789', $decorator_B);
     }
 
     public function testItExportBindWithTLPNoneValue(): void
@@ -101,22 +92,22 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $values     = [
             $none_value,
         ];
-        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
+        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
         $xml_mapping = [];
         $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
-        $this->assertNotNull($items_node);
+        self::assertNotNull($items_node);
 
         $value_A = $items_node->item[0];
-        $this->assertLabelAttributeIsSame('None', $value_A);
+        self::assertLabelAttributeIsSame('None', $value_A);
 
         $decorators_node = $this->xml->decorators->decorator;
-        $this->assertNotNull($decorators_node);
+        self::assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        $this->assertTlpColor($none_value->getUuid(), 'inca-silver', $decorator_none);
+        self::assertTlpColor($none_value->getUuid(), 'inca-silver', $decorator_none);
     }
 
     public function testItExportBindWithLegacyNoneValue(): void
@@ -125,44 +116,44 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $values     = [
             $none_value,
         ];
-        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, '123', '456', '789', null)];
+        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(Tracker_FormElement_Field_List::NONE_VALUE, 100, '123', '456', '789', null)];
 
         $xml_mapping = [];
         $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
-        $this->assertNotNull($items_node);
+        self::assertNotNull($items_node);
 
         $value_A = $items_node->item[0];
-        $this->assertLabelAttributeIsSame('None', $value_A);
+        self::assertLabelAttributeIsSame('None', $value_A);
 
         $decorators_node = $this->xml->decorators->decorator;
-        $this->assertNotNull($decorators_node);
+        self::assertNotNull($decorators_node);
 
         $decorator_none = $decorators_node[0];
-        $this->assertLegacyColor($none_value->getUuid(), '123', '456', '789', $decorator_none);
+        self::assertLegacyColor($none_value->getUuid(), '123', '456', '789', $decorator_none);
     }
 
-    private function assertLabelAttributeIsSame(string $expected_value, \SimpleXMLElement $value_node): void
+    private function assertLabelAttributeIsSame(string $expected_value, SimpleXMLElement $value_node): void
     {
-        $this->assertNotNull($value_node);
+        self::assertNotNull($value_node);
         $value_A_attributes = $value_node->attributes();
-        $this->assertEquals($expected_value, (string) $value_A_attributes->label);
+        self::assertEquals($expected_value, (string) $value_A_attributes->label);
     }
 
-    private function assertTlpColor(string $expected_ref, string $expected_color, \SimpleXMLElement $decorator_node): void
+    private function assertTlpColor(string $expected_ref, string $expected_color, SimpleXMLElement $decorator_node): void
     {
         $decorator_A_attributes = $decorator_node->attributes();
-        $this->assertEquals($expected_ref, (string) $decorator_A_attributes->REF);
-        $this->assertEquals($expected_color, (string) $decorator_A_attributes->tlp_color_name);
+        self::assertEquals($expected_ref, (string) $decorator_A_attributes->REF);
+        self::assertEquals($expected_color, (string) $decorator_A_attributes->tlp_color_name);
     }
 
-    private function assertLegacyColor(string $expected_value, string $expected_r, string $expected_g, string $expected_b, \SimpleXMLElement $decorator_node): void
+    private function assertLegacyColor(string $expected_value, string $expected_r, string $expected_g, string $expected_b, SimpleXMLElement $decorator_node): void
     {
         $decorator_B_attributes = $decorator_node->attributes();
-        $this->assertEquals($expected_value, (string) $decorator_B_attributes->REF);
-        $this->assertEquals($expected_r, (string) $decorator_B_attributes->r);
-        $this->assertEquals($expected_g, (string) $decorator_B_attributes->g);
-        $this->assertEquals($expected_b, (string) $decorator_B_attributes->b);
+        self::assertEquals($expected_value, (string) $decorator_B_attributes->REF);
+        self::assertEquals($expected_r, (string) $decorator_B_attributes->r);
+        self::assertEquals($expected_g, (string) $decorator_B_attributes->g);
+        self::assertEquals($expected_b, (string) $decorator_B_attributes->b);
     }
 }

@@ -22,65 +22,50 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_List;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class BoundDecoratorSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BoundDecoratorSaverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const FIELD_ID = 101;
 
-    /**
-     * @var int
-     */
-    private $field_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_List
-     */
-    private $field;
-    /**
-     * @var BoundDecoratorSaver
-     */
-    private $bound_decorator_saver;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao
-     */
-    private $bind_decorator_dao;
+    private Tracker_FormElement_Field_List $field;
+    private BoundDecoratorSaver $bound_decorator_saver;
+    private BindDecoratorDao&MockObject $bind_decorator_dao;
 
     protected function setUp(): void
     {
-        $this->bind_decorator_dao    = \Mockery::mock(
-            \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao::class
-        );
+        $this->bind_decorator_dao    = $this->createMock(BindDecoratorDao::class);
         $this->bound_decorator_saver = new BoundDecoratorSaver($this->bind_decorator_dao);
 
-        $this->field    = \Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $this->field_id = 101;
-        $this->field->shouldReceive('getId')->andReturn($this->field_id);
+        $this->field = ListFieldBuilder::aListField(self::FIELD_ID)->build();
     }
 
     public function testItHasSpecificSaveForLegacyColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('save')->with(1024, 255, 255, 255)->once();
+        $this->bind_decorator_dao->expects($this->once())->method('save')->with(1024, 255, 255, 255);
         $this->bound_decorator_saver->save($this->field, 1024, '#FFFFFF');
     }
 
     public function testItHasSpecificSaveForNoneLegacyColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('saveNoneLegacyColor')
-            ->with($this->field_id, 255, 255, 255)->once();
-        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, '#FFFFFF');
+        $this->bind_decorator_dao->expects($this->once())->method('saveNoneLegacyColor')->with(self::FIELD_ID, 255, 255, 255);
+        $this->bound_decorator_saver->save($this->field, Tracker_FormElement_Field_List::NONE_VALUE, '#FFFFFF');
     }
 
     public function testItHasSpecificSaveForTlpColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('saveTlpColor')->with(1024, 'peggy-pink')->once();
+        $this->bind_decorator_dao->expects($this->once())->method('saveTlpColor')->with(1024, 'peggy-pink');
         $this->bound_decorator_saver->save($this->field, 1024, 'peggy-pink');
     }
 
     public function testItHasSpecificSaveForNoneTlpColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('saveNoneTlpColor')
-            ->with($this->field_id, 'peggy-pink')->once();
-        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, 'peggy-pink');
+        $this->bind_decorator_dao->expects($this->once())->method('saveNoneTlpColor')->with(self::FIELD_ID, 'peggy-pink');
+        $this->bound_decorator_saver->save($this->field, Tracker_FormElement_Field_List::NONE_VALUE, 'peggy-pink');
     }
 }
