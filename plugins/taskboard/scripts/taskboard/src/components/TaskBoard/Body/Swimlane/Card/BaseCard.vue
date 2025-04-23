@@ -22,7 +22,12 @@
     <div ref="root" class="taskboard-card" v-bind:class="additional_classnames">
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
-            <card-info v-bind:card="card" v-bind:tracker="tracker" v-model="assignees">
+            <card-info
+                v-bind:card="card"
+                v-bind:tracker="tracker"
+                v-bind:value="assignees"
+                v-on:input="assignees = $event"
+            >
                 <template #initial_effort>
                     <slot name="initial_effort" />
                 </template>
