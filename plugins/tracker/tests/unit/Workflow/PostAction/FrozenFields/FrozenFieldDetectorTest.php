@@ -22,60 +22,53 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_FormElement_Field;
+use PHPUnit\Framework\MockObject\MockObject;
 use Transition;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FrozenFieldDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|TransitionRetriever
-     */
-    private $transition_retriever;
-    /** @var FrozenFieldDetector */
-    private $frozen_field_detector;
-    /** @var Mockery\MockInterface */
-    private $frozen_retriever;
+    private TransitionRetriever&MockObject $transition_retriever;
+    private FrozenFieldDetector $frozen_field_detector;
+    private FrozenFieldsRetriever&MockObject $frozen_retriever;
 
     protected function setUp(): void
     {
-        $this->transition_retriever  = Mockery::mock(TransitionRetriever::class);
-        $this->frozen_retriever      = Mockery::mock(FrozenFieldsRetriever::class);
+        $this->transition_retriever  = $this->createMock(TransitionRetriever::class);
+        $this->frozen_retriever      = $this->createMock(FrozenFieldsRetriever::class);
         $this->frozen_field_detector = new FrozenFieldDetector($this->transition_retriever, $this->frozen_retriever);
     }
 
     public function testIsFieldFrozenReturnsFalseWhenNoTransitionIsDefinedForCurrentState(): void
     {
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andThrow(NoTransitionForStateException::class);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willThrowException(new NoTransitionForStateException());
 
         $this->assertFalse(
             $this->frozen_field_detector->isFieldFrozen(
-                Mockery::mock(Artifact::class),
-                Mockery::mock(Tracker_FormElement_Field::class)
+                ArtifactTestBuilder::anArtifact(101)->build(),
+                StringFieldBuilder::aStringField(312)->build(),
             )
         );
     }
 
     public function testIsFieldFrozenReturnsFalseWhenNoFrozenFieldsPostAction(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $field    = Mockery::mock(Tracker_FormElement_Field::class);
+        $artifact = ArtifactTestBuilder::anArtifact(101)->build();
+        $field    = StringFieldBuilder::aStringField(312)->build();
 
-        $transition = Mockery::mock(\Transition::class);
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns($transition);
+        $transition = $this->createMock(\Transition::class);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($transition);
         $this->frozen_retriever
-            ->shouldReceive('getFrozenFields')
+            ->method('getFrozenFields')
             ->with($transition)
-            ->andThrows(new NoFrozenFieldsPostActionException());
+            ->willThrowException(new NoFrozenFieldsPostActionException());
 
         $this->assertFalse(
             $this->frozen_field_detector->isFieldFrozen($artifact, $field)
@@ -84,13 +77,12 @@ final class FrozenFieldDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsFieldFrozenReturnsFalseWhenGivenFieldIsNotAmongFrozenFields(): void
     {
-        $field    = Mockery::mock(Tracker_FormElement_Field::class);
+        $field    = StringFieldBuilder::aStringField(312)->build();
         $artifact = $this->mockArtifactWithWorkflow();
 
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns(Mockery::mock(Transition::class));
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($this->createMock(Transition::class));
         $this->mockFrozenFields(242, 566);
-        $field->shouldReceive('getId')->andReturns('312');
 
         $this->assertFalse(
             $this->frozen_field_detector->isFieldFrozen($artifact, $field)
@@ -99,48 +91,45 @@ final class FrozenFieldDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly(): void
     {
-        $field    = Mockery::mock(Tracker_FormElement_Field::class);
+        $field    = StringFieldBuilder::aStringField(312)->build();
         $artifact = $this->mockArtifactWithWorkflow();
 
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns(Mockery::mock(Transition::class));
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($this->createMock(Transition::class));
         $this->mockFrozenFields(242, 312, 566);
-        $field->shouldReceive('getId')->andReturns('312');
 
         $this->assertTrue(
             $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
-    private function mockSimpleModeWorkflow(): Mockery\MockInterface
+    private function mockSimpleModeWorkflow(): \Workflow&MockObject
     {
-        $workflow = Mockery::mock(\Workflow::class);
-        $workflow->shouldReceive('isUsed')->andReturnTrue();
-        $workflow->shouldReceive('isAdvanced')->andReturnFalse();
+        $workflow = $this->createMock(\Workflow::class);
+        $workflow->method('isUsed')->willReturn(true);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         return $workflow;
     }
 
-    private function mockArtifactWithWorkflow(): Mockery\MockInterface
+    private function mockArtifactWithWorkflow(): Artifact&MockObject
     {
-        $transition = Mockery::mock(\Transition::class);
-        $artifact   = Mockery::mock(Artifact::class);
-        $workflow   = $this->mockSimpleModeWorkflow();
-        $workflow->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns($transition);
-        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
+        $artifact = $this->createMock(Artifact::class);
+        $workflow = $this->mockSimpleModeWorkflow();
+
+        $artifact->method('getWorkflow')->willReturn($workflow);
 
         return $artifact;
     }
 
     private function mockFrozenFields(int ...$field_ids): void
     {
-        $read_only_fields_post_action = Mockery::mock(FrozenFields::class);
+        $read_only_fields_post_action = $this->createMock(FrozenFields::class);
         $this->frozen_retriever
-            ->shouldReceive('getFrozenFields')
-            ->andReturns($read_only_fields_post_action);
+            ->method('getFrozenFields')
+            ->willReturn($read_only_fields_post_action);
         $read_only_fields_post_action
-            ->shouldReceive('getFieldIds')
-            ->andReturns($field_ids);
+            ->method('getFieldIds')
+            ->willReturn($field_ids);
     }
 }
