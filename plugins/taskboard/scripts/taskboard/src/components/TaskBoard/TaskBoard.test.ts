@@ -32,7 +32,7 @@ jest.mock("../../keyboard-navigation/keyboard-navigation");
 async function createWrapper(
     swimlanes: Swimlane[],
     are_closed_items_displayed: boolean,
-): Promise<Wrapper<TaskBoard>> {
+): Promise<Wrapper<Vue>> {
     return shallowMount(TaskBoard, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
@@ -93,7 +93,7 @@ describe("TaskBoard", () => {
     });
 
     describe(`drag/drop callbacks`, () => {
-        let wrapper: Wrapper<TaskBoard>,
+        let wrapper: Wrapper<Vue>,
             target_dropzone: HTMLElement,
             doc: Document,
             init: jest.SpyInstance;
