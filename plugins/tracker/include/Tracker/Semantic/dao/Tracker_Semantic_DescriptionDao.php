@@ -21,15 +21,6 @@
 
 class Tracker_Semantic_DescriptionDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function save($tracker_id, $field_id)
-    {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $field_id   = $this->da->escapeInt($field_id);
-        $sql        = "REPLACE INTO tracker_semantic_description (tracker_id, field_id)
-                VALUES ($tracker_id, $field_id)";
-        return $this->update($sql);
-    }
-
     public function delete($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

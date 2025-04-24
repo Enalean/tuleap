@@ -28,6 +28,7 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use Tuleap\Tracker\TrackerColor;
 use function Psl\Str\lowercase;
@@ -697,7 +698,7 @@ final class TrackerDatabaseBuilder
 
     public function buildDescriptionSemantic(int $tracker_id, int $field_id): void
     {
-        $dao = new \Tracker_Semantic_DescriptionDao();
+        $dao = new DescriptionSemanticDAO();
         $dao->save($tracker_id, $field_id);
     }
 
