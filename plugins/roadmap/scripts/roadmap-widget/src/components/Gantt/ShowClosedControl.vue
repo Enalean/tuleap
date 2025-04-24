@@ -40,28 +40,19 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, onMounted, computed } from "vue";
+import { useState, useMutations } from "vuex-composition-helpers";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
-import { Mutation, State } from "vuex-class";
 
-@Component
-export default class ShowClosedControl extends Vue {
-    @State
-    private readonly show_closed_elements!: boolean;
+const { show_closed_elements } = useState(["show_closed_elements"]);
+const { toggleClosedElements } = useMutations(["toggleClosedElements"]);
 
-    @Mutation
-    readonly toggleClosedElements!: (show_closed_elements: boolean) => void;
+const is_checked = ref<boolean>(true);
 
-    is_checked = true;
+onMounted(() => {
+    is_checked.value = show_closed_elements.value;
+});
 
-    mounted(): void {
-        this.is_checked = this.show_closed_elements;
-    }
-
-    get id(): string {
-        return getUniqueId("roadmap-gantt-show-closed");
-    }
-}
+const id = computed(() => getUniqueId("roadmap-gantt-show-closed"));
 </script>
