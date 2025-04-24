@@ -39,7 +39,13 @@
         >
             <i class="fas fa-pencil-alt" aria-hidden="true"></i>
         </button>
-        <label-editor v-model="label" v-if="card.is_in_edit_mode" v-on:save="save" />
+        <label-editor
+            v-bind:value="label"
+            v-on:input="label = $event"
+            v-if="card.is_in_edit_mode"
+            v-on:save="save"
+            v-bind:readonly="false"
+        />
         <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
         <slot name="remaining_effort" />
     </div>
