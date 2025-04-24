@@ -21,7 +21,12 @@
 <template>
     <div class="taskboard-card-info">
         <slot name="initial_effort" v-if="!card.is_in_edit_mode" />
-        <card-assignees v-bind:card="card" v-bind:tracker="tracker" v-model="new_assignees" />
+        <card-assignees
+            v-bind:card="card"
+            v-bind:tracker="tracker"
+            v-bind:value="new_assignees"
+            v-on:input="new_assignees = $event"
+        />
     </div>
 </template>
 

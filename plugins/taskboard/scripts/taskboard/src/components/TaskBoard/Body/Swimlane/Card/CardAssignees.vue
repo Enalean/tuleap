@@ -32,7 +32,8 @@
         <people-picker
             v-bind:is_multiple="is_multiple"
             v-bind:users="users"
-            v-model="new_assignees_ids"
+            v-bind:value="new_assignees_ids"
+            v-on:input="new_assignees_ids = $event"
             v-if="is_in_edit_mode_ref"
         />
         <template v-else>
