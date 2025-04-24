@@ -19,123 +19,109 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Transition;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
+use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SetFloatValueUpdater
-     */
-    private $updater;
-    /**
-     *
-     * @var MockInterface
-     */
-    private $set_float_value_repository;
-
-    /**
-     * @var MockInterface
-     */
-    private $validator;
-
-    /**
-     * @var MockInterface
-     */
-    private $tracker;
+    private SetFloatValueUpdater $updater;
+    private SetFloatValueRepository&MockObject $set_float_value_repository;
+    private SetFloatValueValidator&MockObject $validator;
+    private Tracker $tracker;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createUpdater()
+    public function createUpdater(): void
     {
-        $this->set_float_value_repository = Mockery::mock(SetFloatValueRepository::class);
-        $this->set_float_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->byDefault();
+        $this->set_float_value_repository = $this->createMock(SetFloatValueRepository::class);
 
-        $this->tracker = Mockery::mock(\Tracker::class);
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->validator = Mockery::mock(SetFloatValueValidator::class);
+        $this->validator = $this->createMock(SetFloatValueValidator::class);
 
         $this->updater = new SetFloatValueUpdater($this->set_float_value_repository, $this->validator);
     }
 
-    public function testUpdateAddsNewSetFloatValueActions()
+    public function testUpdateAddsNewSetFloatValueActions(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $added_action = new SetFloatValue(43, 1.23);
         $actions      = new PostActionCollection($added_action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $added_action);
 
-        $this->set_float_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $added_action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_float_value_repository->method('deleteAllByTransition');
+        $this->set_float_value_repository->expects($this->atLeast(1))
+            ->method('create')
+            ->with($transition, $added_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeletesAndRecreatesSetFloatValueActionsWhichAlreadyExists()
+    public function testUpdateDeletesAndRecreatesSetFloatValueActionsWhichAlreadyExists(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $updated_action = new SetFloatValue(43, 1.23);
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $updated_action);
 
-        $this->set_float_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->with($transition)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_float_value_repository->expects($this->atLeast(1))
+            ->method('deleteAllByTransition')
+            ->with($transition);
 
-        $this->set_float_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $updated_action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_float_value_repository->expects($this->atLeast(1))
+            ->method('create')
+            ->with($transition, $updated_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeletesRemovedSetFloatValueActions()
+    public function testUpdateDeletesRemovedSetFloatValueActions(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $action  = new SetFloatValue(43, 1.23);
         $actions = new PostActionCollection($action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $action);
 
-        $this->set_float_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->with($transition)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_float_value_repository->expects($this->atLeast(1))
+            ->method('deleteAllByTransition')
+            ->with($transition);
 
-        $this->set_float_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_float_value_repository->expects($this->atLeast(1))
+            ->method('create')
+            ->with($transition, $action);
 
         $this->updater->updateByTransition($actions, $transition);
     }

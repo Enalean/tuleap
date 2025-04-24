@@ -19,36 +19,28 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Transition;
 use Transition_PostAction_Field_IntDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private SetIntValueRepository $set_int_value_repository;
 
-    /**
-     * @var SetIntValueRepository
-     */
-    private $set_int_value_repository;
-
-    /**
-     * @var MockInterface
-     */
-    private $set_int_value_dao;
+    private Transition_PostAction_Field_IntDao&MockObject $set_int_value_dao;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createRepository()
+    public function createRepository(): void
     {
-        $this->set_int_value_dao = Mockery::mock(Transition_PostAction_Field_IntDao::class);
+        $this->set_int_value_dao = $this->createMock(Transition_PostAction_Field_IntDao::class);
 
         $this->set_int_value_repository = new SetIntValueRepository(
             $this->set_int_value_dao,
@@ -56,28 +48,28 @@ class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreateCreatesGivenSetIntValueOnGivenTransition()
+    public function testCreateCreatesGivenSetIntValueOnGivenTransition(): void
     {
-        $this->set_int_value_dao->shouldReceive('create')
+        $this->set_int_value_dao->expects($this->atLeast(1))->method('create')
             ->with(1)
-            ->andReturn(9)
-            ->atLeast()->once();
-        $this->set_int_value_dao->shouldReceive('updatePostAction')
-            ->with(9, 43, 1)
-            ->atLeast()->once();
+            ->willReturn(9);
+        $this->set_int_value_dao->expects($this->atLeast(1))->method('updatePostAction')
+            ->with(9, 43, 1);
 
-        $transition    = TransitionFactory::buildATransitionWithId(1);
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
         $set_int_value = new SetIntValue(43, 1);
 
         $this->set_int_value_repository->create($transition, $set_int_value);
     }
 
-    public function testCreateThrowsWhenCreationFail()
+    public function testCreateThrowsWhenCreationFail(): void
     {
-        $this->set_int_value_dao->shouldReceive('create')
-            ->andReturn(false);
+        $this->set_int_value_dao->method('create')
+            ->willReturn(false);
 
-        $transition    = TransitionFactory::buildATransition();
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
         $set_int_value = new SetIntValue(43, 1);
 
         $this->expectException(DataAccessQueryException::class);
@@ -85,23 +77,24 @@ class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_int_value_repository->create($transition, $set_int_value);
     }
 
-    public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
+    public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions(): void
     {
-        $this->set_int_value_dao
-            ->shouldReceive('deletePostActionsByTransitionId')
+        $this->set_int_value_dao->expects($this->atLeast(1))
+            ->method('deletePostActionsByTransitionId')
             ->with(1)
-            ->andReturn(true)
-            ->atLeast()->once();
-        $transition = TransitionFactory::buildATransitionWithId(1);
+            ->willReturn(true);
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
         $this->set_int_value_repository->deleteAllByTransition($transition);
     }
 
-    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
+    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail(): void
     {
         $this->set_int_value_dao
-            ->shouldReceive('deletePostActionsByTransitionId')
-            ->andReturn(false);
-        $transition = TransitionFactory::buildATransition();
+            ->method('deletePostActionsByTransitionId')
+            ->willReturn(false);
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
 
         $this->expectException(DataAccessQueryException::class);
 

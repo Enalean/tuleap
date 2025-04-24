@@ -22,50 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private HiddenFieldsetsValueValidator $hidden_fieldsets_value_validator;
 
-    /**
-     * @var HiddenFieldsetsValueValidator
-     */
-    private $hidden_fieldsets_value_validator;
-
-    private $form_element_factory;
+    private \Tracker_FormElementFactory&MockObject $form_element_factory;
 
     protected function setUp(): void
     {
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
 
         $this->hidden_fieldsets_value_validator = new HiddenFieldsetsValueValidator(
             $this->form_element_factory
         );
     }
 
-    public function testValidateDoesNotThrowWhenValid()
+    public function testValidateDoesNotThrowWhenValid(): void
     {
-        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
 
-        $fieldset_01->shouldReceive('getID')->andReturn('648');
-        $fieldset_02->shouldReceive('getID')->andReturn('701');
+        $fieldset_01->method('getID')->willReturn('648');
+        $fieldset_02->method('getID')->willReturn('701');
 
         $this->form_element_factory
-            ->shouldReceive('getUsedFieldsets')
-            ->andReturn([$fieldset_01, $fieldset_02]);
+            ->method('getUsedFieldsets')
+            ->willReturn([$fieldset_01, $fieldset_02]);
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 701]);
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(101);
 
-        $workflow = Mockery::mock(\Workflow::class);
-        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+        $workflow = $this->createMock(\Workflow::class);
+        $tracker->expects($this->once())->method('getWorkflow')->willReturn($workflow);
 
         $this->hidden_fieldsets_value_validator->validate(
             $tracker,
@@ -75,16 +69,16 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
         $this->addToAssertionCount(1);
     }
 
-    public function testValidateWrapsDuplicateFieldIdException()
+    public function testValidateWrapsDuplicateFieldIdException(): void
     {
         $this->form_element_factory
-            ->shouldReceive('getUsedFieldsets')
-            ->andReturn([]);
+            ->method('getUsedFieldsets')
+            ->willReturn([]);
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 648, 701]);
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(101);
 
         $this->expectException(InvalidPostActionException::class);
 
@@ -94,25 +88,25 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
         );
     }
 
-    public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFieldset()
+    public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFieldset(): void
     {
-        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
 
-        $fieldset_01->shouldReceive('getID')->andReturn('648');
-        $fieldset_02->shouldReceive('getID')->andReturn('701');
+        $fieldset_01->method('getID')->willReturn('648');
+        $fieldset_02->method('getID')->willReturn('701');
 
         $this->form_element_factory
-            ->shouldReceive('getUsedFieldsets')
-            ->andReturn([$fieldset_01, $fieldset_02]);
+            ->method('getUsedFieldsets')
+            ->willReturn([$fieldset_01, $fieldset_02]);
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 702]);
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(101);
 
-        $workflow = Mockery::mock(\Workflow::class);
-        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+        $workflow = $this->createMock(\Workflow::class);
+        $tracker->expects($this->once())->method('getWorkflow')->willReturn($workflow);
 
         $this->expectException(InvalidPostActionException::class);
 

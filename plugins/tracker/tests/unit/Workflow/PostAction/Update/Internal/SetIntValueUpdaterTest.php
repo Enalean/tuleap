@@ -19,126 +19,110 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Transition;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
+use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetIntValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetIntValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SetIntValueUpdater
-     */
-    private $updater;
-    /**
-     * @var MockInterface
-     */
-    private $set_int_value_repository;
-    /**
-     * @var MockInterface
-     */
-    private $validator;
-    /**
-     * @var MockInterface
-     */
-    private $tracker;
+    private SetIntValueUpdater $updater;
+    private SetIntValueRepository&MockObject $set_int_value_repository;
+    private SetIntValueValidator&MockObject $validator;
+    private Tracker $tracker;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createUpdater()
+    public function createUpdater(): void
     {
-        $this->set_int_value_repository = Mockery::mock(SetIntValueRepository::class);
-        $this->set_int_value_repository
-            ->shouldReceive('deleteAllByTransitionIfNotIn')
-            ->byDefault();
-        $this->set_int_value_repository
-            ->shouldReceive('update')
-            ->byDefault();
-        $this->tracker   = Mockery::mock(\Tracker::class);
-        $this->validator = Mockery::mock(SetIntValueValidator::class);
+        $this->set_int_value_repository = $this->createMock(SetIntValueRepository::class);
+        $this->tracker                  = TrackerTestBuilder::aTracker()->build();
+        $this->validator                = $this->createMock(SetIntValueValidator::class);
 
         $this->updater = new SetIntValueUpdater($this->set_int_value_repository, $this->validator);
     }
 
-    public function testUpdateAddsNewSetIntValueActions()
+    public function testUpdateAddsNewSetIntValueActions(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $added_action = new SetIntValue(43, 1);
         $actions      = new PostActionCollection($added_action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $added_action);
 
         $this->set_int_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->with($transition)
-            ->andReturns();
+            ->method('deleteAllByTransition')
+            ->with($transition);
 
-        $this->set_int_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $added_action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_int_value_repository->expects($this->atLeast(1))
+            ->method('create')
+            ->with($transition, $added_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeleteAndRecreatesSetIntValueActionsWhichAlreadyExists()
+    public function testUpdateDeleteAndRecreatesSetIntValueActionsWhichAlreadyExists(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $updated_action = new SetIntValue(43, 1);
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $updated_action);
 
-        $this->set_int_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->with($transition)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_int_value_repository->expects($this->atLeast(1))
+            ->method('deleteAllByTransition')
+            ->with($transition);
 
-        $this->set_int_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $updated_action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_int_value_repository->expects($this->atLeast(1))
+            ->method('create')
+            ->with($transition, $updated_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeletesRemovedSetIntValueActions()
+    public function testUpdateDeletesRemovedSetIntValueActions(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $action  = new SetIntValue(43, 1);
         $actions = new PostActionCollection($action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $action);
 
-        $this->set_int_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->with($transition)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_int_value_repository->expects($this->atLeast(1))
+            ->method('deleteAllByTransition')
+            ->with($transition);
 
-        $this->set_int_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_int_value_repository->expects($this->atLeast(1))
+            ->method('create')
+            ->with($transition, $action);
 
         $this->updater->updateByTransition($actions, $transition);
     }

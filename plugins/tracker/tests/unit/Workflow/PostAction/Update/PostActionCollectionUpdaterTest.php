@@ -19,37 +19,27 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Transition;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PostActionCollectionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostActionCollectionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private PostActionCollectionUpdater $collection_updater;
 
-    /**
-     * @var PostActionCollectionUpdater
-     */
-    private $collection_updater;
-
-    /**
-     * @var MockInterface
-     */
-    private $post_action_updater1;
-    /**
-     * @var MockInterface
-     */
-    private $post_action_updater2;
+    private PostActionUpdater&MockObject $post_action_updater1;
+    private PostActionUpdater&MockObject $post_action_updater2;
 
     #[\PHPUnit\Framework\Attributes\Before]
     public function createUpdater()
     {
-        $this->post_action_updater1 = Mockery::mock(PostActionUpdater::class);
-        $this->post_action_updater2 = Mockery::mock(PostActionUpdater::class);
+        $this->post_action_updater1 = $this->createMock(PostActionUpdater::class);
+        $this->post_action_updater2 = $this->createMock(PostActionUpdater::class);
 
         $this->collection_updater = new PostActionCollectionUpdater(
             $this->post_action_updater1,
@@ -59,19 +49,21 @@ class PostActionCollectionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateByTransitionDelegatesUpdateToUpdaters()
     {
-        $transition = TransitionFactory::buildATransition();
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')
+            ->willReturn(1);
 
         $action            = new CIBuildValue('http://example.test');
         $action_collection = new PostActionCollection($action);
 
         $this->post_action_updater1
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition)
-            ->atLeast()->once();
+            ->expects($this->atLeast(1))
+            ->method('updateByTransition')
+            ->with($action_collection, $transition);
         $this->post_action_updater2
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition)
-            ->atLeast()->once();
+            ->expects($this->atLeast(1))
+            ->method('updateByTransition')
+            ->with($action_collection, $transition);
 
         $this->collection_updater->updateByTransition($transition, $action_collection);
     }

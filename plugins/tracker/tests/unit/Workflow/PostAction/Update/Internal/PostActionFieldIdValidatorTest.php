@@ -20,23 +20,19 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PostActionFieldIdValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostActionFieldIdValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var PostActionFieldIdValidator */
-    private $field_ids_validator;
+    private PostActionFieldIdValidator $field_ids_validator;
 
     protected function setUp(): void
     {
         $this->field_ids_validator = new PostActionFieldIdValidator();
     }
 
-    public function testValidateDoesNotThrowWhenValid()
+    public function testValidateDoesNotThrowWhenValid(): void
     {
         $first_date_value  = new SetDateValue(1, 0);
         $second_date_value = new SetDateValue(2, 0);
@@ -45,7 +41,7 @@ class PostActionFieldIdValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testValidateThrowsWhenDuplicateFieldIds()
+    public function testValidateThrowsWhenDuplicateFieldIds(): void
     {
         $first_identical_field_id  = new SetDateValue(3, 0);
         $second_identical_field_id = new SetDateValue(3, 1);

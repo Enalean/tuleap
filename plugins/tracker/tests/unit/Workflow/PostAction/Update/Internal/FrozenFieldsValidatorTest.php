@@ -18,30 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private FrozenFieldsValueValidator $frozen_fields_validator;
 
-    /** @var FrozenFieldsValueValidator */
-    private $frozen_fields_validator;
+    private \Tracker_FormElementFactory&MockObject $form_element_factory;
 
-    /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
-    private $form_element_factory;
-
-    /** @var \Tracker_RuleFactory | Mockery\MockInterface */
-    private $tracker_rule_factory;
+    private \Tracker_RuleFactory&MockObject $tracker_rule_factory;
 
     protected function setUp(): void
     {
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->tracker_rule_factory = Mockery::mock(\Tracker_RuleFactory::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->tracker_rule_factory = $this->createMock(\Tracker_RuleFactory::class);
 
         $this->frozen_fields_validator = new FrozenFieldsValueValidator(
             $this->form_element_factory,
@@ -49,41 +45,41 @@ class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testValidateDoesNotThrowWhenValid()
+    public function testValidateDoesNotThrowWhenValid(): void
     {
-        $integer_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
+        $integer_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $integer_field
+            ->method('getId')
+            ->willReturn(1);
 
-        $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->getMock();
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $string_field
+            ->method('getId')
+            ->willReturn(2);
 
-        $selectbox_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
-            ->shouldReceive('getId')
-            ->andReturn(3)
-            ->getMock();
+        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field
+            ->method('getId')
+            ->willReturn(3);
 
         $this->form_element_factory
-            ->shouldReceive('getUsedFields')
-            ->andReturn([$integer_field, $string_field, $selectbox_field]);
+            ->method('getUsedFields')
+            ->willReturn([$integer_field, $string_field, $selectbox_field]);
 
         $this->tracker_rule_factory
-            ->shouldReceive('getInvolvedFieldsByTrackerId')
+            ->method('getInvolvedFieldsByTrackerId')
             ->with(101)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $frozen_fields_value = new FrozenFieldsValue([1, 2]);
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(101);
 
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
 
-        $workflow->shouldReceive('getFieldId')->once()->andReturn(3);
-        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+        $workflow->expects($this->once())->method('getFieldId')->willReturn(3);
+        $tracker->expects($this->once())->method('getWorkflow')->willReturn($workflow);
 
         $this->frozen_fields_validator->validate(
             $tracker,
@@ -93,21 +89,21 @@ class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testValidateWrapsDuplicateFieldIdException()
+    public function testValidateWrapsDuplicateFieldIdException(): void
     {
         $this->form_element_factory
-            ->shouldReceive('getUsedFields')
-            ->andReturn([]);
+            ->method('getUsedFields')
+            ->willReturn([]);
 
         $this->tracker_rule_factory
-            ->shouldReceive('getInvolvedFieldsByTrackerId')
+            ->method('getInvolvedFieldsByTrackerId')
             ->with(101)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $frozen_fields_value = new FrozenFieldsValue([1, 1, 2]);
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(101);
 
         $this->expectException(InvalidPostActionException::class);
 
@@ -117,35 +113,35 @@ class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedField()
+    public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedField(): void
     {
-        $integer_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
+        $integer_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $integer_field
+            ->method('getId')
+            ->willReturn(1);
 
-        $selectbox_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->getMock();
+        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field
+            ->method('getId')
+            ->willReturn(2);
 
         $this->form_element_factory
-            ->shouldReceive('getUsedFields')
-            ->andReturn([$integer_field, $selectbox_field]);
+            ->method('getUsedFields')
+            ->willReturn([$integer_field, $selectbox_field]);
 
         $this->tracker_rule_factory
-            ->shouldReceive('getInvolvedFieldsByTrackerId')
+            ->method('getInvolvedFieldsByTrackerId')
             ->with(101)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $frozen_fields_value = new FrozenFieldsValue([1, 3]);
 
-        $tracker  = Mockery::mock(\Tracker::class);
-        $workflow = Mockery::mock(\Workflow::class);
+        $tracker  = $this->createMock(\Tracker::class);
+        $workflow = $this->createMock(\Workflow::class);
 
-        $workflow->shouldReceive('getFieldId')->once()->andReturn(2);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+        $workflow->expects($this->once())->method('getFieldId')->willReturn(2);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->expects($this->once())->method('getWorkflow')->willReturn($workflow);
 
         $this->expectException(InvalidPostActionException::class);
 
@@ -155,37 +151,37 @@ class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testValidateThrowsAnExceptionWhenFieldIdIsTheFieldUsedToDefineToWorkflow()
+    public function testValidateThrowsAnExceptionWhenFieldIdIsTheFieldUsedToDefineToWorkflow(): void
     {
-        $selectbox_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
+        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field
+            ->method('getId')
+            ->willReturn(1);
 
-        $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->getMock();
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $string_field
+            ->method('getId')
+            ->willReturn(2);
 
         $this->form_element_factory
-            ->shouldReceive('getUsedFields')
-            ->andReturn([$selectbox_field, $string_field]);
+            ->method('getUsedFields')
+            ->willReturn([$selectbox_field, $string_field]);
 
         $this->tracker_rule_factory
-            ->shouldReceive('getInvolvedFieldsByTrackerId')
+            ->method('getInvolvedFieldsByTrackerId')
             ->with(101)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $frozen_fields_value = new FrozenFieldsValue([1, 2]);
 
         $this->expectException(InvalidPostActionException::class);
 
-        $tracker  = Mockery::mock(\Tracker::class);
-        $workflow = Mockery::mock(\Workflow::class);
+        $tracker  = $this->createMock(\Tracker::class);
+        $workflow = $this->createMock(\Workflow::class);
 
-        $workflow->shouldReceive('getFieldId')->once()->andReturn(1);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+        $workflow->expects($this->once())->method('getFieldId')->willReturn(1);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->expects($this->once())->method('getWorkflow')->willReturn($workflow);
 
         $this->frozen_fields_validator->validate(
             $tracker,
@@ -193,31 +189,31 @@ class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testValidateThrowsAnExceptionWhenFieldIdIsUsedInFieldDependencies()
+    public function testValidateThrowsAnExceptionWhenFieldIdIsUsedInFieldDependencies(): void
     {
-        $selectbox_field_01 = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
+        $selectbox_field_01 = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field_01
+            ->method('getId')
+            ->willReturn(1);
 
-        $selectbox_field_02 = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->getMock();
+        $selectbox_field_02 = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field_02
+            ->method('getId')
+            ->willReturn(2);
 
-        $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class)
-            ->shouldReceive('getId')
-            ->andReturn(3)
-            ->getMock();
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $string_field
+            ->method('getId')
+            ->willReturn(3);
 
         $this->form_element_factory
-            ->shouldReceive('getUsedFields')
-            ->andReturn([$selectbox_field_01, $selectbox_field_02, $string_field]);
+            ->method('getUsedFields')
+            ->willReturn([$selectbox_field_01, $selectbox_field_02, $string_field]);
 
         $this->tracker_rule_factory
-            ->shouldReceive('getInvolvedFieldsByTrackerId')
+            ->method('getInvolvedFieldsByTrackerId')
             ->with(101)
-            ->andReturn([
+            ->willReturn([
                 0 => [
                     'source_field_id' => '1',
                     'target_field_id' => '2',
@@ -228,12 +224,12 @@ class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidPostActionException::class);
 
-        $tracker  = Mockery::mock(\Tracker::class);
-        $workflow = Mockery::mock(\Workflow::class);
+        $tracker  = $this->createMock(\Tracker::class);
+        $workflow = $this->createMock(\Workflow::class);
 
-        $workflow->shouldReceive('getFieldId')->once()->andReturn(1);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+        $workflow->expects($this->once())->method('getFieldId')->willReturn(1);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->expects($this->once())->method('getWorkflow')->willReturn($workflow);
 
         $this->frozen_fields_validator->validate(
             $tracker,
