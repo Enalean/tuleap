@@ -22,27 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Upload\PathAllocator;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class EmptyFileToUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCreateEmptyFile(): void
     {
         $file_to_upload = new FileToUpload(42, 'readme.md');
 
         $path           = vfsStream::setup()->url() . '/file/42';
-        $path_allocator = \Mockery::mock(PathAllocator::class);
-        $path_allocator->shouldReceive('getPathForItemBeingUploaded')->andReturn($path);
+        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator->method('getPathForItemBeingUploaded')->willReturn($path);
 
         (new EmptyFileToUploadFinisher($path_allocator))->createEmptyFile(
             $file_to_upload,
             'readme.md'
         );
-        $this->assertEquals('', file_get_contents($path));
+        self::assertEquals('', file_get_contents($path));
     }
 }
