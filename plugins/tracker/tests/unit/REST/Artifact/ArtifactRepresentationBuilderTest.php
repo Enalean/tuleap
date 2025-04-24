@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
+use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -35,33 +35,30 @@ use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     private const ARTIFACT_ID = 756;
 
-    /** @var ArtifactRepresentationBuilder */
-    private $builder;
-    /** @var Mockery\MockInterface */
-    private $form_element_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ChangesetRepresentationBuilder
-     */
-    private $changeset_representation_builder;
+    private ArtifactRepresentationBuilder $builder;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private ChangesetRepresentationBuilder&MockObject $changeset_representation_builder;
 
     public function setUp(): void
     {
-        $this->form_element_factory             = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->changeset_representation_builder = Mockery::mock(ChangesetRepresentationBuilder::class);
+        $this->form_element_factory             = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->changeset_representation_builder = $this->createMock(ChangesetRepresentationBuilder::class);
         $this->builder                          = new ArtifactRepresentationBuilder(
             $this->form_element_factory,
-            Mockery::mock(\Tracker_ArtifactFactory::class),
-            Mockery::mock(TypeDao::class),
+            $this->createMock(\Tracker_ArtifactFactory::class),
+            $this->createMock(TypeDao::class),
             $this->changeset_representation_builder,
             ProvideUserAvatarUrlStub::build(),
         );
@@ -76,7 +73,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $artifact     = $this->buildBasicArtifactMock();
         $submitted_by = UserTestBuilder::aUser()->withId(777)->build();
-        $artifact->shouldReceive('getSubmittedByUser')->andReturns($submitted_by);
+        $artifact->method('getSubmittedByUser')->willReturn($submitted_by);
 
         $representation = $this->builder->getArtifactRepresentation($current_user, $artifact, $this->buildStatusValueRepresentation());
 
@@ -85,37 +82,39 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testGetArtifactRepresentationWithFieldValuesWhenThereAreNoFields(): void
     {
-        $current_user = Mockery::mock(\PFUser::class);
+        $current_user = UserTestBuilder::buildWithDefaults();
         $artifact     = $this->buildBasicArtifactMock();
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn([])->once();
+        $this->form_element_factory->expects($this->once())->method('getUsedFieldsForREST')->willReturn([]);
 
         $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation(), $this->buildStatusValueRepresentation());
     }
 
     public function testGetArtifactRepresentationWithFieldValuesDoesntIncludeFieldsUserCantRead(): void
     {
-        $current_user = Mockery::mock(\PFUser::class);
+        $current_user = UserTestBuilder::buildWithDefaults();
 
-        $first_field_user_cant_read = Mockery::mock(\Tracker_FormElement_Field::class);
+        $first_field_user_cant_read = $this->createMock(\Tracker_FormElement_Field::class);
         $first_field_user_cant_read
-            ->shouldReceive('userCanRead')
+            ->method('userCanRead')
             ->with($current_user)
-            ->andReturnFalse();
-        $first_field_user_cant_read->shouldNotReceive('getRESTValue');
-        $field_user_can_read = Mockery::mock(\Tracker_FormElement_Field::class);
-        $field_user_can_read
-            ->shouldReceive('userCanRead')
-            ->with($current_user)
-            ->andReturnTrue();
-        $field_user_can_read->shouldReceive('getRESTValue')->once();
-        $second_field_user_cant_read = Mockery::mock(\Tracker_FormElement_Field::class);
-        $second_field_user_cant_read
-            ->shouldReceive('userCanRead')
-            ->with($current_user)
-            ->andReturnFalse();
-        $second_field_user_cant_read->shouldNotReceive('getRESTValue');
+            ->willReturn(false);
+        $first_field_user_cant_read->expects($this->never())->method('getRESTValue');
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn(
+        $field_user_can_read = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_user_can_read
+            ->method('userCanRead')
+            ->with($current_user)
+            ->willReturn(true);
+        $field_user_can_read->expects($this->once())->method('getRESTValue');
+
+        $second_field_user_cant_read = $this->createMock(\Tracker_FormElement_Field::class);
+        $second_field_user_cant_read
+            ->method('userCanRead')
+            ->with($current_user)
+            ->willReturn(false);
+        $second_field_user_cant_read->expects($this->never())->method('getRESTValue');
+
+        $this->form_element_factory->method('getUsedFieldsForREST')->willReturn(
             [
                 $first_field_user_cant_read,
                 $field_user_can_read,
@@ -129,31 +128,21 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testGetArtifactRepresentationWithFieldValuesReturnsOnlyForFieldsWithValues(): void
     {
-        $first_field  = Mockery::mock(\Tracker_FormElement_Field::class)
-            ->shouldReceive('userCanRead')
-            ->andReturnFalse()
-            ->getMock();
-        $second_field = Mockery::mock(\Tracker_FormElement_Field::class);
-        $second_field->shouldReceive(
-            [
-                'userCanRead' => true,
-                'getRESTValue' => 'whatever',
-            ]
-        );
-        $third_field = Mockery::mock(\Tracker_FormElement_Field::class)
-            ->shouldReceive('userCanRead')
-            ->andReturnFalse()
-            ->getMock();
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn(
+        $current_user = UserTestBuilder::buildWithDefaults();
+
+        $first_field  = StringFieldBuilder::aStringField(1001)->withReadPermission($current_user, false)->build();
+        $second_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $second_field->method('userCanRead')->willReturn(true);
+        $second_field->method('getRESTValue')->willReturn('whatever');
+        $third_field = StringFieldBuilder::aStringField(1003)->withReadPermission($current_user, false)->build();
+        $this->form_element_factory->method('getUsedFieldsForREST')->willReturn(
             [
                 $first_field,
                 $second_field,
                 $third_field,
             ]
         );
-
-        $current_user = Mockery::mock(\PFUser::class);
-        $artifact     = $this->buildBasicArtifactMock();
+        $artifact = $this->buildBasicArtifactMock();
 
         $representation = $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation(), $this->buildStatusValueRepresentation());
 
@@ -163,30 +152,22 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testGetArtifactRepresentationWithFieldValuesByFieldValuesReturnsSimpleValues(): void
     {
-        $first_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $first_field->shouldReceive(
-            [
-                'userCanRead' => true,
-                'getName' => 'field01',
-                'getRESTValue' => '01',
-            ]
-        );
-        $second_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $second_field->shouldReceive(
-            [
-                'userCanRead'  => true,
-                'getName'      => 'field02',
-                'getRESTValue' => 'whatever',
-            ]
-        );
-        $third_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
-        $third_field->shouldReceive('userCanRead')->andReturnFalse();
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn(
+        $current_user = UserTestBuilder::buildWithDefaults();
+
+        $first_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $first_field->method('userCanRead')->willReturn(true);
+        $first_field->method('getName')->willReturn('field01');
+        $first_field->method('getRESTValue')->willReturn('01');
+        $second_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $second_field->method('userCanRead')->willReturn(true);
+        $second_field->method('getName')->willReturn('field02');
+        $second_field->method('getRESTValue')->willReturn('whatever');
+        $third_field = FloatFieldBuilder::aFloatField(1001)->withReadPermission($current_user, false)->build();
+        $this->form_element_factory->method('getUsedFieldsForREST')->willReturn(
             [$first_field, $second_field, $third_field]
         );
 
-        $current_user = Mockery::mock(\PFUser::class);
-        $artifact     = $this->buildBasicArtifactMock();
+        $artifact = $this->buildBasicArtifactMock();
 
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues(
             $current_user,
@@ -201,30 +182,22 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testGetArtifactRepresentationWithFieldValuesInBothFormat(): void
     {
-        $first_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $first_field->shouldReceive(
-            [
-                'userCanRead' => true,
-                'getName' => 'field01',
-                'getRESTValue' => '01',
-            ]
-        );
-        $second_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $second_field->shouldReceive(
-            [
-                'userCanRead'  => true,
-                'getName'      => 'field02',
-                'getRESTValue' => 'whatever',
-            ]
-        );
-        $third_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
-        $third_field->shouldReceive('userCanRead')->andReturnFalse();
-        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn(
+        $current_user = UserTestBuilder::buildWithDefaults();
+
+        $first_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $first_field->method('userCanRead')->willReturn(true);
+        $first_field->method('getName')->willReturn('field01');
+        $first_field->method('getRESTValue')->willReturn('01');
+        $second_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $second_field->method('userCanRead')->willReturn(true);
+        $second_field->method('getName')->willReturn('field02');
+        $second_field->method('getRESTValue')->willReturn('whatever');
+        $third_field = FloatFieldBuilder::aFloatField(1001)->withReadPermission($current_user, false)->build();
+        $this->form_element_factory->method('getUsedFieldsForREST')->willReturn(
             [$first_field, $second_field, $third_field]
         );
 
-        $current_user = Mockery::mock(\PFUser::class);
-        $artifact     = $this->buildBasicArtifactMock();
+        $artifact = $this->buildBasicArtifactMock();
 
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
             $current_user,
@@ -239,9 +212,9 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testGetArtifactChangesetsRepresentationReturnsEmptyArrayWhenNoChanges(): void
     {
-        $current_user = Mockery::mock(\PFUser::class);
+        $current_user = UserTestBuilder::buildWithDefaults();
         $artifact     = $this->buildBasicArtifactMock();
-        $artifact->shouldReceive('getChangesets')->andReturn([]);
+        $artifact->method('getChangesets')->willReturn([]);
 
         $representation = $this->builder->getArtifactChangesetsRepresentation(
             $current_user,
@@ -257,15 +230,14 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testGetArtifactChangesetsRepresentationBuildsHistoryOutOfChangeset(): void
     {
-        $current_user = Mockery::mock(\PFUser::class);
-        $changeset1   = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $current_user = UserTestBuilder::buildWithDefaults();
+        $changeset1   = ChangesetTestBuilder::aChangeset(1001)->build();
         $artifact     = $this->buildBasicArtifactMock();
-        $artifact->shouldReceive('getChangesets')->andReturn([$changeset1]);
+        $artifact->method('getChangesets')->willReturn([$changeset1]);
 
-        $this->changeset_representation_builder->shouldReceive('buildWithFields')
-            ->once()
+        $this->changeset_representation_builder->expects($this->once())->method('buildWithFields')
             ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user, null)
-            ->andReturn($this->buildChangesetRepresentation());
+            ->willReturn($this->buildChangesetRepresentation());
 
         $this->builder->getArtifactChangesetsRepresentation(
             $current_user,
@@ -279,22 +251,24 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testGetArtifactChangesetsRepresentationDoesntExportEmptyChanges(): void
     {
-        $current_user = Mockery::mock(\PFUser::class);
-        $changeset1   = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset2   = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $current_user = UserTestBuilder::buildWithDefaults();
+        $changeset1   = ChangesetTestBuilder::aChangeset(1001)->build();
+        $changeset2   = ChangesetTestBuilder::aChangeset(1002)->build();
 
         $artifact = $this->buildBasicArtifactMock();
-        $artifact->shouldReceive('getChangesets')->andReturn([$changeset1, $changeset2]);
+        $artifact->method('getChangesets')->willReturn([$changeset1, $changeset2]);
 
         $changeset_representation1 = $this->buildChangesetRepresentation();
-        $this->changeset_representation_builder->shouldReceive('buildWithFields')
-            ->once()
-            ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user, null)
-            ->andReturn($changeset_representation1);
-        $this->changeset_representation_builder->shouldReceive('buildWithFields')
-            ->once()
-            ->with($changeset2, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user, $changeset1)
-            ->andReturnNull();
+        $this->changeset_representation_builder->expects($this->exactly(2))->method('buildWithFields')
+            ->willReturnCallback(static fn (
+                \Tracker_Artifact_Changeset $changeset,
+                string $filter_mode,
+                \PFUser $current_user,
+                ?\Tracker_Artifact_Changeset $previous_changeset,
+            ) => match (true) {
+                $changeset === $changeset1 && $previous_changeset === null => $changeset_representation1,
+                $changeset === $changeset2 && $previous_changeset === $changeset1 => null,
+            });
 
         $representation = $this->builder->getArtifactChangesetsRepresentation(
             $current_user,
@@ -314,13 +288,13 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $changeset2 = $this->buildChangeset(1002);
 
         $artifact = $this->buildBasicArtifactMock();
-        $artifact->shouldReceive('getChangesets')->andReturn([$changeset1, $changeset2]);
-        $current_user = Mockery::mock(\PFUser::class);
+        $artifact->method('getChangesets')->willReturn([$changeset1, $changeset2]);
+        $current_user = UserTestBuilder::buildWithDefaults();
 
         $first_representation  = $this->buildChangesetRepresentation(1001);
         $second_representation = $this->buildChangesetRepresentation(1002);
-        $this->changeset_representation_builder->shouldReceive('buildWithFields')
-            ->andReturnUsing(
+        $this->changeset_representation_builder->method('buildWithFields')
+            ->willReturnCallback(
                 function (\Tracker_Artifact_Changeset $changeset, string $mode, \PFUser $user) use ($first_representation, $second_representation) {
                     return ($changeset->getId() === 1001) ? $first_representation : $second_representation;
                 }
@@ -345,13 +319,13 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $changeset2 = $this->buildChangeset(1002);
 
         $artifact = $this->buildBasicArtifactMock();
-        $artifact->shouldReceive('getChangesets')->andReturn([$changeset1, $changeset2]);
-        $current_user = Mockery::mock(\PFUser::class);
+        $artifact->method('getChangesets')->willReturn([$changeset1, $changeset2]);
+        $current_user = UserTestBuilder::buildWithDefaults();
 
         $first_representation  = $this->buildChangesetRepresentation(1001);
         $second_representation = $this->buildChangesetRepresentation(1002);
-        $this->changeset_representation_builder->shouldReceive('buildWithFields')
-            ->andReturnUsing(
+        $this->changeset_representation_builder->method('buildWithFields')
+            ->willReturnCallback(
                 function (\Tracker_Artifact_Changeset $changeset, string $mode, \PFUser $user) use ($first_representation, $second_representation) {
                     return ($changeset->getId() === 1001) ? $first_representation : $second_representation;
                 }
@@ -369,59 +343,43 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertEquals([$second_representation, $first_representation], $representation->toArray());
     }
 
-    /**
-     * @return Mockery\MockInterface|\Tracker
-     */
-    private function buildTrackerMock()
+    private function buildTrackerMock(): \Tracker
     {
         $project = ProjectTestBuilder::aProject()->withId(1478)->build();
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive(
-            [
-                'getId'      => 888,
-                'getProject' => $project,
-                'getName'    => 'Tuleap\Artifact\Artifact',
-                'getColor'   => TrackerColor::default(),
-            ]
-        );
-        return $tracker;
+        return TrackerTestBuilder::aTracker()->withProject($project)->withId(888)->build();
     }
 
-    /**
-     * @return Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private function buildBasicArtifactMock()
+    private function buildBasicArtifactMock(): Artifact&MockObject
     {
-        $tracker  = $this->buildTrackerMock();
-        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive(
-            [
-                'getId'              => self::ARTIFACT_ID,
-                'getTracker'         => $tracker,
-                'getLastChangeset'   => Mockery::mock(\Tracker_Artifact_Changeset::class),
-                'getSubmittedByUser' => UserTestBuilder::aUser()->build(),
-                'getAssignedTo'      => [],
-                'getXRef'            => 'art #' . self::ARTIFACT_ID,
-                'getSubmittedBy'     => 111,
-                'isOpen'             => true,
-                'getSubmittedOn'     => 6546546554,
-                'getLastUpdateDate'  => 6546546554,
-                'getUri'             => '/plugins/tracker/?aid=' . self::ARTIFACT_ID,
-            ]
-        );
+        $tracker = $this->buildTrackerMock();
+
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn(self::ARTIFACT_ID);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getTitle')->willReturn('Title');
+        $artifact->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset(1001)->build());
+        $artifact->method('getSubmittedByUser')->willReturn(UserTestBuilder::aUser()->build());
+        $artifact->method('getAssignedTo')->willReturn([]);
+        $artifact->method('getXRef')->willReturn('art #' . self::ARTIFACT_ID);
+        $artifact->method('getSubmittedBy')->willReturn(111);
+        $artifact->method('isOpen')->willReturn(true);
+        $artifact->method('getSubmittedOn')->willReturn(6546546554);
+        $artifact->method('getLastUpdateDate')->willReturn(6546546554);
+        $artifact->method('getUri')->willReturn('/plugins/tracker/?aid=' . self::ARTIFACT_ID);
+
         return $artifact;
     }
 
     private static function buildMinimalTrackerRepresentation(): MinimalTrackerRepresentation
     {
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(859);
-        $tracker->shouldReceive('getName')->andReturn('tracker name');
-        $tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
-
-        return MinimalTrackerRepresentation::build($tracker);
+        return MinimalTrackerRepresentation::build(
+            TrackerTestBuilder::aTracker()
+                ->withId(859)
+                ->withName('tracker name')
+                ->withProject(ProjectTestBuilder::aProject()->build())
+                ->build()
+        );
     }
 
     private function buildChangesetRepresentation(int $changeset_id = 1001): ChangesetRepresentation
@@ -444,7 +402,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $changeset = new \Tracker_Artifact_Changeset(
             $changeset_id,
-            \Mockery::mock(Artifact::class),
+            $this->createMock(Artifact::class),
             110,
             1234567890,
             null

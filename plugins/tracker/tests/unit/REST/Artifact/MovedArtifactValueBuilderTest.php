@@ -20,41 +20,36 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private MovedArtifactValueBuilder $builder;
 
-    /** @var  MovedArtifactValueBuilder */
-    private $builder;
+    private Artifact&MockObject $artifact;
 
-    /** @var  Artifact */
-    private $artifact;
+    private Tracker&MockObject $tracker;
 
-    /** @var  Tracker */
-    private $tracker;
-
-    /** @var Tracker_FormElement_Field_String */
-    private $field_string;
+    private Tracker_FormElement_Field_String $field_string;
 
     protected function setUp(): void
     {
         $this->builder      = new MovedArtifactValueBuilder();
-        $this->artifact     = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->tracker      = \Mockery::spy(\Tracker::class);
-        $this->field_string = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $this->artifact     = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->tracker      = $this->createMock(\Tracker::class);
+        $this->field_string = StringFieldBuilder::aStringField(101)->build();
     }
 
     public function testItThrowsAnExceptionIfArtifactHasNoTitle(): void
     {
-        $this->artifact->shouldReceive('getTitle')->andReturns(null);
-        $this->tracker->shouldReceive('getTitleField')->andReturns($this->field_string);
+        $this->artifact->method('getTitle')->willReturn(null);
+        $this->tracker->method('getTitleField')->willReturn($this->field_string);
 
         $this->expectException(\Tuleap\Tracker\Exception\SemanticTitleNotDefinedException::class);
 
@@ -63,8 +58,8 @@ class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTrackerHasNoTitle(): void
     {
-        $this->artifact->shouldReceive('getTitle')->andReturns('title');
-        $this->tracker->shouldReceive('getTitleField')->andReturns(null);
+        $this->artifact->method('getTitle')->willReturn('title');
+        $this->tracker->method('getTitleField')->willReturn(null);
 
         $this->expectException(\Tuleap\Tracker\Exception\SemanticTitleNotDefinedException::class);
 
@@ -73,8 +68,8 @@ class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsArtifactValuesRepresentation(): void
     {
-        $this->artifact->shouldReceive('getTitle')->andReturns('title');
-        $this->tracker->shouldReceive('getTitleField')->andReturns($this->field_string);
+        $this->artifact->method('getTitle')->willReturn('title');
+        $this->tracker->method('getTitleField')->willReturn($this->field_string);
 
         $values = $this->builder->getValues($this->artifact, $this->tracker);
 
