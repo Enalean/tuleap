@@ -23,15 +23,14 @@
         <path
             class="roadmap-gantt-task-dependency-line"
             v-bind:class="line_class"
-            v-bind:d="path"
+            v-bind:d="arrow_path"
             data-test="path"
         />
     </svg>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Task, TaskDimension, TaskDimensionMap } from "../../../type";
 import { Styles } from "../../../helpers/styles";
 import { gap } from "../../../helpers/path";
@@ -43,138 +42,123 @@ import {
 } from "../../../helpers/svg-arrow-path";
 import { getDimensions } from "../../../helpers/tasks-dimensions";
 
-@Component
-export default class DependencyArrow extends Vue {
-    @Prop({ required: true })
-    readonly dimensions_map!: TaskDimensionMap;
+const props = defineProps<{
+    readonly dimensions_map: TaskDimensionMap;
+    readonly task: Task;
+    readonly dependency: Task;
+    readonly percentage: string;
+    readonly is_text_displayed_outside_bar: boolean;
+    readonly is_error_sign_displayed_outside_bar: boolean;
+}>();
+const is_task_ends_after_dependency_start = computed((): boolean => {
+    const end_of_task = props.task.end || props.task.start;
+    const start_of_dependency = props.dependency.start || props.dependency.end;
 
-    @Prop({ required: true })
-    readonly task!: Task;
+    if (!end_of_task || !start_of_dependency) {
+        return false;
+    }
 
-    @Prop({ required: true })
-    readonly dependency!: Task;
+    return end_of_task > start_of_dependency;
+});
 
-    @Prop({ required: true })
-    readonly percentage!: string;
+const task_dimensions = computed((): TaskDimension => {
+    return getDimensions(props.task, props.dimensions_map);
+});
 
-    @Prop({ required: true })
-    readonly is_text_displayed_outside_bar!: boolean;
+const dependency_dimensions = computed((): TaskDimension => {
+    return getDimensions(props.dependency, props.dimensions_map);
+});
 
-    @Prop({ required: true })
-    readonly is_error_sign_displayed_outside_bar!: boolean;
+const index_task = computed((): number => {
+    return task_dimensions.value.index;
+});
 
-    get style(): string {
-        let top = Styles.TASK_HEIGHT_IN_PX / 2;
-        const left = Math.min(this.right_of_task_and_text, this.left_of_dependency);
+const index_dependency = computed((): number => {
+    return dependency_dimensions.value.index;
+});
 
-        const is_task_above_dependency = this.index_task < this.index_dependency;
-        if (!is_task_above_dependency) {
-            top -= this.height_without_gap;
-        }
-        return `left: ${left - gap}px;
+const right_of_task = computed((): number => {
+    return task_dimensions.value.left + task_dimensions.value.width;
+});
+
+const right_of_task_and_text = computed((): number => {
+    if (props.is_error_sign_displayed_outside_bar) {
+        return right_of_task.value + Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX;
+    }
+
+    if (props.is_text_displayed_outside_bar && props.percentage.length > 0) {
+        const width_of_text =
+            Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_PERCENT_SIGN_IN_PX +
+            Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_DIGIT_IN_PX *
+                (props.percentage.length - 1) +
+            2 * Styles.TEXT_PERCENTAGE_MARGIN_IN_PX;
+
+        return right_of_task.value + width_of_text;
+    }
+
+    return right_of_task.value;
+});
+
+const left_of_dependency = computed((): number => {
+    return dependency_dimensions.value.left;
+});
+
+const width_without_gap = computed((): number => {
+    return Math.abs(left_of_dependency.value - right_of_task_and_text.value);
+});
+const is_task_and_text_end_after_dependency_start = computed((): boolean => {
+    return right_of_task_and_text.value > left_of_dependency.value;
+});
+
+const width_with_gap = computed((): number => {
+    return width_without_gap.value + 2 * gap;
+});
+const line_class = computed((): string => {
+    return is_task_ends_after_dependency_start.value
+        ? "roadmap-gantt-task-dependency-line-ends-after-start"
+        : "";
+});
+
+const height_without_gap = computed((): number => {
+    return Math.abs(index_task.value - index_dependency.value) * Styles.TASK_HEIGHT_IN_PX;
+});
+
+const height_with_gap = computed((): number => {
+    return height_without_gap.value + 2 * gap;
+});
+
+const arrow_path = computed((): string => {
+    const height = height_with_gap.value;
+    const width = width_with_gap.value;
+
+    const is_task_above_dependency = index_task.value < index_dependency.value;
+
+    if (is_task_above_dependency && !is_task_and_text_end_after_dependency_start.value) {
+        return getDownRightArrow(width, height);
+    }
+
+    if (is_task_above_dependency && is_task_and_text_end_after_dependency_start.value) {
+        return getDownLeftArrow(width, height);
+    }
+
+    if (!is_task_above_dependency && !is_task_and_text_end_after_dependency_start.value) {
+        return getUpRightArrow(width, height);
+    }
+
+    return getUpLeftArrow(width, height);
+});
+
+const style = computed((): string => {
+    let top = Styles.TASK_HEIGHT_IN_PX / 2;
+    const left = Math.min(right_of_task_and_text.value, left_of_dependency.value);
+
+    const is_task_above_dependency = index_task.value < index_dependency.value;
+    if (!is_task_above_dependency) {
+        top -= height_without_gap.value;
+    }
+    return `left: ${left - gap}px;
             top: ${top - gap}px;
-            height: ${this.height_with_gap}px;
-            width: ${this.width_with_gap}px`;
-    }
-
-    get path(): string {
-        const height = this.height_with_gap;
-        const width = this.width_with_gap;
-
-        const is_task_above_dependency = this.index_task < this.index_dependency;
-
-        if (is_task_above_dependency && !this.is_task_and_text_end_after_dependency_start) {
-            return getDownRightArrow(width, height);
-        }
-
-        if (is_task_above_dependency && this.is_task_and_text_end_after_dependency_start) {
-            return getDownLeftArrow(width, height);
-        }
-
-        if (!is_task_above_dependency && !this.is_task_and_text_end_after_dependency_start) {
-            return getUpRightArrow(width, height);
-        }
-
-        return getUpLeftArrow(width, height);
-    }
-
-    get line_class(): string {
-        return this.is_task_ends_after_dependency_start
-            ? "roadmap-gantt-task-dependency-line-ends-after-start"
-            : "";
-    }
-
-    get is_task_ends_after_dependency_start(): boolean {
-        const end_of_task = this.task.end || this.task.start;
-        const start_of_dependency = this.dependency.start || this.dependency.end;
-
-        if (!end_of_task || !start_of_dependency) {
-            return false;
-        }
-
-        return end_of_task > start_of_dependency;
-    }
-
-    get is_task_and_text_end_after_dependency_start(): boolean {
-        return this.right_of_task_and_text > this.left_of_dependency;
-    }
-
-    get task_dimensions(): TaskDimension {
-        return getDimensions(this.task, this.dimensions_map);
-    }
-
-    get dependency_dimensions(): TaskDimension {
-        return getDimensions(this.dependency, this.dimensions_map);
-    }
-
-    get index_task(): number {
-        return this.task_dimensions.index;
-    }
-
-    get index_dependency(): number {
-        return this.dependency_dimensions.index;
-    }
-
-    get width_without_gap(): number {
-        return Math.abs(this.left_of_dependency - this.right_of_task_and_text);
-    }
-
-    get right_of_task(): number {
-        return this.task_dimensions.left + this.task_dimensions.width;
-    }
-
-    get right_of_task_and_text(): number {
-        if (this.is_error_sign_displayed_outside_bar) {
-            return this.right_of_task + Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX;
-        }
-
-        if (this.is_text_displayed_outside_bar && this.percentage.length > 0) {
-            const width_of_text =
-                Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_PERCENT_SIGN_IN_PX +
-                Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_DIGIT_IN_PX *
-                    (this.percentage.length - 1) +
-                2 * Styles.TEXT_PERCENTAGE_MARGIN_IN_PX;
-
-            return this.right_of_task + width_of_text;
-        }
-
-        return this.right_of_task;
-    }
-
-    get left_of_dependency(): number {
-        return this.dependency_dimensions.left;
-    }
-
-    get width_with_gap(): number {
-        return this.width_without_gap + 2 * gap;
-    }
-
-    get height_without_gap(): number {
-        return Math.abs(this.index_task - this.index_dependency) * Styles.TASK_HEIGHT_IN_PX;
-    }
-
-    get height_with_gap(): number {
-        return this.height_without_gap + 2 * gap;
-    }
-}
+            height: ${height_with_gap.value}px;
+            width: ${width_with_gap.value}px`;
+});
 </script>
