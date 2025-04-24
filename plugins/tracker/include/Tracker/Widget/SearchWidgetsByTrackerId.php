@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
+namespace Tuleap\Tracker\Tracker\Widget;
 
-use CSRFSynchronizerToken;
-use Project;
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
-
-class CSRFSynchronizerTokenProvider
+interface SearchWidgetsByTrackerId
 {
-    public function getCSRF(Project $project): CSRFSynchronizerTokenInterface
-    {
-        return new CSRFSynchronizerToken(TrackersDisplayController::getURL($project));
-    }
+    /**
+     * @return array<array{
+     *     owner_id: int,
+     *     widget_id: int,
+     *     dashboard_id: int,
+     *     dashboard_type: string,
+     * }>
+     */
+    public function searchByTrackerId(int $tracker_id): array;
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
 
 /**
@@ -45,10 +46,7 @@ final class TrackersDisplayPresenter
      * @var string
      */
     public $promoted_post_url;
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    public CSRFSynchronizerTokenInterface $csrf_token;
     /**
      * @var string
      */
@@ -60,7 +58,7 @@ final class TrackersDisplayPresenter
     public function __construct(
         \Project $project,
         array $trackers,
-        \CSRFSynchronizerToken $csrf_token,
+        CSRFSynchronizerTokenInterface $csrf_token,
         public bool $is_project_allowed_to_promote_trackers_in_sidebar,
     ) {
         $this->trackers_url       = TrackersDisplayController::getURL($project);
