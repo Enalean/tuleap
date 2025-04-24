@@ -273,6 +273,7 @@ use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
@@ -528,7 +529,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $checker = new TimeboxCreatorChecker(
             $synchronized_fields_builder,
             new SemanticsVerifier(
-                new \Tracker_Semantic_TitleDao(),
+                new TitleSemanticDAO(),
                 new \Tracker_Semantic_DescriptionDao(),
                 new StatusIsAlignedVerifier(
                     new Tracker_Semantic_StatusDao(),
@@ -1524,7 +1525,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $checker = new TimeboxCreatorChecker(
             $synchronized_fields_builder,
             new SemanticsVerifier(
-                new \Tracker_Semantic_TitleDao(),
+                new TitleSemanticDAO(),
                 new \Tracker_Semantic_DescriptionDao(),
                 new StatusIsAlignedVerifier(
                     new Tracker_Semantic_StatusDao(),
