@@ -22,31 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private FrozenFieldsDao&MockObject $frozen_dao;
 
-    /** @var Mockery\MockInterface */
-    private $frozen_dao;
+    private FrozenFieldsFactory $frozen_fields_factory;
 
-    /** @var FrozenFieldsFactory */
-    private $frozen_fields_factory;
-
-    /**
-     * @var FrozenFieldsRetriever
-     */
-    private $frozen_fields_retriever;
+    private FrozenFieldsRetriever&MockObject $frozen_fields_retriever;
 
     protected function setUp(): void
     {
-        $this->frozen_dao              = Mockery::mock(FrozenFieldsDao::class);
-        $this->frozen_fields_retriever = Mockery::mock(FrozenFieldsRetriever::class);
+        $this->frozen_dao              = $this->createMock(FrozenFieldsDao::class);
+        $this->frozen_fields_retriever = $this->createMock(FrozenFieldsRetriever::class);
 
         $this->frozen_fields_factory = new FrozenFieldsFactory(
             $this->frozen_dao,
@@ -63,7 +57,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ListStaticValueBuilder::aStaticValue('field')->build()
         );
         $expected_post_action = new FrozenFields($transition, 0, []);
-        $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->with($transition)->andReturn(
+        $this->frozen_fields_retriever->method('getFrozenFields')->with($transition)->willReturn(
             $expected_post_action
         );
 
@@ -73,7 +67,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoadPostActionsReturnsEmptyArray(): void
     {
-        $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->andThrow(new NoFrozenFieldsPostActionException());
+        $this->frozen_fields_retriever->method('getFrozenFields')->willThrowException(new NoFrozenFieldsPostActionException());
 
         $transition = new \Transition(
             null,
@@ -96,18 +90,15 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $xml         = new SimpleXMLElement($xml_content);
 
-        $int_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
-
-        $int_field->shouldReceive('getId')->andReturn(0);
-        $float_field->shouldReceive('getId')->andReturn(0);
+        $int_field   = IntFieldBuilder::anIntField(1)->build();
+        $float_field = FloatFieldBuilder::aFloatField(2)->build();
 
         $mapping = [
             'F1' => $int_field,
             'F2' => $float_field,
         ];
 
-        $transition = Mockery::mock(\Transition::class);
+        $transition = $this->createMock(\Transition::class);
 
         $action = $this->frozen_fields_factory->getInstanceFromXML($xml, $mapping, $transition);
 
@@ -125,14 +116,13 @@ XML;
 XML;
         $xml         = new SimpleXMLElement($xml_content);
 
-        $int_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $int_field->shouldReceive('getId')->andReturn(0);
+        $int_field = IntFieldBuilder::anIntField(1)->build();
 
         $mapping = [
             'F1' => $int_field,
         ];
 
-        $transition = Mockery::mock(\Transition::class);
+        $transition = $this->createMock(\Transition::class);
 
         $action = $this->frozen_fields_factory->getInstanceFromXML($xml, $mapping, $transition);
 

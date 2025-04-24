@@ -22,25 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use Transition;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
-class FrozenFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
+final class FrozenFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testExportsTheActionInXML()
+    public function testExportsTheActionInXML(): void
     {
-        $field_01 = Mockery::mock(Tracker_FormElement_Field::class);
-        $field_02 = Mockery::mock(Tracker_FormElement_Field::class);
+        $field_01 = StringFieldBuilder::aStringField(101)->build();
+        $field_02 = StringFieldBuilder::aStringField(102)->build();
 
-        $field_01->shouldReceive('getId')->andReturn(101);
-        $field_02->shouldReceive('getId')->andReturn(102);
-
-        $transition = Mockery::mock(Transition::class);
+        $transition = $this->createMock(Transition::class);
 
         $frozen_fields = new FrozenFields($transition, 1, [$field_01, $field_02]);
 

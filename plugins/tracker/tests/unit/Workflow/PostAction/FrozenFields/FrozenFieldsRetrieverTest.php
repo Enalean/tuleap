@@ -22,34 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private FrozenFieldsDao&MockObject $frozen_dao;
+    private FrozenFieldsRetriever $frozen_retriever;
 
-    /** @var Mockery\MockInterface */
-    private $frozen_dao;
-    /** @var FrozenFieldsRetriever */
-    private $frozen_retriever;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    private $workflow_id;
-    private $workflow;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private int $workflow_id = 112;
+    private Workflow&MockObject $workflow;
 
     protected function setUp(): void
     {
-        $this->frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->workflow_id          = '112';
-        $this->workflow             = Mockery::mock(\Workflow::class, ['getId' => $this->workflow_id]);
+        $this->frozen_dao           = $this->createMock(FrozenFieldsDao::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->workflow             = $this->createMock(\Workflow::class);
+
+        $this->workflow->method('getId')->willReturn($this->workflow_id);
 
         $this->frozen_retriever = new FrozenFieldsRetriever(
             $this->frozen_dao,
@@ -62,19 +56,23 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $postaction_id = 72;
         $transition_id = '97';
 
-        $this->frozen_dao->shouldReceive('searchByWorkflow')->with($this->workflow)->andReturn([
+        $this->frozen_dao->method('searchByWorkflow')->with($this->workflow)->willReturn([
             ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 331],
             ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 651],
             ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 987],
         ]);
 
-        $int_field    = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $float_field  = Mockery::mock(\Tracker_FormElement_Field_Float::class);
-        $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
+        $int_field    = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $float_field  = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $string_field = $this->createMock(\Tracker_FormElement_Field_String::class);
 
-        $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
-        $this->form_element_factory->shouldReceive('getFieldById')->with(651)->andReturn($float_field);
-        $this->form_element_factory->shouldReceive('getFieldById')->with(987)->andReturn($string_field);
+        $this->form_element_factory->method('getFieldById')->willReturnCallback(
+            static fn (int $id) => match ($id) {
+                331 => $int_field,
+                651 => $float_field,
+                987 => $string_field
+            }
+        );
 
         $transition = new \Transition(
             $transition_id,
@@ -91,7 +89,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFrozenFieldsThrowsWhenNoPostAction(): void
     {
-        $this->frozen_dao->shouldReceive('searchByWorkflow')->andReturn([]);
+        $this->frozen_dao->method('searchByWorkflow')->willReturn([]);
 
         $transition = new \Transition('97', $this->workflow_id, null, ListStaticValueBuilder::aStaticValue('field')->build());
         $transition->setWorkflow($this->workflow);
@@ -105,15 +103,15 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $postaction_id = 72;
         $transition_id = '97';
 
-        $this->frozen_dao->shouldReceive('searchByWorkflow')->with($this->workflow)->andReturn([
+        $this->frozen_dao->method('searchByWorkflow')->with($this->workflow)->willReturn([
             ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 331],
             ['transition_id' => 98, 'postaction_id' => $postaction_id, 'field_id' => 651],
             ['transition_id' => 99, 'postaction_id' => $postaction_id, 'field_id' => 987],
         ]);
 
-        $int_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $int_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
 
-        $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
+        $this->form_element_factory->method('getFieldById')->with(331)->willReturn($int_field);
 
         $transition = new \Transition($transition_id, $this->workflow_id, null, ListStaticValueBuilder::aStaticValue('field')->build());
         $transition->setWorkflow($this->workflow);
