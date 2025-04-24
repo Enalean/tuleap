@@ -18,77 +18,53 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use DateTime;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use SystemEventManager;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BurndownCacheGenerationCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ChartConfigurationFieldRetriever
-     */
-    private $field_retriever;
-    /**
-     * @var \SystemEvent
-     */
-    private $event_manager;
-    /**
-     * @var BurndownCacheGenerator
-     */
-    private $cache_generator;
-    /**
-     * @var BurndownRemainingEffortAdderForREST
-     */
-    private $remaining_effort_adder;
-    /**
-     * @var ComputedFieldDao
-     */
-    private $computed_dao;
-    /**
-     * @var ChartConfigurationValueChecker
-     */
-    private $value_checker;
-    /**
-     * @var \PFUser
-     */
-    private $user;
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var BurndownCacheGenerationChecker
-     */
-    private $cache_checker;
+    private ChartConfigurationFieldRetriever&MockObject $field_retriever;
+    private SystemEventManager&MockObject $event_manager;
+    private BurndownCacheGenerator&MockObject $cache_generator;
+    private BurndownRemainingEffortAdderForREST&MockObject $remaining_effort_adder;
+    private ComputedFieldDao&MockObject $computed_dao;
+    private ChartConfigurationValueChecker&MockObject $value_checker;
+    private PFUser $user;
+    private Artifact $artifact;
+    private BurndownCacheGenerationChecker $cache_checker;
     private BurndownCacheDateRetriever $date_retriever;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $logger->shouldReceive('debug');
-        $this->cache_generator        = Mockery::mock(BurndownCacheGenerator::class);
-        $this->event_manager          = Mockery::mock(\SystemEventManager::class);
-        $this->field_retriever        = Mockery::mock(ChartConfigurationFieldRetriever::class);
-        $this->value_checker          = Mockery::mock(ChartConfigurationValueChecker::class);
-        $this->computed_dao           = Mockery::mock(ComputedFieldDao::class);
-        $this->remaining_effort_adder = Mockery::mock(BurndownRemainingEffortAdderForREST::class);
+        $this->cache_generator        = $this->createMock(BurndownCacheGenerator::class);
+        $this->event_manager          = $this->createMock(SystemEventManager::class);
+        $this->field_retriever        = $this->createMock(ChartConfigurationFieldRetriever::class);
+        $this->value_checker          = $this->createMock(ChartConfigurationValueChecker::class);
+        $this->computed_dao           = $this->createMock(ComputedFieldDao::class);
+        $this->remaining_effort_adder = $this->createMock(BurndownRemainingEffortAdderForREST::class);
         $this->date_retriever         = new BurndownCacheDateRetriever();
         $this->cache_checker          = new BurndownCacheGenerationChecker(
-            $logger,
+            new NullLogger(),
             $this->cache_generator,
             $this->event_manager,
             $this->field_retriever,
@@ -99,27 +75,25 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->date_retriever,
         );
 
-        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(1);
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->user     = UserTestBuilder::buildWithDefaults();
     }
 
-    public function testNoNeedToCalculateCacheWhenUserCantReadRemainingEffortField()
+    public function testNoNeedToCalculateCacheWhenUserCantReadRemainingEffortField(): void
     {
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
+        $this->remaining_effort_adder->method('addRemainingEffortDataForREST');
 
-        $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-            ->andReturn(false);
-        $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(false);
+        $this->value_checker->method('doesUserCanReadRemainingEffort')->with($this->artifact, $this->user)->willReturn(false);
+        $this->event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturn(false);
 
-        $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
+        $this->cache_generator->expects($this->never())->method('forceBurndownCacheGeneration');
 
         $start_date  = 1543404090;
         $duration    = 10;
         $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
-        $this->assertFalse(
+        self::assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
@@ -129,25 +103,23 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testNoNeedToCalculateCacheWhenNoStartDateIsDefined()
+    public function testNoNeedToCalculateCacheWhenNoStartDateIsDefined(): void
     {
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
+        $this->remaining_effort_adder->method('addRemainingEffortDataForREST');
 
-        $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-            ->andReturn(true);
-        $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
-            ->andReturn(false);
+        $this->value_checker->method('doesUserCanReadRemainingEffort')->with($this->artifact, $this->user)->willReturn(true);
+        $this->value_checker->method('hasStartDate')->with($this->artifact, $this->user)->willReturn(false);
 
-        $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(false);
+        $this->event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturn(false);
 
-        $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
+        $this->cache_generator->expects($this->never())->method('forceBurndownCacheGeneration');
 
         $start_date  = 1543404090;
         $duration    = 10;
         $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
-        $this->assertFalse(
+        self::assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
@@ -157,30 +129,27 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCalculateCacheShouldBeLaunchedWhenMissingRemainingEffortAndCacheGenerationIsNotAlreadyAsked()
+    public function testCalculateCacheShouldBeLaunchedWhenMissingRemainingEffortAndCacheGenerationIsNotAlreadyAsked(): void
     {
-        $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-            ->andReturn(true);
-        $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
-            ->andReturn(true);
+        $this->value_checker->method('doesUserCanReadRemainingEffort')->with($this->artifact, $this->user)->willReturn(true);
+        $this->value_checker->method('hasStartDate')->with($this->artifact, $this->user)->willReturn(true);
 
-        $this->computed_dao->shouldReceive('getCachedDays')->andReturn([]);
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
+        $this->computed_dao->method('getCachedDays')->willReturn([]);
+        $this->remaining_effort_adder->method('addRemainingEffortDataForREST');
 
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
-        $remaining_effort_field->shouldReceive('getId')->andReturn(10);
-        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
+        $remaining_effort_field = ComputedFieldBuilder::aComputedField(10)->build();
+        $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
 
-        $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(false);
+        $this->event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturn(false);
 
-        $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->once();
+        $this->cache_generator->expects($this->once())->method('forceBurndownCacheGeneration');
 
         $start_date  = 1543404090;
         $duration    = 10;
         $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
-        $this->assertTrue(
+        self::assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
@@ -190,34 +159,31 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testDoNoStackEventCallWhenMissingRemainingEffortAndCacheGenerationIsAlreadyAsked()
+    public function testDoNoStackEventCallWhenMissingRemainingEffortAndCacheGenerationIsAlreadyAsked(): void
     {
         $start_date  = 1543404090;
         $duration    = 10;
         $date_period = DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
 
-        $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-            ->andReturn(true);
-        $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
-            ->andReturn(true);
+        $this->value_checker->method('doesUserCanReadRemainingEffort')->with($this->artifact, $this->user)->willReturn(true);
+        $this->value_checker->method('hasStartDate')->with($this->artifact, $this->user)->willReturn(true);
 
-        $this->computed_dao->shouldReceive('getCachedDays')->andReturn(
+        $this->computed_dao->method('getCachedDays')->willReturn(
             array_map(
                 static fn() => ['timestamp' => 2],
-                $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new \DateTime('now'))
+                $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new DateTime('now'))
             )
         );
 
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
-        $remaining_effort_field->shouldReceive('getId')->andReturn(10);
-        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
+        $remaining_effort_field = ComputedFieldBuilder::aComputedField(10)->build();
+        $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
 
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
-        $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(true);
-        $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
+        $this->remaining_effort_adder->method('addRemainingEffortDataForREST');
+        $this->event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturn(true);
+        $this->cache_generator->expects($this->never())->method('forceBurndownCacheGeneration');
 
         $capacity = 5;
-        $this->assertTrue(
+        self::assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,

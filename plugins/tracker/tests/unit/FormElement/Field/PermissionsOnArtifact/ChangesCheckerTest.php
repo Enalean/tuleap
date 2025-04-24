@@ -22,115 +22,108 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ChangesCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ChangesChecker
-     */
-    private $checker;
-
-    private $old_value;
+    private ChangesChecker $checker;
+    private Tracker_Artifact_ChangesetValue_PermissionsOnArtifact&MockObject $old_value;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->old_value = Mockery::mock(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
+        $this->old_value = $this->createMock(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact::class);
         $this->checker   = new ChangesChecker();
     }
 
     public function testShouldBeTrueIfPermissionsOnArtifactAreNowUsed(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn('0');
+        $this->old_value->method('getUsed')->willReturn('0');
 
         $new_values = [
             'use_artifact_permissions' => '1',
-            'u_groups' => [3],
+            'u_groups'                 => [3],
         ];
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_values));
     }
 
     public function testShouldBeTrueIfUgroupsSelectedForPermissionsOnArtifactChanged(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn('1');
-        $this->old_value->shouldReceive('getPerms')->andReturn([2]);
+        $this->old_value->method('getUsed')->willReturn('1');
+        $this->old_value->method('getPerms')->willReturn([2]);
 
         $new_values = [
             'use_artifact_permissions' => '1',
-            'u_groups' => [3],
+            'u_groups'                 => [3],
         ];
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_values));
     }
 
     public function testShouldBeTrueIfNoUgroupsSelectedForPermissionsOnArtifactChanged(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn('1');
-        $this->old_value->shouldReceive('getPerms')->andReturn([2]);
+        $this->old_value->method('getUsed')->willReturn('1');
+        $this->old_value->method('getPerms')->willReturn([2]);
 
         $new_values = [
             'use_artifact_permissions' => '1',
         ];
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_values));
     }
 
     public function testShouldBeTrueIfUgroupsSelectedForPermissionsOnArtifactChangedButNoUgroupInLastChangeset(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn('1');
-        $this->old_value->shouldReceive('getPerms')->andReturn([]);
+        $this->old_value->method('getUsed')->willReturn('1');
+        $this->old_value->method('getPerms')->willReturn([]);
 
         $new_values = [
             'use_artifact_permissions' => '1',
-            'u_groups' => [3],
+            'u_groups'                 => [3],
         ];
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_values));
     }
 
     public function testShouldBeFalseIfNothingChanged(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn('1');
-        $this->old_value->shouldReceive('getPerms')->andReturn([3]);
+        $this->old_value->method('getUsed')->willReturn('1');
+        $this->old_value->method('getPerms')->willReturn([3]);
 
         $new_values = [
             'use_artifact_permissions' => '1',
-            'u_groups' => [3],
+            'u_groups'                 => [3],
         ];
 
-        $this->assertFalse($this->checker->hasChanges($this->old_value, $new_values));
+        self::assertFalse($this->checker->hasChanges($this->old_value, $new_values));
     }
 
     public function testShouldBeTrueWhenOldValuesAreOnNewValuesWithOtherNewValues(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn('1');
-        $this->old_value->shouldReceive('getPerms')->andReturn([3]);
+        $this->old_value->method('getUsed')->willReturn('1');
+        $this->old_value->method('getPerms')->willReturn([3]);
 
         $new_values = [
             'use_artifact_permissions' => '1',
-            'u_groups' => [3, 4],
+            'u_groups'                 => [3, 4],
         ];
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_values));
     }
 
     public function testShouldBeFalseIfStillNotUsed(): void
     {
-        $this->old_value->shouldReceive('getUsed')->andReturn('0');
-        $this->old_value->shouldReceive('getPerms')->andReturn([]);
+        $this->old_value->method('getUsed')->willReturn('0');
+        $this->old_value->method('getPerms')->willReturn([]);
 
         $new_values = [
             'use_artifact_permissions' => '0',
         ];
 
-        $this->assertFalse($this->checker->hasChanges($this->old_value, $new_values));
+        self::assertFalse($this->checker->hasChanges($this->old_value, $new_values));
     }
 }

@@ -23,49 +23,35 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-use DataAccessObject;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
-use Tracker;
+use TestHelper;
 use Tracker_FormElement_Field;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use UserHelper;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class BindListUserValueGetterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BindListUserValueGetter
-     */
-    private $getter;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BindDefaultValueDao
-     */
-    private $default_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserHelper
-     */
-    private $user_helper;
+    private BindListUserValueGetter&MockObject $getter;
+    private BindDefaultValueDao&MockObject $default_dao;
+    private UserHelper&MockObject $user_helper;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->default_dao     = $this->createMock(BindDefaultValueDao::class);
+        $this->user_helper     = $this->createMock(UserHelper::class);
+        $platform_users_getter = $this->createMock(PlatformUsersGetter::class);
+        $platform_users_getter->method('getRegisteredUsers')->willReturn([]);
 
-        $this->default_dao     = Mockery::mock(BindDefaultValueDao::class);
-        $this->user_helper     = Mockery::mock(\UserHelper::class);
-        $platform_users_getter = new class implements PlatformUsersGetter {
-            public function getRegisteredUsers(\UserHelper $user_helper): array
-            {
-                return [];
-            }
-        };
-
-        $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper, $platform_users_getter, new DatabaseUUIDV7Factory()])
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->getter = $this->getMockBuilder(BindListUserValueGetter::class)
+            ->setConstructorArgs([$this->default_dao, $this->user_helper, $platform_users_getter, new DatabaseUUIDV7Factory()])
+            ->onlyMethods(['getUGroupUtilsDynamicMembers', 'getAllMembersOfStaticGroup'])
+            ->getMock();
     }
 
     public function testItReturnsAnEmptyArrayWhenTrackerISNotFound(): void
@@ -73,15 +59,12 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['group_members'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn(null);
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('getTracker')->willReturn(null);
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $this->default_dao->shouldReceive('getDa')->andReturn($da);
+        $this->default_dao->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->assertEquals([], $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
+        self::assertEquals([], $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForProjectMemberGroup(): void
@@ -89,40 +72,27 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['group_members'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(3541)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->once())->method('getDisplayNameSQLOrder')->willReturn('user.user_name');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->once()->andReturn('user.user_name');
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
+        $this->getter->expects($this->once())->method('getUGroupUtilsDynamicMembers')
+            ->with(ProjectUGroup::PROJECT_MEMBERS, $bindvalue_ids, $tracker)->willReturn('sql fragement');
 
-        $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
-            [
-                ProjectUGroup::PROJECT_MEMBERS,
-                $bindvalue_ids,
-                $tracker,
-            ]
-        )->once()->andReturn('sql fragement');
-
-        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
-            [
-                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
-            ]
-        );
+        $this->default_dao->expects($this->once())->method('retrieve')->willReturn([
+            ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+            ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
+        ]);
 
         $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
-        $this->assertEquals('user 1', $subset[101]->getUsername());
-        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
+        self::assertEquals('user 1', $subset[101]->getUsername());
+        self::assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals('user 2', $subset[102]->getUsername());
-        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
+        self::assertEquals('user 2', $subset[102]->getUsername());
+        self::assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForProjectAdminGroup(): void
@@ -130,40 +100,27 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['group_admins'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(354)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->once())->method('getDisplayNameSQLOrder')->willReturn('user.user_name');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->once()->andReturn('user.user_name');
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
+        $this->getter->expects($this->once())->method('getUGroupUtilsDynamicMembers')
+            ->with(ProjectUGroup::PROJECT_ADMIN, $bindvalue_ids, $tracker)->willReturn('sql fragement');
 
-        $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
-            [
-                ProjectUGroup::PROJECT_ADMIN,
-                $bindvalue_ids,
-                $tracker,
-            ]
-        )->once()->andReturn('sql fragement');
-
-        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
-            [
-                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
-            ]
-        );
+        $this->default_dao->expects($this->once())->method('retrieve')->willReturn([
+            ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+            ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
+        ]);
 
         $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
-        $this->assertEquals('user 1', $subset[101]->getUsername());
-        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
+        self::assertEquals('user 1', $subset[101]->getUsername());
+        self::assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals('user 2', $subset[102]->getUsername());
-        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
+        self::assertEquals('user 2', $subset[102]->getUsername());
+        self::assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItReturnsAnEmptyArrayIfNoUserIsFoundInUgroups(): void
@@ -171,30 +128,19 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['group_admins'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(354)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->once())->method('getDisplayNameSQLOrder')->willReturn('user.user_name');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->once()->andReturn('user.user_name');
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
+        $this->getter->expects($this->once())->method('getUGroupUtilsDynamicMembers')
+            ->with(ProjectUGroup::PROJECT_ADMIN, $bindvalue_ids, $tracker)->willReturn(null);
 
-        $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
-            [
-                ProjectUGroup::PROJECT_ADMIN,
-                $bindvalue_ids,
-                $tracker,
-            ]
-        )->once()->andReturn(null);
+        $this->default_dao->expects($this->never())->method('retrieve');
 
-        $this->default_dao->shouldReceive('retrieve')->never();
-
-        $this->assertEquals([], $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
+        self::assertEquals([], $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForArtifactSubmitters(): void
@@ -202,34 +148,25 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['artifact_submitters'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(652)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->exactly(2))->method('getDisplayNameSQLOrder')->willReturn('user.user_name');
+        $this->user_helper->method('getDisplayNameSQLQuery')->willReturn('');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLQuery')->once();
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->twice()->andReturn('user.user_name');
-        $this->user_helper->shouldReceive('getUsersSorted')->never();
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
-
-        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
-            [
-                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
-            ]
-        );
+        $this->default_dao->expects($this->once())->method('retrieve')->willReturn([
+            ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+            ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
+        ]);
 
         $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
-        $this->assertEquals('user 1', $subset[101]->getUsername());
-        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
+        self::assertEquals('user 1', $subset[101]->getUsername());
+        self::assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals('user 2', $subset[102]->getUsername());
-        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
+        self::assertEquals('user 2', $subset[102]->getUsername());
+        self::assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForArtifactModifiers(): void
@@ -237,34 +174,25 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['artifact_modifiers'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(654)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->once())->method('getDisplayNameSQLQuery')->willReturn('user.user_name');
+        $this->user_helper->method('getDisplayNameSQLOrder')->willReturn('');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLQuery')->once();
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->twice()->andReturn('user.user_name');
-        $this->user_helper->shouldReceive('getUsersSorted')->never();
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
-
-        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
-            [
-                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
-            ]
-        );
+        $this->default_dao->expects($this->once())->method('retrieve')->willReturn([
+            ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+            ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
+        ]);
 
         $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
-        $this->assertEquals('user 1', $subset[101]->getUsername());
-        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
+        self::assertEquals('user 1', $subset[101]->getUsername());
+        self::assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals('user 2', $subset[102]->getUsername());
-        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
+        self::assertEquals('user 2', $subset[102]->getUsername());
+        self::assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForDynamicUGroup(): void
@@ -272,40 +200,27 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['ugroup_3'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(354)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->once())->method('getDisplayNameSQLOrder')->willReturn('user.user_name');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->once()->andReturn('user.user_name');
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
+        $this->default_dao->expects($this->once())->method('retrieve')->willReturn([
+            ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+            ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
+        ]);
 
-        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
-            [
-                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
-            ]
-        );
-
-        $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
-            [
-                ProjectUGroup::PROJECT_MEMBERS,
-                $bindvalue_ids,
-                $tracker,
-            ]
-        )->once()->andReturn('sql fragement');
+        $this->getter->expects($this->once())->method('getUGroupUtilsDynamicMembers')
+            ->with(ProjectUGroup::PROJECT_MEMBERS, $bindvalue_ids, $tracker)->willReturn('sql fragement');
 
         $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
-        $this->assertEquals('user 1', $subset[101]->getUsername());
-        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
+        self::assertEquals('user 1', $subset[101]->getUsername());
+        self::assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals('user 2', $subset[102]->getUsername());
-        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
+        self::assertEquals('user 2', $subset[102]->getUsername());
+        self::assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractUserListForStaticUGroup(): void
@@ -313,76 +228,55 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroups       = ['ugroup_109'];
         $bindvalue_ids = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(354)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->once())->method('getDisplayNameSQLOrder')->willReturn('user.user_name');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->once()->andReturn('user.user_name');
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
+        $this->default_dao->expects($this->once())->method('retrieve')->willReturn([
+            ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+            ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
+        ]);
 
-        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
-            [
-                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
-            ]
-        );
-
-        $this->getter->shouldReceive('getAllMembersOfStaticGroup')->withArgs(
-            [
-                $bindvalue_ids,
-                ['ugroup_109', 109],
-            ]
-        )->once()->andReturn('sql fragement');
+        $this->getter->expects($this->once())->method('getAllMembersOfStaticGroup')
+            ->with($bindvalue_ids, ['ugroup_109', 109])->willReturn('sql fragement');
 
         $subset = $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field);
-        $this->assertEquals('user 1', $subset[101]->getUsername());
-        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
+        self::assertEquals('user 1', $subset[101]->getUsername());
+        self::assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals('user 2', $subset[102]->getUsername());
-        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
+        self::assertEquals('user 2', $subset[102]->getUsername());
+        self::assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 
     public function testItExtractActiveUserListForStaticUGroup(): void
     {
         $ugroups = ['ugroup_109'];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(1);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $field   = ListFieldBuilder::aListField(654)->inTracker($tracker)->build();
 
-        $da = Mockery::mock(DataAccessObject::class);
-        $da->shouldReceive('escapeIntImplode');
-        $da->shouldReceive('escapeInt');
+        $this->user_helper->expects($this->exactly(2))->method('getDisplayNameSQLOrder')->willReturn('user.user_name');
+        $this->user_helper->method('getDisplayNameSQLQuery')->willReturn('');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->once()->andReturn('user.user_name');
+        $this->default_dao->expects($this->once())->method('getDa')->willReturn(TestHelper::emptyDa());
 
-        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
+        $this->default_dao->expects($this->once())->method('retrieve')->willReturn([
+            ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+            ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
+        ]);
 
-        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
-            [
-                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
-                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name'],
-            ]
-        );
+        $this->user_helper->expects($this->once())->method('getDisplayNameSQLQuery')->willReturn('user.user_name');
 
-        $this->user_helper->shouldReceive('getDisplayNameSQLQuery')->once();
-        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->andReturn('user.user_name');
-
-        $this->getter->shouldReceive('getAllMembersOfStaticGroup')->never();
+        $this->getter->expects($this->never())->method('getAllMembersOfStaticGroup');
 
         $subset = $this->getter->getActiveUsersValue($ugroups, $field);
-        $this->assertEquals('user 1', $subset[101]->getUsername());
-        $this->assertEquals('user 1 full name', $subset[101]->getLabel());
+        self::assertEquals('user 1', $subset[101]->getUsername());
+        self::assertEquals('user 1 full name', $subset[101]->getLabel());
 
-        $this->assertEquals('user 2', $subset[102]->getUsername());
-        $this->assertEquals('user 2 full name', $subset[102]->getLabel());
+        self::assertEquals('user 2', $subset[102]->getUsername());
+        self::assertEquals('user 2 full name', $subset[102]->getLabel());
     }
 }

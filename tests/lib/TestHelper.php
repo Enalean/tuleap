@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Test\DataAccess;
+
 /**
  * Various tools to assist test in her duty
  */
@@ -46,5 +49,10 @@ class TestHelper
     public static function errorDar()
     {
         return new ErrorDataAccessResult();
+    }
+
+    public static function emptyDa(): LegacyDataAccessInterface
+    {
+        return new DataAccess();
     }
 }
