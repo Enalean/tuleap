@@ -22,68 +22,47 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
+use Tracker_FileInfo;
 use Tracker_FileInfoFactory;
+use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FieldDataFromRESTBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var Mockery\MockInterface|Tracker_FileInfoFactory
-     */
-    private $file_info_factory;
-    /**
-     * @var Mockery\MockInterface|Tracker_Artifact_Attachment_TemporaryFileManager
-     */
-    private $temporary_file_manager;
-    /**
-     * @var FieldDataFromRESTBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\MockInterface|\Tracker_FormElement_Field_File
-     */
-    private $field;
-    /**
-     * @var Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Mockery\MockInterface|FileInfoForTusUploadedFileReadyToBeAttachedProvider
-     */
-    private $tus_uploaded_file_provider;
+    private UserManager&MockObject $user_manager;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private Tracker_FileInfoFactory&MockObject $file_info_factory;
+    private Tracker_Artifact_Attachment_TemporaryFileManager&MockObject $temporary_file_manager;
+    private FieldDataFromRESTBuilder $builder;
+    private Artifact $artifact;
+    private Tracker_FormElement_Field_File $field;
+    private Tracker $tracker;
+    private FileInfoForTusUploadedFileReadyToBeAttachedProvider&MockObject $tus_uploaded_file_provider;
 
     protected function setUp(): void
     {
-        $this->user_manager               = Mockery::mock(UserManager::class);
-        $this->form_element_factory       = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->file_info_factory          = Mockery::mock(Tracker_FileInfoFactory::class);
-        $this->temporary_file_manager     = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
-        $this->tus_uploaded_file_provider = Mockery::mock(FileInfoForTusUploadedFileReadyToBeAttachedProvider::class);
+        $this->user_manager               = $this->createMock(UserManager::class);
+        $this->form_element_factory       = $this->createMock(Tracker_FormElementFactory::class);
+        $this->file_info_factory          = $this->createMock(Tracker_FileInfoFactory::class);
+        $this->temporary_file_manager     = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $this->tus_uploaded_file_provider = $this->createMock(FileInfoForTusUploadedFileReadyToBeAttachedProvider::class);
 
         $this->builder = new FieldDataFromRESTBuilder(
             $this->user_manager,
@@ -93,17 +72,14 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tus_uploaded_file_provider
         );
 
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->artifact->shouldReceive('getId')->andReturn(42);
-
-        $this->field = Mockery::mock(\Tracker_FormElement_Field_File::class);
+        $this->tracker  = TrackerTestBuilder::aTracker()->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(42)->inTracker($this->tracker)->build();
+        $this->field    = FileFieldBuilder::aFileField(6541)->build();
     }
 
     public function testEmptyValue(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             [],
             $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([]), $this->field, null)
         );
@@ -111,28 +87,20 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExistingIdsRemoval(): void
     {
-        $file1 = Mockery::mock(\Tracker_FileInfo::class);
-        $file1->shouldReceive('getId')->andReturn(123);
+        $file1 = new Tracker_FileInfo(123, $this->field, 0, '', '', '', 'image/png');
+        $file2 = new Tracker_FileInfo(456, $this->field, 0, '', '', '', 'image/png');
 
-        $file2 = Mockery::mock(\Tracker_FileInfo::class);
-        $file2->shouldReceive('getId')->andReturn(456);
+        $changeset = ChangesetTestBuilder::aChangeset(574)->build();
+        $changeset->setFieldValue(
+            $this->field,
+            ChangesetValueFileTestBuilder::aValue(654, $changeset, $this->field)->withFiles([$file1, $file2])->build()
+        );
+        $this->artifact->setLastChangeset($changeset);
 
-        $value = Mockery::mock(\Tracker_Artifact_ChangesetValue_File::class);
-        $value->shouldReceive('getFiles')->andReturn([$file1, $file2]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFormElementsByType')
+            ->with($this->tracker, 'file')->willReturn([$this->field]);
 
-        $this->field
-            ->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturn($value)
-            ->once();
-
-        $this->form_element_factory
-            ->shouldReceive('getUsedFormElementsByType')
-            ->with($this->tracker, 'file')
-            ->andReturn([$this->field])
-            ->once();
-
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'delete' => [123, 456],
             ],
@@ -142,39 +110,23 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotRemoveOldAttachment(): void
     {
-        $file1 = Mockery::mock(\Tracker_FileInfo::class);
-        $file1->shouldReceive('getId')->andReturn(123);
+        $file1 = new Tracker_FileInfo(123, $this->field, 0, '', '', '', 'image/png');
+        $file2 = new Tracker_FileInfo(456, $this->field, 0, '', '', '', 'image/png');
 
-        $file2 = Mockery::mock(\Tracker_FileInfo::class);
-        $file2->shouldReceive('getId')->andReturn(456);
+        $changeset = ChangesetTestBuilder::aChangeset(574)->build();
+        $changeset->setFieldValue(
+            $this->field,
+            ChangesetValueFileTestBuilder::aValue(654, $changeset, $this->field)->withFiles([$file1, $file2])->build()
+        );
+        $this->artifact->setLastChangeset($changeset);
 
-        $value = Mockery::mock(\Tracker_Artifact_ChangesetValue_File::class);
-        $value->shouldReceive('getFiles')->andReturn([$file1, $file2]);
+        $this->form_element_factory->expects($this->once())->method('getUsedFormElementsByType')
+            ->with($this->tracker, 'file')->willReturn([$this->field]);
 
-        $this->field
-            ->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturn($value)
-            ->once();
+        $this->file_info_factory->expects($this->exactly(2))->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(self::callback(static fn(int $id) => in_array($id, [123, 456])))->willReturn($this->artifact);
 
-        $this->form_element_factory
-            ->shouldReceive('getUsedFormElementsByType')
-            ->with($this->tracker, 'file')
-            ->andReturn([$this->field])
-            ->once();
-
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn($this->artifact)
-            ->once();
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(456)
-            ->andReturn($this->artifact)
-            ->once();
-
-        $this->assertEquals(
+        self::assertEquals(
             [],
             $this->builder->buildFieldDataFromREST(
                 $this->buildRESTRepresentation([123, 456]),
@@ -186,14 +138,10 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExceptionWhenNoArtifactAndFileIsLinkedToAnotherOne(): void
     {
-        $another_artifact = Mockery::mock(Artifact::class);
-        $another_artifact->shouldReceive('getId')->andReturn(666);
+        $another_artifact = ArtifactTestBuilder::anArtifact(666)->build();
 
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn($another_artifact)
-            ->once();
+        $this->file_info_factory->expects($this->once())->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)->willReturn($another_artifact);
 
         $this->expectException(Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException::class);
         $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
@@ -201,14 +149,10 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExceptionWhenArtifactAndFileIsLinkedToAnotherOne(): void
     {
-        $another_artifact = Mockery::mock(Artifact::class);
-        $another_artifact->shouldReceive('getId')->andReturn(666);
+        $another_artifact = ArtifactTestBuilder::anArtifact(666)->build();
 
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn($another_artifact)
-            ->once();
+        $this->file_info_factory->expects($this->once())->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)->willReturn($another_artifact);
 
         $this->expectException(Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException::class);
         $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, $this->artifact);
@@ -216,30 +160,18 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFileIsNotLinkedAndNotTemporaryButTusUploaded(): void
     {
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn(null)
-            ->once();
+        $this->file_info_factory->expects($this->once())->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)->willReturn(null);
 
-        $this->temporary_file_manager
-            ->shouldReceive('isFileIdTemporary')
-            ->with(123)
-            ->andReturn(false)
-            ->once();
+        $this->temporary_file_manager->expects($this->once())->method('isFileIdTemporary')
+            ->with(123)->willReturn(false);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->andReturn($current_user)
-            ->once();
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $this->tus_uploaded_file_provider
-            ->shouldReceive('getFileInfo')
-            ->andReturn(Mockery::mock(\Tracker_FileInfo::class))
-            ->once();
+        $this->tus_uploaded_file_provider->expects($this->once())->method('getFileInfo')
+            ->willReturn(new Tracker_FileInfo(123, $this->field, 0, '', '', '', 'image/png'));
 
-        $this->assertEquals(
+        self::assertEquals(
             [['tus-uploaded-id' => 123]],
             $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null)
         );
@@ -247,28 +179,15 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFileIsNotLinkedAndNotTemporaryAndNotTusUploaded(): void
     {
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn(null)
-            ->once();
+        $this->file_info_factory->expects($this->once())->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)->willReturn(null);
 
-        $this->temporary_file_manager
-            ->shouldReceive('isFileIdTemporary')
-            ->with(123)
-            ->andReturn(false)
-            ->once();
+        $this->temporary_file_manager->expects($this->once())->method('isFileIdTemporary')
+            ->with(123)->willReturn(false);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->andReturn($current_user)
-            ->once();
+        $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
 
-        $this->tus_uploaded_file_provider
-            ->shouldReceive('getFileInfo')
-            ->andReturn(null)
-            ->once();
+        $this->tus_uploaded_file_provider->expects($this->once())->method('getFileInfo')->willReturn(null);
 
         $this->expectException(Tracker_Artifact_Attachment_FileNotFoundException::class);
         $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
@@ -276,39 +195,23 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFileIsTemporaryButDoesNotExist(): void
     {
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn(null)
-            ->once();
+        $this->file_info_factory->expects($this->once())->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)->willReturn(null);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $temporary_file = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFile::class);
-        $temporary_file->shouldReceive('getCreatorId')->andReturn(101)->once();
-        $temporary_file->shouldReceive('getTemporaryName')->andReturn('file.txt')->once();
+        $temporary_file = $this->createMock(Tracker_Artifact_Attachment_TemporaryFile::class);
+        $temporary_file->expects($this->once())->method('getCreatorId')->willReturn(101);
+        $temporary_file->expects($this->once())->method('getTemporaryName')->willReturn('file.txt');
 
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(101)
-            ->andReturn($user)
-            ->once();
+        $this->user_manager->expects($this->once())->method('getUserById')->with(101)->willReturn($user);
 
-        $this->temporary_file_manager
-            ->shouldReceive('isFileIdTemporary')
-            ->with(123)
-            ->andReturn(true)
-            ->once();
-        $this->temporary_file_manager
-            ->shouldReceive('getFile')
-            ->with(123)
-            ->andReturn($temporary_file)
-            ->once();
-        $this->temporary_file_manager
-            ->shouldReceive('exists')
-            ->with($user, 'file.txt')
-            ->andReturn(false)
-            ->once();
+        $this->temporary_file_manager->expects($this->once())->method('isFileIdTemporary')
+            ->with(123)->willReturn(true);
+        $this->temporary_file_manager->expects($this->once())->method('getFile')
+            ->with(123)->willReturn($temporary_file);
+        $this->temporary_file_manager->expects($this->once())->method('exists')
+            ->with($user, 'file.txt')->willReturn(false);
 
         $this->expectException(Tracker_Artifact_Attachment_FileNotFoundException::class);
         $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
@@ -316,34 +219,19 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFileIsTemporaryButItsCreatorDoesNotExist(): void
     {
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn(null)
-            ->once();
+        $this->file_info_factory->expects($this->once())->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)->willReturn(null);
 
-        $temporary_file = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFile::class);
-        $temporary_file->shouldReceive('getCreatorId')->andReturn(101)->once();
+        $temporary_file = $this->createMock(Tracker_Artifact_Attachment_TemporaryFile::class);
+        $temporary_file->expects($this->once())->method('getCreatorId')->willReturn(101);
 
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(101)
-            ->andReturn(null)
-            ->once();
+        $this->user_manager->expects($this->once())->method('getUserById')->with(101)->willReturn(null);
 
-        $this->temporary_file_manager
-            ->shouldReceive('isFileIdTemporary')
-            ->with(123)
-            ->andReturn(true)
-            ->once();
-        $this->temporary_file_manager
-            ->shouldReceive('getFile')
-            ->with(123)
-            ->andReturn($temporary_file)
-            ->once();
-        $this->temporary_file_manager
-            ->shouldReceive('exists')
-            ->never();
+        $this->temporary_file_manager->expects($this->once())->method('isFileIdTemporary')
+            ->with(123)->willReturn(true);
+        $this->temporary_file_manager->expects($this->once())->method('getFile')
+            ->with(123)->willReturn($temporary_file);
+        $this->temporary_file_manager->expects($this->never())->method('exists');
 
         $this->expectException(Tracker_Artifact_Attachment_FileNotFoundException::class);
         $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
@@ -351,51 +239,25 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testTemporaryFileIsGivenInRESTData(): void
     {
-        $this->file_info_factory
-            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
-            ->with(123)
-            ->andReturn(null)
-            ->once();
+        $this->file_info_factory->expects($this->once())->method('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)->willReturn(null);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $temporary_file = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFile::class);
-        $temporary_file->shouldReceive('getCreatorId')->andReturn(101)->once();
-        $temporary_file->shouldReceive('getTemporaryName')->andReturn('file.txt')->twice();
+        $temporary_file = $this->createMock(Tracker_Artifact_Attachment_TemporaryFile::class);
+        $temporary_file->expects($this->once())->method('getCreatorId')->willReturn(101);
+        $temporary_file->expects($this->exactly(2))->method('getTemporaryName')->willReturn('file.txt');
 
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(101)
-            ->andReturn($user)
-            ->once();
+        $this->user_manager->expects($this->once())->method('getUserById')->with(101)->willReturn($user);
 
-        $this->temporary_file_manager
-            ->shouldReceive('isFileIdTemporary')
-            ->with(123)
-            ->andReturn(true)
-            ->once();
-        $this->temporary_file_manager
-            ->shouldReceive('getFile')
-            ->with(123)
-            ->andReturn($temporary_file)
-            ->once();
-        $this->temporary_file_manager
-            ->shouldReceive('exists')
-            ->with($user, 'file.txt')
-            ->andReturn(true)
-            ->once();
-        $this->temporary_file_manager
-            ->shouldReceive('getPath')
-            ->with($user, 'file.txt')
-            ->andReturn('/path/to/file.txt')
-            ->once();
-        $this->file_info_factory
-            ->shouldReceive('buildFileInfoData')
-            ->with($temporary_file, '/path/to/file.txt')
-            ->andReturn(['id' => 123])
-            ->once();
+        $this->temporary_file_manager->expects($this->once())->method('isFileIdTemporary')->with(123)->willReturn(true);
+        $this->temporary_file_manager->expects($this->once())->method('getFile')->with(123)->willReturn($temporary_file);
+        $this->temporary_file_manager->expects($this->once())->method('exists')->with($user, 'file.txt')->willReturn(true);
+        $this->temporary_file_manager->expects($this->once())->method('getPath')->with($user, 'file.txt')->willReturn('/path/to/file.txt');
+        $this->file_info_factory->expects($this->once())->method('buildFileInfoData')
+            ->with($temporary_file, '/path/to/file.txt')->willReturn(['id' => 123]);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 ['id' => 123],
             ],
@@ -405,8 +267,6 @@ class FieldDataFromRESTBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /**
      * @param array<int> $submitted_ids
-     *
-     * @return mixed
      */
     private function buildRESTRepresentation(array $submitted_ids): \stdClass
     {

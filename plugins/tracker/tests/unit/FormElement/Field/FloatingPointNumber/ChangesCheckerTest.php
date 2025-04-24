@@ -18,84 +18,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\FloatingPointNumber;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetValue_Float;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ChangesCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Artifact_ChangesetValue_Float&Mockery\MockInterface
-     */
-    private $old_value;
+    private Tracker_Artifact_ChangesetValue_Float&MockObject $old_value;
     private ChangesChecker $checker;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->old_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
+        $this->old_value = $this->createMock(Tracker_Artifact_ChangesetValue_Float::class);
         $this->checker   = new ChangesChecker();
     }
 
-    public function testChecksIfChangesOccuredAtArtifactUpdate()
+    public function testChecksIfChangesOccuredAtArtifactUpdate(): void
     {
-        $this->old_value->shouldReceive('getNumeric')->andReturn(1.1);
+        $this->old_value->method('getNumeric')->willReturn(1.1);
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, 2.0));
-        $this->assertFalse($this->checker->hasChanges($this->old_value, 1.1));
+        self::assertTrue($this->checker->hasChanges($this->old_value, 2.0));
+        self::assertFalse($this->checker->hasChanges($this->old_value, 1.1));
     }
 
-    public function testShouldBeTrueIfPreviousValueWasNullAndNewValueIsZero()
+    public function testShouldBeTrueIfPreviousValueWasNullAndNewValueIsZero(): void
     {
-        $this->old_value->shouldReceive('getNumeric')->andReturn(null);
+        $this->old_value->method('getNumeric')->willReturn(null);
         $new_value = 0;
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_value));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_value));
     }
 
-    public function testShouldBeTrueIfOldValueIsZeroAndNewValueIsNull()
+    public function testShouldBeTrueIfOldValueIsZeroAndNewValueIsNull(): void
     {
-        $this->old_value->shouldReceive('getNumeric')->andReturn(0.0);
+        $this->old_value->method('getNumeric')->willReturn(0.0);
         $new_value = null;
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_value));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_value));
     }
 
-    public function testShouldBeTrueIfOldValueIsZeroAndNewValueIsEmpty()
+    public function testShouldBeTrueIfOldValueIsZeroAndNewValueIsEmpty(): void
     {
-        $this->old_value->shouldReceive('getNumeric')->andReturn(0.0);
+        $this->old_value->method('getNumeric')->willReturn(0.0);
         $new_value = '';
 
-        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_value));
+        self::assertTrue($this->checker->hasChanges($this->old_value, $new_value));
     }
 
-    public function testShouldBeFalseWhenNoUpdateOnNullValue()
+    public function testShouldBeFalseWhenNoUpdateOnNullValue(): void
     {
-        $this->old_value->shouldReceive('getNumeric')->andReturn(null);
+        $this->old_value->method('getNumeric')->willReturn(null);
         $new_value = null;
 
-        $this->assertFalse($this->checker->hasChanges($this->old_value, $new_value));
+        self::assertFalse($this->checker->hasChanges($this->old_value, $new_value));
     }
 
-    public function testShouldBeFalseWhenNoUpdatingNullValueToEmpty()
+    public function testShouldBeFalseWhenNoUpdatingNullValueToEmpty(): void
     {
-        $this->old_value->shouldReceive('getNumeric')->andReturn(null);
+        $this->old_value->method('getNumeric')->willReturn(null);
         $new_value = '';
 
-        $this->assertFalse($this->checker->hasChanges($this->old_value, $new_value));
+        self::assertFalse($this->checker->hasChanges($this->old_value, $new_value));
     }
 
-    public function testShouldBeFalseWhenNoUpdateOnZeroValue()
+    public function testShouldBeFalseWhenNoUpdateOnZeroValue(): void
     {
-        $this->old_value->shouldReceive('getNumeric')->andReturn(0.0);
+        $this->old_value->method('getNumeric')->willReturn(0.0);
         $new_value = 0;
 
-        $this->assertFalse($this->checker->hasChanges($this->old_value, $new_value));
+        self::assertFalse($this->checker->hasChanges($this->old_value, $new_value));
     }
 }

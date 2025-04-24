@@ -22,39 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class RequestDataAugmentorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const ARTIFACT_LINK_FIELD_ID = 555;
 
-    /**
-     * @var int
-     */
-    private $art_link_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
-     */
-    private $tracker;
-    /**
-     * @var ArtifactLinkField
-     */
-    private $field;
-
-    /**
-     * @var RequestDataAugmentor
-     */
-    private $augmentor;
+    private ArtifactLinkField $field;
+    private RequestDataAugmentor $augmentor;
 
     protected function setUp(): void
     {
-        $this->art_link_id = 555;
-        $this->tracker     = \Mockery::spy(\Tracker::class);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(456);
+        $tracker->method('isProjectAllowedToUseType')->willReturn(true);
 
-        $this->field = ArtifactLinkFieldBuilder::anArtifactLinkField($this->art_link_id)->build();
-        $this->field->setTracker($this->tracker);
+        $this->field = ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->inTracker($tracker)->build();
 
         $this->augmentor = new RequestDataAugmentor();
     }
@@ -63,16 +50,14 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $new_values  = '32';
         $fields_data = [
-            $this->art_link_id => [
+            self::ARTIFACT_LINK_FIELD_ID => [
                 'new_values' => $new_values,
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals($new_values, $fields_data[$this->art_link_id]['new_values']);
+        self::assertEquals($new_values, $fields_data[self::ARTIFACT_LINK_FIELD_ID]['new_values']);
     }
 
     public function testDoesntAppendPleaseChooseOption(): void
@@ -80,17 +65,15 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_values  = '356';
         $parent_id   = '';
         $fields_data = [
-            $this->art_link_id => [
+            self::ARTIFACT_LINK_FIELD_ID => [
                 'new_values' => $new_values,
                 'parent'     => $parent_id,
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->field->augmentDataFromRequest($fields_data);
 
-        $this->assertEquals($new_values, $fields_data[$this->art_link_id]['new_values']);
+        self::assertEquals($new_values, $fields_data[self::ARTIFACT_LINK_FIELD_ID]['new_values']);
     }
 
     public function testDoesntAppendCreateNewOption(): void
@@ -98,17 +81,15 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_values  = '356';
         $parent_id   = '-1';
         $fields_data = [
-            $this->art_link_id => [
+            self::ARTIFACT_LINK_FIELD_ID => [
                 'new_values' => $new_values,
                 'parent'     => $parent_id,
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals($new_values, $fields_data[$this->art_link_id]['new_values']);
+        self::assertEquals($new_values, $fields_data[self::ARTIFACT_LINK_FIELD_ID]['new_values']);
     }
 
     public function testAddsLinkWithType(): void
@@ -116,60 +97,54 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_values  = '356';
         $type        = '_is_child';
         $fields_data = [
-            $this->art_link_id => [
+            self::ARTIFACT_LINK_FIELD_ID => [
                 'new_values' => $new_values,
                 'type'       => $type,
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals(['356' => '_is_child'], $fields_data[$this->art_link_id]['types']);
+        self::assertEquals(['356' => '_is_child'], $fields_data[self::ARTIFACT_LINK_FIELD_ID]['types']);
     }
 
     public function testDoesNotAddPropertiesIfNoParentAndNoNewValues(): void
     {
         $fields_data = [];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEmpty($fields_data);
+        self::assertEmpty($fields_data);
     }
 
     public function testWhenUserWantsSomeArtifactsToBeParentsThenTheyArePutInTheSpecialKeyParentSoThatTheLinkIsDoneTheRightWay(): void
     {
         $fields_data = [
-            $this->art_link_id => [
+            self::ARTIFACT_LINK_FIELD_ID => [
                 'new_values' => '356,357',
                 'type'       => '_is_parent',
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'new_values' => '',
                 'type'       => '',
                 'parent'     => [356, 357],
             ],
-            $fields_data[$this->art_link_id]
+            $fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );
     }
 
     public function testWhenUserWantsExistingLinksToBeParentsThenTheyArePutInTheSpecialKeyParentSoThatTheLinkIsDoneTheRightWay(): void
     {
         $fields_data = [
-            $this->art_link_id => [
+            self::ARTIFACT_LINK_FIELD_ID => [
                 'new_values' => '',
-                'type' => '',
-                'types' => [
+                'type'       => '',
+                'types'      => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                     '345' => '_is_parent',
@@ -178,35 +153,33 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
-                'new_values' => '',
-                'type'     => '',
-                'types'    => [
+                'new_values'     => '',
+                'type'           => '',
+                'types'          => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                 ],
-                'parent'     => [345, 456],
+                'parent'         => [345, 456],
                 'removed_values' => [
                     '345' => [345],
                     '456' => [456],
                 ],
             ],
-            $fields_data[$this->art_link_id]
+            $fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );
     }
 
     public function testUserCanBothSetNewLinksAndExistingLinksAsParent(): void
     {
         $fields_data = [
-            $this->art_link_id => [
+            self::ARTIFACT_LINK_FIELD_ID => [
                 'new_values' => '356,357',
-                'type' => '_is_parent',
-                'types' => [
+                'type'       => '_is_parent',
+                'types'      => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                     '345' => '_is_parent',
@@ -215,35 +188,33 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
-                'new_values' => '',
-                'type'       => '',
-                'types'      => [
+                'new_values'     => '',
+                'type'           => '',
+                'types'          => [
                     '123' => 'depends_on',
                     '234' => '_is_child',
                 ],
-                'parent'     => [356, 357, 345, 456],
+                'parent'         => [356, 357, 345, 456],
                 'removed_values' => [
                     '345' => [345],
                     '456' => [456],
                 ],
             ],
-            $fields_data[$this->art_link_id]
+            $fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );
     }
 
     public function testRemovedExistingLinksCannotBeBothRemovedAndChangedToParent(): void
     {
         $fields_data = [
-            $this->art_link_id => [
-                'new_values' => '',
-                'type' => '',
-                'types' => [
+            self::ARTIFACT_LINK_FIELD_ID => [
+                'new_values'     => '',
+                'type'           => '',
+                'types'          => [
                     '456' => '_is_parent',
                 ],
                 'removed_values' => [
@@ -252,20 +223,18 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
-                'new_values' => '',
-                'type' => '',
-                'types' => [],
+                'new_values'     => '',
+                'type'           => '',
+                'types'          => [],
                 'removed_values' => [
                     '456' => ['456'],
                 ],
             ],
-            $fields_data[$this->art_link_id]
+            $fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );
     }
 }

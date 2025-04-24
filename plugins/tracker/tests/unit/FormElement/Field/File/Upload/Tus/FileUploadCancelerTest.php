@@ -22,23 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload\Tus;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\PathAllocator;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FileUploadCancelerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDocumentBeingUploadedIsCleanedWhenTheUploadIsCancelled(): void
     {
         $item_path      = vfsStream::setup()->url() . '/file/12';
-        $path_allocator = \Mockery::mock(PathAllocator::class);
-        $path_allocator->shouldReceive('getPathForItemBeingUploaded')->andReturn($item_path);
-        $dao = \Mockery::mock(FileOngoingUploadDao::class);
+        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator->method('getPathForItemBeingUploaded')->willReturn($item_path);
+        $dao = $this->createMock(FileOngoingUploadDao::class);
 
         $canceler = new FileUploadCanceler($path_allocator, $dao);
 
@@ -47,27 +46,27 @@ class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($item_path), 0777, true);
         touch($item_path);
 
-        $dao->shouldReceive('deleteByItemID')->once();
+        $dao->expects($this->once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileDoesNotExist($item_path);
+        self::assertFileDoesNotExist($item_path);
     }
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning(): void
     {
         $item_path      = vfsStream::setup()->url() . '/file/12';
-        $path_allocator = \Mockery::mock(PathAllocator::class);
-        $path_allocator->shouldReceive('getPathForItemBeingUploaded')->andReturn($item_path);
-        $dao = \Mockery::mock(FileOngoingUploadDao::class);
+        $path_allocator = $this->createMock(PathAllocator::class);
+        $path_allocator->method('getPathForItemBeingUploaded')->willReturn($item_path);
+        $dao = $this->createMock(FileOngoingUploadDao::class);
 
         $canceler = new FileUploadCanceler($path_allocator, $dao);
 
         $item_id          = 12;
         $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);
 
-        $dao->shouldReceive('deleteByItemID')->once();
+        $dao->expects($this->once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileDoesNotExist($item_path);
+        self::assertFileDoesNotExist($item_path);
     }
 }

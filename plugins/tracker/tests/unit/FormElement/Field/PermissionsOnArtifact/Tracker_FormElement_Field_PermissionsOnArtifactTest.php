@@ -18,41 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 
 use ForgeAccess;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    /**
-     * @var Tracker_FormElement_Field_PermissionsOnArtifact
-     */
-    private $field;
-
-    /**
-     * @var Artifact
-     */
-    private $artifact;
+    private Tracker_FormElement_Field_PermissionsOnArtifact&MockObject $field;
+    private Artifact $artifact;
 
     public function setUp(): void
     {
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(101);
-        $this->field = Mockery::mock(\Tracker_FormElement_Field_PermissionsOnArtifact::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
+        $this->field    = $this->createPartialMock(Tracker_FormElement_Field_PermissionsOnArtifact::class, ['isRequired']);
     }
 
-    public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName()
+    public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
     {
         $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
 
@@ -60,92 +54,92 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\P
         $this->field->getFieldDataFromRESTValueByField($value);
     }
 
-    public function testItReturnsTrueWhenCheckboxIsCheckedAndAUgroupIsSelected()
+    public function testItReturnsTrueWhenCheckboxIsCheckedAndAUgroupIsSelected(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturn(false);
+        $this->field->method('isRequired')->willReturn(false);
         $submitted_values = [
             'use_artifact_permissions' => true,
             'u_groups'                 => [ForgeAccess::ANONYMOUS],
         ];
-        $this->assertTrue(
+        self::assertTrue(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
                 $this->artifact,
                 $submitted_values,
-                Mockery::mock(\PFUser::class)
+                UserTestBuilder::buildWithDefaults(),
             )
         );
     }
 
-    public function testItReturnsTrueWhenCheckboxIsUnchecked()
+    public function testItReturnsTrueWhenCheckboxIsUnchecked(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturn(false);
+        $this->field->method('isRequired')->willReturn(false);
         $submitted_values = [
             'use_artifact_permissions' => false,
         ];
-        $this->assertTrue(
+        self::assertTrue(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
                 $this->artifact,
                 $submitted_values,
-                Mockery::mock(\PFUser::class)
+                UserTestBuilder::buildWithDefaults(),
             )
         );
     }
 
-    public function testItReturnsTrueWhenArrayIsEmpty()
+    public function testItReturnsTrueWhenArrayIsEmpty(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturn(false);
+        $this->field->method('isRequired')->willReturn(false);
         $submitted_values = [];
-        $this->assertTrue(
+        self::assertTrue(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
                 $this->artifact,
                 $submitted_values,
-                Mockery::mock(\PFUser::class)
+                UserTestBuilder::buildWithDefaults(),
             )
         );
     }
 
-    public function testItReturnsFalseWhenCheckboxIsCheckedAndNoUGroupIsSelected()
+    public function testItReturnsFalseWhenCheckboxIsCheckedAndNoUGroupIsSelected(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturn(false);
+        $this->field->method('isRequired')->willReturn(false);
         $submitted_values = [
             'use_artifact_permissions' => true,
             'u_groups'                 => [],
         ];
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
                 $this->artifact,
                 $submitted_values,
-                Mockery::mock(\PFUser::class)
+                UserTestBuilder::buildWithDefaults(),
             )
         );
     }
 
-    public function testItReturnsFalseWhenFieldIsRequiredAndNoValueAreSet()
+    public function testItReturnsFalseWhenFieldIsRequiredAndNoValueAreSet(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturn(true);
+        $this->field->method('isRequired')->willReturn(true);
         $submitted_values = [];
-        $this->assertFalse(
+        self::assertFalse(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
                 $this->artifact,
                 $submitted_values,
-                Mockery::mock(\PFUser::class)
+                UserTestBuilder::buildWithDefaults(),
             )
         );
     }
 
-    public function testItReturnsFalseWhenFieldIsRequiredAndValueAreNotCorrectlySet()
+    public function testItReturnsFalseWhenFieldIsRequiredAndValueAreNotCorrectlySet(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturn(true);
+        $this->field->method('isRequired')->willReturn(true);
         $submitted_values = [
             'use_artifact_permissions' => true,
             'u_groups'                 => [],
         ];
-        $this->assertFalse(
+        self::assertFalse(
             $this->field->validateFieldWithPermissionsAndRequiredStatus(
                 $this->artifact,
                 $submitted_values,
-                Mockery::mock(\PFUser::class)
+                UserTestBuilder::buildWithDefaults(),
             )
         );
     }

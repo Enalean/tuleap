@@ -23,57 +23,48 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TypePresenterFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TypeDao
-     */
-    private $type_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinksUsageDao
-     */
-    private $artifact_link_usage_dao;
-    /**
-     * @var TypePresenterFactory
-     */
-    private $type_presenter_factory;
+    private TypeDao&MockObject $type_dao;
+    private ArtifactLinksUsageDao&MockObject $artifact_link_usage_dao;
+    private TypePresenterFactory $type_presenter_factory;
 
     protected function setUp(): void
     {
-        $this->type_dao                = \Mockery::mock(TypeDao::class);
-        $this->artifact_link_usage_dao = \Mockery::mock(ArtifactLinksUsageDao::class);
+        $this->type_dao                = $this->createMock(TypeDao::class);
+        $this->artifact_link_usage_dao = $this->createMock(ArtifactLinksUsageDao::class);
 
         $this->type_presenter_factory = new TypePresenterFactory($this->type_dao, $this->artifact_link_usage_dao);
     }
 
     public function testGetsAnEnabledTypeInAProjectFromItsShortname(): void
     {
-        $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->andReturn(false);
-        $this->type_dao->shouldReceive('getFromShortname')->andReturn(
+        $this->artifact_link_usage_dao->method('isTypeDisabledInProject')->willReturn(false);
+        $this->type_dao->method('getFromShortname')->willReturn(
             ['shortname' => 'some_shortname', 'forward_label' => 'Label', 'reverse_label' => 'Label R']
         );
 
         $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname(ProjectTestBuilder::aProject()->build(), 'some_shortname');
 
-        $this->assertEquals(new TypePresenter('some_shortname', 'Label', 'Label R', true), $type);
+        self::assertEquals(new TypePresenter('some_shortname', 'Label', 'Label R', true), $type);
     }
 
     public function testGetsNothingWhenSearchingADisabledTypeFromItsShortnameAndOnlyWantingEnabledOnes(): void
     {
-        $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->andReturn(true);
+        $this->artifact_link_usage_dao->method('isTypeDisabledInProject')->willReturn(true);
 
         $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname(
             ProjectTestBuilder::aProject()->build(),
             'some_disabled_shortname'
         );
 
-        $this->assertNull($type);
+        self::assertNull($type);
     }
 }

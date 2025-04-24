@@ -22,72 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ParentLinkActionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ParentLinkAction
-     */
-    private $action;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $parent_artifact;
-
-    /**
-     * @var Artifact&Mockery\MockInterface
-     */
-    private $another_parent_artifact;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $artifact_link_field;
+    private ParentLinkAction $action;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private Artifact&MockObject $artifact;
+    private PFUser $user;
+    private Artifact&MockObject $parent_artifact;
+    private Artifact&MockObject $another_parent_artifact;
+    private ArtifactLinkField $artifact_link_field;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
 
-        $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->action = new ParentLinkAction($this->artifact_factory);
 
-        $this->action = new ParentLinkAction(
-            $this->artifact_factory
-        );
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getId')->willReturn(101);
 
-        $this->artifact = Mockery::mock(Artifact::class)->shouldReceive('getId')->andReturn(101)->getMock();
+        $this->parent_artifact         = $this->createMock(Artifact::class);
+        $this->another_parent_artifact = $this->createMock(Artifact::class);
+        $this->user                    = UserTestBuilder::buildWithDefaults();
 
-        $this->parent_artifact         = Mockery::mock(Artifact::class);
-        $this->another_parent_artifact = Mockery::mock(Artifact::class);
-        $this->user                    = Mockery::mock(PFUser::class);
-
-        $this->artifact_link_field = Mockery::mock(ArtifactLinkField::class)
-            ->shouldReceive('getId')
-            ->andReturn(587)
-            ->getMock();
+        $this->artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(587)->build();
     }
 
     public function testItReturnsTrueIfAtLeastOneLinkIsDone(): void
@@ -98,32 +66,22 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->with($this->user)
-            ->andReturn($this->artifact_link_field);
+        $this->artifact->expects($this->once())->method('getAnArtifactLinkField')
+            ->with($this->user)->willReturn($this->artifact_link_field);
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(1011)
-            ->andReturn($this->parent_artifact);
+        $this->artifact_factory->expects($this->exactly(2))->method('getArtifactById')
+            ->willReturnCallback(fn (int $id) => match ($id) {
+                1011 => $this->parent_artifact,
+                1012 => $this->another_parent_artifact,
+            });
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(1012)
-            ->andReturn($this->another_parent_artifact);
+        $this->parent_artifact->expects($this->once())->method('linkArtifact')
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)->willReturn(true);
 
-        $this->parent_artifact->shouldReceive('linkArtifact')
-            ->once()
-            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
-            ->andReturnTrue();
+        $this->another_parent_artifact->expects($this->once())->method('linkArtifact')
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)->willReturn(false);
 
-        $this->another_parent_artifact->shouldReceive('linkArtifact')
-            ->once()
-            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
-            ->andReturnFalse();
-
-        $this->assertTrue(
+        self::assertTrue(
             $this->action->linkParent(
                 $this->artifact,
                 $this->user,
@@ -140,32 +98,22 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->with($this->user)
-            ->andReturn($this->artifact_link_field);
+        $this->artifact->expects($this->once())->method('getAnArtifactLinkField')
+            ->with($this->user)->willReturn($this->artifact_link_field);
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(1011)
-            ->andReturn($this->parent_artifact);
+        $this->artifact_factory->expects($this->exactly(2))->method('getArtifactById')
+            ->willReturnCallback(fn (int $id) => match ($id) {
+                1011 => $this->parent_artifact,
+                1012 => $this->another_parent_artifact,
+            });
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(1012)
-            ->andReturn($this->another_parent_artifact);
+        $this->parent_artifact->expects($this->once())->method('linkArtifact')
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)->willReturn(false);
 
-        $this->parent_artifact->shouldReceive('linkArtifact')
-            ->once()
-            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
-            ->andReturnFalse();
+        $this->another_parent_artifact->expects($this->once())->method('linkArtifact')
+            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)->willReturn(false);
 
-        $this->another_parent_artifact->shouldReceive('linkArtifact')
-            ->once()
-            ->with(101, $this->user, ArtifactLinkField::TYPE_IS_CHILD)
-            ->andReturnFalse();
-
-        $this->assertFalse(
+        self::assertFalse(
             $this->action->linkParent(
                 $this->artifact,
                 $this->user,
@@ -182,14 +130,11 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->with($this->user)
-            ->andReturnNull();
+        $this->artifact->expects($this->once())->method('getAnArtifactLinkField')->with($this->user)->willReturn(null);
 
-        $this->parent_artifact->shouldNotReceive('linkArtifact');
+        $this->parent_artifact->expects($this->never())->method('linkArtifact');
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->action->linkParent(
                 $this->artifact,
                 $this->user,
@@ -206,13 +151,11 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->with($this->user)
-            ->andReturn($this->artifact_link_field);
+        $this->artifact->method('getAnArtifactLinkField')->with($this->user)->willReturn($this->artifact_link_field);
 
-        $this->parent_artifact->shouldNotReceive('linkArtifact');
+        $this->parent_artifact->expects($this->never())->method('linkArtifact');
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->action->linkParent(
                 $this->artifact,
                 $this->user,
@@ -224,7 +167,7 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             'parent' => ['1011'],
         ];
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->action->linkParent(
                 $this->artifact,
                 $this->user,
@@ -241,19 +184,14 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->artifact->shouldReceive('getAnArtifactLinkField')
-            ->once()
-            ->with($this->user)
-            ->andReturn($this->artifact_link_field);
+        $this->artifact->expects($this->once())->method('getAnArtifactLinkField')
+            ->with($this->user)->willReturn($this->artifact_link_field);
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->once()
-            ->with(1011)
-            ->andReturnNull();
+        $this->artifact_factory->expects($this->once())->method('getArtifactById')->with(1011)->willReturn(null);
 
-        $this->parent_artifact->shouldNotReceive('linkArtifact');
+        $this->parent_artifact->expects($this->never())->method('linkArtifact');
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->action->linkParent(
                 $this->artifact,
                 $this->user,

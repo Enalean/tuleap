@@ -23,51 +23,49 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File\Upload\Tus;
 
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class FileUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testThumbnailIsGenerated(): void
     {
         ForgeConfig::set('sys_http_user', 'codendiadm');
-        $dao     = \Mockery::mock(FileOngoingUploadDao::class);
-        $factory = \Mockery::mock(Tracker_FormElementFactory::class);
-        $field   = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $dao     = $this->createMock(FileOngoingUploadDao::class);
+        $factory = $this->createMock(Tracker_FormElementFactory::class);
+        $field   = $this->createMock(Tracker_FormElement_Field_File::class);
 
         $base_path = vfsStream::setup()->url() . '/field';
         \mkdir($base_path . '/thumbnails', 0777, true);
         \copy(__DIR__ . '/_fixtures/Lenna.png', $base_path . '/42');
 
-        $dao->shouldReceive('searchFileOngoingUploadById')->andReturn(
-            [
-                'field_id'     => 1001,
-                'id'           => 42,
-                'submitted_by' => 101,
-                'description'  => '',
-                'filename'     => 'Lenna.png',
-                'filesize'     => 473831,
-                'filetype'     => 'image/png',
-            ]
-        );
+        $dao->method('searchFileOngoingUploadById')->willReturn([
+            'field_id'     => 1001,
+            'id'           => 42,
+            'submitted_by' => 101,
+            'description'  => '',
+            'filename'     => 'Lenna.png',
+            'filesize'     => 473831,
+            'filetype'     => 'image/png',
+        ]);
 
-        $field->shouldReceive('getRootPath')->andReturn($base_path);
+        $field->method('getRootPath')->willReturn($base_path);
 
-        $factory->shouldReceive('getFieldById')->andReturn($field);
+        $factory->method('getFieldById')->willReturn($field);
 
         $file_information = new FileBeingUploadedInformation(42, 'Lenna.png', 473831, 473831);
 
         (new FileUploadFinisher($dao, $factory))->finishUpload(new NullServerRequest(), $file_information);
-        $this->assertFileEquals(__DIR__ . '/_fixtures/Lenna-expected-thumbnail.png', $base_path . '/thumbnails/42');
+        self::assertFileEquals(__DIR__ . '/_fixtures/Lenna-expected-thumbnail.png', $base_path . '/thumbnails/42');
     }
 }
