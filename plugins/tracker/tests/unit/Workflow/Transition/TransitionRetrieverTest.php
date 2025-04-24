@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\Transition;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_Selectbox;
@@ -34,8 +32,6 @@ use Workflow;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var TransitionRetriever
      */
@@ -63,22 +59,17 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $previous_changeset = null;
 
-        $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow       = Mockery::mock(Workflow::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
-        $workflow->shouldReceive('getField')
-            ->once()
-            ->andReturn($workflow_field);
+        $workflow->expects($this->once())->method('getField')
+            ->willReturn($workflow_field);
 
-        $workflow->shouldReceive('getFieldId')
-            ->once()
-            ->andReturn(98);
+        $workflow->expects($this->once())->method('getFieldId')
+            ->willReturn(98);
 
-        $workflow->shouldReceive('getTransitions')
-            ->once()
-            ->andReturn([$transition]);
+        $workflow->expects($this->once())->method('getTransitions')
+            ->willReturn([$transition]);
 
         self::assertSame(
             $transition,
@@ -105,24 +96,19 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $previous_changeset = null;
 
-        $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow       = Mockery::mock(Workflow::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
-        $workflow->shouldReceive('getField')
-            ->once()
-            ->andReturn($workflow_field);
+        $workflow->expects($this->once())->method('getField')
+            ->willReturn($workflow_field);
 
-        $workflow->shouldReceive('getFieldId')
-            ->once()
-            ->andReturn(98);
+        $workflow->expects($this->once())->method('getFieldId')
+            ->willReturn(98);
 
-        $workflow->shouldReceive('getTransitions')
-            ->once()
-            ->andReturn([$transition]);
+        $workflow->expects($this->once())->method('getTransitions')
+            ->willReturn([$transition]);
 
-        $workflow_field->shouldReceive('getDefaultValue')->once()->andReturn('59');
+        $workflow_field->expects($this->once())->method('getDefaultValue')->willReturn('59');
 
         self::assertSame(
             $transition,
@@ -147,31 +133,25 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             '98' => '59',
         ];
 
-        $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow       = Mockery::mock(Workflow::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
-        $workflow->shouldReceive('getField')
-            ->once()
-            ->andReturn($workflow_field);
+        $workflow->expects($this->once())->method('getField')
+            ->willReturn($workflow_field);
 
-        $workflow->shouldReceive('getFieldId')
-            ->once()
-            ->andReturn(98);
+        $workflow->expects($this->once())->method('getFieldId')
+            ->willReturn(98);
 
-        $workflow->shouldReceive('getTransitions')
-            ->once()
-            ->andReturn([$transition]);
+        $workflow->expects($this->once())->method('getTransitions')
+            ->willReturn([$transition]);
 
-        $previous_changeset_value_list = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $previous_changeset_value_list->shouldReceive('getValue')->andReturn(['58']);
+        $previous_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $previous_changeset_value_list->method('getValue')->willReturn(['58']);
 
-        $previous_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $previous_changeset->shouldReceive('getValue')
+        $previous_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $previous_changeset->expects($this->once())->method('getValue')
             ->with($workflow_field)
-            ->once()
-            ->andReturn($previous_changeset_value_list);
+            ->willReturn($previous_changeset_value_list);
 
         self::assertSame(
             $transition,
@@ -187,30 +167,25 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [];
 
-        $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow       = Mockery::mock(Workflow::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
-        $workflow->shouldReceive('getField')
-            ->once()
-            ->andReturn($workflow_field);
+        $workflow->expects($this->once())->method('getField')
+            ->willReturn($workflow_field);
 
-        $workflow->shouldReceive('getFieldId')
-            ->once()
-            ->andReturn(98);
+        $workflow->expects($this->once())->method('getFieldId')
+            ->willReturn(98);
 
-        $workflow->shouldNotReceive('getTransitions');
-        $workflow_field->shouldNotReceive('getDefaultValue');
+        $workflow->expects($this->never())->method('getTransitions');
+        $workflow_field->expects($this->never())->method('getDefaultValue');
 
-        $previous_changeset_value_list = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $previous_changeset_value_list->shouldReceive('getValue')->andReturn(['58']);
+        $previous_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $previous_changeset_value_list->method('getValue')->willReturn(['58']);
 
-        $previous_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $previous_changeset->shouldReceive('getValue')
+        $previous_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $previous_changeset->expects($this->once())->method('getValue')
             ->with($workflow_field)
-            ->once()
-            ->andReturn($previous_changeset_value_list);
+            ->willReturn($previous_changeset_value_list);
 
         $this->assertNull(
             $this->retriever->retrieveTransition(
