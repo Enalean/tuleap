@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -31,33 +30,21 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private HiddenFieldsetsDao&MockObject $hidden_dao;
 
-    /** @var Mockery\MockInterface */
-    private $hidden_dao;
+    private HiddenFieldsetsRetriever $hidden_fieldsets_retriever;
 
-    /** @var HiddenFieldsetsRetriever */
-    private $hidden_fieldsets_retriever;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var string
-     */
-    private $workflow_id;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Workflow
-     */
-    private $workflow;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private int $workflow_id = 112;
+    private \Workflow&MockObject $workflow;
 
     protected function setUp(): void
     {
-        $this->hidden_dao           = Mockery::mock(HiddenFieldsetsDao::class);
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->workflow_id          = '112';
-        $this->workflow             = Mockery::mock(\Workflow::class, ['getId' => $this->workflow_id]);
+        $this->hidden_dao           = $this->createMock(HiddenFieldsetsDao::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->workflow             = $this->createMock(\Workflow::class);
+
+        $this->workflow->method('getId')->willReturn($this->workflow_id);
 
         $this->hidden_fieldsets_retriever = new HiddenFieldsetsRetriever(
             $this->hidden_dao,
@@ -70,18 +57,20 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $postaction_id = 72;
         $transition_id = '97';
 
-        $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn(
+        $this->hidden_dao->method('searchByWorkflow')->willReturn(
             [
                 ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'fieldset_id' => 331],
                 ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'fieldset_id' => 651],
             ]
         );
 
-        $fieldset_01 = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
-        $this->form_element_factory->shouldReceive('getFieldsetById')->with(651)->andReturn($fieldset_02);
+        $this->form_element_factory->method('getFieldsetById')
+            ->willReturnCallback(static fn (int $id) => match ($id) {
+331 => $fieldset_01, 651 => $fieldset_02
+            });
 
         $transition = new \Transition($transition_id, $this->workflow_id, null, ListStaticValueBuilder::aStaticValue('field')->build());
         $transition->setWorkflow($this->workflow);
@@ -94,7 +83,7 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetHiddenFieldsetsThrowsWhenNoPostAction(): void
     {
-        $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn([]);
+        $this->hidden_dao->method('searchByWorkflow')->willReturn([]);
 
         $transition = new \Transition('97', $this->workflow_id, null, ListStaticValueBuilder::aStaticValue('field')->build());
         $transition->setWorkflow($this->workflow);
@@ -108,16 +97,16 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $postaction_id = 72;
         $transition_id = '97';
 
-        $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn(
+        $this->hidden_dao->method('searchByWorkflow')->willReturn(
             [
                 ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'fieldset_id' => 331],
                 ['transition_id' => 101, 'postaction_id' => $postaction_id, 'fieldset_id' => 651],
             ]
         );
 
-        $fieldset_01 = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
+        $this->form_element_factory->method('getFieldsetById')->with(331)->willReturn($fieldset_01);
 
         $transition = new \Transition($transition_id, $this->workflow_id, null, ListStaticValueBuilder::aStaticValue('field')->build());
         $transition->setWorkflow($this->workflow);

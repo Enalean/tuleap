@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
@@ -34,27 +33,19 @@ use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private TransitionRetriever&MockObject $transition_retriever;
 
-    /**
-     * @var Mockery\MockInterface|TransitionRetriever
-     */
-    private $transition_retriever;
+    private HiddenFieldsetsDetector $hidden_fieldsets_detector;
 
-    /** @var HiddenFieldsetsDetector*/
-    private $hidden_fieldsets_detector;
+    private HiddenFieldsetsRetriever&MockObject $hidden_retriever;
 
-    /** @var Mockery\MockInterface */
-    private $hidden_retriever;
-
-    /** @var Mockery\MockInterface */
-    private $form_element_factory;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
 
     protected function setUp(): void
     {
-        $this->transition_retriever      = Mockery::mock(TransitionRetriever::class);
-        $this->hidden_retriever          = Mockery::mock(HiddenFieldsetsRetriever::class);
-        $this->form_element_factory      = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->transition_retriever      = $this->createMock(TransitionRetriever::class);
+        $this->hidden_retriever          = $this->createMock(HiddenFieldsetsRetriever::class);
+        $this->form_element_factory      = $this->createMock(Tracker_FormElementFactory::class);
         $this->hidden_fieldsets_detector = new HiddenFieldsetsDetector(
             $this->transition_retriever,
             $this->hidden_retriever,
@@ -64,30 +55,30 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsFieldsetHiddenReturnsFalseWhenNoTransitionIsDefinedForCurrentState(): void
     {
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andThrow(NoTransitionForStateException::class);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willThrowException(new NoTransitionForStateException());
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->isFieldsetHidden(
-                Mockery::mock(Artifact::class),
-                Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
+                $this->createMock(Artifact::class),
+                $this->createMock(Tracker_FormElement_Container_Fieldset::class)
             )
         );
     }
 
     public function testIsFieldsetHiddenReturnsFalseWhenNoHiddenFieldsetsPostAction(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
+        $artifact = $this->createMock(Artifact::class);
+        $fieldset = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $transition = Mockery::mock(\Transition::class);
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns($transition);
+        $transition = $this->createMock(\Transition::class);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($transition);
 
         $this->hidden_retriever
-            ->shouldReceive('getHiddenFieldsets')
+            ->method('getHiddenFieldsets')
             ->with($transition)
-            ->andThrows(new NoHiddenFieldsetsPostActionException());
+            ->willThrowException(new NoHiddenFieldsetsPostActionException());
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)
@@ -96,26 +87,26 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsFieldsetHiddenReturnsFalseWhenGivenFieldsetIsNotAmongHiddenFieldsets(): void
     {
-        $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Artifact::class);
-        $transition                   = Mockery::mock(\Transition::class);
-        $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
-        $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset                     = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $artifact                     = $this->createMock(Artifact::class);
+        $transition                   = $this->createMock(\Transition::class);
+        $hidden_fieldsets_post_action = $this->createMock(HiddenFieldsets::class);
+        $fieldset_hidden              = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns($transition);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($transition);
 
         $this->hidden_retriever
-            ->shouldReceive('getHiddenFieldsets')
+            ->method('getHiddenFieldsets')
             ->with($transition)
-            ->andReturns($hidden_fieldsets_post_action);
+            ->willReturn($hidden_fieldsets_post_action);
 
         $hidden_fieldsets_post_action
-            ->shouldReceive('getFieldsets')
-            ->andReturns([$fieldset_hidden]);
+            ->method('getFieldsets')
+            ->willReturn([$fieldset_hidden]);
 
-        $fieldset->shouldReceive('getID')->andReturns('312');
-        $fieldset_hidden->shouldReceive('getID')->andReturns('999');
+        $fieldset->method('getID')->willReturn('312');
+        $fieldset_hidden->method('getID')->willReturn('999');
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)
@@ -124,26 +115,26 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly(): void
     {
-        $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Artifact::class);
-        $transition                   = Mockery::mock(\Transition::class);
-        $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
-        $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset                     = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $artifact                     = $this->createMock(Artifact::class);
+        $transition                   = $this->createMock(\Transition::class);
+        $hidden_fieldsets_post_action = $this->createMock(HiddenFieldsets::class);
+        $fieldset_hidden              = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns($transition);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($transition);
 
         $this->hidden_retriever
-            ->shouldReceive('getHiddenFieldsets')
+            ->method('getHiddenFieldsets')
             ->with($transition)
-            ->andReturns($hidden_fieldsets_post_action);
+            ->willReturn($hidden_fieldsets_post_action);
 
         $hidden_fieldsets_post_action
-            ->shouldReceive('getFieldsets')
-            ->andReturns([$fieldset_hidden]);
+            ->method('getFieldsets')
+            ->willReturn([$fieldset_hidden]);
 
-        $fieldset->shouldReceive('getID')->andReturns('312');
-        $fieldset_hidden->shouldReceive('getID')->andReturns('312');
+        $fieldset->method('getID')->willReturn('312');
+        $fieldset_hidden->method('getID')->willReturn('312');
 
         $this->assertTrue(
             $this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)
@@ -152,34 +143,34 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesArtifactContainsHiddenFieldsetsShouldReturnTrueIfThereAny(): void
     {
-        $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Artifact::class);
-        $transition                   = Mockery::mock(\Transition::class);
-        $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
-        $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $tracker                      = Mockery::mock(Tracker::class);
-        $workflow                     = Mockery::mock(\Workflow::class);
+        $fieldset                     = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $artifact                     = $this->createMock(Artifact::class);
+        $transition                   = $this->createMock(\Transition::class);
+        $hidden_fieldsets_post_action = $this->createMock(HiddenFieldsets::class);
+        $fieldset_hidden              = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $tracker                      = $this->createMock(Tracker::class);
+        $workflow                     = $this->createMock(\Workflow::class);
 
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('getWorkflow')->andReturn($workflow);
-        $workflow->shouldReceive('isAdvanced')->andReturnFalse();
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getWorkflow')->willReturn($workflow);
+        $workflow->method('isAdvanced')->willReturn(false);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsets')->andReturn([$fieldset]);
+        $this->form_element_factory->method('getUsedFieldsets')->willReturn([$fieldset]);
 
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns($transition);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($transition);
 
         $this->hidden_retriever
-            ->shouldReceive('getHiddenFieldsets')
+            ->method('getHiddenFieldsets')
             ->with($transition)
-            ->andReturns($hidden_fieldsets_post_action);
+            ->willReturn($hidden_fieldsets_post_action);
 
         $hidden_fieldsets_post_action
-            ->shouldReceive('getFieldsets')
-            ->andReturns([$fieldset_hidden]);
+            ->method('getFieldsets')
+            ->willReturn([$fieldset_hidden]);
 
-        $fieldset->shouldReceive('getID')->andReturns('312');
-        $fieldset_hidden->shouldReceive('getID')->andReturns('312');
+        $fieldset->method('getID')->willReturn('312');
+        $fieldset_hidden->method('getID')->willReturn('312');
 
         $this->assertTrue(
             $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($artifact)
@@ -188,15 +179,15 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoFieldsets(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $tracker  = Mockery::mock(Tracker::class);
-        $workflow = Mockery::mock(\Workflow::class);
+        $artifact = $this->createMock(Artifact::class);
+        $tracker  = $this->createMock(Tracker::class);
+        $workflow = $this->createMock(\Workflow::class);
 
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('getWorkflow')->andReturn($workflow);
-        $workflow->shouldReceive('isAdvanced')->andReturnFalse();
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getWorkflow')->willReturn($workflow);
+        $workflow->method('isAdvanced')->willReturn(false);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsets')->andReturn([]);
+        $this->form_element_factory->method('getUsedFieldsets')->willReturn([]);
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($artifact)
@@ -205,32 +196,32 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoHiddenFieldsets(): void
     {
-        $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Artifact::class);
-        $transition                   = Mockery::mock(\Transition::class);
-        $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
-        $tracker                      = Mockery::mock(Tracker::class);
-        $workflow                     = Mockery::mock(\Workflow::class);
+        $fieldset                     = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $artifact                     = $this->createMock(Artifact::class);
+        $transition                   = $this->createMock(\Transition::class);
+        $hidden_fieldsets_post_action = $this->createMock(HiddenFieldsets::class);
+        $tracker                      = $this->createMock(Tracker::class);
+        $workflow                     = $this->createMock(\Workflow::class);
 
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('getWorkflow')->andReturn($workflow);
-        $workflow->shouldReceive('isAdvanced')->andReturnFalse();
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getWorkflow')->willReturn($workflow);
+        $workflow->method('isAdvanced')->willReturn(false);
 
-        $this->form_element_factory->shouldReceive('getUsedFieldsets')->andReturn([$fieldset]);
+        $this->form_element_factory->method('getUsedFieldsets')->willReturn([$fieldset]);
 
-        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
-            ->andReturns($transition);
+        $this->transition_retriever->method('getReferenceTransitionForCurrentState')
+            ->willReturn($transition);
 
         $this->hidden_retriever
-            ->shouldReceive('getHiddenFieldsets')
+            ->method('getHiddenFieldsets')
             ->with($transition)
-            ->andReturns($hidden_fieldsets_post_action);
+            ->willReturn($hidden_fieldsets_post_action);
 
         $hidden_fieldsets_post_action
-            ->shouldReceive('getFieldsets')
-            ->andReturns([]);
+            ->method('getFieldsets')
+            ->willReturn([]);
 
-        $fieldset->shouldReceive('getID')->andReturns('312');
+        $fieldset->method('getID')->willReturn('312');
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($artifact)

@@ -22,26 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker_FormElement_Container_Fieldset;
 use Transition;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class HiddenFieldsetsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HiddenFieldsetsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testExportsTheActionInXML()
+    public function testExportsTheActionInXML(): void
     {
-        $fieldset_01 = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $fieldset_01->shouldReceive('getID')->andReturn(101);
-        $fieldset_02->shouldReceive('getID')->andReturn(102);
+        $fieldset_01->method('getID')->willReturn(101);
+        $fieldset_02->method('getID')->willReturn(102);
 
-        $transition = Mockery::mock(Transition::class);
+        $transition = $this->createMock(Transition::class);
 
         $hidden_fieldsets = new HiddenFieldsets($transition, 1, [$fieldset_01, $fieldset_02]);
 
