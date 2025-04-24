@@ -20,53 +20,68 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    private $condition;
-    private $empty_data     = '';
-    private $not_empty_data = 'coin';
-    private $field;
-    private $field_bis;
-    private $dao;
-    private $transition;
-    private $artifact;
-    private $changeset;
-    private $previous_value;
-    private $current_user;
+    private Workflow_Transition_Condition_FieldNotEmpty $condition;
+    private string $empty_data     = '';
+    private string $not_empty_data = 'coin';
+    private Tracker_FormElement_Field_Selectbox $field;
+    private Tracker_FormElement_Field_Selectbox $field_bis;
+    private Workflow_Transition_Condition_FieldNotEmpty_Dao&MockObject $dao;
+    private Transition $transition;
+    private Artifact $artifact;
+    private \Tracker_Artifact_Changeset&MockObject $changeset;
+    private \Tracker_Artifact_ChangesetValue $previous_value;
+    private PFUser $current_user;
 
     protected function setUp(): void
     {
-        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $factory = $this->createMock(\Tracker_FormElementFactory::class);
 
         $this->field     = $this->createFieldWithId($factory, 123);
         $this->field_bis = $this->createFieldWithId($factory, 234);
 
         Tracker_FormElementFactory::setInstance($factory);
-        $this->dao        = \Mockery::spy(\Workflow_Transition_Condition_FieldNotEmpty_Dao::class);
-        $this->transition = \Mockery::spy(\Transition::class)->shouldReceive('getId')->andReturns(42)->getMock();
+        $this->dao        = $this->createMock(Workflow_Transition_Condition_FieldNotEmpty_Dao::class);
+        $this->transition = new Transition(
+            42,
+            101,
+            null,
+            ListStaticValueBuilder::aStaticValue('Done')->build(),
+        );
         $this->condition  = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
-        $this->artifact   = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
-        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);
+        $this->changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
 
-        $this->previous_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
-        $this->current_user   = \Mockery::spy(\PFUser::class);
+        $this->artifact = ArtifactTestBuilder::anArtifact(101)
+            ->withChangesets($this->changeset)
+            ->build();
+
+        $this->previous_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
+        $this->current_user   = UserTestBuilder::buildWithDefaults();
     }
 
-    private function createFieldWithId(Tracker_FormElementFactory $factory, $id): Tracker_FormElement_Field_Selectbox
+    private function createFieldWithId(Tracker_FormElementFactory&MockObject $factory, int $id): Tracker_FormElement_Field_Selectbox
     {
-        $field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $field->shouldReceive('getId')->andReturns($id);
-        $field->shouldReceive('isEmpty')->with($this->not_empty_data, \Mockery::any())->andReturns(false);
-        $field->shouldReceive('isEmpty')->with($this->empty_data, \Mockery::any())->andReturns(true);
-        $field->shouldReceive('isEmpty')->with(null, \Mockery::any())->andReturns(true);
-        $factory->shouldReceive('getUsedFormElementById')->with($id)->andReturns($field);
+        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field->method('getId')->willReturn($id);
+        $field->method('getName')->willReturn('field');
+        $field->method('getLabel')->willReturn('Field');
+        $field->method('setHasErrors');
+        $field->method('isEmpty')->willReturnCallback(fn (mixed $value) => match ($value) {
+            $this->not_empty_data => false,
+            $this->empty_data, null => true,
+        });
+        $factory->method('getUsedFormElementById')->with($id)->willReturn($field);
 
         return $field;
     }
@@ -79,7 +94,7 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSavesUsingTheRealFieldObject(): void
     {
         $this->condition->addField($this->field);
-        $this->dao->shouldReceive('create')->with(42, [123])->once();
+        $this->dao->expects($this->once())->method('create')->with(42, [123]);
         $this->condition->saveObject();
     }
 
@@ -108,8 +123,8 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueWhenFieldNotPresentInRequestButAlreadySetInTheLastChangeset(): void
     {
         $this->condition->addField($this->field);
-        $this->changeset->shouldReceive('getValue')->with($this->field)->andReturns($this->previous_value);
-        $this->previous_value->shouldReceive('getValue')->andReturns($this->not_empty_data);
+        $this->changeset->method('getValue')->with($this->field)->willReturn($this->previous_value);
+        $this->previous_value->method('getValue')->willReturn($this->not_empty_data);
         $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
         $this->assertTrue($is_valid);
@@ -118,8 +133,8 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenFieldNotPresentInRequestAndNotSetInTheLastChangeset(): void
     {
         $this->condition->addField($this->field);
-        $this->changeset->shouldReceive('getValue')->with($this->field)->andReturns($this->previous_value);
-        $this->previous_value->shouldReceive('getValue')->andReturns($this->empty_data);
+        $this->changeset->method('getValue')->with($this->field)->willReturn($this->previous_value);
+        $this->previous_value->method('getValue')->willReturn($this->empty_data);
         $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
         $this->assertFalse($is_valid);
@@ -128,7 +143,7 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenFieldNotPresentInRequestAndNotInTheLastChangeset(): void
     {
         $this->condition->addField($this->field);
-        $this->changeset->shouldReceive('getValue')->with($this->field)->andReturns(null);
+        $this->changeset->method('getValue')->with($this->field)->willReturn(null);
         $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
         $this->assertFalse($is_valid);
@@ -137,9 +152,10 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenFieldNotPresentInRequestAndThereIsNoLastChangeset(): void
     {
         $this->condition->addField($this->field);
-        $artifact_without_changeset = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $fields_data                = [];
-        $is_valid                   = $this->condition->validate($fields_data, $artifact_without_changeset, '', $this->current_user);
+        $artifact_without_changeset = $this->createMock(Artifact::class);
+        $artifact_without_changeset->method('getLastChangeset')->willReturn(null);
+        $fields_data = [];
+        $is_valid    = $this->condition->validate($fields_data, $artifact_without_changeset, '', $this->current_user);
         $this->assertFalse($is_valid);
     }
 
