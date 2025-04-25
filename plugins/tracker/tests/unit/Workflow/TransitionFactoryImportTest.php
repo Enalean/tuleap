@@ -22,67 +22,65 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use EventManager;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_RulesManager;
 use Tracker_Workflow_Trigger_RulesManager;
+use Transition_PostActionFactory;
 use TransitionFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Workflow;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 use Workflow_TransitionDao;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TransitionFactoryImportTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private TransitionFactory $factory;
 
-    /** @var TransitionFactory */
-    private $factory;
+    private Workflow_Transition_ConditionFactory&MockObject $condition_factory;
 
-    /** @var Workflow_Transition_ConditionFactory */
-    private $condition_factory;
+    private Transition_PostActionFactory&MockObject $postaction_factory;
+    private Project $project;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $to_value;
+    private array $xml_mapping;
 
-    private $postaction_factory;
-    private $project;
-    private $to_value;
-    private $xml_mapping;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Workflow_TransitionDao
-     */
-    private $transition_dao;
+    private Workflow_TransitionDao&MockObject $transition_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->condition_factory  = \Mockery::spy(\Workflow_Transition_ConditionFactory::class);
-        $this->postaction_factory = \Mockery::spy(\Transition_PostActionFactory::class);
-        $event_manager            = \Mockery::mock(\EventManager::class);
-        $this->transition_dao     = \Mockery::mock(Workflow_TransitionDao::class);
-        $this->factory            = \Mockery::mock(
-            \TransitionFactory::class,
-            [
-                $this->condition_factory,
-                $event_manager,
-                new DBTransactionExecutorPassthrough(),
-                $this->postaction_factory,
-                $this->transition_dao,
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->condition_factory  = $this->createMock(Workflow_Transition_ConditionFactory::class);
+        $this->postaction_factory = $this->createMock(Transition_PostActionFactory::class);
+        $this->postaction_factory->method('warmUpCacheForWorkflow');
 
-        $this->project = \Mockery::spy(\Project::class);
+        $event_manager        = $this->createMock(EventManager::class);
+        $this->transition_dao = $this->createMock(Workflow_TransitionDao::class);
+        $this->factory        = new TransitionFactory(
+            $this->condition_factory,
+            $event_manager,
+            new DBTransactionExecutorPassthrough(),
+            $this->postaction_factory,
+            $this->transition_dao,
+        );
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $this->project = ProjectTestBuilder::aProject()->build();
 
-        $from_value        = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $this->to_value    = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
+        $field = ListFieldBuilder::aListField(101)->build();
+
+        $from_value        = ListStaticValueBuilder::aStaticValue('Todo')->build();
+        $this->to_value    = ListStaticValueBuilder::aStaticValue('Done')->build();
         $this->xml_mapping = [
             'F32'    => $field,
             'F32-V1' => $from_value,
@@ -90,7 +88,7 @@ class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    public function testItReconstitutesPostActions()
+    public function testItReconstitutesPostActions(): void
     {
         $xml = new SimpleXMLElement('
             <transition>
@@ -104,18 +102,16 @@ class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
             </transition>
         ');
 
-        $this->condition_factory->shouldReceive('getAllInstancesFromXML')
-            ->once()
-            ->andReturn(new Workflow_Transition_ConditionsCollection());
+        $this->condition_factory->expects($this->once())->method('getAllInstancesFromXML')
+            ->willReturn(new Workflow_Transition_ConditionsCollection());
 
-        $this->postaction_factory->shouldReceive('getInstanceFromXML')
-            ->with(Mockery::any(), $this->xml_mapping, Mockery::any())
-            ->once();
+        $this->postaction_factory->expects($this->once())->method('getInstanceFromXML')
+            ->with($this->anything(), $this->xml_mapping, $this->anything());
 
         $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->project);
     }
 
-    public function testItReconsititutesPermissions()
+    public function testItReconsititutesPermissions(): void
     {
         $xml = new SimpleXMLElement('
             <transition>
@@ -128,16 +124,15 @@ class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
             </transition>
         ');
 
-        $this->condition_factory->shouldReceive('getAllInstancesFromXML')
-            ->once()
-            ->andReturn(new Workflow_Transition_ConditionsCollection());
+        $this->condition_factory->expects($this->once())->method('getAllInstancesFromXML')
+            ->willReturn(new Workflow_Transition_ConditionsCollection());
 
         $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->project);
 
         $this->assertInstanceOf(Workflow_Transition_ConditionsCollection::class, $transition->getConditions());
     }
 
-    public function testItReconsititutesTransitionsForState()
+    public function testItReconsititutesTransitionsForState(): void
     {
         $xml = new SimpleXMLElement('
             <state>
@@ -153,9 +148,8 @@ class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
             </state>
         ');
 
-        $this->condition_factory->shouldReceive('getAllInstancesFromXML')
-            ->andReturn(new Workflow_Transition_ConditionsCollection())
-            ->times(2);
+        $this->condition_factory->expects($this->exactly(2))->method('getAllInstancesFromXML')
+            ->willReturn(new Workflow_Transition_ConditionsCollection());
 
         $transitions = $this->factory->getInstancesFromStateXML(
             $xml,
@@ -169,9 +163,9 @@ class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetTransitionsWhenNoTransitionsDefined(): void
     {
-        $workflow = new \Workflow(
-            Mockery::mock(Tracker_RulesManager::class),
-            Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
+        $workflow = new Workflow(
+            $this->createMock(Tracker_RulesManager::class),
+            $this->createMock(Tracker_Workflow_Trigger_RulesManager::class),
             new WorkflowBackendLogger(new NullLogger(), 0),
             '123',
             444,
@@ -180,7 +174,7 @@ class TransitionFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->transition_dao->shouldReceive('searchByWorkflow')->with('123')->andReturn([]);
+        $this->transition_dao->method('searchByWorkflow')->with('123')->willReturn([]);
 
         self::assertSame([], $this->factory->getTransitions($workflow));
     }

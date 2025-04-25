@@ -22,33 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var WorkflowUpdateChecker */
-    private $workflow_update_checker;
-    /** @var Mockery\MockInterface */
-    private $frozen_field_detector;
+    private WorkflowUpdateChecker $workflow_update_checker;
+    private FrozenFieldDetector&MockObject $frozen_field_detector;
 
     protected function setUp(): void
     {
-        $this->frozen_field_detector   = Mockery::mock(FrozenFieldDetector::class);
+        $this->frozen_field_detector   = $this->createMock(FrozenFieldDetector::class);
         $this->workflow_update_checker = new WorkflowUpdateChecker($this->frozen_field_detector);
     }
 
     public function testCanFieldBeUpdatedReturnsTrueWhenInitialSubmission()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = null;
-        $user                 = Mockery::mock(\PFUser::class);
+        $user                 = $this->createMock(\PFUser::class);
 
         $is_submission = true;
 
@@ -66,12 +61,12 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenUserIsWorkflowUser()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = null;
         $is_submission        = false;
-        $user                 = Mockery::mock(\Tracker_Workflow_WorkflowUser::class);
+        $user                 = $this->createMock(\Tracker_Workflow_WorkflowUser::class);
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -87,12 +82,12 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenBothLastChangesetValueAndSubmittedValueAreNull()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = null;
         $is_submission        = false;
-        $user                 = Mockery::mock(\PFUser::class);
+        $user                 = $this->createMock(\PFUser::class);
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -108,16 +103,16 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenFieldHasNoChanges()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
-        $user                 = Mockery::mock(\PFUser::class);
+        $user                 = $this->createMock(\PFUser::class);
 
-        $field->shouldReceive('hasChanges')
+        $field->method('hasChanges')
             ->with($artifact, $last_changeset_value, $submitted_value)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -133,18 +128,18 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenGivenFieldIsReadOnly()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
-        $user                 = Mockery::mock(\PFUser::class);
+        $user                 = $this->createMock(\PFUser::class);
 
-        $field->shouldReceive('hasChanges')->andReturnTrue();
+        $field->method('hasChanges')->willReturn(true);
         $this->frozen_field_detector
-            ->shouldReceive('isFieldFrozen')
+            ->method('isFieldFrozen')
             ->with($artifact, $field)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->assertFalse(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -160,17 +155,17 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanFieldBeUpdatedReturnsFalseWhenFieldIsNotReadOnly()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
-        $user                 = Mockery::mock(\PFUser::class);
+        $user                 = $this->createMock(\PFUser::class);
 
-        $field->shouldReceive('hasChanges')->andReturnTrue();
+        $field->method('hasChanges')->willReturn(true);
         $this->frozen_field_detector
-            ->shouldReceive('isFieldFrozen')
-            ->andReturnFalse();
+            ->method('isFieldFrozen')
+            ->willReturn(false);
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -186,16 +181,16 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanFieldBeUpdatedChecksFieldWhenLastChangesetWasNull()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
-        $user                 = Mockery::mock(\PFUser::class);
+        $user                 = $this->createMock(\PFUser::class);
 
         $this->frozen_field_detector
-            ->shouldReceive('isFieldFrozen')
-            ->andReturnFalse();
+            ->method('isFieldFrozen')
+            ->willReturn(false);
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -211,16 +206,16 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanFieldBeUpdatedChecksFieldWhenSubmittedValueIsNull()
     {
-        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
+        $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = null;
         $is_submission        = false;
-        $user                 = Mockery::mock(\PFUser::class);
+        $user                 = $this->createMock(\PFUser::class);
 
         $this->frozen_field_detector
-            ->shouldReceive('isFieldFrozen')
-            ->andReturnFalse();
+            ->method('isFieldFrozen')
+            ->willReturn(false);
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(

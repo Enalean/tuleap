@@ -22,25 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Mockery;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowRulesManagerLoopSafeGuardTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testAnArtifactIsProcessedOnlyOnceWhenARecursiveLoopIsDetectedInTheProcess(): void
     {
-        $logger          = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $logger          = new TestLogger();
         $workflow_logger = new WorkflowBackendLogger($logger, \Psr\Log\LogLevel::ERROR);
-
-        $logger->shouldReceive('error');
 
         $guard = new WorkflowRulesManagerLoopSafeGuard($workflow_logger);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(123);
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
 
         $process = new class ($guard, $artifact) {
             /**
@@ -70,20 +66,18 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends \Tuleap\Test\PHPUnit\T
         };
 
         $guard->process($artifact, $process);
-        $this->assertEquals(1, $process->nb_executions);
+        self::assertEquals(1, $process->nb_executions);
+        self::assertTrue($logger->hasErrorRecords());
     }
 
     public function testAnArtifactCanBeProcessedSequentiallyMultipleTimes(): void
     {
-        $logger          = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $logger          = new TestLogger();
         $workflow_logger = new WorkflowBackendLogger($logger, \Psr\Log\LogLevel::ERROR);
-
-        $logger->shouldNotReceive('error');
 
         $guard = new WorkflowRulesManagerLoopSafeGuard($workflow_logger);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(123);
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
 
         $process = new class {
             /**
@@ -100,6 +94,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends \Tuleap\Test\PHPUnit\T
         $guard->process($artifact, $process);
         $guard->process($artifact, $process);
         $guard->process($artifact, $process);
-        $this->assertEquals(3, $process->nb_executions);
+        self::assertEquals(3, $process->nb_executions);
+        self::assertFalse($logger->hasErrorRecords());
     }
 }

@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use TrackerFactory;
@@ -38,6 +35,8 @@ use Transition_PostAction_Field_Date;
 use TransitionFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -48,15 +47,13 @@ use WorkflowFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $permission_manager = Mockery::mock(PermissionsManager::class);
+        $permission_manager = $this->createMock(PermissionsManager::class);
         PermissionsManager::setInstance($permission_manager);
 
         $this->project = ProjectTestBuilder::aProject()->build();
@@ -73,162 +70,138 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importWorkflow2.xml'), SimpleXMLElement::class, LIBXML_NOENT);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
         $static_value_01 = ListStaticValueBuilder::aStaticValue('value 1')->withId(801)->build();
         $static_value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(802)->build();
 
         $mapping = [
-            'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
-            'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
+            'F1'     => ListFieldBuilder::aListField(110)->build(),
+            'F32'    => ListFieldBuilder::aListField(111)->build(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02,
         ];
 
-        $condition_factory = Mockery::mock(Workflow_Transition_ConditionFactory::class);
-        $condition_factory->shouldReceive('getAllInstancesFromXML')
-            ->andReturn(new Workflow_Transition_ConditionsCollection());
+        $condition_factory = $this->createMock(Workflow_Transition_ConditionFactory::class);
+        $condition_factory->method('getAllInstancesFromXML')
+            ->willReturn(new Workflow_Transition_ConditionsCollection());
 
-        $transition_factory = Mockery::mock(TransitionFactory::class);
+        $transition_factory = $this->createMock(TransitionFactory::class);
 
-        $date_post_action = Mockery::mock(Transition_PostAction_Field_Date::class);
-        $date_post_action->shouldReceive('getField')->andReturn(110);
-        $date_post_action->shouldReceive('getValueType')->andReturn(1);
+        $date_post_action = $this->createMock(Transition_PostAction_Field_Date::class);
+        $date_post_action->method('getField')->willReturn(110);
+        $date_post_action->method('getValueType')->willReturn(1);
 
-        $third_transition = Mockery::mock(Transition::class);
-        $third_transition->shouldReceive('getPostActions')->andReturn([$date_post_action]);
+        $third_transition = $this->createMock(Transition::class);
+        $third_transition->method('getPostActions')->willReturn([$date_post_action]);
 
-        $first_transition = Mockery::mock(Transition::class);
-        $first_transition->shouldReceive('getPostActions')->andReturns([]);
+        $first_transition = $this->createMock(Transition::class);
+        $first_transition->method('getPostActions')->willReturn([]);
 
-        $second_transition = Mockery::mock(Transition::class);
-        $second_transition->shouldReceive('getPostActions')->andReturns([]);
+        $second_transition = $this->createMock(Transition::class);
+        $second_transition->method('getPostActions')->willReturn([]);
 
-        $transition_factory->shouldReceive('getInstanceFromXML')
-            ->with(
-                Mockery::on(function (SimpleXMLElement $val) {
-                    return (string) $val->from_id['REF'] === 'null';
-                }),
-                $mapping,
-                $this->project
-            )
-            ->andReturn($first_transition);
-
-        $transition_factory->shouldReceive('getInstanceFromXML')
-            ->with(
-                Mockery::on(function (SimpleXMLElement $val) {
-                    return (string) $val->from_id['REF'] === 'F32-V0';
-                }),
-                $mapping,
-                $this->project
-            )
-            ->andReturn($second_transition);
-
-        $transition_factory->shouldReceive('getInstanceFromXML')
-            ->with(
-                Mockery::on(function (SimpleXMLElement $val) {
-                    return (string) $val->from_id['REF'] === 'F32-V1';
-                }),
-                $mapping,
-                $this->project
-            )
-            ->andReturn($third_transition);
+        $transition_factory->method('getInstanceFromXML')
+            ->willReturnCallback(static fn (SimpleXMLElement $val) => match ((string) $val->from_id['REF']) {
+                'null' => $first_transition,
+                'F32-V0' => $second_transition,
+                'F32-V1' => $third_transition,
+            });
 
         $workflow_factory = new WorkflowFactory(
             $transition_factory,
-            Mockery::mock(TrackerFactory::class),
-            Mockery::mock(Tracker_FormElementFactory::class),
-            Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
-            new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
-            Mockery::mock(FrozenFieldsDao::class),
-            Mockery::mock(StateFactory::class)
+            $this->createStub(TrackerFactory::class),
+            $this->createStub(Tracker_FormElementFactory::class),
+            $this->createStub(Tracker_Workflow_Trigger_RulesManager::class),
+            new WorkflowBackendLogger($this->createStub(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
+            $this->createStub(FrozenFieldsDao::class),
+            $this->createStub(StateFactory::class)
         );
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker, $this->project);
 
-        $this->assertEquals($workflow->isUsed(), 1);
-        $this->assertEquals($workflow->getFieldId(), 111);
-        $this->assertEquals(count($workflow->getTransitions()), 3);
+        self::assertSame('1', $workflow->isUsed());
+        self::assertSame(111, $workflow->getFieldId());
+        self::assertCount(3, $workflow->getTransitions());
 
         // Test post actions
         $transitions = $workflow->getTransitions();
-        $this->assertEquals(count($transitions[0]->getPostActions()), 0);
-        $this->assertEquals(count($transitions[1]->getPostActions()), 0);
-        $this->assertEquals(count($transitions[2]->getPostActions()), 1);
+        self::assertCount(0, $transitions[0]->getPostActions());
+        self::assertCount(0, $transitions[1]->getPostActions());
+        self::assertCount(1, $transitions[2]->getPostActions());
 
         // There is one post action on last transition
         $postactions = $transitions[2]->getPostActions();
-        $this->assertEquals($postactions[0]->getField(), 110);
-        $this->assertEquals($postactions[0]->getValueType(), 1);
+        self::assertSame($postactions[0]->getField(), 110);
+        self::assertSame($postactions[0]->getValueType(), 1);
 
-        $this->assertEquals($third_transition, $transitions[2]);
+        self::assertSame($third_transition, $transitions[2]);
     }
 
     public function testImportSimpleWorkflow(): void
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importSimpleWorkflow.xml'), SimpleXMLElement::class, LIBXML_NOENT);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
 
         $static_value_01 = ListStaticValueBuilder::aStaticValue('value 1')->withId(801)->build();
         $static_value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(802)->build();
 
         $mapping = [
-            'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
-            'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
+            'F1'     => ListFieldBuilder::aListField(110)->build(),
+            'F32'    => ListFieldBuilder::aListField(111)->build(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02,
         ];
 
-        $date_post_action = Mockery::mock(Transition_PostAction_Field_Date::class);
-        $date_post_action->shouldReceive('getField')->andReturn(110);
-        $date_post_action->shouldReceive('getValueType')->andReturn(1);
+        $date_post_action = $this->createMock(Transition_PostAction_Field_Date::class);
+        $date_post_action->method('getField')->willReturn(110);
+        $date_post_action->method('getValueType')->willReturn(1);
 
-        $first_transition = Mockery::mock(Transition::class);
-        $first_transition->shouldReceive('getPostActions')->andReturns([$date_post_action]);
+        $first_transition = $this->createMock(Transition::class);
+        $first_transition->method('getPostActions')->willReturn([$date_post_action]);
 
-        $second_transition = Mockery::mock(Transition::class);
-        $second_transition->shouldReceive('getPostActions')->andReturns([$date_post_action]);
+        $second_transition = $this->createMock(Transition::class);
+        $second_transition->method('getPostActions')->willReturn([$date_post_action]);
 
-        $transition_factory = Mockery::mock(TransitionFactory::class);
-        $transition_factory->shouldReceive('getInstancesFromStateXML')
+        $transition_factory = $this->createMock(TransitionFactory::class);
+        $transition_factory->method('getInstancesFromStateXML')
             ->with(
-                Mockery::on(function (SimpleXMLElement $state) {
+                $this->callback(function (SimpleXMLElement $state) {
                     return (string) $state->to_id['REF'] === 'F32-V0';
                 }),
                 $mapping,
                 $this->project,
                 $static_value_01
             )
-            ->andReturn([$first_transition, $second_transition]);
+            ->willReturn([$first_transition, $second_transition]);
 
         $state_factory = new StateFactory(
             $transition_factory,
-            Mockery::mock(SimpleWorkflowDao::class)
+            $this->createStub(SimpleWorkflowDao::class)
         );
 
         $workflow_factory = new WorkflowFactory(
             $transition_factory,
-            Mockery::mock(TrackerFactory::class),
-            Mockery::mock(Tracker_FormElementFactory::class),
-            Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
-            new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
-            Mockery::mock(FrozenFieldsDao::class),
+            $this->createStub(TrackerFactory::class),
+            $this->createStub(Tracker_FormElementFactory::class),
+            $this->createStub(Tracker_Workflow_Trigger_RulesManager::class),
+            new WorkflowBackendLogger($this->createStub(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
+            $this->createStub(FrozenFieldsDao::class),
             $state_factory
         );
 
         $workflow = $workflow_factory->getSimpleInstanceFromXML($xml, $mapping, $tracker, $this->project);
 
-        $this->assertEquals($workflow->isUsed(), 1);
-        $this->assertEquals($workflow->getFieldId(), 111);
-        $this->assertEquals(count($workflow->getTransitions()), 2);
+        self::assertSame('1', $workflow->isUsed());
+        self::assertSame(111, $workflow->getFieldId());
+        self::assertCount(2, $workflow->getTransitions());
 
         // Test post actions
         $transitions = $workflow->getTransitions();
-        $this->assertEquals(count($transitions[0]->getPostActions()), 1);
-        $this->assertEquals(count($transitions[1]->getPostActions()), 1);
+        self::assertCount(1, $transitions[0]->getPostActions());
+        self::assertCount(1, $transitions[1]->getPostActions());
     }
 
     public function testImportsSimpleWorkflowWithNoStates(): void
@@ -247,15 +220,13 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(StateFactory::class)
         );
 
-        $field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
-        $field->method('getId')->willReturn(32);
         $mapping  = [
-            'F32' => $field,
+            'F32' => ListFieldBuilder::aListField(32)->build(),
         ];
         $workflow = $workflow_factory->getSimpleInstanceFromXML($xml, $mapping, new \NullTracker(), $this->project);
 
-        $this->assertEquals(1, $workflow->isUsed());
-        $this->assertEquals(32, $workflow->getFieldId());
-        $this->assertEmpty($workflow->getTransitions());
+        self::assertSame('1', $workflow->isUsed());
+        self::assertSame(32, $workflow->getFieldId());
+        self::assertEmpty($workflow->getTransitions());
     }
 }
