@@ -31,14 +31,10 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { NbUnitsPerYear } from "../../../type";
 
-@Component
-export default class TimePeriodYears extends Vue {
-    @Prop({ required: true })
-    readonly years!: NbUnitsPerYear;
-}
+defineProps<{
+    years: NbUnitsPerYear;
+}>();
 </script>
