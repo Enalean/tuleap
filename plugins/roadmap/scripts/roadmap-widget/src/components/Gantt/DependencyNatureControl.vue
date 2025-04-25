@@ -54,59 +54,52 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedGetters } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
 import type { NaturesLabels } from "../../type";
 
-const tasks = namespace("tasks");
+const gettext_provider = useGettext();
 
-@Component
-export default class DependencyNatureControl extends Vue {
-    @Prop({ required: true })
-    readonly value!: string | null;
+const NONE_SPECIALVALUE = "-1";
 
-    @Prop({ required: true })
-    readonly available_natures!: NaturesLabels;
+const { has_at_least_one_row_shown } = useNamespacedGetters("tasks", [
+    "has_at_least_one_row_shown",
+]);
 
-    @tasks.Getter
-    private readonly has_at_least_one_row_shown!: boolean;
+const props = defineProps<{
+    value?: string | null;
+    available_natures: NaturesLabels;
+}>();
 
-    readonly NONE_SPECIALVALUE = "-1";
+const emit = defineEmits<{
+    (e: "input", value: string | null): void;
+}>();
 
-    get id(): string {
-        return getUniqueId("roadmap-gantt-links");
-    }
+const id = computed(() => getUniqueId("roadmap-gantt-links"));
+const sorted_natures = computed(() =>
+    Array.from(props.available_natures.keys()).sort((a, b) => a.localeCompare(b)),
+);
+const is_form_element_disabled = computed(() => !has_at_least_one_row_shown.value);
+const is_select_disabled = computed(
+    () => is_form_element_disabled.value || props.available_natures.size <= 0,
+);
+const title = computed(() =>
+    is_select_disabled.value
+        ? gettext_provider.$gettext("Displayed artifacts don't have any links to each other.")
+        : "",
+);
 
-    get sorted_natures(): string[] {
-        return Array.from(this.available_natures.keys()).sort((a, b) => a.localeCompare(b));
-    }
-
-    get is_form_element_disabled(): boolean {
-        return !this.has_at_least_one_row_shown;
-    }
-
-    get is_select_disabled(): boolean {
-        return this.is_form_element_disabled || this.available_natures.size <= 0;
-    }
-
-    get title(): string {
-        return this.is_select_disabled
-            ? this.$gettext("Displayed artifacts don't have any links to each other.")
-            : "";
-    }
-
-    onchange($event: Event): void {
-        if ($event.target instanceof HTMLSelectElement) {
-            let value: string | null = $event.target.value;
-            if (value === this.NONE_SPECIALVALUE) {
-                value = null;
-            }
-
-            this.$emit("input", value);
+function onchange($event: Event): void {
+    if ($event.target instanceof HTMLSelectElement) {
+        let value: string | null = $event.target.value;
+        if (value === NONE_SPECIALVALUE) {
+            value = null;
         }
+
+        emit("input", value);
     }
 }
 </script>

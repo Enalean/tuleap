@@ -26,7 +26,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../../store/tasks/type";
 import type { RootState } from "../../store/type";
 
-function isSelected(wrapper: Wrapper<DependencyNatureControl>, nature: string): boolean {
+function isSelected(wrapper: Wrapper<Vue>, nature: string): boolean {
     const option = wrapper.find(`[data-test=option-${nature}]`).element;
     if (!(option instanceof HTMLOptionElement)) {
         throw Error("Enable to find option for nature " + nature);
