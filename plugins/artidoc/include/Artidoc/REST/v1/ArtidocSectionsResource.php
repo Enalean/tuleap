@@ -117,6 +117,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -592,7 +593,8 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     $artifact_factory
                 ),
             ),
-            new NewArtifactLinkInitialChangesetValueBuilder()
+            new NewArtifactLinkInitialChangesetValueBuilder(),
+            TrackersPermissionsRetriever::build(),
         );
         $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
 
@@ -637,7 +639,8 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                         $artifact_factory
                     )
                 ),
-                $artifact_link_initial_builder
+                $artifact_link_initial_builder,
+                TrackersPermissionsRetriever::build(),
             ),
             TrackerArtifactCreator::build(
                 new InitialChangesetCreator(

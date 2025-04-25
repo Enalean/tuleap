@@ -831,7 +831,8 @@ class ArtifactsResource extends AuthenticatedResource
                     $this->artifact_factory
                 ),
             ),
-            new NewArtifactLinkInitialChangesetValueBuilder()
+            new NewArtifactLinkInitialChangesetValueBuilder(),
+            TrackersPermissionsRetriever::build(),
         );
         $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
         $artifact_factory          = Tracker_ArtifactFactory::instance();
@@ -1011,7 +1012,8 @@ class ArtifactsResource extends AuthenticatedResource
                             $this->artifact_factory
                         )
                     ),
-                    $artifact_link_initial_builder
+                    $artifact_link_initial_builder,
+                    TrackersPermissionsRetriever::build(),
                 ),
                 TrackerArtifactCreator::build(
                     new InitialChangesetCreator(

@@ -178,6 +178,14 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
+    public function getValueFromSubmitOrDefault(array $submitted_values): array
+    {
+        if (isset($submitted_values[$this->getId()])) {
+            return $submitted_values[$this->getId()];
+        }
+        return [self::UPDATE_VALUE_KEY => []];
+    }
+
     protected function fetchSubmitValueMasschange(): string
     {
         return '';

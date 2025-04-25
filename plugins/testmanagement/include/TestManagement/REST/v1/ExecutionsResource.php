@@ -99,6 +99,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
@@ -324,7 +325,8 @@ class ExecutionsResource
                         $this->artifact_factory
                     )
                 ),
-                new NewArtifactLinkInitialChangesetValueBuilder()
+                new NewArtifactLinkInitialChangesetValueBuilder(),
+                TrackersPermissionsRetriever::build(),
             ),
             $changeset_creator,
             new ArtifactRestUpdateConditionsChecker(),
@@ -457,7 +459,8 @@ class ExecutionsResource
                         $this->artifact_factory
                     )
                 ),
-                new NewArtifactLinkInitialChangesetValueBuilder()
+                new NewArtifactLinkInitialChangesetValueBuilder(),
+                TrackersPermissionsRetriever::build(),
             ),
             TrackerArtifactCreator::build(
                 new InitialChangesetCreator(

@@ -26,6 +26,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactLinkFieldBuilder
 {
+    use FieldBuilderWithSpecificProperties;
+
     private int $parent_id        = 0;
     private string $shortname     = 'overjoy';
     private string $label         = 'Overjoy';
@@ -40,6 +42,7 @@ final class ArtifactLinkFieldBuilder
     private function __construct(private int $id)
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(86)->build();
+        $this->withSpecificProperty('default_value', ['value' => []]);
     }
 
     public static function anArtifactLinkField(int $id): self
@@ -93,6 +96,7 @@ final class ArtifactLinkFieldBuilder
             $this->rank
         );
         $field->setTracker($this->tracker);
+        $this->setSpecificProperties($field);
         return $field;
     }
 }

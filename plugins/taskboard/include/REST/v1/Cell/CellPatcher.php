@@ -62,6 +62,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -222,7 +223,8 @@ class CellPatcher
                                 $artifact_factory
                             )
                         ),
-                        new NewArtifactLinkInitialChangesetValueBuilder()
+                        new NewArtifactLinkInitialChangesetValueBuilder(),
+                        TrackersPermissionsRetriever::build(),
                     ),
                     $changeset_creator,
                     new ArtifactRestUpdateConditionsChecker(),
