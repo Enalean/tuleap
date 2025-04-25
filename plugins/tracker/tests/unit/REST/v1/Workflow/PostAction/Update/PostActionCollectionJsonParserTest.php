@@ -21,83 +21,73 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostActionCollectionJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private PostActionCollectionJsonParser $collection_parser;
 
-    /**
-     * @var PostActionCollectionJsonParser
-     */
-    private $collection_parser;
-
-    /**
-     * @var MockInterface
-     */
-    private $action_parser;
+    private PostActionUpdateJsonParser&MockObject $action_parser;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createParser()
+    public function createParser(): void
     {
-        $this->action_parser     = Mockery::mock(PostActionUpdateJsonParser::class);
+        $this->action_parser     = $this->createMock(PostActionUpdateJsonParser::class);
         $this->collection_parser = new PostActionCollectionJsonParser($this->action_parser);
     }
 
-    public function testParseReturnsResultOfParserWhichAcceptsJson()
+    public function testParseReturnsResultOfParserWhichAcceptsJson(): void
     {
-        $another_parser    = Mockery::mock(PostActionUpdateJsonParser::class);
+        $another_parser    = $this->createMock(PostActionUpdateJsonParser::class);
         $collection_parser = new PostActionCollectionJsonParser($another_parser, $this->action_parser);
 
         $another_parser
-            ->shouldReceive('accept')
-            ->andReturn(false);
+            ->method('accept')
+            ->willReturn(false);
         $this->action_parser
-            ->shouldReceive('accept')
-            ->andReturn(true);
+            ->method('accept')
+            ->willReturn(true);
         $ci_build = new CIBuildValue('http://example.test');
         $this->action_parser
-            ->shouldReceive('parse')
-            ->andReturn($ci_build);
+            ->method('parse')
+            ->willReturn($ci_build);
 
-        $workflow = Mockery::mock(Workflow::class);
+        $workflow = $this->createMock(Workflow::class);
 
         $action_collection = $collection_parser->parse($workflow, [['type' => 'should match one parser']]);
 
         $this->assertEquals(new PostActionCollection($ci_build), $action_collection);
     }
 
-    public function testParseWithEmptyArrayReturnsEmptyPostActionCollection()
+    public function testParseWithEmptyArrayReturnsEmptyPostActionCollection(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
+        $workflow = $this->createMock(Workflow::class);
 
         $post_actions = $this->collection_parser->parse($workflow, []);
         $this->assertEquals(new PostActionCollection(), $post_actions);
     }
 
-    public function testParseThrowsWhenNoParserAcceptGivenJson()
+    public function testParseThrowsWhenNoParserAcceptGivenJson(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
+        $workflow = $this->createMock(Workflow::class);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
         $this->action_parser
-            ->shouldReceive('accept')
-            ->andReturn(false);
+            ->method('accept')
+            ->willReturn(false);
 
         $this->collection_parser->parse($workflow, [['id' => 1]]);
     }
 
-    public function testParseWithNotAssociativeArrayThrows()
+    public function testParseWithNotAssociativeArrayThrows(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
+        $workflow = $this->createMock(Workflow::class);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);

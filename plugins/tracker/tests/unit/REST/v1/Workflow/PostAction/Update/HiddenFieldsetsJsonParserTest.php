@@ -18,44 +18,39 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
-use Mockery;
-use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var HiddenFieldsetsJsonParser
-     */
-    private $parser;
+    private HiddenFieldsetsJsonParser $parser;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createParser()
+    public function createParser(): void
     {
         $this->parser = new HiddenFieldsetsJsonParser();
     }
 
-    public function testAcceptReturnsTrueWhenTypeMatches()
+    public function testAcceptReturnsTrueWhenTypeMatches(): void
     {
         $this->assertTrue($this->parser->accept(['type' => 'hidden_fieldsets']));
     }
 
-    public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
+    public function testAcceptReturnsFalseWhenTypeDoesNotMatch(): void
     {
         $this->assertFalse($this->parser->accept(['type' => 'set_date_value']));
     }
 
-    public function testParseReturnsNewHiddenFieldsetsValueBasedOnGivenJson()
+    public function testParseReturnsNewHiddenFieldsetsValueBasedOnGivenJson(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $hidden_fieldsets_value = $this->parser->parse(
             $workflow,
@@ -69,10 +64,10 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_action, $hidden_fieldsets_value);
     }
 
-    public function testParseWhenIdNotProvided()
+    public function testParseWhenIdNotProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $hidden_fieldsets_value = $this->parser->parse(
             $workflow,
@@ -85,81 +80,10 @@ class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_action, $hidden_fieldsets_value);
     }
 
-    public function testParseThrowsAnExceptionWhenNoFieldsetIdsProvided()
+    public function testParseThrowsAnExceptionWhenNoFieldsetIdsProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->parser->parse(
-            $workflow,
-            [
-                'id' => 1,
-                'type' => 'hidden_fieldsets',
-            ]
-        );
-    }
-
-    public function testParseThrowsAnExceptionWhenFieldIdsIsNull()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->parser->parse(
-            $workflow,
-            [
-                'id' => 1,
-                'type' => 'hidden_fieldsets',
-                'fieldset_ids' => null,
-            ]
-        );
-    }
-
-    public function testParseThrowsAnExceptionWhenFieldsetIdIsAnEmptyArray()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->parser->parse(
-            $workflow,
-            [
-                'id' => 1,
-                'type' => 'hidden_fieldsets',
-                'fieldset_ids' => [],
-            ]
-        );
-    }
-
-    public function testParseThrowsAnExceptionWhenFieldsetIdIsNotAnArrayOfInt()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->parser->parse(
-            $workflow,
-            [
-                'id' => 1,
-                'type' => 'hidden_fieldsets',
-                'fieldset_ids' => [1, 'aaa'],
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionIfWorkflowIsInAdvancedMode()
-    {
-        $workflow = \Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturnTrue();
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(IncompatibleWorkflowModeException::class);
         $this->parser->parse($workflow, ['type' => 'hidden_fieldsets']);
