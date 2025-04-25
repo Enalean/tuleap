@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/vue2-dompurify-html':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-dompurify-html
+  '@tuleap/vue2-gettext-composition-helper':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-gettext-init

@@ -10,6 +10,7 @@
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue2-dompurify-html": "workspace:*",
+    "@tuleap/vue2-gettext-composition-helper": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "@vueuse/core": "^8.7.3",
     "lit-html": "^2.8.0",
