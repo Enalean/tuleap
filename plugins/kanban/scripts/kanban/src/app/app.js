@@ -28,7 +28,6 @@ import angular_async from "@tuleap/angular-async";
 
 import "angular-locker";
 import "angular-gettext";
-import "ng-scrollbar";
 import translations from "../../po/fr_FR.po";
 
 import jwt from "./jwt/jwt.js";
@@ -47,7 +46,6 @@ import ColumnCollectionService from "./column-collection-service.js";
 import DroppedService from "./dropped-service.js";
 import KanbanFilterValue from "./filter-value.js";
 import AddInPlaceDirective from "./add-in-place/add-in-place-directive.js";
-import ResizeDirective from "./resize-directive.js";
 import AddToDashboardDirective from "./add-to-dashboard/add-to-dashboard-directive.js";
 import FilterTrackerReportDirective from "./filter-tracker-report/filter-tracker-report-directive.js";
 import GoToKanbanDirective from "./go-to-kanban/go-to-kanban-directive.js";
@@ -72,7 +70,6 @@ export default angular
         angular_moment,
         "angular-locker",
         "gettext",
-        "ngScrollbar",
         angular_artifact_modal,
         angular_async,
         angular_tlp,
@@ -108,7 +105,6 @@ export default angular
     .service("KanbanFilteredUpdatedAlertService", KanbanFilteredUpdatedAlertService)
     .directive("kanban", KanbanDirective)
     .directive("addInPlace", AddInPlaceDirective)
-    .directive("resize", ResizeDirective)
     .directive("addToDashboard", AddToDashboardDirective)
     .directive("filterTrackerReport", FilterTrackerReportDirective)
     .directive("escKey", EscKeyDirective)

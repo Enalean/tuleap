@@ -1,33 +1,22 @@
-<div
-    class="kustom-scroll"
-    ng-class="{ 'column-empty': $ctrl.isColumnLoadedAndEmpty(), 'has-content': $ctrl.column.filtered_content.length > 0, 'is-bar-shown': $ctrl.column.is_scrollbar_shown }"
-    ng-scrollbar
-    rebuild-on="rebuild:kustom-scroll"
-    is-bar-shown="$ctrl.column.is_scrollbar_shown"
+<ul
+    dragular="$ctrl.dragularOptions()"
+    class="kanban-items"
+    ng-class="{ 'appending-item': $ctrl.appending_item }"
+    data-column-id="{{ $ctrl.column.id }}"
+    esc-key="$ctrl.cancelDrag()"
+    data-test="kanban-items-{{$ctrl.slugifyLabel($ctrl.column.label)}}"
 >
-    <ul
-        dragular="$ctrl.dragularOptions()"
-        class="kanban-items"
+    <li
+        ng-repeat="item in $ctrl.column.filtered_content track by $id(item)"
+        class="kanban-item kanban-item-{{ item.color }}"
         ng-class="{
-            'appending-item': $ctrl.appending_item,
-            'has-scrollbar' : $ctrl.column.is_scrollbar_shown
+            'compact-view': item.is_collapsed,
+            'updating': item.updating,
+            'card-created': item.created
         }"
-        data-column-id="{{ $ctrl.column.id }}"
-        esc-key="$ctrl.cancelDrag()"
-        data-test="kanban-items-{{$ctrl.slugifyLabel($ctrl.column.label)}}"
+        id="item_{{ item.id }}"
+        data-test="kanban-item"
     >
-        <li
-            ng-repeat="item in $ctrl.column.filtered_content track by $id(item)"
-            class="kanban-item kanban-item-{{ item.color }}"
-            ng-class="{
-                'compact-view': item.is_collapsed,
-                'updating': item.updating,
-                'card-created': item.created
-            }"
-            id="item_{{ item.id }}"
-            data-test="kanban-item"
-        >
-            <kanban-item class="tlp-swatch-{{ item.background_color_name }}"></kanban-item>
-        </li>
-    </ul>
-</div>
+        <kanban-item class="tlp-swatch-{{ item.background_color_name }}"></kanban-item>
+    </li>
+</ul>

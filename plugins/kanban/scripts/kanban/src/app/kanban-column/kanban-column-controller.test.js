@@ -13,8 +13,7 @@ function createElement(tag_name, no_drag) {
 }
 
 describe("KanbanColumnController -", function () {
-    var $rootScope,
-        $scope,
+    var $scope,
         $q,
         KanbanColumnController,
         SharedPropertiesService,
@@ -38,7 +37,7 @@ describe("KanbanColumnController -", function () {
                 _DroppedService_,
             ) {
                 $controller = _$controller_;
-                $rootScope = _$rootScope_;
+                $scope = _$rootScope_.$new();
                 $q = _$q_;
                 SharedPropertiesService = _SharedPropertiesService_;
                 KanbanColumnService = _KanbanColumnService_;
@@ -54,7 +53,6 @@ describe("KanbanColumnController -", function () {
         jest.spyOn(ColumnCollectionService, "getColumn").mockImplementation(() => {});
         jest.spyOn(SharedPropertiesService, "getKanban").mockImplementation(() => {});
 
-        $scope = $rootScope.$new();
         $element = angular.element(createElement("div", false));
 
         KanbanColumnController = $controller("KanbanColumnController", {
@@ -112,7 +110,6 @@ describe("KanbanColumnController -", function () {
             };
             KanbanColumnController.column = source_column;
             KanbanColumnController.dragularOptions().onInit();
-            jest.spyOn($rootScope, "$broadcast");
         });
 
         it("When I reorder an item in the same column, then the item will be reordered using DroppedService", function () {
@@ -155,8 +152,6 @@ describe("KanbanColumnController -", function () {
                 source_column,
                 compared_to,
             );
-
-            expect($rootScope.$broadcast).toHaveBeenCalledWith("rebuild:kustom-scroll");
         });
 
         it("When I move an item to the archive, then the item will be move using DroppedService", function () {
@@ -203,8 +198,6 @@ describe("KanbanColumnController -", function () {
                 target_column,
                 compared_to,
             );
-
-            expect($rootScope.$broadcast).toHaveBeenCalledWith("rebuild:kustom-scroll");
         });
     });
 
@@ -262,41 +255,6 @@ describe("KanbanColumnController -", function () {
                 $container,
                 $handle_element,
             );
-
-            expect(result).toBe(true);
-        });
-    });
-
-    describe("isColumnLoadedAndEmpty() -", function () {
-        it("Given that the column was loading items, then false will be returned", function () {
-            KanbanColumnController.column = {
-                loading_items: true,
-                content: [],
-            };
-
-            var result = KanbanColumnController.isColumnLoadedAndEmpty();
-
-            expect(result).toBe(false);
-        });
-
-        it("Given that the column had some content in it, then false will be returned", function () {
-            KanbanColumnController.column = {
-                loading_items: false,
-                content: [{ id: 573 }],
-            };
-
-            var result = KanbanColumnController.isColumnLoadedAndEmpty();
-
-            expect(result).toBe(false);
-        });
-
-        it("Given that the column was not loading items and had no content in it, then true will be returned", function () {
-            KanbanColumnController.column = {
-                loading_items: false,
-                content: [],
-            };
-
-            var result = KanbanColumnController.isColumnLoadedAndEmpty();
 
             expect(result).toBe(true);
         });

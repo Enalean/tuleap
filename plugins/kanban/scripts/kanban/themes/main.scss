@@ -19,7 +19,6 @@
 
 @use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "pkg:@tuleap/plugin-tracker-artifact-modal";
-@use "pkg:ng-scrollbar/dist/ng-scrollbar";
 @use "pkg:dragular/dist/dragular";
 @use "pkg:@tuleap/plugin-cardwall-card-fields";
 @use "./socket";
@@ -152,9 +151,8 @@ $kanban-column-footer-height: 50px;
 .kanban-board {
     display: flex;
     z-index: 1;
-    flex: 1 1 auto;
-    width: 100%;
-    overflow: auto;
+    flex: auto;
+    overflow-x: auto;
 }
 
 .kanban-column {
@@ -206,20 +204,6 @@ $kanban-column-footer-height: 50px;
         > .kanban-column-header {
             justify-content: center;
         }
-
-        > kanban-column {
-            position: absolute;
-            z-index: 3;
-            top: 0;
-            left: 0;
-
-            > .kustom-scroll > .ngsb-wrap > .ngsb-container {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-            }
-        }
     }
 
     &.wip-reached {
@@ -253,23 +237,6 @@ $kanban-column-footer-height: 50px;
             > .kanban-column-header-toggle,
             > .kanban-column-label {
                 color: var(--tlp-warning-color);
-            }
-        }
-
-        .ngsb-wrap > .ngsb-scrollbar > .ngsb-thumb-container > .ngsb-thumb-pos {
-            /* stylelint-disable-next-line selector-max-compound-selectors */
-            &:hover > .ngsb-thumb,
-            > .ngsb-thumb {
-                background: var(--tlp-warning-color-transparent-60);
-            }
-
-            &:active {
-                background: none;
-
-                /* stylelint-disable-next-line selector-max-compound-selectors */
-                > .ngsb-thumb {
-                    background: var(--tlp-warning-color-transparent-60-darker-05);
-                }
             }
         }
 
@@ -378,92 +345,47 @@ $kanban-column-footer-height: 50px;
 
 kanban-column {
     display: flex;
-    flex: 1 1 auto;
+    flex: auto;
     flex-direction: column;
     width: 100%;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+}
+
+.wip-reached > kanban-column {
+    scrollbar-color: var(--tlp-warning-color-transparent-60) transparent;
+}
+
+.kanban-column-closed > kanban-column {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
     height: 100%;
+    overflow: hidden;
+    scrollbar-gutter: initial;
+
+    > .kanban-items {
+        height: 100%;
+    }
+}
+
+@keyframes blink-column {
+    0% {
+        background: var(--tlp-white-color);
+    }
+
+    50% {
+        background: var(--tlp-main-color-lighter-90);
+    }
+
+    100% {
+        background: var(--tlp-white-color);
+    }
 }
 
 .created-in-closed-column {
-    @keyframes blink-column {
-        0% {
-            background: var(--tlp-white-color);
-        }
-
-        50% {
-            background: var(--tlp-main-color-lighter-90);
-        }
-
-        100% {
-            background: var(--tlp-white-color);
-        }
-    }
-
     animation: blink-column 1s ease-in-out alternate infinite;
-}
-
-.kustom-scroll,
-.ngsb-wrap {
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-    overflow: hidden;
-    transition: none;
-}
-
-.kustom-scroll {
-    &:not(.has-content),
-    &.column-empty {
-        .ngsb-wrap > .ngsb-container,
-        .kanban-items {
-            height: 100%;
-        }
-
-        .ngsb-scrollbar {
-            opacity: 0;
-        }
-    }
-
-    &.is-bar-shown > .ngsb-wrap > .ngsb-container {
-        width: calc(100% - 12px);
-    }
-}
-
-.ngsb-wrap {
-    > .ngsb-container {
-        width: 100%;
-        transition: none;
-    }
-
-    > .ngsb-scrollbar {
-        top: 8px;
-        height: calc(100% - 50px);
-
-        > .ngsb-thumb-container {
-            left: -4px;
-
-            > .ngsb-track {
-                background: none;
-            }
-
-            > .ngsb-thumb-pos {
-                &:hover > .ngsb-thumb,
-                > .ngsb-thumb {
-                    width: 6px;
-                    border-radius: 3px;
-                    background: var(--tlp-neutral-dark-color);
-                }
-
-                &:active {
-                    background: none;
-                    /* stylelint-disable-next-line max-nesting-depth */
-                    > .ngsb-thumb {
-                        background: var(--tlp-neutral-dark-color-darker-05);
-                    }
-                }
-            }
-        }
-    }
 }
 
 .kanban-items {

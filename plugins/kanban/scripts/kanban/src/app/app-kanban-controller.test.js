@@ -981,7 +981,6 @@ describe("KanbanCtrl", function () {
             kanban.id = 33;
             jest.spyOn(SharedPropertiesService, "setUserPrefersCompactCards");
             jest.spyOn(UserPreferencesService, "setPreference").mockImplementation(() => {});
-            jest.spyOn(KanbanCtrl, "reflowKustomScrollBars").mockImplementation(() => {});
             kanban.backlog.content = [{ is_collapsed: false }, { is_collapsed: true }];
             kanban.archive.content = [{ is_collapsed: true }, { is_collapsed: false }];
             kanban.columns[0].content = [{ is_collapsed: false }];
@@ -998,7 +997,6 @@ describe("KanbanCtrl", function () {
                 "agiledashboard_kanban_item_view_mode_33",
                 "compact-view",
             );
-            expect(KanbanCtrl.reflowKustomScrollBars).toHaveBeenCalled();
 
             var all_columns = [kanban.archive, kanban.backlog, ...kanban.columns];
             var all_kanban_items = all_columns.reduce(
@@ -1020,7 +1018,6 @@ describe("KanbanCtrl", function () {
                 "agiledashboard_kanban_item_view_mode_33",
                 "detailed-view",
             );
-            expect(KanbanCtrl.reflowKustomScrollBars).toHaveBeenCalled();
             var all_columns = [kanban.archive, kanban.backlog, ...kanban.columns];
             var all_kanban_items = all_columns.reduce(
                 (all_items, column) => all_items.concat(column.content),

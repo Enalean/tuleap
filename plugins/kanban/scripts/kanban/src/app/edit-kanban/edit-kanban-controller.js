@@ -33,7 +33,6 @@ EditKanbanCtrl.$inject = [
     "RestErrorService",
     "FilterTrackerReportService",
     "modal_instance",
-    "rebuild_scrollbars",
 ];
 
 function EditKanbanCtrl(
@@ -45,7 +44,6 @@ function EditKanbanCtrl(
     RestErrorService,
     FilterTrackerReportService,
     modal_instance,
-    rebuild_scrollbars,
 ) {
     const self = this;
     self.kanban = SharedPropertiesService.getKanban();
@@ -273,8 +271,6 @@ function EditKanbanCtrl(
                     self.adding_column = false;
                     self.saving_new_column = false;
                     self.new_column_label = "";
-
-                    rebuild_scrollbars();
                 },
                 function (response) {
                     modal_instance.tlp_modal.hide();
@@ -320,8 +316,6 @@ function EditKanbanCtrl(
                 function () {
                     self.deleting_column = false;
                     ColumnCollectionService.removeColumn(column_to_remove.id);
-
-                    rebuild_scrollbars();
                 },
                 function (response) {
                     modal_instance.tlp_modal.hide();

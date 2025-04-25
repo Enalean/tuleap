@@ -123,7 +123,6 @@ function KanbanCtrl(
         moveKanbanItemToBottom,
         openReportModal,
         addKanbanToMyDashboard,
-        reflowKustomScrollBars,
         slugifyLabel,
         displayCardsAndWIPNotUpdated: FilterTrackerReportService.areNotCardsAndWIPUpdated,
         filter: KanbanFilterValue,
@@ -206,8 +205,6 @@ function KanbanCtrl(
             column.content.forEach(forceIsCollapsed);
         });
 
-        self.reflowKustomScrollBars();
-
         function forceIsCollapsed(item) {
             setIsCollapsed(item, self.user_prefers_collapsed_cards);
         }
@@ -219,7 +216,6 @@ function KanbanCtrl(
 
     function collapseOneItem(item, is_collapsed) {
         setIsCollapsed(item, is_collapsed);
-        self.reflowKustomScrollBars();
     }
 
     function filterCards() {
@@ -235,8 +231,6 @@ function KanbanCtrl(
                 return Object.prototype.hasOwnProperty.call(column, "is_open") && column.is_open;
             })
             .forEach(filterColumnCards);
-
-        reflowKustomScrollBars();
     }
 
     function filterBacklogCards() {
@@ -249,10 +243,6 @@ function KanbanCtrl(
 
     function filterColumnCards(column) {
         KanbanColumnService.filterItems(column);
-    }
-
-    function reflowKustomScrollBars() {
-        $scope.$broadcast("rebuild:kustom-scroll");
     }
 
     function collapseColumn(column) {
@@ -284,8 +274,6 @@ function KanbanCtrl(
         } else {
             expandColumn(column);
         }
-
-        reflowKustomScrollBars();
     }
 
     function collapseBacklog() {
@@ -318,8 +306,6 @@ function KanbanCtrl(
             KanbanService.expandBacklog(kanban.id);
             expandBacklog();
         }
-
-        reflowKustomScrollBars();
     }
 
     function collapseArchive() {
@@ -349,8 +335,6 @@ function KanbanCtrl(
         } else {
             expandArchive();
         }
-
-        reflowKustomScrollBars();
     }
 
     function emptyArray(array) {
@@ -376,9 +360,6 @@ function KanbanCtrl(
                     templateUrl: "edit-kanban.tpl.html",
                     controller,
                     controllerAs: "edit_modal",
-                    resolve: {
-                        rebuild_scrollbars: reflowKustomScrollBars,
-                    },
                 });
             })
             .catch(() => {
@@ -507,8 +488,6 @@ function KanbanCtrl(
 
             if (column.is_open) {
                 filterColumnCards(column);
-
-                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -539,8 +518,6 @@ function KanbanCtrl(
 
             if (self.backlog.is_open) {
                 filterBacklogCards();
-
-                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -571,8 +548,6 @@ function KanbanCtrl(
 
             if (self.archive.is_open) {
                 filterArchiveCards();
-
-                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -620,7 +595,6 @@ function KanbanCtrl(
 
         Object.assign(item, item_representation);
 
-        reflowKustomScrollBars();
         under_the_fold_notification_event_source.dispatch();
     }
 
