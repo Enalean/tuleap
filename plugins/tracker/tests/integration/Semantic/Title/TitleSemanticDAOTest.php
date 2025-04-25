@@ -28,7 +28,7 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Semantic_TitleDaoTest extends TestIntegrationTestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class TitleSemanticDAOTest extends TestIntegrationTestCase
 {
     private const TRACKER_ID = 52;
     private const FIELD_ID   = 8898;
