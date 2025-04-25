@@ -42,7 +42,7 @@
                     {/if}
             </div>
             <section class="tlp-pane-section">
-                <table class="tlp-table">
+                <table class="tlp-table" data-test="git-repository-tree-table">
                     <thead>
                         <tr>
                             <th>{t domain="gitphp"}Name{/t}</th>
