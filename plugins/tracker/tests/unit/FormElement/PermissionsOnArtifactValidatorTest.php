@@ -18,26 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class PermissionsOnArtifactValidatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var \Tracker_FormElement_Field_PermissionsOnArtifact */
-    private $field;
-
-    /** @var PermissionsOnArtifactValidator */
-    private $validator;
+    private Tracker_FormElement_Field_PermissionsOnArtifact&MockObject $field;
+    private PermissionsOnArtifactValidator $validator;
 
     protected function setUp(): void
     {
-        $this->field     = \Mockery::spy(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $this->field     = $this->createMock(Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $this->validator = new PermissionsOnArtifactValidator();
     }
 
@@ -45,35 +44,29 @@ final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\Test
     {
         $value = [];
 
-        $this->assertFalse(
-            $this->validator->hasAGroupSelected($value)
-        );
+        self::assertFalse($this->validator->hasAGroupSelected($value));
     }
 
     public function testItReturnsTrueWhenUgroupsSet(): void
     {
-        $this->field->shouldReceive('isRequired')->andReturns(true);
+        $this->field->method('isRequired')->willReturn(true);
         $value['u_groups'] = [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED];
 
-        $this->assertTrue(
-            $this->validator->hasAGroupSelected($value)
-        );
+        self::assertTrue($this->validator->hasAGroupSelected($value));
     }
 
     public function testItReturnsTrueWhenNoneIsSelected(): void
     {
         $value['u_groups'] = [ProjectUGroup::NONE];
 
-        $this->assertTrue(
-            $this->validator->isNoneGroupSelected($value)
-        );
+        self::assertTrue($this->validator->isNoneGroupSelected($value));
     }
 
     public function testItReturnsFalseWhenPermissionsAreNotSent(): void
     {
         $value = [];
 
-        $this->assertFalse($this->validator->isArtifactPermissionChecked($value));
+        self::assertFalse($this->validator->isArtifactPermissionChecked($value));
     }
 
     public function testItReturnsFalseWhenPermissionsAreNotChecked(): void
@@ -82,7 +75,7 @@ final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\Test
             Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 0,
         ];
 
-        $this->assertFalse($this->validator->isArtifactPermissionChecked($value));
+        self::assertFalse($this->validator->isArtifactPermissionChecked($value));
     }
 
     public function testItReturnsTrueWhenPermissionsAreSentAndChecked(): void
@@ -91,6 +84,6 @@ final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\Test
             Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 1,
         ];
 
-        $this->assertTrue($this->validator->isArtifactPermissionChecked($value));
+        self::assertTrue($this->validator->isArtifactPermissionChecked($value));
     }
 }
