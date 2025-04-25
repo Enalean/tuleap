@@ -44,4 +44,9 @@ final class DescriptionSemanticDAO extends DataAccessObject implements RetrieveD
             ['field_id']
         );
     }
+
+    public function deleteForTracker(int $tracker_id): void
+    {
+        $this->getDB()->delete('tracker_semantic_description', ['tracker_id' => $tracker_id]);
+    }
 }

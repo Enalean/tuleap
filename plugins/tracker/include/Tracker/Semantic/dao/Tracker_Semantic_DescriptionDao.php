@@ -21,15 +21,6 @@
 
 class Tracker_Semantic_DescriptionDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function delete($tracker_id)
-    {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $sql = "DELETE FROM tracker_semantic_description WHERE tracker_id = $tracker_id";
-
-        return $this->update($sql);
-    }
-
     public function getNbOfTrackerWithoutSemanticDescriptionDefined($trackers_id): int
     {
         $trackers_id = $this->da->escapeIntImplode($trackers_id);
