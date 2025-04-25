@@ -46,36 +46,31 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedGetters } from "vuex-composition-helpers";
 import { getUniqueId } from "../../../helpers/uniq-id-generator";
 import type { TimeScale } from "../../../type";
-import { namespace } from "vuex-class";
 
-const tasks = namespace("tasks");
+const { has_at_least_one_row_shown } = useNamespacedGetters("tasks", [
+    "has_at_least_one_row_shown",
+]);
 
-@Component
-export default class TimePeriodControl extends Vue {
-    @Prop({ required: true })
-    readonly value!: TimeScale;
+defineProps<{
+    value: TimeScale;
+}>();
 
-    @tasks.Getter
-    private readonly has_at_least_one_row_shown!: boolean;
+const emit = defineEmits<{
+    (e: "input", value: string | null): void;
+}>();
 
-    get id(): string {
-        return getUniqueId("roadmap-gantt-timescale");
-    }
+const id = computed(() => getUniqueId("roadmap-gantt-timescale"));
+const is_disabled = computed(() => !has_at_least_one_row_shown.value);
 
-    get is_disabled(): boolean {
-        return !this.has_at_least_one_row_shown;
-    }
-
-    updateTimePeriod(event: Event): void {
-        if (event.target instanceof HTMLSelectElement) {
-            const value: string | null = event.target.value;
-            this.$emit("input", value);
-        }
+function updateTimePeriod(event: Event): void {
+    if (event.target instanceof HTMLSelectElement) {
+        const value: string | null = event.target.value;
+        emit("input", value);
     }
 }
 </script>
