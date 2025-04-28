@@ -25,11 +25,10 @@ namespace Tuleap\Tracker\Semantic\Description;
 use Tracker_Semantic_DescriptionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Semantic_DescriptionDaoTest extends TestIntegrationTestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class DescriptionSemanticDAOTest extends TestIntegrationTestCase
 {
     private const TRACKER_ID = 60;
     private const FIELD_ID   = 2404;
