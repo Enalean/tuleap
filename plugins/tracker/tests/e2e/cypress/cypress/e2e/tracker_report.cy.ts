@@ -43,9 +43,9 @@ function getCriterionBlock(label: string): Cypress.Chainable<JQuery<HTMLLIElemen
     return cy.getContains("[data-test=report-criteria-item]", label).closest("li");
 }
 
-function createArtifactWithValues(): void {
+function createArtifactWithValues(now: number): void {
     cy.log("Create an artifact with all fields");
-    getFieldWithLabel("Title").find("[data-test-field-input]").type("Title A");
+    getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
     getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
     getFieldWithLabel("String").find("[data-test-field-input]").type("String A");
     getFieldWithLabel("Text").find("[data-test-cypress=text-area]").type("Description A");
@@ -71,6 +71,15 @@ function createArtifactWithValues(): void {
             .find("[data-test=artifact-permissions-selectbox]")
             .select(["Project members", "Integrators"]);
     });
+
+    cy.get("[data-test=artifact-submit-button]").click();
+    cy.get("[data-test=feedback]").contains("Artifact Successfully Created ");
+}
+
+function createArtifactWithListValues(now: number): void {
+    cy.log("Create an artifact with list fields");
+    getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
+    getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
 
     getFieldWithLabel("Selectbox static").within(() => {
         cy.searchItemInListPickerDropdown("Dos").click();
@@ -127,7 +136,7 @@ function createArtifactWithValues(): void {
     cy.get("[data-test=feedback]").contains("Artifact Successfully Created ");
 }
 
-function updateTrackerReportCriterias(): void {
+function updateTrackerReportCriterias(now: number): void {
     cy.intercept({
         method: "POST",
         url: "/plugins/tracker/*",
@@ -135,7 +144,10 @@ function updateTrackerReportCriterias(): void {
 
     cy.log("Update report in order to have a query for every field of artifact");
     cy.log("Update criteria Title");
-    getCriterionBlock("Title").find("[data-test=alphanum-report-criteria]").type("Title A");
+    getCriterionBlock("Title")
+        .find("[data-test=alphanum-report-criteria]")
+        .clear()
+        .type(`Title ${now}`);
 
     cy.log("Update criteria Description");
     getCriterionBlock("Description")
@@ -173,6 +185,24 @@ function updateTrackerReportCriterias(): void {
     getCriterionBlock("Permissions")
         .find("[data-test=permissions-report-criteria][multiple]")
         .select(["Project members", "Integrators"]);
+
+    cy.log("Search ");
+    cy.get("[data-test=submit-report-search]").click();
+    cy.get("[data-test=number-of-matching-artifacts]").should("contain", 1);
+}
+
+function updateTrackerReportListCriterias(now: number): void {
+    cy.intercept({
+        method: "POST",
+        url: "/plugins/tracker/*",
+    }).as("advancedToggle");
+
+    cy.log("Update report in order to have a query for every field of artifact");
+    cy.log("Update criteria Title");
+    getCriterionBlock("Title")
+        .find("[data-test=alphanum-report-criteria]")
+        .clear()
+        .type(`Title ${now}`);
 
     cy.log("Update criteria Selectbox static");
     getCriterionBlock("Selectbox static").find("[data-test=list-report-criteria]").select("Dos");
@@ -246,12 +276,27 @@ function updateTrackerReportCriterias(): void {
 }
 
 describe(`Tracker Report`, () => {
-    it(`Can submit an artifact with all fields`, function () {
+    let now: number;
+
+    beforeEach(() => {
+        now = Date.now();
+    });
+
+    it(`Can submit an artifact with some fields`, function () {
         cy.projectMemberSession();
         cy.visitProjectService("tracker-report", "Trackers");
-        cy.get("[data-test=tracker-link]").click();
+        cy.get("[data-test=tracker-link]").first().click();
         cy.get("[data-test=new-artifact]").click();
-        createArtifactWithValues();
-        updateTrackerReportCriterias();
+        createArtifactWithValues(now);
+        updateTrackerReportCriterias(now);
+    });
+
+    it(`Can submit an artifact with list fields`, function () {
+        cy.projectMemberSession();
+        cy.visitProjectService("tracker-report", "Trackers");
+        cy.get("[data-test=tracker-link]").last().click();
+        cy.get("[data-test=new-artifact]").click();
+        createArtifactWithListValues(now);
+        updateTrackerReportListCriterias(now);
     });
 });
