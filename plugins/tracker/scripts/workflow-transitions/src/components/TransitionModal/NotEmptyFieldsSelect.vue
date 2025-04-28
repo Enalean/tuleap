@@ -97,12 +97,9 @@ export default defineComponent({
     methods: {
         updateNotEmptyFields(event) {
             const select = event.target;
-            const selected_option = Array.from(select.options).filter((option) => {
-                return option.selected;
-            });
-            const values = selected_option.map((option) => {
-                return option.value;
-            });
+            const values = Array.from(select.options)
+                .filter((option) => option.selected)
+                .map((option) => Number.parseInt(option.value, 10));
 
             this.$store.commit("transitionModal/updateNotEmptyFieldIds", values);
         },
