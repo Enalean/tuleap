@@ -26,10 +26,10 @@ use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
-use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Semantic\Description\SearchTrackersWithoutDescriptionSemantic;
 use Tuleap\Tracker\Semantic\Title\SearchTrackersWithoutTitleSemantic;
 
 final class MetadataUsageChecker implements CheckMetadataUsage
@@ -42,7 +42,7 @@ final class MetadataUsageChecker implements CheckMetadataUsage
     public function __construct(
         private readonly Tracker_FormElementFactory $form_element_factory,
         private readonly SearchTrackersWithoutTitleSemantic $title_verifier,
-        private readonly Tracker_Semantic_DescriptionDao $description_dao,
+        private readonly SearchTrackersWithoutDescriptionSemantic $description_verifier,
         private readonly Tracker_Semantic_StatusDao $status_dao,
         private readonly Tracker_Semantic_ContributorDao $assigned_to_dao,
     ) {
@@ -105,7 +105,7 @@ final class MetadataUsageChecker implements CheckMetadataUsage
      */
     private function checkDescriptionIsUsedByAtLeastOneTracker(array $trackers_id): void
     {
-        $count = $this->description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($trackers_id);
+        $count = $this->description_verifier->countTrackersWithoutDescriptionSemantic($trackers_id);
         if ($count === count($trackers_id)) {
             throw new DescriptionIsMissingInAllTrackersException();
         }

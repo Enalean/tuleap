@@ -28,13 +28,13 @@ use Tracker;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
-use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Description\SearchTrackersWithoutDescriptionSemanticStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\SearchTrackersWithoutTitleSemanticStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -45,7 +45,7 @@ final class MetadataUsageCheckerTest extends TestCase
     private PFUser $user;
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private SearchTrackersWithoutTitleSemanticStub $title_verifier;
-    private Tracker_Semantic_DescriptionDao&MockObject $description_dao;
+    private SearchTrackersWithoutDescriptionSemanticStub $description_verifier;
     private Tracker_Semantic_StatusDao&MockObject $status_dao;
     private Tracker_Semantic_ContributorDao&MockObject $assigned_to;
     private Tracker $tracker_101;
@@ -63,7 +63,7 @@ final class MetadataUsageCheckerTest extends TestCase
 
         $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
         $this->title_verifier       = SearchTrackersWithoutTitleSemanticStub::withAllTrackersHaveTitle();
-        $this->description_dao      = $this->createMock(Tracker_Semantic_DescriptionDao::class);
+        $this->description_verifier = SearchTrackersWithoutDescriptionSemanticStub::withAllTrackersHaveDescription();
         $this->status_dao           = $this->createMock(Tracker_Semantic_StatusDao::class);
         $this->assigned_to          = $this->createMock(Tracker_Semantic_ContributorDao::class);
 
@@ -75,7 +75,7 @@ final class MetadataUsageCheckerTest extends TestCase
         $checker = new MetadataUsageChecker(
             $this->form_element_factory,
             $this->title_verifier,
-            $this->description_dao,
+            $this->description_verifier,
             $this->status_dao,
             $this->assigned_to
         );
@@ -98,14 +98,19 @@ final class MetadataUsageCheckerTest extends TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $this->title_verifier = SearchTrackersWithoutTitleSemanticStub::withTrackersThatDoNotHaveTitle(self::SECOND_TRACKER_ID);
+        $this->title_verifier = SearchTrackersWithoutTitleSemanticStub::withTrackersThatDoNotHaveTitle(
+            self::SECOND_TRACKER_ID
+        );
 
         $this->checkMetadata(new Metadata('title'));
     }
 
     public function testItShouldRaiseAnErrorIfThereIsNotSemanticDescriptionInTrackers(): void
     {
-        $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')->willReturn(2);
+        $this->description_verifier = SearchTrackersWithoutDescriptionSemanticStub::withTrackersThatDoNotHaveDescription(
+            self::FIRST_TRACKER_ID,
+            self::SECOND_TRACKER_ID
+        );
 
         $this->expectException(DescriptionIsMissingInAllTrackersException::class);
 
@@ -116,7 +121,9 @@ final class MetadataUsageCheckerTest extends TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')->willReturn(1);
+        $this->description_verifier = SearchTrackersWithoutDescriptionSemanticStub::withTrackersThatDoNotHaveDescription(
+            self::SECOND_TRACKER_ID
+        );
 
         $this->checkMetadata(new Metadata('description'));
     }
