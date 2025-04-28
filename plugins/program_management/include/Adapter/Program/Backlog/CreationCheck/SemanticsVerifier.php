@@ -28,13 +28,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIs
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyTimeframeIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\Tracker\Semantic\Description\SearchTrackersWithoutDescriptionSemantic;
 use Tuleap\Tracker\Semantic\Title\SearchTrackersWithoutTitleSemantic;
 
 final readonly class SemanticsVerifier implements VerifySemanticsAreConfigured
 {
     public function __construct(
         private SearchTrackersWithoutTitleSemantic $title_verifier,
-        private \Tracker_Semantic_DescriptionDao $semantic_description_dao,
+        private SearchTrackersWithoutDescriptionSemantic $description_verifier,
         private VerifyStatusIsAligned $status_verifier,
         private VerifyTimeframeIsAligned $timeframe_verifier,
     ) {
@@ -61,7 +62,7 @@ final readonly class SemanticsVerifier implements VerifySemanticsAreConfigured
                 return false;
             }
         }
-        if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
+        if ($this->description_verifier->countTrackersWithoutDescriptionSemantic($tracker_ids) > 0) {
             $this->buildSemanticError(
                 $configuration_errors,
                 $this->getProgramTrackersWithoutDescriptionDefined($source_tracker_collection),
@@ -131,7 +132,7 @@ final readonly class SemanticsVerifier implements VerifySemanticsAreConfigured
 
     private function getProgramTrackersWithoutDescriptionDefined(SourceTrackerCollection $source_tracker_collection): array
     {
-        $trackers_ids_without_title = $this->semantic_description_dao->getTrackerIdsWithoutSemanticDescriptionDefined(
+        $trackers_ids_without_title = $this->description_verifier->getTrackerIdsWithoutDescriptionSemantic(
             $source_tracker_collection->getSourceTrackerIds()
         );
 

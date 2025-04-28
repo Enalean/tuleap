@@ -271,6 +271,7 @@ use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
+use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
@@ -530,7 +531,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $synchronized_fields_builder,
             new SemanticsVerifier(
                 new TitleSemanticDAO(),
-                new \Tracker_Semantic_DescriptionDao(),
+                new DescriptionSemanticDAO(),
                 new StatusIsAlignedVerifier(
                     new Tracker_Semantic_StatusDao(),
                     $semantic_status_factory,
@@ -1526,7 +1527,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $synchronized_fields_builder,
             new SemanticsVerifier(
                 new TitleSemanticDAO(),
-                new \Tracker_Semantic_DescriptionDao(),
+                new DescriptionSemanticDAO(),
                 new StatusIsAlignedVerifier(
                     new Tracker_Semantic_StatusDao(),
                     $semantic_status_factory,

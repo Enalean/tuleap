@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\Semantic\Description\SearchTrackersWithoutDescriptionSemantic;
 
-final class DescriptionSemanticDAO extends DataAccessObject implements RetrieveDescriptionField
+final class DescriptionSemanticDAO extends DataAccessObject implements RetrieveDescriptionField, SearchTrackersWithoutDescriptionSemantic
 {
     public function searchByTrackerId(int $tracker_id): Option
     {
@@ -48,5 +50,28 @@ final class DescriptionSemanticDAO extends DataAccessObject implements RetrieveD
     public function deleteForTracker(int $tracker_id): void
     {
         $this->getDB()->delete('tracker_semantic_description', ['tracker_id' => $tracker_id]);
+    }
+
+    public function countTrackersWithoutDescriptionSemantic(array $tracker_ids): int
+    {
+        return count($this->getTrackerIdsWithoutDescriptionSemantic($tracker_ids));
+    }
+
+    public function getTrackerIdsWithoutDescriptionSemantic(array $tracker_ids): array
+    {
+        if ($tracker_ids === []) {
+            return [];
+        }
+        $in_statement = EasyStatement::open()->in('tracker.id IN (?*)', $tracker_ids);
+
+        $sql = <<<SQL
+        SELECT tracker.id
+        FROM tracker
+             LEFT JOIN tracker_semantic_description AS description
+        ON (tracker.id = description.tracker_id)
+        WHERE $in_statement AND description.tracker_id IS NULL
+        SQL;
+
+        return $this->getDB()->column($sql, $in_statement->values());
     }
 }
