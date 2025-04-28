@@ -23,48 +23,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElementFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ListFormElementTypeUpdaterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
     private const SIMPLE_LIST_ELEMENT_ID = 20000;
 
-    /**
-     * @var ListFormElementTypeUpdater
-     */
-    private $updater;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldDao
-     */
-    private $field_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BindDefaultValueDao
-     */
-    private $bind_default_value_dao;
+    private ListFormElementTypeUpdater $updater;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private FieldDao&MockObject $field_dao;
+    private BindDefaultValueDao&MockObject $bind_default_value_dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->form_element_factory   = Mockery::mock(\Tracker_FormElementFactory::instance());
-        $this->field_dao              = Mockery::mock(FieldDao::class);
-        $this->bind_default_value_dao = Mockery::mock(BindDefaultValueDao::class);
+        $this->form_element_factory   = $this->createMock(Tracker_FormElementFactory::class);
+        $this->field_dao              = $this->createMock(FieldDao::class);
+        $this->bind_default_value_dao = $this->createMock(BindDefaultValueDao::class);
 
         $this->updater = new ListFormElementTypeUpdater(
             new DBTransactionExecutorPassthrough(),
@@ -74,30 +59,18 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
-    }
-
     public function testItUpdatesFieldType(): void
     {
         $form_element = $this->getListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false);
-        $form_element->shouldReceive('getSharedTargets')
-            ->once()
-            ->andReturn([]);
+        $form_element->expects($this->once())->method('getSharedTargets')->willReturn([]);
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($form_element, 'msb')
-            ->andReturnTrue();
+        $this->field_dao->expects($this->once())->method('setType')->with($form_element, 'msb')->willReturn(true);
 
-        $this->form_element_factory->shouldReceive('clearElementFromCache')->once()->with($form_element);
-        $this->form_element_factory->shouldReceive('getFormElementById')
-            ->once()
-            ->with(self::SIMPLE_LIST_ELEMENT_ID)
-            ->andReturn($this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false));
+        $this->form_element_factory->expects($this->once())->method('clearElementFromCache')->with($form_element);
+        $this->form_element_factory->expects($this->once())->method('getFormElementById')->with(self::SIMPLE_LIST_ELEMENT_ID)
+            ->willReturn($this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false));
 
-        $this->bind_default_value_dao->shouldReceive('save')->never();
+        $this->bind_default_value_dao->expects($this->never())->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
 
@@ -110,22 +83,15 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItClearsDefaultValuesWhenFieldIsChangedFromMultipleToSimpleList(): void
     {
         $form_element = $this->getListFormElement(self::SIMPLE_LIST_ELEMENT_ID, true);
-        $form_element->shouldReceive('getSharedTargets')
-            ->once()
-            ->andReturn([]);
+        $form_element->expects($this->once())->method('getSharedTargets')->willReturn([]);
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($form_element, 'sb')
-            ->andReturnTrue();
+        $this->field_dao->expects($this->once())->method('setType')->with($form_element, 'sb')->willReturn(true);
 
-        $this->form_element_factory->shouldReceive('clearElementFromCache')->once()->with($form_element);
-        $this->form_element_factory->shouldReceive('getFormElementById')
-            ->once()
-            ->with(self::SIMPLE_LIST_ELEMENT_ID)
-            ->andReturn($this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false));
+        $this->form_element_factory->expects($this->once())->method('clearElementFromCache')->with($form_element);
+        $this->form_element_factory->expects($this->once())->method('getFormElementById')->with(self::SIMPLE_LIST_ELEMENT_ID)
+            ->willReturn($this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false));
 
-        $this->bind_default_value_dao->shouldReceive('save')->once()->with(self::SIMPLE_LIST_ELEMENT_ID, []);
+        $this->bind_default_value_dao->expects($this->once())->method('save')->with(self::SIMPLE_LIST_ELEMENT_ID, []);
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
 
@@ -138,12 +104,9 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionAndDoNotAskToUpdatesTargetFieldIfError(): void
     {
         $form_element = $this->getListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false);
-        $form_element->shouldNotReceive('getSharedTargets');
+        $form_element->expects($this->never())->method('getSharedTargets');
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($form_element, 'msb')
-            ->andReturnFalse();
+        $this->field_dao->expects($this->once())->method('setType')->with($form_element, 'msb')->willReturn(false);
 
         $this->expectException(FormElementTypeUpdateErrorException::class);
 
@@ -163,48 +126,27 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $target_field_02_id = 20002;
         $target_field_02    = $this->getListFormElement($target_field_02_id, false);
 
-        $form_element->shouldReceive('getSharedTargets')
-            ->once()
-            ->andReturn([
-                $target_field_01,
-                $target_field_02,
-            ]);
+        $form_element->expects($this->once())->method('getSharedTargets')
+            ->willReturn([$target_field_01, $target_field_02]);
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($form_element, 'msb')
-            ->andReturnTrue();
+        $this->field_dao->expects($this->exactly(3))->method('setType')
+            ->with(
+                self::callback(static fn(Tracker_FormElement_Field_List $field) => in_array($field, [$form_element, $target_field_01, $target_field_02])),
+                'msb',
+            )
+            ->willReturn(true);
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($target_field_01, 'msb')
-            ->andReturnTrue();
+        $this->form_element_factory->expects($this->exactly(3))->method('clearElementFromCache')
+            ->with(self::callback(static fn(Tracker_FormElement_Field_List $field) => in_array($field, [$form_element, $target_field_01, $target_field_02])));
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($target_field_02, 'msb')
-            ->andReturnTrue();
+        $this->form_element_factory->expects($this->exactly(3))->method('getFormElementById')
+            ->willReturnCallback(fn(int $id) => match ($id) {
+                self::SIMPLE_LIST_ELEMENT_ID => $this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false),
+                $target_field_01_id          => $this->getUpdatedListFormElement($target_field_01_id, false),
+                $target_field_02_id          => $this->getUpdatedListFormElement($target_field_02_id, false),
+            });
 
-        $this->form_element_factory->shouldReceive('clearElementFromCache')->once()->with($form_element);
-        $this->form_element_factory->shouldReceive('clearElementFromCache')->once()->with($target_field_01);
-        $this->form_element_factory->shouldReceive('clearElementFromCache')->once()->with($target_field_02);
-
-        $this->form_element_factory->shouldReceive('getFormElementById')
-            ->once()
-            ->with(self::SIMPLE_LIST_ELEMENT_ID)
-            ->andReturn($this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false));
-
-        $this->form_element_factory->shouldReceive('getFormElementById')
-            ->once()
-            ->with($target_field_01_id)
-            ->andReturn($this->getUpdatedListFormElement($target_field_01_id, false));
-
-        $this->form_element_factory->shouldReceive('getFormElementById')
-            ->once()
-            ->with($target_field_02_id)
-            ->andReturn($this->getUpdatedListFormElement($target_field_02_id, false));
-
-        $this->bind_default_value_dao->shouldReceive('save')->never();
+        $this->bind_default_value_dao->expects($this->never())->method('save');
 
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
 
@@ -224,42 +166,23 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $target_field_02_id = 20002;
         $target_field_02    = $this->getListFormElement($target_field_02_id, false);
 
-        $form_element->shouldReceive('getSharedTargets')
-            ->once()
-            ->andReturn([
-                $target_field_01,
-                $target_field_02,
-            ]);
+        $form_element->expects($this->once())->method('getSharedTargets')
+            ->willReturn([$target_field_01, $target_field_02]);
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($form_element, 'msb')
-            ->andReturnTrue();
+        $this->field_dao->expects($this->exactly(3))->method('setType')
+            ->with(self::anything(), 'msb')
+            ->willReturnCallback(static fn(Tracker_FormElement_Field_List $field) => $field !== $target_field_02);
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($target_field_01, 'msb')
-            ->andReturnTrue();
+        $this->form_element_factory->expects($this->exactly(2))->method('clearElementFromCache')
+            ->with(self::callback(static fn(Tracker_FormElement_Field_List $field) => in_array($field, [$form_element, $target_field_01])));
 
-        $this->field_dao->shouldReceive('setType')
-            ->once()
-            ->with($target_field_02, 'msb')
-            ->andReturnFalse();
+        $this->form_element_factory->expects($this->exactly(2))->method('getFormElementById')
+            ->willReturnCallback(fn(int $id) => match ($id) {
+                self::SIMPLE_LIST_ELEMENT_ID => $this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false),
+                $target_field_01_id          => $this->getUpdatedListFormElement($target_field_01_id, false),
+            });
 
-        $this->form_element_factory->shouldReceive('clearElementFromCache')->once()->with($form_element);
-        $this->form_element_factory->shouldReceive('clearElementFromCache')->once()->with($target_field_01);
-
-        $this->form_element_factory->shouldReceive('getFormElementById')
-            ->once()
-            ->with(self::SIMPLE_LIST_ELEMENT_ID)
-            ->andReturn($this->getUpdatedListFormElement(self::SIMPLE_LIST_ELEMENT_ID, false));
-
-        $this->form_element_factory->shouldReceive('getFormElementById')
-            ->once()
-            ->with($target_field_01_id)
-            ->andReturn($this->getUpdatedListFormElement($target_field_01_id, false));
-
-        $this->bind_default_value_dao->shouldReceive('save')->never();
+        $this->bind_default_value_dao->expects($this->never())->method('save');
 
         $this->expectException(FormElementTypeUpdateErrorException::class);
 
@@ -269,27 +192,21 @@ final class ListFormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface&Mockery\MockInterface&\Tracker_FormElement_Field_List
-     */
-    private function getListFormElement(int $element_id, bool $is_multiple)
+    private function getListFormElement(int $element_id, bool $is_multiple): Tracker_FormElement_Field_List&MockObject
     {
-        $mock = Mockery::mock(\Tracker_FormElement_Field_List::class);
-        $mock->shouldReceive('getId')->andReturn($element_id);
-        $mock->shouldReceive('isMultiple')->andReturn($is_multiple);
-        $mock->shouldReceive('changeType')->andReturnTrue();
+        $mock = $this->createMock(Tracker_FormElement_Field_List::class);
+        $mock->method('getId')->willReturn($element_id);
+        $mock->method('isMultiple')->willReturn($is_multiple);
+        $mock->method('changeType')->willReturn(true);
 
         return $mock;
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface&MockInterface&\Tracker_FormElement_Field_List
-     */
-    private function getUpdatedListFormElement(int $element_id, bool $is_multiple)
+    private function getUpdatedListFormElement(int $element_id, bool $is_multiple): Tracker_FormElement_Field_List&MockObject
     {
         $mock = $this->getListFormElement($element_id, $is_multiple);
-        $mock->shouldReceive('getFlattenPropertiesValues')->once()->andReturn([]);
-        $mock->shouldReceive('storeProperties')->once();
+        $mock->expects($this->once())->method('getFlattenPropertiesValues')->willReturn([]);
+        $mock->expects($this->once())->method('storeProperties');
 
         return $mock;
     }
