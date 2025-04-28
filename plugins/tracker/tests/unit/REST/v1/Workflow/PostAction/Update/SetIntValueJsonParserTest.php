@@ -19,31 +19,26 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SetIntValueJsonParser
-     */
-    private $parser;
+    private SetIntValueJsonParser $parser;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createParser()
+    public function createParser(): void
     {
         $this->parser = new SetIntValueJsonParser();
     }
 
-    public function testAcceptReturnsTrueWhenTypeMatches()
+    public function testAcceptReturnsTrueWhenTypeMatches(): void
     {
         $this->assertTrue($this->parser->accept([
             'type' => 'set_field_value',
@@ -51,12 +46,12 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         ]));
     }
 
-    public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
+    public function testAcceptReturnsFalseWhenTypeDoesNotMatch(): void
     {
         $this->assertFalse($this->parser->accept(['type' => 'run_job']));
     }
 
-    public function testAcceptReturnsFalseWhenFieldTypeDoesNotMatch()
+    public function testAcceptReturnsFalseWhenFieldTypeDoesNotMatch(): void
     {
         $this->assertFalse($this->parser->accept([
             'type' => 'set_field_value',
@@ -64,15 +59,15 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         ]));
     }
 
-    public function testAcceptReturnsFalseWithoutType()
+    public function testAcceptReturnsFalseWithoutType(): void
     {
         $this->assertFalse($this->parser->accept([]));
     }
 
-    public function testParseReturnsNewSetIntValueBasedOnGivenJson()
+    public function testParseReturnsNewSetIntValueBasedOnGivenJson(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $set_date_value  = $this->parser->parse(
             $workflow,
@@ -88,10 +83,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_action, $set_date_value);
     }
 
-    public function testParseWhenIdNotProvided()
+    public function testParseWhenIdNotProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $set_date_value  = $this->parser->parse(
             $workflow,
@@ -106,10 +101,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_action, $set_date_value);
     }
 
-    public function testParseReturnsNewSetIntValueWithoutIdWhenWorkflowIsNotAdvanced()
+    public function testParseReturnsNewSetIntValueWithoutIdWhenWorkflowIsNotAdvanced(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $set_date_value  = $this->parser->parse(
             $workflow,
@@ -125,10 +120,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_action, $set_date_value);
     }
 
-    public function testParseThrowsWhenNoFieldIdProvided()
+    public function testParseThrowsWhenNoFieldIdProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -142,10 +137,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsWhenFieldIdIsNull()
+    public function testParseThrowsWhenFieldIdIsNull(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -160,10 +155,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsWhenFieldIdIsNotInt()
+    public function testParseThrowsWhenFieldIdIsNotInt(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -178,10 +173,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsWhenNoValueProvided()
+    public function testParseThrowsWhenNoValueProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -195,10 +190,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsWhenValueIsNull()
+    public function testParseThrowsWhenValueIsNull(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -213,10 +208,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsWhenValueIsNotNumeric()
+    public function testParseThrowsWhenValueIsNotNumeric(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -231,10 +226,10 @@ class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsWhenValueIsFloat()
+    public function testParseThrowsWhenValueIsFloat(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);

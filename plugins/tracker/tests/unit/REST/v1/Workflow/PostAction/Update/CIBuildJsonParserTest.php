@@ -19,48 +19,44 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
-use Mockery;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var CIBuildJsonParser
-     */
-    private $parser;
+    private CIBuildJsonParser $parser;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createParser()
+    public function createParser(): void
     {
         $this->parser = new CIBuildJsonParser();
     }
 
-    public function testAcceptReturnsTrueWhenTypeMatches()
+    public function testAcceptReturnsTrueWhenTypeMatches(): void
     {
         $this->assertTrue($this->parser->accept(['type' => 'run_job']));
     }
 
-    public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
+    public function testAcceptReturnsFalseWhenTypeDoesNotMatch(): void
     {
         $this->assertFalse($this->parser->accept(['type' => 'set_date_value']));
     }
 
-    public function testAcceptReturnsFalseWithoutType()
+    public function testAcceptReturnsFalseWithoutType(): void
     {
         $this->assertFalse($this->parser->accept([]));
     }
 
-    public function testParseReturnsNewCIBuildBasedOnGivenJson()
+    public function testParseReturnsNewCIBuildBasedOnGivenJson(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $ci_build = $this->parser->parse(
             $workflow,
@@ -73,10 +69,10 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(new CIBuildValue('http://example.test'), $ci_build);
     }
 
-    public function testParseWhenIdNotProvided()
+    public function testParseWhenIdNotProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $ci_build = $this->parser->parse(
             $workflow,
@@ -88,10 +84,10 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(new CIBuildValue('http://example.test'), $ci_build);
     }
 
-    public function testParseReturnsNewCIBuildWithoutIdWhenWorkflowIsNotAdvanced()
+    public function testParseReturnsNewCIBuildWithoutIdWhenWorkflowIsNotAdvanced(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $ci_build = $this->parser->parse(
             $workflow,
@@ -104,20 +100,20 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(new CIBuildValue('http://example.test'), $ci_build);
     }
 
-    public function testParseThrowsWhenNoJobUrlProvided()
+    public function testParseThrowsWhenNoJobUrlProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
         $this->parser->parse($workflow, ['type' => 'run_job']);
     }
 
-    public function testParseThrowsWhenJobUrlIsNull()
+    public function testParseThrowsWhenJobUrlIsNull(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -130,10 +126,10 @@ class CIBuildJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsWhenJobUrlIsNotString()
+    public function testParseThrowsWhenJobUrlIsNotString(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);

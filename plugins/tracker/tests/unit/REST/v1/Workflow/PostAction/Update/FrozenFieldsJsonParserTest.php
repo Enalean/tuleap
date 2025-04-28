@@ -18,44 +18,40 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
-use Mockery;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var FrozenFieldsJsonParser
-     */
-    private $parser;
+    private FrozenFieldsJsonParser $parser;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createParser()
+    public function createParser(): void
     {
         $this->parser = new FrozenFieldsJsonParser();
     }
 
-    public function testAcceptReturnsTrueWhenTypeMatches()
+    public function testAcceptReturnsTrueWhenTypeMatches(): void
     {
         $this->assertTrue($this->parser->accept(['type' => 'frozen_fields']));
     }
 
-    public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
+    public function testAcceptReturnsFalseWhenTypeDoesNotMatch(): void
     {
         $this->assertFalse($this->parser->accept(['type' => 'set_date_value']));
     }
 
-    public function testParseReturnsNewFrozenFieldsValueBasedOnGivenJson()
+    public function testParseReturnsNewFrozenFieldsValueBasedOnGivenJson(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $frozen_fields_value = $this->parser->parse(
             $workflow,
@@ -69,10 +65,10 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_action, $frozen_fields_value);
     }
 
-    public function testParseWhenIdNotProvided()
+    public function testParseWhenIdNotProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $frozen_fields_value = $this->parser->parse(
             $workflow,
@@ -85,10 +81,10 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_action, $frozen_fields_value);
     }
 
-    public function testParseThrowsAnExceptionWhenNoFieldIdsProvided()
+    public function testParseThrowsAnExceptionWhenNoFieldIdsProvided(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -102,10 +98,10 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsAnExceptionWhenFieldIdsIsNull()
+    public function testParseThrowsAnExceptionWhenFieldIdsIsNull(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -120,10 +116,10 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsAnExceptionWhenFieldIdIsAnEmptyArray()
+    public function testParseThrowsAnExceptionWhenFieldIdIsAnEmptyArray(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -138,10 +134,10 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testParseThrowsAnExceptionWhenFieldIdIsNotAnArrayOfInt()
+    public function testParseThrowsAnExceptionWhenFieldIdIsNotAnArrayOfInt(): void
     {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -156,10 +152,10 @@ class FrozenFieldsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItThrowsAnExceptionIfWorkflowIsInAdvancedMode()
+    public function testItThrowsAnExceptionIfWorkflowIsInAdvancedMode(): void
     {
-        $workflow = \Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturnTrue();
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
 
         $this->expectException(IncompatibleWorkflowModeException::class);
         $this->parser->parse($workflow, ['type' => 'frozen_fields']);
