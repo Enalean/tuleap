@@ -22,40 +22,29 @@
     <div class="roadmap-gantt-today" v-bind:style="style" v-bind:title="title"></div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useState, useNamespacedGetters } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { getLeftForDate } from "../../helpers/left-postion";
-import type { TimePeriod } from "../../type";
-import { namespace, State } from "vuex-class";
-import type { DateTime } from "luxon";
 
-const timeperiod = namespace("timeperiod");
+const { interpolate, $gettext } = useGettext();
 
-@Component
-export default class TodayIndicator extends Vue {
-    @timeperiod.Getter
-    private readonly time_period!: TimePeriod;
+const { time_period } = useNamespacedGetters("timeperiod", ["time_period"]);
+const { now, locale_bcp47 } = useState(["now", "locale_bcp47"]);
 
-    @State
-    readonly now!: DateTime;
+const style = computed(() => {
+    const left = getLeftForDate(now.value, time_period.value);
+    return `left: ${left}px;`;
+});
 
-    @State
-    readonly locale_bcp47!: string;
-
-    get style(): string {
-        const left = getLeftForDate(this.now, this.time_period);
-        return `left: ${left}px;`;
-    }
-
-    get title(): string {
-        return this.$gettextInterpolate(this.$gettext("Today: %{ date }"), {
-            date: this.now.setLocale(this.locale_bcp47).toLocaleString({
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-            }),
-        });
-    }
-}
+const title = computed(() => {
+    return interpolate($gettext("Today: %{ date }"), {
+        date: now.value.setLocale(locale_bcp47.value).toLocaleString({
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        }),
+    });
+});
 </script>

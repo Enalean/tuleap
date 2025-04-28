@@ -19,69 +19,75 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-scrolling-area">
+    <div class="roadmap-gantt-scrolling-area" ref="scroll">
         <div class="roadmap-gantt-scrolling-area-empty-pixel" ref="empty_pixel" />
         <today-indicator ref="today" />
         <slot></slot>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, onMounted, watch, nextTick } from "vue";
 import TodayIndicator from "./TodayIndicator.vue";
-import type { TimePeriod, TimeScale } from "../../type";
-import { namespace } from "vuex-class";
+import type { TimeScale } from "../../type";
 
-const timeperiod = namespace("timeperiod");
+const props = defineProps<{
+    timescale: TimeScale;
+}>();
 
-@Component({
-    components: { TodayIndicator },
-})
-export default class ScrollingArea extends Vue {
-    override $refs!: {
-        today: TodayIndicator;
-        empty_pixel: HTMLElement;
-    };
+const emit = defineEmits<{
+    (e: "is_scrolling", is_scrolling: boolean): void;
+}>();
 
-    @timeperiod.Getter
-    private readonly time_period!: TimePeriod;
+const today = ref<InstanceType<typeof TodayIndicator> | null>(null);
+const empty_pixel = ref<HTMLElement | null>(null);
+const scroll = ref<HTMLElement | null>(null);
 
-    @Prop({ required: true })
-    readonly timescale!: TimeScale;
+const observer = ref<IntersectionObserver | null>(null);
 
-    private observer: IntersectionObserver | null = null;
+onMounted(() => {
+    autoscrollToToday();
 
-    mounted(): void {
-        this.autoscrollToToday();
+    observer.value = new IntersectionObserver(detectScrolling, {
+        root: scroll.value,
+    });
 
-        this.observer = new IntersectionObserver(this.detectScrolling, {
-            root: this.$el,
+    if (!empty_pixel.value) {
+        return;
+    }
+    observer.value.observe(empty_pixel.value);
+});
+
+watch(
+    () => props.timescale,
+    () => {
+        autoscrollToToday();
+    },
+);
+
+async function autoscrollToToday(): Promise<void> {
+    await nextTick();
+    const scroll_area = scroll.value;
+    if (scroll_area && today.value && today.value.$el instanceof HTMLElement) {
+        scroll_area.scrollTo({
+            top: 0,
+            left: Math.max(0, today.value.$el.offsetLeft - scroll_area.clientWidth / 2),
+            behavior: "smooth",
         });
-        this.observer.observe(this.$refs.empty_pixel);
-    }
-
-    @Watch("timescale")
-    async autoscrollToToday(): Promise<void> {
-        await this.$nextTick();
-        if (this.$el.scrollTo && this.$refs.today.$el instanceof HTMLElement) {
-            this.$el.scrollTo({
-                top: 0,
-                left: Math.max(0, this.$refs.today.$el.offsetLeft - this.$el.clientWidth / 2),
-                behavior: "smooth",
-            });
-        }
-    }
-
-    detectScrolling(entries: IntersectionObserverEntry[]): void {
-        const entry = entries.find((entry) => entry.target === this.$refs.empty_pixel);
-        if (!entry) {
-            return;
-        }
-
-        const is_scrolling = entry.isIntersecting === false;
-
-        this.$emit("is_scrolling", is_scrolling);
     }
 }
+
+function detectScrolling(entries: IntersectionObserverEntry[]): void {
+    const entry = entries.find((entry) => entry.target === empty_pixel.value);
+    if (!entry) {
+        return;
+    }
+
+    const is_scrolling = !entry.isIntersecting;
+    emit("is_scrolling", is_scrolling);
+}
+
+defineExpose({
+    empty_pixel,
+});
 </script>
