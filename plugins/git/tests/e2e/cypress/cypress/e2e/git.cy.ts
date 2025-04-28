@@ -269,6 +269,12 @@ describe("Git", function () {
                 cy.log("Integrators should be able to push content in devel branch");
                 cy.pushAndRebaseGitCommitInBranch(repository_name, "devel");
 
+                cy.log("Check that commit is visible in the tree view");
+                cy.projectMemberSession();
+                cy.visitProjectService(`git-fined-grained`, "Git");
+                cy.get("[data-test=git-repository-path]").click();
+                cy.get("[data-test=git-repository-tree-table]").should("contain.text", "README");
+
                 cy.log("Switch from Integrator to Contributor");
                 cy.deleteClone(repository_name);
                 cy.cloneRepository("ARegularUser", repository_path, repository_name);
