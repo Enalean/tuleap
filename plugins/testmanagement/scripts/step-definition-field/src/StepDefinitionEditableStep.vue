@@ -25,11 +25,11 @@
             v-bind:value="step.id"
         />
         <step-definition-actions
-            v-bind:value="description_format"
+            v-bind:value="step.description_format"
             v-bind:format_select_id="format_select_id"
             v-bind:is_in_preview_mode="is_in_preview_mode"
             v-bind:is_preview_loading="is_preview_loading"
-            v-on:input="toggleRTE"
+            v-on:input="$emit('toggle-rte', $event)"
             v-on:interpret-content-event="togglePreview"
         >
             <step-deletion-action-button-mark-as-deleted v-bind:step="step" />
@@ -37,7 +37,7 @@
         <input
             type="hidden"
             v-bind:name="'artifact[' + field_id + '][description_format][]'"
-            v-bind:value="description_format"
+            v-bind:value="step.description_format"
         />
         <textarea
             ref="description"
@@ -76,7 +76,7 @@
                 <input
                     type="hidden"
                     v-bind:name="'artifact[' + field_id + '][expected_results_format][]'"
-                    v-bind:value="description_format"
+                    v-bind:value="step.description_format"
                 />
                 <textarea
                     ref="expected_results"
@@ -142,6 +142,7 @@ export default {
             default: () => ({}),
         },
     },
+    emits: ["update-description", "update-expected-results", "toggle-rte"],
     data() {
         return {
             interpreted_description: "",
@@ -153,7 +154,6 @@ export default {
             editors: [],
             raw_description: this.step.raw_description,
             raw_expected_results: this.step.raw_expected_results,
-            description_format: this.step.description_format,
         };
     },
     computed: {
@@ -178,7 +178,7 @@ export default {
             return this.expected_results_id + "-help";
         },
         is_current_step_in_html_format() {
-            return this.description_format === TEXT_FORMAT_HTML;
+            return this.step.description_format === TEXT_FORMAT_HTML;
         },
         format_select_id() {
             return "format_" + this.step.uuid + "_" + this.field_id;
@@ -212,9 +212,6 @@ export default {
                 this.raw_expected_results = this.editors[0].getContent();
             }
         },
-        toggleRTE(event, value) {
-            this.description_format = value;
-        },
         areRTEEditorsSet() {
             return this.editors[0] && this.editors[1];
         },
@@ -233,7 +230,7 @@ export default {
 
             const options = {
                 format_selectbox_id: this.format_select_id,
-                format_selectbox_value: this.description_format,
+                format_selectbox_value: this.step.description_format,
                 getAdditionalOptions: (textarea) => getUploadImageOptions(textarea),
                 onFormatChange: (new_format) => {
                     if (help_block) {
@@ -251,9 +248,11 @@ export default {
         },
         updateDescription(event) {
             this.raw_description = event.target.value;
+            this.$emit("update-description", event);
         },
         updateExpectedResults(event) {
             this.raw_expected_results = event.target.value;
+            this.$emit("update-expected-results", event);
         },
         togglePreview() {
             this.is_preview_in_error = false;
@@ -266,8 +265,8 @@ export default {
 
             this.is_preview_loading = true;
             return Promise.all([
-                postInterpretCommonMark(this.raw_description),
-                postInterpretCommonMark(this.raw_expected_results),
+                postInterpretCommonMark(this.step.raw_description),
+                postInterpretCommonMark(this.step.raw_expected_results),
             ])
                 .then((interpreted_fields) => {
                     this.interpreted_description = interpreted_fields[0];
