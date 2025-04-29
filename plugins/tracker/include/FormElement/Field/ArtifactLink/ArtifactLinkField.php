@@ -1281,6 +1281,24 @@ class ArtifactLinkField extends Tracker_FormElement_Field
         );
     }
 
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
+        $value = $changeset->getValue($this);
+        if ($value === null) {
+            // There are maybe some reverse links or none, but we should at least display an empty value
+            $value = new ArtifactLinkChangesetValue(
+                0,
+                $changeset,
+                $this,
+                false,
+                [],
+                $this->getReverseLinks($changeset->getArtifact()->getId()),
+            );
+        }
+
+        return $value->getFullRESTValue($user);
+    }
+
     /**
      * @return array<int, Tracker_ArtifactLinkInfo>
      */
