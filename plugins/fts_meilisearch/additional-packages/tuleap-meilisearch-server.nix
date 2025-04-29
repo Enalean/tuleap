@@ -11,7 +11,7 @@ let
     targets = [ buildTargetRust ];
   };
   zigCC = pkgs.writeShellScriptBin "zigcc" ''
-    ${pkgs.zig}/bin/zig cc $@ -target ${baseArchTarget}-linux-musl
+    ${pkgs.zig}/bin/zig cc $@ -target ${baseArchTarget}-linux-musl -fno-sanitize=all
   '';
   tuleapMeilisearchBin = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "tuleap-meilisearch";

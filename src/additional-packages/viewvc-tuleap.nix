@@ -5,6 +5,13 @@
 
 let
   name = "viewvc-tuleap";
+  pkgsPython39 = import (pkgs.fetchFromGitHub {
+    name = "nixpkgs-with-python-39";
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "199169a2135e6b864a888e89a2ace345703c025d";
+    hash = "sha256-igS2Z4tVw5W/x3lCZeeadt0vcU9fxtetZ/RyrqsCRQ0=";
+  }) { };
 in pkgs.stdenvNoCC.mkDerivation {
   inherit name;
 
@@ -20,7 +27,10 @@ in pkgs.stdenvNoCC.mkDerivation {
     (./viewvc-tuleap/viewvc-tuleap.spec)
   ];
 
-  nativeBuildInputs = [ pkgs.rpm pkgs.python39 ];
+  nativeBuildInputs = [
+    pkgs.rpm
+    pkgsPython39.python39 # Same version than EL9
+  ];
 
   unpackPhase = ''
     runHook preUnpack
