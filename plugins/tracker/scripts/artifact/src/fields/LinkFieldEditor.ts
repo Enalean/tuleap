@@ -196,7 +196,8 @@ export const LinkFieldEditor = (
                 parent.classList.add("in-edition");
                 edition_switcher.toggleSubmitArtifactBar(
                     CKEDITOR.instances.tracker_followup_comment_new,
-                    document.getElementById("tracker_followup_comment_new"),
+                    document.querySelector("#rte_format_selectboxnew"),
+                    document.querySelector("#tracker_followup_comment_new"),
                     document,
                 );
             });

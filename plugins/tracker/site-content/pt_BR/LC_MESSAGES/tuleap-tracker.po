@@ -4169,6 +4169,9 @@ msgstr ""
 msgid "You are not allowed to update the field %1$s."
 msgstr ""
 
+msgid "You are not allowed to update this artifact"
+msgstr ""
+
 msgid "You are not logged in."
 msgstr ""
 

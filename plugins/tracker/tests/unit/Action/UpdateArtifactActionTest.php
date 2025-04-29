@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 use Codendi_Request;
 use EventManager;
+use Feedback;
 use PFUser;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
@@ -36,16 +37,28 @@ use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
+use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
+use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
+use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
+use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
+use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use function Psl\Json\encode as psl_json_encode;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class UpdateArtifactActionTest extends TestCase
@@ -69,6 +82,7 @@ final class UpdateArtifactActionTest extends TestCase
     private EventManager&MockObject $event_manager;
     private UpdateArtifactAction $action;
     private HiddenFieldsetsDetector&MockObject $hidden_fieldsets_detector;
+    private ArtifactReverseLinksUpdater $artifact_updater;
 
     protected function setUp(): void
     {
@@ -107,6 +121,11 @@ final class UpdateArtifactActionTest extends TestCase
         $this->event_manager             = $this->createMock(EventManager::class);
         $this->artifact_retriever        = $this->createMock(TypeIsChildLinkRetriever::class);
         $this->hidden_fieldsets_detector = $this->createMock(HiddenFieldsetsDetector::class);
+        $this->artifact_updater          = new ArtifactReverseLinksUpdater(
+            RetrieveReverseLinksStub::withoutLinks(),
+            new ReverseLinksToNewChangesetsConverter($this->formelement_factory, RetrieveViewableArtifactStub::withNoArtifact()),
+            CreateNewChangesetStub::withNullReturnChangeset(),
+        );
 
         $this->action = new UpdateArtifactAction(
             $this->task,
@@ -115,7 +134,13 @@ final class UpdateArtifactActionTest extends TestCase
             $this->artifact_retriever,
             $this->createMock(VisitRecorder::class),
             $this->hidden_fieldsets_detector,
-            CreateNewChangesetStub::withNullReturnChangeset(),
+            $this->artifact_updater,
+            ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+            new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([
+                ForwardLinkProxy::buildFromData(1, '_is_child'),
+                ForwardLinkProxy::buildFromData(2, ''),
+            ]))),
+            new TrackersPermissionsPassthroughRetriever(),
         );
     }
 
@@ -140,6 +165,7 @@ final class UpdateArtifactActionTest extends TestCase
         $this->setUpAjaxRequestHeaders();
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
         $this->formelement_factory->method('getComputableFieldByNameForUser')->with(self::TRACKER_ID, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->willReturn(null);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
 
         $expected = [];
         $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with($expected);
@@ -157,6 +183,7 @@ final class UpdateArtifactActionTest extends TestCase
                 103              => $this->us_computed_field,
             }
         );
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
 
         $user_story_id = $this->user_story->getId();
         $expected      = [$user_story_id => ['remaining_effort' => 23]];
@@ -173,6 +200,7 @@ final class UpdateArtifactActionTest extends TestCase
 
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($user_story);
         $this->formelement_factory->method('getComputableFieldByNameForUser')->willReturn(null);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
 
         $GLOBALS['Response']->expects($this->once())->method('sendJSON')->with([]);
 
@@ -183,6 +211,7 @@ final class UpdateArtifactActionTest extends TestCase
     {
         $this->setUpAjaxRequestHeaders();
         $this->formelement_factory->method('getComputableFieldByNameForUser')->with(self::TRACKER_ID, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->willReturn($this->computed_field);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(self::TRACKER_ID);
         $tracker->method('augmentDataFromRequest');
@@ -202,7 +231,10 @@ final class UpdateArtifactActionTest extends TestCase
             $this->artifact_retriever,
             $visit_recorder,
             $this->hidden_fieldsets_detector,
-            CreateNewChangesetStub::withNullReturnChangeset(),
+            $this->artifact_updater,
+            ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+            new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
+            new TrackersPermissionsPassthroughRetriever(),
         );
 
         $this->computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
@@ -228,6 +260,7 @@ final class UpdateArtifactActionTest extends TestCase
                 103              => $this->us_computed_field,
             }
         );
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
         $this->computed_field->method('isArtifactValueAutocomputed')->willReturn(false);
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($this->user_story);
         $this->computed_field->method('fetchCardValue')->with($this->task)->willReturn(42);
@@ -246,6 +279,7 @@ final class UpdateArtifactActionTest extends TestCase
     {
         $this->setUpAjaxRequestHeaders();
         $this->formelement_factory->method('getComputableFieldByNameForUser')->with(self::TRACKER_ID, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->willReturn($this->computed_field);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
         $this->computed_field->method('isArtifactValueAutocomputed')->willReturn(false);
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
         $this->computed_field->method('fetchCardValue')->with($this->task)->willReturn(42);
@@ -267,6 +301,7 @@ final class UpdateArtifactActionTest extends TestCase
                 110              => null,
             }
         );
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
         $tracker_user_story = TrackerTestBuilder::aTracker()->withId(110)->build();
         $user_story         = ArtifactTestBuilder::anArtifact(111)->inTracker($tracker_user_story)->build();
 
@@ -293,6 +328,7 @@ final class UpdateArtifactActionTest extends TestCase
     {
         $this->expectNotToPerformAssertions();
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
         $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
 
         $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
@@ -301,6 +337,7 @@ final class UpdateArtifactActionTest extends TestCase
     public function testItReturnsTheScriptTagIfRequestIsFromOverlay(): void
     {
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn($this->user_story);
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
         $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
 
         $from_overlay = $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
@@ -317,6 +354,7 @@ final class UpdateArtifactActionTest extends TestCase
                 103              => $this->us_computed_field,
             }
         );
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn(null);
         $this->hierarchy_factory->method('getParentArtifact')->with($this->user, $this->task)->willReturn(null);
         $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], $this->createMock(ProjectManager::class));
 
@@ -334,7 +372,10 @@ final class UpdateArtifactActionTest extends TestCase
             $this->artifact_retriever,
             $this->createMock(VisitRecorder::class),
             $this->hidden_fieldsets_detector,
-            CreateNewChangesetStub::withNullReturnChangeset(),
+            $this->artifact_updater,
+            ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+            new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
+            new TrackersPermissionsPassthroughRetriever(),
         );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
     }
@@ -386,5 +427,28 @@ final class UpdateArtifactActionTest extends TestCase
         $request_data = ['submit_and_stay' => true];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertUriHasArgument($redirect_uri->toUrl(), 'aid', (string) self::ARTIFACT_ID);
+    }
+
+    public function testItCanEditLinks(): void
+    {
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(645)
+            ->withSpecificProperty('can_edit_reverse_links', ['value' => 1])
+            ->build();
+        $this->formelement_factory->method('getAnArtifactLinkField')->willReturn($field);
+
+        $request = new Codendi_Request([
+            'func'     => 'artifact-update',
+            'artifact' => [
+                645 => psl_json_encode([
+                    'field_id'  => 645,
+                    'all_links' => [],
+                ]),
+            ],
+        ], $this->createMock(ProjectManager::class));
+
+        $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/tracker/?tracker=101');
+        $GLOBALS['Response']->method('addFeedback')->with(Feedback::INFO, self::stringContains('Successfully Updated'));
+
+        $this->action->process($this->layout, $request, $this->user);
     }
 }

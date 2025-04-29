@@ -50,7 +50,10 @@ final readonly class SubmittedValueConvertor
     }
 
     /**
-     * @return array The submitted value expurged from updated links
+     * @return array{
+     *     list_of_artifactlinkinfo: array<int, Tracker_ArtifactLinkInfo>,
+     *     ...<array-key, mixed>
+     * } The submitted value expurged from updated links
      */
     public function convert(
         array $submitted_value,
