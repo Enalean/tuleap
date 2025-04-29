@@ -21,10 +21,13 @@
 
 declare(strict_types=1);
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueEmptyChecker;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -447,8 +450,19 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                     return true;
                 }
             },
-            \Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build()
+            UserTestBuilder::anAnonymousUser()->build()
         );
+    }
+
+    public function testItReturnsARESTValueEventIfThereIsNone(): void
+    {
+        $field     = $this->createPartialMock(ArtifactLinkField::class, ['getValueDao']);
+        $value_dao = $this->createMock(ArtifactLinkFieldValueDao::class);
+        $field->expects($this->once())->method('getValueDao')->willReturn($value_dao);
+        $value_dao->method('searchReverseLinksById')->willReturn(TestHelper::emptyDar());
+        $changeset = ChangesetTestBuilder::aChangeset(98451)->build();
+        $changeset->setFieldValue($field);
+        self::assertNotNull($field->getFullRESTValue(UserTestBuilder::buildWithDefaults(), $changeset));
     }
 
     private function givenAChangesetValueWithArtifactIds(ArtifactLinkField $field, array $ids): Tracker_Artifact_Changeset
