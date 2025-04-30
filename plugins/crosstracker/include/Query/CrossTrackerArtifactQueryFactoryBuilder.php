@@ -135,7 +135,7 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
-use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
+use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use UGroupManager;

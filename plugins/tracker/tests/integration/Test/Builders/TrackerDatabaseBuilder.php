@@ -28,7 +28,7 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
+use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use Tuleap\Tracker\TrackerColor;
 use function Psl\Str\lowercase;

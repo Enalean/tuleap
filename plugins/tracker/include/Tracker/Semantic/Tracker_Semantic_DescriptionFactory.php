@@ -19,10 +19,10 @@
  */
 
 use Tuleap\Option\Option;
+use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
-use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
-use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetDescriptionSemantic

@@ -20,12 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic;
+namespace Tuleap\Tracker\Semantic\Description;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
-use Tuleap\Tracker\Semantic\Description\SearchTrackersWithoutDescriptionSemantic;
 
 final class DescriptionSemanticDAO extends DataAccessObject implements RetrieveDescriptionField, SearchTrackersWithoutDescriptionSemantic
 {

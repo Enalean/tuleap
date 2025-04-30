@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Option\Option;
-use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
+use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 
 class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {

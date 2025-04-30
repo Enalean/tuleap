@@ -271,7 +271,7 @@ use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
-use Tuleap\Tracker\Semantic\DescriptionSemanticDAO;
+use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
