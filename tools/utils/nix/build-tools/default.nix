@@ -12,6 +12,9 @@ in pkgs.mkShellNoCC {
   DO_NOT_TRACK = 1;
   STORYBOOK_DISABLE_TELEMETRY = 1;
 
+  # Disable require(esm) as it currently causes a cycle in our build system
+  NODE_OPTIONS = "--no-experimental-require-module";
+
   shellHook = ''
     export PATH="$PATH:$(pwd)/node_modules/.bin"
   '';
