@@ -53,6 +53,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
@@ -167,7 +168,8 @@ final class KanbanItemsResource extends AuthenticatedResource
                         $this->artifact_factory
                     )
                 ),
-                $artifact_link_initial_builder
+                $artifact_link_initial_builder,
+                TrackersPermissionsRetriever::build(),
             ),
             TrackerArtifactCreator::build(
                 new InitialChangesetCreator(

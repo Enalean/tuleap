@@ -134,6 +134,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
@@ -349,7 +350,8 @@ class CampaignsResource
                     $this->artifact_factory
                 )
             ),
-            $artifact_link_initial_builder
+            $artifact_link_initial_builder,
+            TrackersPermissionsRetriever::build(),
         );
 
         $usage_dao            = new ArtifactLinksUsageDao();

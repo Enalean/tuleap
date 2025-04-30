@@ -737,10 +737,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Return a value from user submitted request (if any) or from default value (if any)
-     *
-     * @return mixed
      */
-    protected function getValueFromSubmitOrDefault(array $submitted_values)
+    public function getValueFromSubmitOrDefault(array $submitted_values): mixed
     {
         $value = '';
         if (isset($submitted_values[$this->getId()])) {

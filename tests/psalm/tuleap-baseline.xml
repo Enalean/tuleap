@@ -3938,7 +3938,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$cardwall]]></code>
@@ -3981,7 +3980,6 @@
       <code><![CDATA[getPaneInfo]]></code>
       <code><![CDATA[importRendererFromXmlEvent]]></code>
       <code><![CDATA[isAgileDashboardOrTrackerUrl]]></code>
-      <code><![CDATA[isFieldUsedInASemanticEvent]]></code>
       <code><![CDATA[javascript]]></code>
       <code><![CDATA[javascript_file]]></code>
       <code><![CDATA[redirectToAgileDashboard]]></code>
@@ -15911,9 +15909,6 @@
       <code><![CDATA[$mode & 0x8000]]></code>
       <code><![CDATA[$mode & 0xA000]]></code>
     </InvalidOperand>
-    <InvalidReturnStatement>
-      <code><![CDATA[explode("\n", $this->data)]]></code>
-    </InvalidReturnStatement>
     <InvalidScalarArgument>
       <code><![CDATA[$count]]></code>
       <code><![CDATA[$skip]]></code>
@@ -21462,10 +21457,6 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-      <code><![CDATA[addChild]]></code>
-      <code><![CDATA[addChild]]></code>
       <code><![CDATA[addChild]]></code>
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
@@ -36406,15 +36397,6 @@
       <code><![CDATA[addType]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Events/IsFieldUsedInASemanticEvent.php">
-    <MissingParamType>
-      <code><![CDATA[$is_used]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getField]]></code>
-      <code><![CDATA[setIsUsed]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Events/SystemEvent_TRACKER_V3_MIGRATION.php">
     <MissingParamType>
       <code><![CDATA[$parameters]]></code>
@@ -39476,8 +39458,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$image]]></code>
       <code><![CDATA[$img]]></code>
-      <code><![CDATA[$is_used_in_semantics]]></code>
-      <code><![CDATA[$is_used_in_semantics]]></code>
       <code><![CDATA[$r]]></code>
       <code><![CDATA[$r]]></code>
       <code><![CDATA[$title]]></code>
@@ -45513,7 +45493,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[clearInstances]]></code>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[setInstance]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
@@ -45575,24 +45554,18 @@
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[retrieveFirstRow]]></code>
       <code><![CDATA[retrieveIds]]></code>
       <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$trackers_id]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[delete]]></code>
-      <code><![CDATA[save]]></code>
     </MissingReturnType>
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$row['nb']]]></code>
@@ -45626,32 +45599,6 @@
       <code><![CDATA[delete]]></code>
       <code><![CDATA[save]]></code>
       <code><![CDATA[searchByTrackerId]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidArrayAccess>
-      <code><![CDATA[$row['nb']]]></code>
-    </PossiblyInvalidArrayAccess>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/dao/Tracker_Semantic_TitleDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[retrieveIds]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[save]]></code>
     </MissingReturnType>
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$row['nb']]]></code>
@@ -49158,6 +49105,11 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/tracker/tests/unit/Test/Builders/Fields/DateFieldBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[setCacheSpecificProperties]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/tracker/tests/unit/Test/Builders/Fields/FieldBuilderWithSpecificProperties.php">
     <DeprecatedMethod>
       <code><![CDATA[setCacheSpecificProperties]]></code>
     </DeprecatedMethod>
@@ -57162,7 +57114,6 @@
       <code><![CDATA[$key]]></code>
     </InvalidOperand>
     <MissingParamType>
-      <code><![CDATA[$force_activation]]></code>
       <code><![CDATA[$group]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
@@ -57171,7 +57122,6 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$send_notifications]]></code>
       <code><![CDATA[$template_id]]></code>
       <code><![CDATA[$template_id]]></code>
       <code><![CDATA[$template_id]]></code>
@@ -57179,9 +57129,6 @@
       <code><![CDATA[$ugroup_mapping]]></code>
       <code><![CDATA[$ugroup_mapping]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$send_notifications]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[autoActivateProject]]></code>
       <code><![CDATA[fakeGroupIdIntoHTTPParams]]></code>
@@ -57397,9 +57344,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[export]]></code>
-      <code><![CDATA[exportPlugins]]></code>
-      <code><![CDATA[exportProjectUgroup]]></code>
-      <code><![CDATA[exportProjectUgroups]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[$rng_path]]></code>
@@ -57424,9 +57368,6 @@
     </TypeDoesNotContainNull>
   </file>
   <file src="src/common/Project/ProjectXMLImporter.php">
-    <MissingDocblockType>
-      <code><![CDATA[private $project_manager;]]></code>
-    </MissingDocblockType>
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
       <code><![CDATA[$extraction_path]]></code>

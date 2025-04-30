@@ -27,6 +27,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FloatFieldBuilder
 {
+    use FieldBuilderWithSpecificProperties;
+
     private string $name                        = 'float';
     private ?\PFUser $user_with_read_permission = null;
     private bool $read_permission               = false;
@@ -35,6 +37,7 @@ final class FloatFieldBuilder
     private function __construct(private readonly int $id)
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
+        $this->withSpecificProperty('default_value', ['value' => 0]);
     }
 
     public static function aFloatField(int $id): self
@@ -78,6 +81,7 @@ final class FloatFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
+        $this->setSpecificProperties($field);
         if ($this->user_with_read_permission !== null) {
             $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
         }
