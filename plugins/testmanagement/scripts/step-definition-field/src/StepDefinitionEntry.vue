@@ -21,15 +21,21 @@
     <div class="ttm-definition-step" data-test="editable-step">
         <step-definition-draggable-component
             v-show="is_dragging"
-            v-bind:step="step"
+            v-bind:step="reactive_step"
             v-bind:dynamic_rank="dynamic_rank"
         />
         <div v-show="!is_dragging" class="ttm-definition-step-rank ttm-execution-step-rank-edition">
             {{ dynamic_rank }}
         </div>
         <div v-show="!is_dragging" class="ttm-definition-step-description">
-            <step-definition-marked-as-deleted v-if="step.is_deleted" v-bind:step="step" />
-            <step-definition-editable-step v-if="!step.is_deleted" v-bind:step="step" />
+            <step-definition-marked-as-deleted v-if="step.is_deleted" v-bind:step="reactive_step" />
+            <step-definition-editable-step
+                v-if="!reactive_step.is_deleted"
+                v-bind:step="reactive_step"
+                v-on:update-description="updateDescription"
+                v-on:update-expected-results="updateExpectedResults"
+                v-on:toggle-rte="toggleRTE"
+            />
         </div>
     </div>
 </template>
@@ -57,8 +63,24 @@ export default {
             required: true,
         },
     },
+    data() {
+        return {
+            reactive_step: this.step,
+        };
+    },
     computed: {
         ...mapState(["is_dragging"]),
+    },
+    methods: {
+        updateDescription(event) {
+            this.reactive_step.raw_description = event.target.value;
+        },
+        updateExpectedResults(event) {
+            this.reactive_step.raw_expected_results = event.target.value;
+        },
+        toggleRTE(event) {
+            this.reactive_step.description_format = event.target.value;
+        },
     },
 };
 </script>
