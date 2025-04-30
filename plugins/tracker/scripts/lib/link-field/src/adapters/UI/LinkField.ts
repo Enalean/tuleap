@@ -237,7 +237,9 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
                 ontype-changed="${onLinkTypeChanged}"
             ></tuleap-tracker-link-type-selector>
         </span>
-        <div class="link-field-add-link-input">${host.link_selector}</div>
+        <div class="link-field-add-link-input" data-test="link-field-add-link-input">
+            ${host.link_selector}
+        </div>
     </div>`;
 };
 

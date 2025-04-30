@@ -106,6 +106,7 @@
         <formElement type="art_link" ID="F5134" rank="3" id="5134" tracker_id="232" parent_id="0">
           <name><![CDATA[linked_issues]]></name>
           <label><![CDATA[Linked Issues]]></label>
+          <properties can_edit_reverse_links="1"/>
         </formElement>
       </formElements>
       <semantics>
