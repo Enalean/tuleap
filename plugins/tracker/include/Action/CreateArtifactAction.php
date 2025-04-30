@@ -18,27 +18,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Action;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use PFUser;
+use Tracker;
+use Tracker_Artifact_Redirect;
+use Tracker_ArtifactFactory;
+use Tracker_Exception;
+use Tracker_FormElementFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_IFetchTrackerSwitcher;
 use Tuleap\JSONHeader;
 use Tuleap\Option\Option;
+use Tuleap\Request\RequestTime;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
+use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
+use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
+use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 
-class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class CreateArtifactAction
 {
     public function __construct(
         private readonly Tracker $tracker,
         private readonly TrackerArtifactCreator $artifact_creator,
         private readonly Tracker_ArtifactFactory $artifact_factory,
         private readonly Tracker_FormElementFactory $formelement_factory,
+        private readonly VerifySubmissionPermissions $submission_permissions,
+        private readonly ArtifactLinker $artifact_linker,
+        private readonly ParentInHierarchyRetriever $parent_retriever,
     ) {
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    /**
+     * @throws SemanticNotSupportedException
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactLinkFieldDoesNotExistException
+     * @throws FieldValidationException
+     * @throws Tracker_Exception
+     */
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
     {
-        if ($this->tracker->userCanSubmitArtifact($current_user)) {
+        if ($this->submission_permissions->canUserSubmitArtifact($current_user, $this->tracker)) {
             $this->processCreate($layout, $request, $current_user);
         } else {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
@@ -46,11 +81,18 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
     }
 
-    private function processCreate(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    /**
+     * @throws ArtifactDoesNotExistException
+     * @throws SemanticNotSupportedException
+     * @throws FieldValidationException
+     * @throws ArtifactLinkFieldDoesNotExistException
+     * @throws Tracker_Exception
+     */
+    private function processCreate(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
     {
         $link     = (int) $request->get('link-artifact-id');
-        $artifact = $this->createArtifact($layout, $request, $current_user);
-        if ($artifact) {
+        $artifact = $this->createArtifact($request, $current_user);
+        if ($artifact !== null) {
             $this->associateImmediatelyIfNeeded($artifact, $request, $current_user);
             $this->redirect($request, $current_user, $artifact);
         }
@@ -59,12 +101,15 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
     }
 
     /**
-     * Add an artefact in the tracker
+     * Add an artifact in the tracker
      *
-     * @param Codendi_Request                $request
-     * @param PFUser                         $user
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactLinkFieldDoesNotExistException
+     * @throws SemanticNotSupportedException
+     * @throws Tracker_Exception
+     * @throws FieldValidationException
      */
-    private function createArtifact(Tracker_IDisplayTrackerLayout $layout, $request, $user): ?Artifact
+    private function createArtifact(Codendi_Request $request, PFUser $user): ?Artifact
     {
         $fields_data = $request->get('artifact');
         if (! isset($fields_data['request_method_called'])) {
@@ -77,15 +122,15 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
             $this->tracker,
             new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
             $user,
-            \Tuleap\Request\RequestTime::getTimestamp(),
+            RequestTime::getTimestamp(),
             true,
             true,
-            new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext(),
+            new NullChangesetValidationContext(),
             false,
         );
     }
 
-    protected function associateImmediatelyIfNeeded(Artifact $new_artifact, \Codendi_Request $request, PFUser $current_user): void
+    protected function associateImmediatelyIfNeeded(Artifact $new_artifact, Codendi_Request $request, PFUser $current_user): void
     {
         $link_artifact_id   = (int) $request->get('link-artifact-id');
         $is_immediate       = (bool) $request->get('immediate');
@@ -100,20 +145,22 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
             return;
         }
 
-        $source_artifact->linkArtifact(
-            $new_artifact->getId(),
+        $this->artifact_linker->linkArtifact(
+            $source_artifact,
+            new CollectionOfForwardLinks([
+                ForwardLinkProxy::buildFromData($new_artifact->getId(), $artifact_link_type ?: ArtifactLinkField::NO_TYPE),
+            ]),
             $current_user,
-            $artifact_link_type ?: ArtifactLinkField::NO_TYPE
         );
     }
 
-    private function redirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact)
+    private function redirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact): void
     {
         $redirect = $this->getRedirect($request, $current_user, $artifact);
         $this->executeRedirect($request, $artifact, $redirect);
     }
 
-    private function getRedirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact)
+    private function getRedirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact): Tracker_Artifact_Redirect
     {
         $redirect = $this->redirectUrlAfterArtifactSubmission($request, $this->tracker->getId(), $artifact->getId());
         $this->redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
@@ -121,7 +168,7 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $redirect;
     }
 
-    private function executeRedirect(Codendi_Request $request, Artifact $artifact, Tracker_Artifact_Redirect $redirect)
+    private function executeRedirect(Codendi_Request $request, Artifact $artifact, Tracker_Artifact_Redirect $redirect): void
     {
         if ($request->isAjax()) {
             header(JSONHeader::getHeaderForPrototypeJS(['aid' => $artifact->getId()]));
@@ -137,7 +184,7 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
     }
 
-    private function isFromOverlay(Codendi_Request $request)
+    private function isFromOverlay(Codendi_Request $request): bool
     {
         if ($request->existAndNonEmpty('link-artifact-id') && ! $request->exist('immediate')) {
             return true;
@@ -151,23 +198,26 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         Tracker_Artifact_Redirect $redirect,
         Codendi_Request $request,
     ): void {
-        $parent_tracker = $this->tracker->getParent();
-        if ($parent_tracker && count($artifact->getAllAncestors($current_user)) == 0) {
-            $art_link = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
+        $this->parent_retriever->getParentTracker($this->tracker)->apply(
+            function (Tracker $parent_tracker) use ($artifact, $current_user, $redirect, $request) {
+                if (count($artifact->getAllAncestors($current_user)) === 0) {
+                    $art_link = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
 
-            if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
-                $art_link_key               = 'artifact[' . $art_link->getId() . '][new_values]';
-                $art_link_type              = 'artifact[' . $art_link->getId() . '][type]';
-                $redirect_params            = [
-                    'tracker'      => (string) $parent_tracker->getId(),
-                    'func'         => 'new-artifact',
-                    $art_link_key  => (string) $artifact->getId(),
-                    $art_link_type => urlencode(ArtifactLinkField::TYPE_IS_CHILD),
-                ];
-                $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
-                $redirect->query_parameters = $redirect_params;
+                    if ($art_link !== null && $this->isParentCreationRequested($request, $current_user)) {
+                        $art_link_key               = 'artifact[' . $art_link->getId() . '][new_values]';
+                        $art_link_type              = 'artifact[' . $art_link->getId() . '][type]';
+                        $redirect_params            = [
+                            'tracker'      => (string) $parent_tracker->getId(),
+                            'func'         => 'new-artifact',
+                            $art_link_key  => (string) $artifact->getId(),
+                            $art_link_type => urlencode(ArtifactLinkField::TYPE_IS_CHILD),
+                        ];
+                        $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
+                        $redirect->query_parameters = $redirect_params;
+                    }
+                }
             }
-        }
+        );
     }
 
     private function isParentCreationRequested(Codendi_Request $request, PFUser $current_user): bool
@@ -188,7 +238,7 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return false;
     }
 
-    protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id)
+    protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, int $tracker_id, int $artifact_id): Tracker_Artifact_Redirect
     {
         $redirect           = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;
@@ -207,7 +257,7 @@ class Tracker_Action_CreateArtifact // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $redirect;
     }
 
-    private function calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue)
+    private function calculateRedirectParams(int $tracker_id, int $artifact_id, $stay, $continue): array
     {
         $redirect_params            = [];
         $redirect_params['tracker'] = $tracker_id;
