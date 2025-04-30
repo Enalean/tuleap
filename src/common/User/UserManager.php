@@ -571,10 +571,11 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         }
     }
 
-    protected function destroySession()
+    protected function destroySession(): void
     {
         $session = new Codendi_Session();
         $session->destroy();
+        (new \Tuleap\CSRF\CSRFSessionKeyCookieStorage($this->getCookieManager()))->clearStorage();
     }
 
     /**
@@ -659,6 +660,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
 
     private function openWebSession(PFUser $user): void
     {
+        $this->destroySession();
+
         $session_manager    = $this->getSessionManager();
         $request            = HTTPRequest::instance();
         $session_identifier = $session_manager->createSession($user, $request, $request->getFromServer('REQUEST_TIME'));
@@ -668,7 +671,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $session_identifier,
             $this->getExpireTimestamp($user)
         );
-        PHP_Session::regenerateID();
 
         $this->markReleaseNoteAsSeenTheFirstTimeTheWebSessionIsOpened($user);
     }

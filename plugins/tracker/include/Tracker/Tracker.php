@@ -726,7 +726,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                             }
                             $GLOBALS['Response']->redirect($form_element_admin_url);
                         } else {
-                            Tracker_FormElementFactory::instance()->displayAdminCreateFormElement($layout, $request, $current_user, $type, $this);
+                            Tracker_FormElementFactory::instance()->displayAdminCreateFormElement($layout, $request, $type, $this);
                             exit;
                         }
                     }

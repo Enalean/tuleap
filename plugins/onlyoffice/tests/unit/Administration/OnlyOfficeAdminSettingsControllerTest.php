@@ -32,6 +32,8 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -57,13 +59,12 @@ final class OnlyOfficeAdminSettingsControllerTest extends TestCase
 
     private static function buildController(AdminPageRenderer $admin_page_renderer, \PFUser $current_user): OnlyOfficeAdminSettingsController
     {
-        $csrf_store = [];
         return new OnlyOfficeAdminSettingsController(
             $admin_page_renderer,
             ProvideCurrentUserStub::buildWithUser($current_user),
             new OnlyOfficeAdminSettingsPresenter(
                 [OnlyOfficeServerPresenter::fromServer(DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://onlyoffice.example.com/', new ConcealedString('123456')))],
-                CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store)),
+                CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub())),
             ),
             new IncludeViteAssets(__DIR__ . '/../frontend-assets/', '/assets/onlyoffice'),
         );

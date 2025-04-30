@@ -45,7 +45,11 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
         $this->cookie_manager = $this->createMock(CookieManager::class);
         $this->plugin_loader  = $this->createMock(PluginLoader::class);
 
-        $this->loader_scheduler = new LoaderScheduler($this->cookie_manager, $this->plugin_loader);
+        $this->loader_scheduler = new LoaderScheduler(
+            $this->cookie_manager,
+            $this->plugin_loader,
+            new \Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub(),
+        );
     }
 
     #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]

@@ -49,14 +49,14 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
         $this->label = $label;
     }
 
-    public function display(TrackerManager $tracker_manager, HTTPRequest $request): void
+    public function display(TrackerManager $tracker_manager, HTTPRequest $request, ?CSRFSynchronizerToken $csrf_token = null): void
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = 'Create a new ' . $this->label;
         $url   = TRACKER_BASE_URL . '/?tracker=' . (int) $this->element->getTracker()->getId() . '&amp;func=admin-formElements&amp;create-formElement[' .  $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) . ']=1';
 
         $form_content  = $this->fetchForm();
-        $form_content .= $this->element->getCSRFTokenForElementUpdate()->fetchHTMLInput();
+        $form_content .= ($csrf_token ?? $this->element->getCSRFTokenForElementUpdate())->fetchHTMLInput();
 
         $this->displayForm($tracker_manager, $request, $url, $title, $form_content);
     }

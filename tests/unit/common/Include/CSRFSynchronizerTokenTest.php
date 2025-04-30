@@ -18,34 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
+
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\TemporaryTestDirectory;
 
-    /**
-     * @var array
-     */
-    private $storage;
-
-    protected function setUp(): void
-    {
-        $this->storage = [];
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['_SESSION']);
-    }
-
     public function testItVerifiesIfATokenIsValid(): void
     {
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
         $token      = $csrf_token->getToken();
 
@@ -57,14 +47,16 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $csrf_token_creator = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
         $token              = $csrf_token_creator->getToken();
 
         $csrf_token_verifier = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
         self::assertTrue($csrf_token_verifier->isValid($token));
     }
@@ -74,7 +66,8 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $csrf_token_1 = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
         $token        = $csrf_token_1->getToken();
 
@@ -83,7 +76,8 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $csrf_token_2 = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
         self::assertTrue($csrf_token_2->isValid($token));
     }
@@ -93,7 +87,8 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
         self::assertFalse($csrf_token->isValid('invalid_token'));
     }
@@ -105,7 +100,8 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
 
         $request = $this->createMock(\Codendi_Request::class);
@@ -122,7 +118,8 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
 
         $request = $this->createMock(\Codendi_Request::class);
@@ -139,7 +136,8 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
 
         $request = $this->createMock(\Codendi_Request::class);
@@ -155,38 +153,13 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $token1 = new CSRFSynchronizerToken(
             '/path/to/uri/1',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
+            new CSRFSigningKeyStorageStub(),
+            new CSRFSessionKeyStorageStub(),
         );
 
         self::assertEquals(
             '<input type="hidden" name="' . CSRFSynchronizerToken::DEFAULT_TOKEN_NAME . '" value="' . $token1->getToken() . '" />',
             $token1->fetchHTMLInput()
         );
-    }
-
-    public function testItLimitsTheNumberOfStoredCSRFTokens(): void
-    {
-        $first_token           = new CSRFSynchronizerToken(
-            'first_token_created',
-            CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
-        );
-        $first_token_challenge = $first_token->getToken();
-
-        for ($i = 0; $i < CSRFSynchronizerToken::MAX_TOKEN_PER_STORAGE * 2; $i++) {
-            new CSRFSynchronizerToken('/' . $i, CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, $this->storage);
-        }
-
-        self::assertCount(
-            CSRFSynchronizerToken::MAX_TOKEN_PER_STORAGE,
-            $this->storage[CSRFSynchronizerToken::STORAGE_PREFIX],
-        );
-
-        $token = new CSRFSynchronizerToken(
-            'first_token_created',
-            CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
-            $this->storage
-        );
-        self::assertFalse($token->isValid($first_token_challenge));
     }
 }

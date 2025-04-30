@@ -262,7 +262,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     {
         $func = (string) $request->get('func');
         if ($func === Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW) {
-            $this->displayAdminFormElement($layout, $request, $current_user);
+            $this->displayAdminFormElement($layout, $request);
             return;
         }
 
@@ -439,11 +439,8 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
-     * @param PFUser                           $current_user    The user who mades the request
-     *
-     * @return void
      */
-    public function displayAdminFormElement(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    public function displayAdminFormElement(Tracker_IDisplayTrackerLayout $layout, $request, ?CSRFSynchronizerToken $csrf_token = null): void
     {
         $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
         if ($this->isTargetSharedField()) {
@@ -459,7 +456,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
             );
         }
         $this->accept($visitor);
-        $visitor->display($layout, $request);
+        $visitor->display($layout, $request, $csrf_token);
     }
 
     public function setFormElementFactory(Tracker_FormElementFactory $factory)

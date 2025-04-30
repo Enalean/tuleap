@@ -32,6 +32,8 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -51,24 +53,22 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
+    private \CSRFSynchronizerToken $csrf_token;
 
     protected function setUp(): void
     {
         $this->presenter_builder = $this->createMock(AppsPresenterBuilder::class);
         $this->user_manager      = $this->createMock(\UserManager::class);
+        $this->csrf_token        = new \CSRFSynchronizerToken('apps', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
         $this->controller        = new AccountAppsController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             $this->presenter_builder,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->user_manager,
+            new \CSRFSynchronizerToken('apps', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub()),
             $this->createMock(EmitterInterface::class)
         );
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['_SESSION']);
     }
 
     public function testHandleForbidsAnonymousUsers(): void
@@ -84,7 +84,7 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
         $this->user_manager->expects($this->once())->method('getCurrentUser')->willReturn($user);
-        $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
+        $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken($this->csrf_token);
 
         $this->presenter_builder->expects($this->once())->method('build')
             ->with($user, self::isInstanceOf(CSRFSynchronizerTokenPresenter::class))

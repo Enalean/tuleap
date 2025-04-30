@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\CSRF\CSRFSessionKeyStorage;
+use Tuleap\CSRF\CSRFSigningKeyStorage;
+
 /**
  *
  *
@@ -42,24 +45,15 @@
  */
 class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInterface // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const DEFAULT_TOKEN_NAME    = 'challenge';
-    public const STORAGE_PREFIX        = 'synchronizer_token';
-    public const MAX_TOKEN_PER_STORAGE = 4096;
+    public const DEFAULT_TOKEN_NAME = 'challenge';
 
     /**
-     * @var string a pseudorandom generated token
+     * @psalm-var SensitiveParameterValue<non-empty-string>|null
      */
-    private $token;
+    private ?SensitiveParameterValue $token = null;
 
-    /**
-     * @var string the name of the token (to retrieve in the request)
-     */
-    private $token_name;
-
-    /**
-     * @var array Storage used to keep CSRF tokens
-     */
-    private $storage;
+    private readonly CSRFSigningKeyStorage $signing_key_storage;
+    private readonly CSRFSessionKeyStorage $session_key_storage;
 
     /**
      * Generate a token for the $url
@@ -72,25 +66,21 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
      * @see https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29
      *
      * @param string $url         The url of the page. The token is uniq for (url, user session)
-     * @param string $token_name  The name of the token in the request. default is 'challenge'
-     * @param array|null $storage Storage used to keep CSRF tokens, $_SESSION is used by default
      */
-    public function __construct(public readonly string $url, $token_name = self::DEFAULT_TOKEN_NAME, &$storage = null)
-    {
-        $this->token_name = $token_name;
-
-        if ($storage === null) {
-            $this->storage =& $_SESSION;
-        } else {
-            $this->storage =& $storage;
+    public function __construct(
+        public readonly string $url,
+        private readonly string $token_name = self::DEFAULT_TOKEN_NAME,
+        ?\Tuleap\CSRF\CSRFSigningKeyStorage $signing_key_storage = null,
+        ?\Tuleap\CSRF\CSRFSessionKeyStorage $session_key_storage = null,
+    ) {
+        if ($signing_key_storage === null) {
+            $signing_key_storage = new \Tuleap\CSRF\CSRFSigningKeyDBStorage(new \Tuleap\Config\ConfigDao());
         }
-
-        if (isset($this->storage[self::STORAGE_PREFIX][$this->url])) {
-            $this->token = $this->storage[self::STORAGE_PREFIX][$this->url]['token'];
+        $this->signing_key_storage = $signing_key_storage;
+        if ($session_key_storage === null) {
+            $session_key_storage = new \Tuleap\CSRF\CSRFSessionKeyCookieStorage(new \Tuleap\CookieManager());
         }
-        if (! $this->token) {
-            $this->generateToken();
-        }
+        $this->session_key_storage = $session_key_storage;
     }
 
     /**
@@ -107,7 +97,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
             return false;
         }
 
-        return hash_equals($this->token, $token);
+        return \hash_equals($this->getToken(), $token);
     }
 
     /**
@@ -147,45 +137,21 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
 
     public function getToken(): string
     {
-        return $this->token;
+        if ($this->token !== null) {
+            return $this->token->getValue();
+        }
+        $this->token = new \SensitiveParameterValue(
+            \hash_hmac(
+                'sha256',
+                $this->session_key_storage->getSessionKey() . ':' . $this->url,
+                $this->signing_key_storage->getSigningKey()->getString()
+            )
+        );
+        return $this->token->getValue();
     }
 
     public function getTokenName(): string
     {
         return $this->token_name;
-    }
-
-    private function generateToken()
-    {
-        $random_number_generator                         = new RandomNumberGenerator();
-        $this->token                                     = $random_number_generator->getNumber();
-        $this->storage[self::STORAGE_PREFIX][$this->url] = [
-            'token'   => $this->token,
-            'created' => time(),
-        ];
-        $this->recycleTokens();
-    }
-
-    /**
-     * We enforce a limit on the number of CSRF tokens stored in the storage
-     * by removing the oldest ones first.
-     * We do this to avoid an unnecessary bloating of the storage capacity.
-     */
-    private function recycleTokens()
-    {
-        if (self::MAX_TOKEN_PER_STORAGE > count($this->storage[self::STORAGE_PREFIX])) {
-            return;
-        }
-
-        uasort(
-            $this->storage,
-            function ($token_1, $token_2) {
-                return $token_1['created'] - $token_2['created'];
-            }
-        );
-
-        while (count($this->storage[self::STORAGE_PREFIX]) > self::MAX_TOKEN_PER_STORAGE) {
-            array_shift($this->storage[self::STORAGE_PREFIX]);
-        }
     }
 }

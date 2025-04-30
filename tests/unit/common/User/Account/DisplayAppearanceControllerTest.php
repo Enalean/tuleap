@@ -33,6 +33,8 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\User\Account\Appearance\AppearancePresenterBuilder;
 use Tuleap\User\Account\Appearance\AppearancePresenter;
 
@@ -58,8 +60,7 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $GLOBALS['Language']->method('gettext')->with('system', 'datefmt_short')->willReturn('d/m/Y');
 
         $this->appearance_builder = $this->createMock(AppearancePresenterBuilder::class);
-        $csrf_storage             = [];
-        $this->csrf_token         = new CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage);
+        $this->csrf_token         = new CSRFSynchronizerToken('some_url', 'token_name', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
 
         $this->controller = new DisplayAppearanceController(
             $event_manager,

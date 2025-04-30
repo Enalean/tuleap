@@ -500,6 +500,7 @@ final class oauth2_serverPlugin extends Plugin
             ),
             TemplateRendererFactory::build(),
             UserManager::instance(),
+            AccountAppsController::getCSRFToken(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION)
         );

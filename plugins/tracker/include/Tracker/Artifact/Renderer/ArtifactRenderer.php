@@ -153,7 +153,7 @@ abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.Cl
 
     public function fetchArtifactForm($html): string
     {
-        $csrf_token = new CSRFSynchronizerToken($this->tracker->getUri(), CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, $_SESSION['tracker_csrf']);
+        $csrf_token = new CSRFSynchronizerToken($this->tracker->getUri());
         return '
         <form action="' . $this->redirect->toUrl() . '" method="POST" enctype="multipart/form-data" class="artifact-form">
             ' . $csrf_token->fetchHTMLInput() . $html . '

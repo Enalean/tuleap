@@ -30,6 +30,8 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -74,7 +76,6 @@ final class MeilisearchAdminSettingsControllerTest extends TestCase
     {
         $key = $is_local_server ? new ConcealedString('a') : null;
 
-        $csrf_store = [];
         return new MeilisearchAdminSettingsController(
             new class ($key) implements IProvideCurrentKeyForLocalServer {
                 public function __construct(private ?ConcealedString $key)
@@ -92,7 +93,7 @@ final class MeilisearchAdminSettingsControllerTest extends TestCase
                 'https://meilisearch.example.com/',
                 true,
                 'fts_tuleap',
-                CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store))
+                CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub()))
             )
         );
     }

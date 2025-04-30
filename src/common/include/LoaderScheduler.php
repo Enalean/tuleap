@@ -21,12 +21,15 @@
 use Tuleap\CookieManager;
 use Tuleap\Plugin\PluginLoader;
 
-class LoaderScheduler
+final readonly class LoaderScheduler
 {
     public const FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION = 'TULEAP_DISABLE_AUTO_SESSION_START';
 
-    public function __construct(private CookieManager $cookie_manager, private PluginLoader $plugin_loader)
-    {
+    public function __construct(
+        private CookieManager $cookie_manager,
+        private PluginLoader $plugin_loader,
+        private \Tuleap\CSRF\CSRFSessionKeyStorage $csrf_session_key_storage,
+    ) {
     }
 
     public function loadPluginsThenStartSession($is_script, array $server): void
@@ -48,5 +51,7 @@ class LoaderScheduler
         PHP_Session::start();
         $GLOBALS['session_hash'] = $this->cookie_manager->isCookie('session_hash') ?
             $this->cookie_manager->getCookie('session_hash') : false;
+        // Force the CSRF session key initialization early
+        $this->csrf_session_key_storage->getSessionKey();
     }
 }

@@ -31,6 +31,8 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
+use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -71,11 +73,10 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             }
         };
 
-        $csrf_storage     = [];
         $this->controller = new DisplayAccountInformationController(
             $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            new CSRFSynchronizerToken('some_url', 'token_name', $csrf_storage)
+            new CSRFSynchronizerToken('some_url', 'token_name', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub())
         );
 
         $language = $this->createStub(\BaseLanguage::class);
