@@ -1173,6 +1173,10 @@ class PullRequestsResource extends AuthenticatedResource
             BypassBrokenGitReferenceCheck::check()
         )->getAccessiblePullRequestWithGitReferenceForCurrentUser($pull_request_id, $user);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
+        $git_repository                  = $this->getRepository($pull_request->getRepositoryId());
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $git_repository->getProject()
+        );
 
         $comment_dao         = new CommentDao();
         $comment_retriever   = new CommentRetriever($comment_dao);
