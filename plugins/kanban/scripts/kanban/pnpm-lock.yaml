@@ -86,9 +86,6 @@ dependencies:
   moment:
     specifier: ^2.29.4
     version: 2.29.4
-  ng-scrollbar:
-    specifier: 0.0.7
-    version: 0.0.7
   socket.io-client:
     specifier: ^4.6.2
     version: 4.7.5
@@ -284,10 +281,6 @@ packages:
 
   /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
-    dev: false
-
-  /ng-scrollbar@0.0.7:
-    resolution: {integrity: sha1-te8H+PjkfWK2IQIUpdpgCcJVvPM=}
     dev: false
 
   /socket.io-client@4.7.5:

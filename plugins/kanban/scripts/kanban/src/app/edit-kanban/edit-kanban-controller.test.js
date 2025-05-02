@@ -65,7 +65,6 @@ describe("EditKanbanController", () => {
         modal_instance = {
             tlp_modal: { hide: jest.fn() },
         };
-        const rebuild_scrollbars = angular.noop;
 
         jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue({
             id: 8,
@@ -84,7 +83,6 @@ describe("EditKanbanController", () => {
             KanbanService,
             FilterTrackerReportService,
             modal_instance,
-            rebuild_scrollbars,
         });
     });
 

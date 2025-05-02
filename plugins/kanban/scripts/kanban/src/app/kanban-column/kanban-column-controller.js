@@ -22,7 +22,6 @@ import { element } from "angular";
 export default KanbanColumnController;
 
 KanbanColumnController.$inject = [
-    "$rootScope",
     "$scope",
     "$element",
     "DroppedService",
@@ -32,7 +31,6 @@ KanbanColumnController.$inject = [
 ];
 
 function KanbanColumnController(
-    $rootScope,
     $scope,
     $element,
     DroppedService,
@@ -44,7 +42,6 @@ function KanbanColumnController(
     self.appending_item = false;
     self.cancelDrag = cancelDrag;
     self.dragularOptions = dragularOptions;
-    self.isColumnLoadedAndEmpty = isColumnLoadedAndEmpty;
     self.slugifyLabel = slugifyLabel;
 
     function dragularOptions() {
@@ -136,8 +133,6 @@ function KanbanColumnController(
         }
 
         KanbanColumnService.moveItem(dropped_item, source_column, target_column, compared_to);
-
-        reflowKustomScrollBars();
     }
 
     function droppedToTheSameColumn(source_column, target_column) {
@@ -146,14 +141,6 @@ function KanbanColumnController(
 
     function getColumnId(html_element) {
         return html_element.data("column-id");
-    }
-
-    function isColumnLoadedAndEmpty() {
-        return !self.column.loading_items && self.column.content.length === 0;
-    }
-
-    function reflowKustomScrollBars() {
-        $rootScope.$broadcast("rebuild:kustom-scroll");
     }
 
     function cancelDrag() {
