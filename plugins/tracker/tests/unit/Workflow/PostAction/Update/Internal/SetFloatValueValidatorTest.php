@@ -18,64 +18,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var SetFloatValueValidator */
-    private $set_float_value_validator;
-    /** @var PostActionFieldIdValidator | Mockery\MockInterface */
-    private $field_id_validator;
-    /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
-    private $form_element_factory;
+    private SetFloatValueValidator $set_float_value_validator;
+    private PostActionFieldIdValidator&MockObject $field_id_validator;
+    private \Tracker_FormElementFactory&MockObject $form_element_factory;
 
     protected function setUp(): void
     {
-        $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
-        $this->field_id_validator->shouldReceive('validate')->byDefault();
+        $this->field_id_validator = $this->createMock(PostActionFieldIdValidator::class);
+        $this->field_id_validator->method('validate');
 
-        $this->form_element_factory      = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->form_element_factory      = $this->createMock(\Tracker_FormElementFactory::class);
         $this->set_float_value_validator = new SetFloatValueValidator(
             $this->field_id_validator,
             $this->form_element_factory
         );
     }
 
-    public function testValidateDoesNotThrowWhenValid()
+    public function testValidateDoesNotThrowWhenValid(): void
     {
         $this->expectNotToPerformAssertions();
 
-        $float_field       = Mockery::mock(\Tracker_FormElement_Field_Float::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
-        $other_float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->getMock();
+        $float_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $float_field
+            ->method('getId')
+            ->willReturn(1);
+        $other_float_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $other_float_field
+            ->method('getId')
+            ->willReturn(2);
         $this->form_element_factory
-            ->shouldReceive('getUsedFormElementsByType')
-            ->with(Mockery::any(), 'float')
-            ->andReturn([$float_field, $other_float_field]);
+            ->method('getUsedFormElementsByType')
+            ->with($this->anything(), 'float')
+            ->willReturn([$float_field, $other_float_field]);
 
         $first_float_value  = new SetFloatValue(1, 12.0);
         $second_float_value = new SetFloatValue(2, 42.1);
 
         $this->set_float_value_validator->validate(
-            Mockery::mock(\Tracker::class),
+            $this->createMock(\Tracker::class),
             $first_float_value,
             $second_float_value
         );
     }
 
-    public function testValidateWrapsDuplicateFieldIdException()
+    public function testValidateWrapsDuplicateFieldIdException(): void
     {
         $this->set_float_value_validator = new SetFloatValueValidator(
             new PostActionFieldIdValidator(),
@@ -87,28 +83,28 @@ class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidPostActionException::class);
         $this->set_float_value_validator->validate(
-            Mockery::mock(\Tracker::class),
+            $this->createMock(\Tracker::class),
             $first_same_field_id,
             $second_same_field_id
         );
     }
 
-    public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFloatField()
+    public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFloatField(): void
     {
-        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
+        $float_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $float_field
+            ->method('getId')
+            ->willReturn(1);
         $this->form_element_factory
-            ->shouldReceive('getUsedFormElementsByType')
-            ->with(Mockery::any(), 'float')
-            ->andReturn([$float_field]);
+            ->method('getUsedFormElementsByType')
+            ->with($this->anything(), 'float')
+            ->willReturn([$float_field]);
 
         $invalid_field_id = new SetFloatValue(8, 0.0);
 
         $this->expectException(InvalidPostActionException::class);
         $this->set_float_value_validator->validate(
-            Mockery::mock(\Tracker::class),
+            $this->createMock(\Tracker::class),
             $invalid_field_id
         );
     }

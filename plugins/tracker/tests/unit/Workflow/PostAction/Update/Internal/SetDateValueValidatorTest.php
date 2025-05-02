@@ -18,93 +18,89 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetDateValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetDateValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var SetDateValueValidator */
-    private $set_date_value_validator;
-    /** @var PostActionFieldIdValidator | Mockery\MockInterface */
-    private $field_id_validator;
-    /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
-    private $form_element_factory;
+    private SetDateValueValidator $set_date_value_validator;
+    private PostActionFieldIdValidator&MockObject $field_id_validator;
+    private \Tracker_FormElementFactory&MockObject $form_element_factory;
 
     protected function setUp(): void
     {
-        $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
-        $this->field_id_validator->shouldReceive('validate')->byDefault();
+        $this->field_id_validator = $this->createMock(PostActionFieldIdValidator::class);
+        $this->field_id_validator->method('validate');
 
-        $this->form_element_factory     = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->form_element_factory     = $this->createMock(\Tracker_FormElementFactory::class);
         $this->set_date_value_validator = new SetDateValueValidator(
             $this->field_id_validator,
             $this->form_element_factory
         );
     }
 
-    public function testValidateDoesNotThrowWhenValid()
+    public function testValidateDoesNotThrowWhenValid(): void
     {
         $this->expectNotToPerformAssertions();
 
-        $date_field       = Mockery::mock(\Tracker_FormElement_Field_Date::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
-        $other_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class)
-            ->shouldReceive('getId')
-            ->andReturn(2)
-            ->getMock();
+        $date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $date_field
+            ->method('getId')
+            ->willReturn(1);
+        $other_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $other_date_field
+            ->method('getId')
+            ->willReturn(2);
         $this->form_element_factory
-            ->shouldReceive('getUsedCustomDateFields')
-            ->andReturn([$date_field, $other_date_field]);
+            ->method('getUsedCustomDateFields')
+            ->willReturn([$date_field, $other_date_field]);
 
         $first_date_value  = new SetDateValue(1, 0);
         $second_date_value = new SetDateValue(2, 0);
 
         $this->set_date_value_validator->validate(
-            Mockery::mock(\Tracker::class),
+            $this->createMock(\Tracker::class),
             $first_date_value,
             $second_date_value
         );
     }
 
-    public function testValidateWrapsDuplicateFieldIdException()
+    public function testValidateWrapsDuplicateFieldIdException(): void
     {
         $first_same_field_id  = new SetDateValue(1, 0);
         $second_same_field_id = new SetDateValue(1, 2);
-        $this->field_id_validator->shouldReceive('validate')
+        $this->field_id_validator->method('validate')
             ->with($first_same_field_id, $second_same_field_id)
-            ->andThrow(new DuplicateFieldIdException());
+            ->willThrowException(new DuplicateFieldIdException());
 
         $this->expectException(InvalidPostActionException::class);
 
         $this->set_date_value_validator->validate(
-            Mockery::mock(\Tracker::class),
+            $this->createMock(\Tracker::class),
             $first_same_field_id,
             $second_same_field_id
         );
     }
 
-    public function testValidateThrowsWhenFieldIdDoesNotMatchADateField()
+    public function testValidateThrowsWhenFieldIdDoesNotMatchADateField(): void
     {
-        $date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class)
-            ->shouldReceive('getId')
-            ->andReturn(1)
-            ->getMock();
+        $date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $date_field
+            ->method('getId')
+            ->willReturn(1);
         $this->form_element_factory
-            ->shouldReceive('getUsedCustomDateFields')
-            ->andReturn([$date_field]);
+            ->method('getUsedCustomDateFields')
+            ->willReturn([$date_field]);
 
         $invalid_field_id = new SetDateValue(8, 0);
 
         $this->expectException(InvalidPostActionException::class);
 
-        $this->set_date_value_validator->validate(Mockery::mock(\Tracker::class), $invalid_field_id);
+        $this->set_date_value_validator->validate($this->createMock(\Tracker::class), $invalid_field_id);
     }
 }

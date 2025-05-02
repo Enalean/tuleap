@@ -1241,7 +1241,6 @@
             <file name="plugins/tracker/tests/unit/Workflow/PostAction/Update/Internal/SetIntValueUpdaterTest.php"/>
             <file name="plugins/tracker/tests/unit/Workflow/PostAction/Update/Internal/SetIntValueValidatorTest.php"/>
             <file name="plugins/tracker/tests/unit/Workflow/PostAction/Update/PostActionCollectionUpdaterTest.php"/>
-            <file name="plugins/tracker/tests/unit/Workflow/PostAction/Update/TransitionFactory.php"/>
             <file name="plugins/tracker/tests/unit/Workflow/SimpleMode/SimpleWorkflowXMLExporterTest.php"/>
             <file name="plugins/tracker/tests/unit/Workflow/SimpleMode/State/TransitionCreatorTest.php"/>
             <file name="plugins/tracker/tests/unit/Workflow/SimpleMode/State/TransitionExtractorTest.php"/>

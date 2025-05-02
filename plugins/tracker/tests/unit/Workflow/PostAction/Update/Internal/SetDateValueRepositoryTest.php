@@ -19,37 +19,29 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\MockObject\MockObject;
+use Transition;
 use Transition_PostAction_Field_DateDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private SetDateValueRepository $set_date_value_repository;
 
-    /**
-     * @var SetDateValueRepository
-     */
-    private $set_date_value_repository;
-
-    /**
-     * @var MockInterface
-     */
-    private $set_date_value_dao;
+    private Transition_PostAction_Field_DateDao&MockObject $set_date_value_dao;
 
     #[Before]
-    public function createRepository()
+    public function createRepository(): void
     {
-        $this->set_date_value_dao = Mockery::mock(Transition_PostAction_Field_DateDao::class);
+        $this->set_date_value_dao = $this->createMock(Transition_PostAction_Field_DateDao::class);
 
         $this->set_date_value_repository = new SetDateValueRepository(
             $this->set_date_value_dao,
@@ -57,28 +49,28 @@ class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreateCreatesGivenSetDateValueOnGivenTransition()
+    public function testCreateCreatesGivenSetDateValueOnGivenTransition(): void
     {
-        $this->set_date_value_dao->shouldReceive('create')
+        $this->set_date_value_dao->expects($this->atLeast(1))->method('create')
             ->with(1)
-            ->andReturn(9)
-            ->atLeast()->once();
-        $this->set_date_value_dao->shouldReceive('updatePostAction')
-            ->with(9, 43, 1)
-            ->atLeast()->once();
+            ->willReturn(9);
+        $this->set_date_value_dao->expects($this->atLeast(1))->method('updatePostAction')
+            ->with(9, 43, 1);
 
-        $transition     = TransitionFactory::buildATransitionWithId(1);
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
         $set_date_value = new SetDateValue(43, 1);
 
         $this->set_date_value_repository->create($transition, $set_date_value);
     }
 
-    public function testCreateThrowsWhenCreationFail()
+    public function testCreateThrowsWhenCreationFail(): void
     {
-        $this->set_date_value_dao->shouldReceive('create')
-            ->andReturn(false);
+        $this->set_date_value_dao->method('create')
+            ->willReturn(false);
 
-        $transition     = TransitionFactory::buildATransition();
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
         $set_date_value = new SetDateValue(43, 1);
 
         $this->expectException(DataAccessQueryException::class);
@@ -86,25 +78,26 @@ class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_date_value_repository->create($transition, $set_date_value);
     }
 
-    public function testDeleteDeletesByTransitionId()
+    public function testDeleteDeletesByTransitionId(): void
     {
-        $this->set_date_value_dao->shouldReceive('deletePostActionsByTransitionId')
+        $this->set_date_value_dao->expects($this->atLeast(1))->method('deletePostActionsByTransitionId')
             ->with(1)
-            ->andReturn(true)
-            ->atLeast()->once()->atLeast()->once();
+            ->willReturn(true);
 
-        $transition = TransitionFactory::buildATransitionWithId(1);
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
 
         $this->set_date_value_repository->deleteAllByTransition($transition);
     }
 
-    public function testDeleteThrowsWhenDeletionFails()
+    public function testDeleteThrowsWhenDeletionFails(): void
     {
-        $this->set_date_value_dao->shouldReceive('deletePostActionsByTransitionId')
+        $this->set_date_value_dao->method('deletePostActionsByTransitionId')
             ->with(1)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $transition = TransitionFactory::buildATransitionWithId(1);
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
 
         $this->expectException(DataAccessQueryException::class);
 

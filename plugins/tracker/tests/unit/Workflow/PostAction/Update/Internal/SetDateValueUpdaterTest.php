@@ -19,116 +19,107 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Transition;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
+use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SetDateValueUpdater
-     */
-    private $updater;
-    /**
-     * @var MockInterface
-     */
-    private $set_date_value_repository;
-    /**
-     * @var MockInterface
-     */
-    private $validator;
-    /**
-     * @var MockInterface
-     */
-    private $tracker;
+    private SetDateValueUpdater $updater;
+    private SetDateValueRepository&MockObject $set_date_value_repository;
+    private SetDateValueValidator&MockObject $validator;
+    private Tracker $tracker;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createUpdater()
+    public function createUpdater(): void
     {
-        $this->set_date_value_repository = Mockery::mock(SetDateValueRepository::class);
-        $this->set_date_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->byDefault();
-        $this->tracker   = Mockery::mock(\Tracker::class);
-        $this->validator = Mockery::mock(SetDateValueValidator::class);
-        $this->updater   = new SetDateValueUpdater($this->set_date_value_repository, $this->validator);
+        $this->set_date_value_repository = $this->createMock(SetDateValueRepository::class);
+        $this->tracker                   = TrackerTestBuilder::aTracker()->build();
+        $this->validator                 = $this->createMock(SetDateValueValidator::class);
+        $this->updater                   = new SetDateValueUpdater($this->set_date_value_repository, $this->validator);
     }
 
-    public function testUpdateAddsNewSetDateValueActions()
+    public function testUpdateAddsNewSetDateValueActions(): void
     {
-        $transition   = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
+
         $added_action = new SetDateValue(43, 1);
         $actions      = new PostActionCollection($added_action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $added_action);
 
-        $this->set_date_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $added_action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_date_value_repository->method('deleteAllByTransition');
+        $this->set_date_value_repository->expects($this->once())
+            ->method('create')
+            ->with($transition, $added_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeletesAndCreatesSetDateValueActionsWhichAlreadyExists()
+    public function testUpdateDeletesAndCreatesSetDateValueActionsWhichAlreadyExists(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $updated_action = new SetDateValue(43, 1);
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $updated_action);
 
-        $this->set_date_value_repository
-            ->shouldReceive('deleteAllByTransition')
+        $this->set_date_value_repository->expects($this->once())
+            ->method('deleteAllByTransition')
             ->with($transition)
-            ->andReturnTrue()
-            ->atLeast()->once();
+            ->willReturn(true);
 
-        $this->set_date_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $updated_action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_date_value_repository->expects($this->once())
+            ->method('create')
+            ->with($transition, $updated_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeletesRemovedSetDateValueActions()
+    public function testUpdateDeletesRemovedSetDateValueActions(): void
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
 
         $action  = new SetDateValue(43, 1);
         $actions = new PostActionCollection($action);
 
         $this->validator
-            ->shouldReceive('validate')
+            ->method('validate')
             ->with($this->tracker, $action);
 
-        $this->set_date_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->with($transition)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_date_value_repository->expects($this->once())
+            ->method('deleteAllByTransition')
+            ->with($transition);
 
-        $this->set_date_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $action)
-            ->andReturns()
-            ->atLeast()->once();
+        $this->set_date_value_repository->expects($this->once())
+            ->method('create')
+            ->with($transition, $action);
 
         $this->updater->updateByTransition($actions, $transition);
     }

@@ -19,82 +19,77 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\MockObject\MockObject;
+use Transition;
 use Transition_PostAction_CIBuildDao;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CIBuildRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CIBuildRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private CIBuildValueRepository $ci_build_repository;
 
-    /**
-     * @var CIBuildValueRepository
-     */
-    private $ci_build_repository;
-
-    /**
-     * @var MockInterface
-     */
-    private $ci_build_dao;
+    private Transition_PostAction_CIBuildDao&MockObject $ci_build_dao;
 
     #[Before]
-    public function createRepository()
+    public function createRepository(): void
     {
-        $this->ci_build_dao        = Mockery::mock(Transition_PostAction_CIBuildDao::class);
+        $this->ci_build_dao        = $this->createMock(Transition_PostAction_CIBuildDao::class);
         $this->ci_build_repository = new CIBuildValueRepository($this->ci_build_dao);
     }
 
-    public function testCreateCreatesGivenCIBuildOnGivenTransition()
+    public function testCreateCreatesGivenCIBuildOnGivenTransition(): void
     {
-        $this->ci_build_dao->shouldReceive('create')
+        $this->ci_build_dao->expects($this->atLeast(1))->method('create')
             ->with(1, 'http://added-ci-url.test')
-            ->andReturn(9)
-            ->atLeast()->once();
+            ->willReturn(9);
 
-        $transition = TransitionFactory::buildATransitionWithId(1);
-        $ci_build   = new CIBuildValue('http://added-ci-url.test');
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $ci_build = new CIBuildValue('http://added-ci-url.test');
 
         $this->ci_build_repository->create($transition, $ci_build);
     }
 
-    public function testCreateThrowsWhenCreationFail()
+    public function testCreateThrowsWhenCreationFail(): void
     {
-        $this->ci_build_dao->shouldReceive('create')
-            ->andReturn(false);
+        $this->ci_build_dao->method('create')
+            ->willReturn(false);
 
-        $transition = TransitionFactory::buildATransition();
-        $ci_build   = new CIBuildValue('http://example.test');
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $ci_build = new CIBuildValue('http://example.test');
 
         $this->expectException(DataAccessQueryException::class);
 
         $this->ci_build_repository->create($transition, $ci_build);
     }
 
-    public function testDeleteAllByTransitionDeletesExpectedTransitions()
+    public function testDeleteAllByTransitionDeletesExpectedTransitions(): void
     {
-        $this->ci_build_dao
-            ->shouldReceive('deletePostActionByTransition')
+        $this->ci_build_dao->expects($this->atLeast(1))
+            ->method('deletePostActionByTransition')
             ->with(1)
-            ->andReturn(true)
-            ->atLeast()->once();
-        $transition = TransitionFactory::buildATransitionWithId(1);
+            ->willReturn(true);
+
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
         $this->ci_build_repository->deleteAllByTransition($transition);
     }
 
-    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
+    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail(): void
     {
         $this->ci_build_dao
-            ->shouldReceive('deletePostActionByTransition')
-            ->andReturn(false);
-        $transition = TransitionFactory::buildATransition();
+            ->method('deletePostActionByTransition')
+            ->willReturn(false);
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
 
         $this->expectException(DataAccessQueryException::class);
 

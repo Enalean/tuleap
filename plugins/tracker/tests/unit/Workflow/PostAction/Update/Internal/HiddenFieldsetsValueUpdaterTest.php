@@ -18,48 +18,30 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
+use Transition;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
-use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
+use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class HiddenFieldsetsValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HiddenFieldsetsValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var HiddenFieldsetsValueUpdater
-     */
-    private $updater;
-    /**
-     *
-     * @var MockInterface
-     */
-    private $hidden_fieldsets_value_repository;
-    /**
-     *
-     * @var MockInterface
-     */
-    private $hidden_fieldsets_value_validator;
+    private HiddenFieldsetsValueUpdater $updater;
+    private HiddenFieldsetsValueRepository&MockObject $hidden_fieldsets_value_repository;
+    private HiddenFieldsetsValueValidator&MockObject $hidden_fieldsets_value_validator;
 
     #[\PHPUnit\Framework\Attributes\Before]
-    public function createUpdater()
+    public function createUpdater(): void
     {
-        $this->hidden_fieldsets_value_repository = Mockery::mock(HiddenFieldsetsValueRepository::class);
-        $this->hidden_fieldsets_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->byDefault();
-        $this->hidden_fieldsets_value_repository
-            ->shouldReceive('create')
-            ->byDefault();
+        $this->hidden_fieldsets_value_repository = $this->createMock(HiddenFieldsetsValueRepository::class);
 
-        $this->hidden_fieldsets_value_validator = Mockery::mock(HiddenFieldsetsValueValidator::class);
+        $this->hidden_fieldsets_value_validator = $this->createMock(HiddenFieldsetsValueValidator::class);
 
         $this->updater = new HiddenFieldsetsValueUpdater(
             $this->hidden_fieldsets_value_repository,
@@ -67,48 +49,61 @@ class HiddenFieldsetsValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUpdateAddsNewHiddenFieldsetsActions()
+    public function testUpdateAddsNewHiddenFieldsetsActions(): void
     {
-        $transition   = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
+
         $added_action = new HiddenFieldsetsValue([]);
         $actions      = new PostActionCollection($added_action);
 
-        $this->hidden_fieldsets_value_validator->shouldReceive('validate')->once();
+        $this->hidden_fieldsets_value_validator->expects($this->once())->method('validate');
 
+        $this->hidden_fieldsets_value_repository->method('deleteAllByTransition');
         $this->hidden_fieldsets_value_repository
-            ->shouldReceive('create')
-            ->with($transition, $added_action)
-            ->andReturns();
+            ->method('create')
+            ->with($transition, $added_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeletesAllPreExistingHiddenFieldsetsActions()
+    public function testUpdateDeletesAllPreExistingHiddenFieldsetsActions(): void
     {
-        $transition     = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
+
         $updated_action = new HiddenFieldsetsValue([]);
         $actions        = new PostActionCollection($updated_action);
 
-        $this->hidden_fieldsets_value_validator->shouldReceive('validate')->once();
+        $this->hidden_fieldsets_value_validator->expects($this->once())->method('validate');
 
-        $this->hidden_fieldsets_value_repository
-            ->shouldReceive('deleteAllByTransition')
-            ->with($updated_action)
-            ->andReturns();
+        $this->hidden_fieldsets_value_repository->method('create');
+        $this->hidden_fieldsets_value_repository->method('deleteAllByTransition')->with($transition);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testItDoesNothingIfHiddenFieldsetsActionsAreNotValid()
+    public function testItDoesNothingIfHiddenFieldsetsActionsAreNotValid(): void
     {
-        $transition     = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $transition = $this->createMock(Transition::class);
+        $transition->method('getId')->willReturn(1);
+        $transition->method('getWorkflow')->willReturn($workflow);
+
         $updated_action = new HiddenFieldsetsValue([]);
         $actions        = new PostActionCollection($updated_action);
 
-        $this->hidden_fieldsets_value_validator->shouldReceive('validate')->andThrow(InvalidPostActionException::class);
+        $this->hidden_fieldsets_value_validator->method('validate')->willThrowException(new InvalidPostActionException());
 
-        $this->hidden_fieldsets_value_repository->shouldReceive('deleteAllByTransition')->never();
-        $this->hidden_fieldsets_value_repository->shouldReceive('create')->never();
+        $this->hidden_fieldsets_value_repository->expects($this->never())->method('deleteAllByTransition');
+        $this->hidden_fieldsets_value_repository->expects($this->never())->method('create');
 
         $this->expectException(InvalidPostActionException::class);
 

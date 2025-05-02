@@ -20,23 +20,19 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CIBuildValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CIBuildValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var CIBuildValueValidator */
-    private $ci_build_validator;
+    private CIBuildValueValidator $ci_build_validator;
 
     protected function setUp(): void
     {
         $this->ci_build_validator = new CIBuildValueValidator();
     }
 
-    public function testValidateDoesNotThrowWhenValid()
+    public function testValidateDoesNotThrowWhenValid(): void
     {
         $first_ci_build  = new CIBuildValue('https://example.com');
         $second_ci_build = new CIBuildValue('https://example.com/2');
@@ -46,7 +42,7 @@ class CIBuildValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testValidateThrowsWhenInvalidJobUrl()
+    public function testValidateThrowsWhenInvalidJobUrl(): void
     {
         $invalid_ci_build = new CIBuildValue('not an URL');
 
@@ -55,7 +51,7 @@ class CIBuildValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ci_build_validator->validate($invalid_ci_build);
     }
 
-    public function testValidateThrowsWhenEmptyJobUrl()
+    public function testValidateThrowsWhenEmptyJobUrl(): void
     {
         $invalid_ci_build = new CIBuildValue('');
 
