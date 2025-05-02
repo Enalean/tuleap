@@ -27,45 +27,28 @@ use Transition;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow;
+use XML_SimpleXMLCDATAFactory;
 
-class SimpleWorkflowXMLExporter
+final readonly class SimpleWorkflowXMLExporter
 {
-    /**
-     * @var SimpleWorkflowDao
-     */
-    private $simple_workflow_dao;
-
-    /**
-     * @var StateFactory
-     */
-    private $state_factory;
-
-    /**
-     * @var TransitionExtractor
-     */
-    private $transition_extractor;
-
     public function __construct(
-        SimpleWorkflowDao $simple_workflow_dao,
-        StateFactory $state_factory,
-        TransitionExtractor $transition_extractor,
+        private SimpleWorkflowDao $simple_workflow_dao,
+        private StateFactory $state_factory,
+        private TransitionExtractor $transition_extractor,
     ) {
-        $this->simple_workflow_dao  = $simple_workflow_dao;
-        $this->state_factory        = $state_factory;
-        $this->transition_extractor = $transition_extractor;
     }
 
-    public function exportToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping)
+    public function exportToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping): void
     {
         $xml_simple_workflow->addChild('field_id')->addAttribute('REF', array_search($workflow->getFieldId(), $xml_mapping));
 
-        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata = new XML_SimpleXMLCDATAFactory();
         $cdata->insert($xml_simple_workflow, 'is_used', (string) $workflow->isUsed());
 
         $this->exportStatesToXML($workflow, $xml_simple_workflow, $xml_mapping);
     }
 
-    private function exportStatesToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping)
+    private function exportStatesToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping): void
     {
         $states_sql = $this->simple_workflow_dao->searchStatesForWorkflow((int) $workflow->getId());
 
@@ -77,10 +60,14 @@ class SimpleWorkflowXMLExporter
         }
     }
 
-    private function exportStateToXML(Workflow $workflow, SimpleXMLElement $states_xml, array $xml_mapping, int $to_id)
+    private function exportStateToXML(Workflow $workflow, SimpleXMLElement $states_xml, array $xml_mapping, int $to_id): void
     {
+        $ref = array_search($to_id, $xml_mapping['values']);
+        if ($ref === false) {
+            return;
+        }
         $state_xml = $states_xml->addChild('state');
-        $state_xml->addChild('to_id')->addAttribute('REF', array_search($to_id, $xml_mapping['values']));
+        $state_xml->addChild('to_id')->addAttribute('REF', $ref);
 
         $state = $this->state_factory->getStateFromValueId($workflow, $to_id);
 

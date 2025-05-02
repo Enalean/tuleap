@@ -39,7 +39,10 @@ use Tuleap\Tracker\Test\Stub\FormElement\RetrieveFormElementsForTrackerStub;
 use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use UserXMLExporter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -494,7 +497,11 @@ final class TrackerStructureXMLExporterTest extends TestCase
             $rules_manager,
             $report_factory,
             $workflow_factory,
-            $this->createMock(SimpleWorkflowXMLExporter::class),
+            new SimpleWorkflowXMLExporter(
+                $this->createMock(SimpleWorkflowDao::class),
+                $this->createMock(StateFactory::class),
+                $this->createMock(TransitionExtractor::class),
+            ),
             $webhook_xml_exporter,
             new MoveActionAllowedChecker($move_action_allowed_dao)
         );
