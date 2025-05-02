@@ -100,6 +100,7 @@ final class FieldsetContainerBuilder
             20,
             null
         );
+        $fieldset->setTracker($this->tracker);
 
         $fieldset->formElements = $this->form_elements;
 

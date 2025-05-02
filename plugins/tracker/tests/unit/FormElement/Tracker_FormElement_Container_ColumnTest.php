@@ -23,61 +23,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
 use Tracker_FormElement_Container_Column;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 
-class Tracker_FormElement_Container_ColumnTest extends TestCase //phpcs:ignore
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Container_ColumnTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testIsNotDeletableWithFields()
+    public function testIsNotDeletableWithFields(): void
     {
-        $container_column = Mockery::mock(Tracker_FormElement_Container_Column::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $a_formelement    = DateFieldBuilder::aDateField(650)->build();
+        $container_column = ColumnContainerBuilder::aColumn(651)->containsFormElements($a_formelement)->build();
 
-        $a_formelement = Mockery::mock(Tracker_FormElement_Field_Date::class);
-
-        $container_column->shouldReceive('getFormElements')->andReturn([$a_formelement]);
-
-        $this->assertFalse($container_column->canBeRemovedFromUsage());
+        self::assertFalse($container_column->canBeRemovedFromUsage());
     }
 
-    public function testIsDeletableWithoutFields()
+    public function testIsDeletableWithoutFields(): void
     {
-        $container_column = Mockery::mock(Tracker_FormElement_Container_Column::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $container_column = ColumnContainerBuilder::aColumn(651)->build();
 
-        $container_column->shouldReceive('getFormElements')->andReturn(null);
-
-        $this->assertTrue($container_column->canBeRemovedFromUsage());
+        self::assertTrue($container_column->canBeRemovedFromUsage());
     }
 
-    public function testItCallsExportPermissionsToXMLForEachSubfield()
+    public function testItCallsExportPermissionsToXMLForEachSubfield(): void
     {
-        $container_column = Mockery::mock(Tracker_FormElement_Container_Column::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $field_01 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field_02 = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field_03 = $this->createMock(Tracker_FormElement_Field_Text::class);
 
-        $field_01 = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $field_02 = Mockery::mock(Tracker_FormElement_Field_Float::class);
-        $field_03 = Mockery::mock(Tracker_FormElement_Field_Text::class);
-
-        $container_column->shouldReceive('getAllFormElements')->andReturn(
-            [
-                $field_01,
-                $field_02,
-                $field_03,
-            ]
-        );
+        $container_column = $this->createPartialMock(Tracker_FormElement_Container_Column::class, ['getAllFormElements']);
+        $container_column->method('getAllFormElements')->willReturn([$field_01, $field_02, $field_03]);
 
         $data    = '<?xml version="1.0" encoding="UTF-8"?>
                     <permissions/>';
@@ -85,9 +66,9 @@ class Tracker_FormElement_Container_ColumnTest extends TestCase //phpcs:ignore
         $mapping = [];
         $ugroups = [];
 
-        $field_01->shouldReceive('exportPermissionsToXML')->once();
-        $field_02->shouldReceive('exportPermissionsToXML')->once();
-        $field_03->shouldReceive('exportPermissionsToXML')->once();
+        $field_01->expects($this->once())->method('exportPermissionsToXML');
+        $field_02->expects($this->once())->method('exportPermissionsToXML');
+        $field_03->expects($this->once())->method('exportPermissionsToXML');
 
         $container_column->exportPermissionsToXML($xml, $ugroups, $mapping);
     }

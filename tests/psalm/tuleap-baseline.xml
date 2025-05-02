@@ -48996,6 +48996,20 @@
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
   </file>
+  <file src="plugins/tracker/tests/unit/FormElement/ArtifactLinkFieldTest.php">
+    <TooManyArguments>
+      <code><![CDATA[TestHelper::arrayToDar([
+            'id'                => 123,
+            'field_id'          => 1,
+            'artifact_id'       => '999',
+            'keyword'           => 'bug',
+            'group_id'          => '102',
+            'tracker_id'        => '456',
+            'nature'            => '',
+            'last_changeset_id' => '789',
+        ])]]></code>
+    </TooManyArguments>
+  </file>
   <file src="plugins/tracker/tests/unit/FormElement/Field/Burndown/BurndownCommonDataBuilderTest.php">
     <PossiblyFalseArgument>
       <code><![CDATA[strtotime('2024-11-01')]]></code>
