@@ -29,13 +29,13 @@ let
 
     # Dropping service-runner as it depends on heapdump which require some specific binary (and we do not need it)
     postPatch = ''
-      substituteInPlace package.json --replace '"service-runner": "^3.1.0",' ""
+      substituteInPlace package.json --replace-fail '"service-runner": "^3.1.0",' ""
     '';
 
     dontNpmBuild = true;
     dontPatchShebangs = true;
 
-    nodejs = pkgs.nodejs_20;
+    nodejs = pkgs.nodejs_22;
   };
   unpackPhaseCopyMultipleSrcs = ''
     runHook preUnpack
