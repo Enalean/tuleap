@@ -129,7 +129,6 @@ if (! IS_SCRIPT) {
 
     // XSS prevention
     header('X-Content-Type-Options: nosniff');
-    header('X-XSS-Protection: 1; mode=block');
     $whitelist_scripts = [];
     $event_manager->processEvent(
         Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST,
