@@ -8,16 +8,12 @@
 let
   tuleapVersion = pkgs.lib.strings.fileContents ../../VERSION;
   tuleapDist = tuleapOS;
-  pkgsPinForRPM418 = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/5083ec887760adfe12af64830a66807423a859a7.tar.gz";
-    sha256 = "0sr45csfh2ff8w7jpnkkgl22aa89sza4jlhs6wq0368dpmklsl8g";
-  }) { };
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-rpms";
 
   src = [ tuleapSourceTarballPath ];
 
-  nativeBuildInputs = [ pkgsPinForRPM418.rpm ];
+  nativeBuildInputs = [ pkgs.rpm ];
 
   dontUnpack = true;
   dontConfigure = true;

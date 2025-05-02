@@ -1,6 +1,6 @@
-%define _prefix /usr
 %define _datadir /usr/share
 %define _bindir /usr/bin
+%define _localstatedir /var
 %define _unitdir /usr/lib/systemd/system
 %define _tmpfilesdir /usr/lib/tmpfiles.d
 
