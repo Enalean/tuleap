@@ -23,26 +23,28 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File;
 
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_ChangesetValue_File;
+use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ChangesetValueFileSaverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testReturnsTrueWhenThereIsNothingToSaveForANewArtifact(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(FileFieldValueDao::class);
-        $attachment_creator = \Mockery::mock(AttachmentCreator::class);
-        $current_user       = \Mockery::mock(PFUser::class);
-        $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
+        $dao                = $this->createMock(FileFieldValueDao::class);
+        $attachment_creator = $this->createMock(AttachmentCreator::class);
+        $field              = FileFieldBuilder::aFileField(354)->build();
 
         $changeset_value_id = 12345;
 
@@ -50,20 +52,20 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [];
 
-        $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
-        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
-        $savior->shouldAllowMockingProtectedMethods();
+        $savior = $this->getMockBuilder(ChangesetValueFileSaver::class)
+            ->setConstructorArgs([$dao, $attachment_creator])
+            ->onlyMethods(['initFolder'])
+            ->getMock();
+        $savior->method('initFolder');
 
-        $savior->shouldReceive('initFolder');
-
-        $this->assertTrue(
+        self::assertTrue(
             $savior->saveValue(
-                $current_user,
+                UserTestBuilder::buildWithDefaults(),
                 $field,
                 $changeset_value_id,
                 $value,
                 $previous_changeset_value,
-                $url_mapping
+                new CreatedFileURLMapping()
             )
         );
     }
@@ -71,23 +73,17 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDuplicatesPreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(FileFieldValueDao::class);
-        $attachment_creator = \Mockery::mock(AttachmentCreator::class);
-        $current_user       = \Mockery::mock(PFUser::class);
-        $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
-
+        $dao                = $this->createMock(FileFieldValueDao::class);
+        $attachment_creator = $this->createMock(AttachmentCreator::class);
+        $field              = FileFieldBuilder::aFileField(354)->build();
         $changeset_value_id = 12345;
 
-        $previous_file_1 = \Mockery::mock(\Tracker_FileInfo::class);
-        $previous_file_1->shouldReceive('getId')->andReturn(69);
-
-        $previous_file_2 = \Mockery::mock(\Tracker_FileInfo::class);
-        $previous_file_2->shouldReceive('getId')->andReturn(70);
+        $previous_file_1 = new Tracker_FileInfo(69, $field, 101, '', '', 0, 'image/png');
+        $previous_file_2 = new Tracker_FileInfo(70, $field, 101, '', '', 0, 'image/png');
 
         $previous_changeset_value = new Tracker_Artifact_ChangesetValue_File(
             1,
-            \Mockery::mock(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(63412)->build(),
             $field,
             0,
             [$previous_file_1, $previous_file_2]
@@ -95,22 +91,23 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [];
 
-        $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
-        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
-        $savior->shouldAllowMockingProtectedMethods();
+        $savior = $this->getMockBuilder(ChangesetValueFileSaver::class)
+            ->setConstructorArgs([$dao, $attachment_creator])
+            ->onlyMethods(['initFolder'])
+            ->getMock();
 
-        $savior->shouldReceive('initFolder');
+        $savior->method('initFolder');
 
-        $dao->shouldReceive('create')->with($changeset_value_id, [69, 70])->andReturn(true);
+        $dao->method('create')->with($changeset_value_id, [69, 70])->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $savior->saveValue(
-                $current_user,
+                UserTestBuilder::buildWithDefaults(),
                 $field,
                 $changeset_value_id,
                 $value,
                 $previous_changeset_value,
-                $url_mapping
+                new CreatedFileURLMapping()
             )
         );
     }
@@ -118,23 +115,17 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseIfItCannotDuplicatePreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(FileFieldValueDao::class);
-        $attachment_creator = \Mockery::mock(AttachmentCreator::class);
-        $current_user       = \Mockery::mock(PFUser::class);
-        $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
-
+        $dao                = $this->createMock(FileFieldValueDao::class);
+        $attachment_creator = $this->createMock(AttachmentCreator::class);
+        $field              = FileFieldBuilder::aFileField(354)->build();
         $changeset_value_id = 12345;
 
-        $previous_file_1 = \Mockery::mock(\Tracker_FileInfo::class);
-        $previous_file_1->shouldReceive('getId')->andReturn(69);
-
-        $previous_file_2 = \Mockery::mock(\Tracker_FileInfo::class);
-        $previous_file_2->shouldReceive('getId')->andReturn(70);
+        $previous_file_1 = new Tracker_FileInfo(69, $field, 101, '', '', 0, 'image/png');
+        $previous_file_2 = new Tracker_FileInfo(70, $field, 101, '', '', 0, 'image/png');
 
         $previous_changeset_value = new Tracker_Artifact_ChangesetValue_File(
             1,
-            \Mockery::mock(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(6145)->build(),
             $field,
             0,
             [$previous_file_1, $previous_file_2]
@@ -142,22 +133,23 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [];
 
-        $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
-        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
-        $savior->shouldAllowMockingProtectedMethods();
+        $savior = $this->getMockBuilder(ChangesetValueFileSaver::class)
+            ->setConstructorArgs([$dao, $attachment_creator])
+            ->onlyMethods(['initFolder'])
+            ->getMock();
 
-        $savior->shouldReceive('initFolder');
+        $savior->method('initFolder');
 
-        $dao->shouldReceive('create')->with($changeset_value_id, [69, 70])->andReturn(false);
+        $dao->method('create')->with($changeset_value_id, [69, 70])->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $savior->saveValue(
-                $current_user,
+                UserTestBuilder::buildWithDefaults(),
                 $field,
                 $changeset_value_id,
                 $value,
                 $previous_changeset_value,
-                $url_mapping
+                new CreatedFileURLMapping()
             )
         );
     }
@@ -165,23 +157,17 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDeletePreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(FileFieldValueDao::class);
-        $attachment_creator = \Mockery::mock(AttachmentCreator::class);
-        $current_user       = \Mockery::mock(PFUser::class);
-        $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
-
+        $dao                = $this->createMock(FileFieldValueDao::class);
+        $attachment_creator = $this->createMock(AttachmentCreator::class);
+        $field              = FileFieldBuilder::aFileField(354)->build();
         $changeset_value_id = 12345;
 
-        $previous_file_1 = \Mockery::mock(\Tracker_FileInfo::class);
-        $previous_file_1->shouldReceive('getId')->andReturn(69);
-
-        $previous_file_2 = \Mockery::mock(\Tracker_FileInfo::class);
-        $previous_file_2->shouldReceive('getId')->andReturn(70);
+        $previous_file_1 = new Tracker_FileInfo(69, $field, 101, '', '', 0, 'image/png');
+        $previous_file_2 = new Tracker_FileInfo(70, $field, 101, '', '', 0, 'image/png');
 
         $previous_changeset_value = new Tracker_Artifact_ChangesetValue_File(
             1,
-            \Mockery::mock(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(6145)->build(),
             $field,
             0,
             [$previous_file_1, $previous_file_2]
@@ -191,23 +177,23 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'delete' => [70],
         ];
 
-        $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
-        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
-        $savior->shouldAllowMockingProtectedMethods();
+        $savior = $this->getMockBuilder(ChangesetValueFileSaver::class)
+            ->setConstructorArgs([$dao, $attachment_creator])
+            ->onlyMethods(['initFolder'])
+            ->getMock();
 
-        $savior->shouldReceive('initFolder');
+        $savior->method('initFolder');
 
-        $dao->shouldReceive('create')->with($changeset_value_id, [69])->andReturn(true);
-        $previous_file_2->shouldReceive('deleteFiles');
+        $dao->method('create')->with($changeset_value_id, [69])->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $savior->saveValue(
-                $current_user,
+                UserTestBuilder::buildWithDefaults(),
                 $field,
                 $changeset_value_id,
                 $value,
                 $previous_changeset_value,
-                $url_mapping
+                new CreatedFileURLMapping()
             )
         );
     }
@@ -215,11 +201,11 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSavesNewFiles(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(FileFieldValueDao::class);
-        $attachment_creator = \Mockery::mock(AttachmentCreator::class);
-        $current_user       = \Mockery::mock(PFUser::class);
-        $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
+        $dao                = $this->createMock(FileFieldValueDao::class);
+        $attachment_creator = $this->createMock(AttachmentCreator::class);
+        $current_user       = UserTestBuilder::buildWithDefaults();
+        $field              = FileFieldBuilder::aFileField(354)->build();
+        $url_mapping        = new CreatedFileURLMapping();
 
         $changeset_value_id = 12345;
 
@@ -242,27 +228,23 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [$submitted_file_1, $submitted_file_2];
 
-        $attachment_1 = \Mockery::mock(\Tracker_FileInfo::class);
-        $attachment_1->shouldReceive('getId')->andReturn(1);
-        $attachment_2 = \Mockery::mock(\Tracker_FileInfo::class);
-        $attachment_2->shouldReceive('getId')->andReturn(2);
+        $attachment_1 = new Tracker_FileInfo(1, $field, 101, '', '', 0, 'image/png');
+        $attachment_2 = new Tracker_FileInfo(2, $field, 101, '', '', 0, 'image/png');
 
-        $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
-        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
-        $savior->shouldAllowMockingProtectedMethods();
+        $savior = $this->getMockBuilder(ChangesetValueFileSaver::class)
+            ->setConstructorArgs([$dao, $attachment_creator])
+            ->onlyMethods(['initFolder'])
+            ->getMock();
 
-        $savior->shouldReceive('initFolder');
-        $attachment_creator
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_1, $url_mapping)
-            ->andReturn($attachment_1);
-        $attachment_creator
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_2, $url_mapping)
-            ->andReturn($attachment_2);
-        $dao->shouldReceive('create')->with($changeset_value_id, [1, 2])->andReturn(true);
+        $savior->method('initFolder');
+        $attachment_creator->method('createAttachment')->with($current_user, $field, self::anything(), $url_mapping)
+            ->willReturnCallback(static fn(PFUser $current_user, Tracker_FormElement_Field_File $field, array $submitted_value_info) => match ($submitted_value_info) {
+                $submitted_file_1 => $attachment_1,
+                $submitted_file_2 => $attachment_2,
+            });
+        $dao->method('create')->with($changeset_value_id, [1, 2])->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $savior->saveValue(
                 $current_user,
                 $field,
@@ -277,11 +259,11 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsFalseIfItCannotSaveNewFiles(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(FileFieldValueDao::class);
-        $attachment_creator = \Mockery::mock(AttachmentCreator::class);
-        $current_user       = \Mockery::mock(PFUser::class);
-        $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
+        $dao                = $this->createMock(FileFieldValueDao::class);
+        $attachment_creator = $this->createMock(AttachmentCreator::class);
+        $current_user       = UserTestBuilder::buildWithDefaults();
+        $field              = FileFieldBuilder::aFileField(354)->build();
+        $url_mapping        = new CreatedFileURLMapping();
 
         $changeset_value_id = 12345;
 
@@ -304,27 +286,23 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [$submitted_file_1, $submitted_file_2];
 
-        $attachment_1 = \Mockery::mock(\Tracker_FileInfo::class);
-        $attachment_1->shouldReceive('getId')->andReturn(1);
-        $attachment_2 = \Mockery::mock(\Tracker_FileInfo::class);
-        $attachment_2->shouldReceive('getId')->andReturn(2);
+        $attachment_1 = new Tracker_FileInfo(1, $field, 101, '', '', 0, 'image/png');
+        $attachment_2 = new Tracker_FileInfo(2, $field, 101, '', '', 0, 'image/png');
 
-        $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
-        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
-        $savior->shouldAllowMockingProtectedMethods();
+        $savior = $this->getMockBuilder(ChangesetValueFileSaver::class)
+            ->setConstructorArgs([$dao, $attachment_creator])
+            ->onlyMethods(['initFolder'])
+            ->getMock();
 
-        $savior->shouldReceive('initFolder');
-        $attachment_creator
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_1, $url_mapping)
-            ->andReturn($attachment_1);
-        $attachment_creator
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_2, $url_mapping)
-            ->andReturn($attachment_2);
-        $dao->shouldReceive('create')->with($changeset_value_id, [1, 2])->andReturn(false);
+        $savior->method('initFolder');
+        $attachment_creator->method('createAttachment')->with($current_user, $field, self::anything(), $url_mapping)
+            ->willReturnCallback(static fn(PFUser $current_user, Tracker_FormElement_Field_File $field, array $submitted_value_info) => match ($submitted_value_info) {
+                $submitted_file_1 => $attachment_1,
+                $submitted_file_2 => $attachment_2,
+            });
+        $dao->method('create')->with($changeset_value_id, [1, 2])->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $savior->saveValue(
                 $current_user,
                 $field,
@@ -339,11 +317,11 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIgnoresFilesThatHaveNotBeenCreated(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(FileFieldValueDao::class);
-        $attachment_creator = \Mockery::mock(AttachmentCreator::class);
-        $current_user       = \Mockery::mock(PFUser::class);
-        $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
+        $dao                = $this->createMock(FileFieldValueDao::class);
+        $attachment_creator = $this->createMock(AttachmentCreator::class);
+        $current_user       = UserTestBuilder::buildWithDefaults();
+        $field              = FileFieldBuilder::aFileField(354)->build();
+        $url_mapping        = new CreatedFileURLMapping();
 
         $changeset_value_id = 12345;
 
@@ -366,25 +344,22 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value = [$submitted_file_1, $submitted_file_2];
 
-        $attachment_2 = \Mockery::mock(\Tracker_FileInfo::class);
-        $attachment_2->shouldReceive('getId')->andReturn(2);
+        $attachment_2 = new Tracker_FileInfo(2, $field, 101, '', '', 0, 'image/png');
 
-        $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
-        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
-        $savior->shouldAllowMockingProtectedMethods();
+        $savior = $this->getMockBuilder(ChangesetValueFileSaver::class)
+            ->setConstructorArgs([$dao, $attachment_creator])
+            ->onlyMethods(['initFolder'])
+            ->getMock();
 
-        $savior->shouldReceive('initFolder');
-        $attachment_creator
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_1, $url_mapping)
-            ->andReturn(null);
-        $attachment_creator
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_2, $url_mapping)
-            ->andReturn($attachment_2);
-        $dao->shouldReceive('create')->with($changeset_value_id, [2])->andReturn(true);
+        $savior->method('initFolder');
+        $attachment_creator->method('createAttachment')->with($current_user, $field, self::anything(), $url_mapping)
+            ->willReturnCallback(static fn(PFUser $current_user, Tracker_FormElement_Field_File $field, array $submitted_value_info) => match ($submitted_value_info) {
+                $submitted_file_1 => null,
+                $submitted_file_2 => $attachment_2,
+            });
+        $dao->method('create')->with($changeset_value_id, [2])->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $savior->saveValue(
                 $current_user,
                 $field,

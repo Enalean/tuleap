@@ -22,350 +22,276 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Mockery;
-use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Rule_File;
 use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
-use Tracker_FormElement_Field_File;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class AttachmentForRestCreatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testCreateAttachment(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::buildWithId(101);
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'rename', '/var/tmp')
-            ->andReturn(true);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'rename', '/var/tmp')->willReturn(true);
 
         $submitted_value_info = ['id' => 42];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = FileFieldBuilder::aFileField(653)->build();
 
-        $temporary_file = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFile::class);
-        $temporary_file->shouldReceive(
-            [
-                'getId'          => 42,
-                'getDescription' => '',
-                'getName'        => 'readme.mkd',
-                'getSize'        => 123,
-                'getType'        => 'text/plain',
-            ]
+        $temporary_file = new Tracker_Artifact_Attachment_TemporaryFile(
+            42,
+            'readme.mkd',
+            '',
+            '',
+            0,
+            101,
+            123,
+            'text/plain',
         );
 
-        $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
-        $temporary_file_manager
-            ->shouldReceive('getFileByTemporaryName')
-            ->with(42)
-            ->andReturn($temporary_file);
-        $temporary_file_manager
-            ->shouldReceive('exists')
-            ->with($current_user, 42)
-            ->andReturn(true);
-        $temporary_file_manager
-            ->shouldReceive('getPath')
-            ->with($current_user, 42)
-            ->andReturn('/var/tmp');
-        $temporary_file_manager
-            ->shouldReceive('removeTemporaryFileInDBByTemporaryName')
-            ->with(42);
+        $temporary_file_manager = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $temporary_file_manager->method('getFileByTemporaryName')->with(42)->willReturn($temporary_file);
+        $temporary_file_manager->method('exists')->with($current_user, 42)->willReturn(true);
+        $temporary_file_manager->method('getPath')->with($current_user, 42)->willReturn('/var/tmp');
+        $temporary_file_manager->method('removeTemporaryFileInDBByTemporaryName')->with(42);
 
-        $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
+        $next_creator_in_chain = $this->createMock(AttachmentCreator::class);
 
-        $creator = Mockery::mock(
-            AttachmentForRestCreator::class . '[delete]',
-            [
+        $creator = $this->getMockBuilder(AttachmentForRestCreator::class)
+            ->onlyMethods(['delete'])
+            ->setConstructorArgs([
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
                 $rule_file,
-            ]
-        );
-        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+            ])
+            ->getMock();
 
-        $creator->shouldReceive('delete')->never();
+        $creator->expects($this->never())->method('delete');
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertEquals('readme.mkd', $attachment->getFilename());
+        self::assertEquals('readme.mkd', $attachment->getFilename());
     }
 
     public function testItReturnsNullIfMoveToFinalPlaceIsNotPossible(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::buildWithId(101);
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
-        $mover
-            ->shouldReceive('moveAttachmentToFinalPlace')
-            ->with(Mockery::any(), 'rename', '/var/tmp')
-            ->andReturn(false);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
+        $mover->method('moveAttachmentToFinalPlace')->with(self::anything(), 'rename', '/var/tmp')->willReturn(false);
 
         $submitted_value_info = ['id' => 42];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = FileFieldBuilder::aFileField(654)->build();
 
-        $temporary_file = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFile::class);
-        $temporary_file->shouldReceive(
-            [
-                'getId'          => 42,
-                'getDescription' => '',
-                'getName'        => 'readme.mkd',
-                'getSize'        => 123,
-                'getType'        => 'text/plain',
-            ]
+        $temporary_file = new Tracker_Artifact_Attachment_TemporaryFile(
+            42,
+            'readme.mkd',
+            '',
+            '',
+            0,
+            101,
+            123,
+            'text/plain',
         );
 
-        $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
-        $temporary_file_manager
-            ->shouldReceive('getFileByTemporaryName')
-            ->with(42)
-            ->andReturn($temporary_file);
-        $temporary_file_manager
-            ->shouldReceive('exists')
-            ->with($current_user, 42)
-            ->andReturn(true);
-        $temporary_file_manager
-            ->shouldReceive('getPath')
-            ->with($current_user, 42)
-            ->andReturn('/var/tmp');
-        $temporary_file_manager
-            ->shouldReceive('removeTemporaryFileInDBByTemporaryName')
-            ->with(42);
+        $temporary_file_manager = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $temporary_file_manager->method('getFileByTemporaryName')->with(42)->willReturn($temporary_file);
+        $temporary_file_manager->method('exists')->with($current_user, 42)->willReturn(true);
+        $temporary_file_manager->method('getPath')->with($current_user, 42)->willReturn('/var/tmp');
+        $temporary_file_manager->method('removeTemporaryFileInDBByTemporaryName')->with(42);
 
-        $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
-
-        $creator = Mockery::mock(
-            AttachmentForRestCreator::class . '[delete]',
-            [
+        $creator = $this->getMockBuilder(AttachmentForRestCreator::class)
+            ->onlyMethods(['delete'])
+            ->setConstructorArgs([
                 $mover,
                 $temporary_file_manager,
-                $next_creator_in_chain,
+                $this->createStub(AttachmentCreator::class),
                 $rule_file,
-            ]
-        );
-        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+            ])
+            ->getMock();
 
-        $creator->shouldReceive('delete')->never();
+        $creator->expects($this->never())->method('delete');
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 
     public function testItReturnsNullIfTemporaryFileDoesNotExist(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::buildWithId(101);
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
 
         $submitted_value_info = ['id' => 42];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = FileFieldBuilder::aFileField(654)->build();
 
-        $temporary_file = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFile::class);
-        $temporary_file->shouldReceive(
-            [
-                'getId'          => 42,
-                'getDescription' => '',
-                'getName'        => 'readme.mkd',
-                'getSize'        => 123,
-                'getType'        => 'text/plain',
-            ]
+        $temporary_file = new Tracker_Artifact_Attachment_TemporaryFile(
+            42,
+            'readme.mkd',
+            '',
+            '',
+            0,
+            101,
+            123,
+            'text/plain',
         );
 
-        $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
-        $temporary_file_manager
-            ->shouldReceive('getFileByTemporaryName')
-            ->with(42)
-            ->andReturn($temporary_file);
-        $temporary_file_manager
-            ->shouldReceive('exists')
-            ->with($current_user, 42)
-            ->andReturn(false);
-        $temporary_file_manager
-            ->shouldReceive('getPath')
-            ->with($current_user, 42)
-            ->andReturn('/var/tmp');
-        $temporary_file_manager
-            ->shouldReceive('removeTemporaryFileInDBByTemporaryName')
-            ->with(42);
+        $temporary_file_manager = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $temporary_file_manager->method('getFileByTemporaryName')->with(42)->willReturn($temporary_file);
+        $temporary_file_manager->method('exists')->with($current_user, 42)->willReturn(false);
+        $temporary_file_manager->method('getPath')->with($current_user, 42)->willReturn('/var/tmp');
+        $temporary_file_manager->method('removeTemporaryFileInDBByTemporaryName')->with(42);
 
-        $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
-
-        $creator = Mockery::mock(
-            AttachmentForRestCreator::class . '[delete]',
-            [
+        $creator = $this->getMockBuilder(AttachmentForRestCreator::class)
+            ->onlyMethods(['delete'])
+            ->setConstructorArgs([
                 $mover,
                 $temporary_file_manager,
-                $next_creator_in_chain,
+                $this->createStub(AttachmentCreator::class),
                 $rule_file,
-            ]
-        );
-        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+            ])
+            ->getMock();
 
-        $creator->shouldReceive('delete')->once();
+        $creator->expects($this->once())->method('delete');
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 
     public function testItDelegatesToNextCreatorInChainIfThereIsNoTemporaryFileForGivenId(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::buildWithId(101);
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
 
         $submitted_value_info = ['id' => 42];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = FileFieldBuilder::aFileField(654)->build();
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
 
-        $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
-        $temporary_file_manager
-            ->shouldReceive('getFileByTemporaryName')
-            ->with(42)
-            ->andReturn(null);
+        $temporary_file_manager = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $temporary_file_manager->method('getFileByTemporaryName')->with(42)->willReturn(null);
 
-        $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
-        $next_creator_in_chain
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_value_info, $url_mapping);
+        $next_creator_in_chain = $this->createMock(AttachmentCreator::class);
+        $next_creator_in_chain->method('createAttachment')->with($current_user, $field, $submitted_value_info, $url_mapping);
 
-        $creator = Mockery::mock(
-            AttachmentForRestCreator::class . '[delete]',
-            [
+        $creator = $this->getMockBuilder(AttachmentForRestCreator::class)
+            ->onlyMethods(['delete'])
+            ->setConstructorArgs([
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
                 $rule_file,
-            ]
-        );
-        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+            ])
+            ->getMock();
 
-        $creator->shouldReceive('delete')->never();
+        $creator->expects($this->never())->method('delete');
 
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 
     public function testItDelegatesToNextCreatorInChainIfThereIsNoIdEntryInSubmittedValueInfo(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(true);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(true);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::buildWithId(101);
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
 
         $submitted_value_info = [];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = FileFieldBuilder::aFileField(654)->build();
 
-        $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $next_creator_in_chain = $this->createMock(AttachmentCreator::class);
+        $next_creator_in_chain->method('createAttachment')->with($current_user, $field, $submitted_value_info, $url_mapping);
 
-        $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
-        $next_creator_in_chain
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_value_info, $url_mapping);
-
-        $creator = Mockery::mock(
-            AttachmentForRestCreator::class . '[delete]',
-            [
+        $creator = $this->getMockBuilder(AttachmentForRestCreator::class)
+            ->onlyMethods(['delete'])
+            ->setConstructorArgs([
                 $mover,
-                $temporary_file_manager,
+                $this->createStub(Tracker_Artifact_Attachment_TemporaryFileManager::class),
                 $next_creator_in_chain,
                 $rule_file,
-            ]
-        );
-        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+            ])
+            ->getMock();
 
-        $creator->shouldReceive('delete')->never();
+        $creator->expects($this->never())->method('delete');
 
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 
     public function testItDelegatesToNextCreatorInChainIfTheFileIsNotValid(): void
     {
-        $rule_file = Mockery::mock(\Rule_File::class);
-        $rule_file->shouldReceive('isValid')->andReturn(false);
+        $rule_file = $this->createMock(Rule_File::class);
+        $rule_file->method('isValid')->willReturn(false);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getId')->andReturn(101);
+        $current_user = UserTestBuilder::buildWithId(101);
 
-        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
+        $mover = $this->createMock(AttachmentToFinalPlaceMover::class);
 
         $submitted_value_info = ['id' => 42];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $field = FileFieldBuilder::aFileField(654)->build();
 
-        $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $url_mapping = $this->createMock(CreatedFileURLMapping::class);
 
-        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $next_creator_in_chain = $this->createMock(AttachmentCreator::class);
+        $next_creator_in_chain->method('createAttachment')->with($current_user, $field, $submitted_value_info, $url_mapping);
 
-        $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
-        $next_creator_in_chain
-            ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_value_info, $url_mapping);
-
-        $creator = Mockery::mock(
-            AttachmentForRestCreator::class . '[delete]',
-            [
+        $creator = $this->getMockBuilder(AttachmentForRestCreator::class)
+            ->onlyMethods(['delete'])
+            ->setConstructorArgs([
                 $mover,
-                $temporary_file_manager,
+                $this->createStub(Tracker_Artifact_Attachment_TemporaryFileManager::class),
                 $next_creator_in_chain,
                 $rule_file,
-            ]
-        );
-        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
-        $creator->shouldAllowMockingProtectedMethods();
+            ])
+            ->getMock();
 
-        $creator->shouldReceive('delete')->never();
+        $creator->expects($this->never())->method('delete');
 
-        $url_mapping->shouldReceive('add')->never();
+        $url_mapping->expects($this->never())->method('add');
 
         $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        $this->assertNull($attachment);
+        self::assertNull($attachment);
     }
 }
