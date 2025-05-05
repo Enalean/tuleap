@@ -27,9 +27,10 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ErrorRow } from "../../../type";
+import type { EmptySubtasksRow, ErrorRow } from "../../../type";
+
 const props = defineProps<{
-    row: ErrorRow;
+    row: ErrorRow | EmptySubtasksRow;
 }>();
 
 const classes = computed((): string => {

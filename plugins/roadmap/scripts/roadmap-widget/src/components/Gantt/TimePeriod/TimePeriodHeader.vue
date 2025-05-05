@@ -25,42 +25,32 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useNamespacedGetters } from "vuex-composition-helpers";
 import { NbUnitsPerYear } from "../../../type";
-import type { TimePeriod } from "../../../type";
-import TimePeriodUnits from "./TimePeriodUnits.vue";
 import TimePeriodYears from "./TimePeriodYears.vue";
-import { namespace } from "vuex-class";
-import type { DateTime } from "luxon";
+import TimePeriodUnits from "./TimePeriodUnits.vue";
 
-const timeperiod = namespace("timeperiod");
+const { time_period } = useNamespacedGetters("timeperiod", ["time_period"]);
 
-@Component({
-    components: { TimePeriodYears, TimePeriodUnits },
-})
-export default class TimePeriodHeader extends Vue {
-    @timeperiod.Getter
-    readonly time_period!: TimePeriod;
+const props = defineProps<{
+    nb_additional_units: number;
+}>();
 
-    @Prop({ required: true })
-    readonly nb_additional_units!: number;
+const time_units = computed(() => {
+    return [
+        ...time_period.value.units,
+        ...time_period.value.additionalUnits(props.nb_additional_units),
+    ];
+});
 
-    get time_units(): DateTime[] {
-        return [
-            ...this.time_period.units,
-            ...this.time_period.additionalUnits(this.nb_additional_units),
-        ];
-    }
+const years = computed(() => {
+    return time_units.value.reduce((nb_units_per_year, unit): NbUnitsPerYear => {
+        const year = unit.year;
+        nb_units_per_year.set(year, (nb_units_per_year.get(year) || 0) + 1);
 
-    get years(): NbUnitsPerYear {
-        return this.time_units.reduce((nb_units_per_year, unit): NbUnitsPerYear => {
-            const year = unit.year;
-            nb_units_per_year.set(year, (nb_units_per_year.get(year) || 0) + 1);
-
-            return nb_units_per_year;
-        }, new NbUnitsPerYear());
-    }
-}
+        return nb_units_per_year;
+    }, new NbUnitsPerYear());
+});
 </script>

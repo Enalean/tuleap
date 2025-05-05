@@ -21,7 +21,7 @@
 <template>
     <div>
         <div class="roadmap-gantt-controls">
-            <time-period-control v-bind:value="timescale" v-on:input="setTimescale" />
+            <time-period-control v-bind:value="timescale" v-on:input="setTimescale($event)" />
             <dependency-nature-control
                 v-model="dependencies_nature_to_display"
                 v-bind:available_natures="available_natures"
@@ -78,7 +78,7 @@
             <scrolling-area v-bind:timescale="timescale" v-on:is_scrolling="isScrolling">
                 <time-period-header
                     v-bind:nb_additional_units="nb_additional_units"
-                    ref="time_period"
+                    ref="time_period_header"
                 />
                 <iterations-ribbon
                     v-if="has_lvl1_iterations"
@@ -151,26 +151,25 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, watch, nextTick, computed } from "vue";
+import {
+    useStore,
+    useNamespacedGetters,
+    useNamespacedState,
+    useNamespacedMutations,
+} from "vuex-composition-helpers";
 import GanttTask from "./Task/GanttTask.vue";
 import type {
     NaturesLabels,
     Task,
-    TimePeriod,
-    TasksDependencies,
-    TaskDimensionMap,
-    TimeScale,
     Row,
     TaskRow,
     SubtaskRow,
     ErrorRow,
     EmptySubtasksRow,
-    Iteration,
 } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
-import TodayIndicator from "./TodayIndicator.vue";
 import { Styles } from "../../helpers/styles";
 import { getTasksDependencies } from "../../helpers/dependency-map-builder";
 import { getDimensionsMap } from "../../helpers/tasks-dimensions";
@@ -181,7 +180,6 @@ import TaskHeader from "./Task/TaskHeader.vue";
 import ScrollingArea from "./ScrollingArea.vue";
 import BarPopover from "./Task/BarPopover.vue";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
-import { namespace, State } from "vuex-class";
 import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
 import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
 import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
@@ -192,214 +190,158 @@ import ShowClosedControl from "./ShowClosedControl.vue";
 import NoDataToShowEmptyState from "../NoDataToShowEmptyState.vue";
 import { sortRows } from "../../helpers/rows-sorter";
 
-const tasks = namespace("tasks");
-const iterations = namespace("iterations");
-const timeperiod = namespace("timeperiod");
+const store = useStore();
+const { has_at_least_one_row_shown } = useNamespacedGetters("tasks", [
+    "has_at_least_one_row_shown",
+]);
+const { timescale } = useNamespacedState("timeperiod", ["timescale"]);
+const { setTimescale } = useNamespacedMutations("timeperiod", ["setTimescale"]);
+const { time_period } = useNamespacedGetters("timeperiod", ["time_period"]);
 
-@Component({
-    components: {
-        NoDataToShowEmptyState,
-        ShowClosedControl,
-        IterationsRibbon,
-        SubtaskMessageHeader,
-        SubtaskMessage,
-        SubtaskHeader,
-        SubtaskSkeletonBar,
-        SubtaskSkeletonHeader,
-        BarPopover,
-        ScrollingArea,
-        TaskHeader,
-        DependencyNatureControl,
-        TimePeriodControl,
-        TodayIndicator,
-        TimePeriodHeader,
-        GanttTask,
-    },
-})
-export default class GanttBoard extends Vue {
-    override $refs!: {
-        time_period: TimePeriodHeader | undefined;
-    };
+const rows = computed(() => store.getters["tasks/rows"]);
+const tasks = computed(() => store.getters["tasks/tasks"]);
+const lvl1_iterations_to_display = computed(
+    () => store.getters["iterations/lvl1_iterations_to_display"],
+);
+const lvl2_iterations_to_display = computed(
+    () => store.getters["iterations/lvl2_iterations_to_display"],
+);
 
-    @tasks.Getter
-    readonly rows!: Row[];
+const props = defineProps<{
+    visible_natures: NaturesLabels;
+}>();
 
-    @tasks.Getter
-    private readonly has_at_least_one_row_shown!: boolean;
+const time_period_header = ref<InstanceType<typeof TimePeriodHeader>>();
+const nb_additional_units = ref(0);
+const observer = ref<ResizeObserver | null>(null);
+const dependencies_nature_to_display = ref<string | null>(null);
+const reactive_is_scrolling = ref(false);
 
-    @tasks.Getter
-    private readonly tasks!: Task[];
+const id_prefix_for_bar_popover = getUniqueId("roadmap-gantt-bar-popover");
 
-    @iterations.Getter
-    readonly lvl1_iterations_to_display!: Iteration[];
+onMounted(() => {
+    observer.value = new ResizeObserver(adjustAdditionalUnits);
+    if (time_period_header.value) {
+        observer.value.observe(time_period_header.value.$el);
+    }
+});
 
-    @iterations.Getter
-    readonly lvl2_iterations_to_display!: Iteration[];
+onBeforeUnmount(() => {
+    observer.value?.disconnect();
+});
 
-    @timeperiod.State
-    readonly timescale!: TimeScale;
+watch(rows.value, () => {
+    observeTimeperiod();
+});
 
-    @timeperiod.Mutation
-    readonly setTimescale!: (timescale: TimeScale) => void;
+function observeTimeperiod(): void {
+    if (!time_period_header.value) {
+        nextTick(() => {
+            if (time_period_header.value && observer.value) {
+                observer.value.observe(time_period_header.value.$el);
+            }
+        });
+    }
+}
 
-    @timeperiod.Getter
-    private readonly time_period!: TimePeriod;
+function getIdForPopover(task: Task): string {
+    return id_prefix_for_bar_popover + "-" + task.id;
+}
 
-    @State
-    private readonly locale_bcp47!: string;
+function getIdForPopoverForSubtask(parent: Task, subtask: Task): string {
+    return id_prefix_for_bar_popover + "-" + parent.id + "-" + subtask.id;
+}
 
-    @State
-    private readonly now!: Date;
+function isScrolling(is_scrolling: boolean): void {
+    reactive_is_scrolling.value = is_scrolling;
+}
 
-    @Prop({ required: true })
-    private readonly visible_natures!: NaturesLabels;
-
-    nb_additional_units = 0;
-
-    private observer: ResizeObserver | null = null;
-
-    dependencies_nature_to_display: string | null = null;
-
-    private is_scrolling = false;
-
-    private id_prefix_for_bar_popover = getUniqueId("roadmap-gantt-bar-popover");
-
-    mounted(): void {
-        this.observer = new ResizeObserver(this.adjustAdditionalUnits);
-        if (this.$refs.time_period) {
-            this.observer.observe(this.$refs.time_period.$el);
-        }
+function adjustAdditionalUnits(entries: ResizeObserverEntry[]): void {
+    if (time_period.value.units.length === 0) {
+        return;
     }
 
-    beforeDestroy(): void {
-        if (this.observer) {
-            this.observer.disconnect();
-        }
+    const entry = entries.find(
+        (entry) => time_period_header.value && entry.target === time_period_header.value.$el,
+    );
+    if (!entry) {
+        return;
     }
 
-    @Watch("rows")
-    observeTimeperiod(): void {
-        if (!this.$refs.time_period) {
-            this.$nextTick(() => {
-                if (this.$refs.time_period && this.observer) {
-                    this.observer.observe(this.$refs.time_period.$el);
-                }
-            });
-        }
+    setAdditionalUnitsNumberAccordingToWidth(entry.contentRect.width);
+}
+
+watch(timescale, () => {
+    adjustAdditionalUnitsAfterTimescaleChang();
+});
+
+function adjustAdditionalUnitsAfterTimescaleChang(): void {
+    if (!time_period_header.value) {
+        return;
     }
 
-    getIdForPopover(task: Task): string {
-        return this.id_prefix_for_bar_popover + "-" + task.id;
+    setAdditionalUnitsNumberAccordingToWidth(
+        time_period_header.value.$el.getBoundingClientRect().width,
+    );
+}
+
+function setAdditionalUnitsNumberAccordingToWidth(width: number): void {
+    const nb_visible_units = Math.ceil(width / Styles.TIME_UNIT_WIDTH_IN_PX);
+
+    nb_additional_units.value = nb_visible_units - time_period.value.units.length - 1;
+}
+
+const should_display_empty_state = computed(() => !has_at_least_one_row_shown.value);
+const dependencies = computed(() => getTasksDependencies(tasks.value));
+const dimensions_map = computed(() => getDimensionsMap(rows.value, time_period.value));
+const sorted_rows = computed(() => sortRows(rows.value));
+const available_natures = computed(() =>
+    getNatureLabelsForTasks(tasks.value, dependencies.value, props.visible_natures),
+);
+const has_lvl1_iterations = computed((): boolean => {
+    return lvl1_iterations_to_display.value.length > 0;
+});
+const has_lvl2_iterations = computed((): boolean => {
+    return lvl2_iterations_to_display.value.length > 0;
+});
+const nb_iterations_ribbons = computed((): number => {
+    if (has_lvl1_iterations.value && has_lvl2_iterations.value) {
+        return 2;
     }
 
-    getIdForPopoverForSubtask(parent: Task, subtask: Task): string {
-        return this.id_prefix_for_bar_popover + "-" + parent.id + "-" + subtask.id;
+    if (has_lvl1_iterations.value || has_lvl2_iterations.value) {
+        return 1;
     }
 
-    isScrolling(is_scrolling: boolean): void {
-        this.is_scrolling = is_scrolling;
+    return 0;
+});
+const header_class = computed(() => {
+    const classes = [];
+
+    if (reactive_is_scrolling.value) {
+        classes.push("roadmap-gantt-header-is-scrolling");
     }
 
-    adjustAdditionalUnits(entries: ResizeObserverEntry[]): void {
-        if (this.time_period.units.length === 0) {
-            return;
-        }
-
-        const entry = entries.find(
-            (entry) => this.$refs.time_period && entry.target === this.$refs.time_period.$el,
-        );
-        if (!entry) {
-            return;
-        }
-
-        this.setAdditionalUnitsNumberAccordingToWidth(entry.contentRect.width);
+    if (nb_iterations_ribbons.value) {
+        classes.push(`roadmap-gantt-header-with-${nb_iterations_ribbons.value}-ribbons`);
     }
 
-    @Watch("timescale")
-    adjustAdditionalUnitsAfterTimescaleChang(): void {
-        if (!this.$refs.time_period) {
-            return;
-        }
+    return classes;
+});
 
-        this.setAdditionalUnitsNumberAccordingToWidth(
-            this.$refs.time_period.$el.getBoundingClientRect().width,
-        );
-    }
+function isTaskRow(row: Row): row is TaskRow {
+    return "task" in row;
+}
 
-    setAdditionalUnitsNumberAccordingToWidth(width: number): void {
-        const nb_visible_units = Math.ceil(width / Styles.TIME_UNIT_WIDTH_IN_PX);
+function isSubtaskRow(row: Row): row is SubtaskRow {
+    return "subtask" in row;
+}
 
-        this.nb_additional_units = nb_visible_units - this.time_period.units.length - 1;
-    }
+function isErrorRow(row: Row): row is ErrorRow {
+    return "is_error" in row && row.is_error;
+}
 
-    get should_display_empty_state(): boolean {
-        return !this.has_at_least_one_row_shown;
-    }
-
-    get dependencies(): TasksDependencies {
-        return getTasksDependencies(this.tasks);
-    }
-
-    get dimensions_map(): TaskDimensionMap {
-        return getDimensionsMap(this.rows, this.time_period);
-    }
-
-    get sorted_rows(): Row[] {
-        return sortRows(this.rows);
-    }
-
-    get available_natures(): NaturesLabels {
-        return getNatureLabelsForTasks(this.tasks, this.dependencies, this.visible_natures);
-    }
-
-    get header_class(): string[] {
-        const classes = [];
-
-        if (this.is_scrolling) {
-            classes.push("roadmap-gantt-header-is-scrolling");
-        }
-
-        if (this.nb_iterations_ribbons) {
-            classes.push(`roadmap-gantt-header-with-${this.nb_iterations_ribbons}-ribbons`);
-        }
-
-        return classes;
-    }
-
-    get nb_iterations_ribbons(): number {
-        if (this.has_lvl1_iterations && this.has_lvl2_iterations) {
-            return 2;
-        }
-
-        if (this.has_lvl1_iterations || this.has_lvl2_iterations) {
-            return 1;
-        }
-
-        return 0;
-    }
-
-    get has_lvl1_iterations(): boolean {
-        return this.lvl1_iterations_to_display.length > 0;
-    }
-
-    get has_lvl2_iterations(): boolean {
-        return this.lvl2_iterations_to_display.length > 0;
-    }
-
-    isTaskRow(row: Row): row is TaskRow {
-        return "task" in row;
-    }
-
-    isSubtaskRow(row: Row): row is SubtaskRow {
-        return "subtask" in row;
-    }
-
-    isErrorRow(row: Row): row is ErrorRow {
-        return "is_error" in row && row.is_error;
-    }
-
-    isEmptySubtasksRow(row: Row): row is EmptySubtasksRow {
-        return "is_empty" in row && row.is_empty;
-    }
+function isEmptySubtasksRow(row: Row): row is EmptySubtasksRow {
+    return "is_empty" in row && row.is_empty;
 }
 </script>
