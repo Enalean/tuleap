@@ -38,7 +38,7 @@ final readonly class CrossTrackerSearchXmlWidgetForProjectTemplate
                 self::getQueryAsXml(
                     'All open artifacts',
                     <<<EOS
-                    SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+                    SELECT @pretty_title, @status, @last_update_date, @submitted_by
                     FROM @project = 'self'
                     WHERE @status = OPEN()
                     ORDER BY @last_update_date DESC
@@ -50,7 +50,7 @@ final readonly class CrossTrackerSearchXmlWidgetForProjectTemplate
                 self::getQueryAsXml(
                     'Open artifacts assigned to me',
                     <<<EOS
-                    SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+                    SELECT @pretty_title, @status, @last_update_date, @submitted_by
                     FROM @project = 'self'
                     WHERE @status = OPEN() AND @assigned_to = MYSELF()
                     ORDER BY @last_update_date DESC
