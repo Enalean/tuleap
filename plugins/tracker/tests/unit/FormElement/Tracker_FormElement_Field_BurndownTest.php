@@ -24,170 +24,122 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use Codendi_Request;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use SystemEventManager;
-use Tracker_Artifact_ChangesetValue;
+use Tracker;
+use Tracker_ArtifactFactory;
+use Tracker_Chart_BurndownView;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerManager
-     */
-    private $tracker_manager;
-
-    /**
-     * @var \Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Tracker_FormElement_Field_Burndown
-     */
-    private $burndown_field;
-
-    /**
-     * @var Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var PFUser
-     */
-    private $user;
-
-    /**
-     * @var Tracker_Artifact_ChangesetValue
-     */
-    private $changesetValue;
-
-    private $tracker_id;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $sprint;
-    /**
-     * @var int
-     */
-    private $sprint_tracker_id;
-    /**
-     * @var Mockery\MockInterface|\Tracker
-     */
-    private $sprint_tracker;
+    private TrackerManager&MockObject $tracker_manager;
+    private Tracker $tracker;
+    private Tracker_FormElement_Field_Burndown&MockObject $burndown_field;
+    private Artifact $artifact;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
+    private PFUser $user;
+    private Artifact $sprint;
+    private Tracker $sprint_tracker;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->tracker_manager = $this->createMock(TrackerManager::class);
 
-        $this->tracker_manager = Mockery::mock(TrackerManager::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $this->tracker    = \Mockery::spy(\Tracker::class);
-        $this->tracker_id = 101;
-        $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
+        $tracker_id    = 101;
+        $this->tracker = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($project)->build();
 
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->artifact = ArtifactTestBuilder::anArtifact(123)->inTracker($this->tracker)
+            ->withChangesets(ChangesetTestBuilder::aChangeset(65412)->build())
+            ->build();
 
-        $this->form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
 
-        $this->burndown_field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->burndown_field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, [
+            'getLogger', 'fetchBurndownReadOnly', 'getTimeframeCalculator', 'getCurrentUser', 'userCanRead', 'renderPresenter', 'getBurndown', 'buildBurndownDataForLegacy',
+        ]);
 
-        $logger = \Mockery::spy(LoggerInterface::class);
-        $this->burndown_field->shouldReceive('getLogger')->andReturn($logger);
-        $this->burndown_field->shouldReceive('fetchBurndownReadOnly')
-            ->with($this->artifact)
-            ->andReturn('<div id="burndown-chart"></div>');
-        $this->burndown_field->shouldReceive('isCacheBurndownAlreadyAsked')->andReturnFalse();
-        $this->burndown_field->shouldReceive('getTimeframeCalculator')
-            ->andReturn(Mockery::mock(IComputeTimeframes::class));
+        $this->burndown_field->method('getLogger')->willReturn(new NullLogger());
+        $this->burndown_field->method('fetchBurndownReadOnly')->with($this->artifact)->willReturn('<div id="burndown-chart"></div>');
+        $this->burndown_field->method('getTimeframeCalculator')->willReturn($this->createStub(IComputeTimeframes::class));
 
-        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
 
-        $system_event_manager = \Mockery::spy(SystemEventManager::class);
+        $system_event_manager = $this->createMock(SystemEventManager::class);
         SystemEventManager::setInstance($system_event_manager);
-        $system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(true);
+        $system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturn(true);
 
-        $this->sprint            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->sprint_tracker_id = 113;
-        $this->sprint_tracker    = \Mockery::spy(\Tracker::class);
-        $this->sprint_tracker->shouldReceive('getId')->andReturn($this->sprint_tracker_id);
-        $this->sprint->shouldReceive('getTracker')->andReturn($this->sprint_tracker);
+        $sprint_tracker_id    = 113;
+        $this->sprint_tracker = TrackerTestBuilder::aTracker()->withId($sprint_tracker_id)->withProject($project)->build();
+        $this->sprint         = ArtifactTestBuilder::anArtifact(456)->inTracker($this->sprint_tracker)->build();
     }
 
     protected function tearDown(): void
     {
         SystemEventManager::clearInstance();
         Tracker_FormElementFactory::clearInstance();
-        parent::tearDown();
     }
 
-    private function getAStartDateField($value)
+    private function getAStartDateField(?int $value): void
     {
-        $start_date_field           = Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        $start_date_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
-        $start_date_changeset_value->shouldReceive('getTimestamp')->andReturn($value);
+        $start_date_field = DateFieldBuilder::aDateField(789)->withReadPermission($this->user, true)->build();
+        if ($value !== null) {
+            $start_date_changeset_value = ChangesetValueDateTestBuilder::aValue(1, $this->artifact->getLastChangeset(), $start_date_field)
+                ->withTimestamp($value)
+                ->build();
+        } else {
+            $start_date_changeset_value = null;
+        }
+        $this->artifact->getLastChangeset()->setFieldValue($start_date_field, $start_date_changeset_value);
 
-        $this->artifact->shouldReceive('getValue')
-            ->with($start_date_field)
-            ->andReturn($start_date_changeset_value);
-
-        $start_date_field->shouldReceive('userCanRead')->andReturnTrue();
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')
-            ->with('start_date', ['date'])
-            ->andReturnTrue();
+        $this->form_element_factory->method('getUsedFieldByName')->with('start_date', ['date'])->willReturn($start_date_field);
     }
 
-    private function getADurationField($value)
+    private function getADurationField(?int $value): void
     {
-        $duration_field = Mockery::spy(\Tracker_FormElement_Field_Integer::class);
+        $duration_field = IntFieldBuilder::anIntField(790)->withReadPermission($this->user, true)->build();
+        if ($value !== null) {
+            $duration_changeset_value = ChangesetValueIntegerTestBuilder::aValue(2, $this->artifact->getLastChangeset(), $duration_field)
+                ->withValue($value)
+                ->build();
+        } else {
+            $duration_changeset_value = null;
+        }
+        $this->artifact->getLastChangeset()->setFieldValue($duration_field, $duration_changeset_value);
 
-        $duration_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
-        $duration_changeset_value->shouldReceive('getValue')->andReturn($value);
+        $this->form_element_factory->method('getNumericFieldByNameForUser')
+            ->with($this->tracker, $this->user, 'duration')->willReturn($duration_field);
 
-        $this->artifact->shouldReceive('getValue')
-            ->with($duration_field)
-            ->andReturn($duration_changeset_value);
-
-        $this->form_element_factory->shouldReceive('getNumericFieldByNameForUser')
-            ->with(
-                $this->tracker,
-                $this->user,
-                'duration'
-            )->andReturn(
-                $duration_field
-            );
-
-        $duration_field->shouldReceive('userCanRead')->andReturnTrue();
-        $this->tracker->shouldReceive('hasFormElementWithNameAndType')
-            ->with('duration', ['int', 'float', 'computed'])
-            ->andReturnTrue();
+        $this->form_element_factory->method('getUsedFieldByName')->with('duration', ['int', 'float', 'computed'])->willReturn($duration_field);
     }
 
-    public function testItRendersAD3BurndownMontPointWhenBurndownHasAStartDateAndADuration()
+    public function testItRendersAD3BurndownMontPointWhenBurndownHasAStartDateAndADuration(): void
     {
-        $this->user->shouldReceive('isAdmin')->andReturnTrue();
-        $this->burndown_field->shouldReceive('getCurrentUser')->andReturn($this->user);
+        $this->burndown_field->method('getCurrentUser')->willReturn($this->user);
 
         $timestamp = mktime(0, 0, 0, 20, 12, 2016);
         $this->getAStartDateField($timestamp);
@@ -195,18 +147,15 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $duration = 5;
         $this->getADurationField($duration);
 
-        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact, $this->changesetValue);
+        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact);
 
-        $this->assertEquals(
-            '<div id="burndown-chart"></div>',
-            $result
-        );
+        self::assertSame('<div id="burndown-chart"></div>', $result);
     }
 
-    public function testItRendersAJPGraphBurndownErrorWhenUserCantReadBurndownField()
+    public function testItRendersAJPGraphBurndownErrorWhenUserCantReadBurndownField(): void
     {
-        $this->burndown_field->shouldReceive('getCurrentUser')->andReturn($this->user);
-        $this->burndown_field->shouldReceive('userCanRead')->andReturn(false);
+        $this->burndown_field->method('getCurrentUser')->willReturn($this->user);
+        $this->burndown_field->method('userCanRead')->willReturn(false);
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
         $this->expectExceptionMessage('You are not allowed to access this field.');
@@ -214,10 +163,9 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->burndown_field->fetchBurndownImage($this->artifact, $this->user);
     }
 
-    public function testButtonForceCacheGenerationIsNotPresentWhenStartDateIsNotSet()
+    public function testButtonForceCacheGenerationIsNotPresentWhenStartDateIsNotSet(): void
     {
-        $this->user->shouldReceive('isAdmin')->andReturnTrue();
-        $this->burndown_field->shouldReceive('getCurrentUser')->andReturn($this->user);
+        $this->burndown_field->method('getCurrentUser')->willReturn($this->user);
 
         $timestamp = null;
         $this->getAStartDateField($timestamp);
@@ -225,17 +173,16 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $duration = 5;
         $this->getADurationField($duration);
 
-        $this->burndown_field->shouldReceive('renderPresenter')->andReturn('<div id="burndown-chart"></div>');
+        $this->burndown_field->method('renderPresenter')->willReturn('<div id="burndown-chart"></div>');
 
-        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact, $this->changesetValue);
+        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact);
 
         self::assertSame('<div id="burndown-chart"></div>', $result);
     }
 
-    public function testButtonForceCacheGenerationIsNotRenderedWhenDurationIsNotSet()
+    public function testButtonForceCacheGenerationIsNotRenderedWhenDurationIsNotSet(): void
     {
-        $this->user->shouldReceive('isAdmin')->andReturnTrue();
-        $this->burndown_field->shouldReceive('getCurrentUser')->andReturn($this->user);
+        $this->burndown_field->method('getCurrentUser')->willReturn($this->user);
 
         $timestamp = mktime(0, 0, 0, 20, 12, 2016);
         $this->getAStartDateField($timestamp);
@@ -243,14 +190,14 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $duration = null;
         $this->getADurationField($duration);
 
-        $this->burndown_field->shouldReceive('renderPresenter')->andReturn('<div id="burndown-chart"></div>');
+        $this->burndown_field->method('renderPresenter')->willReturn('<div id="burndown-chart"></div>');
 
-        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact, $this->changesetValue);
+        $result = $this->burndown_field->fetchArtifactValueReadOnly($this->artifact);
 
         self::assertSame('<div id="burndown-chart"></div>', $result);
     }
 
-    public function testItDisplaysTheOldJPGraph()
+    public function testItDisplaysTheOldJPGraph(): void
     {
         $timestamp = mktime(0, 0, 0, 7, 3, 2011);
         $duration  = 5;
@@ -258,31 +205,19 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $date_period   = DatePeriodWithOpenDays::buildFromDuration($timestamp, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period);
 
-        $burndown_view = \Mockery::spy(\Tracker_Chart_BurndownView::class);
+        $burndown_view = $this->createMock(Tracker_Chart_BurndownView::class);
 
-        $this->burndown_field->shouldReceive('getBurndown')
-            ->with($burndown_data)
-            ->andReturn($burndown_view);
+        $this->burndown_field->method('getBurndown')->with($burndown_data)->willReturn($burndown_view);
 
-        $this->burndown_field->shouldReceive('userCanRead')->andReturnTrue();
+        $this->burndown_field->method('userCanRead')->willReturn(true);
 
-        $this->burndown_field->shouldReceive('buildBurndownDataForLegacy')
-            ->with($this->user, $this->sprint)
-            ->andReturn($burndown_data);
+        $this->burndown_field->method('buildBurndownDataForLegacy')->with($this->user, $this->sprint)->willReturn($burndown_data);
 
-        $this->burndown_field->shouldReceive('getLogger')->andReturn(\Mockery::spy(Burndown\Psr\Log\LoggerInterface::class));
+        $duration_field = IntFieldBuilder::anIntField(452)->build();
+        $this->form_element_factory->method('getNumericFieldByNameForUser')
+            ->with($this->sprint_tracker, $this->user, 'duration')->willReturn($duration_field);
 
-        $duration_field = Mockery::spy(\Tracker_FormElement_Field_Integer::class);
-        $this->form_element_factory->shouldReceive('getNumericFieldByNameForUser')
-            ->with(
-                $this->sprint_tracker,
-                $this->user,
-                'duration'
-            )->andReturn(
-                $duration_field
-            );
-
-        $burndown_view->shouldReceive('display')->once();
+        $burndown_view->expects($this->once())->method('display');
 
         $this->burndown_field->fetchBurndownImage($this->sprint, $this->user);
     }
@@ -299,49 +234,50 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
             ]
         );
 
-        $artifact        = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $artifactFactory->shouldReceive('getArtifactById')->withArgs([$artifact_id])->andReturn($artifact);
+        $artifact        = ArtifactTestBuilder::anArtifact($artifact_id)->build();
+        $artifactFactory = $this->createMock(Tracker_ArtifactFactory::class);
+        $artifactFactory->method('getArtifactById')->with($artifact_id)->willReturn($artifact);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getArtifactFactory')->andReturn($artifactFactory);
-        $field->shouldReceive('fetchBurndownImage')->with($artifact, $this->user)->once();
+        $field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, ['getArtifactFactory', 'fetchBurndownImage']);
+        $field->method('getArtifactFactory')->willReturn($artifactFactory);
+        $field->expects($this->once())->method('fetchBurndownImage')->with($artifact, $this->user);
 
         $field->process($this->tracker_manager, $request, $this->user);
     }
 
     public function testProcessMustNotBuildBurndownWhenSrcAidIsNotValid(): void
     {
-        $request = new Codendi_Request(['formElement' => 1234,
+        $request = new Codendi_Request([
+            'formElement' => 1234,
             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
             'src_aid'     => '; DROP DATABASE mouuahahahaha!',
         ]);
 
 
+        $artifactFactory = $this->createMock(Tracker_ArtifactFactory::class);
+        $artifactFactory->method('getArtifactById')->willReturn(null);
 
-        $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $artifactFactory->shouldReceive('getArtifactById')->andReturn(null);
-
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getArtifactFactory')->andReturn($artifactFactory);
-        $field->shouldReceive('fetchBurndownImage')->never();
+        $field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, ['getArtifactFactory', 'fetchBurndownImage']);
+        $field->method('getArtifactFactory')->willReturn($artifactFactory);
+        $field->expects($this->never())->method('fetchBurndownImage');
 
         $field->process($this->tracker_manager, $request, $this->user);
     }
 
     public function testProcessMustNotBuildBurndownWhenArtifactDoesNotExist(): void
     {
-        $request = new Codendi_Request(['formElement' => 1234,
+        $this->expectNotToPerformAssertions();
+        $request = new Codendi_Request([
+            'formElement' => 1234,
             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
             'src_aid'     => 999,
         ]);
 
-        $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $artifactFactory->shouldReceive('getArtifactById')->andReturn(null);
+        $artifactFactory = $this->createMock(Tracker_ArtifactFactory::class);
+        $artifactFactory->method('getArtifactById')->willReturn(null);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getArtifactFactory')->andReturn($artifactFactory);
-        $field->shouldReceive('fetchBurndownImage')->never();
+        $field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, ['getArtifactFactory', 'fetchBurndownImage']);
+        $field->method('getArtifactFactory')->willReturn($artifactFactory);
 
         $field->process($this->tracker_manager, $request, $this->user);
     }

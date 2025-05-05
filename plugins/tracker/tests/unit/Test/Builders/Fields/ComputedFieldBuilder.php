@@ -27,7 +27,11 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ComputedFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+    use FieldBuilderWithSpecificProperties;
+
     private \Tracker $tracker;
+    private bool $required = false;
 
     private function __construct(private readonly int $id)
     {
@@ -37,6 +41,12 @@ final class ComputedFieldBuilder
     public static function aComputedField(int $id): self
     {
         return new self($id);
+    }
+
+    public function thatIsRequired(): self
+    {
+        $this->required = true;
+        return $this;
     }
 
     public function build(): Tracker_FormElement_Field_Computed
@@ -50,12 +60,14 @@ final class ComputedFieldBuilder
             '',
             true,
             'P',
-            false,
+            $this->required,
             '',
             10,
             null
         );
         $field->setTracker($this->tracker);
+        $this->setPermissions($field);
+        $this->setSpecificProperties($field);
         return $field;
     }
 }
