@@ -215,5 +215,23 @@ describe("Artifact link usage", () => {
 
             cy.get("[data-test=tracker-hierarchy]").contains("Parent");
         });
+
+        it("can create a new artifact by editing artifact links", function () {
+            const new_artifact_title = "New artifact";
+
+            cy.projectMemberSession();
+
+            cy.visit("/plugins/tracker/?&aid=" + this.update_parent);
+
+            cy.get("[data-test=link-field-add-link-input]").click();
+            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+                .focus()
+                .type(new_artifact_title);
+            cy.get("[data-test=new-item-button]").click();
+            cy.get("[data-test=artifact-creator-submit]").click();
+            submitArtifactAndStay();
+
+            cy.get("[data-test=artifact-link-field]").contains(new_artifact_title);
+        });
     });
 });
