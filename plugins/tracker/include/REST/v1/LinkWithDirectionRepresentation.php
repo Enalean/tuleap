@@ -43,4 +43,15 @@ final class LinkWithDirectionRepresentation
      * @var string | null $type {@required false}
      */
     public ?string $type = null;
+
+    /**
+     * @psalm-param int<1, max> $id
+     * @psalm-param 'reverse'|'forward' $direction
+     */
+    public function __construct(int $id, string $direction, ?string $type)
+    {
+        $this->id        = $id;
+        $this->direction = $direction;
+        $this->type      = $type;
+    }
 }

@@ -52,19 +52,14 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
 
-        $all_link_payload            = new LinkWithDirectionRepresentation();
-        $all_link_payload->id        = 121;
-        $all_link_payload->direction = 'forward';
+        $all_link_payload = new LinkWithDirectionRepresentation(121, 'forward', null);
 
         RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
     }
 
     public function testTheTypeAttributeIsNoTypeWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
     {
-        $all_link_payload            = new LinkWithDirectionRepresentation();
-        $all_link_payload->id        = 121;
-        $all_link_payload->direction = 'forward';
-        $all_link_payload->type      = '';
+        $all_link_payload = new LinkWithDirectionRepresentation(121, 'forward', '');
 
         $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
 
@@ -74,10 +69,7 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheProxyObjectWithTheIdAndType(): void
     {
-        $all_link_payload            = new LinkWithDirectionRepresentation();
-        $all_link_payload->id        = 121;
-        $all_link_payload->direction = 'forward';
-        $all_link_payload->type      = '_is_child';
+        $all_link_payload = new LinkWithDirectionRepresentation(121, 'forward', '_is_child');
 
         $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
 

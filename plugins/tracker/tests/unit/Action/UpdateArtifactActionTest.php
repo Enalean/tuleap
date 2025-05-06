@@ -44,11 +44,13 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainerBuilder;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -135,12 +137,16 @@ final class UpdateArtifactActionTest extends TestCase
             $this->createMock(VisitRecorder::class),
             $this->hidden_fieldsets_detector,
             $this->artifact_updater,
-            ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
-            new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([
-                ForwardLinkProxy::buildFromData(1, '_is_child'),
-                ForwardLinkProxy::buildFromData(2, ''),
-            ]))),
             new TrackersPermissionsPassthroughRetriever(),
+            new ChangesetValuesContainerBuilder(
+                $this->formelement_factory,
+                ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+                new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([
+                    ForwardLinkProxy::buildFromData(1, '_is_child'),
+                    ForwardLinkProxy::buildFromData(2, ''),
+                ]))),
+                new NewArtifactLinkInitialChangesetValueBuilder(),
+            ),
         );
     }
 
@@ -232,9 +238,13 @@ final class UpdateArtifactActionTest extends TestCase
             $visit_recorder,
             $this->hidden_fieldsets_detector,
             $this->artifact_updater,
-            ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
-            new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
             new TrackersPermissionsPassthroughRetriever(),
+            new ChangesetValuesContainerBuilder(
+                $this->formelement_factory,
+                ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+                new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
+                new NewArtifactLinkInitialChangesetValueBuilder(),
+            ),
         );
 
         $this->computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
@@ -373,9 +383,13 @@ final class UpdateArtifactActionTest extends TestCase
             $this->createMock(VisitRecorder::class),
             $this->hidden_fieldsets_detector,
             $this->artifact_updater,
-            ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
-            new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
             new TrackersPermissionsPassthroughRetriever(),
+            new ChangesetValuesContainerBuilder(
+                $this->formelement_factory,
+                ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+                new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
+                new NewArtifactLinkInitialChangesetValueBuilder(),
+            ),
         );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
     }

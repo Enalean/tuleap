@@ -33,13 +33,11 @@ use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_IFetchTrackerSwitcher;
 use Tuleap\JSONHeader;
-use Tuleap\Option\Option;
 use Tuleap\Request\RequestTime;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\ChangesetValue\BuildInitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
@@ -61,6 +59,7 @@ class CreateArtifactAction
         private readonly VerifySubmissionPermissions $submission_permissions,
         private readonly ArtifactLinker $artifact_linker,
         private readonly ParentInHierarchyRetriever $parent_retriever,
+        private readonly BuildInitialChangesetValuesContainer $initial_changeset_values_container_builder,
     ) {
     }
 
@@ -120,13 +119,13 @@ class CreateArtifactAction
 
         return $this->artifact_creator->create(
             $this->tracker,
-            new InitialChangesetValuesContainer($fields_data, Option::nothing(NewArtifactLinkInitialChangesetValue::class)),
+            $this->initial_changeset_values_container_builder->buildInitialChangesetValuesContainer($fields_data, $this->tracker, $user),
             $user,
             RequestTime::getTimestamp(),
             true,
             true,
             new NullChangesetValidationContext(),
-            false,
+            true,
         );
     }
 

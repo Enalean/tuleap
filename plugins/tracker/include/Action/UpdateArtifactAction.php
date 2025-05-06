@@ -22,8 +22,6 @@ namespace Tuleap\Tracker\Action;
 
 use Codendi_HTMLPurifier;
 use Codendi_Request;
-use CuyZ\Valinor\Mapper\MappingError;
-use CuyZ\Valinor\Mapper\TreeMapper;
 use DateTimeImmutable;
 use EventManager;
 use Feedback;
@@ -34,27 +32,21 @@ use Tracker_Artifact_Redirect;
 use Tracker_Exception;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Computed;
-use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_NoChangeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\ChangesetValue\BuildChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
-use function Psl\Json\decode as psl_json_decode;
 
 final readonly class UpdateArtifactAction
 {
@@ -66,9 +58,8 @@ final readonly class UpdateArtifactAction
         private VisitRecorder $visit_recorder,
         private HiddenFieldsetsDetector $hidden_fieldsets_detector,
         private ArtifactReverseLinksUpdater $artifact_updater,
-        private TreeMapper $mapper,
-        private NewArtifactLinkChangesetValueBuilder $link_value_builder,
         private RetrieveUserPermissionOnArtifacts $user_permission_on_artifacts,
+        private BuildChangesetValuesContainer $changeset_values_container_builder,
     ) {
     }
 
@@ -109,9 +100,11 @@ final readonly class UpdateArtifactAction
             $redirect        = $this->getRedirectUrlAfterArtifactUpdate($request);
             $this->artifact_updater->updateArtifactAndItsLinks(
                 $this->artifact,
-                new ChangesetValuesContainer(
+                $this->changeset_values_container_builder->buildChangesetValuesContainer(
                     $fields_data,
-                    $this->getFieldDataForArtifactLinkField($this->artifact->getTracker(), $current_user, $fields_data),
+                    $this->artifact->getTracker(),
+                    $this->artifact,
+                    $current_user,
                 ),
                 $current_user,
                 $submission_date,
@@ -190,41 +183,6 @@ final readonly class UpdateArtifactAction
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
         }
         return $redirect;
-    }
-
-    /**
-     * @return Option<NewArtifactLinkChangesetValue>
-     * @throws Tracker_FormElement_InvalidFieldValueException
-     */
-    private function getFieldDataForArtifactLinkField(Tracker $tracker, PFUser $current_user, array $fields_data): Option
-    {
-        $artifact_link_field = $this->form_element_factory->getAnArtifactLinkField($current_user, $tracker);
-        if ($artifact_link_field === null) {
-            return Option::nothing(NewArtifactLinkChangesetValue::class);
-        }
-        $field_id = $artifact_link_field->getId();
-        if (! isset($fields_data[$field_id])) {
-            return Option::nothing(NewArtifactLinkChangesetValue::class);
-        }
-
-        if ($artifact_link_field->canEditReverseLinks()) {
-            try {
-                $payload = $this->mapper->map(ArtifactValuesRepresentation::class, psl_json_decode($fields_data[$field_id]));
-            } catch (MappingError) {
-                return Option::nothing(NewArtifactLinkChangesetValue::class);
-            }
-        } else {
-            return Option::nothing(NewArtifactLinkChangesetValue::class);
-        }
-
-        return Option::fromValue(
-            $this->link_value_builder->buildFromPayload(
-                $this->artifact,
-                $artifact_link_field,
-                $current_user,
-                $payload,
-            ),
-        );
     }
 
     private function calculateRedirectParams($stay, $from_aid): array
