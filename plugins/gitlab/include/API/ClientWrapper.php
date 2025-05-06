@@ -50,7 +50,7 @@ class ClientWrapper implements WrapGitlabClient
 
         try {
             $response = $client->sendRequest($request);
-            if ((int) $response->getStatusCode() !== 200) {
+            if ($response->getStatusCode() !== 200) {
                 self::handleInvalidResponse($response);
             }
         } catch (ClientExceptionInterface $exception) {
@@ -77,7 +77,7 @@ class ClientWrapper implements WrapGitlabClient
 
         try {
             $response = $client->sendRequest($request);
-            if ((int) $response->getStatusCode() !== 200) {
+            if ($response->getStatusCode() !== 200) {
                 self::handleInvalidResponse($response);
             }
         } catch (ClientExceptionInterface $exception) {
