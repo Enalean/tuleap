@@ -146,7 +146,7 @@ describe("CrossTracker search", function () {
         );
         cy.get("[data-test=cross-tracker-search-widget] [data-test=expert-query]").should(
             "contain",
-            "SELECT @pretty_title, @tracker.name, @project.name, @last_update_date, @submitted_by",
+            "SELECT @pretty_title, @project.name, @last_update_date, @submitted_by",
         );
         cy.get("[data-test=query-creation-search-button]").click();
         cy.wait("@getQueryContent", { timeout: 5000 });

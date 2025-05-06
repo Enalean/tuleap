@@ -13,7 +13,7 @@
               <value name="is-default">1</value>
               <value name="title"><![CDATA[All open artifacts]]></value>
               <value name="description"><![CDATA[]]></value>
-              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+              <value name="tql"><![CDATA[SELECT @pretty_title, @status, @last_update_date, @submitted_by
   FROM @project = 'self'
   WHERE @status = OPEN()
   ORDER BY @last_update_date DESC]]></value>
@@ -22,7 +22,7 @@
               <value name="is-default">0</value>
               <value name="title"><![CDATA[Open artifacts assigned to me]]></value>
               <value name="description"><![CDATA[]]></value>
-              <value name="tql"><![CDATA[SELECT @pretty_title, @tracker.name, @status, @last_update_date, @submitted_by
+              <value name="tql"><![CDATA[SELECT @pretty_title, @status, @last_update_date, @submitted_by
 FROM @project = 'self'
 WHERE @status = OPEN() AND @assigned_to = MYSELF()
 ORDER BY @last_update_date DESC]]></value>
