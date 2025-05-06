@@ -69,13 +69,6 @@ final class LinkWithDirectionRepresentationBuilder
 
     public function build(): LinkWithDirectionRepresentation
     {
-        $representation = new LinkWithDirectionRepresentation();
-        /** @psalm-suppress InaccessibleProperty */
-        $representation->id = $this->id;
-        /** @psalm-suppress InaccessibleProperty */
-        $representation->type = $this->type;
-        /** @psalm-suppress InaccessibleProperty */
-        $representation->direction = $this->direction;
-        return $representation;
+        return new LinkWithDirectionRepresentation($this->id, $this->direction, $this->type);
     }
 }

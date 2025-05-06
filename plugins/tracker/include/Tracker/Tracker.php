@@ -28,6 +28,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Option\Option;
 use Tuleap\Project\ProjectAccessChecker;
@@ -76,6 +77,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaverIgnoringPermissions;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainerBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
@@ -126,6 +128,8 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
@@ -844,9 +848,14 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
             case 'submit-artifact':
                 $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 header('X-Frame-Options: SAMEORIGIN');
-                $formelement_factory = $this->getFormElementFactory();
-                $artifact_factory    = $this->getTrackerArtifactFactory();
-                $action              = new CreateArtifactAction(
+                $formelement_factory     = $this->getFormElementFactory();
+                $artifact_factory        = $this->getTrackerArtifactFactory();
+                $forward_links_retriever = new ArtifactForwardLinksRetriever(
+                    new ArtifactLinksByChangesetCache(),
+                    new ChangesetValueArtifactLinkDao(),
+                    $artifact_factory,
+                );
+                $action                  = new CreateArtifactAction(
                     $this,
                     $this->getArtifactCreator(),
                     $artifact_factory,
@@ -855,13 +864,15 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                     new ArtifactLinker(
                         $formelement_factory,
                         $this->getNewChangesetCreator(),
-                        new ArtifactForwardLinksRetriever(
-                            new ArtifactLinksByChangesetCache(),
-                            new ChangesetValueArtifactLinkDao(),
-                            $artifact_factory,
-                        ),
+                        $forward_links_retriever,
                     ),
                     new ParentInHierarchyRetriever(new HierarchyDAO(), $this->getTrackerFactory()),
+                    new ChangesetValuesContainerBuilder(
+                        $formelement_factory,
+                        ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+                        new NewArtifactLinkChangesetValueBuilder($forward_links_retriever),
+                        new NewArtifactLinkInitialChangesetValueBuilder(),
+                    ),
                 );
                 $action->process($layout, $request, $current_user);
                 break;

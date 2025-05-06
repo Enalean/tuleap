@@ -36,6 +36,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\BuildInitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
@@ -95,6 +96,7 @@ final class CreateArtifactActionTest extends TestCase
                 SearchParentTrackerStub::withParentTracker($this->parent_tracker->getId()),
                 RetrieveTrackerStub::withTracker($this->parent_tracker),
             ),
+            $this->createStub(BuildInitialChangesetValuesContainer::class),
         ) extends CreateArtifactAction {
             public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
             {
@@ -210,6 +212,7 @@ final class CreateArtifactActionTest extends TestCase
             VerifySubmissionPermissionStub::withSubmitPermission(),
             $this->createMock(ArtifactLinker::class),
             new ParentInHierarchyRetriever(SearchParentTrackerStub::withNoParent(), RetrieveTrackerStub::withoutTracker()),
+            $this->createStub(BuildInitialChangesetValuesContainer::class),
         ) extends CreateArtifactAction {
             public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
             {
@@ -254,6 +257,7 @@ final class CreateArtifactActionTest extends TestCase
             VerifySubmissionPermissionStub::withSubmitPermission(),
             $artifact_linker,
             new ParentInHierarchyRetriever(SearchParentTrackerStub::withNoParent(), RetrieveTrackerStub::withoutTracker()),
+            $this->createStub(BuildInitialChangesetValuesContainer::class),
         ) extends CreateArtifactAction {
             public function associateImmediatelyIfNeeded(Artifact $new_artifact, Codendi_Request $request, PFUser $current_user): void
             {

@@ -133,6 +133,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainerBuilder;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
@@ -161,6 +162,7 @@ use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
@@ -917,15 +919,19 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         new ReverseLinksToNewChangesetsConverter($form_element_factory, $artifact_factory),
                         $this->getNewChangesetCreator($this->getFieldValidator()),
                     ),
-                    ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
-                    new NewArtifactLinkChangesetValueBuilder(
-                        new ArtifactForwardLinksRetriever(
-                            new ArtifactLinksByChangesetCache(),
-                            new ChangesetValueArtifactLinkDao(),
-                            $artifact_factory,
-                        ),
-                    ),
                     TrackersPermissionsRetriever::build(),
+                    new ChangesetValuesContainerBuilder(
+                        $form_element_factory,
+                        ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+                        new NewArtifactLinkChangesetValueBuilder(
+                            new ArtifactForwardLinksRetriever(
+                                new ArtifactLinksByChangesetCache(),
+                                new ChangesetValueArtifactLinkDao(),
+                                $artifact_factory,
+                            ),
+                        ),
+                        new NewArtifactLinkInitialChangesetValueBuilder(),
+                    ),
                 );
                 $action->process($layout, $request, $current_user);
                 break;
