@@ -21,25 +21,21 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private TransitionFactory $factory;
 
-    /** @var TransitionFactory */
-    private $factory;
+    private Workflow_Transition_ConditionFactory&MockObject $condition_factory;
 
-    /** @var Workflow_Transition_ConditionFactory */
-    private $condition_factory;
+    private EventManager&MockObject $event_manager;
 
-    /**
-     * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $event_manager;
-
-    private $postaction_factory;
+    private Transition_PostActionFactory&MockObject $postaction_factory;
     private $a_field_not_used_in_transitions;
     private $a_field_used_in_post_actions;
     private $a_field_used_in_conditions;
@@ -47,39 +43,34 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
     protected function setUp(): void
     {
         parent::setUp();
-        $this->condition_factory  = \Mockery::spy(\Workflow_Transition_ConditionFactory::class);
-        $this->postaction_factory = \Mockery::spy(\Transition_PostActionFactory::class);
-        $this->event_manager      = \Mockery::spy(\EventManager::class);
-        $this->factory            = \Mockery::mock(
-            \TransitionFactory::class,
-            [
-                $this->condition_factory,
-                $this->event_manager,
-                new DBTransactionExecutorPassthrough(),
-                $this->postaction_factory,
-                Mockery::mock(Workflow_TransitionDao::class),
+        $this->condition_factory  = $this->createMock(\Workflow_Transition_ConditionFactory::class);
+        $this->postaction_factory = $this->createMock(\Transition_PostActionFactory::class);
+        $this->event_manager      = $this->createMock(\EventManager::class);
+        $this->factory            = new \TransitionFactory(
+            $this->condition_factory,
+            $this->event_manager,
+            new DBTransactionExecutorPassthrough(),
+            $this->postaction_factory,
+            $this->createMock(Workflow_TransitionDao::class),
+        );
 
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->a_field_not_used_in_transitions = DateFieldBuilder::aDateField(1002)->build();
 
-        $this->a_field_not_used_in_transitions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        $this->a_field_not_used_in_transitions->shouldReceive('getId')->andReturns(1002);
+        $this->a_field_used_in_post_actions = DateFieldBuilder::aDateField(1003)->build();
 
-        $this->a_field_used_in_post_actions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        $this->a_field_used_in_post_actions->shouldReceive('getId')->andReturns(1003);
+        $this->a_field_used_in_conditions = DateFieldBuilder::aDateField(1004)->build();
 
-        $this->a_field_used_in_conditions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        $this->a_field_used_in_conditions->shouldReceive('getId')->andReturns(1004);
+        $this->postaction_factory->method('isFieldUsedInPostActions')->willReturnCallback(fn (Tracker_FormElement_Field $field) => match ($field) {
+            $this->a_field_not_used_in_transitions => false,
+            $this->a_field_used_in_post_actions => true,
+            $this->a_field_used_in_conditions => false,
+        });
 
-        $this->postaction_factory->shouldReceive('isFieldUsedInPostActions')->with($this->a_field_not_used_in_transitions)->andReturns(false);
-        $this->postaction_factory->shouldReceive('isFieldUsedInPostActions')->with($this->a_field_used_in_post_actions)->andReturns(true);
-        $this->postaction_factory->shouldReceive('isFieldUsedInPostActions')->with($this->a_field_used_in_conditions)->andReturns(false);
-
-        $this->condition_factory->shouldReceive('isFieldUsedInConditions')->with($this->a_field_not_used_in_transitions)->andReturns(false);
-        $this->condition_factory->shouldReceive('isFieldUsedInConditions')->with($this->a_field_used_in_post_actions)->andReturns(false);
-        $this->condition_factory->shouldReceive('isFieldUsedInConditions')->with($this->a_field_used_in_conditions)->andReturns(true);
+        $this->condition_factory->method('isFieldUsedInConditions')->willReturnCallback(fn (Tracker_FormElement_Field $field) => match ($field) {
+            $this->a_field_not_used_in_transitions => false,
+            $this->a_field_used_in_post_actions => false,
+            $this->a_field_used_in_conditions => true,
+        });
     }
 
     public function testItReturnsTrueIfFieldIsUsedInPostActions(): void
@@ -99,14 +90,11 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
 
     public function testDuplicate(): void
     {
-        $tpaf = \Mockery::spy(\Transition_PostActionFactory::class);
+        $tpaf = $this->createMock(\Transition_PostActionFactory::class);
 
-        $field_value_new = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_new->shouldReceive('getId')->andReturns(2066);
-        $field_value_analyzed = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_analyzed->shouldReceive('getId')->andReturns(2067);
-        $field_value_accepted = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_accepted->shouldReceive('getId')->andReturns(2068);
+        $field_value_new      = ListStaticValueBuilder::aStaticValue('new')->withId(2066)->build();
+        $field_value_analyzed = ListStaticValueBuilder::aStaticValue('analyzed')->withId(2067)->build();
+        $field_value_accepted = ListStaticValueBuilder::aStaticValue('accepted')->withId(2068)->build();
 
         $t1          = new Transition(1, 1, $field_value_new, $field_value_analyzed);
         $t2          = new Transition(2, 1, $field_value_analyzed, $field_value_accepted);
@@ -115,18 +103,17 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
 
         $user_groups_mapping = \Tuleap\Project\Duplication\DuplicationUserGroupMapping::fromSameProjectWithoutMapping();
 
-        $tf = \Mockery::mock(
-            \TransitionFactory::class,
-            [
-                $this->condition_factory,
-                $this->event_manager,
-                new DBTransactionExecutorPassthrough(),
-                $tpaf,
-                Mockery::mock(Workflow_TransitionDao::class),
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $transition_factory = $this->getMockBuilder(\TransitionFactory::class)
+            ->setConstructorArgs(
+                [
+                    $this->condition_factory,
+                    $this->event_manager,
+                    new DBTransactionExecutorPassthrough(),
+                    $tpaf,
+                    $this->createMock(Workflow_TransitionDao::class),
+                ]
+            )->onlyMethods(['addTransition'])
+            ->getMock();
 
         $values = [
             2066  => 3066,
@@ -134,20 +121,30 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
             2068  => 3068,
         ];
 
-        $tf->shouldReceive('addTransition')->with(1, 3066, 3067)->once()->andReturn(101);
-        $tf->shouldReceive('addTransition')->with(1, 3067, 3068)->once()->andReturn(102);
-        $tf->shouldReceive('addTransition')->with(1, 3067, 3066)->once()->andReturn(103);
+        $transition_factory->expects($this->exactly(3))->method('addTransition')->willReturnCallback(
+            static fn ($workflow_id, $from_id, $to_id) => match (true) {
+                $from_id === 3066 && $to_id === 3067 => 101,
+                $from_id === 3067 && $to_id === 3068 => 102,
+                $from_id === 3067 && $to_id === 3066 => 103,
+            }
+        );
 
-        $this->condition_factory->shouldReceive('duplicate')->with($t1, 101, [], $user_groups_mapping)->once();
-        $this->condition_factory->shouldReceive('duplicate')->with($t2, 102, [], $user_groups_mapping)->once();
-        $this->condition_factory->shouldReceive('duplicate')->with($t3, 103, [], $user_groups_mapping)->once();
+        $this->condition_factory->method('duplicate')->willReturnCallback(
+            static fn (Transition $from_transition, int $new_transition_id) => match (true) {
+                $from_transition === $t1 && $new_transition_id === 101,
+                $from_transition === $t2 && $new_transition_id === 102,
+                $from_transition === $t3 && $new_transition_id === 103 => null
+            }
+        );
 
-        $tpaf->shouldReceive('duplicate')->times(3);
-        $tpaf->shouldReceive('duplicate')->with($t1, 101, [])->ordered();
-        $tpaf->shouldReceive('duplicate')->with($t2, 102, [])->ordered();
-        $tpaf->shouldReceive('duplicate')->with($t3, 103, [])->ordered();
-        $tf->shouldReceive('getPostActionFactory')->andReturns($tpaf);
+        $tpaf->expects($this->exactly(3))->method('duplicate')->willReturnCallback(
+            static fn (Transition $from_transition, $to_transition_id, array $field_mapping) => match (true) {
+                $from_transition === $t1 && $to_transition_id === 101,
+                    $from_transition === $t2 && $to_transition_id === 102,
+                    $from_transition === $t3 && $to_transition_id === 103 => null
+            }
+        );
 
-        $tf->duplicate($values, 1, $transitions, [], $user_groups_mapping);
+        $transition_factory->duplicate($values, 1, $transitions, [], $user_groups_mapping);
     }
 }

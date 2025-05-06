@@ -26,8 +26,6 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private $id          = 1;
     private $workflow_id = 2;
     private $from;
@@ -41,12 +39,13 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
     {
         $this->from = ListStaticValueBuilder::aStaticValue('value')->withId(123)->build();
         $this->to   = ListStaticValueBuilder::aStaticValue('value')->withId(456)->build();
-        PermissionsManager::setInstance(\Mockery::spy(\PermissionsManager::class));
+        PermissionsManager::setInstance($this->createMock(\PermissionsManager::class));
 
         $this->transition       = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
-        $this->field            = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        $this->date_post_action = \Mockery::spy(\Transition_PostAction_Field_Date::class)->shouldReceive('bypassPermissions')->andReturns(true)->getMock();
-        $this->current_user     = \Mockery::spy(\PFUser::class);
+        $this->field            = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $this->date_post_action = $this->createMock(\Transition_PostAction_Field_Date::class);
+        $this->date_post_action->method('bypassPermissions')->willReturn(true);
+        $this->current_user = $this->createMock(\PFUser::class);
     }
 
     protected function tearDown(): void
@@ -56,14 +55,9 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
 
     public function testEquals(): void
     {
-        $field_value_new = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_new->shouldReceive('getId')->andReturns(2066);
-
-        $field_value_analyzed = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_analyzed->shouldReceive('getId')->andReturns(2067);
-
-        $field_value_accepted = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_accepted->shouldReceive('getId')->andReturns(2068);
+        $field_value_new      = ListStaticValueBuilder::aStaticValue('new')->withId(2066)->build();
+        $field_value_analyzed = ListStaticValueBuilder::aStaticValue('analyzed')->withId(2067)->build();
+        $field_value_accepted = ListStaticValueBuilder::aStaticValue('accepted')->withId(2068)->build();
 
         $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
         $t2 = new Transition(1, 2, $field_value_analyzed, $field_value_accepted);
@@ -86,50 +80,44 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
 
     public function testBeforeShouldTriggerActions(): void
     {
-        $current_user = \Mockery::spy(\PFUser::class);
+        $current_user = $this->createMock(\PFUser::class);
 
-        $field_value_new = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_new->shouldReceive('getId')->andReturns(2066);
-
-        $field_value_analyzed = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_analyzed->shouldReceive('getId')->andReturns(2067);
+        $field_value_new      = ListStaticValueBuilder::aStaticValue('new')->withId(2066)->build();
+        $field_value_analyzed = ListStaticValueBuilder::aStaticValue('analyzed')->withId(2067)->build();
 
         $fields_data = ['field_id' => 'value'];
 
         $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
         $t1->setConditions(new Workflow_Transition_ConditionsCollection());
 
-        $a1 = \Mockery::spy(\Transition_PostAction::class);
-        $a2 = \Mockery::spy(\Transition_PostAction::class);
+        $a1 = $this->createMock(\Transition_PostAction::class);
+        $a2 = $this->createMock(\Transition_PostAction::class);
 
         $t1->setPostActions([$a1, $a2]);
 
-        $a1->shouldReceive('before')->with($fields_data, $current_user)->once();
-        $a2->shouldReceive('before')->with($fields_data, $current_user)->once();
+        $a1->expects($this->once())->method('before')->with($fields_data, $current_user);
+        $a2->expects($this->once())->method('before')->with($fields_data, $current_user);
 
         $t1->before($fields_data, $current_user);
     }
 
     public function testAfterShouldTriggerActions(): void
     {
-        $field_value_new = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_new->shouldReceive('getId')->andReturns(2066);
-
-        $field_value_analyzed = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $field_value_analyzed->shouldReceive('getId')->andReturns(2067);
+        $field_value_new      = ListStaticValueBuilder::aStaticValue('new')->withId(2066)->build();
+        $field_value_analyzed = ListStaticValueBuilder::aStaticValue('analyzed')->withId(2067)->build();
 
         $transition = new Transition(1, 2, $field_value_new, $field_value_analyzed);
         $transition->setConditions(new Workflow_Transition_ConditionsCollection());
 
-        $post_action_1 = \Mockery::spy(\Transition_PostAction::class);
-        $post_action_2 = \Mockery::spy(\Transition_PostAction::class);
+        $post_action_1 = $this->createMock(\Transition_PostAction::class);
+        $post_action_2 = $this->createMock(\Transition_PostAction::class);
 
         $transition->setPostActions([$post_action_1, $post_action_2]);
 
-        $post_action_1->shouldReceive('after')->once();
-        $post_action_2->shouldReceive('after')->once();
+        $post_action_1->expects($this->once())->method('after');
+        $post_action_2->expects($this->once())->method('after');
 
-        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
 
         $transition->after($changeset);
     }
@@ -138,8 +126,9 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
     {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
         $fields_data = [];
-        $artifact    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $conditions  = \Mockery::spy(\Workflow_Transition_ConditionsCollection::class)->shouldReceive('validate')->andReturns(true)->getMock();
+        $artifact    = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $conditions  = $this->createMock(\Workflow_Transition_ConditionsCollection::class);
+        $conditions->method('validate')->willReturn(true);
         $transition->setConditions($conditions);
         $this->assertTrue($transition->validate($fields_data, $artifact, '', $this->current_user));
     }
@@ -148,8 +137,9 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
     {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
         $fields_data = [];
-        $artifact    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $conditions  = \Mockery::spy(\Workflow_Transition_ConditionsCollection::class)->shouldReceive('validate')->andReturns(false)->getMock();
+        $artifact    = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $conditions  = $this->createMock(\Workflow_Transition_ConditionsCollection::class);
+        $conditions->method('validate')->willReturn(false);
         $transition->setConditions($conditions);
         $this->assertFalse($transition->validate($fields_data, $artifact, '', $this->current_user));
     }
@@ -164,7 +154,9 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
 
     public function testItBypassesPermissionIfThereIsACIJob(): void
     {
-        $ci_job        = \Mockery::spy(\Transition_PostAction_CIBuild::class);
+        $ci_job = $this->createMock(\Transition_PostAction_CIBuild::class);
+        $ci_job->method('bypassPermissions');
+
         $posts_actions = [$ci_job, $this->date_post_action];
 
         $this->transition->setPostActions($posts_actions);

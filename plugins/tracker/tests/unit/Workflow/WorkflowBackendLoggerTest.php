@@ -22,52 +22,50 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowBackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var LoggerInterface|Mockery\MockInterface
-     */
-    private $backend_logger;
+    private LoggerInterface&MockObject $backend_logger;
 
     protected function setUp(): void
     {
-        $this->backend_logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->backend_logger = $this->createMock(\Psr\Log\LoggerInterface::class);
     }
 
     public function testLogsMethod(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
-        $this->backend_logger->shouldReceive('debug')->with('[WF] ┌ Start theMethod()', [])->once();
+        $this->backend_logger->expects($this->once())->method('debug')->with('[WF] ┌ Start theMethod()', []);
         $logger->start('theMethod');
     }
 
     public function testLogsOptionalArgument(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
-        $this->backend_logger->shouldReceive('debug')->with('[WF] ┌ Start theMethod(1, a)', [])->once();
+        $this->backend_logger->expects($this->once())->method('debug')->with('[WF] ┌ Start theMethod(1, a)', []);
         $logger->start('theMethod', 1, 'a');
     }
 
     public function testWorksAlsoWorksForEndMethod(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
-        $this->backend_logger->shouldReceive('debug')->with('[WF] └ End theMethod(1, a)', [])->once();
+        $this->backend_logger->expects($this->once())->method('debug')->with('[WF] └ End theMethod(1, a)', []);
         $logger->end('theMethod', 1, 'a');
     }
 
     public function testIncrementsOnStartAndDecrementsOnEnd(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
-        $this->backend_logger->shouldReceive('debug')->with('[WF] ┌ Start method()', [])->once();
-        $this->backend_logger->shouldReceive('debug')->with('[WF] │ ┌ Start subMethod()', [])->once();
-        $this->backend_logger->shouldReceive('debug')->with('[WF] │ └ End subMethod()', [])->once();
-        $this->backend_logger->shouldReceive('debug')->with('[WF] └ End method()', [])->once();
+        $this->backend_logger->expects($this->exactly(4))->method('debug')
+            ->willReturnCallback(static fn (string $message) => match ($message) {
+                '[WF] ┌ Start method()' => true,
+                '[WF] │ ┌ Start subMethod()' => true,
+                '[WF] │ └ End subMethod()' => true,
+                '[WF] └ End method()' => true,
+            });
         $logger->start('method');
         $logger->start('subMethod');
         $logger->end('subMethod');
@@ -77,7 +75,7 @@ final class WorkflowBackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIncludesTheFingerprint(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
-        $this->backend_logger->shouldReceive('debug')->with('[WF] [12345] toto', [])->once();
+        $this->backend_logger->expects($this->once())->method('debug')->with('[WF] [12345] toto', []);
         $logger->defineFingerprint(12345);
         $logger->debug('toto');
     }
@@ -85,7 +83,7 @@ final class WorkflowBackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesNotChangeTheFingerprint(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
-        $this->backend_logger->shouldReceive('debug')->with('[WF] [12345] toto', [])->once();
+        $this->backend_logger->expects($this->once())->method('debug')->with('[WF] [12345] toto', []);
         $logger->defineFingerprint(12345);
         $logger->defineFingerprint(67890);
         $logger->debug('toto');
@@ -94,7 +92,7 @@ final class WorkflowBackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testLogLevelIsRespected(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::INFO);
-        $this->backend_logger->shouldReceive('debug')->never();
+        $this->backend_logger->expects($this->never())->method('debug');
         $logger->start('theMethod');
     }
 }

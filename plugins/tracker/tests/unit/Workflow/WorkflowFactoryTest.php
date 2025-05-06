@@ -21,6 +21,9 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
@@ -28,99 +31,86 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker_FormElement $field_status;
 
-    /** @var Tracker_FormElement */
-    private $field_status;
+    private Tracker_FormElement $field_start_date;
 
-    /** @var Tracker_FormElement */
-    private $field_start_date;
+    private Tracker_FormElement $field_close_date;
 
-    /** @var Tracker_FormElement */
-    private $field_close_date;
+    private WorkflowFactory&MockObject $workflow_factory;
 
-    /** @var WorkflowFactory */
-    private $workflow_factory;
-
-    /** @var TransitionFactory */
-    private $transition_factory;
+    private TransitionFactory&MockObject $transition_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $tracker = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(123)->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->field_status     = $this->setUpField($tracker, 1001);
-        $this->field_start_date = $this->setUpField($tracker, 1002);
-        $this->field_close_date = $this->setUpField($tracker, 1003);
+        $this->field_status     = ListFieldBuilder::aListField(1001)->inTracker($tracker)->build();
+        $this->field_start_date = ListFieldBuilder::aListField(1002)->inTracker($tracker)->build();
+        $this->field_close_date = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
 
-        $workflow = \Mockery::spy(\Workflow::class);
-        $workflow->shouldReceive('getFieldId')->andReturns($this->field_status->getId());
+        $workflow = $this->createMock(\Workflow::class);
+        $workflow->method('getFieldId')->willReturn($this->field_status->getId());
 
-        $this->transition_factory = \Mockery::spy(\TransitionFactory::class);
+        $this->transition_factory = $this->createMock(\TransitionFactory::class);
 
-        $this->workflow_factory = \Mockery::mock(
-            \WorkflowFactory::class . '[getWorkflowByTrackerId]',
-            [
-                $this->transition_factory,
-                Mockery::mock(TrackerFactory::class),
-                Mockery::mock(Tracker_FormElementFactory::class),
-                Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
-                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
-                Mockery::mock(FrozenFieldsDao::class),
-                Mockery::mock(StateFactory::class),
-            ]
-        );
-        $this->workflow_factory->shouldReceive('getWorkflowByTrackerId')->with($tracker->getId())->andReturns($workflow);
-    }
-
-    private function setUpField(Tracker $tracker, $id)
-    {
-        $field = \Mockery::spy(\Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('getTracker')->andReturns($tracker);
-        $field->shouldReceive('getId')->andReturns($id);
-        return $field;
+        $this->workflow_factory = $this->getMockBuilder(\WorkflowFactory::class)
+            ->onlyMethods(['getWorkflowByTrackerId'])
+            ->setConstructorArgs(
+                [
+                    $this->transition_factory,
+                    $this->createStub(TrackerFactory::class),
+                    $this->createStub(Tracker_FormElementFactory::class),
+                    $this->createStub(Tracker_Workflow_Trigger_RulesManager::class),
+                    new WorkflowBackendLogger($this->createStub(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
+                    $this->createStub(FrozenFieldsDao::class),
+                    $this->createStub(StateFactory::class),
+                ]
+            )->getMock();
+        $this->workflow_factory->method('getWorkflowByTrackerId')->with($tracker->getId())->willReturn($workflow);
     }
 
     public function testItReturnsTrueIfTheFieldIsUsedToDescribeTheStatesOfTheWorkflow(): void
     {
-        $this->transition_factory->shouldReceive('isFieldUsedInTransitions')->never();
-        $this->assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_status));
+        $this->transition_factory->expects($this->never())->method('isFieldUsedInTransitions');
+        self::assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_status));
     }
 
     public function testItReturnsTrueIfTheFieldIsUsedInAPostAction(): void
     {
-        $this->transition_factory->shouldReceive('isFieldUsedInTransitions')->with($this->field_close_date)->once()->andReturns(true);
-        $this->assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_close_date));
+        $this->transition_factory->expects($this->once())->method('isFieldUsedInTransitions')->with($this->field_close_date)->willReturn(true);
+        self::assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_close_date));
     }
 
     public function testItReturnsFalseIfTheFieldIsNotUsedByTheWorkflow(): void
     {
-        $this->transition_factory->shouldReceive('isFieldUsedInTransitions')->with($this->field_start_date)->once()->andReturns(false);
-        $this->assertFalse($this->workflow_factory->isFieldUsedInWorkflow($this->field_start_date));
+        $this->transition_factory->expects($this->once())->method('isFieldUsedInTransitions')->with($this->field_start_date)->willReturn(false);
+        self::assertFalse($this->workflow_factory->isFieldUsedInWorkflow($this->field_start_date));
     }
 
     public function testItReturnsSameObjectWhenUsingSameTrackerId(): void
     {
-        $tracker_rules_manager = Mockery::mock(Tracker_RulesManager::class);
-        $dao                   = \Mockery::spy(\Workflow_Dao::class);
-        $tracker_factory       = Mockery::mock(TrackerFactory::class);
-        $workflow_factory      = \Mockery::mock(
-            \WorkflowFactory::class . '[getDao,getGlobalRulesManager]',
-            [
-                Mockery::mock(TransitionFactory::class),
-                $tracker_factory,
-                Mockery::mock(Tracker_FormElementFactory::class),
-                Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
-                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
-                \Mockery::mock(FrozenFieldsDao::class),
-                Mockery::mock(StateFactory::class),
-            ]
-        )->shouldAllowMockingProtectedMethods();
-        $workflow_factory->shouldReceive('getDao')->andReturns($dao);
-        $workflow_factory->shouldReceive('getGlobalRulesManager')->andReturns($tracker_rules_manager);
-        $tracker_factory->shouldReceive('getTrackerById')->andReturn(Mockery::mock(Tracker::class));
-        $dao->shouldReceive('searchByTrackerId')->with(112)->andReturns(['tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0, 'is_advanced' => 1]);
+        $tracker_rules_manager = $this->createMock(Tracker_RulesManager::class);
+        $dao                   = $this->createMock(\Workflow_Dao::class);
+        $tracker_factory       = $this->createMock(TrackerFactory::class);
+        $workflow_factory      = $this->getMockBuilder(\WorkflowFactory::class)
+            ->onlyMethods(['getDao', 'getGlobalRulesManager'])
+            ->setConstructorArgs(
+                [
+                    $this->createStub(TransitionFactory::class),
+                    $tracker_factory,
+                    $this->createStub(Tracker_FormElementFactory::class),
+                    $this->createStub(Tracker_Workflow_Trigger_RulesManager::class),
+                    new WorkflowBackendLogger($this->createStub(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
+                    $this->createStub(FrozenFieldsDao::class),
+                    $this->createStub(StateFactory::class),
+                ]
+            )->getMock();
+        $workflow_factory->method('getDao')->willReturn($dao);
+        $workflow_factory->method('getGlobalRulesManager')->willReturn($tracker_rules_manager);
+        $tracker_factory->method('getTrackerById')->willReturn($this->createMock(Tracker::class));
+        $dao->method('searchByTrackerId')->with(112)->willReturn(['tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0, 'is_advanced' => 1]);
         self::assertSame(
             $workflow_factory->getWorkflowByTrackerId(112),
             $workflow_factory->getWorkflowByTrackerId(112)
