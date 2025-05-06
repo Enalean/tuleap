@@ -102,41 +102,46 @@ describe("Artifact link usage", () => {
             cy.log("Fixed in nature is not available when nature is disabled");
             cy.visit(`/plugins/tracker/?tracker=${this.tracker_id}`);
             cy.get("[data-test=direct-link-to-artifact]").first().click();
-            cy.get("[data-test=edit-field-links]").click();
 
-            cy.get("[data-test=artifact-link-type-selector]").should("not.contain", "Fixed in");
+            cy.get("[data-test=link-type-select]").should("not.contain", "Fixed in");
 
             enableArtifactLinkUsage(this.project_id);
             cy.log("Fixed in nature can be used");
             cy.visit("/plugins/tracker/?&aid=" + this.fixed_in_artifact);
-            cy.get("[data-test=edit-field-links]").click();
-            cy.get("[data-test=artifact-link-submit]").type(this.fixed_by_artifact);
-            cy.get("[data-test=artifact-link-type-selector]").first().select("Fixed in");
+            cy.get("[data-test=link-type-select]").first().select("Fixed in");
+            cy.get("[data-test=link-field-add-link-input]").click();
+            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+                .focus()
+                .type(this.fixed_by_artifact);
+            cy.get("[data-test=lazybox-item]").first().click();
             submitArtifactAndStay();
 
             cy.get("[data-test=feedback]").contains("Successfully Updated");
 
-            cy.get("[data-test=artifact-link-section]").contains(this.fixed_by_artifact);
+            cy.get("[data-test=tracker-artifact-value-links]").contains(this.fixed_by_artifact);
 
             cy.log("Reverse link display fixed in nature");
             cy.visit("/plugins/tracker/?&aid=" + this.fixed_by_artifact);
-            cy.get("[data-test=reverse-link-section").contains(this.fixed_in_artifact);
+            cy.get("[data-test=tracker-artifact-value-links").contains(this.fixed_in_artifact);
         });
 
         it("can use _is_child nature", function () {
             cy.projectAdministratorSession();
             cy.visit("/plugins/tracker/?&aid=" + this.child_of_artifact);
-            cy.get("[data-test=edit-field-links]").click();
-            cy.get("[data-test=artifact-link-submit]").type(this.parent_of_artifact);
-            cy.get("[data-test=artifact-link-type-selector]").first().select("Child");
+            cy.get("[data-test=link-type-select]").select("is Child of");
+            cy.get("[data-test=link-field-add-link-input]").click();
+            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+                .focus()
+                .type(this.parent_of_artifact);
+            cy.get("[data-test=lazybox-item]").first().click();
             submitArtifactAndStay();
 
             cy.get("[data-test=feedback]").contains("Successfully Updated");
 
-            cy.get("[data-test=artifact-link-section]").contains(this.parent_of_artifact);
+            cy.get("[data-test=tracker-artifact-value-links]").contains(this.parent_of_artifact);
 
             cy.visit("https://tuleap/plugins/tracker/?&aid=" + this.parent_of_artifact);
-            cy.get("[data-test=reverse-link-section").contains(this.child_of_artifact);
+            cy.get("[data-test=tracker-artifact-value-links").contains(this.child_of_artifact);
         });
     });
 
@@ -173,9 +178,13 @@ describe("Artifact link usage", () => {
 
             cy.visit("/plugins/tracker/?&aid=" + this.create_parent);
 
-            cy.get("[data-test=edit-field-linked_issues]").click();
-            cy.get("[data-test=artifact-link-submit]").type(`${this.parent_artifact}`);
-            cy.get("[data-test=artifact-link-type-selector]").first().select("Parent");
+            cy.get("[data-test=link-type-select]").first().select("is Child of");
+            cy.get("[data-test=link-field-add-link-input]").click();
+            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+                .focus()
+                .type(this.parent_artifact);
+            cy.get("[data-test=lazybox-item]").first().click();
+
             submitArtifactAndStay();
 
             cy.get("[data-test=tracker-hierarchy]").contains(`${this.parent_artifact}`);
@@ -184,20 +193,22 @@ describe("Artifact link usage", () => {
 
         it("can update a `Parent` link between two existing artifact", function () {
             cy.projectMemberSession();
-            cy.intercept("*?func=artifactlink-renderer-async*").as("loadLinksPost");
+            cy.intercept("api/v1/artifacts/*").as("getArtifact");
 
             cy.visit("/plugins/tracker/?&aid=" + this.update_parent);
 
-            cy.get("[data-test=edit-field-linked_issues]").click();
-            cy.get("[data-test=artifact-link-submit]").type(`${this.parent_artifact}`);
+            cy.get("[data-test=link-field-add-link-input]").click();
+            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+                .focus()
+                .type(this.parent_artifact);
+            cy.wait("@getArtifact");
+            cy.get("[data-test=lazybox-item]").first().click();
             submitArtifactAndStay();
-            cy.get("[data-test=edit-field-linked_issues]").click();
-            cy.wait("@loadLinksPost", { timeout: 6000 });
 
-            cy.get("[data-test=artifact-report-table]").within(() => {
-                cy.get("[data-test=artifact-link-type-selector]")
-                    .last()
-                    .select("Parent", { force: true });
+            cy.get("[data-test=artifact-link-field]").within(() => {
+                cy.get("[data-test=link-type-select]")
+                    .first()
+                    .select("is Child of", { force: true });
             });
 
             submitArtifactAndStay();

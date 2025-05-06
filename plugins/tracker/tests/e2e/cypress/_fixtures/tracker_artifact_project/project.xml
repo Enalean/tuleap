@@ -1301,6 +1301,7 @@
         <formElement type="art_link" ID="F18129" rank="2" id="18129" tracker_id="858" parent_id="0">
           <name><![CDATA[links]]></name>
           <label><![CDATA[links]]></label>
+          <properties can_edit_reverse_links="1"/>
         </formElement>
       </formElements>
       <semantics>
