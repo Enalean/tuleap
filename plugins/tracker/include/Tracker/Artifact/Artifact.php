@@ -90,6 +90,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\TooltipJSON;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -128,8 +129,12 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetr
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
+use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -154,6 +159,8 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
@@ -896,14 +903,29 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 break;
             case 'artifact-update':
                 $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
-                $action = new UpdateArtifactAction(
+                $artifact_factory     = $this->getArtifactFactory();
+                $form_element_factory = $this->getFormElementFactory();
+                $action               = new UpdateArtifactAction(
                     $this,
-                    $this->getFormElementFactory(),
+                    $form_element_factory,
                     $this->getEventManager(),
                     $this->getTypeIsChildLinkRetriever(),
                     $this->getVisitRecorder(),
                     $this->getHiddenFieldsetsDetector(),
-                    $this->getNewChangesetCreator($this->getFieldValidator()),
+                    new ArtifactReverseLinksUpdater(
+                        new ReverseLinksRetriever(new ReverseLinksDao(), $artifact_factory),
+                        new ReverseLinksToNewChangesetsConverter($form_element_factory, $artifact_factory),
+                        $this->getNewChangesetCreator($this->getFieldValidator()),
+                    ),
+                    ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper(),
+                    new NewArtifactLinkChangesetValueBuilder(
+                        new ArtifactForwardLinksRetriever(
+                            new ArtifactLinksByChangesetCache(),
+                            new ChangesetValueArtifactLinkDao(),
+                            $artifact_factory,
+                        ),
+                    ),
+                    TrackersPermissionsRetriever::build(),
                 );
                 $action->process($layout, $request, $current_user);
                 break;

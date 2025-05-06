@@ -4769,6 +4769,9 @@ msgstr "Vous n'avez pas la permission d'accéder à ce champ."
 msgid "You are not allowed to update the field %1$s."
 msgstr "Vous n'êtes pas autorisé à modifier le champ %1$s."
 
+msgid "You are not allowed to update this artifact"
+msgstr "Vous n'êtes pas autorisé à modifier cet artéfact"
+
 msgid "You are not logged in."
 msgstr "Vous n'êtes pas connecté."
 
