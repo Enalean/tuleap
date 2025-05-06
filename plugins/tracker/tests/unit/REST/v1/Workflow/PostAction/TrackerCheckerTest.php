@@ -21,54 +21,38 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \EventManager&Mockery\MockInterface
-     */
-    private $event_manager;
-    private TrackerChecker $tracker_checker;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->event_manager   = Mockery::mock(\EventManager::class);
-        $this->tracker_checker = new TrackerChecker($this->event_manager);
-    }
-
-    public function testItThrowsAnExceptionIfPostActionsAreNotEligible()
+    public function testItThrowsAnExceptionIfPostActionsAreNotEligible(): void
     {
         $this->expectException(PostActionNonEligibleForTrackerException::class);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (CheckPostActionsForTracker $event) {
-            $event->setPostActionsNonEligible();
-            return true;
-        }));
+        $tracker      = $this->createMock(Tracker::class);
+        $post_actions = $this->createMock(PostActionCollection::class);
 
-        $tracker      = Mockery::mock(Tracker::class);
-        $post_actions = Mockery::mock(PostActionCollection::class);
-        $this->tracker_checker->checkPostActionsAreEligibleForTracker($tracker, $post_actions);
+        $tracker_checker = new TrackerChecker(EventDispatcherStub::withCallback(
+            static function (CheckPostActionsForTracker $event): CheckPostActionsForTracker {
+                $event->setPostActionsNonEligible();
+
+                return $event;
+            }
+        ));
+        $tracker_checker->checkPostActionsAreEligibleForTracker($tracker, $post_actions);
     }
 
-    public function testItDoesNotThrowAnExceptionIfPostActionsAreEligible()
+    public function testItDoesNotThrowAnExceptionIfPostActionsAreEligible(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (CheckPostActionsForTracker $event) {
-            return true;
-        }));
+        $this->expectNotToPerformAssertions();
 
-        $tracker      = Mockery::mock(Tracker::class);
-        $post_actions = Mockery::mock(PostActionCollection::class);
-        $this->tracker_checker->checkPostActionsAreEligibleForTracker($tracker, $post_actions);
+        $tracker      = $this->createMock(Tracker::class);
+        $post_actions = $this->createMock(PostActionCollection::class);
 
-        $this->addToAssertionCount(1);
+        $tracker_checker = new TrackerChecker(EventDispatcherStub::withIdentityCallback());
+        $tracker_checker->checkPostActionsAreEligibleForTracker($tracker, $post_actions);
     }
 }
