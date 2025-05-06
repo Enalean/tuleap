@@ -354,7 +354,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getValueFromRow($row)
     {
-        return new Tracker_FormElement_Field_List_Bind_UsersValue($row['id'], $row['user_name'], $row['full_name']);
+        return new Tracker_FormElement_Field_List_Bind_UsersValue(
+            $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
+            $row['id'],
+            $row['user_name'],
+            $row['full_name'],
+        );
     }
 
     /**
