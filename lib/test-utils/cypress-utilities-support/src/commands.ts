@@ -237,6 +237,17 @@ Cypress.Commands.add(
     },
 );
 
+Cypress.Commands.add("addLinkToArtifact", (link_type, artifact_id) => {
+    cy.get("[data-test=artifact-link-field]").within(() => {
+        cy.get("[data-test=link-type-select]").last().select(link_type);
+        cy.get("[data-test=link-field-add-link-input]").click();
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+            .focus()
+            .type(artifact_id, { force: true });
+        cy.get("[data-test=lazybox-item]").first().click();
+    });
+});
+
 const LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 
 Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {

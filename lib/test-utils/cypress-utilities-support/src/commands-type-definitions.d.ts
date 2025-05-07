@@ -117,6 +117,8 @@ declare global {
 
             getContains(selector: string, label: string): Chainable<JQuery<HTMLElement>>;
 
+            addLinkToArtifact(link_type: string, artifact_id: string): void;
+
             searchItemInLazyboxDropdown(
                 query: string,
                 dropdown_item_label: string,

@@ -95,7 +95,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
 
     public array $default_properties = [
         'can_edit_reverse_links' => [
-            'value' => 0,
+            'value' => 1,
             'type'  => 'checkbox',
         ],
     ];
