@@ -1,0 +1,49 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa-solid fa-gear tlp-pane-title-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-tracker | New artifact links interface{{/ dgettext }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>
+                {{# dgettext }} tuleap-tracker | Artifact links edition in artifact view has been revamped and is activated by default for new trackers.{{/ dgettext }}
+                {{# dgettext }} tuleap-tracker | It can be disabled per tracker.{{/ dgettext }}
+            </p>
+            {{# has_trackers_without_new_interface }}
+                <p>
+                    {{# dngettext }} tuleap-tracker
+                        | Currently there is %s tracker that doesn't have the new interface activated.
+                        | Currently there are %s trackers that don't have the new interface activated.
+                        | {{ nb_trackers }}
+                        | {{ nb_trackers }}
+                    {{/ dngettext }}
+                </p>
+                <form class="tlp-pane-section-submit">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+                    <button type="submit" class="tlp-button-primary" disabled title="Not yet implemented">
+                        {{# dngettext }} tuleap-tracker
+                            | Activate new interface for %s tracker
+                            | Activate new interface for %s trackers
+                            | {{ nb_trackers }}
+                            | {{ nb_trackers }}
+                        {{/ dngettext }}
+                    </button>
+                </form>
+            {{/ has_trackers_without_new_interface }}
+            {{^ has_trackers_without_new_interface }}
+                <p>
+                    {{# dgettext }} tuleap-tracker | Currently the new interface is activated for every tracker on the platform. {{/ dgettext }}
+                </p>
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary" disabled>
+                        {{# dgettext }} tuleap-tracker | Activate new interface for all trackers {{/ dgettext }}
+                    </button>
+                </div>
+            {{/ has_trackers_without_new_interface }}
+        </section>
+    </div>
+</section>

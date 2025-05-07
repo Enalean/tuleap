@@ -13,7 +13,9 @@
             </button>
         </div>
         <div class="tlp-modal-body">
-            {{{ csrf_token }}}
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <input type="hidden" name="shortname" value="{{ shortname }}">
 
             <p>{{{ delete_modal_content }}}</p>
