@@ -18,20 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var TransitionValidator */
-    private $validator;
+    private TransitionValidator $validator;
 
     private const FROM_ID = 516;
     private const TO_ID   = 137;
@@ -41,16 +38,16 @@ class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator = new TransitionValidator();
     }
 
-    public function testValidateForCreationReturnsValidatedParameters()
+    public function testValidateForCreationReturnsValidatedParameters(): void
     {
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
         $workflow
-            ->shouldReceive('getTransition')
+            ->method('getTransition')
             ->with(self::FROM_ID, self::TO_ID)
-            ->andReturnNull();
+            ->willReturn(null);
         $workflow
-            ->shouldReceive('getAllFieldValues')
-            ->andReturn([self::FROM_ID => 'Todo', self::TO_ID => 'On Going']);
+            ->method('getAllFieldValues')
+            ->willReturn([self::FROM_ID => 'Todo', self::TO_ID => 'On Going']);
 
         $result = $this->validator->validateForCreation($workflow, self::FROM_ID, self::TO_ID);
 
@@ -58,16 +55,16 @@ class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testValidateForCreationAcceptsFromIdZero()
+    public function testValidateForCreationAcceptsFromIdZero(): void
     {
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
         $workflow
-            ->shouldReceive('getTransition')
+            ->method('getTransition')
             ->with(null, self::TO_ID)
-            ->andReturnNull();
+            ->willReturn(null);
         $workflow
-            ->shouldReceive('getAllFieldValues')
-            ->andReturn([self::TO_ID => 'On Going']);
+            ->method('getAllFieldValues')
+            ->willReturn([self::TO_ID => 'On Going']);
 
         $result = $this->validator->validateForCreation($workflow, 0, self::TO_ID);
 
@@ -75,9 +72,9 @@ class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testValidateForCreationThrowsWhenIdenticalToAndFromIds()
+    public function testValidateForCreationThrowsWhenIdenticalToAndFromIds(): void
     {
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -85,13 +82,13 @@ class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator->validateForCreation($workflow, self::FROM_ID, self::FROM_ID);
     }
 
-    public function testValidateForCreationThrowsWhenTransitionAlreadyExists()
+    public function testValidateForCreationThrowsWhenTransitionAlreadyExists(): void
     {
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
         $workflow
-            ->shouldReceive('getTransition')
+            ->method('getTransition')
             ->with(self::FROM_ID, self::TO_ID)
-            ->andReturn(Mockery::mock(\Transition::class));
+            ->willReturn($this->createMock(\Transition::class));
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -99,16 +96,16 @@ class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator->validateForCreation($workflow, self::FROM_ID, self::TO_ID);
     }
 
-    public function testValidateForCreationThrowsWhenFromIdDoesNotExistInFieldValues()
+    public function testValidateForCreationThrowsWhenFromIdDoesNotExistInFieldValues(): void
     {
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
         $workflow
-            ->shouldReceive('getTransition')
+            ->method('getTransition')
             ->with(self::FROM_ID, self::TO_ID)
-            ->andReturnNull();
+            ->willReturn(null);
         $workflow
-            ->shouldReceive('getAllFieldValues')
-            ->andReturn([self::TO_ID => 'On Going']);
+            ->method('getAllFieldValues')
+            ->willReturn([self::TO_ID => 'On Going']);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(404);
@@ -116,16 +113,16 @@ class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator->validateForCreation($workflow, self::FROM_ID, self::TO_ID);
     }
 
-    public function testValidateForCreationThrowsWhenToIdDoesNotExistInFieldValues()
+    public function testValidateForCreationThrowsWhenToIdDoesNotExistInFieldValues(): void
     {
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->createMock(\Workflow::class);
         $workflow
-            ->shouldReceive('getTransition')
+            ->method('getTransition')
             ->with(self::FROM_ID, self::TO_ID)
-            ->andReturnNull();
+            ->willReturn(null);
         $workflow
-            ->shouldReceive('getAllFieldValues')
-            ->andReturn([self::FROM_ID => 'Todo']);
+            ->method('getAllFieldValues')
+            ->willReturn([self::FROM_ID => 'Todo']);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(404);
