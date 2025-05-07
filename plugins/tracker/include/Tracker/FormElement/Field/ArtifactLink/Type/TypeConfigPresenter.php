@@ -46,7 +46,6 @@ class TypeConfigPresenter
     public $types_usage;
     public $has_types;
     public $sections;
-    public $available_types;
     public $edit_icon_label;
     public $edit_system_type_title;
     public $delete_modal_title;
@@ -56,7 +55,6 @@ class TypeConfigPresenter
     public function __construct($title, array $types_usage, CSRFSynchronizerToken $csrf)
     {
         $this->desc                = dgettext('tuleap-tracker', 'Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform.');
-        $this->available_types     = dgettext('tuleap-tracker', 'Available types');
         $this->shortname_label     = dgettext('tuleap-tracker', 'Shortname');
         $this->forward_label_label = dgettext('tuleap-tracker', 'Forward label');
         $this->reverse_label_label = dgettext('tuleap-tracker', 'Reverse label');
