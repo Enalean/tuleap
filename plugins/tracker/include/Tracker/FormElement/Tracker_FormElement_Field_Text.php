@@ -324,7 +324,9 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
         if (isset($submitted_values[$this->getId()])) {
             $content = $submitted_values[$this->getId()]['content'];
-            $format  = $submitted_values[$this->getId()]['format'] == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT ? Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT : Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+            $format  = $this->isFormatValid($submitted_values[$this->getId()]['format'])
+                ? $submitted_values[$this->getId()]['format']
+                : Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
         } elseif ($value != null) {
             $content = $value->getText();
         }
