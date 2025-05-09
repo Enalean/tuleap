@@ -79,6 +79,7 @@
         <formElement type="art_link" ID="F14355" rank="0">
           <name>links</name>
           <label><![CDATA[Links]]></label>
+          <properties can_edit_reverse_links="1"/>
         </formElement>
         <formElement type="cross" ID="F14356" rank="1">
           <name>references</name>

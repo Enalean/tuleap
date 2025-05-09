@@ -91,6 +91,7 @@
           <name>links</name>
           <label><![CDATA[Links]]></label>
           <description><![CDATA[Links]]></description>
+          <properties can_edit_reverse_links="1"/>
         </formElement>
         <formElement type="cross" ID="F14343" rank="1">
           <name>references</name>

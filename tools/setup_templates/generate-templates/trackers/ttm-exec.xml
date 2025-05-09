@@ -65,6 +65,7 @@
         <formElement type="art_link" ID="F12772" rank="0">
           <name>artifact_links</name>
           <label><![CDATA[Artifact Links]]></label>
+          <properties can_edit_reverse_links="1"/>
         </formElement>
         <formElement type="cross" ID="F12773" rank="1">
           <name>cross</name>

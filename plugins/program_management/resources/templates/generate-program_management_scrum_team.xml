@@ -104,6 +104,7 @@
             <formElement type="art_link" ID="F22624" rank="0" id="22624" tracker_id="1036" parent_id="22623">
               <name><![CDATA[links]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F22625" rank="1" id="22625" tracker_id="1036" parent_id="22623">
               <name><![CDATA[references]]></name>
@@ -373,6 +374,7 @@
             <formElement type="art_link" ID="F792681" rank="0" id="792681" tracker_id="36342" parent_id="792680">
               <name><![CDATA[links]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F792682" rank="1" id="792682" tracker_id="36342" parent_id="792680">
               <name><![CDATA[references]]></name>
@@ -713,6 +715,7 @@
             <formElement type="art_link" ID="F792733" rank="0" id="792733" tracker_id="36344" parent_id="792732">
               <name><![CDATA[links]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F792734" rank="1" id="792734" tracker_id="36344" parent_id="792732">
               <name><![CDATA[references]]></name>
@@ -1044,6 +1047,7 @@
             <formElement type="art_link" ID="F26136" rank="0" id="26136" tracker_id="1187" parent_id="26135">
               <name><![CDATA[satisfy]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
           </formElements>
         </formElement>
@@ -1323,6 +1327,7 @@
             <formElement type="art_link" ID="F792748" rank="0" id="792748" tracker_id="36345" parent_id="792747">
               <name><![CDATA[links]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F792749" rank="1" id="792749" tracker_id="36345" parent_id="792747">
               <name><![CDATA[references]]></name>

@@ -171,6 +171,7 @@ ORDER BY @last_update_date DESC]]></value>
             <formElement type="art_link" ID="F23917" rank="2" id="23917" tracker_id="1089" parent_id="23910">
               <name><![CDATA[linked-features]]></name>
               <label><![CDATA[Linked Features]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
           </formElements>
         </formElement>
