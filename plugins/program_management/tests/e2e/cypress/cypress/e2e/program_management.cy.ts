@@ -133,9 +133,7 @@ function planFeatureIntoProgramIncrement(
     cy.log("Link User story to feature");
     cy.visit("https://tuleap/plugins/tracker/?&aid=" + feature_id);
 
-    cy.get("[data-test=edit-field-link]").click();
-    cy.get("[data-test=artifact-link-submit]").type(user_story_id);
-    cy.get("[data-test=artifact-link-type-selector]").select("_is_child");
+    cy.addLinkToArtifact("is Parent of", user_story_id);
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
     cy.log("Add feature to top backlog");
@@ -146,8 +144,7 @@ function planFeatureIntoProgramIncrement(
     cy.visitProjectService(program_project_name, "Program");
     cy.get("[data-test=program-increment-toggle]").click();
     cy.get("[data-test=program-increment-info-edit-link]").click();
-    cy.get("[data-test=edit-field-links]").click();
-    cy.get("[data-test=artifact-link-submit]").type(feature_id);
+    cy.addLinkToArtifact("is Linked to", feature_id);
     cy.get("[data-test=artifact-submit]").click();
 }
 
@@ -197,10 +194,7 @@ function planUserStory(team_project_name: string, program_project_name: string):
                 .invoke("data", "artifact-id")
                 .then((sprint_id) => {
                     cy.visit("https://tuleap/plugins/tracker/?&aid=" + sprint_id);
-                    cy.get("[data-test=edit-field-links]").click();
-                    cy.get("[data-test=artifact-link-submit]").type(String(user_story_id));
-                    cy.get("[data-test=artifact-link-type-selector]").first().select("_is_child");
-                    cy.get("[data-test=artifact-submit]").click();
+                    cy.addLinkToArtifact("is Parent of", String(user_story_id));
                 });
         });
 
