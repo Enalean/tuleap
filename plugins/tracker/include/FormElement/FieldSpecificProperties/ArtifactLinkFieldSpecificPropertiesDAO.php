@@ -49,6 +49,21 @@ final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject impl
         );
     }
 
+    public function activateForEveryExistingTrackers(): void
+    {
+        $this->getDB()->cell(
+            <<<EOS
+            INSERT INTO plugin_tracker_field_artifact_link (field_id, can_edit_reverse_links)
+            SELECT tracker_field.id, 1
+            FROM tracker_field
+                LEFT JOIN plugin_tracker_field_artifact_link
+                    ON (tracker_field.id = plugin_tracker_field_artifact_link.field_id)
+            WHERE (can_edit_reverse_links IS NULL OR can_edit_reverse_links = 0) AND formElement_type = 'art_link'
+            ON DUPLICATE KEY UPDATE can_edit_reverse_links = 1
+            EOS
+        );
+    }
+
     public function saveSpecificProperties(int $field_id, array $row): void
     {
         $can_edit_reverse_links = $row['can_edit_reverse_links'] ?? 0;

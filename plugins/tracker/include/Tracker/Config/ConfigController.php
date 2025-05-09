@@ -62,6 +62,10 @@ final class ConfigController implements DispatchableWithRequestNoAuthz, Dispatch
                 $this->csrf->check();
                 $this->artifact_links_controller->deleteType($request, $layout);
                 break;
+            case ArtifactLinkConfigController::ACTION_ACTIVATE_NEW_INTERFACE:
+                $this->csrf->check();
+                $this->artifact_links_controller->activateNewInterface($request, $layout);
+                break;
             case 'types': // kept for backward compatibility of url
             case 'artifact-links':
                 $this->artifact_links_controller->index($this->csrf, $layout);
