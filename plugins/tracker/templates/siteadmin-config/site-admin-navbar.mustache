@@ -2,9 +2,15 @@
 
 {{# sections }}
     <nav class="tlp-tabs">
-        <a class="tlp-tab {{ email_gateway_active }}" href="{{ emailgateway_url }}">{{ emailgateway }}</a>
-        <a class="tlp-tab {{ artifact_link_active }}" href="{{ types_url }}" data-test="artifact-link-types">{{ types }}</a>
-        <a class="tlp-tab {{ report_active }}" href="{{ report_config_url }}">{{ report_config_panel }}</a>
+        <a class="tlp-tab {{ email_gateway_active }}" href="{{ emailgateway_url }}">
+            {{# dgettext }} tuleap-tracker | Email Gateway {{/ dgettext }}
+        </a>
+        <a class="tlp-tab {{ artifact_link_active }}" href="{{ types_url }}" data-test="artifact-link-types">
+            {{# dgettext }} tuleap-tracker | Artifact links {{/ dgettext }}
+        </a>
+        <a class="tlp-tab {{ report_active }}" href="{{ report_config_url }}">
+            {{# dgettext }} tuleap-tracker | Report {{/ dgettext }}
+        </a>
         <a class="tlp-tab {{ artifact_deletion_active }}" href="{{ artifacts_deletion_url }}" data-test="artifact-deletion">
             {{# dgettext }} tuleap-tracker | Artifacts deletion {{/ dgettext }}
         </a>
