@@ -36,6 +36,19 @@ final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject impl
         return $this->getDB()->row($sql, $field_id);
     }
 
+    public function countNumberOfTrackersWithoutTheFeature(): int
+    {
+        return $this->getDB()->cell(
+            <<<EOS
+            SELECT COUNT(*)
+            FROM tracker_field
+                LEFT JOIN plugin_tracker_field_artifact_link
+                    ON (tracker_field.id = plugin_tracker_field_artifact_link.field_id)
+            WHERE (can_edit_reverse_links IS NULL OR can_edit_reverse_links = 0) AND formElement_type = 'art_link'
+            EOS
+        );
+    }
+
     public function saveSpecificProperties(int $field_id, array $row): void
     {
         $can_edit_reverse_links = $row['can_edit_reverse_links'] ?? 0;

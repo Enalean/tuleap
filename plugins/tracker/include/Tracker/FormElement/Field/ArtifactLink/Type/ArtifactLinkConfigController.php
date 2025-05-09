@@ -24,16 +24,17 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
-use Response;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecificPropertiesDAO;
 
-class TypeConfigController
+final readonly class ArtifactLinkConfigController
 {
-    private static $TEMPLATE = 'siteadmin-config/types';
-    private static $URL      = '/plugins/tracker/config.php?action=types';
+    private const TEMPLATE = 'siteadmin-config/artifact-links';
+    private const URL      = '/plugins/tracker/config.php?action=artifact-links';
 
     public function __construct(
         private TypeCreator $creator,
@@ -41,11 +42,12 @@ class TypeConfigController
         private TypeDeletor $deletor,
         private TypePresenterFactory $type_presenter_factory,
         private TypeUsagePresenterFactory $type_usage_presenter_factory,
+        private ArtifactLinkFieldSpecificPropertiesDAO $new_artifact_link_interface,
         private AdminPageRenderer $admin_page_rendered,
     ) {
     }
 
-    public function index(CSRFSynchronizerToken $csrf, BaseLayout $base_layout)
+    public function index(CSRFSynchronizerToken $csrf, BaseLayout $base_layout): void
     {
         $title = dgettext('tuleap-tracker', 'Trackers');
 
@@ -60,12 +62,12 @@ class TypeConfigController
         $this->admin_page_rendered->renderANoFramedPresenter(
             $title,
             TRACKER_TEMPLATE_DIR,
-            self::$TEMPLATE,
-            $this->getTypeConfigPresenter($title, $csrf)
+            self::TEMPLATE,
+            $this->getPresenter($title, $csrf)
         );
     }
 
-    public function createType(Codendi_Request $request, Response $response)
+    public function createType(Codendi_Request $request, BaseLayout $layout): void
     {
         try {
             $this->creator->create(
@@ -74,20 +76,20 @@ class TypeConfigController
                 $request->get('reverse_label')
             );
 
-            $response->addFeedback(
+            $layout->addFeedback(
                 Feedback::INFO,
                 sprintf(dgettext('tuleap-tracker', 'The type %1$s has been successfully created.'), $request->get('shortname'))
             );
         } catch (TypeManagementException $exception) {
-            $response->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 sprintf(dgettext('tuleap-tracker', 'Unable to create the requested type: %1$s'), $exception->getMessage())
             );
         }
-        $response->redirect(self::$URL);
+        $layout->redirect(self::URL);
     }
 
-    public function editType(Codendi_Request $request, Response $response)
+    public function editType(Codendi_Request $request, BaseLayout $layout): void
     {
         try {
             $this->editor->edit(
@@ -96,44 +98,49 @@ class TypeConfigController
                 $request->get('reverse_label')
             );
 
-            $response->addFeedback(
+            $layout->addFeedback(
                 Feedback::INFO,
                 sprintf(dgettext('tuleap-tracker', 'The type %1$s has been successfully updated.'), $request->get('shortname'))
             );
         } catch (TypeManagementException $exception) {
-            $response->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 sprintf(dgettext('tuleap-tracker', 'Unable to edit the requested type: %1$s'), $exception->getMessage())
             );
         }
-        $response->redirect(self::$URL);
+        $layout->redirect(self::URL);
     }
 
-    public function deleteType(Codendi_Request $request, Response $response)
+    public function deleteType(Codendi_Request $request, BaseLayout $layout): void
     {
         try {
             $this->deletor->delete($request->get('shortname'));
 
-            $response->addFeedback(
+            $layout->addFeedback(
                 Feedback::INFO,
                 dgettext('tuleap-tracker', 'The type has been successfully deleted.')
             );
         } catch (TypeManagementException $exception) {
-            $response->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 sprintf(dgettext('tuleap-tracker', 'An error has occurred during the deletion of the type: %1$s'), $exception->getMessage())
             );
         }
-        $response->redirect(self::$URL);
+        $layout->redirect(self::URL);
     }
 
-    /** @return TypeConfigPresenter */
-    private function getTypeConfigPresenter($title, CSRFSynchronizerToken $csrf)
+    private function getPresenter(string $title, CSRFSynchronizerToken $csrf): ArtifactLinkPresenter
     {
         $types = $this->type_presenter_factory->getAllTypes();
 
         $types_usage = $this->type_usage_presenter_factory->getTypesUsagePresenters($types);
 
-        return new TypeConfigPresenter($title, $types_usage, $csrf);
+        return new ArtifactLinkPresenter(
+            new TypeConfigPresenter($title, $types_usage),
+            new NewInterfacePresenter(
+                $this->new_artifact_link_interface->countNumberOfTrackersWithoutTheFeature(),
+            ),
+            CSRFSynchronizerTokenPresenter::fromToken($csrf),
+        );
     }
 }

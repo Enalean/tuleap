@@ -36847,26 +36847,6 @@
       <code><![CDATA[setIsGraph]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeConfigController.php">
-    <MissingParamType>
-      <code><![CDATA[$title]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$TEMPLATE]]></code>
-      <code><![CDATA[$URL]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[createType]]></code>
-      <code><![CDATA[deleteType]]></code>
-      <code><![CDATA[editType]]></code>
-      <code><![CDATA[index]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[redirect]]></code>
-      <code><![CDATA[redirect]]></code>
-      <code><![CDATA[redirect]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeConfigPresenter.php">
     <MissingParamType>
       <code><![CDATA[$title]]></code>

@@ -37,7 +37,7 @@ class SectionsPresenter
             'action'   => 'emailgateway',
         ]);
         $this->types_url         = TRACKER_BASE_URL . '/config.php?' . http_build_query([
-            'action'   => 'types',
+            'action'   => 'artifact-links',
         ]);
         $this->report_config_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action' => 'report-config',

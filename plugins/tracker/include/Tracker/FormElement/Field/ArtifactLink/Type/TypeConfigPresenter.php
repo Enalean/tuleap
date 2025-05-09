@@ -21,12 +21,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Tuleap\Tracker\Config\ArtifactLinkTypePresenter;
-use CSRFSynchronizerToken;
 
 class TypeConfigPresenter
 {
-    public $csrf_token;
     public $desc;
     public $title;
     public $shortname_label;
@@ -45,14 +42,13 @@ class TypeConfigPresenter
     public $shortname_pattern;
     public $types_usage;
     public $has_types;
-    public $sections;
     public $edit_icon_label;
     public $edit_system_type_title;
     public $delete_modal_title;
     public $delete_modal_submit;
     public $delete_modal_content;
 
-    public function __construct($title, array $types_usage, CSRFSynchronizerToken $csrf)
+    public function __construct($title, array $types_usage)
     {
         $this->desc                = dgettext('tuleap-tracker', 'Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform.');
         $this->shortname_label     = dgettext('tuleap-tracker', 'Shortname');
@@ -80,12 +76,9 @@ class TypeConfigPresenter
         $this->delete_modal_content   = dgettext('tuleap-tracker', 'You are about to delete a type. This action is action is irreversible. Do you confirm this deletion?');
         $this->shortname_pattern      = TypeValidator::SHORTNAME_PATTERN;
 
-        $this->sections = new ArtifactLinkTypePresenter();
-
         $this->title       = $title;
         $this->types_usage = $types_usage;
         $this->has_types   = count($this->types_usage) > 0;
         $this->no_types    = dgettext('tuleap-tracker', 'There no artifact links types');
-        $this->csrf_token  = $csrf->fetchHTMLInput();
     }
 }

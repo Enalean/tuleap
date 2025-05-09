@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -342,6 +342,14 @@ msgstr ""
 "Activer les liens entre artéfacts typés pour l'ensemble des outils de suivi "
 "du projet ?"
 
+msgid "Activate new interface for %s tracker"
+msgid_plural "Activate new interface for %s trackers"
+msgstr[0] "Activer la nouvelle interface pour %s tracker"
+msgstr[1] "Activer la nouvelle interface pour %s trackers"
+
+msgid "Activate new interface for all trackers"
+msgstr "Activer la nouvelle interface pour tous les trackers"
+
 msgid "Add a follow-up comment"
 msgstr "Ajouter un commentaire"
 
@@ -611,6 +619,13 @@ msgstr "Liens entre artéfacts"
 
 msgid "Artifact links count based"
 msgstr "Basé sur le nombre d'artéfacts liés"
+
+msgid ""
+"Artifact links edition in artifact view has been revamped and is activated "
+"by default for new trackers."
+msgstr ""
+"L'édition des liens entre artéfacts dans la vue d'artéfact a été améliorée "
+"et est activé par défaut pour les nouveaux trackers."
 
 msgid "Artifact links types"
 msgstr "Liens entre artéfacts typés"
@@ -1125,6 +1140,21 @@ msgid_plural "Current artifact children satisfy the following conditions:"
 msgstr[0] "Les enfants de l'artéfact courant satisfont la condition suivante :"
 msgstr[1] ""
 "Les enfants de l'artéfact courant satisfont les conditions suivantes :"
+
+msgid ""
+"Currently the new interface is activated for every tracker on the platform."
+msgstr ""
+"Actuellement la nouvelle interface est activée pour tous les trackers de la "
+"plateforme."
+
+msgid ""
+"Currently there is %s tracker that doesn't have the new interface activated."
+msgid_plural ""
+"Currently there are %s trackers that don't have the new interface activated."
+msgstr[0] ""
+"Actuellement il y a %s tracker qui n'a pas la nouvelle interface activée."
+msgstr[1] ""
+"Actuellement il y a %s trackers qui n'ont pas la nouvelle interface activée."
 
 msgid ""
 "Currently, you will be notified only if you are creator of an artifact, "
@@ -1866,6 +1896,9 @@ msgstr "Est activé"
 msgid "Is promoted"
 msgstr "Est promu"
 
+msgid "It can be disabled per tracker."
+msgstr "Elle peut être désactivée par tracker."
+
 msgid "It encountered the following error:"
 msgstr "L'erreur suivante a été remontée :"
 
@@ -2155,6 +2188,9 @@ msgstr "Le nom, la description et le nom court sont obligatoires."
 #, php-format
 msgid "New %s"
 msgstr "Ajouter un(e) %s"
+
+msgid "New artifact links interface"
+msgstr "Nouvelle interface de liens entre artéfacts"
 
 msgid "New tracker"
 msgstr "Nouvel outil de suivi"

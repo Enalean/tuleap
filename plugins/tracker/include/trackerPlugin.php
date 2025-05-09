@@ -194,7 +194,7 @@ use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeConfigController;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactLinkConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDeletor;
@@ -216,6 +216,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
+use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Hierarchy\HierarchyHistoryEntry;
@@ -2131,7 +2132,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 EventManager::instance(),
                 $admin_page_renderer
             ),
-            new TypeConfigController(
+            new ArtifactLinkConfigController(
                 new TypeCreator(
                     $nature_dao,
                     $nature_validator
@@ -2151,7 +2152,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new TypeUsagePresenterFactory(
                     $nature_dao
                 ),
-                $admin_page_renderer
+                new ArtifactLinkFieldSpecificPropertiesDAO(),
+                $admin_page_renderer,
             ),
             new TrackerReportConfigController(
                 new TrackerReportConfig(

@@ -11,7 +11,9 @@
         <div class="tlp-modal-body">
             <input type="hidden" name="action" value="create-type">
 
-            {{{ csrf_token }}}
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="siteadmin-config-types-modal-create-shortname">{{ shortname_label }} <i class="fa fa-asterisk"></i></label>
