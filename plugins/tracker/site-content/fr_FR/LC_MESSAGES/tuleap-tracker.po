@@ -350,6 +350,9 @@ msgstr[1] "Activer la nouvelle interface pour %s trackers"
 msgid "Activate new interface for all trackers"
 msgstr "Activer la nouvelle interface pour tous les trackers"
 
+msgid "Activate unified and simplified artifact links edition"
+msgstr "Activer l'édition des liens unifiée et simplifiée"
+
 msgid "Add a follow-up comment"
 msgstr "Ajouter un commentaire"
 
@@ -3694,6 +3697,9 @@ msgid ""
 msgstr ""
 "Le champ liste '%s' ne peut pas être comparé à une chaîne vide avec "
 "l'opérateur NOT IN()."
+
+msgid "The new interface allows edition of the forward and reverse links"
+msgstr "La nouvelle interface permet l'édition des liens directs et inverses"
 
 msgid "The notification could not be deleted."
 msgstr "La notification n’a pas pu être supprimée."

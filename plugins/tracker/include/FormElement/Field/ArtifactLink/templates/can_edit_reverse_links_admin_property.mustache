@@ -1,0 +1,15 @@
+<label class="checkbox" data-test="checkbox-specific-properties">
+    <input type="hidden"
+           name="formElement_data[specific_properties][can_edit_reverse_links]"
+           value="0" />
+    <input type="checkbox"
+           name="formElement_data[specific_properties][can_edit_reverse_links]"
+           id="formElement_properties_can_edit_reverse_links"
+           value="1"
+           {{# is_checked }}checked{{/ is_checked }}
+    />
+    {{# dgettext }} tuleap-tracker | Activate unified and simplified artifact links edition {{/ dgettext }}
+</label>
+<span class="text-info">
+    {{# dgettext }} tuleap-tracker | The new interface allows edition of the forward and reverse links {{/ dgettext }}
+</span>
