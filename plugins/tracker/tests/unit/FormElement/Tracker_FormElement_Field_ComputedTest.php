@@ -22,45 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\LegacyMockInterface;
-use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_Artifact_Changeset;
+use TestHelper;
 use Tracker_Artifact_Changeset_ValueDao;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueComputedTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
+use UserManager;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
-    /**
-     * @return Tracker_FormElement_Field_Computed|LegacyMockInterface|MockInterface
-     */
-    private function getComputedField()
+    public function testItExportsDefaultValueInXML(): void
     {
-        return \Mockery::mock(Tracker_FormElement_Field_Computed::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-    }
-
-    public function testItExportsDefaultValueInXML()
-    {
-        $computed_field = \Mockery::mock(Tracker_FormElement_Field_Computed::class)->makePartial();
-        $computed_field->shouldReceive('getProperty')->with('default_value')->andReturn('12.34');
+        $computed_field = ComputedFieldBuilder::aComputedField(123)->withSpecificProperty('default_value', ['value' => '12.34'])->build();
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><field />');
         $computed_field->exportPropertiesToXML($xml);
@@ -68,40 +60,35 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         self::assertSame('12.34', (string) $xml->properties['default_value']);
     }
 
-    public function testItDoesNotExportNullDefaultValueInXML()
+    public function testItDoesNotExportNullDefaultValueInXML(): void
     {
-        $computed_field = \Mockery::mock(Tracker_FormElement_Field_Computed::class)->makePartial();
-        $computed_field->shouldReceive('getProperty')->with('default_value')->andReturnNull();
+        $computed_field = ComputedFieldBuilder::aComputedField(123)->build();
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><field />');
         $computed_field->exportPropertiesToXML($xml);
 
-        $this->assertFalse(isset($xml->properties));
+        self::assertFalse(isset($xml->properties));
     }
 
     public function testItReturnsValueWhenCorrectlyFormatted(): void
     {
-        $field = $this->getComputedField();
-        $value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
-        ];
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
+        $value = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true];
 
-        $this->assertEquals($value, $field->getFieldDataFromRESTValue($value));
+        self::assertEquals($value, $field->getFieldDataFromRESTValue($value));
     }
 
     public function testItRejectsDataWhenAutocomputedIsDisabledAndNoManualValueIsProvided(): void
     {
-        $field = $this->getComputedField();
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
-        ];
+        $value = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false];
         $field->getFieldDataFromRESTValue($value);
     }
 
     public function testItRejectsDataWhenAutocomputedIsDisabledAndManualValueIsNull(): void
     {
-        $field = $this->getComputedField();
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
@@ -112,194 +99,148 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
 
     public function testItRejectsDataWhenValueIsSet(): void
     {
-        $field = $this->getComputedField();
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $value = [
-            'value' => 1,
-        ];
+        $value = ['value' => 1];
         $field->getFieldDataFromRESTValue($value);
     }
 
     public function testItExpectsAnArray(): void
     {
-        $field = $this->getComputedField();
-        $this->assertFalse($field->validateValue('String'));
-        $this->assertFalse($field->validateValue(1));
-        $this->assertFalse($field->validateValue(1.1));
-        $this->assertFalse($field->validateValue(true));
-        $this->assertTrue(
-            $field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true])
-        );
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
+        self::assertFalse($field->validateValue('String'));
+        self::assertFalse($field->validateValue(1));
+        self::assertFalse($field->validateValue(1.1));
+        self::assertFalse($field->validateValue(true));
+        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true]));
     }
 
     public function testItExpectsAtLeastAValueOrAnAutocomputedInformation(): void
     {
-        $field = $this->getComputedField();
-        $this->assertFalse($field->validateValue([]));
-        $this->assertFalse($field->validateValue(['v1' => 1]));
-        $this->assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED]));
-        $this->assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL]));
-        $this->assertFalse(
-            $field->validateValue(
-                [
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL,
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED,
-                ]
-            )
-        );
-        $this->assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1]));
-        $this->assertTrue(
-            $field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true])
-        );
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
+        self::assertFalse($field->validateValue([]));
+        self::assertFalse($field->validateValue(['v1' => 1]));
+        self::assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED]));
+        self::assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL]));
+        self::assertFalse($field->validateValue([
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL,
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED,
+        ]));
+        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1]));
+        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true]));
     }
 
     public function testItExpectsAFloatOrAIntAsManualValue(): void
     {
-        $field = $this->getComputedField();
-        $this->assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 'String']));
-        $this->assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1.1]));
-        $this->assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 0]));
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
+        self::assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 'String']));
+        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1.1]));
+        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 0]));
     }
 
     public function testItCanNotAcceptAManualValueWhenAutocomputedIsEnabled(): void
     {
-        $field = $this->getComputedField();
-        $this->assertFalse(
-            $field->validateValue(
-                [
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
-                ]
-            )
-        );
-        $this->assertTrue(
-            $field->validateValue(
-                [
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
-                ]
-            )
-        );
-        $this->assertFalse(
-            $field->validateValue(
-                [
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
-                ]
-            )
-        );
-        $this->assertTrue(
-            $field->validateValue(
-                [
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
-                ]
-            )
-        );
+        $field = ComputedFieldBuilder::aComputedField(123)->build();
+        self::assertFalse($field->validateValue([
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
+        ]));
+        self::assertTrue($field->validateValue([
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
+        ]));
+        self::assertFalse($field->validateValue([
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
+        ]));
+        self::assertTrue($field->validateValue([
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
+        ]));
     }
 
     public function testItIsValidWhenTheFieldIsRequiredAndIsAutocomputed(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(233);
-        $field->shouldReceive('isRequired')->andReturn(true);
-        $field->shouldReceive('userCanUpdate')->andReturn(true);
+        $user            = UserTestBuilder::buildWithDefaults();
+        $field           = ComputedFieldBuilder::aComputedField(123)->thatIsRequired()->withUpdatePermission($user, true)->build();
+        $artifact        = ArtifactTestBuilder::anArtifact(233)->build();
         $submitted_value = [
             'manual_value'    => '',
             'is_autocomputed' => true,
         ];
+        UserManager::instance()->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
-        $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
-        );
+        self::assertTrue($field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $user));
     }
 
     public function testItIsValidWhenTheFieldIsNotRequiredAndIsAutocomputed(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(233);
-        $field->shouldReceive('isRequired')->andReturn(false);
-        $field->shouldReceive('userCanUpdate')->andReturn(true);
+        $user            = UserTestBuilder::buildWithDefaults();
+        $field           = ComputedFieldBuilder::aComputedField(123)->withUpdatePermission($user, true)->build();
+        $artifact        = ArtifactTestBuilder::anArtifact(233)->build();
         $submitted_value = [
             'manual_value'    => '',
             'is_autocomputed' => true,
         ];
+        UserManager::instance()->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
-        $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
-        );
+        self::assertTrue($field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $user));
     }
 
     public function testItIsValidWhenTheFieldIsRequiredAndHasAManualValue(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(233);
-        $field->shouldReceive('isRequired')->andReturn(true);
-        $field->shouldReceive('userCanUpdate')->andReturn(true);
-        $field->shouldReceive('validate')->andReturn(true);
+        $user            = UserTestBuilder::buildWithDefaults();
+        $field           = ComputedFieldBuilder::aComputedField(123)->thatIsRequired()->withUpdatePermission($user, true)->build();
+        $artifact        = ArtifactTestBuilder::anArtifact(233)->build();
         $submitted_value = [
             'manual_value' => '11',
         ];
+        UserManager::instance()->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
-        $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
-        );
+        self::assertTrue($field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $user));
     }
 
     public function testItIsNotValidWhenTheFieldIsRequiredAndDoesntHaveAManualValue(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(233);
-        $field->shouldReceive('isRequired')->andReturn(true);
-        $field->shouldReceive('userCanUpdate')->andReturn(true);
+        $user            = UserTestBuilder::buildWithDefaults();
+        $field           = ComputedFieldBuilder::aComputedField(123)->thatIsRequired()->withUpdatePermission($user, true)->build();
+        $artifact        = ArtifactTestBuilder::anArtifact(233)->build();
         $submitted_value = [
             'manual_value' => '',
         ];
+        UserManager::instance()->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
-        $this->assertFalse(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
-        );
+        self::assertFalse($field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $user));
     }
 
     public function testItIsNotValidWhenTheFieldIsNotRequiredAndDoesntHaveAManualValue(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(233);
-        $field->shouldReceive('isRequired')->andReturn(false);
-        $field->shouldReceive('userCanUpdate')->andReturn(true);
+        $user            = UserTestBuilder::buildWithDefaults();
+        $field           = ComputedFieldBuilder::aComputedField(123)->withUpdatePermission($user, true)->build();
+        $artifact        = ArtifactTestBuilder::anArtifact(233)->build();
         $submitted_value = [
             'manual_value' => '',
         ];
+        UserManager::instance()->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
-        $this->assertFalse(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
-        );
+        self::assertFalse($field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $user));
     }
 
     public function testItIsValidWhenNoValuesAreSubmitted(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(233);
-        $field->shouldReceive('isRequired')->andReturn(false);
-        $field->shouldReceive('userCanUpdate')->andReturn(true);
-        $submitted_value = [
-        ];
+        $user            = UserTestBuilder::buildWithDefaults();
+        $field           = ComputedFieldBuilder::aComputedField(123)->withUpdatePermission($user, true)->build();
+        $artifact        = ArtifactTestBuilder::anArtifact(233)->build();
+        $submitted_value = [];
+        UserManager::instance()->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
-        $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
-        );
+        self::assertTrue($field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $user));
     }
 
     public function testItDisplaysEmptyWhenFieldsAreAutocomputedAndNoValuesAreSet(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
@@ -307,88 +248,80 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $value_one = ['id' => 766, 'artifact_link_id' => 766, 'type' => 'computed'];
         $value_two = ['id' => 777, 'artifact_link_id' => 777, 'type' => 'computed'];
 
-        $values = \TestHelper::arrayToDar($value_one, $value_two);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values = TestHelper::arrayToDar($value_one, $value_two);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->withArgs([101, 23])->andReturn(['value' => null]);
-        $field->shouldReceive('getStandardCalculationMode')->once();
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
+        $value_dao->method('getManuallySetValueForChangeset')->with(101, 23)->willReturn(['value' => null]);
+        $field->expects($this->once())->method('getStandardCalculationMode');
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
     public function testItDisplaysComputedValuesWhenComputedChildrenAreSet(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
 
         $value_one = ['id' => 766, 'artifact_link_id' => 766, 'type' => 'computed', 'value' => 10];
         $value_two = ['id' => 777, 'artifact_link_id' => 777, 'type' => 'computed', 'value' => 5];
-        $values    = \TestHelper::arrayToDar($value_one, $value_two);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values    = TestHelper::arrayToDar($value_one, $value_two);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->withArgs([101, 23])->andReturn(['value' => null]);
-        $field->shouldReceive('getStandardCalculationMode')->once();
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
+        $value_dao->method('getManuallySetValueForChangeset')->with(101, 23)->willReturn(['value' => null]);
+        $field->expects($this->once())->method('getStandardCalculationMode');
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
     public function testItCallsStandardCalculWhenFieldsAreIntAndNoValuesAreSet(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
 
         $value_one = ['id' => 750, 'type' => 'int'];
         $value_two = ['id' => 75, 'type' => 'int'];
-        $values    = \TestHelper::arrayToDar($value_one, $value_two);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values    = TestHelper::arrayToDar($value_one, $value_two);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->andReturn(['value' => null]);
-        $field->shouldReceive('getStandardCalculationMode')->once();
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
+        $value_dao->method('getManuallySetValueForChangeset')->willReturn(['value' => null]);
+        $field->expects($this->once())->method('getStandardCalculationMode');
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
     public function testItCallsStandardCalculWhenFieldsAreComputedAndNoValuesAreSet(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
 
         $value_one = ['id' => 766, 'type' => 'computed'];
         $value_two = ['id' => 777, 'type' => 'computed'];
-        $values    = \TestHelper::arrayToDar($value_one, $value_two);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values    = TestHelper::arrayToDar($value_one, $value_two);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->andReturn(['value' => null]);
-        $field->shouldReceive('getStandardCalculationMode')->once();
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
+        $value_dao->method('getManuallySetValueForChangeset')->willReturn(['value' => null]);
+        $field->expects($this->once())->method('getStandardCalculationMode');
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
     public function testItCallsStandardCalculWhenAComputedValueIsSet(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
@@ -396,65 +329,59 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $value_one = ['id' => 766, 'type' => 'computed', 'value' => '6'];
         $value_two = ['id' => 777, 'type' => 'computed'];
 
-        $values = \TestHelper::arrayToDar($value_one, $value_two);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values = TestHelper::arrayToDar($value_one, $value_two);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->andReturn(['value' => null]);
-        $field->shouldReceive('getStandardCalculationMode')->once();
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
+        $value_dao->method('getManuallySetValueForChangeset')->willReturn(['value' => null]);
+        $field->expects($this->once())->method('getStandardCalculationMode');
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
     public function testItCallsStandardCalculWhenIntFieldsAreSet(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
 
         $value_one = ['id' => 750, 'type' => 'int', 'int_value' => 10];
         $value_two = ['id' => 751, 'type' => 'int', 'int_value' => 5];
-        $values    = \TestHelper::arrayToDar($value_one, $value_two);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values    = TestHelper::arrayToDar($value_one, $value_two);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->andReturn(['value' => null]);
-        $field->shouldReceive('getStandardCalculationMode')->once();
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
+        $value_dao->method('getManuallySetValueForChangeset')->willReturn(['value' => null]);
+        $field->expects($this->once())->method('getStandardCalculationMode');
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
     public function testItReturnsNullWhenNoManualValueIsSetAndNoChildrenExists(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
 
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn(null);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn(null);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->andReturn(['value' => null]);
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
-        $field->shouldReceive('getStandardCalculationMode')->never();
+        $value_dao->method('getManuallySetValueForChangeset')->willReturn(['value' => null]);
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
+        $field->expects($this->never())->method('getStandardCalculationMode');
 
         $result = $field->getComputedValueWithNoStopOnManualValue($artifact);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testItCalculatesAutocomputedAndintFieldsEvenIfAParentIsSet(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
@@ -463,22 +390,20 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $value_two   = ['id' => 751, 'type' => 'int', 'int_value' => 5];
         $value_three = ['id' => 766, 'type' => 'computed', 'value' => '6'];
         $value_four  = ['id' => 777, 'type' => 'computed', 'value' => '6'];
-        $values      = \TestHelper::arrayToDar($value_one, $value_two, $value_three, $value_four);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values      = TestHelper::arrayToDar($value_one, $value_two, $value_three, $value_four);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->andReturn(['value' => 12]);
-        $field->shouldReceive('getStopAtManualSetFieldMode')->once();
-        $field->shouldReceive('getStandardCalculationMode')->once();
+        $value_dao->method('getManuallySetValueForChangeset')->willReturn(['value' => 12]);
+        $field->expects($this->once())->method('getStopAtManualSetFieldMode');
+        $field->expects($this->once())->method('getStandardCalculationMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
     public function testItReturnsComputedValuesAndIntValuesWhenBothAreOneSameChildrenLevel(): void
     {
-        $dao       = \Mockery::mock(ComputedFieldDao::class);
-        $value_dao = \Mockery::mock(ComputedDao::class);
+        $dao       = $this->createMock(ComputedFieldDao::class);
+        $value_dao = $this->createMock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
         $field    = $this->getComputedFieldForManualComputationTests($dao, $value_dao);
@@ -487,204 +412,203 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $value_two   = ['id' => 751, 'type' => 'int', 'int_value' => 5];
         $value_three = ['id' => 766, 'type' => 'computed', 'value' => '6'];
         $value_four  = ['id' => 777, 'type' => 'computed', 'value' => '6'];
-        $values      = \TestHelper::arrayToDar($value_one, $value_two, $value_three, $value_four);
-        $dao->shouldReceive('getComputedFieldValues')
-            ->withArgs([[233], 'effort', 23, false])
-            ->andReturn($values);
+        $values      = TestHelper::arrayToDar($value_one, $value_two, $value_three, $value_four);
+        $dao->method('getComputedFieldValues')->with([233], 'effort', 23, false)->willReturn($values);
 
-        $value_dao->shouldReceive('getManuallySetValueForChangeset')->andReturn(['value' => null]);
-        $field->shouldReceive('getStopAtManualSetFieldMode')->never();
-        $field->shouldReceive('getStandardCalculationMode')->once();
+        $value_dao->method('getManuallySetValueForChangeset')->willReturn(['value' => null]);
+        $field->expects($this->never())->method('getStopAtManualSetFieldMode');
+        $field->expects($this->once())->method('getStandardCalculationMode');
 
         $field->getComputedValueWithNoStopOnManualValue($artifact);
     }
 
-    /**
-     * @return LegacyMockInterface|MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private function getArtifactWithChangeset()
+    private function getArtifactWithChangeset(): Artifact
     {
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(233);
-
-        $changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
-
-        return $artifact;
+        return ArtifactTestBuilder::anArtifact(233)
+            ->withChangesets(ChangesetTestBuilder::aChangeset(101)->build())
+            ->build();
     }
 
-    /**
-     * @return LegacyMockInterface|MockInterface|Tracker_FormElement_Field_Computed
-     */
-    private function getComputedFieldForManualComputationTests($dao, $value_dao)
+    private function getComputedFieldForManualComputationTests(ComputedFieldDao $dao, ComputedDao $value_dao): Tracker_FormElement_Field_Computed&MockObject
     {
-        $field = $this->getComputedField();
-        $field->shouldReceive('getDao')->andReturn($dao);
-        $field->shouldReceive('getId')->andReturn(23);
-        $field->shouldReceive('getName')->andReturn('effort');
-        $field->shouldReceive('getValueDao')->andReturn($value_dao);
+        $field = $this->createPartialMock(Tracker_FormElement_Field_Computed::class, [
+            'getDao', 'getId', 'getName', 'getValueDao', 'getStandardCalculationMode', 'getStopAtManualSetFieldMode',
+        ]);
+        $field->method('getDao')->willReturn($dao);
+        $field->method('getId')->willReturn(23);
+        $field->method('getName')->willReturn('effort');
+        $field->method('getValueDao')->willReturn($value_dao);
 
         return $field;
     }
 
     public function testItDetectsChangeWhenBackToAutocompute(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(1.0);
-        $old_value->shouldReceive('isManualValue')->andReturn(true);
+        $old_value = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(1.0)
+            ->withIsManualValue(true)
+            ->build();
 
         $submitted_value = [
             'manual_value'    => '',
             'is_autocomputed' => true,
         ];
 
-        $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItDetectsChangeWhenBackToManualValue(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(null);
-        $old_value->shouldReceive('isManualValue')->andReturn(false);
+        $old_value       = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(null)
+            ->withIsManualValue(false)
+            ->build();
         $submitted_value = [
             'manual_value'    => '123',
             'is_autocomputed' => false,
         ];
 
-        $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItDetectsChangeWhenBackToAutocomputeWhenManualValueIs0(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(0.0);
-        $old_value->shouldReceive('isManualValue')->andReturn(true);
+        $old_value = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(0.0)
+            ->withIsManualValue(true)
+            ->build();
 
         $submitted_value = [
             'manual_value'    => '',
             'is_autocomputed' => true,
         ];
 
-        $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItHasChangesWhenANewManualValueIsSet(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(7.0);
-        $old_value->shouldReceive('isManualValue')->andReturn(false);
+        $old_value       = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(7.0)
+            ->withIsManualValue(false)
+            ->build();
         $submitted_value = [
             'is_autocomputed' => '',
             'manual_value'    => 5,
         ];
 
-        $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItHasNotChangesWhenANewManualValueIsEqualToOldChangesetValue(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(7.0);
-        $old_value->shouldReceive('isManualValue')->andReturn(false);
+        $old_value       = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(7.0)
+            ->withIsManualValue(false)
+            ->build();
         $submitted_value = [
             'is_autocomputed' => '',
             'manual_value'    => 7,
         ];
 
-        $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItHasNotChangesIfYouAreStillInAutocomputedMode(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(null);
-        $old_value->shouldReceive('isManualValue')->andReturn(false);
+        $old_value = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(null)
+            ->withIsManualValue(false)
+            ->build();
 
         $submitted_value = [
             'is_autocomputed' => '1',
             'manual_value'    => '',
         ];
 
-        $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItHasNotChangesIfYouAreStillInAutocomputedModeWithAProvidedManualValueByHTMLForm(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(null);
-        $old_value->shouldReceive('isManualValue')->andReturn(false);
+        $old_value = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(null)
+            ->withIsManualValue(false)
+            ->build();
 
         $submitted_value = [
             'is_autocomputed' => '1',
             'manual_value'    => '999999',
         ];
 
-        $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItHasNotChangesWhenANewManualIsAStringAndValueIsEqualToOldChangesetValue(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(7.0);
-        $old_value->shouldReceive('isManualValue')->andReturn(false);
+        $old_value       = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(7.0)
+            ->withIsManualValue(false)
+            ->build();
         $submitted_value = [
             'is_autocomputed' => '',
             'manual_value'    => '7',
         ];
 
-        $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItCanAdd0ToManualValueFromAutocomputed(): void
     {
-        $field    = $this->getComputedField();
-        $artifact = Mockery::mock(Artifact::class);
+        $field    = ComputedFieldBuilder::aComputedField(123)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(654)->build();
 
-        $old_value = Mockery::mock(ChangesetValueComputed::class);
-        $old_value->shouldReceive('getNumeric')->andReturn(null);
-        $old_value->shouldReceive('isManualValue')->andReturn(false);
+        $old_value       = ChangesetValueComputedTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(456)->build(), $field)
+            ->withValue(null)
+            ->withIsManualValue(false)
+            ->build();
         $submitted_value = [
             'is_autocomputed' => '',
             'manual_value'    => '0',
         ];
 
-        $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
+        self::assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
     }
 
     public function testItCanRetrieveManualValuesWhenArrayIsGiven(): void
     {
-        $value_dao = Mockery::mock(ComputedDao::class);
-        $user      = Mockery::mock(\PFUser::class);
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $value_dao = $this->createMock(ComputedDao::class);
+        $user      = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset(101)->build();
 
-        $field = $this->getComputedFieldForManualValueRetrievement($value_dao, $user, $changeset);
+        $field = $this->getComputedFieldForManualValueRetrievement($value_dao);
+        $changeset->setFieldValue($field);
 
-        $value_dao->shouldReceive('create')->withArgs([1234, 20]);
+        $value_dao->method('create')->with(1234, 20);
 
         $value = [
             'manual_value'    => 20,
@@ -692,81 +616,80 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         ];
 
         $field->saveNewChangeset(
-            Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(654)->build(),
             $changeset,
             4444,
             $value,
             $user,
             false,
             false,
-            \Mockery::mock(CreatedFileURLMapping::class)
+            new CreatedFileURLMapping(),
         );
     }
 
     public function testItCanRetrieveManualValueWhenDataComesFromJson(): void
     {
-        $value_dao = Mockery::mock(ComputedDao::class);
-        $user      = Mockery::mock(\PFUser::class);
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $value_dao = $this->createMock(ComputedDao::class);
+        $user      = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset(68771)->build();
 
-        $field = $this->getComputedFieldForManualValueRetrievement($value_dao, $user, $changeset);
+        $field = $this->getComputedFieldForManualValueRetrievement($value_dao);
+        $changeset->setFieldValue($field);
 
-        $value     = json_encode(
-            $value = [
-                'manual_value'    => 20,
-                'is_autocomputed' => 0,
-            ]
-        );
+        $value = json_encode([
+            'manual_value'    => 20,
+            'is_autocomputed' => 0,
+        ]);
 
-        $value_dao->shouldReceive('create')->withArgs([1234, 20]);
+        $value_dao->method('create')->with(1234, 20);
 
         $field->saveNewChangeset(
-            Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(654)->build(),
             $changeset,
             4444,
             $value,
             $user,
             false,
             false,
-            \Mockery::mock(CreatedFileURLMapping::class)
+            new CreatedFileURLMapping(),
         );
     }
 
     public function testItRetrieveEmptyValueWhenDataIsIncorrect(): void
     {
-        $value_dao = Mockery::mock(ComputedDao::class);
-        $user      = Mockery::mock(\PFUser::class);
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $value_dao = $this->createMock(ComputedDao::class);
+        $user      = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset(9697854)->build();
 
-        $field = $this->getComputedFieldForManualValueRetrievement($value_dao, $user, $changeset);
+        $field = $this->getComputedFieldForManualValueRetrievement($value_dao);
+        $changeset->setFieldValue($field);
 
         $value = 'aaa';
-        $value_dao->shouldReceive('create')->withArgs([1234, null]);
+        $value_dao->method('create')->with(1234, null);
 
         $field->saveNewChangeset(
-            Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class),
+            ArtifactTestBuilder::anArtifact(654)->build(),
             $changeset,
             4444,
             $value,
             $user,
             false,
             false,
-            \Mockery::mock(CreatedFileURLMapping::class)
+            new CreatedFileURLMapping(),
         );
     }
 
-    private function getComputedFieldForManualValueRetrievement($value_dao, $user, $changeset)
+    private function getComputedFieldForManualValueRetrievement(ComputedDao $value_dao): Tracker_FormElement_Field_Computed
     {
-        $field = $this->getComputedField();
-        $field->shouldReceive('getValueDao')->andReturn($value_dao);
-        $old_changset = Mockery::mock(Tracker_Artifact_Changeset_ValueDao::class);
-        $field->shouldReceive('getChangesetValueDao')->andReturn($old_changset);
-        $field->shouldReceive('userCanUpdate')->andReturn(true);
+        $field = $this->createPartialMock(Tracker_FormElement_Field_Computed::class, [
+            'getValueDao', 'getChangesetValueDao', 'userCanUpdate',
+        ]);
+        $field->method('getValueDao')->willReturn($value_dao);
+        $old_changset = $this->createMock(Tracker_Artifact_Changeset_ValueDao::class);
+        $field->method('getChangesetValueDao')->willReturn($old_changset);
+        $field->method('userCanUpdate')->willReturn(true);
 
-        $old_changset->shouldReceive('save')->withArgs([4444, Mockery::any(), 1])->once()->andReturn(1234);
-
-        $user->shouldReceive('isSuperUser')->andReturn(false);
-        $changeset->shouldReceive('getValue')->once();
+        $old_changset->expects($this->once())->method('save')->with(4444, self::anything(), 1)->willReturn(1234);
 
         return $field;
     }

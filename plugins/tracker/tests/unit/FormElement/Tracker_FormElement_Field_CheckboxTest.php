@@ -19,52 +19,64 @@
  *
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use ReflectionClass;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_FormElement_Field_Checkbox;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_CheckboxTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_CheckboxTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItIsNoneWhenArrayIsFullOfZero(): void
     {
         $field = $this->getCheckboxField();
-        $this->assertTrue($field->isNone(['0', '0', '0']));
+        self::assertTrue($field->isNone(['0', '0', '0']));
     }
 
     public function testItIsNotNoneWhenArrayContainsAValue(): void
     {
         $field = $this->getCheckboxField();
-        $this->assertFalse($field->isNone(['1' => '0', '2' => '53']));
+        self::assertFalse($field->isNone(['1' => '0', '2' => '53']));
     }
 
     public function testItHasNoChangesWhenSubmittedValuesAreTheSameAsStored(): void
     {
-        $previous = $this->getPreviousCHangesetValue();
         $field    = $this->getCheckboxField();
-        $this->assertFalse($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '5125']));
+        $previous = $this->getPreviousChangesetValue($field);
+        self::assertFalse($field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $previous, ['5123', '5125']));
     }
 
     public function testItHasNoChangesWhenSubmittedValuesContainsZero(): void
     {
-        $previous = $this->getPreviousCHangesetValue();
         $field    = $this->getCheckboxField();
-        $this->assertFalse($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '0', '5125']));
+        $previous = $this->getPreviousChangesetValue($field);
+        self::assertFalse($field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $previous, ['5123', '0', '5125']));
     }
 
     public function testItDetectsChangesEvenWhenCSVImportValueIsNull(): void
     {
-        $previous = $this->getPreviousCHangesetValue();
         $field    = $this->getCheckboxField();
-        $this->assertTrue($field->hasChanges(Mockery::mock(Artifact::class), $previous, null));
+        $previous = $this->getPreviousChangesetValue($field);
+        self::assertTrue($field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $previous, null));
     }
 
     public function testItHasChangesWhenSubmittedValuesContainsDifferentValues(): void
     {
-        $previous = $this->getPreviousCHangesetValue();
         $field    = $this->getCheckboxField();
-        $this->assertTrue($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '0', '5122']));
+        $previous = $this->getPreviousChangesetValue($field);
+        self::assertTrue($field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $previous, ['5123', '0', '5122']));
     }
 
     public function testItHasAnHiddenFieldForEachCheckbox(): void
@@ -72,50 +84,42 @@ final class Tracker_FormElement_Field_CheckboxTest extends \Tuleap\Test\PHPUnit\
         $value      = ListStaticValueBuilder::aStaticValue('static')->withId(1)->build();
         $parameters = [$value, 'lename', false];
 
-        $field = $this->getCheckboxField();
-        $bind  = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind->shouldReceive('formatChangesetValueWithoutLink')->once();
-        $field->setBind($bind);
+        $field = ListStaticBindBuilder::aStaticBind($this->getCheckboxField())->build()->getField();
 
-        $reflection = new \ReflectionClass($field::class);
+        $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('fetchFieldValue');
         $method->setAccessible(true);
 
         $html = $method->invokeArgs($field, $parameters);
 
-        $this->assertMatchesRegularExpression('/<input type="hidden" lename/', $html);
+        self::assertMatchesRegularExpression('/<input type="hidden" lename/', $html);
     }
 
     public function testItPresentsReadOnlyViewAsAList(): void
     {
-        $artifact     = Mockery::mock(Artifact::class);
-        $value        = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $bind         = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_value   = ListStaticValueBuilder::aStaticValue('static')->withId(523)->build();
-        $bind_value_2 = ListStaticValueBuilder::aStaticValue('static')->withId(524)->build();
-        $bind_value_3 = ListStaticValueBuilder::aStaticValue('static')->withId(525)->build();
-        $bind->shouldReceive('getAllVisibleValues')->andReturn([$bind_value->getId() => $bind_value, $bind_value_2->getId() => $bind_value_2, $bind_value_3->getId() => $bind_value_3]);
-        $value->shouldReceive('getListValues')->andReturn([$bind_value->getId() => $bind_value, $bind_value_3->getId() => $bind_value_3]);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
+        $bind     = ListStaticBindBuilder::aStaticBind($this->getCheckboxField())->withStaticValues([
+            523 => 'Value_1',
+            524 => 'Value_2',
+            525 => 'Value_3',
+        ])->build();
+        $field    = $bind->getField();
+        $value    = ChangesetValueListTestBuilder::aListOfValue(1, ChangesetTestBuilder::aChangeset(1)->build(), $field)
+            ->withValues($bind->getBindValues([523, 525]))->build();
 
-        $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value)->andReturn('Value_1');
-        $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value_2)->andReturn('Value_2');
-        $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value_3)->andReturn('Value_3');
-
-        $field = $this->getCheckboxField();
-        $field->setBind($bind);
         $html = $field->fetchArtifactValueReadOnly($artifact, $value);
 
-        $this->assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[x]</span> Value_1</li>', $html);
-        $this->assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[ ]</span> Value_2</li>', $html);
-        $this->assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[x]</span> Value_3</li>', $html);
+        self::assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[x]</span> Value_1</li>', $html);
+        self::assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[ ]</span> Value_2</li>', $html);
+        self::assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[x]</span> Value_3</li>', $html);
     }
 
     public function testItReplaceCSVNullValueByNone(): void
     {
         $field = $this->getCheckboxField();
-        $this->assertEquals(
+        self::assertEquals(
             [Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID],
-            $field->getFieldDataFromCSVValue(null, null)
+            $field->getFieldDataFromCSVValue(null)
         );
     }
 
@@ -142,14 +146,13 @@ final class Tracker_FormElement_Field_CheckboxTest extends \Tuleap\Test\PHPUnit\
         );
     }
 
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetValue_List
-     */
-    protected function getPreviousCHangesetValue()
+    protected function getPreviousChangesetValue(Tracker_FormElement_Field_List $field): Tracker_Artifact_ChangesetValue_List
     {
-        $previous = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $previous->shouldReceive('getValue')->andReturn([5123, 5125]);
-
-        return $previous;
+        return ChangesetValueListTestBuilder::aListOfValue(1, ChangesetTestBuilder::aChangeset(1)->build(), $field)
+            ->withValues([
+                ListStaticValueBuilder::aStaticValue('foo')->withId(5123)->build(),
+                ListStaticValueBuilder::aStaticValue('bar')->withId(5125)->build(),
+            ])
+            ->build();
     }
 }
