@@ -114,9 +114,3 @@ ignoreUntil = 2025-10-12
 id = "RUSTSEC-2024-0436"
 reason = "Repository archive notification. see https://github.com/bytecodealliance/wasmtime/issues/10356"
 ignoreUntil = 2025-10-12
-
-# Go
-[[IgnoredVulns]]
-id = "GO-2025-3563" # CVE-2025-22871
-reason = "No security impact for Tuleap use cases. https://github.com/golang/go/issues/71988"
-ignoreUntil = 2025-05-09
