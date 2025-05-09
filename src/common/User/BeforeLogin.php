@@ -23,8 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\User;
 
 use Tuleap\Event\Dispatchable;
+use Tuleap\Option\Option;
 
 interface BeforeLogin extends Dispatchable
 {
     public function getUser(): ?\PFUser;
+
+    public function getLoginName(): string;
+
+    public function refuseLogin(string $feedback): void;
+
+    /**
+     * @return Option<string>
+     */
+    public function isLoginRefused(): Option;
 }

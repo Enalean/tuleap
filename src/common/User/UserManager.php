@@ -601,6 +601,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $login_manager               = new User_LoginManager(
                 EventManager::instance(),
                 $this,
+                $this->getDao(),
                 $this,
                 new \Tuleap\User\PasswordVerifier($password_handler),
                 $password_expiration_checker,
@@ -627,9 +628,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             \Tuleap\User\LoginInstrumentation::increment('success');
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
             return $user;
-        } catch (User_InvalidPasswordWithUserException $exception) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $this->getDao()->storeLoginFailure($name, \Tuleap\Request\RequestTime::getTimestamp());
         } catch (User_InvalidPasswordException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (User_PasswordExpiredException $exception) {

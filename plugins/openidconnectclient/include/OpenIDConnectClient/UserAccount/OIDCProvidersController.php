@@ -118,7 +118,7 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
                 $this->csrf_token,
                 $user_mappings_usage,
                 $this->unique_provider,
-                $this->can_unlink_provider_from_account_checker->canAUserMappingBeRemoved($user, $user_mappings_usage)
+                $this->can_unlink_provider_from_account_checker->canAUserMappingBeRemoved($user_mappings_usage)
             )
         );
         $layout->footer([]);

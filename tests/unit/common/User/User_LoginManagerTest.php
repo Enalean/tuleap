@@ -38,6 +38,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
      * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
+    private UserDao&\PHPUnit\Framework\MockObject\MockObject $user_dao;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\User\PasswordVerifier
      */
@@ -56,12 +57,14 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
     {
         $this->event_manager               = new EventManager();
         $this->user_manager                = $this->createMock(\UserManager::class);
+        $this->user_dao                    = $this->createMock(UserDao::class);
         $this->password_verifier           = $this->createMock(\Tuleap\User\PasswordVerifier::class);
         $this->password_expiration_checker = $this->createMock(\User_PasswordExpirationChecker::class);
         $this->password_handler            = $this->createMock(\PasswordHandler::class);
         $this->login_manager               = new User_LoginManager(
             $this->event_manager,
             $this->user_manager,
+            $this->user_dao,
             $this->user_manager,
             $this->password_verifier,
             $this->password_expiration_checker,
@@ -135,33 +138,16 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
     public function testItThrowsAnExceptionWhenPasswordIsWrong(): void
     {
         $this->getCatchEventsPlugin();
-
-        $this->expectException(\User_InvalidPasswordWithUserException::class);
-
-        $this->user_manager->method('getUserByUserName')->willReturn($this->buildUser(PFUser::STATUS_ACTIVE));
-        $this->password_verifier->method('verifyPassword')->willReturn(false);
-        $this->user_manager->method('isPasswordlessOnly')->willReturn(false);
-        $this->password_handler->method('isPasswordNeedRehash')->willReturn(false);
-
-        $this->login_manager->authenticate('john', new ConcealedString('wrong_password'));
-    }
-
-    public function testItThrowsAnExceptionWithUserWhenPasswordIsWrong(): void
-    {
-        $this->getCatchEventsPlugin();
-        $exception_catched = false;
-        $user              = $this->buildUser(PFUser::STATUS_ACTIVE);
+        $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->method('getUserByUserName')->willReturn($user);
         $this->password_verifier->method('verifyPassword')->willReturn(false);
         $this->user_manager->method('isPasswordlessOnly')->willReturn(false);
         $this->password_handler->method('isPasswordNeedRehash')->willReturn(false);
-        try {
-            $this->login_manager->authenticate('john', new ConcealedString('wrong_password'));
-        } catch (User_InvalidPasswordWithUserException $exception) {
-            $this->assertEquals($exception->getUser(), $user);
-            $exception_catched = true;
-        }
-        $this->assertTrue($exception_catched);
+
+        $this->user_dao->expects($this->once())->method('storeLoginFailure');
+        $this->expectException(User_InvalidPasswordException::class);
+
+        $this->login_manager->authenticate('john', new ConcealedString('wrong_password'));
     }
 
     public function testItAsksPluginIfDbAuthIsAuthorizedForUser(): void
@@ -249,7 +235,27 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $this->login_manager->validateAndSetCurrentUser($user);
     }
 
-    public function testItRaisesAnExceptionIfPluginForbidLogin(): void
+    public function testItRaisesAnExceptionIfPluginForbidLoginBeforeEvenAttemptingLocalLogin(): void
+    {
+        $user = $this->buildUser(PFUser::STATUS_ACTIVE);
+        $this->user_manager->method('getUserByUserName')->willReturn($user);
+        $this->user_manager->method('isPasswordlessOnly')->willReturn(false);
+
+        $plugin = new class extends \Plugin {
+            public function beforeLogin(BeforeStandardLogin $event): void
+            {
+                $event->refuseLogin('before login denied');
+            }
+        };
+        $this->addListeners($plugin);
+
+        $this->expectException(\User_InvalidPasswordException::class);
+        $this->expectExceptionMessage('before login denied');
+
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
+    }
+
+    public function testItRaisesAnExceptionIfPluginForbidLoginAfterLocalLoginSucceeded(): void
     {
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->method('getUserByUserName')->willReturn($user);
@@ -280,7 +286,8 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         };
         $this->addListeners($plugin);
 
-        $this->expectException(\User_InvalidPasswordWithUserException::class);
+        $this->user_dao->expects($this->once())->method('storeLoginFailure');
+        $this->expectException(\User_InvalidPasswordException::class);
         $this->expectExceptionMessage('nope');
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
@@ -310,7 +317,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $this->user_manager->method('isPasswordlessOnly')->willReturn(false);
         $this->password_handler->method('isPasswordNeedRehash')->willReturn(false);
 
-        $this->expectException(\User_InvalidPasswordWithUserException::class);
+        $this->expectException(\User_InvalidPasswordException::class);
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
@@ -319,7 +326,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
     {
         $this->user_manager->expects($this->once())->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->build());
         $this->user_manager->method('isPasswordlessOnly')->willReturn(true);
-        self::expectException(User_InvalidPasswordWithUserException::class);
+        self::expectException(User_InvalidPasswordException::class);
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
     }

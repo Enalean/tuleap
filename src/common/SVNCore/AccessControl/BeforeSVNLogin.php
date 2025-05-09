@@ -23,22 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\SVNCore\AccessControl;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Option\Option;
 use Tuleap\User\BeforeLogin;
+use function Psl\Type\string;
 
 final class BeforeSVNLogin implements BeforeLogin
 {
     public const NAME = 'beforeSVNLogin';
 
     private ?\PFUser $user = null;
+    /**
+     * @var Option<string>
+     */
+    private Option $login_refusal;
 
     public function __construct(
-        /** @psalm-readonly */
-        private string $login_name,
-        /** @psalm-readonly */
-        private ConcealedString $password,
-        /** @psalm-readonly */
-        public \Project $project,
+        private readonly string $login_name,
+        private readonly ConcealedString $password,
+        public readonly \Project $project,
     ) {
+        $this->login_refusal = Option::nothing(string());
     }
 
     public function getLoginName(): string
@@ -59,5 +63,15 @@ final class BeforeSVNLogin implements BeforeLogin
     public function getUser(): ?\PFUser
     {
         return $this->user;
+    }
+
+    public function refuseLogin(string $feedback): void
+    {
+        $this->login_refusal = Option::fromValue($feedback);
+    }
+
+    public function isLoginRefused(): Option
+    {
+        return $this->login_refusal;
     }
 }

@@ -30,8 +30,6 @@ use User_LoginException;
 use UserManager;
 use EventManager;
 use User_LoginManager;
-use User_InvalidPasswordWithUserException;
-use User_InvalidPasswordException;
 use User_PasswordExpirationChecker;
 use PasswordHandlerFactory;
 
@@ -74,6 +72,7 @@ class TokenResource
             $user_login       = new User_LoginManager(
                 EventManager::instance(),
                 $this->user_manager,
+                new \UserDao(),
                 $this->user_manager,
                 new PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
@@ -90,10 +89,6 @@ class TokenResource
             );
             return $token;
         } catch (User_LoginException $exception) {
-            throw new RestException(401, $exception->getMessage());
-        } catch (User_InvalidPasswordWithUserException $exception) {
-            throw new RestException(401, $exception->getMessage());
-        } catch (User_InvalidPasswordException $exception) {
             throw new RestException(401, $exception->getMessage());
         } catch (Exception $exception) {
             throw new RestException(500, $exception->getMessage());

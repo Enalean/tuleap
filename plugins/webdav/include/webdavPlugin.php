@@ -147,6 +147,7 @@ class WebDAVPlugin extends Plugin implements PluginWithConfigKeys
             new User_LoginManager(
                 EventManager::instance(),
                 $user_manager,
+                new UserDao(),
                 $user_manager,
                 new \Tuleap\User\PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),

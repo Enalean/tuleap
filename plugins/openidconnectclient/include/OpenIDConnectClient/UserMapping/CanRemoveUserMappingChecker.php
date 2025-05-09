@@ -23,15 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
-use PFUser;
-
 class CanRemoveUserMappingChecker
 {
     /**
      * @param UserMappingUsage[] $existing_user_mappings
      */
-    public function canAUserMappingBeRemoved(PFUser $user, array $existing_user_mappings): bool
+    public function canAUserMappingBeRemoved(array $existing_user_mappings): bool
     {
-        return $user->getUserPw() !== null || count($existing_user_mappings) > 1;
+        return count($existing_user_mappings) > 1;
     }
 }

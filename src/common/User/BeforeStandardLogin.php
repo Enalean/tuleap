@@ -25,28 +25,22 @@ namespace Tuleap\User;
 
 use PFUser;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final class BeforeStandardLogin implements BeforeLogin
 {
     public const NAME = 'beforeLogin';
 
+    private ?PFUser $user = null;
     /**
-     * @var string
+     * @var Option<string>
      */
-    private $login_name;
-    /**
-     * @var ConcealedString
-     */
-    private $password;
-    /**
-     * @var PFUser|null
-     */
-    private $user;
+    private Option $login_refusal;
 
-    public function __construct(string $login_name, ConcealedString $password)
+    public function __construct(private readonly string $login_name, private readonly ConcealedString $password)
     {
-        $this->login_name = $login_name;
-        $this->password   = $password;
+        $this->login_refusal = Option::nothing(string());
     }
 
     public function getLoginName(): string
@@ -67,5 +61,15 @@ final class BeforeStandardLogin implements BeforeLogin
     public function getUser(): ?PFUser
     {
         return $this->user;
+    }
+
+    public function refuseLogin(string $feedback): void
+    {
+        $this->login_refusal = Option::fromValue($feedback);
+    }
+
+    public function isLoginRefused(): Option
+    {
+        return $this->login_refusal;
     }
 }

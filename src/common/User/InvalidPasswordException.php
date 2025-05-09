@@ -19,8 +19,11 @@
 
 class User_InvalidPasswordException extends User_LoginException
 {
-    public function __construct()
+    public function __construct(string $message = '')
     {
-        parent::__construct(_('Invalid Password Or User Name'));
+        if ($message === '') {
+            $message = _('Invalid Password Or User Name');
+        }
+        parent::__construct($message);
     }
 }

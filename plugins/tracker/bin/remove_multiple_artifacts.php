@@ -60,6 +60,7 @@ $password_handler = PasswordHandlerFactory::getPasswordHandler();
 $login_manager = new User_LoginManager(
     EventManager::instance(),
     UserManager::instance(),
+    new UserDao(),
     UserManager::instance(),
     new PasswordVerifier($password_handler),
     new User_PasswordExpirationChecker(),
