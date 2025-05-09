@@ -842,9 +842,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
         $usage_in_semantics = $this->getUsagesInSemantics();
 
-        $html         .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '" data-test="tracker-admin-field" >';
-        $html         .= '<div class="tracker-admin-field-controls">';
-                $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
+        $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '" data-test="tracker-admin-field" >';
+        $html .= '<div class="tracker-admin-field-controls">';
+        $html .= '<a class="edit-field" data-test="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
         if ($usage_in_semantics->areThereSemanticsUsingField() === false && $this->canBeRemovedFromUsage()) {
             $csrf_token = $this->getCSRFTokenForElementUpdate();
             $html      .= '<form method="POST" action="?">';
