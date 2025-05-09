@@ -192,6 +192,21 @@ final class ProgramAdminTest extends TestCase
         self::assertFalse($program_admin->is_project_used_in_plan);
     }
 
+    public function testItSaysThatIncrementHasErrorsWhenThereIsNoIterationTracker(): void
+    {
+        $errors_gatherer = new ConfigurationErrorsGatherer(
+            $this->build_program,
+            ProgramIncrementCreatorCheckerBuilder::buildInvalid(),
+            IterationCreatorCheckerBuilder::build(),
+            $this->teams_searcher,
+            RetrieveProjectReferenceStub::withProjects($this->project_reference, $this->team_reference)
+        );
+
+        $program_admin = $this->getProgramAdminWithoutIteration($errors_gatherer);
+
+        self::assertTrue($program_admin->has_presenter_errors);
+    }
+
     private function getProgramAdminNotUsedInPlanWithTeam(ConfigurationErrorsGatherer $errors_gatherer): ProgramAdmin
     {
         $program_increment_tracker    = TrackerReferenceStub::withId(1);
@@ -315,6 +330,67 @@ final class ProgramAdminTest extends TestCase
             $aggregated_teams,
             ProjectIsAProgramOrUsedInPlanCheckerStub::stubValidProgram(),
             VerifyIsProjectUsedInPlanStub::withProjectNotUsedInPlan()
+        );
+    }
+
+    private function getProgramAdminWithoutIteration(ConfigurationErrorsGatherer $errors_gatherer): ProgramAdmin
+    {
+        $program_increment_tracker    = TrackerReferenceStub::withId(1);
+        $plannable_tracker            = TrackerReferenceStub::withId(3);
+        $plannable_trackers_retriever = RetrievePlannableTrackersStub::build($plannable_tracker);
+
+        $verify_tracker_semantics = VerifyTrackerSemanticsStub::withAllSemantics();
+
+        $search_project_user_is_admin = SearchProjectsUserIsAdminStub::buildWithProjects($this->project_reference);
+
+        $program_increment_tracker_retriever   = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_increment_tracker);
+        $iteration_tracker_retriever           = RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker();
+        $plannable_tracker_presenters_builder  = new PotentialPlannableTrackersConfigurationBuilder($plannable_trackers_retriever);
+        $ugroups_can_prioritize_builder        = new ProjectUGroupCanPrioritizeItemsBuilder(
+            RetrieveUGroupsStub::buildWithUGroups(),
+            RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds($this->team_reference->getId()),
+            BuildUGroupRepresentationStub::build()
+        );
+        $program_increment_labels_retriever    = RetrieveProgramIncrementLabelsStub::buildLabels('PI', 'pi');
+        $trackers_searcher                     = SearchTrackersOfProgramStub::withTrackers($program_increment_tracker);
+        $iteration_labels_retriever            = RetrieveIterationLabelsStub::buildLabels('Iteration', 'iteration');
+        $all_program_searcher                  = AllProgramSearcherStub::buildPrograms($this->project_reference->getId());
+        $search_open_program_increments        = SearchOpenProgramIncrementsStub::withoutProgramIncrements();
+        $timebox_searcher                      = SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror();
+        $verify_is_synchronization_pending     = VerifyIsSynchronizationPendingStub::withoutOnGoingSynchronization();
+        $team_searcher                         = SearchVisibleTeamsOfProgramStub::withTeamIds($this->team_reference->getId());
+        $verify_team_synchronization_has_error = VerifyTeamSynchronizationHasErrorStub::buildWithoutError();
+        $program_for_administration_identifier = ProgramForAdministrationIdentifierBuilder::buildWithId($this->project_reference->getId());
+
+        $aggregated_teams = TeamProjectsCollectionBuilder::withEmptyTeams();
+
+        return ProgramAdmin::build(
+            $search_project_user_is_admin,
+            $this->teams_searcher,
+            VerifyIsTeamStub::withValidTeam(),
+            $this->build_program,
+            $program_increment_tracker_retriever,
+            $iteration_tracker_retriever,
+            $plannable_tracker_presenters_builder,
+            $ugroups_can_prioritize_builder,
+            $program_increment_labels_retriever,
+            $trackers_searcher,
+            $iteration_labels_retriever,
+            $all_program_searcher,
+            $errors_gatherer,
+            $search_open_program_increments,
+            $timebox_searcher,
+            $verify_is_synchronization_pending,
+            $team_searcher,
+            $verify_team_synchronization_has_error,
+            $plannable_trackers_retriever,
+            $verify_tracker_semantics,
+            $program_for_administration_identifier,
+            UserReferenceStub::withDefaults(),
+            $this->project_reference,
+            $aggregated_teams,
+            ProjectIsAProgramOrUsedInPlanCheckerStub::stubValidProgram(),
+            VerifyIsProjectUsedInPlanStub::withProjectUsedInPlan()
         );
     }
 }
