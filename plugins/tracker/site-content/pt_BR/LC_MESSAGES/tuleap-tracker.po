@@ -287,6 +287,9 @@ msgstr[1] ""
 msgid "Activate new interface for all trackers"
 msgstr ""
 
+msgid "Activate unified and simplified artifact links edition"
+msgstr ""
+
 msgid "Add a follow-up comment"
 msgstr ""
 
@@ -3261,6 +3264,9 @@ msgstr ""
 msgid ""
 "The list field '%s' cannot be compared to the empty string with NOT IN() "
 "operator."
+msgstr ""
+
+msgid "The new interface allows edition of the forward and reverse links"
 msgstr ""
 
 msgid "The notification could not be deleted."
