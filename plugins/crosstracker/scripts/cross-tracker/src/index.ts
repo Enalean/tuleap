@@ -37,6 +37,7 @@ import {
     NEW_QUERY_CREATOR,
     WIDGET_TITLE_UPDATER,
     QUERY_UPDATER,
+    WIDGET_CONTAINER,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -108,6 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(NEW_QUERY_CREATOR, NewQueryCreator())
             .provide(QUERY_UPDATER, QueryUpdater())
             .provide(WIDGET_TITLE_UPDATER, widget_title_updater)
+            .provide(WIDGET_CONTAINER, widget_element)
             .mount(vue_mount_point);
     }
 });

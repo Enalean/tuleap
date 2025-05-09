@@ -20,8 +20,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { EMITTER, IS_USER_ADMIN, WIDGET_ID } from "../../injection-symbols";
-import { beforeEach, expect, vi, describe, it } from "vitest";
-import ChooseQueryButton from "./ChooseQueryButton.vue";
+import { beforeEach, expect, describe, it } from "vitest";
+import ChooseQueryMenu from "./ChooseQueryMenu.vue";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 import type { Query } from "../../type";
 import {
@@ -30,13 +30,7 @@ import {
     CREATE_NEW_QUERY_EVENT,
 } from "../../helpers/widget-events";
 
-vi.mock("@tuleap/tlp-dropdown", () => ({
-    createDropdown: (): void => {
-        // do nothing
-    },
-}));
-
-describe("ChooseQueryButton", () => {
+describe("ChooseQueryMenu", () => {
     let backend_query: Query;
     let emitter: EmitterStub;
 
@@ -67,8 +61,8 @@ describe("ChooseQueryButton", () => {
         },
     ];
     const widget_id = 15;
-    const getWrapper = (): VueWrapper<InstanceType<typeof ChooseQueryButton>> => {
-        return shallowMount(ChooseQueryButton, {
+    const getWrapper = (): VueWrapper<InstanceType<typeof ChooseQueryMenu>> => {
+        return shallowMount(ChooseQueryMenu, {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
@@ -80,6 +74,7 @@ describe("ChooseQueryButton", () => {
             props: {
                 backend_query,
                 queries,
+                on_selected_query_callback: () => {},
             },
         });
     };
