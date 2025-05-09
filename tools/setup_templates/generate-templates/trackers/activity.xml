@@ -102,6 +102,7 @@
           <name>links</name>
           <label>Links</label>
           <description>Links</description>
+          <properties can_edit_reverse_links="1"/>
         </formElement>
         <formElement type="cross" ID="F13051" rank="0">
           <name>cross_references</name>

@@ -84,6 +84,7 @@
         <formElement type="art_link" ID="F12754" rank="0">
           <name>artifact_links</name>
           <label><![CDATA[Artifact Links]]></label>
+          <properties can_edit_reverse_links="1"/>
         </formElement>
       </formElements>
     </formElement>

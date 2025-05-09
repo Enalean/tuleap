@@ -88,6 +88,7 @@
             <formElement type="art_link" ID="F25119" rank="0" id="25119" tracker_id="1144" parent_id="25118">
               <name><![CDATA[link]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F25120" rank="4" id="25120" tracker_id="1144" parent_id="25118">
               <name><![CDATA[references]]></name>
@@ -697,6 +698,7 @@
             <formElement type="art_link" ID="F25074" rank="0" id="25074" tracker_id="1142" parent_id="25073">
               <name><![CDATA[satisfy]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
           </formElements>
         </formElement>
@@ -1105,6 +1107,7 @@
             <formElement type="art_link" ID="F18370" rank="0" id="18370" tracker_id="856" parent_id="18369">
               <name><![CDATA[links]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F18371" rank="1" id="18371" tracker_id="856" parent_id="18369">
               <name><![CDATA[references]]></name>
@@ -1369,6 +1372,7 @@
             <formElement type="art_link" ID="F22481" rank="0" id="22481" tracker_id="1030" parent_id="22480">
               <name><![CDATA[links]]></name>
               <label><![CDATA[Links]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F22482" rank="1" id="22482" tracker_id="1030" parent_id="22480">
               <name><![CDATA[references]]></name>
