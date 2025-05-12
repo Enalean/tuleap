@@ -78,10 +78,10 @@ const props = defineProps<{
     configuration_helper: ConfigurationScreenHelper;
     on_save_callback: () => void;
     current_tab: ConfigurationTab;
+    is_submit_button_disabled: boolean;
 }>();
 
-const { is_submit_button_disabled, submit_button_icon, is_success, is_error, error_message } =
-    props.configuration_helper;
+const { submit_button_icon, is_success, is_error, error_message } = props.configuration_helper;
 </script>
 
 <style scoped lang="scss">

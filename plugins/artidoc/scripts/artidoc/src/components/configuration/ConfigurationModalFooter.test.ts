@@ -51,6 +51,7 @@ describe("ConfigurationModalFooter", () => {
                 configuration_helper,
                 current_tab: TRACKER_SELECTION_TAB,
                 on_save_callback: onSaveCallback,
+                is_submit_button_disabled: false,
             },
             global: {
                 provide: {

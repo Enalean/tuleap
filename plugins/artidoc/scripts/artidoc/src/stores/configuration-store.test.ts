@@ -25,6 +25,12 @@ import * as rest from "@/helpers/rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
+import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
+
+const tracker_for_fields = {
+    fields: [],
+    semantics: { title: { field_id: 100 } },
+};
 
 describe("configuration-store", () => {
     const bugs: Tracker = TrackerStub.build(101, "Bugs");
@@ -35,19 +41,14 @@ describe("configuration-store", () => {
         store = initConfigurationStore(1, null, [bugs, tasks], []);
     });
 
-    describe("saveConfiguration", () => {
-        it("should save the new configuration", async () => {
+    describe("saveTrackerConfiguration", () => {
+        it("should save the new tracker configuration", async () => {
             vi.spyOn(rest, "putConfiguration").mockReturnValue(okAsync(new Response()));
-            vi.spyOn(rest, "getTracker").mockReturnValue(
-                okAsync({
-                    fields: [],
-                    semantics: { title: { field_id: 100 } },
-                }),
-            );
+            vi.spyOn(rest, "getTracker").mockReturnValue(okAsync(tracker_for_fields));
 
             expect(store.selected_tracker.value).toStrictEqual(null);
 
-            store.saveConfiguration(bugs);
+            store.saveTrackerConfiguration(bugs);
             await flushPromises();
 
             expect(store.selected_tracker.value).toStrictEqual(bugs);
@@ -62,7 +63,7 @@ describe("configuration-store", () => {
 
             expect(store.selected_tracker.value).toStrictEqual(null);
 
-            store.saveConfiguration(bugs);
+            store.saveTrackerConfiguration(bugs);
             await flushPromises();
 
             expect(store.selected_tracker.value).toStrictEqual(null);
@@ -76,16 +77,35 @@ describe("configuration-store", () => {
             vi.spyOn(rest, "getTracker").mockReturnValue(
                 errAsync(Fault.fromMessage("Bad request")),
             );
-
             expect(store.selected_tracker.value).toStrictEqual(null);
 
-            store.saveConfiguration(bugs);
+            store.saveTrackerConfiguration(bugs);
             await flushPromises();
 
             expect(store.selected_tracker.value).toStrictEqual(null);
             expect(store.is_success.value).toBe(false);
             expect(store.is_error.value).toBe(true);
             expect(store.error_message.value).toBe("Bad request");
+        });
+    });
+
+    describe("saveFieldsConfiguration", () => {
+        const fields = [ConfigurationFieldStub.build(), ConfigurationFieldStub.build()];
+
+        it("should save the new fields configuration", async () => {
+            vi.spyOn(rest, "putConfiguration").mockReturnValue(okAsync(new Response()));
+            vi.spyOn(rest, "getTracker").mockReturnValue(okAsync(tracker_for_fields));
+
+            const store = initConfigurationStore(1, bugs, [bugs, tasks], []);
+
+            expect(store.selected_fields.value).toStrictEqual([]);
+
+            store.saveFieldsConfiguration(fields);
+            await flushPromises();
+
+            expect(store.selected_fields.value).toStrictEqual(fields);
+            expect(store.is_success.value).toBe(true);
+            expect(store.is_error.value).toBe(false);
         });
     });
 

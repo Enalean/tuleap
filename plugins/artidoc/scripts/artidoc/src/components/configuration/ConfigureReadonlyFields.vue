@@ -29,24 +29,42 @@
     <configuration-modal-footer
         v-bind:current_tab="READONLY_FIELDS_SELECTION_TAB"
         v-bind:configuration_helper="configuration_helper"
-        v-bind:on_save_callback="noop"
+        v-bind:on_save_callback="onFieldsSubmit"
+        v-bind:is_submit_button_disabled="is_submit_button_disabled"
     />
 </template>
 
 <script setup lang="ts">
-import type { Tracker } from "@/stores/configuration-store";
+import { ref, toRaw, watch } from "vue";
+import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
 import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSelectionIntroductoryText.vue";
 import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
-import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
 import { READONLY_FIELDS_SELECTION_TAB } from "@/components/configuration/configuration-modal";
-import { noop } from "@/helpers/noop";
 import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
-defineProps<{
+const props = defineProps<{
+    configuration_store: ConfigurationStore;
     configuration_helper: ConfigurationScreenHelper;
     selected_tracker: Tracker;
-    selected_fields: ConfigurationField[];
-    available_fields: ConfigurationField[];
 }>();
+
+const selected_fields = ref<ConfigurationField[]>(
+    structuredClone(toRaw(props.configuration_store.selected_fields.value)),
+);
+const available_fields = ref<ConfigurationField[]>(
+    structuredClone(toRaw(props.configuration_store.available_fields.value)),
+);
+
+function onFieldsSubmit(): void {
+    props.configuration_store.saveFieldsConfiguration(selected_fields.value);
+}
+
+const is_submit_button_disabled = ref(true);
+watch(selected_fields.value, () => {
+    is_submit_button_disabled.value =
+        JSON.stringify(toRaw(selected_fields.value)) ===
+        JSON.stringify(toRaw(props.configuration_store.selected_fields.value));
+});
 </script>

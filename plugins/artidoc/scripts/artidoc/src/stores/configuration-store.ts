@@ -78,7 +78,8 @@ export interface ConfigurationStore {
     is_error: Ref<boolean>;
     is_success: Ref<boolean>;
     error_message: Ref<string>;
-    saveConfiguration: (new_selected_tracker: Tracker) => void;
+    saveTrackerConfiguration: (new_selected_tracker: Tracker) => void;
+    saveFieldsConfiguration: (new_selected_fields: ConfigurationField[]) => void;
     resetSuccessFlagFromPreviousCalls: () => void;
     current_project: Ref<Project | null>;
 }
@@ -105,7 +106,7 @@ export function initConfigurationStore(
     const available_fields: Ref<ConfigurationField[]> = ref([]);
 
     if (selected_tracker) {
-        getAvailableFields(selected_tracker.id, selected_fields).match(
+        getAvailableFields(selected_tracker.id, currently_selected_fields.value).match(
             (fields) => {
                 available_fields.value = fields;
             },
@@ -115,19 +116,48 @@ export function initConfigurationStore(
         );
     }
 
-    function saveConfiguration(new_selected_tracker: Tracker): void {
+    function saveTrackerConfiguration(new_selected_tracker: Tracker): void {
         is_saving.value = true;
         is_error.value = false;
         is_success.value = false;
         current_project.value = new_selected_tracker.project;
 
-        putConfiguration(document_id, new_selected_tracker.id)
-            .andThen(() => getAvailableFields(new_selected_tracker.id, selected_fields))
+        putConfiguration(document_id, new_selected_tracker.id, [])
+            .andThen(() =>
+                getAvailableFields(new_selected_tracker.id, currently_selected_fields.value),
+            )
             .match(
                 (new_available_fields) => {
                     currently_selected_tracker.value = new_selected_tracker;
                     available_fields.value = new_available_fields;
                     currently_selected_fields.value = [];
+                    is_saving.value = false;
+                    is_success.value = true;
+                },
+                (fault) => {
+                    is_saving.value = false;
+                    is_error.value = true;
+                    error_message.value = String(fault);
+                },
+            );
+    }
+
+    function saveFieldsConfiguration(new_selected_fields: ConfigurationField[]): void {
+        is_saving.value = true;
+        is_error.value = false;
+        is_success.value = false;
+
+        if (!currently_selected_tracker.value) {
+            return;
+        }
+        const selected_tracker_id = currently_selected_tracker.value.id;
+
+        putConfiguration(document_id, selected_tracker_id, new_selected_fields)
+            .andThen(() => getAvailableFields(selected_tracker_id, new_selected_fields))
+            .match(
+                (new_available_fields) => {
+                    currently_selected_fields.value = new_selected_fields;
+                    available_fields.value = new_available_fields;
                     is_saving.value = false;
                     is_success.value = true;
                 },
@@ -153,7 +183,8 @@ export function initConfigurationStore(
         is_success,
         error_message,
         current_project,
-        saveConfiguration,
+        saveTrackerConfiguration,
+        saveFieldsConfiguration,
         resetSuccessFlagFromPreviousCalls,
     };
 }

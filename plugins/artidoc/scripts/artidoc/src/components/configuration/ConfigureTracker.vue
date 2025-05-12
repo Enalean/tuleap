@@ -28,6 +28,7 @@
     <configuration-modal-footer
         v-bind:current_tab="TRACKER_SELECTION_TAB"
         v-bind:configuration_helper="configuration_helper"
+        v-bind:is_submit_button_disabled="configuration_helper.is_submit_button_disabled.value"
         v-bind:on_save_callback="configuration_helper.onSubmit"
     />
 </template>
