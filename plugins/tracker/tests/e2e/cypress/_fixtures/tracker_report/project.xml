@@ -188,6 +188,7 @@
             <formElement type="art_link" ID="F3599" rank="0" id="3599" tracker_id="158" parent_id="3598">
               <name><![CDATA[artifact_link]]></name>
               <label><![CDATA[Artifact link]]></label>
+              <properties can_edit_reverse_links="1"/>
             </formElement>
             <formElement type="cross" ID="F3600" rank="1" id="3600" tracker_id="158" parent_id="3598">
               <name><![CDATA[cross_references]]></name>

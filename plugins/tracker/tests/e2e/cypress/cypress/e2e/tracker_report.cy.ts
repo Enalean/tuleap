@@ -44,6 +44,8 @@ function getCriterionBlock(label: string): Cypress.Chainable<JQuery<HTMLLIElemen
 }
 
 function createArtifactWithValues(now: number): void {
+    cy.intercept("api/v1/artifacts/*").as("getArtifact");
+
     cy.log("Create an artifact with all fields");
     getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
     getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
@@ -71,6 +73,15 @@ function createArtifactWithValues(now: number): void {
             .find("[data-test=artifact-permissions-selectbox]")
             .select(["Project members", "Integrators"]);
     });
+
+    cy.get("[data-test=link-type-select]").first().select("is Child of");
+    cy.get("[data-test=link-field-add-link-input]").click();
+    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+        .focus()
+        .type("Linked Artifact");
+    cy.get("[data-test=new-item-button]").click();
+    cy.get("[data-test=artifact-creator-submit]").click();
+    cy.wait("@getArtifact");
 
     cy.get("[data-test=artifact-submit-button]").click();
     cy.get("[data-test=feedback]").contains("Artifact Successfully Created ");
