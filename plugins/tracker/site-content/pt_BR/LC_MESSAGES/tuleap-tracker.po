@@ -3269,6 +3269,9 @@ msgstr ""
 msgid "The new interface allows edition of the forward and reverse links"
 msgstr ""
 
+msgid "The new interface has been successfully activated for all trackers."
+msgstr ""
+
 msgid "The notification could not be deleted."
 msgstr ""
 

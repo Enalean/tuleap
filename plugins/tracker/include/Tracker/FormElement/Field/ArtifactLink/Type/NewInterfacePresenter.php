@@ -23,9 +23,14 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 final readonly class NewInterfacePresenter
 {
     public bool $has_trackers_without_new_interface;
+    public string $activate_url;
 
     public function __construct(public int $nb_trackers)
     {
         $this->has_trackers_without_new_interface = $this->nb_trackers > 0;
+
+        $this->activate_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+            'action' => ArtifactLinkConfigController::ACTION_ACTIVATE_NEW_INTERFACE,
+        ]);
     }
 }

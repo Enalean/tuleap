@@ -36,6 +36,8 @@ final readonly class ArtifactLinkConfigController
     private const TEMPLATE = 'siteadmin-config/artifact-links';
     private const URL      = '/plugins/tracker/config.php?action=artifact-links';
 
+    public const ACTION_ACTIVATE_NEW_INTERFACE = 'activate-new-artifact-links-interface';
+
     public function __construct(
         private TypeCreator $creator,
         private TypeEditor $editor,
@@ -86,6 +88,16 @@ final readonly class ArtifactLinkConfigController
                 sprintf(dgettext('tuleap-tracker', 'Unable to create the requested type: %1$s'), $exception->getMessage())
             );
         }
+        $layout->redirect(self::URL);
+    }
+
+    public function activateNewInterface(\HTTPRequest $request, BaseLayout $layout): void
+    {
+        $this->new_artifact_link_interface->activateForEveryExistingTrackers();
+        $layout->addFeedback(
+            Feedback::SUCCESS,
+            dgettext('tuleap-tracker', 'The new interface has been successfully activated for all trackers.')
+        );
         $layout->redirect(self::URL);
     }
 

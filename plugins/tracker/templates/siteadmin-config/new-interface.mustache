@@ -20,11 +20,11 @@
                         | {{ nb_trackers }}
                     {{/ dngettext }}
                 </p>
-                <form class="tlp-pane-section-submit">
+                <form method="post" action="{{ activate_url }}" class="tlp-pane-section-submit">
                     {{# csrf_token }}
                         {{> csrf_token_input }}
                     {{/ csrf_token }}
-                    <button type="submit" class="tlp-button-primary" disabled title="Not yet implemented">
+                    <button type="submit" class="tlp-button-primary">
                         {{# dngettext }} tuleap-tracker
                             | Activate new interface for %s tracker
                             | Activate new interface for %s trackers

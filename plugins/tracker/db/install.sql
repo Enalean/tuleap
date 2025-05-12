@@ -207,7 +207,8 @@ CREATE TABLE tracker_field_computed (
 DROP TABLE IF EXISTS plugin_tracker_field_artifact_link;
 CREATE TABLE plugin_tracker_field_artifact_link (
     field_id INT(11) NOT NULL PRIMARY KEY,
-    can_edit_reverse_links BOOL NOT NULL DEFAULT FALSE
+    can_edit_reverse_links BOOL NOT NULL DEFAULT FALSE,
+    INDEX idx (can_edit_reverse_links)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_field_openlist_value;
