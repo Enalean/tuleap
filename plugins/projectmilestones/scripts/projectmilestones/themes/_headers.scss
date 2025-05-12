@@ -23,36 +23,36 @@
     background: none;
 }
 
+@keyframes blink-text {
+    from {
+        color: var(--tlp-dimmed-color-lighter-70);
+    }
+
+    to {
+        color: var(--tlp-dimmed-color-lighter-95);
+    }
+}
+
+@keyframes blink-icon {
+    from {
+        background: var(--tlp-dimmed-color-lighter-70);
+    }
+
+    to {
+        background: var(--tlp-dimmed-color-lighter-95);
+    }
+}
+
 .project-release-header.disabled {
     border-bottom-color: transparent;
     cursor: not-allowed;
 
     > .project-release-title,
     > .project-release-date {
-        @keyframes blink-text {
-            from {
-                color: var(--tlp-dimmed-color-lighter-70);
-            }
-
-            to {
-                color: var(--tlp-dimmed-color-lighter-95);
-            }
-        }
-
         animation: blink-text 750ms linear infinite alternate;
     }
 
     > .project-release-whats-hot-icon {
-        @keyframes blink-icon {
-            from {
-                background: var(--tlp-dimmed-color-lighter-70);
-            }
-
-            to {
-                background: var(--tlp-dimmed-color-lighter-95);
-            }
-        }
-
         animation: blink-icon 750ms linear infinite alternate;
     }
 }
