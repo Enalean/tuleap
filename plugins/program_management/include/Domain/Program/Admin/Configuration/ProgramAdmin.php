@@ -49,7 +49,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsProjectUsedInPlan;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
@@ -160,9 +159,6 @@ final class ProgramAdmin
                 $program,
                 $user_identifier
             );
-            if (! $iteration_tracker_identifier) {
-                throw new ProgramIterationTrackerNotFoundException($program);
-            }
 
             $increment_error = TrackerError::buildProgramIncrementError(
                 $errors_gatherer,
@@ -173,16 +169,13 @@ final class ProgramAdmin
             );
 
             $iteration_tracker = $iteration_tracker_retriever->retrieveVisibleIterationTracker($program, $user_identifier);
-            if (! $iteration_tracker) {
-                throw new ProgramIterationTrackerNotFoundException($program);
-            }
-            $iteration_error = TrackerError::buildIterationError(
+            $iteration_error   = TrackerError::buildIterationError(
                 $errors_gatherer,
                 $iteration_tracker,
                 $user_identifier,
                 $iteration_error_collector
             );
-            $plannable_error = TrackerError::buildPlannableError(
+            $plannable_error   = TrackerError::buildPlannableError(
                 $plannable_trackers_retriever,
                 $verify_tracker_semantics,
                 $program,
@@ -192,7 +185,6 @@ final class ProgramAdmin
             ProjectIsNotAProgramException
             | ProgramHasNoProgramIncrementTrackerException
             | ProgramTrackerNotFoundException
-            | ProgramIterationTrackerNotFoundException
         ) {
         }
 
@@ -211,12 +203,10 @@ final class ProgramAdmin
             $program_for_administration_identifier
         );
 
-        $has_errors                    = $increment_error && $iteration_error && $plannable_error && ($increment_error->has_presenter_errors
-                || $iteration_error->has_presenter_errors
-                || $plannable_error->has_presenter_errors);
         $has_program_increment_error   = $increment_error && $increment_error->has_presenter_errors;
         $has_iteration_increment_error = $iteration_error && $iteration_error->has_presenter_errors;
         $has_plannable_error           = $plannable_error && $plannable_error->has_presenter_errors;
+        $has_errors                    = $has_program_increment_error || $has_iteration_increment_error || $has_plannable_error;
 
         $project_team_access_errors = '';
         try {
