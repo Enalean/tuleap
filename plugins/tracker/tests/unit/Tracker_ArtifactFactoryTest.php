@@ -24,52 +24,44 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Tracker\Artifact\Artifact;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var Tracker_ArtifactDao */
-    private $dao;
+    private Tracker_ArtifactDao&MockObject $dao;
 
     /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao              = \Mockery::spy(\Tracker_ArtifactDao::class);
-        $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->artifact_factory->shouldReceive('getDao')->andReturns($this->dao);
+        $this->dao              = $this->createMock(\Tracker_ArtifactDao::class);
+        $this->artifact_factory = $this->createPartialMock(\Tracker_ArtifactFactory::class, ['getDao']);
+        $this->artifact_factory->method('getDao')->willReturn($this->dao);
     }
 
     public function testItFetchArtifactsTitlesFromDb(): void
     {
-        $art12 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $art12->shouldReceive('getId')->andReturn(12);
-
-        $art30 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $art30->shouldReceive('getId')->andReturn(30);
+        $art12 = ArtifactTestBuilder::anArtifact(12)->build();
+        $art30 = ArtifactTestBuilder::anArtifact(30)->build();
 
         $artifacts = [$art12, $art30];
 
-        $this->dao->shouldReceive('getTitles')->with([12, 30])->once()->andReturns(\TestHelper::emptyDar());
+        $this->dao->expects($this->once())->method('getTitles')->with([12, 30])->willReturn(\TestHelper::emptyDar());
 
         $this->artifact_factory->setTitles($artifacts);
     }
 
     public function testItSetTheTitlesToTheArtifact(): void
     {
-        $art24 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $art24->shouldReceive('getId')->andReturn(24);
+        $art24 = ArtifactTestBuilder::anArtifact(24)->build();
 
         $artifacts = [$art24];
 
-        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum']));
+        $this->dao->method('getTitles')->willReturn(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum']));
 
         $this->artifact_factory->setTitles($artifacts);
 
@@ -78,15 +70,12 @@ class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetTheTitlesWhenThereAreSeveralArtifacts(): void
     {
-        $art24 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $art24->shouldReceive('getId')->andReturn(24);
-
-        $art32 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $art32->shouldReceive('getId')->andReturn(32);
+        $art24 = ArtifactTestBuilder::anArtifact(24)->build();
+        $art32 = ArtifactTestBuilder::anArtifact(32)->build();
 
         $artifacts = [$art24, $art32];
 
-        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum'], ['id' => 32, 'title' => 'Zen']));
+        $this->dao->method('getTitles')->willReturn(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum'], ['id' => 32, 'title' => 'Zen']));
 
         $this->artifact_factory->setTitles($artifacts);
 
@@ -96,14 +85,12 @@ class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetTheTitlesWhenThereAreSeveralTimeTheSameArtifact(): void
     {
-        $art24_1 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $art24_1->shouldReceive('getId')->andReturn(24);
-        $art24_2 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $art24_2->shouldReceive('getId')->andReturn(24);
+        $art24_1 = ArtifactTestBuilder::anArtifact(24)->build();
+        $art24_2 = ArtifactTestBuilder::anArtifact(24)->build();
 
         $artifacts = [$art24_1, $art24_2];
 
-        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum']));
+        $this->dao->method('getTitles')->willReturn(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum']));
 
         $this->artifact_factory->setTitles($artifacts);
 
@@ -115,8 +102,8 @@ class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $artifact_with_multiple_parents_id = 1;
         $artifact_with_single_parents_id   = 2;
-        $this->dao->shouldReceive('getParents')
-            ->andReturns(
+        $this->dao->method('getParents')
+            ->willReturn(
                 \TestHelper::arrayToDar(
                     [
                         'child_id'                 => $artifact_with_multiple_parents_id,

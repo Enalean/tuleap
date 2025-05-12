@@ -23,59 +23,53 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker;
 
 use EventManager;
 use Luracast\Restler\RestException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\REST\Event\GetAdditionalCriteria;
 use Tuleap\Tracker\REST\v1\GetTrackersQueryChecker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private GetTrackersQueryChecker $checker;
 
-    /**
-     * GetProjectsQueryChecker
-     */
-    private $checker;
-
-    /**
-     * EventManager
-     */
-    private $event_manager;
+    private EventManager&MockObject $event_manager;
 
     public function setUp(): void
     {
-        $this->event_manager = \Mockery::mock(EventManager::class);
+        $this->event_manager = $this->createMock(EventManager::class);
         $this->checker       = new GetTrackersQueryChecker($this->event_manager);
     }
 
-    public function testItDoesNotRaiseAnExceptionForCriterionProvidedByPlugin()
+    public function testItDoesNotRaiseAnExceptionForCriterionProvidedByPlugin(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with(
-            \Mockery::on(
-                function (GetAdditionalCriteria $event) {
-                    $event->addCriteria('with_whatever', "'with_whatever': true");
-                    return true;
-                }
-            )
+        $this->event_manager->method('processEvent')->willReturnCallback(
+            function (GetAdditionalCriteria $event) {
+                $event->addCriteria('with_whatever', "'with_whatever': true");
+                return $event;
+            }
         );
 
         $json_query = ['with_whatever' => true];
-        $this->assertNull($this->checker->checkQuery($json_query, false));
+
+        $this->expectNotToPerformAssertions();
+
+        $this->checker->checkQuery($json_query);
     }
 
-    public function testItRaiseAnExceptionForCriterionProvidedByPlugin()
+    public function testItRaiseAnExceptionForCriterionProvidedByPlugin(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with(
-            \Mockery::on(
-                function (GetAdditionalCriteria $event) {
-                    $event->addCriteria('with_whatever', "'with_whatever': true");
-                    return true;
-                }
-            )
+        $this->event_manager->method('processEvent')->willReturnCallback(
+            function (GetAdditionalCriteria $event) {
+                $event->addCriteria('with_whatever', "'with_whatever': true");
+
+                return $event;
+            }
         );
 
         $json_query = ['whatever' => true];
@@ -86,9 +80,9 @@ class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkQuery($json_query);
     }
 
-    public function testYouAreNotAdministratorOfAtLeastOneTrackerIsNotSupported()
+    public function testYouAreNotAdministratorOfAtLeastOneTrackerIsNotSupported(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
         $json_query = ['is_tracker_admin' => false];
 
         $this->expectException(RestException::class);
@@ -97,10 +91,13 @@ class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkQuery($json_query);
     }
 
-    public function testItPassesWhenIsTrackerAdminIsValid()
+    public function testItPassesWhenIsTrackerAdminIsValid(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
         $json_query = ['is_tracker_admin' => true];
-        $this->assertNull($this->checker->checkQuery($json_query));
+
+        $this->expectNotToPerformAssertions();
+
+        $this->checker->checkQuery($json_query);
     }
 }

@@ -18,42 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ArtifactNotificationSubscriberTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactNotificationSubscriberTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    /** @var Tracker_ArtifactNotificationSubscriber */
-    private $artifact_subscriber;
+    private const USER_ID     = 101;
+    private const ARTIFACT_ID = 201;
 
-    /** @var Codendi_Request */
-    private $request;
+    private Tracker_ArtifactNotificationSubscriber $artifact_subscriber;
 
-    /** @var PFUser */
-    private $user;
+    private PFUser $user;
 
-    /** @var Artifact */
-    private $artifact;
+    private Artifact $artifact;
 
     /** @var Tracker_ArtifactDao */
-    private $artifact_dao;
+    private Tracker_ArtifactDao&MockObject $artifact_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(201);
-        $this->artifact->shouldReceive('getUri');
-        $this->artifact_dao = \Mockery::spy(\Tracker_ArtifactDao::class);
+        $this->user = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
 
-        $this->user = Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(101);
-        $this->request = \Mockery::spy(\Codendi_Request::class);
+        $this->artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->userCanView($this->user)->build();
+
+        $this->artifact_dao = $this->createMock(\Tracker_ArtifactDao::class);
 
         $this->artifact_subscriber = new Tracker_ArtifactNotificationSubscriber(
             $this->artifact,
@@ -63,19 +61,19 @@ class ArtifactNotificationSubscriberTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSubscribeUser(): void
     {
-        $this->artifact->shouldReceive('userCanView')->withArgs([$this->user])->andReturn(true);
+        $this->artifact_dao->expects($this->once())
+            ->method('deleteUnsubscribeNotification')
+            ->with(self::ARTIFACT_ID, self::USER_ID);
 
-        $this->artifact_dao->shouldReceive('deleteUnsubscribeNotification')->withArgs([201, 101])->once();
-
-        $this->artifact_subscriber->subscribeUser($this->user, $this->request);
+        $this->artifact_subscriber->subscribeUser($this->user, HTTPRequestBuilder::get()->build());
     }
 
     public function testItUnsubscribeUser(): void
     {
-        $this->artifact->shouldReceive('userCanView')->withArgs([$this->user])->andReturn(true);
+        $this->artifact_dao->expects($this->once())
+            ->method('createUnsubscribeNotification')
+            ->with(self::ARTIFACT_ID, self::USER_ID);
 
-        $this->artifact_dao->shouldReceive('createUnsubscribeNotification')->withArgs([201, 101])->once();
-
-        $this->artifact_subscriber->unsubscribeUser($this->user, $this->request);
+        $this->artifact_subscriber->unsubscribeUser($this->user, HTTPRequestBuilder::get()->build());
     }
 }

@@ -20,25 +20,22 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Date
-     */
-    private $field;
+    private Tracker_FormElement_Field_Date&MockObject $field;
 
-    /** @var Tracker_FormElement_DateFormatter */
-    private $date_formatter;
+    private Tracker_FormElement_DateFormatter $date_formatter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->field          = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $this->field          = $this->createMock(Tracker_FormElement_Field_Date::class);
         $this->date_formatter = new Tracker_FormElement_DateFormatter($this->field);
     }
 
@@ -60,7 +57,7 @@ class Tracker_FormElement_DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItDoesNotValidateNotWellFormedValue(): void
     {
         $value = '2014/09/03';
-        $this->field->shouldReceive('getLabel')->once();
+        $this->field->expects($this->once())->method('getLabel');
 
         $this->assertFalse($this->date_formatter->validate($value));
     }

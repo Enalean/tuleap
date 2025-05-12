@@ -18,31 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+use PHPUnit\Framework\MockObject\MockObject;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Date
-     */
-    private $field;
-
-    /** @var Tracker_FormElement_DateTimeFormatter */
-    private $date_formatter;
+    private Tracker_FormElement_Field_Date&MockObject $field;
+    private Tracker_FormElement_DateTimeFormatter $date_formatter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->field          = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $this->field          = $this->createMock(Tracker_FormElement_Field_Date::class);
         $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field);
-
-        $user         = Mockery::mock(PFUser::class);
-        $user_manager =  Mockery::mock(\UserManager::class);
-        $user_manager->shouldReceive('getCurrentUser')->andReturn($user);
     }
 
     public function testItFormatsTimestampInRightFormat(): void
@@ -72,7 +66,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $value = '2014/09/03 03:49';
 
-        $this->field->shouldReceive('getLabel')->once();
+        $this->field->expects($this->once())->method('getLabel');
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
@@ -81,7 +75,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $value = '2014-09-03 03-49-34';
 
-        $this->field->shouldReceive('getLabel')->once();
+        $this->field->expects($this->once())->method('getLabel');
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
@@ -90,7 +84,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $value = '2014-09-0303:49';
 
-        $this->field->shouldReceive('getLabel')->once();
+        $this->field->expects($this->once())->method('getLabel');
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
@@ -99,7 +93,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $value = '2014-09-03';
 
-        $this->field->shouldReceive('getLabel')->once();
+        $this->field->expects($this->once())->method('getLabel');
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
