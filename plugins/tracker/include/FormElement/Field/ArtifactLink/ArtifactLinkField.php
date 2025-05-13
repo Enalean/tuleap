@@ -1057,6 +1057,14 @@ class ArtifactLinkField extends Tracker_FormElement_Field
             return $this->getFieldRenderer()->render($this, $artifact, $this->getCurrentUser());
         }
 
+        return $this->fetchOldReadOnlyView($artifact, $value, $artifact_links_to_render);
+    }
+
+    public function fetchOldReadOnlyView(
+        Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value = null,
+        ?ArtifactLinksToRender $artifact_links_to_render = null,
+    ): string {
         if ($artifact_links_to_render === null) {
             $artifact_links_to_render = $this->getArtifactLinksToRenderFromChangesetValue($value);
         }

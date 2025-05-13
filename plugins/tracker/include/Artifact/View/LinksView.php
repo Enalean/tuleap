@@ -65,7 +65,7 @@ final readonly class LinksView extends TrackerArtifactView
                         <h1 class="tlp-pane-title">' . dgettext('tuleap-tracker', 'Links from and to current artifact') . '</h1>
                     </div>
                     <section class="tlp-pane-section">'
-                . $field->fetchArtifactValueReadOnly($this->artifact, $this->artifact->getValue($field))
+                . $field->fetchOldReadOnlyView($this->artifact, $this->artifact->getValue($field))
                 . '</section>
                 </div>
             </section>';
