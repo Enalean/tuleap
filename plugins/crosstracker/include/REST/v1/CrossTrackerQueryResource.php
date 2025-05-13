@@ -22,18 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1;
 
-use Exception;
-use ForgeConfig;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\ExpertQueryIsEmptyException;
-use Tuleap\CrossTracker\Query\Advanced\InvalidOrderByBuilder;
-use Tuleap\CrossTracker\Query\Advanced\InvalidSearchablesCollectionBuilder;
-use Tuleap\CrossTracker\Query\Advanced\InvalidSelectablesCollectionBuilder;
-use Tuleap\CrossTracker\Query\Advanced\InvalidSelectablesCollectorVisitor;
-use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactory;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactoryBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerQuery;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
@@ -266,9 +258,6 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             }
             $new_query = CrossTrackerQueryFactory::fromQueryToEdit($previous_query, $query_representation);
 
-            $trackers = $this->factory_builder->getQueryTrackersRetriever()->getQueryTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactQueryFactory::MAX_TRACKER_FROM));
-            $this->checkQueryIsValid($trackers, $new_query->getQuery(), $current_user, $new_query->getWidgetId());
-
             $query_dao = $this->getQueryDao();
             (new QueryUpdater(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
@@ -280,12 +269,6 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             return CrossTrackerQueryRepresentation::fromQuery($new_query);
         } catch (CrossTrackerQueryNotFoundException) {
             throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Query not found'));
-        } catch (FromIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (SyntaxError $error) {
-            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        } catch (MissingFromException $exception) {
-            throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
         }
     }
 
@@ -350,8 +333,6 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToUpdateWidget($current_user, $query_representation->widget_id);
 
             $new_query = CrossTrackerQueryFactory::fromQueryPostRepresentation($query_representation);
-            $trackers  = $this->factory_builder->getQueryTrackersRetriever()->getQueryTrackers($new_query, $current_user, ForgeConfig::getInt(CrossTrackerArtifactQueryFactory::MAX_TRACKER_FROM));
-            $this->checkQueryIsValid($trackers, $new_query->getQuery(), $current_user, $new_query->getWidgetId());
 
             $query_dao     = $this->getQueryDao();
             $created_query = (new QueryCreator(
@@ -364,12 +345,6 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             return CrossTrackerQueryRepresentation::fromQuery($created_query);
         } catch (CrossTrackerWidgetNotFoundException) {
             throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $query_representation->widget_id));
-        } catch (FromIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (SyntaxError $error) {
-            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        } catch (MissingFromException $exception) {
-            throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
         }
     }
 
@@ -394,43 +369,6 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
     private function getQueryDao(): CrossTrackerQueryDao
     {
         return new CrossTrackerQueryDao();
-    }
-
-    /**
-     * @param Tracker[] $trackers
-     * @throws RestException
-     */
-    private function checkQueryIsValid(array $trackers, string $query, PFUser $user, int $widget_id): void
-    {
-        if ($query === '') {
-            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'TQL query is required and cannot be empty'));
-        }
-
-        try {
-            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($user, $widget_id);
-            $field_checker    = $this->factory_builder->getDuckTypedFieldChecker();
-            $metadata_checker = $this->factory_builder->getMetadataChecker();
-            $this->factory_builder->getQueryValidator()->validateExpertQuery(
-                $query,
-                new InvalidSearchablesCollectionBuilder($this->factory_builder->getInvalidComparisonsCollector(), $trackers, $user),
-                new InvalidSelectablesCollectionBuilder(
-                    new InvalidSelectablesCollectorVisitor($field_checker, $metadata_checker),
-                    $trackers,
-                    $user
-                ),
-                new InvalidOrderByBuilder($field_checker, $metadata_checker, $trackers, $user),
-            );
-        } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (SyntaxError $error) {
-            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        } catch (OrderByIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (LimitSizeIsExceededException | SelectLimitExceededException | SelectablesMustBeUniqueException $exception) {
-            throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
-        } catch (Exception $exception) {
-            throw new RestException(400, $exception->getMessage());
-        }
     }
 
     private function getUserIsAllowedToSeeWidgetChecker(): UserIsAllowedToSeeWidgetChecker

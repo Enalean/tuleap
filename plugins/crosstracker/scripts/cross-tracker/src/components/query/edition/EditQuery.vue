@@ -68,7 +68,6 @@
                 {{ $gettext("Search") }}
             </button>
             <button
-                v-if="is_save_button_displayed"
                 type="button"
                 class="tlp-button-primary"
                 v-on:click="handleSaveButton"
@@ -155,12 +154,8 @@ const is_search_button_disabled = computed((): boolean => {
     return tql_query.value === searched_tql_query.value || is_search_loading.value;
 });
 
-const is_save_button_displayed = computed((): boolean => {
-    return tql_query.value !== "" && title.value !== "";
-});
-
 const is_save_button_disabled = computed((): boolean => {
-    return tql_query.value !== searched_tql_query.value || is_save_loading.value;
+    return tql_query.value === "" || title.value === "" || is_save_loading.value;
 });
 
 function handleCancelButton(): void {
@@ -175,7 +170,7 @@ function handleSearch(tql_query: string): void {
 function handleSaveButton(): void {
     is_save_loading.value = true;
     const updated_query: PutQueryRepresentation = {
-        tql_query: searched_tql_query.value,
+        tql_query: tql_query.value,
         description: description.value,
         title: title.value,
         widget_id,

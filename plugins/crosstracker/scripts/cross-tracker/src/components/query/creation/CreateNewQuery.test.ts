@@ -122,30 +122,6 @@ describe("CreateNewQuery", () => {
     });
 
     describe("'Save' and 'Search' buttons", () => {
-        it("Does not display the Save button and the 'Search' button is disabled by default", () => {
-            const wrapper = getWrapper();
-            expect(wrapper.find("[data-test=query-creation-save-button]").exists()).toBe(false);
-            expect(
-                wrapper
-                    .find("[data-test=query-creation-search-button]")
-                    .element.attributes.getNamedItem("disabled"),
-            ).not.toBeNull();
-        });
-        it("Displays the disabled 'Save' button if the `Title` and `Query` fields are not empty, the 'Search' button is enabled", async () => {
-            const wrapper = getWrapper();
-            wrapper.findComponent(TitleInput).vm.$emit("update:title", "Some title");
-            wrapper
-                .findComponent(QueryEditor)
-                .vm.$emit("update:tql_query", "SELECT @id FROM @project = 'self' WHERE @id > 1 ");
-            await vi.runOnlyPendingTimersAsync();
-
-            const saved_button = wrapper.find("[data-test=query-creation-save-button]");
-            expect(saved_button.exists()).toBe(true);
-            expect(saved_button.element.attributes.getNamedItem("disabled")).not.toBeNull();
-
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
-            expect(search_button.element.attributes.getNamedItem("disabled")).toBeNull();
-        });
         it("Displays an enabled 'Save' button when the user search for query result, the 'Search' button becomes disabled", async () => {
             const wrapper = getWrapper();
             wrapper.findComponent(TitleInput).vm.$emit("update:title", "Some title");
@@ -217,7 +193,6 @@ describe("CreateNewQuery", () => {
 
             await vi.runOnlyPendingTimersAsync();
 
-            // Need to trigger the search before saving
             const search_button = wrapper.find("[data-test=query-creation-search-button]");
             await search_button.trigger("click");
 
@@ -246,6 +221,23 @@ describe("CreateNewQuery", () => {
         });
     });
     describe("Saving a new query", () => {
+        it.each([
+            ["TQL query", "Some title", ""],
+            ["Title", "", "SELECT @id FROM @project = 'self' WHERE @id > 1"],
+        ])(
+            "Displays the disabled 'Save' button when the %s field is empty",
+            async (_field_name: string, title: string, tql_query: string) => {
+                const wrapper = getWrapper();
+                wrapper.findComponent(TitleInput).vm.$emit("update:title", title);
+                wrapper.findComponent(QueryEditor).vm.$emit("update:tql_query", tql_query);
+
+                await vi.runOnlyPendingTimersAsync();
+
+                const saved_button = wrapper.find("[data-test=query-creation-save-button]");
+                expect(saved_button.exists()).toBe(true);
+                expect(saved_button.element.attributes.getNamedItem("disabled")).not.toBeNull();
+            },
+        );
         it("saves a new query result when the save button is clicked", async () => {
             const title = "Some title";
             const description = "";
@@ -267,10 +259,6 @@ describe("CreateNewQuery", () => {
 
             await vi.runOnlyPendingTimersAsync();
 
-            // Need to trigger the search before saving
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
-            await search_button.trigger("click");
-
             await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
 
             expect(dispatched_fault_events).toHaveLength(0);
@@ -288,10 +276,6 @@ describe("CreateNewQuery", () => {
             wrapper.findComponent(TitleInput).vm.$emit("update:title", "Some title");
 
             await vi.runOnlyPendingTimersAsync();
-
-            // Need to trigger the search before saving
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
-            await search_button.trigger("click");
 
             await wrapper.find("[data-test=query-creation-save-button]").trigger("click");
 
