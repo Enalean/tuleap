@@ -251,6 +251,9 @@ class UserDao extends \Tuleap\DB\DataAccessObject
                 }
 
                 $db->update('user', $values, ['user_id' => $user['user_id']]);
+                if (strtoupper((string) ($values['status'] ?? '')) === PFUser::STATUS_DELETED) {
+                    $this->deletePersonalInformation((int) $user['user_id']);
+                }
                 return true;
             }
         );
@@ -587,12 +590,19 @@ class UserDao extends \Tuleap\DB\DataAccessObject
 
     public function switchPasswordlessOnlyAuth(int $user_id, bool $passwordless_only): void
     {
-        $this->getDB()->run(
-            'UPDATE user
-            SET passwordless_only = ?
-            WHERE user_id = ?',
-            $passwordless_only,
-            $user_id
+        $this->getDB()->tryFlatTransaction(
+            function () use ($user_id, $passwordless_only): void {
+                $this->getDB()->run(
+                    'UPDATE user
+                    SET passwordless_only = ?
+                    WHERE user_id = ?',
+                    $passwordless_only,
+                    $user_id
+                );
+                if ($passwordless_only) {
+                    $this->deletePasswordInformation($user_id);
+                }
+            }
         );
     }
 
@@ -613,6 +623,56 @@ class UserDao extends \Tuleap\DB\DataAccessObject
             static function (\ParagonIE\EasyDB\EasyDB $db) use ($user_id): void {
                 $db->run('UPDATE user SET password = null WHERE user_id = ?', $user_id);
                 $db->run('DELETE FROM user_lost_password WHERE user_id = ?', $user_id);
+            }
+        );
+    }
+
+    private function deletePersonalInformation(int $user_id): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            function (\ParagonIE\EasyDB\EasyDB $db) use ($user_id): void {
+                $this->deletePasswordInformation($user_id);
+                $db->run('UPDATE user SET authorized_keys = NULL WHERE user_id = ?', $user_id);
+                $db->run(
+                    '
+                    DELETE
+                        user_access_key,
+                        user_access_key_scope,
+                        svn_token,
+                        `session`,
+                        feedback,
+                        rest_authentication_token,
+                        webauthn_challenge,
+                        webauthn_credential_source,
+                        oauth2_authorization_code,
+                        oauth2_authorization_code_scope,
+                        oauth2_access_token,
+                        oauth2_access_token_scope,
+                        oauth2_refresh_token,
+                        oauth2_refresh_token_scope,
+                        user_bookmarks,
+                        user_preferences
+                    FROM user
+                    LEFT JOIN user_access_key ON (user.user_id = user_access_key.user_id)
+                    LEFT JOIN user_access_key_scope ON (user_access_key.id = user_access_key_scope.access_key_id)
+                    LEFT JOIN svn_token ON (user.user_id = svn_token.user_id)
+                    LEFT JOIN `session` ON (user.user_id = `session`.user_id)
+                    LEFT JOIN feedback ON (`session`.id = feedback.session_id)
+                    LEFT JOIN rest_authentication_token ON (user.user_id = rest_authentication_token.user_id)
+                    LEFT JOIN webauthn_challenge ON (user.user_id = webauthn_challenge.user_id)
+                    LEFT JOIN webauthn_credential_source ON (user.user_id = webauthn_credential_source.user_id)
+                    LEFT JOIN oauth2_authorization_code ON (user.user_id = oauth2_authorization_code.user_id)
+                    LEFT JOIN oauth2_authorization_code_scope ON (oauth2_authorization_code.id = oauth2_authorization_code_scope.auth_code_id)
+                    LEFT JOIN oauth2_access_token ON (oauth2_authorization_code.id = oauth2_access_token.authorization_code_id)
+                    LEFT JOIN oauth2_access_token_scope ON (oauth2_access_token.id = oauth2_access_token_scope.access_token_id)
+                    LEFT JOIN oauth2_refresh_token ON (oauth2_authorization_code.id = oauth2_refresh_token.authorization_code_id)
+                    LEFT JOIN oauth2_refresh_token_scope ON oauth2_refresh_token.id = oauth2_refresh_token_scope.refresh_token_id
+                    LEFT JOIN user_bookmarks ON (user.user_id = user_bookmarks.user_id)
+                    LEFT JOIN user_preferences ON (user.user_id = user_preferences.user_id)
+                    WHERE user.user_id = ?
+                    ',
+                    $user_id
+                );
             }
         );
     }
