@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -29,22 +29,17 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectTrackerReferenceRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectBackgroundConfiguration
-     */
-    private $project_background_configuration;
+    private ProjectBackgroundConfiguration&MockObject $project_background_configuration;
 
     protected function setUp(): void
     {
-        $this->project_background_configuration = \Mockery::mock(ProjectBackgroundConfiguration::class);
+        $this->project_background_configuration = $this->createMock(ProjectBackgroundConfiguration::class);
     }
 
     public function testBuildsWhenProjectHasABackground(): void
     {
         $background_identifier = 'brown-alpaca';
-        $this->project_background_configuration->shouldReceive('getBackground')->andReturn(ProjectBackgroundName::fromIdentifier($background_identifier));
+        $this->project_background_configuration->method('getBackground')->willReturn(ProjectBackgroundName::fromIdentifier($background_identifier));
 
         $representation = ProjectReferenceWithBackground::fromProject(
             ProjectTestBuilder::aProject()->build(),
@@ -57,7 +52,7 @@ final class ProjectTrackerReferenceRepresentationTest extends \Tuleap\Test\PHPUn
 
     public function testBuildsWhenProjectDoesNotHaveABackground(): void
     {
-        $this->project_background_configuration->shouldReceive('getBackground')->andReturn(null);
+        $this->project_background_configuration->method('getBackground')->willReturn(null);
 
         $representation = ProjectReferenceWithBackground::fromProject(
             ProjectTestBuilder::aProject()->build(),

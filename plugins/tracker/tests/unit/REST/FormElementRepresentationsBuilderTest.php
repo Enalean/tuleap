@@ -18,78 +18,82 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker;
+use Tracker_FormElement;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItReturnsAnArrayEvenWhenFieldsAreNotReadable()
+    public function testItReturnsAnArrayEvenWhenFieldsAreNotReadable(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $field1 = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $field1->shouldReceive('getId')->andReturn(1);
-        $field1->shouldReceive('getName')->andReturn('field_01');
-        $field1->shouldReceive('getLabel')->andReturn('Field 01');
-        $field1->shouldReceive('isRequired')->andReturnFalse();
-        $field1->shouldReceive('isCollapsed')->andReturnFalse();
-        $field1->shouldReceive('getDefaultRESTValue')->andReturnNull();
-        $field1->shouldReceive('getRESTAvailableValues')->andReturnNull();
-        $field1->shouldReceive('userCanRead')->andReturnTrue();
-        $field1->shouldReceive('getRESTBindingProperties')->andReturn([
+        $field1 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field1->method('getId')->willReturn(1);
+        $field1->method('getName')->willReturn('field_01');
+        $field1->method('getLabel')->willReturn('Field 01');
+        $field1->method('isRequired')->willReturn(false);
+        $field1->method('isCollapsed')->willReturn(false);
+        $field1->method('getDefaultRESTValue')->willReturn(null);
+        $field1->method('getRESTAvailableValues')->willReturn(null);
+        $field1->method('userCanRead')->willReturn(true);
+        $field1->method('getRESTBindingProperties')->willReturn([
             'bind_type' => null,
             'bind_list' => [],
         ]);
 
-        $field2 = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $field2->shouldReceive('getId')->andReturn(2);
-        $field2->shouldReceive('getName')->andReturn('field_02');
-        $field2->shouldReceive('getLabel')->andReturn('Field 02');
-        $field2->shouldReceive('isRequired')->andReturnFalse();
-        $field2->shouldReceive('isCollapsed')->andReturnFalse();
-        $field2->shouldReceive('getDefaultRESTValue')->andReturnNull();
-        $field2->shouldReceive('getRESTAvailableValues')->andReturnNull();
-        $field2->shouldReceive('userCanRead')->andReturnFalse();
-        $field2->shouldReceive('getRESTBindingProperties')->andReturn([
+        $field2 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field2->method('getId')->willReturn(2);
+        $field2->method('getName')->willReturn('field_02');
+        $field2->method('getLabel')->willReturn('Field 02');
+        $field2->method('isRequired')->willReturn(false);
+        $field2->method('isCollapsed')->willReturn(false);
+        $field2->method('getDefaultRESTValue')->willReturn(null);
+        $field2->method('getRESTAvailableValues')->willReturn(null);
+        $field2->method('userCanRead')->willReturn(false);
+        $field2->method('getRESTBindingProperties')->willReturn([
             'bind_type' => null,
             'bind_list' => [],
         ]);
 
-        $field3 = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $field3->shouldReceive('getId')->andReturn(3);
-        $field3->shouldReceive('getName')->andReturn('field_03');
-        $field3->shouldReceive('getLabel')->andReturn('Field 03');
-        $field3->shouldReceive('isRequired')->andReturnFalse();
-        $field3->shouldReceive('isCollapsed')->andReturnFalse();
-        $field3->shouldReceive('getDefaultRESTValue')->andReturnNull();
-        $field3->shouldReceive('getRESTAvailableValues')->andReturnNull();
-        $field3->shouldReceive('userCanRead')->andReturnTrue();
-        $field3->shouldReceive('getRESTBindingProperties')->andReturn([
+        $field3 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field3->method('getId')->willReturn(3);
+        $field3->method('getName')->willReturn('field_03');
+        $field3->method('getLabel')->willReturn('Field 03');
+        $field3->method('isRequired')->willReturn(false);
+        $field3->method('isCollapsed')->willReturn(false);
+        $field3->method('getDefaultRESTValue')->willReturn(null);
+        $field3->method('getRESTAvailableValues')->willReturn(null);
+        $field3->method('userCanRead')->willReturn(true);
+        $field3->method('getRESTBindingProperties')->willReturn([
             'bind_type' => null,
             'bind_list' => [],
         ]);
 
-        $form_element_factory           = Mockery::mock(Tracker_FormElementFactory::class);
-        $permission_exporter            = Mockery::mock(PermissionsExporter::class);
-        $hidden_fieldset_checker        = Mockery::mock(HiddenFieldsetChecker::class);
-        $permissions_for_groups_builder = Mockery::mock(PermissionsForGroupsBuilder::class);
+        $form_element_factory           = $this->createMock(Tracker_FormElementFactory::class);
+        $permission_exporter            = $this->createMock(PermissionsExporter::class);
+        $hidden_fieldset_checker        = $this->createMock(HiddenFieldsetChecker::class);
+        $permissions_for_groups_builder = $this->createMock(PermissionsForGroupsBuilder::class);
 
-        $permissions_for_groups_builder->shouldReceive('getPermissionsForGroups')->with($field1, null, $user)->once()->andReturn(new PermissionsForGroupsRepresentation([], [], []));
-        $permissions_for_groups_builder->shouldReceive('getPermissionsForGroups')->with($field3, null, $user)->once()->andReturn(new PermissionsForGroupsRepresentation([], [], []));
+        $permissions_for_groups_builder->expects($this->exactly(2))
+            ->method('getPermissionsForGroups')
+            ->willReturnCallback(
+                static fn (Tracker_FormElement $form_element) => match ($form_element) {
+                    $field1, $field3 => new PermissionsForGroupsRepresentation([], [], []),
+                }
+            );
 
         $builder = new FormElementRepresentationsBuilder(
             $form_element_factory,
@@ -101,15 +105,15 @@ class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             )
         );
 
-        $form_element_factory->shouldReceive('getAllUsedFormElementOfAnyTypesForTracker')
-            ->andReturn([$field1, $field2, $field3]);
+        $form_element_factory->method('getAllUsedFormElementOfAnyTypesForTracker')
+            ->willReturn([$field1, $field2, $field3]);
 
-        $form_element_factory->shouldReceive('getType')->andReturn('string');
+        $form_element_factory->method('getType')->willReturn('string');
 
-        $permission_exporter->shouldReceive('exportUserPermissionsForFieldWithoutWorkflowComputedPermissions')
-            ->andReturn([]);
+        $permission_exporter->method('exportUserPermissionsForFieldWithoutWorkflowComputedPermissions')
+            ->willReturn([]);
 
-        $tracker = Mockery::mock(Tracker::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
         $collection = $builder->buildRepresentationsInTrackerContext($tracker, $user);
 

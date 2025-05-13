@@ -18,31 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private FrozenFieldDetector&MockObject $frozen_field_detector;
 
-    /**
-     * @var MockInterface
-     */
-    private $frozen_field_detector;
-
-    /**
-     * @var PermissionsExporter
-     */
-    private $permissions_exporter;
+    private PermissionsExporter $permissions_exporter;
 
     protected function setUp(): void
     {
-        $this->frozen_field_detector = \Mockery::mock(FrozenFieldDetector::class);
+        $this->frozen_field_detector = $this->createMock(FrozenFieldDetector::class);
         $this->permissions_exporter  = new PermissionsExporter(
             $this->frozen_field_detector
         );
@@ -51,15 +44,15 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotComputePermissionsIfFormElementIsNotField()
     {
         $initial_permissions = [Tracker_FormElement::REST_PERMISSION_READ, Tracker_FormElement::REST_PERMISSION_UPDATE];
-        $form_element        = \Mockery::mock(Tracker_FormElement::class);
+        $form_element        = $this->createMock(Tracker_FormElement::class);
         $form_element
-            ->shouldReceive('exportCurrentUserPermissionsToREST')
-            ->andReturn($initial_permissions);
+            ->method('exportCurrentUserPermissionsToREST')
+            ->willReturn($initial_permissions);
 
-        $user     = \Mockery::mock(\PFUser::class);
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
-        $this->frozen_field_detector->shouldNotReceive('isFieldFrozen');
+        $this->frozen_field_detector->expects($this->never())->method('isFieldFrozen');
 
         $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
             $user,
@@ -71,17 +64,17 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotChangePermissionsIfNotFrozenField()
     {
         $initial_permissions = [Tracker_FormElement::REST_PERMISSION_READ, Tracker_FormElement::REST_PERMISSION_UPDATE];
-        $form_element        = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $form_element        = $this->createMock(\Tracker_FormElement_Field::class);
         $form_element
-            ->shouldReceive('exportCurrentUserPermissionsToREST')
-            ->andReturn($initial_permissions);
+            ->method('exportCurrentUserPermissionsToREST')
+            ->willReturn($initial_permissions);
 
-        $user     = \Mockery::mock(\PFUser::class);
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->frozen_field_detector
-            ->shouldReceive('isFieldFrozen')
-            ->andReturnFalse();
+            ->method('isFieldFrozen')
+            ->willReturn(false);
 
         $computed_permissions = $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
             $user,
@@ -95,17 +88,17 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldRemoveTheUpdatePermissionIfFieldIsFrozen()
     {
         $initial_permissions = [Tracker_FormElement::REST_PERMISSION_READ, Tracker_FormElement::REST_PERMISSION_UPDATE];
-        $form_element        = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $form_element        = $this->createMock(\Tracker_FormElement_Field::class);
         $form_element
-            ->shouldReceive('exportCurrentUserPermissionsToREST')
-            ->andReturn($initial_permissions);
+            ->method('exportCurrentUserPermissionsToREST')
+            ->willReturn($initial_permissions);
 
-        $user     = \Mockery::mock(\PFUser::class);
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->frozen_field_detector
-            ->shouldReceive('isFieldFrozen')
-            ->andReturnTrue();
+            ->method('isFieldFrozen')
+            ->willReturn(true);
 
         $computed_permissions = $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
             $user,
@@ -125,15 +118,15 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             Tracker_FormElement::REST_PERMISSION_UPDATE,
             Tracker_FormElement::REST_PERMISSION_SUBMIT,
         ];
-        $form_element        = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $form_element        = $this->createMock(\Tracker_FormElement_Field::class);
         $form_element
-            ->shouldReceive('exportCurrentUserPermissionsToREST')
-            ->andReturn($initial_permissions);
+            ->method('exportCurrentUserPermissionsToREST')
+            ->willReturn($initial_permissions);
 
-        $user     = \Mockery::mock(\PFUser::class);
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
-        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->andReturnTrue();
+        $this->frozen_field_detector->method('isFieldFrozen')->willReturn(true);
 
         $computed_permissions = $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
             $user,
