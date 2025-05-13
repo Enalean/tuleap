@@ -24,11 +24,15 @@ import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-
 
 export type TrackerForFields = Pick<TrackerResponseNoInstance, "fields" | "semantics">;
 
+export type ConfigurationFieldDisplayType = "column" | "block";
+export const DISPLAY_TYPE_COLUMN: ConfigurationFieldDisplayType = "column";
+export const DISPLAY_TYPE_BLOCK: ConfigurationFieldDisplayType = "block";
+
 export type ConfigurationField = {
     readonly type: "string";
     readonly field_id: number;
     readonly label: string;
-    display_type: "column" | "block";
+    display_type: ConfigurationFieldDisplayType;
 };
 
 export const getAvailableFields = (
