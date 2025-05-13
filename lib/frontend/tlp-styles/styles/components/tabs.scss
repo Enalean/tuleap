@@ -57,7 +57,7 @@ $inactive-tab-right-margin: calc(
     left: 0;
     flex-direction: column;
     min-width: 100%;
-    padding: var(--tlp-medium-spacing) / 2 0;
+    padding: calc(var(--tlp-medium-spacing) / 2) 0;
     transform: translateY(100%);
     transition:
         bottom $tlp-tabs-transition,

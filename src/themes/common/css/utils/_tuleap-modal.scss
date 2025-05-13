@@ -21,8 +21,8 @@
     left: 50%;
     width: $loading-size;
     height: $loading-size;
-    margin-top: -($loading-size / 2);
-    margin-left: -($loading-size / 2);
+    margin-top: -($loading-size * 0.5);
+    margin-left: -($loading-size * 0.5);
     border-radius: 50%;
     background: #303030 url("#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif")
         no-repeat center center;
@@ -52,7 +52,7 @@
     top: 150px;
     left: 50%;
     height: $modal-height;
-    margin: 0 0 0 #{- ($modal-width + 2 * $grip-width) / 2};
+    margin: 0 0 0 #{- ($modal-width + 2 * $grip-width) * 0.5};
     padding: 0;
     box-shadow: var(--tlp-flyover-shadow);
     font-style: normal;
@@ -94,10 +94,10 @@
             span {
                 display: block;
                 position: absolute;
-                top: -$grip-width / 2;
+                top: -$grip-width * 0.5;
                 bottom: 0;
-                left: $grip-width / 4;
-                height: $grip-width / 2;
+                left: $grip-width * 0.25;
+                height: $grip-width * 0.5;
                 transform: rotate(90deg);
                 transform-origin: bottom left;
                 background-color: $grip-background-color;
@@ -116,7 +116,7 @@
 
                 span {
                     top: auto;
-                    left: $grip-width / 2 + $grip-width / 4;
+                    left: $grip-width * 0.5 + $grip-width * 0.25;
                     transform: rotate((-90deg));
                     transform-origin: bottom left;
                 }
