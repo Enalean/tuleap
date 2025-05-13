@@ -23,8 +23,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use EventManager;
 use Jenkins_Client;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Transition;
@@ -33,26 +32,22 @@ use Transition_PostAction_CIBuild;
 use Transition_PostAction_Field_Date;
 use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
+    private EventManager&MockObject $event_manager;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->event_manager = Mockery::mock(EventManager::class);
+        $this->event_manager = $this->createMock(EventManager::class);
     }
 
-    public function testBuildReturnsRunJobRepresentationBasedOnGivenCiBuildPostAction()
+    public function testBuildReturnsRunJobRepresentationBasedOnGivenCiBuildPostAction(): void
     {
         $run_job = $this->buildAPostActionCIBuild(1, 'http://job.example.com');
         $builder = new PostActionsRepresentationBuilder($this->event_manager, [$run_job]);
@@ -66,15 +61,15 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildAPostActionCIBuild($id, $job_url): Transition_PostAction_CIBuild
     {
-        $transition = Mockery::mock(Transition::class);
-        $client     = Mockery::mock(Jenkins_Client::class);
+        $transition = $this->createMock(Transition::class);
+        $client     = $this->createMock(Jenkins_Client::class);
         return new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
     }
 
-    public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldDateAction()
+    public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldDateAction(): void
     {
-        $transition     = Mockery::mock(Transition::class);
-        $field          = $this->buildFieldWithId(8);
+        $transition     = $this->createMock(Transition::class);
+        $field          = StringFieldBuilder::aStringField(8)->build();
         $set_date_field = new Transition_PostAction_Field_Date($transition, 1, $field, Transition_PostAction_Field_Date::CLEAR_DATE);
         $builder        = new PostActionsRepresentationBuilder($this->event_manager, [$set_date_field]);
 
@@ -87,10 +82,10 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('', $representation[0]->value);
     }
 
-    public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldIntAction()
+    public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldIntAction(): void
     {
-        $transition    = Mockery::mock(Transition::class);
-        $field         = $this->buildFieldWithId(8);
+        $transition    = $this->createMock(Transition::class);
+        $field         = StringFieldBuilder::aStringField(8)->build();
         $set_int_field = new Transition_PostAction_Field_Int($transition, 1, $field, 23);
         $builder       = new PostActionsRepresentationBuilder($this->event_manager, [$set_int_field]);
 
@@ -103,10 +98,10 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(23, $representation[0]->value);
     }
 
-    public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldFloatAction()
+    public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldFloatAction(): void
     {
-        $transition      = Mockery::mock(Transition::class);
-        $field           = $this->buildFieldWithId(8);
+        $transition      = $this->createMock(Transition::class);
+        $field           = StringFieldBuilder::aStringField(8)->build();
         $set_float_field = new Transition_PostAction_Field_Float($transition, 1, $field, 3.4);
         $builder         = new PostActionsRepresentationBuilder($this->event_manager, [$set_float_field]);
 
@@ -119,7 +114,7 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(3.4, $representation[0]->value);
     }
 
-    public function testBuildReturnsAsManyRepresentationsAsGivenActions()
+    public function testBuildReturnsAsManyRepresentationsAsGivenActions(): void
     {
         $post_actions = [
             $this->buildAPostAction(),
@@ -132,13 +127,13 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(3, $builder->build());
     }
 
-    public function testBuilderAsksToExternalPlugin()
+    public function testBuilderAsksToExternalPlugin(): void
     {
         $post_actions = [
             $this->buildAnExternalPostAction(),
         ];
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $builder = new PostActionsRepresentationBuilder($this->event_manager, $post_actions);
 
@@ -147,14 +142,14 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildAPostAction(): Transition_PostAction_Field_Float
     {
-        $transition = Mockery::mock(Transition::class);
-        $field      = $this->buildFieldWithId(8);
+        $transition = $this->createMock(Transition::class);
+        $field      = StringFieldBuilder::aStringField(8)->build();
         return new Transition_PostAction_Field_Float($transition, 1, $field, 3.4);
     }
 
     private function buildAnExternalPostAction(): Transition_PostAction
     {
-        $transition = Mockery::mock(Transition::class);
+        $transition = $this->createMock(Transition::class);
         return new class ($transition, 1) extends Transition_PostAction {
             public function getShortName()
             {
@@ -186,12 +181,5 @@ class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $visitor->visitExternalActions($this);
             }
         };
-    }
-
-    private function buildFieldWithId($id): Tracker_FormElement_Field
-    {
-        $field = Mockery::mock(Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn($id);
-        return $field;
     }
 }

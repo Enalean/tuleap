@@ -22,20 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
-use EventManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class TrackerChecker
+final readonly class TrackerChecker
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    public function __construct(EventManager $event_manager)
+    public function __construct(private EventDispatcherInterface $event_manager)
     {
-        $this->event_manager = $event_manager;
     }
 
     /**
@@ -44,7 +38,7 @@ class TrackerChecker
     public function checkPostActionsAreEligibleForTracker(Tracker $tracker, PostActionCollection $post_actions)
     {
         $event = new CheckPostActionsForTracker($tracker, $post_actions);
-        $this->event_manager->processEvent($event);
+        $this->event_manager->dispatch($event);
 
         if (! $event->arePostActionsEligible()) {
             throw new PostActionNonEligibleForTrackerException($event->getErrorMessage());
