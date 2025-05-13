@@ -9,7 +9,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\TestManagement\\Test\\": ["./tests/unit/"]
+      "Tuleap\\TestManagement\\Test\\": ["./tests/unit/"],
+      "Tuleap\\TestManagement\\": ["./tests/integration"]
     }
   },
   "config": {

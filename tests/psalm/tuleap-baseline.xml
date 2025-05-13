@@ -31291,6 +31291,15 @@
       <code><![CDATA[$dom_document]]></code>
     </TypeDoesNotContainType>
   </file>
+  <file src="plugins/testmanagement/tests/integration/Step/Definition/Field/StepDefinitionChangesetValueDaoTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[$retrieved]]></code>
+      <code><![CDATA[$retrieved]]></code>
+      <code><![CDATA[$retrieved]]></code>
+      <code><![CDATA[$retrieved]]></code>
+      <code><![CDATA[rowCount]]></code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/testplan/include/REST/v1/BacklogItemRepresentation.php">
     <DeprecatedMethod>
       <code><![CDATA[getAnArtifactLinkField]]></code>
@@ -31929,9 +31938,6 @@
     <MissingReturnType>
       <code><![CDATA[addAutocomputeLabelIfFieldIsAutcocomputed]]></code>
     </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
     <UndefinedInterfaceMethod>
       <code><![CDATA[fetchCardValue]]></code>
     </UndefinedInterfaceMethod>
@@ -35963,9 +35969,7 @@
       <code><![CDATA[checkUserIsSiteadmin]]></code>
     </MissingReturnType>
     <UndefinedMethod>
-      <code><![CDATA[allowProject]]></code>
       <code><![CDATA[redirect]]></code>
-      <code><![CDATA[revokeProject]]></code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSender.php">
@@ -36852,11 +36856,9 @@
       <code><![CDATA[$title]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$available_types]]></code>
       <code><![CDATA[$btn_close]]></code>
       <code><![CDATA[$btn_submit]]></code>
       <code><![CDATA[$create_new_type]]></code>
-      <code><![CDATA[$csrf_token]]></code>
       <code><![CDATA[$delete_modal_content]]></code>
       <code><![CDATA[$delete_modal_submit]]></code>
       <code><![CDATA[$delete_modal_title]]></code>
@@ -36871,7 +36873,6 @@
       <code><![CDATA[$reverse_label_help]]></code>
       <code><![CDATA[$reverse_label_label]]></code>
       <code><![CDATA[$reverse_label_placeholder]]></code>
-      <code><![CDATA[$sections]]></code>
       <code><![CDATA[$shortname_help]]></code>
       <code><![CDATA[$shortname_label]]></code>
       <code><![CDATA[$shortname_pattern]]></code>
@@ -38443,7 +38444,6 @@
       <code><![CDATA[clearCaches]]></code>
       <code><![CDATA[createFormElement]]></code>
       <code><![CDATA[deleteFormElement]]></code>
-      <code><![CDATA[displayAdminCreateFormElement]]></code>
       <code><![CDATA[fetchFactoryButtons]]></code>
       <code><![CDATA[fixOriginalFieldIdsAfterDuplication]]></code>
       <code><![CDATA[fixSharedFieldOriginalId]]></code>
@@ -47808,11 +47808,6 @@
     <DeprecatedMethod>
       <code><![CDATA[getConditions]]></code>
     </DeprecatedMethod>
-    <MissingReturnType>
-      <code><![CDATA[exportStateToXML]]></code>
-      <code><![CDATA[exportStatesToXML]]></code>
-      <code><![CDATA[exportToXML]]></code>
-    </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($workflow->getFieldId(), $xml_mapping)]]></code>
     </PossiblyFalseArgument>
@@ -59011,7 +59006,6 @@
       <code><![CDATA[$collect_routes]]></code>
     </InvalidArgument>
     <MissingReturnType>
-      <code><![CDATA[getAdminPasswordPolicy]]></code>
       <code><![CDATA[getAdminSiteContentCustomisation]]></code>
       <code><![CDATA[getLegacyController]]></code>
       <code><![CDATA[getOrPostProjectHome]]></code>
@@ -60561,11 +60555,6 @@
       <code><![CDATA[generateWarningMessageForInvalidEntries]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/User/InvalidPasswordWithUserException.php">
-    <MissingReturnType>
-      <code><![CDATA[getUser]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/User/LoginController.php">
     <MissingParamType>
       <code><![CDATA[$presenter]]></code>
@@ -60588,7 +60577,6 @@
       <code><![CDATA[$hashed_password]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[authenticateFromDatabase]]></code>
       <code><![CDATA[isPasswordUpdatingNeeded]]></code>
       <code><![CDATA[validateAndSetCurrentUser]]></code>
     </MissingReturnType>
@@ -61194,7 +61182,6 @@
       <code><![CDATA[countAllUsers]]></code>
       <code><![CDATA[countUsersByStatus]]></code>
       <code><![CDATA[deleteSSHKeys]]></code>
-      <code><![CDATA[destroySession]]></code>
       <code><![CDATA[getExpireTimestamp]]></code>
       <code><![CDATA[getSSHKeyValidator]]></code>
       <code><![CDATA[getSessionLifetime]]></code>
@@ -65406,7 +65393,6 @@
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$login]]></code>
       <code><![CDATA[$mail_siteupdates]]></code>
       <code><![CDATA[$mail_va]]></code>
       <code><![CDATA[$name]]></code>
@@ -65417,7 +65403,6 @@
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$sticky_login]]></code>
-      <code><![CDATA[$time]]></code>
       <code><![CDATA[$time]]></code>
       <code><![CDATA[$time]]></code>
       <code><![CDATA[$timestamp]]></code>
@@ -66075,18 +66060,6 @@
       <code><![CDATA[isInBurningParrotCompatiblePage]]></code>
       <code><![CDATA[setIsInBurningParrotCompatiblePage]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/include/CSRFSynchronizerToken.php">
-    <MissingClosureReturnType>
-      <code><![CDATA[function ($token_1, $token_2) {]]></code>
-    </MissingClosureReturnType>
-    <MissingReturnType>
-      <code><![CDATA[generateToken]]></code>
-      <code><![CDATA[recycleTokens]]></code>
-    </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $this->token]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/include/Codendi_BlockDiffFormatter.php">
     <MissingParamType>
