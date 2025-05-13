@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
@@ -34,27 +34,16 @@ use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FormElementListValueAdminViewPresenterBuilder
-     */
-    private $presenter_builder;
-    /**
-     * @var \Mockery\MockInterface|BindStaticValueDao
-     */
-    private $value_dao;
-    /**
-     * @var \Mockery\MockInterface|Tracker_FormElement_Field
-     */
-    private $field;
+    private FormElementListValueAdminViewPresenterBuilder $presenter_builder;
+    private BindStaticValueDao&MockObject $value_dao;
+    private Tracker_FormElement_Field&MockObject $field;
 
     protected function setUp(): void
     {
-        $this->field = \Mockery::mock(Tracker_FormElement_Field::class);
-        $this->field->shouldReceive('getTrackerId')->andReturn(5);
+        $this->field = $this->createMock(Tracker_FormElement_Field::class);
+        $this->field->method('getTrackerId')->willReturn(5);
 
-        $this->value_dao         = \Mockery::mock(BindStaticValueDao::class);
+        $this->value_dao         = $this->createMock(BindStaticValueDao::class);
         $this->presenter_builder = new FormElementListValueAdminViewPresenterBuilder($this->value_dao);
     }
 
@@ -72,10 +61,10 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             false
         );
 
-        $this->field->shouldReceive('getId')->andReturn(111);
+        $this->field->method('getId')->willReturn(111);
 
-        $this->value_dao->shouldReceive('canValueBeHidden')->andReturn(true);
-        $this->value_dao->shouldReceive('canValueBeDeleted')->andReturn(false);
+        $this->value_dao->method('canValueBeHidden')->willReturn(true);
+        $this->value_dao->method('canValueBeDeleted')->willReturn(false);
 
         $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator, false);
 
@@ -95,7 +84,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             false
         );
 
-        $this->field->shouldReceive('getId')->andReturn(111);
+        $this->field->method('getId')->willReturn(111);
 
         $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator, false);
 
@@ -116,7 +105,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
             true
         );
 
-        $this->field->shouldReceive('getId')->andReturn(111);
+        $this->field->method('getId')->willReturn(111);
 
         $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator, true);
 

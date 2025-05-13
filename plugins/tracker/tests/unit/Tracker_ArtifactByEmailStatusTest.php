@@ -18,49 +18,82 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-    private $tracker;
-    private $tracker_plugin_conf;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+{
+    private Tracker&MockObject $tracker;
+    private MailGatewayConfig&MockObject $tracker_plugin_conf;
 
     protected function setUp(): void
     {
-        $this->tracker             = \Mockery::spy(\Tracker::class);
-        $this->tracker_plugin_conf = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
+        $this->tracker             = $this->createMock(Tracker::class);
+        $this->tracker_plugin_conf = $this->createMock(MailGatewayConfig::class);
+    }
+
+    public function testItDoesNotAcceptArtifactByInsecureEmailWhenSemanticTitleIsNotDefined(): void
+    {
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('getTitleField')->willReturn(null);
+        $this->tracker->method('getDescriptionField')->willReturn(null);
+
+        $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
+        $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
+    }
+
+    public function testItDoesNotAcceptArtifactByInsecureEmailWhenSemanticDescriptionIsNotDefined(): void
+    {
+        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('getTitleField')->willReturn($field_title);
+        $this->tracker->method('getDescriptionField')->willReturn(null);
+
+        $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
+
+        $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
     }
 
     public function testItAcceptsArtifactByInsecureEmailWhenSemanticIsDefined(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+        $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+
+        $field_title->method('isRequired')->willReturn(false);
+        $field_description->method('isRequired')->willReturn(false);
+
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('getTitleField')->willReturn($field_title);
+        $this->tracker->method('getDescriptionField')->willReturn($field_description);
+        $this->tracker->method('getFormElementFields')->willReturn([$field_title, $field_description]);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
-        $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
 
-        $field_title = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
-        $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
-
-        $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $field_description]);
         $this->assertTrue($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
     }
 
     public function testItAcceptsArtifactByInsecureEmailWhenRequiredFieldsAreValid(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
-        $field_title       = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
-        $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $field_description]);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+
+        $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_title->method('isRequired')->willReturn(false);
+        $field_description->method('isRequired')->willReturn(false);
+
+        $this->tracker->method('getTitleField')->willReturn($field_title);
+        $this->tracker->method('getDescriptionField')->willReturn($field_description);
+        $this->tracker->method('getFormElementFields')->willReturn([$field_title, $field_description]);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertTrue($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
@@ -68,20 +101,25 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItDoesNotAcceptArtifactByInsecureEmailWhenRequiredFieldsAreInvalid(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
-        $field_title = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $field_title->shouldReceive('getId')->andReturns(1);
-        $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
-        $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $field_description->shouldReceive('getId')->andReturns(2);
-        $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $another_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $another_field->shouldReceive('getId')->andReturns(3);
-        $another_field->shouldReceive('isRequired')->andReturns(true);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $another_field, $field_description]);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+
+        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title->method('getId')->willReturn(1);
+        $field_title->method('isRequired')->willReturn(false);
+        $this->tracker->method('getTitleField')->willReturn($field_title);
+
+        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_description->method('getId')->willReturn(2);
+        $field_description->method('isRequired')->willReturn(false);
+        $this->tracker->method('getDescriptionField')->willReturn($field_description);
+
+        $another_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $another_field->method('getId')->willReturn(3);
+        $another_field->method('isRequired')->willReturn(true);
+        $this->tracker->method('getFormElementFields')->willReturn([$field_title, $another_field, $field_description]);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
@@ -89,8 +127,9 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItDoesNotCreateArtifactInTokenMode(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
@@ -98,9 +137,9 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItUpdatesArtifactInTokenMode(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertTrue($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
@@ -108,9 +147,9 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItDoesNotUpdateArtifactInTokenModeWhenMailGatewayIsDisabled(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
@@ -118,9 +157,9 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItUpdatesArtifactInTokenModeWhenMailGatewayIsInsecure(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertTrue($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
@@ -128,9 +167,9 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItDoesNotUpdateArtifactInTokenModeWhenMailGatewayIsInsecureAndTrackerDisallowEmailGateway(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(false);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(false);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
@@ -138,9 +177,9 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItUpdatesArtifactInInsecureMode(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertTrue($tracker_artifactbyemailstatus->canUpdateArtifactInInsecureMode($this->tracker));
@@ -148,9 +187,9 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItDoesNotUpdateArtifactInInsecureModeWhenTrackerEmailGatewayIsDisabled(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(false);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(false);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(false);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInInsecureMode($this->tracker));
@@ -158,54 +197,87 @@ class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //
 
     public function testItDoesNotUpdateArtifactInInsecureModeWhenTokenModeIsEnabled(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(false);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(false);
+        $this->tracker_plugin_conf->method('isTokenBasedEmailgatewayEnabled')->willReturn(true);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(false);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(false);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInInsecureMode($this->tracker));
     }
 
-    public function testItChecksFieldValidity(): void
-    {
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+    /**
+     * @testWith [false, false, false, true]
+     *           [true, true, false, true]
+     *           [true, true, true, false]
+     */
+    public function testItChecksFieldValidity(
+        bool $is_title_required,
+        bool $is_description_required,
+        bool $is_another_field_required,
+        bool $expected,
+    ): void {
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
-        $field_title = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $field_title->shouldReceive('getId')->andReturns(1);
-        $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $field_description->shouldReceive('getId')->andReturns(2);
-        $another_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $another_field->shouldReceive('getId')->andReturns(3);
-        $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
-        $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $another_field, $field_description]);
+        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title->method('getId')->willReturn(1);
+        $field_title->method('isRequired')->willReturn($is_title_required);
+
+        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_description->method('getId')->willReturn(2);
+        $field_description->method('isRequired')->willReturn($is_description_required);
+
+        $another_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $another_field->method('getId')->willReturn(3);
+        $another_field->method('isRequired')->willReturn($is_another_field_required);
+
+        $this->tracker->method('getTitleField')->willReturn($field_title);
+        $this->tracker->method('getDescriptionField')->willReturn($field_description);
+        $this->tracker->method('getFormElementFields')->willReturn([$field_title, $another_field, $field_description]);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
-        $this->assertTrue($tracker_artifactbyemailstatus->isRequiredFieldsConfigured($this->tracker));
-
-        $field_title->shouldReceive('isRequired')->andReturns(true);
-        $field_description->shouldReceive('isRequired')->andReturns(true);
-        $this->assertTrue($tracker_artifactbyemailstatus->isRequiredFieldsConfigured($this->tracker));
-
-        $another_field->shouldReceive('isRequired')->andReturns(true);
-        $this->assertFalse($tracker_artifactbyemailstatus->isRequiredFieldsConfigured($this->tracker));
+        self::assertSame($expected, $tracker_artifactbyemailstatus->isRequiredFieldsConfigured($this->tracker));
     }
 
-    public function testItChecksSemantic(): void
+    public function testIsSemanticConfiguredReturnsFalseIfNoTitle(): void
     {
-        $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
-        $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('getTitleField')->willReturn(null);
+        $this->tracker->method('getDescriptionField')->willReturn(null);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
-        $this->assertFalse($tracker_artifactbyemailstatus->isSemanticConfigured($this->tracker));
 
-        $field_title = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
-        $this->assertFalse($tracker_artifactbyemailstatus->isSemanticConfigured($this->tracker));
+        self::assertFalse($tracker_artifactbyemailstatus->isSemanticConfigured($this->tracker));
+    }
 
-        $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
-        $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $this->assertTrue($tracker_artifactbyemailstatus->isSemanticConfigured($this->tracker));
+    public function testIsSemanticConfiguredReturnsFalseIfNoDescription(): void
+    {
+        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('getTitleField')->willReturn($field_title);
+        $this->tracker->method('getDescriptionField')->willReturn(null);
+
+        $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
+
+        self::assertFalse($tracker_artifactbyemailstatus->isSemanticConfigured($this->tracker));
+    }
+
+    public function testIsSemanticConfiguredReturnsTrue(): void
+    {
+        $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+
+
+        $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
+        $this->tracker->method('getTitleField')->willReturn($field_title);
+        $this->tracker->method('getDescriptionField')->willReturn($field_description);
+
+        $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
+
+        self::assertTrue($tracker_artifactbyemailstatus->isSemanticConfigured($this->tracker));
     }
 }

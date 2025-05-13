@@ -22,34 +22,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ProjectAdminPermissionPerGroupPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectAdminPermissionPerGroupPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ProjectAdminPermissionPerGroupPresenterBuilder
-     */
-    private $presenter_builder;
+    private ProjectAdminPermissionPerGroupPresenterBuilder $presenter_builder;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
-            \Mockery::spy(\UGroupManager::class)
+            $this->createMock(\UGroupManager::class)
         );
     }
 
     public function testItBuildsAPresenterWithANullUGroupNameWhenNoGroupIsSelected(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->build();
 
         $presenter = $this->presenter_builder->buildPresenter(
             $project,

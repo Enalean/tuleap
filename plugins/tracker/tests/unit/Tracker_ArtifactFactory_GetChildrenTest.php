@@ -26,58 +26,48 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
+    private Tracker_ArtifactDao&MockObject $dao;
 
-    /** @var Tracker_ArtifactDao */
-    private $dao;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var PFUser */
-    private $user;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->dao              = \Mockery::spy(\Tracker_ArtifactDao::class);
-        $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->artifact_factory->shouldReceive('getDao')->andReturns($this->dao);
+        $this->dao              = $this->createMock(\Tracker_ArtifactDao::class);
+        $this->artifact_factory = $this->createPartialMock(\Tracker_ArtifactFactory::class, ['getDao', 'getInstanceFromRow']);
+        $this->artifact_factory->method('getDao')->willReturn($this->dao);
 
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturns(48);
-        // Needed to by pass Tracker_Artifact::userCanView
-        $this->user->shouldReceive('isSuperUser')->andReturns(true);
+        $this->user = UserTestBuilder::buildSiteAdministrator();
     }
 
     public function testItFetchAllChildren(): void
     {
-        $project = \Mockery::mock(\Project::class);
+        $project = $this->createMock(\Project::class);
 
-        $tracker = \Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('userIsAdmin')->with($this->user)->andReturn(true);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getProject')->andReturn($project);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('userIsAdmin')->with($this->user)->willReturn(true);
+        $tracker->method('getId')->willReturn(101);
+        $tracker->method('getProject')->willReturn($project);
 
-        $artifact_01 = Mockery::mock(Artifact::class);
-        $artifact_01->shouldReceive('getId')->andReturn(11);
-        $artifact_01->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact_01 = $this->createMock(Artifact::class);
+        $artifact_01->method('getId')->willReturn(11);
+        $artifact_01->method('getTracker')->willReturn($tracker);
 
-        $artifact_02 = Mockery::mock(Artifact::class);
-        $artifact_02->shouldReceive('getId')->andReturn(12);
-        $artifact_02->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact_02 = $this->createMock(Artifact::class);
+        $artifact_02->method('getId')->willReturn(12);
+        $artifact_02->method('getTracker')->willReturn($tracker);
 
         $artifacts = [
             $artifact_01,
@@ -100,16 +90,22 @@ class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit\TestC
             'use_artifact_permissions' => false,
         ];
 
-        $this->dao->shouldReceive('getChildrenForArtifacts')->with([11, 12])->andReturns([$artiafct_as_dar1, $artiafct_as_dar2]);
+        $this->dao->method('getChildrenForArtifacts')->with([11, 12])->willReturn([$artiafct_as_dar1, $artiafct_as_dar2]);
 
-        $child_artifact1 = \Mockery::mock(Artifact::class);
-        $child_artifact1->shouldReceive('userCanView')->andReturn(true);
-        $child_artifact2 = \Mockery::mock(Artifact::class);
-        $child_artifact2->shouldReceive('userCanView')->andReturn(true);
+        $child_artifact1 = $this->createMock(Artifact::class);
+        $child_artifact1->method('userCanView')->willReturn(true);
+        $child_artifact2 = $this->createMock(Artifact::class);
+        $child_artifact2->method('userCanView')->willReturn(true);
 
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artiafct_as_dar1)->andReturns($child_artifact1);
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artiafct_as_dar2)->andReturns($child_artifact2);
+        $this->artifact_factory->method('getInstanceFromRow')
+            ->willReturnCallback(static fn (array $row) => match ($row) {
+                $artiafct_as_dar1 => $child_artifact1,
+                $artiafct_as_dar2 => $child_artifact2,
+            });
 
-        self::assertSame([$child_artifact1, $child_artifact2], $this->artifact_factory->getChildrenForArtifacts($this->user, $artifacts));
+        self::assertSame(
+            [$child_artifact1, $child_artifact2],
+            $this->artifact_factory->getChildrenForArtifacts($this->user, $artifacts),
+        );
     }
 }

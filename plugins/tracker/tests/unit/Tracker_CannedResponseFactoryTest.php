@@ -19,23 +19,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tracker_CannedResponse;
 use Tracker_CannedResponseFactory;
 use TrackerFactory;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_CannedResponseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_CannedResponseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    //testing CannedResponse import
-    public function testImport()
+    public function testImport(): void
     {
         $xml       = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TestTracker-1.xml'));
         $responses = [];
@@ -47,49 +43,65 @@ class Tracker_CannedResponseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('this is the message of the new canned response', $responses[0]->body);
     }
 
-    public function testDuplicateWithNoCannedResponses()
+    public function testDuplicateWithNoCannedResponses(): void
     {
-        $from_tracker = Mockery::mock(Tracker::class);
-        $to_tracker   = Mockery::mock(Tracker::class);
-        $tf           = Mockery::mock(TrackerFactory::class);
-        $tf->shouldReceive('getTrackerById')->with(102)->andReturns($from_tracker);
-        $tf->shouldReceive('getTrackerById')->with(502)->andReturns($to_tracker);
+        $from_tracker = $this->createMock(Tracker::class);
+        $to_tracker   = $this->createMock(Tracker::class);
+        $tf           = $this->createMock(TrackerFactory::class);
+        $tf->method('getTrackerById')
+            ->willReturnCallback(
+                static fn (int $id) => match ($id) {
+                    102 => $from_tracker,
+                    502 => $to_tracker,
+                }
+            );
 
         $canned_responses = [];
 
-        $crf = Mockery::mock(Tracker_CannedResponseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $crf->shouldReceive('getTrackerFactory')->andReturns($tf);
-        $crf->shouldReceive('getCannedResponses')->with($from_tracker)->andReturns($canned_responses);
-        $crf->shouldReceive('create')->never();
+        $crf = $this->createPartialMock(Tracker_CannedResponseFactory::class, ['getTrackerFactory', 'getCannedResponses', 'create']);
+        $crf->method('getTrackerFactory')->willReturn($tf);
+        $crf->method('getCannedResponses')->with($from_tracker)->willReturn($canned_responses);
+        $crf->expects($this->never())->method('create');
         $crf->duplicate(102, 502);
     }
 
-    public function testDuplicateWithCannedResponses()
+    public function testDuplicateWithCannedResponses(): void
     {
-        $from_tracker = Mockery::mock(Tracker::class);
-        $to_tracker   = Mockery::mock(Tracker::class);
-        $tf           = Mockery::mock(TrackerFactory::class);
-        $tf->shouldReceive('getTrackerById')->with(102)->andReturns($from_tracker);
-        $tf->shouldReceive('getTrackerById')->with(502)->andReturns($to_tracker);
+        $from_tracker = $this->createMock(Tracker::class);
+        $to_tracker   = $this->createMock(Tracker::class);
+        $tf           = $this->createMock(TrackerFactory::class);
+        $tf->method('getTrackerById')
+            ->willReturnCallback(
+                static fn (int $id) => match ($id) {
+                    102 => $from_tracker,
+                    502 => $to_tracker,
+                }
+            );
 
-        $cr1 = Mockery::mock(Tracker_CannedResponse::class);
-        $cr1->shouldReceive('getTitle')->andReturns('cr1');
-        $cr1->shouldReceive('getBody')->andReturns('body of cr1');
-        $cr2 = Mockery::mock(Tracker_CannedResponse::class);
-        $cr2->shouldReceive('getTitle')->andReturns('cr2');
-        $cr2->shouldReceive('getBody')->andReturns('body of cr2');
-        $cr3 = Mockery::mock(Tracker_CannedResponse::class);
-        $cr3->shouldReceive('getTitle')->andReturns('cr3');
-        $cr3->shouldReceive('getBody')->andReturns('body of cr3');
+        $cr1 = $this->createMock(Tracker_CannedResponse::class);
+        $cr1->method('getTitle')->willReturn('cr1');
+        $cr1->method('getBody')->willReturn('body of cr1');
+        $cr2 = $this->createMock(Tracker_CannedResponse::class);
+        $cr2->method('getTitle')->willReturn('cr2');
+        $cr2->method('getBody')->willReturn('body of cr2');
+        $cr3 = $this->createMock(Tracker_CannedResponse::class);
+        $cr3->method('getTitle')->willReturn('cr3');
+        $cr3->method('getBody')->willReturn('body of cr3');
         $crs = [$cr1, $cr2, $cr3];
 
-        $crf = Mockery::mock(Tracker_CannedResponseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $crf->shouldReceive('getTrackerFactory')->andReturns($tf);
-        $crf->shouldReceive('getCannedResponses')->with($from_tracker)->andReturns($crs);
-        $crf->shouldReceive('create')->times(3);
-        $crf->shouldReceive('create')->with($to_tracker, 'cr1', 'body of cr1')->ordered();
-        $crf->shouldReceive('create')->with($to_tracker, 'cr2', 'body of cr2')->ordered();
-        $crf->shouldReceive('create')->with($to_tracker, 'cr3', 'body of cr3')->ordered();
+        $crf = $this->createPartialMock(Tracker_CannedResponseFactory::class, ['getTrackerFactory', 'getCannedResponses', 'create']);
+        $crf->method('getTrackerFactory')->willReturn($tf);
+        $crf->method('getCannedResponses')->with($from_tracker)->willReturn($crs);
+        $matcher = $this->exactly(3);
+        $crf->expects($matcher)
+            ->method('create')
+            ->willReturnCallback(
+                static fn (Tracker $tracker, string $title, string $body) => match (true) {
+                    $matcher->numberOfInvocations() === 1 && $title === 'cr1' && $body === 'body of cr1',
+                    $matcher->numberOfInvocations() === 2 && $title === 'cr2' && $body === 'body of cr2',
+                    $matcher->numberOfInvocations() === 3 && $title === 'cr3' && $body === 'body of cr3' => true
+                }
+            );
         $crf->duplicate(102, 502);
     }
 }
