@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "basepath";
+
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 
 /* The wrapper div */
@@ -53,8 +74,8 @@ a.date-picker-control:focus {
     margin: 0 0 0 4px;
     padding: 0;
     border: 0 none;
-    background: transparent url("#{$tuleap-common-theme-basepath}images/ic/cal.png") no-repeat 50%
-        50%;
+    background: transparent url("#{basepath.$tuleap-common-theme-basepath}images/ic/cal.png")
+        no-repeat 50% 50%;
     line-height: 1;
     text-decoration: none;
     vertical-align: middle;
@@ -184,7 +205,7 @@ div.datePicker table th {
 div.datePicker table td.date-picker-unused {
     padding: 0;
     border-color: #dcdcdc;
-    background: #ffffff url("#{$tuleap-common-theme-basepath}images/backstripes.gif");
+    background: #ffffff url("#{basepath.$tuleap-common-theme-basepath}images/backstripes.gif");
     cursor: default !important;
 }
 

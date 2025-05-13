@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "../../../common/css/utils/skip-to-main-link";
+@use "../../../common/css/utils/skip-to-main-link";
 
 .skip-to-main-link {
     border-color: var(--tlp-dark-color);

@@ -17,26 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "siteadmin-homepage";
-@import "siteadmin-user-details";
-@import "siteadmin-user-password";
-@import "siteadmin-pending-users";
-@import "siteadmin-pending-projects";
-@import "siteadmin-permission-delegation";
-@import "siteadmin-system-events";
-@import "siteadmin-project";
-@import "siteadmin-project-history";
-@import "siteadmin-project-list";
-@import "siteadmin-project-webhooks";
-@import "siteadmin-platform-access";
-@import "siteadmin-custom-homepage";
-@import "siteadmin-pending-tracker-removal";
-@import "siteadmin-description-fields";
-@import "siteadmin-trovecats";
-@import "siteadmin-massmail";
-@import "siteadmin-news";
-@import "siteadmin-templates";
-@import "siteadmin-platform-banner";
+@use "siteadmin-homepage";
+@use "siteadmin-user-details";
+@use "siteadmin-user-password";
+@use "siteadmin-pending-users";
+@use "siteadmin-pending-projects";
+@use "siteadmin-permission-delegation";
+@use "siteadmin-system-events";
+@use "siteadmin-project";
+@use "siteadmin-project-history";
+@use "siteadmin-project-list";
+@use "siteadmin-project-webhooks";
+@use "siteadmin-platform-access";
+@use "siteadmin-custom-homepage";
+@use "siteadmin-pending-tracker-removal";
+@use "siteadmin-description-fields";
+@use "siteadmin-trovecats";
+@use "siteadmin-massmail";
+@use "siteadmin-news";
+@use "siteadmin-templates";
+@use "siteadmin-platform-banner";
 
 .siteadmin-trovecat-list-category {
     width: 100%;

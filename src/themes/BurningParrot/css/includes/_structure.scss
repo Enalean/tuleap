@@ -19,6 +19,12 @@
 
 @use "global-variables";
 @use "sidebar/sidebar";
+@use "header";
+@use "toolbar";
+@use "navbar";
+@use "logo-url";
+@use "logo";
+@use "footer";
 
 body {
     display: flex;
@@ -77,10 +83,3 @@ main[role="main"]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empt
 .full-width + #main-container > main[role="main"]:not(.tlp-framed) > #feedback:not(:empty) {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
-
-@import "header";
-@import "toolbar";
-@import "navbar";
-@import "logo-url";
-@import "logo";
-@import "footer";

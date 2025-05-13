@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "../../../common/css/utils/mermaid";
+@use "../../../common/css/utils/mermaid";
 
 // we have to disable the Bootstrap rules for .label elements which conflict with mermaid ones.
 .diagram-mermaid .label {

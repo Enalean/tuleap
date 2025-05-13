@@ -19,6 +19,9 @@
 
 @use "pkg:@tuleap/tlp-dropdown";
 @use "pkg:dragula/dist/dragula";
+@use "includes/dashboard-widgets";
+@use "includes/dashboard-project";
+@use "includes/dashboard-user";
 
 .dashboard-tabs-dropdown {
     margin: 0 0 0 var(--tlp-small-spacing);
@@ -401,7 +404,3 @@ $two-columns-span-in-four-columns: calc(
 #add-dashboard-button {
     margin: 0 0 0 var(--tlp-medium-spacing);
 }
-
-@import "includes/dashboard-widgets";
-@import "includes/dashboard-project";
-@import "includes/dashboard-user";
