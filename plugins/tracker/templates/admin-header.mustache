@@ -13,10 +13,9 @@
         </a>
     </li>
     <li class="dropdown {{# is_permissions_tab_active }}active{{/ is_permissions_tab_active }}">
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker"
+        <a
             class="dropdown-toggle"
             data-toggle="dropdown"
-            data-target="#"
             data-test="admin-permissions"
         >
             {{# dgettext }}tuleap-tracker | Permissions{{/ dgettext }}
@@ -36,10 +35,9 @@
         </ul>
     </li>
     <li class="dropdown {{# is_workflow_tab_active }}active{{/ is_workflow_tab_active }}">
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow"
+        <a
             class="dropdown-toggle"
             data-toggle="dropdown"
-            data-target="#"
             data-test="workflow">
             {{# dgettext }}tuleap-tracker | Workflow{{/ dgettext }}
             <b class="caret"></b>
@@ -62,7 +60,7 @@
         </a>
     </li>
     <li class="dropdown {{# is_other_tab_active }}active{{/ is_other_tab_active }}" data-test="tracker-admin-more-options">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{# dgettext }}tuleap-tracker | Others{{/ dgettext }}">
+        <a class="dropdown-toggle" data-toggle="dropdown" title="{{# dgettext }}tuleap-tracker | Others{{/ dgettext }}">
             <i class="fa fa-bars"></i>
             <b class="caret"></b>
         </a>

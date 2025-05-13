@@ -19,7 +19,7 @@
 
 <template>
     <div class="dropdown tracker-colorpicker">
-        <a class="dropdown-toggle" href="#" data-target="#" data-toggle="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
             <color-picker-preview
                 v-bind:color="color"
                 v-bind:is_unsupported_color="is_unsupported_color"

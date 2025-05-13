@@ -409,10 +409,10 @@ lightwindow.prototype = {
 	buildGalleryList : function() {
 		var output = '';
 		var galleryLink;
-		for (i in this.galleries) {
+		for (let i in this.galleries) {
 			if (typeof this.galleries[i] == 'object') {
 				output += (this.options.skin.gallery.top).replace('{gallery_title_replace}', unescape(i));
-				for (j in this.galleries[i]) {
+				for (let j in this.galleries[i]) {
 					if (typeof this.galleries[i][j] == 'object') {						
 						galleryLink = '<a href="#" id="lightwindow_gallery_'+i+'_'+j+'" >'+unescape(j)+'</a>';
 						output += (this.options.skin.gallery.middle).replace('{gallery_link_replace}', galleryLink);
@@ -424,9 +424,9 @@ lightwindow.prototype = {
 		new Insertion.Top('lightwindow_galleries_list', output);
 		
 		// Attach Events
-		for (i in this.galleries) {
+		for (let i in this.galleries) {
 			if (typeof this.galleries[i] == 'object') {
-				for (j in this.galleries[i]) {
+				for (let j in this.galleries[i]) {
 					if (typeof this.galleries[i][j] == 'object') {
 						Event.observe($('lightwindow_gallery_'+i+'_'+j), 'click', this.openWindow.bind(this, this.galleries[i][j][0]), false);
 						$('lightwindow_gallery_'+i+'_'+j).onclick = function() {return false;};	

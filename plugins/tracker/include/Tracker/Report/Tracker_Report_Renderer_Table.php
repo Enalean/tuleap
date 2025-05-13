@@ -557,7 +557,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $my_items            = ['export' => ''];
         $my_items['export'] .= '<div class="btn-group">';
-        $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
+        $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
         $my_items['export'] .= '<i class="fa fa-download"></i> ';
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export');
         $my_items['export'] .= ' <span class="caret"></span>';

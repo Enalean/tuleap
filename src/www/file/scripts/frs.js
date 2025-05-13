@@ -528,7 +528,7 @@ document.observe("dom:loaded", function () {
             return;
         }
 
-        if (!input_files.size()) {
+        if (!input_files.length) {
             // No files to check, continue validation
             onsuccess_callback();
             return;
