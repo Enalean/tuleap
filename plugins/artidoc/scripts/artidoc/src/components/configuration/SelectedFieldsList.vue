@@ -35,12 +35,13 @@
             <div class="field-display-type">
                 <label class="tlp-label tlp-checkbox">
                     <input
-                        disabled
                         type="checkbox"
                         value="1"
-                        v-bind:checked="field.display_type === 'block'"
                         data-not-drag-handle="true"
+                        data-test="switch-display-type-checkbox"
                         draggable="false"
+                        v-bind:checked="field.display_type === DISPLAY_TYPE_BLOCK"
+                        v-on:change="() => switchFieldDisplayType(field)"
                     />
                     {{ $gettext("Full row") }}
                 </label>
@@ -81,6 +82,10 @@ import DragndropGripIllustration from "@/components/dnd/DragndropGripIllustratio
 import ReorderFieldsArrows from "@/components/configuration/ReorderFieldsArrows.vue";
 import type { FieldsReorderer } from "@/sections/readonly-fields/FieldsReorderer";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import {
+    DISPLAY_TYPE_COLUMN,
+    DISPLAY_TYPE_BLOCK,
+} from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 const props = defineProps<{
     currently_selected_fields: ConfigurationField[];
@@ -160,6 +165,11 @@ onMounted(() => {
 onBeforeUnmount(() => {
     drek?.destroy();
 });
+
+const switchFieldDisplayType = (field: ConfigurationField): void => {
+    field.display_type =
+        field.display_type === DISPLAY_TYPE_COLUMN ? DISPLAY_TYPE_BLOCK : DISPLAY_TYPE_COLUMN;
+};
 </script>
 
 <style scoped lang="scss">

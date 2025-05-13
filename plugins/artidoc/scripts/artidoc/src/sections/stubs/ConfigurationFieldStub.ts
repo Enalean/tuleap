@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import { DISPLAY_TYPE_COLUMN } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 export const ConfigurationFieldStub = {
     build: (): ConfigurationField => {
@@ -24,7 +25,7 @@ export const ConfigurationFieldStub = {
             field_id: 123,
             label: "String Field",
             type: "string",
-            display_type: "column",
+            display_type: DISPLAY_TYPE_COLUMN,
         };
     },
 
