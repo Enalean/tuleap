@@ -1,40 +1,42 @@
-<div class="column-content-addinplace"
-    ng-class="{open: addInPlace.isOpen(), 'tlp-button-primary': ! addInPlace.isOpen()}"
-     ng-click="addInPlace.open()"
+<button class="kanban-add-in-place-button tlp-button-primary"
+        type="button"
+        ng-if="!addInPlace.isOpen()"
+        ng-click="addInPlace.open()"
+        data-test="add-in-place-button"
 >
-    <i class="fa fa-plus column-content-addinplace-icon"  data-test="add-in-place-button"></i>
-</div>
-<div esc-key="addInPlace.close()">
-    <form ng-submit="addInPlace.submit()"
-          ng-if="addInPlace.isOpen()"
-          class="column-content-addinplace-icon-form tlp-form-element"
+    <i class="fa-solid fa-plus"></i>
+</button>
+<form ng-submit="addInPlace.submit()"
+      ng-if="addInPlace.isOpen()"
+      class="kanban-add-in-place-form"
+      esc-key="addInPlace.close()"
+>
+    <input type="text"
+           class="tlp-input"
+           ng-model="addInPlace.summary"
+           placeholder="{{ 'Card summary' | translate }}"
+           ng-disabled="addInPlace.isUpdating()"
+           data-test="add-in-place-label-input"
+           aria-label="Add in place"
+           autofocus
     >
-        <input type="text"
-               class="tlp-input column-content-addinplace-icon-form-input"
-               ng-model="addInPlace.summary"
-               placeholder="{{ 'Card summary' | translate }}"
-               ng-disabled="addInPlace.isUpdating()"
-               data-test="add-in-place-label-input"
-               aria-label="Add in place"
+    <div class="kanban-add-in-place-form-buttons">
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                ng-click="addInPlace.close()"
+                ng-disabled="addInPlace.isUpdating()"
         >
-        <div class="kanban-add-in-place-buttons">
-            <button type="button"
-                    class="tlp-button-primary tlp-button-outline tlp-button-small"
-                    ng-click="addInPlace.close()"
-                    ng-disabled="addInPlace.isUpdating()"
-            >
-                <i class="fa fa-fw fa-tlp-esc-key tlp-button-icon"></i>
-                <span translate>Cancel</span>
-            </button>
-            <button type="submit"
-                    class="tlp-button-primary tlp-button-small"
-                    data-test="add-in-place-submit"
-                    ng-disabled="addInPlace.isUpdating()"
-            >
-                <i class="fa tlp-button-icon fa-tlp-enter-key" ng-if="! item.isUpdating()"></i>
-                <i class="fa tlp-button-icon fa-spin" ng-if="item.isUpdating()"></i>
-                <span translate>Save</span>
-            </button>
-        </div>
-    </form>
-</div>
+            <i class="fa fa-fw fa-tlp-esc-key tlp-button-icon"></i>
+            <span translate>Cancel</span>
+        </button>
+        <button type="submit"
+                class="tlp-button-primary tlp-button-small"
+                data-test="add-in-place-submit"
+                ng-disabled="addInPlace.isUpdating()"
+        >
+            <i class="fa tlp-button-icon fa-tlp-enter-key" ng-if="! item.isUpdating()"></i>
+            <i class="fa tlp-button-icon fa-spin" ng-if="item.isUpdating()"></i>
+            <span translate>Save</span>
+        </button>
+    </div>
+</form>
