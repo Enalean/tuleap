@@ -34,11 +34,11 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
-use Tracker_NoChangeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
+use Tuleap\Tracker\Artifact\Changeset\NoChangeFault;
 use Tuleap\Tracker\Artifact\ChangesetValue\BuildChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -115,10 +115,9 @@ final readonly class UpdateArtifactAction
                     $submission_date->getTimestamp(),
                     [],
                 ),
-            )->mapErr(function (Fault $fault) use ($base_layout, $redirect): void {
-                $base_layout->addFeedback(Feedback::ERROR, (string) $fault);
-                $base_layout->redirect($redirect->toUrl());
-            });
+            )->mapErr(
+                fn(Fault $fault) => $this->handleFault($fault, $base_layout, $layout, $redirect, $request, $current_user)
+            );
 
             $art_link = $this->artifact->fetchDirectLinkToArtifact();
             $base_layout->addFeedback(Feedback::INFO, sprintf(dgettext('tuleap-tracker', 'Successfully Updated (%1$s)'), $art_link), CODENDI_PURIFIER_LIGHT);
@@ -134,22 +133,6 @@ final readonly class UpdateArtifactAction
                 return;
             } else {
                 $base_layout->redirect($redirect->toUrl());
-            }
-        } catch (Tracker_NoChangeException $e) {
-            if ($request->isAjax()) {
-                $this->sendAjaxCardsUpdateInfo($current_user);
-            } else {
-                $base_layout->addFeedback(Feedback::INFO, $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                $render = new Tracker_Artifact_ReadOnlyRenderer(
-                    $this->event_manager,
-                    $this->artifact,
-                    $layout,
-                    $this->artifact_retriever,
-                    $this->visit_recorder,
-                    $this->hidden_fieldsets_detector,
-                    new ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
-                );
-                $render->display($request, $current_user);
             }
         } catch (Tracker_Exception $e) {
             if ($request->isAjax()) {
@@ -168,6 +151,39 @@ final readonly class UpdateArtifactAction
                 $render->display($request, $current_user);
             }
         }
+    }
+
+    /**
+     * @psalm-return never-return
+     */
+    private function handleFault(
+        Fault $fault,
+        BaseLayout $base_layout,
+        Tracker_IDisplayTrackerLayout $layout,
+        Tracker_Artifact_Redirect $redirect,
+        Codendi_Request $request,
+        PFUser $current_user,
+    ): void {
+        if ($fault instanceof NoChangeFault) {
+            if ($request->isAjax()) {
+                $this->sendAjaxCardsUpdateInfo($current_user);
+                exit();
+            }
+            $base_layout->addFeedback(Feedback::INFO, (string) $fault, CODENDI_PURIFIER_LIGHT);
+            $render = new Tracker_Artifact_ReadOnlyRenderer(
+                $this->event_manager,
+                $this->artifact,
+                $layout,
+                $this->artifact_retriever,
+                $this->visit_recorder,
+                $this->hidden_fieldsets_detector,
+                new ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
+            );
+            $render->display($request, $current_user);
+            exit();
+        }
+        $base_layout->addFeedback(Feedback::ERROR, (string) $fault);
+        $base_layout->redirect($redirect->toUrl());
     }
 
     public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request): Tracker_Artifact_Redirect

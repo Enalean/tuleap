@@ -28,7 +28,6 @@ use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
-use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
@@ -37,7 +36,7 @@ use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
-use Tuleap\Tracker\REST\FaultMapper;
+use Tuleap\Tracker\REST\PUTHandlerFaultMapper;
 
 final class PUTHandler implements HandlePUT
 {
@@ -68,11 +67,9 @@ final class PUTHandler implements HandlePUT
                 $submitter,
                 $submission_date,
                 $this->buildNewComment($comment, $submitter, $submission_date)
-            )->mapErr(FaultMapper::mapToRestException(...));
+            )->mapErr(PUTHandlerFaultMapper::mapToRestException(...));
         } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException | CommentContentNotValidException | FieldValidationException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_NoChangeException) {
-            //Do nothing
         } catch (Tracker_Exception $exception) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 throw new RestException(500, $GLOBALS['Response']->getRawFeedback());

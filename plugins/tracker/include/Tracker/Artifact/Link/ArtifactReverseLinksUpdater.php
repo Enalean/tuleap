@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Link;
 
+use Tracker_NoChangeException;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -31,6 +32,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NoChangeFault;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeReverseLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
@@ -41,12 +43,12 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-final class ArtifactReverseLinksUpdater
+final readonly class ArtifactReverseLinksUpdater
 {
     public function __construct(
-        private readonly RetrieveReverseLinks $reverse_links_retriever,
-        private readonly ReverseLinksToNewChangesetsConverter $changesets_converter,
-        private readonly CreateNewChangeset $changeset_creator,
+        private RetrieveReverseLinks $reverse_links_retriever,
+        private ReverseLinksToNewChangesetsConverter $changesets_converter,
+        private CreateNewChangeset $changeset_creator,
     ) {
     }
 
@@ -88,8 +90,7 @@ final class ArtifactReverseLinksUpdater
                 Result::ok([])
             );
 
-        return $result->map(fn(array $new_changesets) => [
-            ...$new_changesets,
+        return $result->andThen(fn(array $new_changesets) => $this->saveChangesets(
             NewChangeset::fromFieldsDataArray(
                 $artifact,
                 $changeset_values->getFieldsData(),
@@ -100,24 +101,48 @@ final class ArtifactReverseLinksUpdater
                 $submission_date->getTimestamp(),
                 new CreatedFileURLMapping()
             ),
-        ])->andThen($this->saveChangesets(...));
+            ...$new_changesets
+        ));
     }
 
     /**
-     * @param list<NewChangeset> $new_changesets
      * @return Ok<null> | Err<Fault>
      * @throws FieldValidationException
      * @throws \Tracker_Exception
      */
-    private function saveChangesets(array $new_changesets): Ok|Err
+    private function saveChangesets(NewChangeset $source_artifact_new_changeset, NewChangeset ...$reverse_link_changesets): Ok|Err
     {
-        foreach ($new_changesets as $changeset) {
+        $source_no_change = Option::nothing(Fault::class);
+        try {
+            $this->changeset_creator->create($source_artifact_new_changeset, PostCreationContext::withNoConfig(true));
+        } catch (Tracker_NoChangeException $exception) {
+            $source_no_change = Option::fromValue(NoChangeFault::build($exception));
+        }
+        $at_least_one_reverse_changed = false;
+        foreach ($reverse_link_changesets as $changeset) {
             try {
                 $this->changeset_creator->create($changeset, PostCreationContext::withNoConfig(true));
-            } catch (\Tracker_NoChangeException) {
+                $at_least_one_reverse_changed = true;
+            } catch (Tracker_NoChangeException) {
                 //Ignore, it should not stop the update
             }
         }
-        return Result::ok(null);
+        return $this->returnNoChangeIfNoneOfTheReverseLinksHaveChanged($source_no_change, $at_least_one_reverse_changed);
+    }
+
+    /**
+     * @param Option<Fault> $source_no_change
+     * @return Ok<null>|Err<Fault>
+     */
+    private function returnNoChangeIfNoneOfTheReverseLinksHaveChanged(
+        Option $source_no_change,
+        bool $at_least_one_reverse_changed,
+    ): Ok|Err {
+        return $source_no_change->mapOr(
+            static fn(Fault $no_change_fault): Ok|Err => $at_least_one_reverse_changed
+                ? Result::ok(null)
+                : Result::err($no_change_fault),
+            Result::ok(null)
+        );
     }
 }

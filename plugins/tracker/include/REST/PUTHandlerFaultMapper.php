@@ -25,18 +25,23 @@ namespace Tuleap\Tracker\REST;
 use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
+use Tuleap\Tracker\Artifact\Changeset\NoChangeFault;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
-use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
 
-final class FaultMapper
+final class PUTHandlerFaultMapper
 {
     /**
      * @throws RestException
      */
-    public static function mapToRestException(Fault $fault): never
+    public static function mapToRestException(Fault $fault): void
     {
+        if ($fault instanceof NoChangeFault) {
+            //Do nothing
+            return;
+        }
         $status_code = match ($fault::class) {
-            ArtifactDoesNotExistFault::class , ArtifactLinkFieldDoesNotExistFault::class, SemanticNotSupportedFault::class => 400,
+            ArtifactDoesNotExistFault::class,
+            ArtifactLinkFieldDoesNotExistFault::class => 400,
             default => 500,
         };
         throw new RestException($status_code, (string) $fault);

@@ -29,6 +29,7 @@ use Tracker_Semantic_TitleFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -44,7 +45,6 @@ use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
-use Tuleap\Tracker\REST\FaultMapper;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -54,6 +54,7 @@ use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\ArtifactCannotBeCreatedReasonsGetter;
 use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
+use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -183,7 +184,7 @@ class ProjectTrackersResource extends AuthenticatedResource
 
         $semantics_to_check = CollectionOfCreationSemanticToCheck::fromREST($with_creation_semantic_check)->match(
             fn(CollectionOfCreationSemanticToCheck $valid_semantic_to_check) => $valid_semantic_to_check,
-            FaultMapper::mapToRestException(...)
+            self::mapTrackerProjectsFault(...)
         );
 
         if (empty($json_query) || isset($json_query['is_tracker_admin'])) {
@@ -215,6 +216,17 @@ class ProjectTrackersResource extends AuthenticatedResource
         }
 
         return $this->getTrackersWithCriteria($project, $representation, $limit, $offset, $json_query);
+    }
+
+    /**
+     * @throws RestException
+     */
+    private static function mapTrackerProjectsFault(Fault $fault): never
+    {
+        throw match ($fault::class) {
+            SemanticNotSupportedFault::class => new RestException(400, (string) $fault),
+            default => new RestException(500, (string) $fault),
+        };
     }
 
     /**
