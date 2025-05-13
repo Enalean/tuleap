@@ -126,7 +126,7 @@
             <column-wip-header column="kanban.backlog"></column-wip-header>
         </div>
         <kanban-column ng-init="$ctrl.column=kanban.backlog" ng-class="{'created-in-closed-column': $ctrl.column.have_new_item }"></kanban-column>
-        <add-in-place column="kanban.backlog" create-item="kanban.createItemInPlaceInBacklog" ng-if="kanban.backlog.user_can_add_in_place && kanban.backlog.is_open" data-test="add-in-place" class="add-in-place kanban-add-in-place-element"></add-in-place>
+        <add-in-place column="kanban.backlog" create-item="kanban.createItemInPlaceInBacklog" ng-if="kanban.backlog.user_can_add_in_place && kanban.backlog.is_open" data-test="add-in-place" class="add-in-place"></add-in-place>
         <div ng-if="! kanban.backlog.is_open" class="kanban-column-label">
             <span class="kanban-column-label-title">{{ kanban.backlog.label }}</span>
             <span
