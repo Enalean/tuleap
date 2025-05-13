@@ -64,6 +64,16 @@ $template-category-inactive-tab-right-margin: calc(
     margin: 0 5px 0 0;
 }
 
+@keyframes footer-appear {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
 .project-registration-button-container {
     padding: var(--tlp-medium-spacing) 0 0;
     border-top: 1px solid var(--tlp-neutral-dark-color-transparent-50);
@@ -75,16 +85,6 @@ $template-category-inactive-tab-right-margin: calc(
     }
 
     &.pinned {
-        @keyframes footer-appear {
-            from {
-                transform: translateY(100%);
-            }
-
-            to {
-                transform: translateY(0);
-            }
-        }
-
         position: fixed;
         bottom: 0;
         left: 0;
