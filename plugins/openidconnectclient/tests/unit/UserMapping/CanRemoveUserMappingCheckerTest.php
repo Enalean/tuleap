@@ -23,41 +23,24 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
-use Tuleap\Test\Builders\UserTestBuilder;
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanRemoveUserMappingCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var CanRemoveUserMappingChecker
-     */
-    private $checker;
+    private CanRemoveUserMappingChecker $checker;
 
     protected function setUp(): void
     {
         $this->checker = new CanRemoveUserMappingChecker();
     }
 
-    public function testCanRemoveAMappingWhenTheUserHasAPasswordSetOnTheAccount(): void
-    {
-        $user = UserTestBuilder::aUser()->build();
-        $user->setUserPw('some_password_hash');
-
-        $this->assertTrue($this->checker->canAUserMappingBeRemoved($user, [$this->buildMappingUsage()]));
-    }
-
     public function testCanRemoveWhenThereIsMoreThanOneLink(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
-        $this->assertTrue($this->checker->canAUserMappingBeRemoved($user, [$this->buildMappingUsage(), $this->buildMappingUsage()]));
+        $this->assertTrue($this->checker->canAUserMappingBeRemoved([$this->buildMappingUsage(), $this->buildMappingUsage()]));
     }
 
-    public function testCannotRemoveWhenUserHasNoPasswordAndThereIsOnlyOneLink(): void
+    public function testCannotRemoveWhenUserOnlyHasOneLink(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
-        $this->assertFalse($this->checker->canAUserMappingBeRemoved($user, [$this->buildMappingUsage()]));
+        $this->assertFalse($this->checker->canAUserMappingBeRemoved([$this->buildMappingUsage()]));
     }
 
     private function buildMappingUsage(): UserMappingUsage

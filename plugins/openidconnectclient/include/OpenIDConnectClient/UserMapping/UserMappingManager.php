@@ -64,11 +64,15 @@ class UserMappingManager
         if ($user_id < \UserManager::SPECIAL_USERS_LIMIT) {
             throw new CannotCreateAMappingForASpecialUserException($user_id);
         }
-        $this->user_dao->storeLoginSuccess($user_id, $last_used);
-        $is_saved = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
-        if (! $is_saved) {
-            throw new UserMappingDataAccessException();
-        }
+        $this->transaction_executor->execute(
+            function () use ($user_id, $provider_id, $identifier, $last_used): void {
+                $this->updateGlobalLoginInformationAndClearPasswordInformation($user_id, $last_used);
+                $is_saved = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
+                if (! $is_saved) {
+                    throw new UserMappingDataAccessException();
+                }
+            }
+        );
     }
 
     /**
@@ -153,7 +157,7 @@ class UserMappingManager
 
         $this->transaction_executor->execute(
             function () use ($user, $user_mapping): void {
-                if (! $this->can_remove_user_mapping_checker->canAUserMappingBeRemoved($user, $this->getUsageByUser($user))) {
+                if (! $this->can_remove_user_mapping_checker->canAUserMappingBeRemoved($this->getUsageByUser($user))) {
                     throw new UserMappingDataAccessException();
                 }
 
@@ -170,14 +174,28 @@ class UserMappingManager
      */
     public function updateLastUsed(UserMapping $user_mapping, int $last_used): void
     {
-        $this->user_dao->storeLoginSuccess($user_mapping->getUserId(), $last_used);
-        $is_updated = $this->dao->updateLastUsed(
-            $user_mapping->getId(),
-            $last_used
+        $this->transaction_executor->execute(
+            function () use ($user_mapping, $last_used): void {
+                $this->updateGlobalLoginInformationAndClearPasswordInformation($user_mapping->getUserId(), $last_used);
+                $is_updated = $this->dao->updateLastUsed(
+                    $user_mapping->getId(),
+                    $last_used
+                );
+                if (! $is_updated) {
+                    throw new UserMappingDataAccessException();
+                }
+            }
         );
-        if (! $is_updated) {
-            throw new UserMappingDataAccessException();
-        }
+    }
+
+    private function updateGlobalLoginInformationAndClearPasswordInformation(int $user_id, int $last_used): void
+    {
+        $this->transaction_executor->execute(
+            function () use ($user_id, $last_used): void {
+                $this->user_dao->storeLoginSuccess($user_id, $last_used);
+                $this->user_dao->deletePasswordInformation($user_id);
+            }
+        );
     }
 
     /**

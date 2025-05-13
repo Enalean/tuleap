@@ -63,6 +63,7 @@ use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
 use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
+use Tuleap\OpenIDConnectClient\Login\LoginEventsGuard;
 use Tuleap\OpenIDConnectClient\LoginController;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientPluginInfo;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
@@ -83,13 +84,17 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingUsage;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\SVNCore\AccessControl\BeforeSVNLogin;
 use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Account\Register\AfterUserRegistrationEvent;
 use Tuleap\User\Account\Register\BeforeUserRegistrationEvent;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\AdditionalConnector;
 use Tuleap\User\AdditionalConnectorsCollector;
 use Tuleap\User\Admin\UserDetailsPresenter;
+use Tuleap\User\BeforeLogin;
+use Tuleap\User\BeforeStandardLogin;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserNameNormalizer;
 
@@ -268,6 +273,16 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
                 $provider->getIcon(),
                 $provider->getColor()
             ));
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function passwordPreUpdateEvent(PasswordPreUpdateEvent $event): void
+    {
+        $user_mapping_manager = $this->getUserMappingManager();
+
+        if ($user_mapping_manager->userHasProvider($event->getUser())) {
+            $event->forbidUserToChangePassword();
         }
     }
 
@@ -527,11 +542,36 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         $config_keys->addConfigClass(Login\Registration\AutomaticUserRegistration::class);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function beforeStandardLogin(BeforeStandardLogin $event): void
+    {
+        $this->beforeLogin($event);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function beforeSVNLogin(BeforeSVNLogin $event): void
+    {
+        $this->beforeLogin($event);
+    }
+
+    private function beforeLogin(BeforeLogin $event): void
+    {
+        (new LoginEventsGuard($this->getUserMappingManager()))
+            ->verifyLoginEvent(
+                $event,
+                \Tuleap\Option\Option::fromNullable(
+                    UserManager::instance()->getUserByLoginName($event->getLoginName())
+                )
+            );
+    }
+
     public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
     {
-        if ($this->getUserMappingManager()->userHasProvider($event->user)) {
-            $event->refuseLogin(dgettext('tuleap-openidconnectclient', 'Your account is linked to an OpenID Connect provider, you must use it to authenticate'));
-        }
+        (new LoginEventsGuard($this->getUserMappingManager()))
+            ->verifyLoginEvent(
+                $event,
+                \Tuleap\Option\Option::fromValue($event->user)
+            );
     }
 
     private function getUserMappingManager(): UserMappingManager

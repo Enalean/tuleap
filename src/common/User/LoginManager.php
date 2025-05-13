@@ -19,6 +19,7 @@
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Request\RequestTime;
 use Tuleap\User\BeforeStandardLogin;
 use Tuleap\User\PasswordVerifier;
 use Tuleap\User\RetrievePasswordlessOnlyState;
@@ -43,6 +44,7 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     public function __construct(
         EventDispatcherInterface $event_dispatcher,
         UserManager $user_manager,
+        private readonly UserDao $user_dao,
         private readonly RetrievePasswordlessOnlyState $passwordless_only_state,
         PasswordVerifier $password_verifier,
         User_PasswordExpirationChecker $password_expiration_checker,
@@ -78,7 +80,6 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      * @param null|callable(string,\Tuleap\Cryptography\ConcealedString):\Tuleap\User\BeforeLogin $before_login_event_builder
      * @param null|callable(\PFUser):\Tuleap\User\AfterLocalLogin $after_local_login_event_builder
      *
-     * @throws User_InvalidPasswordWithUserException
      * @throws User_InvalidPasswordException
      */
     public function authenticate(
@@ -89,14 +90,20 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     ): PFUser {
         $user = $this->user_manager->getUserByUserName($name);
         if ($user !== null && $this->passwordless_only_state->isPasswordlessOnly($user)) {
-            throw new User_InvalidPasswordWithUserException($user, _('Password authentication is disabled, please use your passkey instead'));
+            throw new User_InvalidPasswordException(_('Password authentication is disabled, please use your passkey instead'));
         }
 
         if ($before_login_event_builder === null) {
             $before_login_event_builder = fn (string $name, ConcealedString $password): BeforeStandardLogin => new BeforeStandardLogin($name, $password);
         }
-        $beforeLogin = $this->event_dispatcher->dispatch($before_login_event_builder($name, $password));
-        $user        = $beforeLogin->getUser();
+        $before_login = $this->event_dispatcher->dispatch($before_login_event_builder($name, $password));
+        \assert($before_login instanceof \Tuleap\User\BeforeLogin);
+        $before_login->isLoginRefused()->apply(
+            function (string $feedback): never {
+                throw new User_InvalidPasswordException($feedback);
+            }
+        );
+        $user = $before_login->getUser();
 
         if ($user === null) {
             $user = $this->user_manager->getUserByUserName($name);
@@ -109,7 +116,7 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $auth_succeeded = $this->event_dispatcher->dispatch(new UserAuthenticationSucceeded($user));
         if (! $auth_succeeded->isLoginAllowed()) {
-            throw new User_InvalidPasswordWithUserException($user, $auth_succeeded->getFeedbackMessage());
+            throw new User_InvalidPasswordException($auth_succeeded->getFeedbackMessage());
         }
 
         return $user;
@@ -118,12 +125,13 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     /**
      * @param null|callable(\PFUser):\Tuleap\User\AfterLocalLogin $after_local_login_event_builder
      *
-     * @throws User_InvalidPasswordWithUserException
+     * @throws User_InvalidPasswordException
      */
-    private function authenticateFromDatabase(PFUser $user, ConcealedString $password, ?callable $after_local_login_event_builder = null)
+    private function authenticateFromDatabase(PFUser $user, ConcealedString $password, ?callable $after_local_login_event_builder = null): void
     {
         if (! $this->password_verifier->verifyPassword($user, $password)) {
-            throw new User_InvalidPasswordWithUserException($user);
+            $this->user_dao->storeLoginFailure((int) $user->getId(), RequestTime::getTimestamp());
+            throw new User_InvalidPasswordException();
         }
 
         $user->setPassword($password);
@@ -135,7 +143,8 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $afterLogin = $this->event_dispatcher->dispatch($after_local_login_event_builder($user));
         if (! $afterLogin->isIsLoginAllowed()) {
-            throw new User_InvalidPasswordWithUserException($user, $afterLogin->getFeedbackMessage());
+            $this->user_dao->storeLoginFailure((int) $user->getId(), RequestTime::getTimestamp());
+            throw new User_InvalidPasswordException($afterLogin->getFeedbackMessage());
         }
     }
 

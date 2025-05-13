@@ -90,6 +90,7 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdatesLastUsedInformation(): void
     {
         $this->user_dao->expects($this->once())->method('storeLoginSuccess');
+        $this->user_dao->expects($this->once())->method('deletePasswordInformation');
         $this->dao->expects($this->once())->method('updateLastUsed')->willReturn(true);
 
         $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
@@ -100,6 +101,7 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCreatesAMapping(): void
     {
         $this->user_dao->expects($this->once())->method('storeLoginSuccess');
+        $this->user_dao->expects($this->once())->method('deletePasswordInformation');
         $this->dao->expects($this->once())->method('save')->willReturn(true);
 
         $this->user_mapping_manager->create(102, 1, 'identifier', 10);

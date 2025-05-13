@@ -305,13 +305,13 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      * was no bad attemps since the last successful login (ie. 'last_auth_success'
      * newer than 'last_auth_failure') the counter is reset to 1.
      */
-    public function storeLoginFailure($login, $time): void
+    public function storeLoginFailure(int $user_id, int $time): void
     {
         $sql = 'UPDATE user_access
                 SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1),
                 last_auth_failure = ?
-                WHERE user_id = (SELECT user_id from user WHERE user_name = ?)';
-        $this->getDB()->run($sql, $time, $login);
+                WHERE user_id = ?';
+        $this->getDB()->run($sql, $time, $user_id);
     }
 
     /**
@@ -605,5 +605,15 @@ class UserDao extends \Tuleap\DB\DataAccessObject
         }
 
         return false;
+    }
+
+    public function deletePasswordInformation(int $user_id): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            static function (\ParagonIE\EasyDB\EasyDB $db) use ($user_id): void {
+                $db->run('UPDATE user SET password = null WHERE user_id = ?', $user_id);
+                $db->run('DELETE FROM user_lost_password WHERE user_id = ?', $user_id);
+            }
+        );
     }
 }
