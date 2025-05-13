@@ -326,16 +326,18 @@ describe("Tracker artifacts", function () {
             });
 
             it("must be able to create tracker from empty and configure it", function () {
+                const current_time = getCurrentTimestampInSeconds();
+                const tracker_item_name = current_time + "_from_empty";
+
                 cy.projectAdministratorSession();
                 cy.visit(`/plugins/tracker/${encodeURIComponent(project_name)}/new`);
                 cy.get("[data-test=selected-option-tracker_empty]").click({ force: true });
 
                 cy.get("[data-test=button-next]").click();
-                cy.get("[data-test=tracker-name-input]").type(
-                    getCurrentTimestampInSeconds() + " From empty",
-                );
+                cy.get("[data-test=tracker-name-input]").type(current_time + " From empty");
                 cy.get("[data-test=button-create-my-tracker]").click();
                 cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
+                cy.getTrackerIdFromREST(this.project_id, tracker_item_name).as("tracker_id");
 
                 cy.log("Configure tracker fields");
                 cy.get("[data-test=continue-tracker-configuration]").click();
@@ -410,6 +412,30 @@ describe("Tracker artifacts", function () {
                 cy.get("[data-test=date-picker]").type("2021-01-01");
                 cy.get("[data-test=formElement-submit]").click();
                 cy.get("[data-test=date-time-date]").invoke("val").should("equal", "2021-01-01");
+
+                cy.log("Add artifact link field and check the specific properties");
+                selectFormElementWithName("Artifact Link");
+                cy.get("[data-test=formElement_label]").type("Artifact Link");
+                cy.get("[data-test=input-type-checkbox]").should("be.checked");
+                cy.get("[data-test=formElement-submit]").click();
+
+                cy.log("Check that the new artifact link field is displayed");
+                cy.get("@tracker_id").then((tracker_id) => {
+                    cy.visit(`/plugins/tracker/?tracker=${tracker_id}&func=new-artifact`);
+                    cy.get("[data-test=artifact-link-submit]").should("not.exist");
+                    cy.get("[data-test=link-field-add-link-input]").should("exist");
+
+                    cy.log("Change the specific properties of the artifact link field");
+                    cy.visit(`/plugins/tracker/?tracker=${tracker_id}&func=admin`);
+                    cy.get("[data-test=edit-field]").first().click({ force: true });
+                    cy.get("[data-test=input-type-checkbox]").uncheck();
+                    cy.get("[data-test=formElement-submit]").click();
+
+                    cy.log("Check that the old artifact link field is displayed");
+                    cy.visit(`/plugins/tracker/?tracker=${tracker_id}&func=new-artifact`);
+                    cy.get("[data-test=artifact-link-submit]").should("exist");
+                    cy.get("[data-test=link-field-add-link-input]").should("not.exist");
+                });
             });
 
             it("must be able to create tracker from an other project", function () {
