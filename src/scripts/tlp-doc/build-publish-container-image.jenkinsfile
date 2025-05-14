@@ -37,7 +37,7 @@ pipeline {
                         def image_name = 'tlp-doc';
                         sh 'docker load < $(nix-build --no-out-link ./src/scripts/tlp-doc/container-image.nix)'
                         def image = docker.image(image_name)
-                        def registry_name = "nexus.enalean.com:22000";
+                        def registry_name = "nexus.enalean.com:20000";
                         docker.withRegistry("https://${registry_name}", 'ci-write') {
                             image.push()
 
