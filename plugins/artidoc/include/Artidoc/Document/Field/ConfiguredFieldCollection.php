@@ -26,7 +26,6 @@ final readonly class ConfiguredFieldCollection
 {
     /**
      * @param array<int, list<ConfiguredField>> $fields
-     * @psalm-internal \Tuleap\Artidoc\Document\Field
      */
     public function __construct(private array $fields)
     {

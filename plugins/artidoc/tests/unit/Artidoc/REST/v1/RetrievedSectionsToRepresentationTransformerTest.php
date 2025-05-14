@@ -34,6 +34,8 @@ use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
+use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollection;
+use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
@@ -43,7 +45,6 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
-use Tuleap\Artidoc\Stubs\REST\v1\BuildSectionFieldsStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -106,7 +107,9 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder(
                     $this->file_upload_provider,
-                    BuildSectionFieldsStub::withoutFields()
+                    new FieldsWithValuesBuilder(
+                        new ConfiguredFieldCollection([])
+                    )
                 ),
             ),
             new RequiredSectionInformationCollector(

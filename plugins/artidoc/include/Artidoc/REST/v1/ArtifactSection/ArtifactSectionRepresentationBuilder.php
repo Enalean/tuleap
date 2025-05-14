@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
+use Tuleap\Artidoc\Document\Field\GetFieldsWithValues;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
-use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\BuildSectionFields;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -34,7 +36,7 @@ final readonly class ArtifactSectionRepresentationBuilder
 {
     public function __construct(
         private GetFileUploadData $file_upload_data_provider,
-        private BuildSectionFields $section_fields_builder,
+        private GetFieldsWithValues $section_fields_builder,
     ) {
     }
 
@@ -75,7 +77,18 @@ final readonly class ArtifactSectionRepresentationBuilder
             $artifact_information->description,
             $can_user_edit_section,
             $attachments,
-            $this->section_fields_builder->getFields($artifact_information->last_changeset),
+            $this->getFieldValues($artifact_information),
+        );
+    }
+
+    /**
+     * @return list<SectionStringFieldRepresentation>
+     */
+    private function getFieldValues(RequiredArtifactInformation $artifact_information): array
+    {
+        return array_map(
+            static fn(StringFieldWithValue $field) => new SectionStringFieldRepresentation($field),
+            $this->section_fields_builder->getFieldsWithValues($artifact_information->last_changeset)
         );
     }
 }

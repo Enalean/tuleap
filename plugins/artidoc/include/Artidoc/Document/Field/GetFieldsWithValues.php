@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 
-/**
- * @psalm-immutable
- */
-final readonly class SectionStringFieldRepresentation
+interface GetFieldsWithValues
 {
-    public string $type;
-    public string $label;
-    public string $display_type;
-    public string $value;
-
-    public function __construct(StringFieldWithValue $field)
-    {
-        $this->type         = FieldType::STRING->value;
-        $this->label        = $field->label;
-        $this->display_type = $field->display_type->value;
-        $this->value        = $field->value;
-    }
+    /**
+     * @return list<StringFieldWithValue>
+     */
+    public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array;
 }
