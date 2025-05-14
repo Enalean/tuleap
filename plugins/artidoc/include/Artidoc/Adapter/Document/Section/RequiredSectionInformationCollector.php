@@ -24,8 +24,8 @@ namespace Tuleap\Artidoc\Adapter\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
-use Tuleap\Artidoc\REST\v1\BuildRequiredArtifactInformation;
-use Tuleap\Artidoc\REST\v1\RequiredArtifactInformation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\BuildRequiredArtifactInformation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;

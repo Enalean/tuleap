@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Semantic_Description;

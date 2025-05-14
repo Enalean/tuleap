@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
-use Tracker_Artifact_Changeset;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-interface BuildSectionFields
+interface BuildRequiredArtifactInformation
 {
     /**
-     * @return list<SectionStringFieldRepresentation>
+     * @return Ok<RequiredArtifactInformation>|Err<Fault>
      */
-    public function getFields(Tracker_Artifact_Changeset $changeset): array;
+    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, \PFUser $user): Ok|Err;
 }

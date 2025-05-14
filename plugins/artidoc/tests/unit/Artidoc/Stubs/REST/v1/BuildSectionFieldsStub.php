@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\REST\v1;
 
 use Tracker_Artifact_Changeset;
-use Tuleap\Artidoc\REST\v1\BuildSectionFields;
-use Tuleap\Artidoc\REST\v1\SectionStringFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\BuildSectionFields;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
 
 final readonly class BuildSectionFieldsStub implements BuildSectionFields
 {

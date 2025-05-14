@@ -20,8 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\SectionRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 /**

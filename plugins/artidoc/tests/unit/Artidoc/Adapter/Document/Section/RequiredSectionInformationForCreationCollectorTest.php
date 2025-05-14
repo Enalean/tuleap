@@ -24,8 +24,8 @@ namespace Tuleap\Artidoc\Adapter\Document\Section;
 
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\REST\v1\RequiredArtifactInformationTestBuilder;
-use Tuleap\Artidoc\Stubs\BuildRequiredArtifactInformationStub;
+use Tuleap\Artidoc\Stubs\REST\v1\ArtifactSection\BuildRequiredArtifactInformationStub;
+use Tuleap\Artidoc\Tests\Builders\RequiredArtifactInformationTestBuilder;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;

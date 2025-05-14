@@ -20,8 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Tests\Builders;
 
+use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;

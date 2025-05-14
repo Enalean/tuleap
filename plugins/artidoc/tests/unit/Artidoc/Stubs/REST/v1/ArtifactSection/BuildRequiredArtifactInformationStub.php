@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs;
+namespace Tuleap\Artidoc\Stubs\REST\v1\ArtifactSection;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\REST\v1\BuildRequiredArtifactInformation;
-use Tuleap\Artidoc\REST\v1\RequiredArtifactInformation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\BuildRequiredArtifactInformation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;

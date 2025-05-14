@@ -20,16 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\BuildSectionFields;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
-final readonly class ArtifactSectionRepresentationBuilder implements BuildArtifactSectionRepresentation
+final readonly class ArtifactSectionRepresentationBuilder
 {
     public function __construct(
         private GetFileUploadData $file_upload_data_provider,
