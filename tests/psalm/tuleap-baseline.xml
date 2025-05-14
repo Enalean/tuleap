@@ -31152,29 +31152,9 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Step/Definition/Field/StepDefinition.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$this->getValueDao()->searchById($value_id)]]></code>
-      <code><![CDATA[$this->getValueDao()->searchById($value_id)]]></code>
-    </DeprecatedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $user_preference]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/Step/Definition/Field/StepDefinitionChangesetValueDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Step/Execution/Field/StepExecution.php">
     <DeprecatedMethod>
@@ -31290,15 +31270,6 @@
       <code><![CDATA[$dom]]></code>
       <code><![CDATA[$dom_document]]></code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="plugins/testmanagement/tests/integration/Step/Definition/Field/StepDefinitionChangesetValueDaoTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$retrieved]]></code>
-      <code><![CDATA[$retrieved]]></code>
-      <code><![CDATA[$retrieved]]></code>
-      <code><![CDATA[$retrieved]]></code>
-      <code><![CDATA[rowCount]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/testplan/include/REST/v1/BacklogItemRepresentation.php">
     <DeprecatedMethod>

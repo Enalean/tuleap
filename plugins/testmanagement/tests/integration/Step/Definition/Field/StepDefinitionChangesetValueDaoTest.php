@@ -39,20 +39,21 @@ final class StepDefinitionChangesetValueDaoTest extends TestIntegrationTestCase
         $tracker_builder->buildArtifact(53);
 
         $dao = new StepDefinitionChangesetValueDao();
-        $ids = array_unique($dao->createNoneChangesetValue(53, 125));
+        $ids = $dao->createNoneChangesetValue(53, 125);
+        self::assertIsArray($ids);
+        $ids = array_unique($ids);
         self::assertCount(2, $ids);
 
         foreach ($ids as $changeset_value_id) {
-            $dar = $dao->searchById($changeset_value_id);
-            self::assertSame(0, $dar->rowCount());
+            self::assertSame([], $dao->searchById($changeset_value_id));
         }
     }
 
-    public function testItCanInsertSomeStepsAndRetrieveThem(): void
+    public function testItCanInsertSomeStepsAndRetrieveThemAndDeleteThem(): void
     {
         $dao = new StepDefinitionChangesetValueDao();
 
-        self::assertCount(0, $dao->searchById(15));
+        self::assertSame([], $dao->searchById(15));
 
         $steps = [
             new Step(1, '1 + 1', 'commonmark', '2', 'text', 1),
@@ -61,11 +62,14 @@ final class StepDefinitionChangesetValueDaoTest extends TestIntegrationTestCase
         self::assertTrue($dao->create(15, $steps));
 
         $retrieved = $dao->searchById(15);
-        self::assertNotNull($retrieved);
         self::assertCount(2, $retrieved);
-        foreach ($retrieved as $i => $row) {
-            self::assertSameStep($steps[$i], $row);
+        foreach ($retrieved as $i => $step) {
+            assert(isset($steps[$i]));
+            self::assertSameStep($steps[$i], $step);
         }
+
+        $dao->delete(15);
+        self::assertSame([], $dao->searchById(15));
     }
 
     public function testItCanKeepValueFromChangesetValueToChangesetValue(): void
@@ -80,26 +84,18 @@ final class StepDefinitionChangesetValueDaoTest extends TestIntegrationTestCase
         $dao->keep(15, 16);
 
         $retrieved = $dao->searchById(16);
-        self::assertNotNull($retrieved);
-        foreach ($retrieved as $i => $row) {
-            self::assertSameStep($steps[$i], $row);
+        foreach ($retrieved as $i => $step) {
+            assert(isset($steps[$i]));
+            self::assertSameStep($steps[$i], $step);
         }
     }
 
-    /**
-     * @param array{
-     *      id: int,
-     *      description: string,
-     *      description_format: string,
-     *      expected_results: string,
-     *      expected_results_format: string,
-     *  } $retrieved
-     */
-    private static function assertSameStep(Step $expected, array $retrieved): void
+    private static function assertSameStep(Step $expected, Step $retrieved): void
     {
-        self::assertSame($expected->getDescription(), $retrieved['description']);
-        self::assertSame($expected->getDescriptionFormat(), $retrieved['description_format']);
-        self::assertSame($expected->getExpectedResults(), $retrieved['expected_results']);
-        self::assertSame($expected->getExpectedResultsFormat(), $retrieved['expected_results_format']);
+        self::assertSame($expected->getDescription(), $retrieved->getDescription());
+        self::assertSame($expected->getDescriptionFormat(), $retrieved->getDescriptionFormat());
+        self::assertSame($expected->getExpectedResults(), $retrieved->getExpectedResults());
+        self::assertSame($expected->getExpectedResultsFormat(), $retrieved->getExpectedResultsFormat());
+        self::assertSame($expected->getRank(), $retrieved->getRank());
     }
 }
