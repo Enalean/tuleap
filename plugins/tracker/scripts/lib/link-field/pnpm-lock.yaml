@@ -35,6 +35,9 @@ dependencies:
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:^
     version: link:../constants
+  '@tuleap/tooltip':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/tooltip
   hybrids:
     specifier: ^9.1.6
     version: 9.1.6

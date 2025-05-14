@@ -25,6 +25,7 @@
     "@tuleap/option": "workspace:^",
     "@tuleap/plugin-tracker-artifact-common": "workspace:^",
     "@tuleap/plugin-tracker-constants": "workspace:^",
+    "@tuleap/tooltip": "workspace:^",
     "hybrids": "^9.1.6",
     "neverthrow": "^6.0.0",
     "sprintf-js": "^1.1.2"

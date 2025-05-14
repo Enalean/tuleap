@@ -70,7 +70,7 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
         ><span class="link-field-row-xref"
             ><a
                 href="${link.uri}"
-                class="link-field-artifact-link"
+                class="link-field-artifact-link cross-reference"
                 title="${link.title}"
                 data-test="link-link"
                 ><span class="${getCrossRefClasses(link)}" data-test="link-xref"
