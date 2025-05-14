@@ -6,8 +6,7 @@
 let
   baseArchTarget = "x86_64";
   buildTargetRust = "${baseArchTarget}-unknown-linux-musl";
-  # Meilisearch does not currently build with Rust 1.80+ so pin Rust 1.79 for now
-  rustBinWithMuslTarget = pkgs.rust-bin.stable."1.79.0".minimal.override {
+  rustBinWithMuslTarget = pkgs.rust-bin.stable.latest.minimal.override {
     targets = [ buildTargetRust ];
   };
   zigCC = pkgs.writeShellScriptBin "zigcc" ''
@@ -15,12 +14,12 @@ let
   '';
   tuleapMeilisearchBin = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "tuleap-meilisearch";
-    version = "1.9.0";
+    version = "1.14.0";
     src = pkgs.fetchFromGitHub {
       owner = "meilisearch";
       repo = "MeiliSearch";
       rev = "v${version}";
-      hash = "sha256-fPXhayS8OKiiiDvVvBry3njZ74/W6oVL0p85Z5qf3KA=";
+      hash = "sha256-nPOhiJJbZCr9PBlR6bsZ9trSn/2XCI2O+nXeYbZEQpU=";
     };
     cargoDeps = pkgs.rustPlatform.importCargoLock {
       lockFile = "${src.out}/Cargo.lock";
