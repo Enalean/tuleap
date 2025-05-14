@@ -71,19 +71,6 @@ describe(`SelectableCell`, () => {
     };
 
     describe(`render()`, () => {
-        it(`when the cell is a pretty title, it renders a link to artifact URI`, () => {
-            artifact_uri = "/plugins/tracker/?aid=76";
-            const wrapper = getWrapper({
-                type: PRETTY_TITLE_CELL,
-                title: "uncensorable litigant",
-                tracker_name: "story",
-                artifact_id: 76,
-                color: "coral-pink",
-            });
-
-            expect(wrapper.get("a").attributes("href")).toBe(artifact_uri);
-        });
-
         function* generateCells(): Generator<[string, Cell]> {
             yield [
                 PRETTY_TITLE_CELL,
