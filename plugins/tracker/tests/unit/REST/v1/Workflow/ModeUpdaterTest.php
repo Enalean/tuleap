@@ -19,10 +19,11 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Transition;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -36,30 +37,25 @@ use Workflow;
 use Workflow_Dao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ModeUpdater
-     */
-    private $workflow_mode_updater;
-    private $workflow_dao;
-    private $transition_replicator;
-    private $frozen_fields_dao;
-    private $hidden_fieldsets_dao;
-    private $tracker;
-    private $workflow;
-    private $state_factory;
-    private $reference_transition_extractor;
+    private ModeUpdater $workflow_mode_updater;
+    private Workflow_Dao&MockObject $workflow_dao;
+    private TransitionReplicator&MockObject $transition_replicator;
+    private FrozenFieldsDao&MockObject $frozen_fields_dao;
+    private HiddenFieldsetsDao&MockObject $hidden_fieldsets_dao;
+    private Tracker&MockObject $tracker;
+    private Workflow&MockObject $workflow;
+    private StateFactory&MockObject $state_factory;
+    private TransitionExtractor $reference_transition_extractor;
 
     protected function setUp(): void
     {
-        $this->workflow_dao                   = Mockery::mock(Workflow_Dao::class);
-        $this->transition_replicator          = Mockery::mock(TransitionReplicator::class);
-        $this->frozen_fields_dao              = Mockery::mock(FrozenFieldsDao::class);
-        $this->hidden_fieldsets_dao           = Mockery::mock(HiddenFieldsetsDao::class);
-        $this->state_factory                  = Mockery::mock(StateFactory::class);
+        $this->workflow_dao                   = $this->createMock(Workflow_Dao::class);
+        $this->transition_replicator          = $this->createMock(TransitionReplicator::class);
+        $this->frozen_fields_dao              = $this->createMock(FrozenFieldsDao::class);
+        $this->hidden_fieldsets_dao           = $this->createMock(HiddenFieldsetsDao::class);
+        $this->state_factory                  = $this->createMock(StateFactory::class);
         $this->reference_transition_extractor = new TransitionExtractor();
 
         $this->workflow_mode_updater = new ModeUpdater(
@@ -71,41 +67,41 @@ class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->reference_transition_extractor
         );
 
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->workflow = Mockery::mock(Workflow::class);
+        $this->tracker  = $this->createMock(Tracker::class);
+        $this->workflow = $this->createMock(Workflow::class);
     }
 
-    public function testItSwitchesToAdvancedMode()
+    public function testItSwitchesToAdvancedMode(): void
     {
-        $this->tracker->shouldReceive('getWorkflow')->andReturn($this->workflow);
-        $this->workflow->shouldReceive('getId')->andReturn(25);
-        $this->workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $this->tracker->method('getWorkflow')->willReturn($this->workflow);
+        $this->workflow->method('getId')->willReturn(25);
+        $this->workflow->method('isAdvanced')->willReturn(false);
 
-        $this->workflow_dao->shouldReceive('switchWorkflowToAdvancedMode')->with(25)->once();
-        $this->frozen_fields_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->once();
-        $this->hidden_fieldsets_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->once();
+        $this->workflow_dao->expects($this->once())->method('switchWorkflowToAdvancedMode')->with(25);
+        $this->frozen_fields_dao->expects($this->once())->method('deleteAllPostActionsForWorkflow')->with(25);
+        $this->hidden_fieldsets_dao->expects($this->once())->method('deleteAllPostActionsForWorkflow')->with(25);
 
         $this->workflow_mode_updater->switchWorkflowToAdvancedMode($this->tracker);
     }
 
-    public function testItDoesNotSwitchToAdvancedModeIfWorkflowAlreadyInAdvancedMode()
+    public function testItDoesNotSwitchToAdvancedModeIfWorkflowAlreadyInAdvancedMode(): void
     {
-        $this->tracker->shouldReceive('getWorkflow')->andReturn($this->workflow);
-        $this->workflow->shouldReceive('getId')->andReturn(25);
-        $this->workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $this->tracker->method('getWorkflow')->willReturn($this->workflow);
+        $this->workflow->method('getId')->willReturn(25);
+        $this->workflow->method('isAdvanced')->willReturn(true);
 
-        $this->workflow_dao->shouldReceive('switchWorkflowToAdvancedMode')->with(25)->never();
-        $this->frozen_fields_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->never();
-        $this->hidden_fieldsets_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->never();
+        $this->workflow_dao->expects($this->never())->method('switchWorkflowToAdvancedMode')->with(25);
+        $this->frozen_fields_dao->expects($this->never())->method('deleteAllPostActionsForWorkflow')->with(25);
+        $this->hidden_fieldsets_dao->expects($this->never())->method('deleteAllPostActionsForWorkflow')->with(25);
 
         $this->workflow_mode_updater->switchWorkflowToAdvancedMode($this->tracker);
     }
 
-    public function testItSwitchesToSimpleMode()
+    public function testItSwitchesToSimpleMode(): void
     {
-        $this->tracker->shouldReceive('getWorkflow')->andReturn($this->workflow);
-        $this->workflow->shouldReceive('getId')->andReturn(25);
-        $this->workflow->shouldReceive('isAdvanced')->andReturn(true);
+        $this->tracker->method('getWorkflow')->willReturn($this->workflow);
+        $this->workflow->method('getId')->willReturn(25);
+        $this->workflow->method('isAdvanced')->willReturn(true);
 
         $open_value      = ListStaticValueBuilder::aStaticValue('open')->withId(1)->build();
         $closed_value    = ListStaticValueBuilder::aStaticValue('closed')->withId(2)->build();
@@ -120,36 +116,29 @@ class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $state_closed                = new State(2, [$transition_new_closed, $transition_open_closed]);
         $state_cancelled             = new State(3, [$transition_open_cancelled, $transition_closed_cancelled]);
 
-        $this->state_factory->shouldReceive('getAllStatesForWorkflow')
+        $this->state_factory->expects($this->once())->method('getAllStatesForWorkflow')
             ->with($this->workflow)
-            ->once()
-            ->andReturn([$state_open, $state_closed, $state_cancelled]);
+            ->willReturn([$state_open, $state_closed, $state_cancelled]);
 
-        $this->transition_replicator->shouldReceive('replicate')
-            ->with($transition_new_open, Mockery::any())
-            ->never();
+        $this->transition_replicator->expects($this->exactly(2))->method('replicate')
+            ->willReturnCallback(static fn (Transition $from, Transition $to) => match (true) {
+                $from === $transition_open_closed && $to === $transition_new_closed,
+                $from === $transition_open_cancelled && $to === $transition_closed_cancelled => true
+            });
 
-        $this->transition_replicator->shouldReceive('replicate')
-            ->with($transition_open_closed, $transition_new_closed)
-            ->once();
-
-        $this->transition_replicator->shouldReceive('replicate')
-            ->with($transition_open_cancelled, $transition_closed_cancelled)
-            ->once();
-
-        $this->workflow_dao->shouldReceive('switchWorkflowToSimpleMode')->with(25)->once();
+        $this->workflow_dao->expects($this->once())->method('switchWorkflowToSimpleMode')->with(25);
 
         $this->workflow_mode_updater->switchWorkflowToSimpleMode($this->tracker);
     }
 
-    public function testItDoesNotSwitchToSimpleModeIfWorkflowAlreadyInSimpleMode()
+    public function testItDoesNotSwitchToSimpleModeIfWorkflowAlreadyInSimpleMode(): void
     {
-        $this->tracker->shouldReceive('getWorkflow')->andReturn($this->workflow);
-        $this->workflow->shouldReceive('getId')->andReturn(25);
-        $this->workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $this->tracker->method('getWorkflow')->willReturn($this->workflow);
+        $this->workflow->method('getId')->willReturn(25);
+        $this->workflow->method('isAdvanced')->willReturn(false);
 
-        $this->workflow_dao->shouldReceive('switchWorkflowToSimpleMode')->with(25)->never();
-        $this->transition_replicator->shouldReceive('replicate')->never();
+        $this->workflow_dao->expects($this->never())->method('switchWorkflowToSimpleMode')->with(25);
+        $this->transition_replicator->expects($this->never())->method('replicate');
 
         $this->workflow_mode_updater->switchWorkflowToSimpleMode($this->tracker);
     }

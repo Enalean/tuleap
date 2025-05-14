@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -31,32 +32,21 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use UserManager;
+use Workflow;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var TransitionPOSTHandler */
-    private $handler;
-    /** @var Mockery\MockInterface | UserManager */
-    private $user_manager;
-    /** @var Mockery\MockInterface */
-    private $tracker_factory;
-    /** @var Mockery\MockInterface */
-    private $project_status_verificator;
-    /** @var Mockery\MockInterface */
-    private $permissions_checker;
-    /** @var Mockery\MockInterface */
-    private $workflow_factory;
-    /** @var Mockery\MockInterface */
-    private $transition_factory;
-    /** @var Mockery\MockInterface */
-    private $validator;
-    /** @var Mockery\MockInterface */
-    private $state_factory;
-    /** @var Mockery\MockInterface */
-    private $transition_creator;
+    private TransitionPOSTHandler $handler;
+    private UserManager&MockObject $user_manager;
+    private TrackerFactory&MockObject $tracker_factory;
+    private ProjectStatusVerificator&MockObject $project_status_verificator;
+    private TransitionsPermissionsChecker&MockObject $permissions_checker;
+    private \WorkflowFactory&MockObject $workflow_factory;
+    private \TransitionFactory&MockObject $transition_factory;
+    private TransitionValidator&MockObject $validator;
+    private StateFactory&MockObject $state_factory;
+    private TransitionCreator&MockObject $transition_creator;
 
     private const TRACKER_ID = 196;
     private const FROM_ID    = 134;
@@ -64,15 +54,15 @@ class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->user_manager               = Mockery::mock(UserManager::class);
-        $this->tracker_factory            = Mockery::mock(TrackerFactory::class);
-        $this->project_status_verificator = Mockery::mock(ProjectStatusVerificator::class);
-        $this->permissions_checker        = Mockery::mock(TransitionsPermissionsChecker::class);
-        $this->workflow_factory           = Mockery::mock(\WorkflowFactory::class);
-        $this->transition_factory         = Mockery::mock(\TransitionFactory::class);
-        $this->validator                  = Mockery::mock(TransitionValidator::class);
-        $this->state_factory              = Mockery::mock(StateFactory::class);
-        $this->transition_creator         = Mockery::mock(TransitionCreator::class);
+        $this->user_manager               = $this->createMock(UserManager::class);
+        $this->tracker_factory            = $this->createMock(TrackerFactory::class);
+        $this->project_status_verificator = $this->createMock(ProjectStatusVerificator::class);
+        $this->permissions_checker        = $this->createMock(TransitionsPermissionsChecker::class);
+        $this->workflow_factory           = $this->createMock(\WorkflowFactory::class);
+        $this->transition_factory         = $this->createMock(\TransitionFactory::class);
+        $this->validator                  = $this->createMock(TransitionValidator::class);
+        $this->state_factory              = $this->createMock(StateFactory::class);
+        $this->transition_creator         = $this->createMock(TransitionCreator::class);
 
         $this->handler = new TransitionPOSTHandler(
             $this->user_manager,
@@ -88,47 +78,46 @@ class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testHandleCreatesATransitionAndReturnsItsRepresentation()
+    public function testHandleCreatesATransitionAndReturnsItsRepresentation(): void
     {
-        $current_user = Mockery::mock(\PFUser::class);
+        $current_user = $this->createMock(\PFUser::class);
         $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->andReturn($current_user);
-        $tracker = Mockery::mock(\Tracker::class);
-        $project = Mockery::mock(\Project::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
+            ->method('getCurrentUser')
+            ->willReturn($current_user);
+        $tracker = $this->createMock(\Tracker::class);
+        $project = $this->createMock(\Project::class);
+        $tracker->method('getProject')->willReturn($project);
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->method('getTrackerById')
             ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+            ->willReturn($tracker);
         $this->project_status_verificator
-            ->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt')
+            ->method('checkProjectStatusAllowsAllUsersToAccessIt')
             ->with($project);
         $this->permissions_checker
-            ->shouldReceive('checkCreate')
+            ->method('checkCreate')
             ->with($current_user, $tracker);
         $workflow = $this->buildAdvancedWorkflow();
         $this->workflow_factory
-            ->shouldReceive('getWorkflowByTrackerId')
+            ->method('getWorkflowByTrackerId')
             ->with(self::TRACKER_ID)
-            ->andReturn($workflow);
+            ->willReturn($workflow);
         $validated_parameters = new TransitionCreationParameters(self::FROM_ID, self::TO_ID);
         $this->validator
-            ->shouldReceive('validateForCreation')
+            ->method('validateForCreation')
             ->with($workflow, self::FROM_ID, self::TO_ID)
-            ->andReturn($validated_parameters);
+            ->willReturn($validated_parameters);
 
-        $new_transition = Mockery::mock(\Transition::class)
-            ->shouldReceive('getId')
-            ->andReturn(86)
-            ->getMock();
+        $new_transition = $this->createMock(\Transition::class);
+        $new_transition->method('getId')->willReturn(86);
+
         $this->transition_factory
-            ->shouldReceive('createAndSaveTransition')
+            ->method('createAndSaveTransition')
             ->with($workflow, $validated_parameters)
-            ->andReturn($new_transition);
+            ->willReturn($new_transition);
 
-        $this->state_factory->shouldNotReceive('getStateFromValueId');
-        $this->transition_creator->shouldNotReceive('createTransitionInState');
+        $this->state_factory->expects($this->never())->method('getStateFromValueId');
+        $this->transition_creator->expects($this->never())->method('createTransitionInState');
 
         $result = $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
 
@@ -137,59 +126,55 @@ class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testHandleForSimpleModeAlsoReplicatesTransitionFromFirstSibling()
+    public function testHandleForSimpleModeAlsoReplicatesTransitionFromFirstSibling(): void
     {
-        $current_user = Mockery::mock(\PFUser::class);
+        $current_user = $this->createMock(\PFUser::class);
         $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->andReturn($current_user);
-        $tracker = Mockery::mock(\Tracker::class);
-        $project = Mockery::mock(\Project::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $this->tracker_factory->allows('getTrackerById')->andReturn($tracker);
-        $this->project_status_verificator->allows('checkProjectStatusAllowsAllUsersToAccessIt');
-        $this->permissions_checker->allows('checkCreate');
-        $this->validator->allows('validateForCreation')->andReturn(
+            ->method('getCurrentUser')
+            ->willReturn($current_user);
+        $tracker = $this->createMock(\Tracker::class);
+        $project = $this->createMock(\Project::class);
+        $tracker->method('getProject')->willReturn($project);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $this->project_status_verificator->method('checkProjectStatusAllowsAllUsersToAccessIt');
+        $this->permissions_checker->method('checkCreate');
+        $this->validator->method('validateForCreation')->willReturn(
             new TransitionCreationParameters(self::FROM_ID, self::TO_ID)
         );
 
-        $new_transition = Mockery::mock(\Transition::class)
-            ->shouldReceive('getId')
-            ->andReturn(965)
-            ->getMock();
+        $new_transition = $this->createMock(\Transition::class);
+        $new_transition->method('getId')->willReturn(965);
 
         $this->transition_factory
-            ->shouldReceive('createAndSaveTransition')
-            ->andReturn($new_transition);
+            ->method('createAndSaveTransition')
+            ->willReturn($new_transition);
 
         $workflow = $this->buildSimpleWorkflow();
 
         $this->workflow_factory
-            ->shouldReceive('getWorkflowByTrackerId')
+            ->method('getWorkflowByTrackerId')
             ->with(self::TRACKER_ID)
-            ->andReturn($workflow);
+            ->willReturn($workflow);
 
-        $this->state_factory
-            ->shouldReceive('getStateFromValueId')
-            ->with($workflow, self::TO_ID)
-            ->once();
+        $this->state_factory->expects($this->once())
+            ->method('getStateFromValueId')
+            ->with($workflow, self::TO_ID);
 
-        $this->transition_creator->shouldReceive('createTransitionInState')
-            ->once()
-            ->andReturn($new_transition);
+        $this->transition_creator->expects($this->once())->method('createTransitionInState')
+            ->willReturn($new_transition);
 
         $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
     }
 
-    public function testHandleThrowsWhenNoTrackerFound()
+    public function testHandleThrowsWhenNoTrackerFound(): void
     {
         $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->andReturn(Mockery::mock(\PFUser::class));
+            ->method('getCurrentUser')
+            ->willReturn($this->createMock(\PFUser::class));
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
+            ->method('getTrackerById')
             ->with(self::TRACKER_ID)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(404);
@@ -197,24 +182,24 @@ class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
     }
 
-    public function testHandleThrowsWhenTrackerHasNoWorkflow()
+    public function testHandleThrowsWhenTrackerHasNoWorkflow(): void
     {
         $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->andReturn(Mockery::mock(\PFUser::class));
-        $tracker = Mockery::mock(\Tracker::class);
-        $project = Mockery::mock(\Project::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
+            ->method('getCurrentUser')
+            ->willReturn($this->createMock(\PFUser::class));
+        $tracker = $this->createMock(\Tracker::class);
+        $project = $this->createMock(\Project::class);
+        $tracker->method('getProject')->willReturn($project);
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->andReturn($tracker);
-        $this->project_status_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt');
-        $this->permissions_checker->shouldReceive('checkCreate');
+            ->method('getTrackerById')
+            ->willReturn($tracker);
+        $this->project_status_verificator->method('checkProjectStatusAllowsAllUsersToAccessIt');
+        $this->permissions_checker->method('checkCreate');
 
         $this->workflow_factory
-            ->shouldReceive('getWorkflowByTrackerId')
+            ->method('getWorkflowByTrackerId')
             ->with(self::TRACKER_ID)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(404);
@@ -222,25 +207,19 @@ class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
     }
 
-    /**
-     * @return Mockery\MockInterface|\Workflow
-     */
-    private function buildAdvancedWorkflow()
+    private function buildAdvancedWorkflow(): Workflow&MockObject
     {
-        return Mockery::mock(\Workflow::class)
-            ->shouldReceive('isAdvanced')
-            ->andReturnTrue()
-            ->getMock();
+        $workflow = $this->createMock(\Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(true);
+
+        return $workflow;
     }
 
-    /**
-     * @return Mockery\MockInterface|\Workflow
-     */
-    private function buildSimpleWorkflow()
+    private function buildSimpleWorkflow(): Workflow&MockObject
     {
-        return Mockery::mock(\Workflow::class)
-            ->shouldReceive('isAdvanced')
-            ->andReturnFalse()
-            ->getMock();
+        $workflow = $this->createMock(\Workflow::class);
+        $workflow->method('isAdvanced')->willReturn(false);
+
+        return $workflow;
     }
 }
