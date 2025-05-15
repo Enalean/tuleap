@@ -18,21 +18,17 @@
  */
 
 import path from "node:path";
-import {fileURLToPath} from "node:url";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-import {webpack_configurator} from "@tuleap/build-system-configurator";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
 const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
 const assets_public_path = "/assets/document/";
-import MomentTimezoneDataPlugin from "moment-timezone-data-webpack-plugin";
-import {VueLoaderPlugin} from "vue-loader";
 
 const entry_points = {
-    document: "./scripts/document/index.ts",
     "admin-search-view": "./scripts/admin-search-view/index.ts",
     "document-style": "./themes/document.scss",
 };
@@ -54,35 +50,13 @@ export default [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                {
-                    test: /\.vue$/,
-                    exclude: /node_modules/,
-                    loader: "vue-loader",
-                    options: {
-                        compilerOptions: {
-                            isCustomElement: tag => {
-                                return 'tlp-relative-date' === tag;
-                            },
-                        },
-                    },
-                },
                 webpack_configurator.rule_scss_loader,
-                {
-                    test: /new\.(docx|xlsx|pptx)/,
-                    type: "asset/resource",
-                },
             ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            POGettextPlugin.webpack(),
-            new VueLoaderPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
-            new MomentTimezoneDataPlugin({
-                startYear: 1970,
-                endYear: new Date().getFullYear() + 1,
-            }),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },
