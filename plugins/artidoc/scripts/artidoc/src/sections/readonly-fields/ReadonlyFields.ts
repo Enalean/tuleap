@@ -16,12 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { ConfigurationFieldDisplayType } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
-export type ReadonlyField = ReadonlyFieldString;
+export const STRING_FIELD = "string";
+export const USER_GROUP_LIST_FIELD = "user-groups-list";
 
-export type ReadonlyFieldString = {
-    readonly type: "string";
-    readonly label: string;
-    readonly display_type: "column" | "block";
-    readonly value: string;
-};
+export type ReadonlyFieldString = Readonly<{
+    type: typeof STRING_FIELD;
+    label: string;
+    value: string;
+    display_type: ConfigurationFieldDisplayType;
+}>;
+
+export type ReadonlyFieldUserGroupsListValue = Readonly<{
+    label: string;
+}>;
+
+export type ReadonlyFieldUserGroupsList = Readonly<{
+    type: typeof USER_GROUP_LIST_FIELD;
+    label: string;
+    value: ReadonlyFieldUserGroupsListValue[];
+    display_type: ConfigurationFieldDisplayType;
+}>;
+
+export type ReadonlyField = ReadonlyFieldString | ReadonlyFieldUserGroupsList;

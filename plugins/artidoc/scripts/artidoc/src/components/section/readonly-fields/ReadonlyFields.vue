@@ -25,10 +25,15 @@
             v-bind:key="index"
             class="tlp-property"
             v-bind:class="getFieldClasses(readonly_field)"
+            data-test="readonly-field"
         >
             <field-string
-                v-if="readonly_field.type === 'string'"
+                v-if="readonly_field.type === STRING_FIELD"
                 v-bind:field_string="readonly_field"
+            />
+            <field-user-groups-list
+                v-if="readonly_field.type === USER_GROUP_LIST_FIELD"
+                v-bind:user_groups_list_field="readonly_field"
             />
         </div>
     </div>
@@ -37,7 +42,9 @@
 <script setup lang="ts">
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
+import { STRING_FIELD, USER_GROUP_LIST_FIELD } from "@/sections/readonly-fields/ReadonlyFields";
 import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
 
 defineProps<{
     section: SectionBasedOnArtifact;
