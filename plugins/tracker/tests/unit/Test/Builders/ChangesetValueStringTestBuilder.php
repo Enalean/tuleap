@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,49 +23,41 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue_String;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_Text;
+use Tracker_FormElement_Field_String;
 
-final class ChangesetValueTextTestBuilder
+final class ChangesetValueStringTestBuilder
 {
-    private string $value  = 'Accipitres';
-    private string $format = Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+    private string $value = 'faultless';
 
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly Tracker_FormElement_Field_Text $field,
+        private readonly Tracker_FormElement_Field_String $field,
     ) {
     }
 
-    public static function aValue(
-        int $id,
-        Tracker_Artifact_Changeset $changeset,
-        Tracker_FormElement_Field_Text $field,
-    ): self {
+    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, Tracker_FormElement_Field_String $field): self
+    {
         return new self($id, $changeset, $field);
     }
 
-    /**
-     * @psalm-param Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT|Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT|Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT $format
-     */
-    public function withValue(string $value, string $format): self
+    public function withValue(string $value): self
     {
-        $this->value  = $value;
-        $this->format = $format;
-
+        $this->value = $value;
         return $this;
     }
 
-    public function build(): Tracker_Artifact_ChangesetValue_Text
+    public function build(): Tracker_Artifact_ChangesetValue_String
     {
-        return new Tracker_Artifact_ChangesetValue_Text(
+        return new Tracker_Artifact_ChangesetValue_String(
             $this->id,
             $this->changeset,
             $this->field,
             true,
             $this->value,
-            $this->format,
+            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
         );
     }
 }

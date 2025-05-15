@@ -101,7 +101,12 @@ final class ArtifactDescriptionProviderTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->build();
 
-        $changeset->setFieldValue($field, ChangesetValueTextTestBuilder::aValue(1, $changeset, $field)->withValue('The description')->build());
+        $changeset->setFieldValue(
+            $field,
+            ChangesetValueTextTestBuilder::aValue(1, $changeset, $field)
+                ->withValue('The description', \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+                ->build()
+        );
 
         self::assertEquals('The description', $this->provider->getDescription($artifact));
     }
@@ -165,7 +170,12 @@ final class ArtifactDescriptionProviderTest extends TestCase
         $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->inTracker($tracker)->build();
 
         $description = "<p>Description:</p>\n\n<ul>\n\t<li>Element 1</li>\n\t<li>Element 2</li>\n\t<li>Element 3 puce</li>\n</ul>\n";
-        $changeset->setFieldValue($field, ChangesetValueTextTestBuilder::aValue(1, $changeset, $field)->withValue($description)->withFormat(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)->build());
+        $changeset->setFieldValue(
+            $field,
+            ChangesetValueTextTestBuilder::aValue(1, $changeset, $field)
+                ->withValue($description, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+                ->build()
+        );
 
         self::assertEquals($description, $this->provider->getPostProcessedDescription($artifact));
     }
