@@ -21,16 +21,15 @@ import { describe, it, expect } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import type { ReadonlyField, ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFields";
+import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
-
-const string_field: ReadonlyFieldString = {
-    type: "string",
-    label: "String Field",
-    display_type: "column",
-    value: "The first field",
-};
+import { ReadonlyFieldStub } from "@/sections/stubs/ReadonlyFieldStub";
+import {
+    DISPLAY_TYPE_BLOCK,
+    DISPLAY_TYPE_COLUMN,
+} from "@/sections/readonly-fields/AvailableReadonlyFields";
+import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
 
 describe("ReadonlyFields", () => {
     const getWrapper = (fields: ReadonlyField[]): VueWrapper => {
@@ -45,15 +44,19 @@ describe("ReadonlyFields", () => {
         });
     };
 
-    it("should display String fields in column", () => {
-        const wrapper = getWrapper([string_field]);
+    it("When the display type of a readonly field is 'column', then it should display it in column", () => {
+        const wrapper = getWrapper([
+            ReadonlyFieldStub.string("The first field", DISPLAY_TYPE_COLUMN),
+        ]);
 
         expect(wrapper.findComponent(FieldString).exists()).toBe(true);
         expect(wrapper.findAll(".tlp-property")[0].classes()).toStrictEqual(["tlp-property"]);
     });
 
-    it("should display String fields in block", () => {
-        const wrapper = getWrapper([{ ...string_field, display_type: "block" }]);
+    it("When the display type of a readonly field is 'block', then it should display it in block", () => {
+        const wrapper = getWrapper([
+            ReadonlyFieldStub.string("The first field", DISPLAY_TYPE_BLOCK),
+        ]);
 
         expect(wrapper.findComponent(FieldString).exists()).toBe(true);
         expect(wrapper.findAll(".tlp-property")[0].classes()).toStrictEqual([
@@ -61,5 +64,20 @@ describe("ReadonlyFields", () => {
             "display-field-in-block",
             "document-grid-element-full-row",
         ]);
+    });
+
+    it("should display all kinds of readonly fields", () => {
+        const fields = [
+            ReadonlyFieldStub.string("String field", DISPLAY_TYPE_COLUMN),
+            ReadonlyFieldStub.userGroupsList(
+                [{ label: "Project Administrators" }],
+                DISPLAY_TYPE_COLUMN,
+            ),
+        ];
+        const wrapper = getWrapper(fields);
+
+        expect(wrapper.findAll("[data-test=readonly-field]")).toHaveLength(fields.length);
+        expect(wrapper.findComponent(FieldString).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldUserGroupsList).exists()).toBe(true);
     });
 });
