@@ -47,6 +47,8 @@ import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injec
 import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 import { buildSectionsBelowArtifactsDetector } from "@/sections/levels/SectionsBelowArtifactsDetector";
 import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { watchUpdateSectionsReadonlyFields } from "@/sections/readonly-fields/ReadonlyFieldsWatcher";
 
 const { scrollToAnchor } = useScrollToAnchor();
 
@@ -56,6 +58,8 @@ const container = ref<HTMLElement>();
 const is_loading_sections = ref(true);
 const is_loading_failed = strictInject(IS_LOADING_SECTIONS_FAILED);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
+const configuration_store = strictInject(CONFIGURATION_STORE);
+const document_id = strictInject(DOCUMENT_ID);
 const sections_numberer = getSectionsNumberer(sections_collection);
 const bad_sections_detector = buildSectionsBelowArtifactsDetector();
 const bad_sections = ref<ReadonlyArray<string>>([]);
@@ -67,7 +71,7 @@ provide(
 );
 provide(SECTIONS_BELOW_ARTIFACTS, bad_sections);
 
-getSectionsLoader(strictInject(DOCUMENT_ID))
+getSectionsLoader(document_id)
     .loadSections()
     .match(
         (collection) => {
@@ -96,6 +100,14 @@ onMounted(() => {
 onUnmounted(() => {
     container.value?.removeEventListener("scroll", onScroll);
 });
+
+watchUpdateSectionsReadonlyFields(
+    sections_collection,
+    configuration_store.selected_fields,
+    document_id,
+    is_loading_sections,
+    is_loading_failed,
+);
 
 function onScroll(): void {
     // Magic value to wait that a few pixels have been scrolled down before applying a dropshadow

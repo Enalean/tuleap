@@ -43,6 +43,7 @@ describe("App", () => {
                     [DOCUMENT_ID.valueOf()]: 1,
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(false),
+                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.withSelectedFields([]),
                 },
             },
         });
