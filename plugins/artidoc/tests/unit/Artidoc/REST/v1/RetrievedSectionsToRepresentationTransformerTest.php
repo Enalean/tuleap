@@ -82,6 +82,9 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         Tracker_Semantic_Title::clearInstances();
     }
 
+    /**
+     * @psalm-param \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT|\Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT|\Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT $format
+     */
     private function getArtifact(
         int $id,
         Tracker_FormElement_Field_String $title,
@@ -99,7 +102,12 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
 
         $this->setTitleValue($title, $changeset, $id);
-        $this->setDescriptionValue($description, $changeset, $format, $id);
+        $changeset->setFieldValue(
+            $description,
+            ChangesetValueTextTestBuilder::aValue(1, $changeset, $description)
+                ->withValue("Desc *for* $id", $format)
+                ->build()
+        );
 
         $artifact->setChangesets([$changeset]);
 
@@ -115,21 +123,8 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     {
         $changeset->setFieldValue(
             $title,
-            ChangesetValueTextTestBuilder::aValue(1, $changeset, $title)->withValue("Title for {$id}")->build()
-        );
-    }
-
-    private function setDescriptionValue(
-        Tracker_FormElement_Field_Text $description,
-        Tracker_Artifact_Changeset $changeset,
-        string $format,
-        int $id,
-    ): void {
-        $changeset->setFieldValue(
-            $description,
-            ChangesetValueTextTestBuilder::aValue(1, $changeset, $description)
-                ->withFormat($format)
-                ->withValue("Desc *for* {$id}")
+            ChangesetValueTextTestBuilder::aValue(1, $changeset, $title)
+                ->withValue("Title for {$id}", \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
                 ->build()
         );
     }

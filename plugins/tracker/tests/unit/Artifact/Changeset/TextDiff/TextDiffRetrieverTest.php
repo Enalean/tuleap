@@ -197,11 +197,15 @@ final class TextDiffRetrieverTest extends TestCase
 
         $this->next_changeset->setFieldValue(
             $this->field_text,
-            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)->withValue('this is a test')->build(),
+            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)
+                ->withValue('this is a test', \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+                ->build(),
         );
         $this->previous_changeset->setFieldValue(
             $this->field_text,
-            ChangesetValueTextTestBuilder::aValue(1, $this->previous_changeset, $this->field_text)->withValue('this is not a test')->build(),
+            ChangesetValueTextTestBuilder::aValue(1, $this->previous_changeset, $this->field_text)
+                ->withValue('this is not a test', \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+                ->build(),
         );
 
         $changesets_for_diff = new ChangesetsForDiff(
@@ -237,11 +241,15 @@ final class TextDiffRetrieverTest extends TestCase
 
         $this->next_changeset->setFieldValue(
             $this->field_text,
-            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)->withValue('this is a test')->build(),
+            ChangesetValueTextTestBuilder::aValue(1, $this->next_changeset, $this->field_text)
+                ->withValue('this is a test', \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+                ->build(),
         );
         $this->previous_changeset->setFieldValue(
             $this->field_text,
-            ChangesetValueTextTestBuilder::aValue(1, $this->previous_changeset, $this->field_text)->withValue('this is not a test')->build(),
+            ChangesetValueTextTestBuilder::aValue(1, $this->previous_changeset, $this->field_text)
+                ->withValue('this is not a test', \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+                ->build(),
         );
 
         $changesets_for_diff = new ChangesetsForDiff(

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\String;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
@@ -26,7 +28,7 @@ use Tracker_FormElement_Field_String;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -39,7 +41,9 @@ final class TrackerFormElementFieldStringChangesTest extends TestCase
     {
         $this->field          = StringFieldBuilder::aStringField(1456)->build();
         $changeset            = ChangesetTestBuilder::aChangeset(654)->build();
-        $this->previous_value = ChangesetValueTextTestBuilder::aValue(1, $changeset, $this->field)->withValue('1')->build();
+        $this->previous_value = ChangesetValueStringTestBuilder::aValue(1, $changeset, $this->field)
+            ->withValue('1')
+            ->build();
     }
 
     public function testItReturnsTrueIfThereIsAChange(): void

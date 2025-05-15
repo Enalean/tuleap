@@ -341,7 +341,9 @@ final class XmlImportTest extends TestCase
         $field = StringFieldBuilder::aStringField(48641)->withName('summary')->build();
         $changeset->setFieldValue(
             $field,
-            ChangesetValueTextTestBuilder::aValue(1453, $changeset, $field)->withValue($changeset_field_value)->build()
+            ChangesetValueTextTestBuilder::aValue(1453, $changeset, $field)
+                ->withValue($changeset_field_value, \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+                ->build()
         );
 
         return $changeset;

@@ -61,8 +61,7 @@ final class ChangesetValueTextXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
         $changeset = ChangesetTestBuilder::aChangeset(102)->build();
 
         $this->changeset_value = ChangesetValueTextTestBuilder::aValue(101, $changeset, $this->field)
-            ->withValue('<p>test</p>')
-            ->withFormat(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+            ->withValue('<p>test</p>', Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
             ->build();
     }
 
