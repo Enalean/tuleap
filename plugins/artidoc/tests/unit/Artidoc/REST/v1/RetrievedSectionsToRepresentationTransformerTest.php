@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use PFUser;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -39,12 +40,14 @@ use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\REST\v1\BuildSectionFieldsStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
@@ -60,12 +63,16 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 {
+    private PFUser $user;
     private Tracker $tracker;
     private Tracker_Semantic_Title&MockObject $semantic_title;
     private Tracker_Semantic_Description&MockObject $semantic_description;
+    private RetrieveArtifactStub $artifact_retriever;
+    private GetFileUploadDataStub $file_upload_provider;
 
     protected function setUp(): void
     {
+        $this->user    = UserTestBuilder::buildWithDefaults();
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
@@ -75,11 +82,42 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);
         Tracker_Semantic_Description::setInstance($this->semantic_description, $this->tracker);
+        $this->artifact_retriever   = RetrieveArtifactStub::withNoArtifact();
+        $this->file_upload_provider = GetFileUploadDataStub::withoutField();
     }
 
     protected function tearDown(): void
     {
         Tracker_Semantic_Title::clearInstances();
+        Tracker_Semantic_Description::clearInstances();
+    }
+
+    /**
+     * @param list<RetrievedSection> $sections
+     * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
+     */
+    private function getRepresentation(array $sections): Ok|Err
+    {
+        $transformer = new RetrievedSectionsToRepresentationTransformer(
+            new SectionRepresentationBuilder(
+                new ArtifactSectionRepresentationBuilder(
+                    $this->file_upload_provider,
+                    BuildSectionFieldsStub::withoutFields()
+                ),
+            ),
+            new RequiredSectionInformationCollector(
+                $this->user,
+                new RequiredArtifactInformationBuilder($this->artifact_retriever)
+            ),
+        );
+        return $transformer->getRepresentation(
+            new PaginatedRetrievedSections(
+                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
+                $sections,
+                10,
+            ),
+            $this->user
+        );
     }
 
     /**
@@ -90,11 +128,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         Tracker_FormElement_Field_String $title,
         Tracker_FormElement_Field_Text $description,
         string $format,
-        PFUser $user,
     ): Artifact {
         $artifact = ArtifactTestBuilder::anArtifact($id)
             ->inTracker($this->tracker)
-            ->userCanView($user)
+            ->userCanView($this->user)
             ->build();
 
         $changeset = ChangesetTestBuilder::aChangeset(1000 + $id)
@@ -114,9 +151,9 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         return $artifact;
     }
 
-    private function getArtifactUserCannotView(int $id, PFUser $user): Artifact
+    private function getArtifactUserCannotView(int $id): Artifact
     {
-        return ArtifactTestBuilder::anArtifact($id)->userCannotView($user)->build();
+        return ArtifactTestBuilder::anArtifact($id)->userCannotView($this->user)->build();
     }
 
     private function setTitleValue(Tracker_FormElement_Field_String $title, Tracker_Artifact_Changeset $changeset, int $id): void
@@ -129,43 +166,40 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [false, false, false]
-     *           [false, true, false]
-     *           [true, false, false]
-     *           [true, true, true]
-     */
+    #[TestWith([false, false, false])]
+    #[TestWith([false, true, false])]
+    #[TestWith([true, false, false])]
+    #[TestWith([true, true, true])]
     public function testHappyPath(
         bool $can_user_edit_title,
         bool $can_user_edit_description,
         bool $expected_can_user_edit_section,
     ): void {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, $can_user_edit_title)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, $can_user_edit_title)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, $can_user_edit_description)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, $can_user_edit_description)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
+        $this->file_upload_provider = GetFileUploadDataStub::withField($file);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $file_upload_provider = GetFileUploadDataStub::withField($file);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4);
 
         $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
@@ -175,28 +209,12 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getFileValue($file, $art4),
             });
 
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 3, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
@@ -224,54 +242,36 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testHappyPathWithDescriptionInMarkdownFormat(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
+        $this->file_upload_provider = GetFileUploadDataStub::withField($file);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT, $user);
-
-        $file_upload_provider = GetFileUploadDataStub::withField($file);
+        $art1                     = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1);
 
         $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
                 $art1->getLastChangeset() => $this->getFileValue($file, $art1),
             });
 
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 1, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
@@ -285,54 +285,36 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testHappyPathWithDescriptionInTextFormat(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
+        $this->file_upload_provider = GetFileUploadDataStub::withField($file);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, $user);
-
-        $file_upload_provider = GetFileUploadDataStub::withField($file);
+        $art1                     = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1);
 
         $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
                 $art1->getLastChangeset() => $this->getFileValue($file, $art1),
             });
 
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 1, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
@@ -346,63 +328,45 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testHappyPathWithFreetext(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
+        $this->file_upload_provider = GetFileUploadDataStub::withField($file);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-
-        $file_upload_provider = GetFileUploadDataStub::withField($file);
+        $art1                     = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1);
 
         $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
                 $art1->getLastChangeset() => $this->getFileValue($file, $art1),
             });
 
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromFreetext([
-                        'freetext_title'       => 'Requirements',
-                        'freetext_description' => 'Lorem ipsum',
-                        'freetext_id'          => FreetextIdentifierStub::create(),
-                        'id'                   => SectionIdentifierStub::create(),
-                        'item_id'              => 101,
-                        'rank'                 => 0,
-                        'level' => 1,
-                    ]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([
+            RetrievedSection::fromFreetext([
+                'freetext_title'       => 'Requirements',
+                'freetext_description' => 'Lorem ipsum',
+                'freetext_id'          => FreetextIdentifierStub::create(),
+                'id'                   => SectionIdentifierStub::create(),
+                'item_id'              => 101,
+                'rank'                 => 0,
+                'level' => 1,
+            ]),
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
@@ -421,51 +385,33 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testArtifactHasEmptyAttachmentFieldThatHasBeenCreatedAfterArtifactCreation(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
+        $this->file_upload_provider = GetFileUploadDataStub::withField($file);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-
-        $file_upload_provider = GetFileUploadDataStub::withField($file);
+        $art1                     = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1);
 
         $file->method('getRESTValue')->willReturn(null);
 
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
@@ -476,48 +422,29 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testArtifactHasNoAttachmentField(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, true)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-
-        $file_upload_provider = GetFileUploadDataStub::withoutField();
+        $art1                     = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1);
 
         $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
         $editor_builder->method('getDataAttributes')->willReturn([]);
 
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
@@ -542,57 +469,36 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testWhenOrderOfArtifactRowsDoesNotMatchOrderOfGivenArtifactIds(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, false)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, false)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
-            ->withUpdatePermission($user, false)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, false)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            null
-        );
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4);
 
         $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
         $editor_builder->method('getDataAttributes')->willReturn([]);
 
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
@@ -617,284 +523,164 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testWhenTitleSemanticIsNotSet(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn(null);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            null
-        );
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4);
+
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenTitleSemanticIsNotReadableByCurrentUser(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, false)
+            ->withReadPermission($this->user, false)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            null
-        );
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4);
+
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenDescriptionSemanticIsNotReadableByCurrentUser(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, false)
+            ->withReadPermission($this->user, false)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            null
-        );
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4);
+
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenDescriptionSemanticIsNotSet(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn(null);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifact(3, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            null
-        );
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4);
+
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isErr($result));
     }
 
     public function testFaultWhenThereIsAtLeastOneArtifactThatCurrentUserCannotRead(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $title = StringFieldBuilder::aStringField(1001)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_title->method('getField')->willReturn($title);
 
         $description = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
-            ->withReadPermission($user, true)
+            ->withReadPermission($this->user, true)
             ->build();
         $this->semantic_description->method('getField')->willReturn($description);
 
-        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
-        $art3 = $this->getArtifactUserCannotView(3, $user);
-        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, $user);
+        $art1 = $this->getArtifact(1, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifactUserCannotView(3);
+        $art4 = $this->getArtifact(4, $title, $description, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            null
-        );
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4))
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [
-                    RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
-                    RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
-                ],
-                10,
-            ),
-            $user
-        );
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3, $art4);
+
+        $result = $this->getRepresentation([
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
+        ]);
 
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenThereIsNotAnyArtifacts(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
+        $this->artifact_retriever = RetrieveArtifactStub::withNoArtifact();
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            null
-        );
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
-            new SectionRepresentationBuilder(
-                new ArtifactSectionRepresentationBuilder($file_upload_provider, BuildSectionFieldsStub::withoutFields()),
-            ),
-            new RequiredSectionInformationCollector(
-                $user,
-                new RequiredArtifactInformationBuilder(RetrieveArtifactStub::withNoArtifact())
-            ),
-        );
-        $result      = $transformer->getRepresentation(
-            new PaginatedRetrievedSections(
-                new ArtidocWithContext(new ArtidocDocument(['item_id' => 101])),
-                [],
-                10,
-            ),
-            $user
-        );
+        $result = $this->getRepresentation([]);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame(10, $result->value->total);
