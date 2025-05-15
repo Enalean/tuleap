@@ -32,4 +32,5 @@ export type WidgetData = {
     readonly dashboard_type: string;
     readonly title_attribute: string;
     readonly default_title: string;
+    readonly can_display_artifact_link: boolean;
 };

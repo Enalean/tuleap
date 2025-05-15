@@ -77,17 +77,15 @@
             data-test="cell"
             ><span v-bind:class="getBadgeClass(props.cell.color)">{{ props.cell.name }}</span></span
         >
-        <span
+        <pretty-title-cell-component
             v-if="props.cell.type === PRETTY_TITLE_CELL"
+            v-bind:cell="cell"
+            v-bind:artifact_uri="artifact_uri"
             class="cell"
             v-bind:class="getCommonClasses()"
             data-test="cell"
-            ><a v-bind:href="props.artifact_uri" class="link"
-                ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
-                    >{{ props.cell.tracker_name }} #{{ props.cell.artifact_id }}</span
-                >{{ props.cell.title }}</a
-            ></span
-        >
+        />
+
         <span
             v-if="
                 props.cell.type === DATE_CELL ||
@@ -106,7 +104,7 @@
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { ColorName } from "@tuleap/core-constants";
 import type { Option } from "@tuleap/option";
-import type { Cell, PrettyTitleCell } from "../../domain/ArtifactsTable";
+import type { Cell } from "../../domain/ArtifactsTable";
 import {
     DATE_CELL,
     NUMERIC_CELL,
@@ -122,6 +120,7 @@ import {
 import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
 import UserValue from "./UserValue.vue";
 import TextCell from "./TextCell.vue";
+import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
 
 const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
@@ -159,15 +158,10 @@ const getBadgeClass = (color: ColorName): string => `tlp-badge-${color} tlp-badg
 
 const getOptionalBadgeClass = (option: Option<ColorName>): string =>
     option.mapOr(getBadgeClass, "tlp-badge-secondary tlp-badge-outline");
-
-const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
-    `cross-ref-badge tlp-swatch-${cell.color}`;
 </script>
 
 <style scoped lang="scss">
 @use "../../../themes/cell";
-@use "../../../themes/links";
-@use "../../../themes/badges";
 
 .cell {
     @include cell.cell-template;
@@ -178,14 +172,6 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 .list-cell {
     gap: 3px;
     flex-wrap: wrap;
-}
-
-.link {
-    @include links.link;
-}
-
-.cross-ref-badge {
-    @include badges.badge;
 }
 
 .user-group:not(:last-child)::after {

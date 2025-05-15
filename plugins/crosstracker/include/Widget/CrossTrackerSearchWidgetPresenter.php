@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
+use ForgeConfig;
 use PFUser;
 
 final readonly class CrossTrackerSearchWidgetPresenter
@@ -32,6 +33,7 @@ final readonly class CrossTrackerSearchWidgetPresenter
     public string $dashboard_type;
     public string $title_attribute;
     public string $default_title;
+    public bool $can_display_artifact_link;
 
     public function __construct(
         int $widget_id,
@@ -45,11 +47,12 @@ final readonly class CrossTrackerSearchWidgetPresenter
 
         $this->is_widget_admin = $is_admin;
 
-        $this->documentation_base_url = '/doc/' . urlencode(
+        $this->documentation_base_url    = '/doc/' . urlencode(
             $current_user->getShortLocale()
         );
-        $this->dashboard_type         = $dashboard_type;
-        $this->title_attribute        = $title_attribute;
-        $this->default_title          = $default_title;
+        $this->dashboard_type            = $dashboard_type;
+        $this->title_attribute           = $title_attribute;
+        $this->default_title             = $default_title;
+        $this->can_display_artifact_link = ForgeConfig::getFeatureFlag(CrossTrackerSearchWidget::FEATURE_FLAG) === '1';
     }
 }
