@@ -820,14 +820,13 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                     $this->assertTrue(array_key_exists('display_name', $field['value']));
                     $this->assertTrue(array_key_exists('avatar_url', $field['value']));
                     break;
-                case 'subon':
                 case 'lud':
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
                     break;
-                case 'file':
-                    self::assertTrue(is_string($field['label']));
-                    self::assertTrue(is_array($field['file_descriptions']));
+                case 'subon':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
                     break;
                 default:
                     throw new Exception('You need to update this test for the field: ' . print_r($field, true));

@@ -28,7 +28,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class StringFieldBuilder
 {
     use FieldBuilderWithPermissions;
-    use FieldBuilderWithSpecificProperties;
 
     private string $label     = 'Title';
     private string $name      = 'title';
@@ -42,7 +41,6 @@ final class StringFieldBuilder
     private function __construct(private readonly int $id)
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
-        $this->withSpecificProperty('default_value', ['value' => '']);
     }
 
     public static function aStringField(int $id): self

@@ -40,7 +40,6 @@ use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CheckArtifactRestUpdateConditionsStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
-use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
@@ -90,8 +89,7 @@ final class PUTHandlerTest extends TestCase
             new FieldsDataBuilder(
                 $all_fields_retriever,
                 new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
-                new NewArtifactLinkInitialChangesetValueBuilder(),
-                RetrieveUserPermissionOnFieldsStub::build(),
+                new NewArtifactLinkInitialChangesetValueBuilder()
             ),
             new ArtifactReverseLinksUpdater(
                 RetrieveReverseLinksStub::withoutLinks(),

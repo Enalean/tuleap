@@ -24,7 +24,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
-use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -36,7 +35,6 @@ use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
@@ -69,7 +67,6 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         $this->float_field  = FloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
             ->inTracker($this->tracker)
-            ->withSpecificProperty('default_value', ['value' => 9.81])
             ->build();
         $this->string_field = StringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->inTracker($this->tracker)
@@ -94,8 +91,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new NewArtifactLinkChangesetValueBuilder(
                 RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([]))
             ),
-            new NewArtifactLinkInitialChangesetValueBuilder(),
-            RetrieveUserPermissionOnFieldsStub::build(),
+            new NewArtifactLinkInitialChangesetValueBuilder()
         );
         return $builder->getFieldsDataOnUpdate($payload, $artifact, $user);
     }
@@ -196,20 +192,17 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /**
      * @param ArtifactValuesRepresentation[] $payload
-     * @param list<int> $fields_permissions
      */
-    private function getFieldsDataOnCreate(array $payload, array $fields_permissions = []): InitialChangesetValuesContainer
+    private function getFieldsDataOnCreate(array $payload): InitialChangesetValuesContainer
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $user    = UserTestBuilder::buildWithDefaults();
 
         $builder = new FieldsDataBuilder(
             $this->fields_retriever,
             new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
-            new NewArtifactLinkInitialChangesetValueBuilder(),
-            RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn($fields_permissions, FieldPermissionType::PERMISSION_SUBMIT),
+            new NewArtifactLinkInitialChangesetValueBuilder()
         );
-        return $builder->getFieldsDataOnCreate($payload, $tracker, $user);
+        return $builder->getFieldsDataOnCreate($payload, $tracker);
     }
 
     public function testItTellsEachFieldToBuildFieldsDataFromRESTCreatePayload(): void
@@ -247,26 +240,6 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
         ], $changeset_values->getFieldsData());
         self::assertTrue($changeset_values->getArtifactLinkValue()->isNothing());
-    }
-
-    public function testItFillWithEmptyValuesForFieldsWithoutExplicitValueFromRESTPayload(): void
-    {
-        $int_representation = ArtifactValuesRepresentationBuilder::aRepresentation(self::INT_FIELD_ID)
-            ->withValue(self::INT_VALUE)
-            ->build();
-
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            $this->int_field,
-            $this->float_field,
-            $this->string_field,
-        );
-
-        $changeset_values = $this->getFieldsDataOnCreate([$int_representation], [self::INT_FIELD_ID, self::FLOAT_FIELD_ID, self::STRING_FIELD_ID]);
-        self::assertSame([
-            self::INT_FIELD_ID    => self::INT_VALUE,
-            self::FLOAT_FIELD_ID  => 9.81,
-            self::STRING_FIELD_ID => '',
-        ], $changeset_values->getFieldsData());
     }
 
     public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTCreatePayload(): void

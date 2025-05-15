@@ -41,7 +41,6 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CheckArtifactRestUpdateConditionsStub;
-use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
@@ -99,7 +98,6 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                     RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
                 ),
                 new NewArtifactLinkInitialChangesetValueBuilder(),
-                RetrieveUserPermissionOnFieldsStub::build(),
             ),
             $this->changeset_creator,
             $check_artifact_rest_update_conditions,

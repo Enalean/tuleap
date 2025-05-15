@@ -216,14 +216,6 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $this->renderStepEditionToString(null, $steps);
     }
 
-    public function getValueFromSubmitOrDefault(array $submitted_values): mixed
-    {
-        if (isset($submitted_values[$this->getId()])) {
-            return $submitted_values[$this->getId()];
-        }
-        return ['description' => [], 'expected_results' => []];
-    }
-
     protected function fetchSubmitValueMasschange(): string
     {
         return '';

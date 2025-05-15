@@ -286,7 +286,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $response        = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $posted_artifact['id']));
         $posted_artifact = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertCount(13, $posted_artifact['values']);
+        $this->assertCount(11, $posted_artifact['values']);
 
         $file_exists = false;
         foreach ($posted_artifact['values'] as $field) {

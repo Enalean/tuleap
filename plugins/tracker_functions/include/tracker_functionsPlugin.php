@@ -432,8 +432,7 @@ final class tracker_functionsPlugin extends Plugin
                     $artifact_factory
                 ),
             ),
-            new NewArtifactLinkInitialChangesetValueBuilder(),
-            TrackersPermissionsRetriever::build(),
+            new NewArtifactLinkInitialChangesetValueBuilder()
         );
         $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
         $artifact_factory          = Tracker_ArtifactFactory::instance();
