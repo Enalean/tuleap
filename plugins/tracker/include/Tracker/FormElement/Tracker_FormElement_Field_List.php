@@ -601,16 +601,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         );
     }
 
-    public function getValueFromSubmitOrDefault(array $submitted_values): null
-    {
-        if (isset($submitted_values[$this->getId()])) {
-            return $submitted_values[$this->getId()];
-        } elseif ($this->hasDefaultValue()) {
-            return $this->getDefaultValue();
-        }
-        return null;
-    }
-
     private function getSubmitDefaultValues()
     {
         if ($this->fieldHasEnableWorkflow()) {

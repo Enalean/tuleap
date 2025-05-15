@@ -712,6 +712,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return parent::getNoValueLabel();
     }
 
+    public function getValueFromSubmitOrDefault(array $submitted_values)
+    {
+        return parent::getValueFromSubmitOrDefault($submitted_values);
+    }
+
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *

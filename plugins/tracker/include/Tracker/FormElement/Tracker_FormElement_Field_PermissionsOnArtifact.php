@@ -126,14 +126,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
     }
 
-    public function getValueFromSubmitOrDefault(array $submitted_values): array
-    {
-        if (isset($submitted_values[$this->getId()])) {
-            return $submitted_values[$this->getId()];
-        }
-        return [];
-    }
-
     protected function fetchSubmitValueMasschange(): string
     {
         $mass_change_input_html = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/form-element/')

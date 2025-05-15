@@ -53,7 +53,6 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -280,7 +279,6 @@ final class ArtifactCreatorTest extends TestCase
                 ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)
                     ->inTracker($tracker)
                     ->withName(self::ARTIFACT_LINK_FIELD_NAME)
-                    ->withSpecificProperty('default_value', ['value' => []])
                     ->build(),
             ),
             $creator,
@@ -340,7 +338,6 @@ final class ArtifactCreatorTest extends TestCase
                 ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)
                     ->inTracker($tracker)
                     ->withName(self::ARTIFACT_LINK_FIELD_NAME)
-                    ->withSpecificProperty('default_value', ['value' => []])
                     ->build(),
             ),
             $creator,
@@ -405,7 +402,6 @@ final class ArtifactCreatorTest extends TestCase
                 ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)
                     ->inTracker($tracker)
                     ->withName(self::ARTIFACT_LINK_FIELD_NAME)
-                    ->withSpecificProperty('default_value', ['value' => []])
                     ->build(),
             ),
             $creator,
@@ -505,7 +501,6 @@ final class ArtifactCreatorTest extends TestCase
                     RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
                 ),
                 $artifact_link_initial_builder,
-                RetrieveUserPermissionOnFieldsStub::build(),
             ),
             $artifact_creator,
             $tracker_factory,

@@ -281,14 +281,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function getValueFromSubmitOrDefault(array $submitted_values): array
-    {
-        if (isset($submitted_values[$this->getId()])) {
-            return $submitted_values[$this->getId()];
-        }
-        return [];
-    }
-
     protected function fetchSubmitValueMasschange(): string
     {
         return '';  // deactivate mass change for file fields (see issue described in rev #15855)

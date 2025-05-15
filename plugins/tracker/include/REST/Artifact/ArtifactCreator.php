@@ -54,7 +54,7 @@ class ArtifactCreator implements CreateArtifact
         bool $should_visit_be_recorded,
     ): ArtifactReference {
         $tracker          = $this->getTracker($tracker_reference);
-        $changeset_values = $this->fields_data_builder->getFieldsDataOnCreate($values, $tracker, $submitter);
+        $changeset_values = $this->fields_data_builder->getFieldsDataOnCreate($values, $tracker);
 
         $fields_data = $this->default_values_adder->getUsedFieldsWithDefaultValue(
             $tracker,
