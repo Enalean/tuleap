@@ -51,6 +51,7 @@ import type { ArtifactCreatorController } from "../../domain/creation/ArtifactCr
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import type { LinkedArtifact, LinkedArtifactIdentifier } from "../../domain/links/LinkedArtifact";
 import type { NewLink } from "../../domain/links/NewLink";
+import { loadTooltips } from "@tuleap/tooltip";
 
 export interface ExternalLinkField {
     controller: LinkFieldController;
@@ -78,6 +79,7 @@ type InternalLinkField = LinkField & {
     linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter>;
     parent_artifact_ids: ReadonlyArray<LinkedArtifactIdentifier>;
     new_artifact_title: string;
+    readonly after_each_render: unknown;
 };
 export type HostElement = InternalLinkField & HTMLElement;
 
@@ -135,6 +137,11 @@ export const getLinkedArtifactPresenters = (
             host.controller.isMarkedForRemoval(artifact),
         ),
     );
+};
+
+const after_each_render_descriptor = {
+    value: (host: HostElement): unknown => host.render,
+    observe: (host: HostElement): void => loadTooltips(host, false),
 };
 
 export const observeNewLinks = (
@@ -308,7 +315,9 @@ export const LinkField: HybridElement<InternalLinkField> = define.compile<Intern
     field_presenter: (host: InternalLinkField) => host.controller.getLabeledField(),
     allowed_link_types: getAllowedLinkTypes,
     linked_artifacts: { value: [] },
-    linked_artifact_presenters: getLinkedArtifactPresenters,
+    linked_artifact_presenters: {
+        value: getLinkedArtifactPresenters,
+    },
     parent_artifact_ids: { value: [] },
     is_loading_links: true,
     new_links: {
@@ -322,6 +331,7 @@ export const LinkField: HybridElement<InternalLinkField> = define.compile<Intern
     search_results_section: dropdown_section_descriptor,
     is_artifact_creator_shown: false,
     new_artifact_title: "",
+    after_each_render: after_each_render_descriptor,
     render: (host) =>
         html`<div class="tracker-form-element" data-test="artifact-link-field">
             <label class="tlp-label tracker_formelement_label">${host.field_presenter.label}</label>
