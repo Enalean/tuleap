@@ -66,16 +66,35 @@ module.exports = {
             "fr"
         ],
         "media-feature-range-notation": "prefix",
+        // Disabled rules because already handled by Prettier
+        "@stylistic/block-opening-brace-space-before": null,
+        "@stylistic/color-hex-case": null,
+        "@stylistic/declaration-bang-space-after": null,
+        "@stylistic/declaration-bang-space-before": null,
+        "@stylistic/declaration-block-semicolon-newline-after": null,
+        "@stylistic/declaration-block-semicolon-space-before": null,
+        "@stylistic/declaration-block-trailing-semicolon": null,
+        "@stylistic/declaration-colon-space-after": null,
+        "@stylistic/declaration-colon-space-before": null,
+        "@stylistic/function-comma-space-after": null,
+        "@stylistic/function-parentheses-space-inside": null,
+        "@stylistic/indentation": null,
+        "@stylistic/media-feature-parentheses-space-inside": null,
+        "@stylistic/no-missing-end-of-source-newline": null,
+        "@stylistic/number-leading-zero": null,
+        "@stylistic/number-no-trailing-zeros": null,
+        "@stylistic/selector-list-comma-newline-after": null,
+        "@stylistic/string-quotes": null,
+        "scss/dollar-variable-colon-space-after": null,
+        "scss/dollar-variable-colon-space-before": null,
+        "scss/operator-no-newline-after": null,
         // Plugins
         "order/properties-alphabetical-order": null, // Overridden by stylelint-config-property-sort-order-smacss
         "scss/at-else-empty-line-before": ["never"],
-        "scss/dollar-variable-colon-space-after": null, // Managed by Prettier
-        "scss/dollar-variable-colon-space-before": null, // Managed by Prettier
         "scss/operator-no-unspaced": true,
         "font-family-no-missing-generic-family-keyword": null,
         "no-descending-specificity": null, // Need a lot of work with existing files
         "no-invalid-position-at-import-rule": null, // Need work with existing files
-        "scss/operator-no-newline-after": null, // Does not play well with Prettier
         "prettier/prettier": [true, prettier_config]
     },
 };
