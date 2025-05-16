@@ -34,7 +34,7 @@
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-jest": "^27.4.2",
     "eslint-plugin-monorepo-cop": "^1.0.2",
-    "eslint-plugin-no-only-tests": "^3.1.0",
+    "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-no-unsanitized": "^4.0.2",
     "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-storybook": "^0.8.0",
