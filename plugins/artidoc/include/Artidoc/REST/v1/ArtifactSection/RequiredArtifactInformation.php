@@ -18,17 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\REST\v1;
+declare(strict_types=1);
 
-use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
-use Tuleap\Artidoc\Domain\Document\Section\Level;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
-interface BuildArtifactSectionRepresentation
+use Tracker_FormElement_Field_Text;
+
+final readonly class RequiredArtifactInformation
 {
-    public function build(
-        RequiredArtifactInformation $artifact_information,
-        SectionIdentifier $section_identifier,
-        Level $level,
-        \PFUser $user,
-    ): ArtifactSectionRepresentation;
+    public function __construct(
+        public \Tracker_Artifact_Changeset $last_changeset,
+        public Tracker_FormElement_Field_Text $title_field,
+        public string $title,
+        public Tracker_FormElement_Field_Text $description_field,
+        public string $description,
+    ) {
+    }
 }

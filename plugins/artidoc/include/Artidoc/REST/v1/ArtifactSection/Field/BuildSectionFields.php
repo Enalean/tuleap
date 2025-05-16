@@ -18,29 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-namespace Tuleap\Artidoc\REST\v1;
+use Tracker_Artifact_Changeset;
 
-use Tuleap\Artidoc\Document\Field\ConfiguredField;
-
-/**
- * @psalm-immutable
- */
-final readonly class SectionStringFieldRepresentation
+interface BuildSectionFields
 {
-    private const TYPE = 'string';
-
-    public string $type;
-    public string $label;
-    public string $display_type;
-
-    public function __construct(
-        ConfiguredField $configured_field,
-        public string $value,
-    ) {
-        $this->type         = self::TYPE;
-        $this->label        = $configured_field->field->getLabel();
-        $this->display_type = $configured_field->display_type->value;
-    }
+    /**
+     * @return list<SectionStringFieldRepresentation>
+     */
+    public function getFields(Tracker_Artifact_Changeset $changeset): array;
 }

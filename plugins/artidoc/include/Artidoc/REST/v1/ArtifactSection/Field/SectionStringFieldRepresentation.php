@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tracker_FormElement_Field_Text;
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
 
-final readonly class RequiredArtifactInformation
+/**
+ * @psalm-immutable
+ */
+final readonly class SectionStringFieldRepresentation
 {
+    private const TYPE = 'string';
+
+    public string $type;
+    public string $label;
+    public string $display_type;
+
     public function __construct(
-        public \Tracker_Artifact_Changeset $last_changeset,
-        public Tracker_FormElement_Field_Text $title_field,
-        public string $title,
-        public Tracker_FormElement_Field_Text $description_field,
-        public string $description,
+        ConfiguredField $configured_field,
+        public string $value,
     ) {
+        $this->type         = self::TYPE;
+        $this->label        = $configured_field->field->getLabel();
+        $this->display_type = $configured_field->display_type->value;
     }
 }

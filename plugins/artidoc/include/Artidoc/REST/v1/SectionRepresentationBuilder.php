@@ -27,6 +27,8 @@ use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreet
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
