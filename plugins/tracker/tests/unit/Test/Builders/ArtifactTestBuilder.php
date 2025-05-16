@@ -71,7 +71,9 @@ final class ArtifactTestBuilder
     /**
      * @var Artifact[]|null
      */
-    private ?array $ancestors = null;
+    private ?array $ancestors                  = null;
+    private ?array $linked_artifact            = null;
+    private array $linked_and_reverse_artifact = [];
 
     private function __construct(int $id)
     {
@@ -196,6 +198,27 @@ final class ArtifactTestBuilder
         return $this;
     }
 
+    public function withLinkedArtifact(Artifact $artifact, Artifact ...$other_artifacts): self
+    {
+        $this->linked_artifact = [$artifact, ...$other_artifacts];
+
+        return $this;
+    }
+
+    public function withoutLinkedArtifact(): self
+    {
+        $this->linked_artifact = [];
+
+        return $this;
+    }
+
+    public function withLinkedAndReverseArtifact(Artifact $artifact, Artifact ...$other_artifacts): self
+    {
+        $this->linked_and_reverse_artifact = [$artifact, ...$other_artifacts];
+
+        return $this;
+    }
+
     public function build(): Artifact
     {
         $artifact = new class (
@@ -203,6 +226,8 @@ final class ArtifactTestBuilder
             $this->tracker->getId(),
             $this->submission_timestamp,
             $this->user_can_view,
+            $this->linked_artifact,
+            $this->linked_and_reverse_artifact
         ) extends Artifact {
             /**
              * @param array<int, bool> $user_can_view
@@ -212,6 +237,8 @@ final class ArtifactTestBuilder
                 int $tracker_id,
                 int $submitted_on,
                 private readonly array $user_can_view,
+                private readonly ?array $linked_artifact,
+                private readonly array $linked_and_reverse_artifact,
             ) {
                 parent::__construct($id, $tracker_id, 102, $submitted_on, false);
             }
@@ -222,6 +249,22 @@ final class ArtifactTestBuilder
                     return $this->user_can_view[(int) $user->getId()];
                 }
                 return parent::userCanView($user);
+            }
+
+            /**
+             * @return Artifact[]
+             */
+            public function getLinkedArtifacts(PFUser $user): array
+            {
+                return $this->linked_artifact ?? parent::getLinkedArtifacts($user);
+            }
+
+            /**
+             * @return Artifact[]
+             */
+            public function getLinkedAndReverseArtifacts(PFUser $user): array
+            {
+                return $this->linked_and_reverse_artifact;
             }
 
             public function getCSRFTokenForTrackerViewArtifactManipulation(): \CSRFSynchronizerToken

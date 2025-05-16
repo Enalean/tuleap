@@ -77,7 +77,7 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::TRACKER_NAME     => $this->tracker_name_builder->getResult($select_results),
             AllowedMetadata::PRETTY_TITLE     => $this->pretty_title_builder->getResult($select_results),
 
-            '@artifact'                       => $this->artifact_builder->getResult($select_results),
+            '@artifact'                       => $this->artifact_builder->getResult($select_results, $user),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
