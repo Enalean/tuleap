@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifie
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\DB\DataAccessObject;
 
-final class ArtidocDao extends DataAccessObject implements SearchConfiguredTracker, SaveConfiguredTracker
+final class ArtidocDao extends DataAccessObject implements SearchConfiguredTracker, SaveConfiguredTracker, DeleteConfiguredTracker
 {
     public function __construct(
         private readonly SectionIdentifierFactory $section_identifier_factory,
@@ -160,6 +160,16 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
             WHERE artifact_id = ?
             EOS,
             $artifact_id,
+        );
+    }
+
+    public function deleteConfiguredTracker(int $item_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_artidoc_document_tracker',
+            [
+                'item_id' => $item_id,
+            ]
         );
     }
 }

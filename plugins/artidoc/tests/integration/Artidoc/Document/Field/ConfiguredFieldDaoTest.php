@@ -119,6 +119,15 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
         );
     }
 
+    public function testDeleteConfiguredFieldsByDocumentId(): void
+    {
+        $dao = new ConfiguredFieldDao();
+
+        $dao->deleteConfiguredFieldByArtidocId(self::ITEM_ID_3);
+
+        self::assertEmpty($dao->retrieveConfiguredFieldsFromItemId(self::ITEM_ID_3));
+    }
+
     /**
      * @param list<ArtifactSectionField> $fields_in_item_1
      * @param list<ArtifactSectionField> $fields_in_item_2

@@ -23,12 +23,14 @@
 
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DocumentDeletion\DocmanWikiDeletor;
+use Tuleap\Docman\DocumentDeletion\AfterOtherDocumentDeleted;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Item\OtherDocument;
 
 /**
  * @implements ItemVisitor<bool>
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_ActionsDeleteVisitor implements ItemVisitor
 {
     protected $user;
@@ -117,7 +119,10 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
 
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
-        return $this->visitDocument($item, $params);
+        $this->visitDocument($item, $params);
+        $this->_getEventManager()->processEvent(new AfterOtherDocumentDeleted($item));
+
+        return true;
     }
 
     /**
@@ -160,7 +165,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    public function _deleteItem($item, $params)
+    public function _deleteItem($item, $params) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
             $dIF = $this->_getItemFactory();
@@ -179,7 +184,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @return bool
      * @throws DeleteFailedException
      */
-    public function _deleteFile(Docman_File $item, $params)
+    public function _deleteFile(Docman_File $item, $params) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Delete all versions before
         $version_factory = $this->_getVersionFactory();
@@ -201,20 +206,20 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      *
      * @return bool
      */
-    public function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user)
+    public function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Proceed to deletion
         $version_factory = $this->_getVersionFactory();
         return $version_factory->deleteSpecificVersion($item, $version->getNumber());
     }
 
-    public function _getEventManager()
+    public function _getEventManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return EventManager::instance();
     }
 
     public $version_factory;
-    public function _getVersionFactory()
+    public function _getVersionFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->version_factory) {
             $this->version_factory = new Docman_VersionFactory();
@@ -223,7 +228,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     }
 
     public $item_factory;
-    public function _getItemFactory()
+    public function _getItemFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
@@ -232,7 +237,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     }
 
     public $lock_factory;
-    public function _getLockFactory()
+    public function _getLockFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->lock_factory) {
             $this->lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
@@ -240,12 +245,12 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         return $this->lock_factory;
     }
 
-    public function _getFileStorage()
+    public function _getFileStorage() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_FileStorage();
     }
 
-    public function _getItemDao()
+    public function _getItemDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ItemDao(CodendiDataAccess::instance());
     }

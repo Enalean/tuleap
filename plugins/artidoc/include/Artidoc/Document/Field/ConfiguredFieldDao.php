@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\DB\DataAccessObject;
 
-final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfiguredField, SaveConfiguredFields
+final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfiguredField, SaveConfiguredFields, DeleteDocumentConfiguredFields
 {
     public function retrieveConfiguredFieldsFromItemId(int $item_id): array
     {
@@ -72,6 +72,16 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
             'plugin_artidoc_document_tracker_field',
             [
                 'field_id' => $field_id,
+            ]
+        );
+    }
+
+    public function deleteConfiguredFieldByArtidocId(int $item_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_artidoc_document_tracker_field',
+            [
+                'item_id' => $item_id,
             ]
         );
     }

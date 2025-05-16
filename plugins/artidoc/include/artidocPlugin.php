@@ -31,6 +31,7 @@ use Tuleap\Artidoc\ArtidocAttachmentController;
 use Tuleap\Artidoc\ArtidocController;
 use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
+use Tuleap\Artidoc\Document\ArtidocConfigurationDeletor;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
@@ -55,6 +56,7 @@ use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\DocumentDeletion\AfterOtherDocumentDeleted;
 use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\Item\Icon\DocumentIconPresenterEvent;
@@ -375,6 +377,20 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     {
         if ($event->source instanceof ArtidocDocument && $event->target instanceof ArtidocDocument) {
             $this->getArtidocDao()->cloneItem($event->source->getId(), $event->target->getId());
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function afterOtherDocumentDeleted(AfterOtherDocumentDeleted $event): void
+    {
+        if ($event->item instanceof ArtidocDocument) {
+            $configuration_deletor = new ArtidocConfigurationDeletor(
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                $this->getArtidocDao(),
+                new ConfiguredFieldDao(),
+            );
+
+            $configuration_deletor->deleteArtidocConfiguration($event->item);
         }
     }
 
