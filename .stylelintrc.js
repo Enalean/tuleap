@@ -14,6 +14,7 @@ module.exports = {
     ],
     reportNeedlessDisables: true,
     reportInvalidScopeDisables: true,
+    reportUnscopedDisables: true,
     rules: {
         "comment-word-disallowed-list": [
             [/^!/],

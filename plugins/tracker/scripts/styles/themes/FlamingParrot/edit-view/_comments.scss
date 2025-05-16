@@ -30,8 +30,7 @@ $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $track
 #tracker_artifact_followup_comments {
     left: -12px;
     box-sizing: border-box;
-    width: 960px;
-    /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
+    width: 960px; /* stylelint-disable-line declaration-block-no-duplicate-properties */
     width: 100%;
     margin-top: 30px;
     padding: 30px 12px $tracker-artifact-submit-buttons-height;
