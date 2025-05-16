@@ -32,7 +32,8 @@ CREATE TABLE plugin_onlyoffice_save_document_token(
     user_id INT(11) NOT NULL,
     document_id INT(11) UNSIGNED NOT NULL,
     server_id BINARY(16) NOT NULL,
-    INDEX idx_document_server_id(document_id, server_id)
+    INDEX idx_document_server_id(document_id, server_id),
+    INDEX idx_expiration_date(expiration_date)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_onlyoffice_document_server(
