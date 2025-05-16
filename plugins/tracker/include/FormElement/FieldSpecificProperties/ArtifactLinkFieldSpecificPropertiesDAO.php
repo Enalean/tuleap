@@ -40,8 +40,10 @@ final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject impl
     {
         return $this->getDB()->cell(
             <<<EOS
-            SELECT COUNT(*)
+            SELECT COUNT(DISTINCT tracker.id)
             FROM tracker_field
+                INNER JOIN tracker ON (tracker_field.tracker_id = tracker.id AND tracker.deletion_date IS NULL)
+                INNER JOIN `groups` AS project ON (tracker.group_id = project.group_id AND project.status = 'A')
                 LEFT JOIN plugin_tracker_field_artifact_link
                     ON (tracker_field.id = plugin_tracker_field_artifact_link.field_id)
             WHERE (can_edit_reverse_links IS NULL OR can_edit_reverse_links = 0) AND formElement_type = 'art_link'

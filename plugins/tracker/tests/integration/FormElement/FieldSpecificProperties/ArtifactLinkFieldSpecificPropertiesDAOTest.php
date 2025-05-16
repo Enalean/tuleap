@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
+use Project;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -31,50 +32,103 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
 {
     private ArtifactLinkFieldSpecificPropertiesDAO $dao;
-    private int $artifact_link_field_id;
-    private int $artifact_link_field_id_2;
+    private TrackerDatabaseBuilder $tracker_builder;
+    private CoreDatabaseBuilder $core_builder;
 
     protected function setUp(): void
     {
-        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
-        $tracker_builder = new TrackerDatabaseBuilder($db);
-        $core_builder    = new CoreDatabaseBuilder($db);
-        $this->dao       = new ArtifactLinkFieldSpecificPropertiesDAO();
+        $db                    = DBFactory::getMainTuleapDBConnection()->getDB();
+        $this->tracker_builder = new TrackerDatabaseBuilder($db);
+        $this->core_builder    = new CoreDatabaseBuilder($db);
+        $this->dao             = new ArtifactLinkFieldSpecificPropertiesDAO();
+    }
 
-        $project    = $core_builder->buildProject('project_name');
-        $project_id = (int) $project->getID();
-        $tracker    = $tracker_builder->buildTracker($project_id, 'MyTracker');
+    private function createProjectWithNameAndStatus(string $project_name, string $status): \Project
+    {
+        return $this->core_builder->buildProjectWithStatus($project_name, $status);
+    }
 
-        $this->artifact_link_field_id   = $tracker_builder->buildArtifactLinkField($tracker->getId());
-        $this->artifact_link_field_id_2 = $tracker_builder->buildArtifactLinkField($tracker->getId());
+    private function createTrackerInProject(Project $project, string $name): \Tracker
+    {
+        return $this->tracker_builder->buildTracker((int) $project->getId(), $name);
+    }
+
+    private function createArtifactLinksFieldInTracker(\Tracker $tracker): int
+    {
+        return $this->tracker_builder->buildArtifactLinkField($tracker->getId());
     }
 
     public function testSaveAndSearchProperties(): void
     {
-        $empty_properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
+        $project                = $this->createProjectWithNameAndStatus('Save and search properties', Project::STATUS_ACTIVE);
+        $artifact_link_field_id =  $this->createArtifactLinksFieldInTracker(
+            $this->createTrackerInProject($project, 'Story'),
+        );
+
+        $empty_properties = $this->dao->searchByFieldId($artifact_link_field_id);
         self::assertEmpty($empty_properties);
 
-        $this->dao->saveSpecificProperties($this->artifact_link_field_id, []);
-        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
-        self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 0], $properties);
+        $this->dao->saveSpecificProperties($artifact_link_field_id, []);
+        $properties = $this->dao->searchByFieldId($artifact_link_field_id);
+        self::assertSame(['field_id' => $artifact_link_field_id, 'can_edit_reverse_links' => 0], $properties);
 
-        $this->dao->saveSpecificProperties($this->artifact_link_field_id, ['can_edit_reverse_links' => 1]);
-        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
-        self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 1], $properties);
+        $this->dao->saveSpecificProperties($artifact_link_field_id, ['can_edit_reverse_links' => 1]);
+        $properties = $this->dao->searchByFieldId($artifact_link_field_id);
+        self::assertSame(['field_id' => $artifact_link_field_id, 'can_edit_reverse_links' => 1], $properties);
 
-        $this->dao->saveSpecificProperties($this->artifact_link_field_id, ['can_edit_reverse_links' => 0]);
-        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
-        self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 0], $properties);
+        $this->dao->saveSpecificProperties($artifact_link_field_id, ['can_edit_reverse_links' => 0]);
+        $properties = $this->dao->searchByFieldId($artifact_link_field_id);
+        self::assertSame(['field_id' => $artifact_link_field_id, 'can_edit_reverse_links' => 0], $properties);
     }
 
     public function testDuplicateProperties(): void
     {
-        $this->dao->saveSpecificProperties($this->artifact_link_field_id, ['can_edit_reverse_links' => 1]);
-        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id);
-        self::assertSame(['field_id' => $this->artifact_link_field_id, 'can_edit_reverse_links' => 1], $properties);
+        $source_project    = $this->createProjectWithNameAndStatus('Source project', Project::STATUS_ACTIVE);
+        $duplicate_project = $this->createProjectWithNameAndStatus('Duplicate project', Project::STATUS_ACTIVE);
 
-        $this->dao->duplicate($this->artifact_link_field_id, $this->artifact_link_field_id_2);
-        $properties = $this->dao->searchByFieldId($this->artifact_link_field_id_2);
-        self::assertSame(['field_id' => $this->artifact_link_field_id_2, 'can_edit_reverse_links' => 1], $properties);
+        $source_artifact_link_field_id =  $this->createArtifactLinksFieldInTracker(
+            $this->createTrackerInProject($source_project, 'Bug'),
+        );
+
+        $duplicate_link_field_id =  $this->createArtifactLinksFieldInTracker(
+            $this->createTrackerInProject($duplicate_project, 'Bug2'),
+        );
+
+        $this->dao->saveSpecificProperties($source_artifact_link_field_id, ['can_edit_reverse_links' => 1]);
+        $properties = $this->dao->searchByFieldId($source_artifact_link_field_id);
+        self::assertSame(['field_id' => $source_artifact_link_field_id, 'can_edit_reverse_links' => 1], $properties);
+
+        $this->dao->duplicate($source_artifact_link_field_id, $duplicate_link_field_id);
+        $properties = $this->dao->searchByFieldId($duplicate_link_field_id);
+        self::assertSame(['field_id' => $duplicate_link_field_id, 'can_edit_reverse_links' => 1], $properties);
+    }
+
+    public function testItCountsOnlyActiveTrackersFromActiveProjectsWithAnArtifactLinkField(): void
+    {
+        $tracker_dao = new \TrackerDao();
+
+        $suspended_project = $this->createProjectWithNameAndStatus('Suspended project', Project::STATUS_SUSPENDED);
+
+        $active_tracker_in_suspended_project = $this->createTrackerInProject($suspended_project, 'Active tracker in suspended project');
+        $this->createArtifactLinksFieldInTracker($active_tracker_in_suspended_project);
+
+        $deleted_tracker_in_suspended_project = $this->createTrackerInProject($suspended_project, 'Deleted tracker in suspended project');
+        $tracker_dao->markAsDeleted($deleted_tracker_in_suspended_project->getId());
+        $this->createArtifactLinksFieldInTracker($deleted_tracker_in_suspended_project);
+
+        $active_project = $this->createProjectWithNameAndStatus('Active project', Project::STATUS_ACTIVE);
+
+        $active_tracker_in_active_project = $this->createTrackerInProject($active_project, 'Active tracker in active project');
+        $this->createArtifactLinksFieldInTracker($active_tracker_in_active_project);
+
+        $active_tracker_in_active_project_2 = $this->createTrackerInProject($active_project, 'Second active tracker in active project');
+        $this->createArtifactLinksFieldInTracker($active_tracker_in_active_project_2);
+
+        $deleted_tracker_in_active_project = $this->createTrackerInProject($active_project, 'Deleted tracker in active project');
+        $tracker_dao->markAsDeleted($deleted_tracker_in_active_project->getId());
+        $this->createArtifactLinksFieldInTracker($deleted_tracker_in_active_project);
+        $this->createTrackerInProject($active_project, 'Active tracker without art link field in active project');
+
+        self::assertEquals(2, $this->dao->countNumberOfTrackersWithoutTheFeature());
     }
 }

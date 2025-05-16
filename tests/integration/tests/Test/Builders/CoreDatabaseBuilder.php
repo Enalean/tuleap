@@ -38,10 +38,20 @@ final class CoreDatabaseBuilder
 
     public function buildProject(string $name, string $icon = ''): Project
     {
+        return $this->insertProject($name, $icon, PROJECT::STATUS_ACTIVE);
+    }
+
+    public function buildProjectWithStatus(string $name, string $status): Project
+    {
+        return $this->insertProject($name, '', $status);
+    }
+
+    private function insertProject(string $name, string $icon, string $status): Project
+    {
         $row         = [
             'group_name'      => $name,
             'access'          => 'public',
-            'status'          => 'A',
+            'status'          => $status,
             'unix_group_name' => $name,
             'icon_codepoint'  => $icon,
         ];
