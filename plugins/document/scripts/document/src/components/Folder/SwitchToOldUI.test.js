@@ -18,6 +18,7 @@
  *
  */
 
+import { beforeEach, describe, it, jest } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import SwitchToOldUI from "./SwitchToOldUI.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";

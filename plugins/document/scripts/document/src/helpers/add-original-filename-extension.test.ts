@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { addOriginalFilenameExtension } from "./add-original-filename-extension";
 
 describe("add-original-filename-extension", () => {

@@ -18,6 +18,8 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { describe, expect, it, jest } from "@jest/globals";
+
 const getAllFileVersionHistory = jest.fn();
 const getAllLinkVersionHistory = jest.fn();
 const getAllEmbeddedFileVersionHistory = jest.fn();

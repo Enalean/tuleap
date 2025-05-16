@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookOtherType from "./QuickLookOtherType.vue";
 import type { OtherTypeItem } from "../../type";

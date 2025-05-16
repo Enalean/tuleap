@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import * as lock_rest_querier from "../../api/lock-rest-querier";
 import * as rest_querier from "../../api/rest-querier";
 import { TYPE_EMBEDDED, TYPE_FILE } from "../../constants";

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { Embedded, Empty, Folder, Item, ItemFile, Link, State, Wiki } from "../type";
 import {
     CLIPBOARD_OPERATION_COPY,

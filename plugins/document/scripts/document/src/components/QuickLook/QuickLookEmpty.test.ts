@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookEmpty from "./QuickLookEmpty.vue";
 import { TYPE_EMPTY } from "../../constants";

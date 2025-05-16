@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import type { ConfigurationState } from "../store/configuration";
 import type { Item } from "../type";
 import { canDelete } from "./can-delete-helper";

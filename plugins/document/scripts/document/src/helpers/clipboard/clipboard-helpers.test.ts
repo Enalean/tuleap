@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { isItemDestinationIntoItself } from "./clipboard-helpers";
 import type { Folder, ItemFile } from "../../type";
 

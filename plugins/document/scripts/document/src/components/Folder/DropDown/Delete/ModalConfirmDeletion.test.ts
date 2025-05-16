@@ -18,6 +18,7 @@
  *
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../../constants";

@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "@jest/globals";
 import LinkCellTitle from "./LinkCellTitle.vue";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_LINK } from "../../../constants";

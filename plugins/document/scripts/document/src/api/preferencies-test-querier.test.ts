@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";

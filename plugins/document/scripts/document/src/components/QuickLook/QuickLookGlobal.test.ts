@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_FILE } from "../../constants";
 import QuickLookGlobal from "./QuickLookGlobal.vue";

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import * as actions from "./error-actions";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ActionContext } from "vuex";

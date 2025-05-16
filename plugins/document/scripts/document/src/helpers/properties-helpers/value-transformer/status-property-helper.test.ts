@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import type { Folder, Property, ListValue } from "../../../type";
 import { getItemStatus, updateStatusProperty } from "./status-property-helper";
 

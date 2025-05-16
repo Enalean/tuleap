@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { getErrorMessage, handleErrorForHistoryVersion } from "./error-handler-helper";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { DocumentJsonError, JsonError } from "../../type";

@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import * as version_rest_querier from "../api/version-rest-querier";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_FOLDER, TYPE_LINK } from "../constants";
 import type { FileHistory, Item } from "../type";

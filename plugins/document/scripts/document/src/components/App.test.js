@@ -18,6 +18,7 @@
  *
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { RouterViewStub, shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 

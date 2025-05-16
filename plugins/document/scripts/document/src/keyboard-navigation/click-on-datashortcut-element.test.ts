@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { clickOnDatashortcutElement } from "./click-on-datashortcut-element";
 import * as getter_focused_row from "./get-focused-row";
 

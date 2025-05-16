@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import * as load_folder_content from "./actions-helpers/load-folder-content";
 import * as rest_querier from "../api/rest-querier";
 import * as error_handler from "./actions-helpers/handle-errors";

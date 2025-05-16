@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import type { VueWrapper } from "@vue/test-utils";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
