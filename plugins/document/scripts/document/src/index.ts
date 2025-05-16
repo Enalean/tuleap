@@ -26,7 +26,7 @@ import { createInitializedRouter } from "./router/router";
 import moment from "moment";
 import "moment-timezone";
 import { createPinia } from "pinia";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
 
@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(store);
     const gettext = await initVueGettext(
         createGettext,
-        (locale) => import(`./po/${getPOFileFromLocale(locale)}`),
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const pinia = createPinia();

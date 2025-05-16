@@ -31,8 +31,8 @@ use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;
-use Tuleap\Document\Config\ModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
+use Tuleap\Document\Config\ModalDisplayer;
 use Tuleap\Document\Tree\Create\NewItemAlternativeCollector;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -40,6 +40,8 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -71,6 +73,10 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $is_item_status_used       = $this->isHardcodedMetadataUsed($project, 'status');
         $is_obsolescence_date_used = $this->isHardcodedMetadataUsed($project, 'obsolescence_date');
 
+        $layout->addJavascriptAsset(new JavascriptViteAsset(new IncludeViteAssets(
+            __DIR__ . '/../../scripts/document/frontend-assets',
+            '/assets/document/document'
+        ), 'src/index.ts'));
         $this->includeCssFiles($layout);
         $this->includeHeaderAndNavigationBar($layout, $project);
         $this->includeJavascriptFiles($layout, $request);
@@ -145,7 +151,6 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     {
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $layout->includeFooterJavascriptFile($core_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('document.js'));
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
     }
 
