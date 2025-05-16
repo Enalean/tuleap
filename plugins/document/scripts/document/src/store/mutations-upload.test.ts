@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import * as mutations from "./mutations-upload";
 import type { FakeItem, FileProperties, Folder, ItemFile, State } from "../type";
 

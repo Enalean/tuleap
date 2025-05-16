@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { cancelFileUpload, cancelFolderUpload, cancelVersionUpload } from "./actions-cancel";
 import * as rest_querier from "../api/rest-querier";
 import type { ActionContext } from "vuex";

@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookWiki from "./QuickLookWiki.vue";
 import { TYPE_WIKI } from "../../constants";

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+
 const emitMock = jest.fn();
 
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";

@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import FolderHeader from "./FolderHeader.vue";
 import { TYPE_EMPTY, TYPE_LINK } from "../../constants";

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { Direction } from "../type";
 import { BOTTOM, NEXT, PREVIOUS, TOP } from "../type";
 import { callNavigationShortcut } from "./handle-navigation-shortcut";

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { buildAdvancedSearchParams } from "./build-advanced-search-params";
 import type { AdvancedSearchParams } from "../type";
 

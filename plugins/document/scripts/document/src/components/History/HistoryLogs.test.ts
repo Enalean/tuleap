@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
+
 const getLogs = jest.fn();
 
 import type { LogEntry } from "../../api/log-rest-querier";

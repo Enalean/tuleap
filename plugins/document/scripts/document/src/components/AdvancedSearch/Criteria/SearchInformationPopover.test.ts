@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";

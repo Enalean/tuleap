@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookEmbedded from "./QuickLookEmbedded.vue";
 import { TYPE_EMBEDDED } from "../../constants";

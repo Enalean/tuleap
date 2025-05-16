@@ -18,6 +18,7 @@
  *
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
 import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../../constants";

@@ -18,6 +18,7 @@
  *
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";

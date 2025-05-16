@@ -18,6 +18,8 @@
  *
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+
 const getEmbeddedFileVersionContent = jest.fn();
 
 import { okAsync } from "neverthrow";

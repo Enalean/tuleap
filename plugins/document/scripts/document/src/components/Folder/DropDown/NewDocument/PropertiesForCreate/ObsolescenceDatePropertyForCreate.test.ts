@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ObsolescenceDatePropertyForCreate from "./ObsolescenceDatePropertyForCreate.vue";

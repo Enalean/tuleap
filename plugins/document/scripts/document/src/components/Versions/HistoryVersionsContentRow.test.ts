@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { Modal } from "@tuleap/tlp-modal";
 
 jest.mock("@tuleap/tlp-modal", () => {

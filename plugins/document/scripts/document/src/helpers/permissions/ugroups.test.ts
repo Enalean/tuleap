@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
 import * as rest_querier from "../../api/rest-querier";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "./ugroups";
 import type { UserGroup } from "../../type";

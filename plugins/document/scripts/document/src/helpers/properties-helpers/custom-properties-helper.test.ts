@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { getCustomProperties } from "./custom-properties-helper";
 import type { Property, ItemFile } from "../../type";
 

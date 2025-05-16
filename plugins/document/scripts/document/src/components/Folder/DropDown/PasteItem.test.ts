@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { ConfigurationState } from "../../../store/configuration";
 
 const emitMock = jest.fn();
