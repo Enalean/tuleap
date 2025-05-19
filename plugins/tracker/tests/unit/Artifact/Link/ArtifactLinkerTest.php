@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
@@ -44,15 +45,13 @@ final class ArtifactLinkerTest extends TestCase
     private RetrieveUsedArtifactLinkFieldsStub $form_element_factory;
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveForwardLinksStub $links_retriever;
-
-    private \PFUser $user;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::aUser()->build();
-
-        $artifact_link_field        = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
-        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::withAField($artifact_link_field);
+        $this->tracker              = TrackerTestBuilder::aTracker()->withId(93)->build();
+        $artifact_link_field        = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->inTracker($this->tracker)->build();
+        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::withFields($artifact_link_field);
         $this->changeset_creator    = CreateNewChangesetStub::withNullReturnChangeset();
         $this->links_retriever      = RetrieveForwardLinksStub::withLinks(
             new CollectionOfForwardLinks([ForwardLinkStub::withNoType(10)])
@@ -61,7 +60,7 @@ final class ArtifactLinkerTest extends TestCase
 
     private function linkArtifact(): bool
     {
-        $artifact         = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->build();
+        $artifact         = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->inTracker($this->tracker)->build();
         $linked_artifacts = new CollectionOfForwardLinks([ForwardLinkStub::withNoType(18)]);
 
         $artifact_linker = new ArtifactLinker(
@@ -69,7 +68,7 @@ final class ArtifactLinkerTest extends TestCase
             $this->changeset_creator,
             $this->links_retriever,
         );
-        return $artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user);
+        return $artifact_linker->linkArtifact($artifact, $linked_artifacts, UserTestBuilder::buildWithDefaults());
     }
 
     public function testItReturnsFalseAndDisplayAnErrorWhenNoArtifactLinkFieldsAreUsed(): void

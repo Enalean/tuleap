@@ -30,8 +30,10 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
@@ -40,7 +42,7 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 {
     private const ADDED_ARTIFACT_ID     = 245;
-    private const ADDED_TYPE            = 'is_child';
+    private const ADDED_TYPE            = ArtifactLinkField::TYPE_IS_CHILD;
     private const ADDED_ARTIFACT_ID_2   = 271;
     private const CHANGED_ARTIFACT_ID   = 857;
     private const CHANGED_TYPE          = 'custom';
@@ -81,7 +83,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
             ]),
             new CollectionOfReverseLinks([
                 ReverseLinkStub::withNoType(self::CHANGED_ARTIFACT_ID),
-                ReverseLinkStub::withType(self::REMOVED_ARTIFACT_ID, '_is_child'),
+                ReverseLinkStub::withType(self::REMOVED_ARTIFACT_ID, ArtifactLinkField::TYPE_IS_CHILD),
             ])
         );
     }
@@ -116,15 +118,18 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 
     public function testAddReturnsErrWhenUserCannotReadSourceArtifactOfReverseLink(): void
     {
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withNoArtifact();
+
         $result = $this->convertAdd();
         self::assertTrue(Result::isErr($result));
     }
 
     public function testAddReturnsErrWhenNoArtifactLinkFieldInSourceOfReverseLink(): void
     {
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withArtifacts(
             ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID)->build(),
         );
+        $this->field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withNoField();
 
         $result = $this->convertAdd();
         self::assertTrue(Result::isErr($result));
@@ -132,13 +137,15 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 
     public function testAddReturnsANewChangesetForEachReverseLink(): void
     {
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
-            ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID)->build(),
-            ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID_2)->build(),
+        $first_tracker            = TrackerTestBuilder::aTracker()->withId(51)->build();
+        $second_tracker           = TrackerTestBuilder::aTracker()->withId(115)->build();
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withArtifacts(
+            ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID)->inTracker($first_tracker)->build(),
+            ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID_2)->inTracker($second_tracker)->build(),
         );
-        $this->field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withSuccessiveFields(
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ADDED_LINK_FIELD_ID)->build(),
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ADDED_LINK_FIELD_ID)->build(),
+        $this->field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ADDED_LINK_FIELD_ID)->inTracker($first_tracker)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ADDED_LINK_FIELD_ID)->inTracker($second_tracker)->build(),
         );
 
         $result = $this->convertAdd();
@@ -169,7 +176,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
             self::ADDED_LINK_FIELD_ID => [
                 'new_values'     => (string) self::TARGET_ARTIFACT_ID,
                 'removed_values' => [],
-                'types'          => [self::TARGET_ARTIFACT_ID => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE],
+                'types'          => [self::TARGET_ARTIFACT_ID => ArtifactLinkField::NO_TYPE],
             ],
         ], $second_added_changeset->getFieldsData());
     }
@@ -201,15 +208,18 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 
     public function testItReturnsErrWhenUserCannotReadSourceArtifactOfReverseLink(): void
     {
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withNoArtifact();
+
         $result = $this->convertChange();
         self::assertTrue(Result::isErr($result));
     }
 
     public function testItReturnsErrWhenNoArtifactLinkFieldInSourceOfReverseLink(): void
     {
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withArtifacts(
             ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID)->build(),
         );
+        $this->field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withNoField();
 
         $result = $this->convertChange();
         self::assertTrue(Result::isErr($result));
@@ -217,15 +227,18 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 
     public function testItReturnsANewChangesetForEachReverseLink(): void
     {
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
-            ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID)->build(),
-            ArtifactTestBuilder::anArtifact(self::CHANGED_ARTIFACT_ID)->build(),
-            ArtifactTestBuilder::anArtifact(self::REMOVED_ARTIFACT_ID)->build(),
+        $tracker_added            = TrackerTestBuilder::aTracker()->withId(48)->build();
+        $tracker_changed          = TrackerTestBuilder::aTracker()->withId(33)->build();
+        $tracker_removed          = TrackerTestBuilder::aTracker()->withId(76)->build();
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withArtifacts(
+            ArtifactTestBuilder::anArtifact(self::ADDED_ARTIFACT_ID)->inTracker($tracker_added)->build(),
+            ArtifactTestBuilder::anArtifact(self::CHANGED_ARTIFACT_ID)->inTracker($tracker_changed)->build(),
+            ArtifactTestBuilder::anArtifact(self::REMOVED_ARTIFACT_ID)->inTracker($tracker_removed)->build(),
         );
-        $this->field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withSuccessiveFields(
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ADDED_LINK_FIELD_ID)->build(),
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::CHANGED_LINK_FIELD_ID)->build(),
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::REMOVED_LINK_FIELD_ID)->build(),
+        $this->field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ADDED_LINK_FIELD_ID)->inTracker($tracker_added)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::CHANGED_LINK_FIELD_ID)->inTracker($tracker_changed)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::REMOVED_LINK_FIELD_ID)->inTracker($tracker_removed)->build(),
         );
 
         $result = $this->convertChange();
@@ -244,7 +257,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
             self::ADDED_LINK_FIELD_ID => [
                 'new_values'     => (string) self::TARGET_ARTIFACT_ID,
                 'removed_values' => [],
-                'types'          => [self::TARGET_ARTIFACT_ID => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE],
+                'types'          => [self::TARGET_ARTIFACT_ID => ArtifactLinkField::NO_TYPE],
             ],
         ], $new_changeset_add_link->getFieldsData());
 
