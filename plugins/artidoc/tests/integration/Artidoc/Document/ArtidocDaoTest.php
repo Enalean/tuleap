@@ -188,6 +188,17 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         SectionsAsserter::assertSectionsForDocument($this->artidoc_103, []);
     }
 
+    public function testDeleteConfiguredTracker(): void
+    {
+        $dao = $this->getDao();
+
+        $dao->saveTracker($this->artidoc_101->document->getId(), 1001);
+        self::assertSame(1001, $dao->getTracker($this->artidoc_101->document->getId()));
+
+        $dao->deleteConfiguredTracker($this->artidoc_101->document->getId());
+        self::assertNull($dao->getTracker($this->artidoc_101->document->getId()));
+    }
+
     private function getDao(): ArtidocDao
     {
         return new ArtidocDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
