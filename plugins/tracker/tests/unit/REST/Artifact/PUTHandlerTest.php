@@ -186,11 +186,12 @@ final class PUTHandlerTest extends TestCase
     public function testItLinksTheArtifactWithForwardAndReverseLink(): void
     {
         $reverse_artifact_id        = 34;
-        $this->artifact_retriever   = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
-            ArtifactTestBuilder::anArtifact($reverse_artifact_id)->build(),
+        $tracker                    = TrackerTestBuilder::aTracker()->withId(63)->build();
+        $this->artifact_retriever   = RetrieveViewableArtifactStub::withArtifacts(
+            ArtifactTestBuilder::anArtifact($reverse_artifact_id)->inTracker($tracker)->build(),
         );
-        $this->link_field_retriever = RetrieveUsedArtifactLinkFieldsStub::withSuccessiveFields(
-            ArtifactLinkFieldBuilder::anArtifactLinkField(234)->build(),
+        $this->link_field_retriever = RetrieveUsedArtifactLinkFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(234)->inTracker($tracker)->build(),
         );
 
         $this->payload = [

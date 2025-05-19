@@ -24,36 +24,35 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class RetrieveViewableArtifactStub implements \Tuleap\Tracker\Artifact\RetrieveViewableArtifact
+final readonly class RetrieveViewableArtifactStub implements \Tuleap\Tracker\Artifact\RetrieveViewableArtifact
 {
     /**
-     * @param list<Artifact> $return_values
+     * @param list<Artifact> $artifacts
      */
-    private function __construct(private bool $return_null, private array $return_values)
+    private function __construct(private array $artifacts)
     {
     }
 
     /**
      * @no-named-arguments
      */
-    public static function withSuccessiveArtifacts(Artifact $artifact, Artifact ...$other_artifacts): self
+    public static function withArtifacts(Artifact $artifact, Artifact ...$other_artifacts): self
     {
-        return new self(false, [$artifact, ...$other_artifacts]);
+        return new self([$artifact, ...$other_artifacts]);
     }
 
     public static function withNoArtifact(): self
     {
-        return new self(true, []);
+        return new self([]);
     }
 
     public function getArtifactByIdUserCanView(\PFUser $user, int $id): ?Artifact
     {
-        if ($this->return_null) {
-            return null;
+        foreach ($this->artifacts as $artifact) {
+            if ($artifact->getId() === $id) {
+                return $artifact;
+            }
         }
-        if (count($this->return_values) > 0) {
-            return array_shift($this->return_values);
-        }
-        throw new \LogicException('No artifact configured');
+        return null;
     }
 }

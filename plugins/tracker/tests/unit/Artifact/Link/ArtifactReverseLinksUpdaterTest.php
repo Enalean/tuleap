@@ -38,9 +38,11 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
@@ -79,13 +81,14 @@ final class ArtifactReverseLinksUpdaterTest extends TestCase
         $submitter       = UserTestBuilder::buildWithDefaults();
         $submission_date = new \DateTimeImmutable();
 
-        $artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
-            ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build(),
-            ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID_2)->build(),
+        $tracker            = TrackerTestBuilder::aTracker()->withId(69)->build();
+        $artifact_retriever = RetrieveViewableArtifactStub::withArtifacts(
+            ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->inTracker($tracker)->build(),
+            ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID_2)->inTracker($tracker)->build(),
         );
-        $field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withSuccessiveFields(
-            ArtifactLinkFieldBuilder::anArtifactLinkField(417)->build(),
-            ArtifactLinkFieldBuilder::anArtifactLinkField(169)->build(),
+        $field_retriever    = RetrieveUsedArtifactLinkFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(417)->inTracker($tracker)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(169)->inTracker($tracker)->build(),
         );
 
         $handler = new ArtifactReverseLinksUpdater(
@@ -127,7 +130,7 @@ final class ArtifactReverseLinksUpdaterTest extends TestCase
     public function testWhenReverseLinksDidNotChangeItOnlyUpdatesGivenArtifact(): void
     {
         $reverse_links                 = new CollectionOfReverseLinks([
-            ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, '_is_child'),
+            ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, ArtifactLinkField::TYPE_IS_CHILD),
             ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID_2),
         ]);
         $this->reverse_links_retriever = RetrieveReverseLinksStub::withLinks($reverse_links);
@@ -154,7 +157,7 @@ final class ArtifactReverseLinksUpdaterTest extends TestCase
                 Option::nothing(NewParentLink::class),
                 Option::fromValue(
                     new CollectionOfReverseLinks([
-                        ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, '_is_child'),
+                        ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, ArtifactLinkField::TYPE_IS_CHILD),
                         ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID_2),
                     ])
                 )
@@ -185,7 +188,7 @@ final class ArtifactReverseLinksUpdaterTest extends TestCase
                 Option::nothing(NewParentLink::class),
                 Option::fromValue(
                     new CollectionOfReverseLinks([
-                        ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, '_is_child'),
+                        ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, ArtifactLinkField::TYPE_IS_CHILD),
                         ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID_2),
                     ])
                 )

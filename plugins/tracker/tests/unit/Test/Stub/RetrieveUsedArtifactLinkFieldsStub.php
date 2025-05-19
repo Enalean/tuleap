@@ -22,48 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 
-final class RetrieveUsedArtifactLinkFieldsStub implements RetrieveUsedArtifactLinkFields
+final readonly class RetrieveUsedArtifactLinkFieldsStub implements RetrieveUsedArtifactLinkFields
 {
     /**
-     * @param list<\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField> $return_values
+     * @param list<ArtifactLinkField> $fields
      */
-    private function __construct(private bool $return_empty, private array $return_values)
+    private function __construct(private array $fields)
     {
     }
 
     /**
-     * @return array{0?: \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField}
+     * @return array{0?: ArtifactLinkField}
      */
     public function getUsedArtifactLinkFields(\Tracker $tracker): array
     {
-        if ($this->return_empty) {
-            return [];
+        foreach ($this->fields as $field) {
+            if ($field->getTrackerId() === $tracker->getId()) {
+                return [$field];
+            }
         }
-        if (count($this->return_values) > 0) {
-            return [array_shift($this->return_values)];
-        }
-        throw new \LogicException('No artifact link field configured');
+        return [];
     }
 
     public static function withNoField(): self
     {
-        return new self(true, []);
-    }
-
-    public static function withAField(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $field): self
-    {
-        return new self(false, [$field]);
+        return new self([]);
     }
 
     /**
      * @no-named-arguments
      */
-    public static function withSuccessiveFields(
-        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $first_field,
-        \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField ...$other_fields,
-    ): self {
-        return new self(false, [$first_field, ...$other_fields]);
+    public static function withFields(ArtifactLinkField $first_field, ArtifactLinkField ...$other_fields): self
+    {
+        return new self([$first_field, ...$other_fields]);
     }
 }
