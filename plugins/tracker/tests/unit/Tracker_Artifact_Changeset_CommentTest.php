@@ -20,41 +20,43 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\Artifact\Artifact;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
 
-    /**
-     * @var string
-     */
-    private $timestamp;
+    private string $timestamp = '1433863107';
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
+    private Tracker_Artifact_Changeset $changeset;
+    private UserManager&MockObject $user_manager;
 
     protected function setUp(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-        $user->shouldReceive('getLdapId')->andReturn('ldap_01');
-        $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $user = UserTestBuilder::aUser()
+            ->withId(101)
+            ->withLdapId('ldap_01')
+            ->withAvatarUrl('/path/to/avatar.png')
+            ->build();
+
+        $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();
         $this->timestamp = '1433863107';
 
-        $this->user_manager = Mockery::mock(\UserManager::class);
-        $this->user_manager->shouldReceive('getUserById')->withArgs([101])->andReturn($user);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $this->user_manager->method('getUserById')->with(101)->willReturn($user);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
 
         $GLOBALS['Language']->method('getText')->willReturn('');
+        UserManager::setInstance($this->user_manager);
+    }
+
+    protected function tearDown(): void
+    {
+        UserManager::clearInstance();
+        Codendi_HTMLPurifier::clearInstance();
     }
 
     public function testItExportsToXMLWithoutPrivateUGroupsIfNoUGroup(): void
@@ -78,7 +80,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 <comments/>';
 
         $changeset_node    = new SimpleXMLElement($xml);
-        $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, $this->stubCollection());
 
         $comment->exportToXML($changeset_node, $user_xml_exporter);
 
@@ -96,6 +98,14 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         $this->assertEquals((string) $changeset_node->comment->body, $body);
         $this->assertEquals($changeset_node->comment->body['format'], 'html');
         $this->assertFalse(isset($changeset_node->comment->private_ugroups));
+    }
+
+    private function stubCollection(): \UserXMLExportedCollection
+    {
+        $collection = $this->createMock(\UserXMLExportedCollection::class);
+        $collection->method('add');
+
+        return $collection;
     }
 
     public function testItExportsToXMLWithoutPrivateUGroupsIfUgroupIsNull(): void
@@ -119,7 +129,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 <comments/>';
 
         $changeset_node    = new SimpleXMLElement($xml);
-        $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, $this->stubCollection());
 
         $comment->exportToXML($changeset_node, $user_xml_exporter);
 
@@ -141,9 +151,11 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
 
     public function testItExportsToXMLWithPrivateUGroups(): void
     {
-        $ugroup_1 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_1']);
-        $ugroup_2 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_2']);
-        $body     = '<b> My comment 01</b>';
+        $ugroup_1 = $this->createMock(ProjectUGroup::class);
+        $ugroup_1->method('getNormalizedName')->willReturn('ugroup_1');
+        $ugroup_2 = $this->createMock(ProjectUGroup::class);
+        $ugroup_2->method('getNormalizedName')->willReturn('ugroup_2');
+        $body = '<b> My comment 01</b>';
 
         $comment = new Tracker_Artifact_Changeset_Comment(
             1,
@@ -162,7 +174,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 <comments/>';
 
         $changeset_node    = new SimpleXMLElement($xml);
-        $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, $this->stubCollection());
 
         $comment->exportToXML($changeset_node, $user_xml_exporter);
 
@@ -207,7 +219,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
                 <comments/>';
 
         $changeset_node    = new SimpleXMLElement($xml);
-        $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, $this->stubCollection());
 
         $comment->exportToXML($changeset_node, $user_xml_exporter);
 
@@ -229,72 +241,60 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
 
     public function testItReturnsEmptyWhenFormatIsTextAndWhenItHasEmptyBody(): void
     {
-        $comment = Mockery::mock(
-            Tracker_Artifact_Changeset_Comment::class,
-            [
-                1,
-                $this->changeset,
-                0,
-                0,
-                101,
-                $this->timestamp,
-                '',
-                'text',
-                0,
-                [],
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $comment = new Tracker_Artifact_Changeset_Comment(
+            1,
+            $this->changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            '',
+            'text',
+            0,
+            [],
+        );
 
         $this->assertEquals('', $comment->fetchMailFollowUp('text'));
     }
 
     public function testItClearsComment(): void
     {
-        $comment = Mockery::mock(
-            Tracker_Artifact_Changeset_Comment::class,
-            [
-                1,
-                $this->changeset,
-                0,
-                0,
-                101,
-                $this->timestamp,
-                ' ',
-                'html',
-                1234,
-                [],
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-        $user    = $this->getAMockedUser();
-        $comment->shouldReceive('getCurrentUser')->andReturn($user);
+        $comment = new Tracker_Artifact_Changeset_Comment(
+            1,
+            $this->changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            ' ',
+            'html',
+            1234,
+            [],
+        );
 
         $this->assertStringContainsString('Comment has been cleared', $comment->fetchMailFollowUp());
     }
 
     public function testItDisplayStandardComment(): void
     {
-        $changeset = $this->buildChangeset();
+        $changeset = $this->changeset;
         $body      = 'See art #290';
-        $comment   = Mockery::mock(
-            Tracker_Artifact_Changeset_Comment::class,
-            [
-                1,
-                $changeset,
-                0,
-                0,
-                101,
-                $this->timestamp,
-                $body,
-                'html',
-                0,
-                [],
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-        $user      = $this->getAMockedUser();
-        $comment->shouldReceive('getCurrentUser')->andReturn($user);
-        $purifier = Mockery::mock(Codendi_HTMLPurifier::class);
-        $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn($body);
-        $comment->shouldReceive('getPurifier')->andReturn($purifier);
+        $comment   = new Tracker_Artifact_Changeset_Comment(
+            1,
+            $changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            $body,
+            'html',
+            0,
+            [],
+        );
+        $purifier  = $this->createMock(Codendi_HTMLPurifier::class);
+        $purifier->method('purify');
+        $purifier->method('purifyHTMLWithReferences')->willReturn($body);
+        Codendi_HTMLPurifier::setInstance($purifier);
 
         $follow_up = $comment->fetchMailFollowUp();
         $this->assertStringNotContainsString('Comment has been cleared', $follow_up);
@@ -303,58 +303,25 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
 
     public function testItDisplayEditedComment(): void
     {
-        $changeset = $this->buildChangeset();
+        $changeset = $this->changeset;
         $body      = 'See art #290';
-        $comment   = Mockery::mock(
-            Tracker_Artifact_Changeset_Comment::class,
-            [
-                1,
-                $changeset,
-                0,
-                0,
-                101,
-                $this->timestamp,
-                $body,
-                'html',
-                1234,
-                [],
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-        $user      = $this->getAMockedUser();
-        $comment->shouldReceive('getCurrentUser')->andReturn($user);
-        $purifier = Mockery::mock(Codendi_HTMLPurifier::class);
-        $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn($body);
-        $comment->shouldReceive('getPurifier')->andReturn($purifier);
+        $comment   = new Tracker_Artifact_Changeset_Comment(
+            1,
+            $changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            $body,
+            'html',
+            1234,
+            [],
+        );
+        $purifier  = $this->createMock(Codendi_HTMLPurifier::class);
+        $purifier->method('purify');
+        $purifier->method('purifyHTMLWithReferences')->willReturn($body);
+        Codendi_HTMLPurifier::setInstance($purifier);
 
         $this->assertStringContainsString('Updated comment', $comment->fetchMailFollowUp());
-    }
-
-    private function getAMockedUser()
-    {
-        $user = Mockery::mock(PFUser::class);
-
-        $user->shouldReceive('fetchHtmlAvatar')->once();
-        $user->shouldReceive('getTimezone');
-        $user->shouldReceive('getId')->once();
-        $user->shouldReceive('getEmail')->once();
-        $user->shouldReceive('getRealName')->once();
-        $user->shouldReceive('getUserName')->once();
-        $user->shouldReceive('isAnonymous')->once()->andReturnFalse();
-        return $user;
-    }
-
-    private function buildChangeset(): \Tracker_Artifact_Changeset
-    {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        return new \Tracker_Artifact_Changeset(
-            1001,
-            $artifact,
-            110,
-            1234567890,
-            null
-        );
     }
 }
