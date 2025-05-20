@@ -4418,6 +4418,16 @@ msgid ""
 "'assigned to group' permission"
 msgstr ""
 
+#, php-format
+msgid "You tried to create a link to Artifact #%s, but it could not be found."
+msgstr ""
+
+#, php-format
+msgid ""
+"You tried to create a link to Artifact #%s, but there is no artifact links "
+"field in its tracker."
+msgstr ""
+
 msgid ""
 "You will be notified for any changes if you make a comment or change a value "
 "in an artifact."

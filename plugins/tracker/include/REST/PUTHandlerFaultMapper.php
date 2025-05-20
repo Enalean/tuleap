@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST;
 
 use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\Changeset\NoChangeFault;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
@@ -39,11 +40,28 @@ final class PUTHandlerFaultMapper
             //Do nothing
             return;
         }
-        $status_code = match ($fault::class) {
-            ArtifactDoesNotExistFault::class,
-            ArtifactLinkFieldDoesNotExistFault::class => 400,
-            default => 500,
+        throw match ($fault::class) {
+            ArtifactDoesNotExistFault::class => new I18NRestException(
+                400,
+                sprintf(
+                    dgettext(
+                        'tuleap-tracker',
+                        'You tried to create a link to Artifact #%s, but it could not be found.'
+                    ),
+                    $fault->artifact_id
+                )
+            ),
+            ArtifactLinkFieldDoesNotExistFault::class => new I18NRestException(
+                400,
+                sprintf(
+                    dgettext(
+                        'tuleap-tracker',
+                        'You tried to create a link to Artifact #%s, but there is no artifact links field in its tracker.'
+                    ),
+                    $fault->artifact_id
+                )
+            ),
+            default => new RestException(500, (string) $fault)
         };
-        throw new RestException($status_code, (string) $fault);
     }
 }
