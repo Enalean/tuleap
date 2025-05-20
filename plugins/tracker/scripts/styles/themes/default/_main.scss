@@ -573,8 +573,7 @@ button[name="tracker_query_submit"] {
                 border-left: 1px solid #dddddd;
                 background: #eeeeee;
                 font-size: 0.8em;
-                font-weight: normal;
-                /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
+                font-weight: normal; /* stylelint-disable-line declaration-block-no-duplicate-properties */
                 font-weight: bold;
                 text-transform: uppercase;
                 vertical-align: middle;
@@ -2140,8 +2139,8 @@ td.first-column {
     width: 100%;
     padding: 20px 0;
     border-top: 1px solid #e0e0e0;
-    background: rgb(255 255 255 / 95%);
     /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
+    background: rgb(255 255 255 / 95%);
     background: #ffffff;
     text-align: center;
 

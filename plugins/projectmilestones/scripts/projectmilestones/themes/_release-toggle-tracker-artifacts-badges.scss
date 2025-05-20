@@ -67,7 +67,7 @@ body.theme-condensed .release-number-artifacts-value {
         display: inline-block;
         width: max-content;
         max-width: 160px;
-        padding: calc(var(--tlp-small-spacing) / 2) 0 calc(var(--tlp-small-spacing) / 2) 0;
+        padding: calc(var(--tlp-small-spacing) / 2) 0;
         overflow: hidden;
         color: map.get($colors, "text");
         text-overflow: ellipsis;
