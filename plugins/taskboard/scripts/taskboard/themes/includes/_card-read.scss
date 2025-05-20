@@ -206,7 +206,7 @@ a.taskboard-card-xref {
 .taskboard-card-label {
     font-size: 0.875rem;
     line-height: 1.125rem;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .taskboard-card-accessibility {

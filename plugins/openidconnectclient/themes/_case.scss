@@ -23,8 +23,8 @@
     $index: string.index($string, "-");
 
     @if $index {
-        @return str-slice($string, 1, $index - 1) + "_" +
-            to-snake-case(str-slice($string, $index + str-length("-")));
+        @return string.slice($string, 1, $index - 1) + "_" +
+            to-snake-case(string.slice($string, $index + string.length("-")));
     }
 
     @return $string;

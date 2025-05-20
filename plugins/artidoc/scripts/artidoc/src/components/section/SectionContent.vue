@@ -237,7 +237,7 @@ artidoc-section-description,
 section {
     display: grid;
     grid-template-columns: auto whitespace.$section-right-padding;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .artidoc-dropdown-container {

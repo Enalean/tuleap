@@ -31,7 +31,7 @@
 
 #document-owner > .document-badge-avatar > .document-badge-avatar-username {
     color: var(--tlp-main-color);
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .document-quick-look-property-empty {
@@ -41,5 +41,5 @@
 
 #item-description,
 .document-quick-look-properties-column > .tlp-property > p {
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
