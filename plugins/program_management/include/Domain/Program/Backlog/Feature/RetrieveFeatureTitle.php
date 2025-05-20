@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
 interface RetrieveFeatureTitle
 {
-    public function getFeatureTitle(FeatureIdentifier $feature_identifier): ?string;
+    public function getFeatureTitle(FeatureIdentifier $feature_identifier, UserIdentifier $user_identifier): ?string;
 }

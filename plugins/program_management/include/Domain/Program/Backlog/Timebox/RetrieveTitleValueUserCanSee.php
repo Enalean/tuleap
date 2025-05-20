@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface RetrieveTitleValueUserCanSee
 {
-    public function getTitle(TimeboxIdentifier $timebox_identifier): ?string;
+    public function getTitle(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?string;
 }

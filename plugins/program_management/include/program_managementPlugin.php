@@ -623,7 +623,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $artifact_visible_verifier,
                 new ProgramIncrementRetriever(
                     new StatusValueRetriever($artifact_retriever, $user_retriever),
-                    new TitleValueRetriever($artifact_retriever),
+                    new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance()),
                     new TimeframeValueRetriever(
                         $artifact_retriever,
                         $user_retriever,
@@ -668,6 +668,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
         $project_manager_adapter  = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
         $program_dao              = new ProgramDaoProject();
+        $title_retriever          = new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance());
         $program_adapter          = CachedProgramBuilder::instance();
 
         $project_access_checker = new ProjectAccessChecker(
@@ -690,7 +691,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new ProgramIncrementInfoBuilder(
                 new ProgramIncrementRetriever(
                     new StatusValueRetriever($artifact_retriever, $user_retriever),
-                    new TitleValueRetriever($artifact_retriever),
+                    $title_retriever,
                     new TimeframeValueRetriever(
                         $artifact_retriever,
                         $user_retriever,
@@ -722,7 +723,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $this->getVisibleIterationTrackerRetriever($user_retriever),
             new IterationsDAO(),
             new UserPreferenceRetriever($user_retriever),
-            new TitleValueRetriever($artifact_retriever)
+            $title_retriever
         );
     }
 
@@ -857,7 +858,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                         $artifact_visible_verifier,
                         new ProgramIncrementRetriever(
                             new StatusValueRetriever($artifact_retriever, $user_retriever),
-                            new TitleValueRetriever($artifact_retriever),
+                            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance()),
                             new TimeframeValueRetriever(
                                 $artifact_retriever,
                                 $user_retriever,

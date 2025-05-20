@@ -55,7 +55,7 @@ final class Iteration
         UserIdentifier $user_identifier,
         IterationIdentifier $iteration_identifier,
     ): ?self {
-        $title = $retrieve_title_value->getTitle($iteration_identifier);
+        $title = $retrieve_title_value->getTitle($iteration_identifier, $user_identifier);
         if (! $title) {
             return null;
         }

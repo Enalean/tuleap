@@ -29,7 +29,6 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\IterationView\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerConfiguration;
@@ -39,6 +38,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgra
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
@@ -47,6 +47,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUserPreference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserPreference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -71,7 +72,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
         private RetrieveIterationLabels $retrieve_iteration_labels,
         private RetrieveUserPreference $retrieve_user_preference,
-        private TitleValueRetriever $title_value_retriever,
+        private RetrieveTitleValueUserCanSee $title_value_retriever,
     ) {
     }
 
@@ -151,7 +152,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         }
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->getAssets(), 'src/index.ts'));
-        $this->includeHeaderAndNavigationBar($layout, $project, $increment_identifier);
+        $this->includeHeaderAndNavigationBar($layout, $project, $increment_identifier, $user_identifier);
 
         $this->template_renderer->renderToPage(
             'plan-iterations',
@@ -165,8 +166,9 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         BaseLayout $layout,
         Project $project,
         ProgramIncrementIdentifier $increment_identifier,
+        UserIdentifier $user_identifier,
     ): void {
-        $program_increment_title = (string) $this->title_value_retriever->getTitle($increment_identifier);
+        $program_increment_title = (string) $this->title_value_retriever->getTitle($increment_identifier, $user_identifier);
         $project_title           = $project->getPublicName();
         $title                   = sprintf(
             dgettext(

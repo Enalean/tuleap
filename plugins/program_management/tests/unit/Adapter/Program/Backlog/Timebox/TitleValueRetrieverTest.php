@@ -26,40 +26,93 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TitleValueRetrieverTest extends TestCase
 {
     private const ARTIFACT_ID = 1;
     private const TITLE       = 'Unawful paramine';
+    private \PFUser $user;
+    private bool $is_title_semantic_defined = true;
+    private bool $can_user_read_title_field = true;
+
+    protected function setUp(): void
+    {
+        $this->user = UserTestBuilder::aUser()->build();
+    }
 
     private function getRetriever(): TitleValueRetriever
     {
-        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
             ->withTitle(self::TITLE)
+            ->withChangesets($changeset)
             ->build();
 
-        return new TitleValueRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
+        $title_field = StringFieldBuilder::aStringField(1230)->inTracker($artifact->getTracker())->withReadPermission($this->user, $this->can_user_read_title_field)->build();
+        $changeset->setFieldValue(
+            $title_field,
+            ChangesetValueStringTestBuilder::aValue(1, $changeset, $title_field)->withValue(self::TITLE)->build(),
+        );
+
+        return new TitleValueRetriever(
+            RetrieveFullArtifactStub::withArtifact($artifact),
+            RetrieveUserStub::withUser($this->user),
+            $this->is_title_semantic_defined ? GetTitleSemanticStub::withTextField($title_field) : GetTitleSemanticStub::withoutTextField(),
+        );
     }
 
     public function testItReturnsTitleOfTimebox(): void
     {
         $artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
-        self::assertSame(self::TITLE, $this->getRetriever()->getTitle($artifact_identifier));
+        $user_identifier     = UserIdentifierStub::withId((int) $this->user->getId());
+
+        self::assertSame(self::TITLE, $this->getRetriever()->getTitle($artifact_identifier, $user_identifier));
     }
 
     public function testItReturnsTitleOfUserStory(): void
     {
         $user_story_identifier = UserStoryIdentifierBuilder::withId(self::ARTIFACT_ID);
-        self::assertSame(self::TITLE, $this->getRetriever()->getUserStoryTitle($user_story_identifier));
+        $user_identifier       = UserIdentifierStub::withId((int) $this->user->getId());
+
+        self::assertSame(self::TITLE, $this->getRetriever()->getUserStoryTitle($user_story_identifier, $user_identifier));
     }
 
     public function testItReturnsTitleOfFeature(): void
     {
         $feature_identifier = FeatureIdentifierBuilder::withId(self::ARTIFACT_ID);
-        self::assertSame(self::TITLE, $this->getRetriever()->getFeatureTitle($feature_identifier));
+        $user_identifier    = UserIdentifierStub::withId((int) $this->user->getId());
+
+        self::assertSame(self::TITLE, $this->getRetriever()->getFeatureTitle($feature_identifier, $user_identifier));
+    }
+
+    public function testItReturnsNullWhenUserCannotReadTitleField(): void
+    {
+        $timebox_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
+        $user_identifier    = UserIdentifierStub::withId((int) $this->user->getId());
+
+        $this->can_user_read_title_field = false;
+
+        self::assertNull($this->getRetriever()->getTitle($timebox_identifier, $user_identifier));
+    }
+
+    public function testItReturnsNullWhenTitleSemanticIsNotDefined(): void
+    {
+        $timebox_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
+        $user_identifier    = UserIdentifierStub::withId((int) $this->user->getId());
+
+        $this->is_title_semantic_defined = false;
+
+        self::assertNull($this->getRetriever()->getTitle($timebox_identifier, $user_identifier));
     }
 }

@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
 interface RetrieveUserStoryTitle
 {
-    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier): ?string;
+    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier, UserIdentifier $user_identifier): ?string;
 }

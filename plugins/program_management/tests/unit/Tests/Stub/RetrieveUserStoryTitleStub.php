@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveUserStoryTitleStub implements RetrieveUserStoryTitle
 {
@@ -45,7 +46,7 @@ final class RetrieveUserStoryTitleStub implements RetrieveUserStoryTitle
         return new self([$first_title, ...$other_titles]);
     }
 
-    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier): ?string
+    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier, UserIdentifier $user_identifier): ?string
     {
         if (count($this->titles) > 0) {
             return array_shift($this->titles);

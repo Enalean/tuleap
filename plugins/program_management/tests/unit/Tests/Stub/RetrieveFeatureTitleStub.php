@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureTitle;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveFeatureTitleStub implements RetrieveFeatureTitle
 {
@@ -49,7 +50,7 @@ final class RetrieveFeatureTitleStub implements RetrieveFeatureTitle
         return new self([]);
     }
 
-    public function getFeatureTitle(FeatureIdentifier $feature_identifier): ?string
+    public function getFeatureTitle(FeatureIdentifier $feature_identifier, UserIdentifier $user_identifier): ?string
     {
         if (count($this->titles) > 0) {
             return array_shift($this->titles);
