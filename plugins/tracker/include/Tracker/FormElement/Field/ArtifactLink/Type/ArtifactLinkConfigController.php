@@ -93,7 +93,7 @@ final readonly class ArtifactLinkConfigController
 
     public function activateNewInterface(\HTTPRequest $request, BaseLayout $layout): void
     {
-        $this->new_artifact_link_interface->activateForEveryExistingTrackers();
+        $this->new_artifact_link_interface->massActivateForActiveTrackers();
         $layout->addFeedback(
             Feedback::SUCCESS,
             dgettext('tuleap-tracker', 'The new interface has been successfully activated for all trackers.')

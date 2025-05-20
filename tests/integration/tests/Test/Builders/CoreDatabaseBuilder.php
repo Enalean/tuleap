@@ -27,13 +27,15 @@ use Project;
 use Tuleap\Project\UserPermissionsDao;
 use UserManager;
 
-final class CoreDatabaseBuilder
+final readonly class CoreDatabaseBuilder
 {
     private UserPermissionsDao $user_permissions_dao;
+    private \ProjectDao $project_dao;
 
-    public function __construct(private readonly EasyDB $db)
+    public function __construct(private EasyDB $db)
     {
         $this->user_permissions_dao = new UserPermissionsDao();
+        $this->project_dao          = new \ProjectDao();
     }
 
     public function buildProject(string $name, string $icon = ''): Project
@@ -41,11 +43,17 @@ final class CoreDatabaseBuilder
         return $this->insertProject($name, $icon, PROJECT::STATUS_ACTIVE);
     }
 
+    /**
+     * @psalm-param Project::STATUS_ACTIVE|Project::STATUS_PENDING|Project::STATUS_SUSPENDED|Project::STATUS_DELETED $status
+     */
     public function buildProjectWithStatus(string $name, string $status): Project
     {
         return $this->insertProject($name, '', $status);
     }
 
+    /**
+     * @psalm-param Project::STATUS_ACTIVE|Project::STATUS_PENDING|Project::STATUS_SUSPENDED|Project::STATUS_DELETED $status
+     */
     private function insertProject(string $name, string $icon, string $status): Project
     {
         $row         = [
@@ -59,9 +67,16 @@ final class CoreDatabaseBuilder
             'groups',
             $row
         );
-        $dao         = new \ProjectDao();
-        $project_row = $dao->searchById($project_id);
+        $project_row = $this->project_dao->searchById($project_id);
         return new Project($project_row->getRow());
+    }
+
+    /**
+     * @psalm-param Project::STATUS_ACTIVE|Project::STATUS_PENDING|Project::STATUS_SUSPENDED|Project::STATUS_DELETED $new_status
+     */
+    public function changeProjectStatus(Project $project, string $new_status): void
+    {
+        $this->project_dao->updateStatus($project->getID(), $new_status);
     }
 
     public function buildUser(string $user_name, string $real_name, string $email): \PFUser
