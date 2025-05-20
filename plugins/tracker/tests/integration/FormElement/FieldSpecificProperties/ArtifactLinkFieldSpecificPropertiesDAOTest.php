@@ -43,11 +43,6 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         $this->dao             = new ArtifactLinkFieldSpecificPropertiesDAO();
     }
 
-    private function createProjectWithNameAndStatus(string $project_name, string $status): \Project
-    {
-        return $this->core_builder->buildProjectWithStatus($project_name, $status);
-    }
-
     private function createTrackerInProject(Project $project, string $name): \Tracker
     {
         return $this->tracker_builder->buildTracker((int) $project->getId(), $name);
@@ -60,7 +55,10 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
 
     public function testSaveAndSearchProperties(): void
     {
-        $project                = $this->createProjectWithNameAndStatus('Save and search properties', Project::STATUS_ACTIVE);
+        $project                = $this->core_builder->buildProjectWithStatus(
+            'Save and search properties',
+            Project::STATUS_ACTIVE
+        );
         $artifact_link_field_id =  $this->createArtifactLinksFieldInTracker(
             $this->createTrackerInProject($project, 'Story'),
         );
@@ -83,8 +81,8 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
 
     public function testDuplicateProperties(): void
     {
-        $source_project    = $this->createProjectWithNameAndStatus('Source project', Project::STATUS_ACTIVE);
-        $duplicate_project = $this->createProjectWithNameAndStatus('Duplicate project', Project::STATUS_ACTIVE);
+        $source_project    = $this->core_builder->buildProjectWithStatus('Source project', Project::STATUS_ACTIVE);
+        $duplicate_project = $this->core_builder->buildProjectWithStatus('Duplicate project', Project::STATUS_ACTIVE);
 
         $source_artifact_link_field_id =  $this->createArtifactLinksFieldInTracker(
             $this->createTrackerInProject($source_project, 'Bug'),
@@ -103,11 +101,11 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         self::assertSame(['field_id' => $duplicate_link_field_id, 'can_edit_reverse_links' => 1], $properties);
     }
 
-    public function testItCountsOnlyActiveTrackersFromActiveProjectsWithAnArtifactLinkField(): void
+    public function testItCountsAndActivatesOnlyActiveTrackersFromActiveProjectsWithAnArtifactLinkField(): void
     {
         $tracker_dao = new \TrackerDao();
 
-        $suspended_project = $this->createProjectWithNameAndStatus('Suspended project', Project::STATUS_SUSPENDED);
+        $suspended_project = $this->core_builder->buildProjectWithStatus('Suspended project', Project::STATUS_SUSPENDED);
 
         $active_tracker_in_suspended_project = $this->createTrackerInProject($suspended_project, 'Active tracker in suspended project');
         $this->createArtifactLinksFieldInTracker($active_tracker_in_suspended_project);
@@ -116,7 +114,7 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         $tracker_dao->markAsDeleted($deleted_tracker_in_suspended_project->getId());
         $this->createArtifactLinksFieldInTracker($deleted_tracker_in_suspended_project);
 
-        $active_project = $this->createProjectWithNameAndStatus('Active project', Project::STATUS_ACTIVE);
+        $active_project = $this->core_builder->buildProjectWithStatus('Active project', Project::STATUS_ACTIVE);
 
         $active_tracker_in_active_project = $this->createTrackerInProject($active_project, 'Active tracker in active project');
         $this->createArtifactLinksFieldInTracker($active_tracker_in_active_project);
@@ -129,6 +127,14 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         $this->createArtifactLinksFieldInTracker($deleted_tracker_in_active_project);
         $this->createTrackerInProject($active_project, 'Active tracker without art link field in active project');
 
-        self::assertEquals(2, $this->dao->countNumberOfTrackersWithoutTheFeature());
+        self::assertSame(2, $this->dao->countNumberOfTrackersWithoutTheFeature());
+
+        $this->dao->massActivateForActiveTrackers();
+
+        self::assertSame(0, $this->dao->countNumberOfTrackersWithoutTheFeature());
+
+        $this->core_builder->changeProjectStatus($suspended_project, Project::STATUS_ACTIVE);
+
+        self::assertSame(1, $this->dao->countNumberOfTrackersWithoutTheFeature());
     }
 }
