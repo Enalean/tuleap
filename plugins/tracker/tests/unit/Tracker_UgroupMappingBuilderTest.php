@@ -24,34 +24,46 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_UgroupMappingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class Tracker_UgroupMappingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testItBuildsAMappingBasedOnTheNames(): void
     {
-        $template_ugroup_dev     = Mockery::mock(\ProjectUGroup::class)->shouldReceive('getName')->andReturns('dev')->getMock();
-        $template_ugroup_support = Mockery::mock(\ProjectUGroup::class)->shouldReceive('getName')->andReturns('support')->getMock();
-        $template_ugroup_staff   = Mockery::mock(\ProjectUGroup::class)->shouldReceive('getName')->andReturns('staff')->getMock();
-        $target_ugroup_dev       = Mockery::mock(\ProjectUGroup::class)->shouldReceive('getName')->andReturns('DEV')->getMock();
-        $target_ugroup_support   = Mockery::mock(\ProjectUGroup::class)->shouldReceive('getName')->andReturns('support')->getMock();
-        $target_ugroup_client    = Mockery::mock(\ProjectUGroup::class)->shouldReceive('getName')->andReturns('client')->getMock();
+        $template_ugroup_dev = $this->createMock(\ProjectUGroup::class);
+        $template_ugroup_dev->method('getName')->willReturn('dev');
 
-        $template_ugroup_support->shouldReceive('getId')->andReturns(1001);
-        $target_ugroup_support->shouldReceive('getId')->andReturns(1002);
+        $template_ugroup_support = $this->createMock(\ProjectUGroup::class);
+        $template_ugroup_support->method('getName')->willReturn('support');
 
-        $template_project      = Mockery::mock((\Project::class))->shouldReceive('getId')->andReturns(103)->getMock();
-        $template_tracker      = Mockery::mock(Tracker::class)->shouldReceive('getProject')->andReturn($template_project)->getMock();
-        $target_project        = Mockery::mock((\Project::class))->shouldReceive('getId')->andReturns(104)->getMock();
-        $ugroup_manager        = \Mockery::spy(\UGroupManager::class);
-        $permissions_retriever = \Mockery::spy(\Tracker_UgroupPermissionsGoldenRetriever::class);
+        $template_ugroup_staff = $this->createMock(\ProjectUGroup::class);
+        $template_ugroup_staff->method('getName')->willReturn('staff');
 
-        $permissions_retriever->shouldReceive('getListOfInvolvedStaticUgroups')->with($template_tracker)->andReturns([$template_ugroup_dev,
+        $target_ugroup_dev = $this->createMock(\ProjectUGroup::class);
+        $target_ugroup_dev->method('getName')->willReturn('DEV');
+
+        $target_ugroup_support = $this->createMock(\ProjectUGroup::class);
+        $target_ugroup_support->method('getName')->willReturn('support');
+
+        $target_ugroup_client = $this->createMock(\ProjectUGroup::class);
+        $target_ugroup_client->method('getName')->willReturn('client');
+
+
+        $template_ugroup_support->method('getId')->willReturn(1001);
+        $target_ugroup_support->method('getId')->willReturn(1002);
+
+        $template_project      = ProjectTestBuilder::aProject()->withId(103)->build();
+        $template_tracker      = TrackerTestBuilder::aTracker()->withProject($template_project)->build();
+        $target_project        = ProjectTestBuilder::aProject()->withId(104)->build();
+        $ugroup_manager        = $this->createMock(\UGroupManager::class);
+        $permissions_retriever = $this->createMock(\Tracker_UgroupPermissionsGoldenRetriever::class);
+
+        $permissions_retriever->method('getListOfInvolvedStaticUgroups')->with($template_tracker)->willReturn([$template_ugroup_dev,
             $template_ugroup_support, $template_ugroup_staff,
         ]);
-        $ugroup_manager->shouldReceive('getStaticUGroups')->with($target_project)->andReturns([$target_ugroup_dev,
+        $ugroup_manager->method('getStaticUGroups')->with($target_project)->willReturn([$target_ugroup_dev,
             $target_ugroup_support, $target_ugroup_client,
         ]);
 

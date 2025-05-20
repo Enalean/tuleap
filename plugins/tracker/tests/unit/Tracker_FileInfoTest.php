@@ -21,25 +21,19 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+use PHPUnit\Framework\MockObject\MockObject;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
 
-    private $fixture_data_dir;
-    private $working_directory;
-    /** @var Tracker_FormElement_Field_File */
-    private $field;
-    /** @var Tracker_FileInfo */
-    private $file_info_1;
-    /** @var Tracker_FileInfo */
-    private $file_info_2;
-    /**
-     * @var string
-     */
-    private $thumbnails_dir;
+    private string $fixture_data_dir;
+    private string $working_directory;
+    private Tracker_FormElement_Field_File&MockObject $field;
+    private Tracker_FileInfo $file_info_1;
+    private Tracker_FileInfo $file_info_2;
+    private string $thumbnails_dir;
 
     protected function setUp(): void
     {
@@ -48,9 +42,9 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->working_directory = \org\bovigo\vfs\vfsStream::setup()->url();
         $this->thumbnails_dir    = $this->working_directory . '/thumbnails';
         mkdir($this->thumbnails_dir);
-        $this->field = \Mockery::spy(\Tracker_FormElement_Field_File::class);
-        $this->field->shouldReceive('getId')->andReturns($field_id);
-        $this->field->shouldReceive('getRootPath')->andReturns($this->working_directory);
+        $this->field = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $this->field->method('getId')->willReturn($field_id);
+        $this->field->method('getRootPath')->willReturn($this->working_directory);
 
         $id                = 1;
         $submitted_by      = 103;
@@ -89,7 +83,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderIsImage')]
     public function testIsImage(string $filetype, bool $is_image): void
     {
-        $fi = new Tracker_FileInfo(1, Mockery::mock(Tracker_FormElement_Field::class), 102, 'description', 'image', 10, $filetype);
+        $fi = new Tracker_FileInfo(1, $this->createMock(Tracker_FormElement_Field::class), 102, 'description', 'image', 10, $filetype);
 
         $this->assertEquals($is_image, $fi->isImage());
     }
@@ -110,7 +104,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderHumanReadableFilesize')]
     public function testHumanReadableFilesize(int $size, string $expected_human_readable_filesize): void
     {
-        $f = new Tracker_FileInfo(1, Mockery::mock(Tracker_FormElement_Field::class), 102, 'description', 'name', $size, 'text/plain');
+        $f = new Tracker_FileInfo(1, $this->createMock(Tracker_FormElement_Field::class), 102, 'description', 'name', $size, 'text/plain');
         $this->assertEquals($expected_human_readable_filesize, $f->getHumanReadableFilesize());
     }
 
@@ -133,9 +127,9 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesThumbnailForPng(): void
     {
-        $backend = \Mockery::mock(Backend::class);
+        $backend = $this->createMock(Backend::class);
         Backend::setInstance(Backend::BACKEND, $backend);
-        $backend->shouldReceive('changeOwnerGroupMode');
+        $backend->method('changeOwnerGroupMode');
 
         copy($this->fixture_data_dir . '/logo.png', $this->working_directory . '/66');
 
@@ -159,9 +153,9 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesThumbnailForGif(): void
     {
-        $backend = \Mockery::mock(Backend::class);
+        $backend = $this->createMock(Backend::class);
         Backend::setInstance(Backend::BACKEND, $backend);
-        $backend->shouldReceive('changeOwnerGroupMode');
+        $backend->method('changeOwnerGroupMode');
 
         copy($this->fixture_data_dir . '/logo.gif', $this->working_directory . '/111');
 
@@ -186,9 +180,9 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesThumbnailForJpeg(): void
     {
-        $backend = \Mockery::mock(Backend::class);
+        $backend = $this->createMock(Backend::class);
         Backend::setInstance(Backend::BACKEND, $backend);
-        $backend->shouldReceive('changeOwnerGroupMode');
+        $backend->method('changeOwnerGroupMode');
 
         copy($this->fixture_data_dir . '/logo.jpg', $this->working_directory . '/421');
 
@@ -213,7 +207,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItEnsuresFilesIsOwnedByHttpUser(): void
     {
-        $backend = \Mockery::mock(Backend::class);
+        $backend = $this->createMock(Backend::class);
         Backend::setInstance(Backend::BACKEND, $backend);
 
         copy($this->fixture_data_dir . '/logo.jpg', $this->working_directory . '/421');
@@ -221,7 +215,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_info_1 = new Tracker_FileInfo(421, $this->field, 0, '', '', '', 'image/jpg');
         ForgeConfig::set('sys_http_user', 'user');
 
-        $backend->shouldReceive('changeOwnerGroupMode')->with($this->working_directory . '/421', 'user', 'user', 0644)->once();
+        $backend->expects($this->once())->method('changeOwnerGroupMode')->with($this->working_directory . '/421', 'user', 'user', 0644);
 
         $file_info_1->postUploadActions();
     }

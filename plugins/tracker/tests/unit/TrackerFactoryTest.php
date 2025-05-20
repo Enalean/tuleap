@@ -23,57 +23,43 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TrackerFactory;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\Mock | TrackerFactory
-     */
-    private $tracker_factory;
-
-    protected function setUp(): void
-    {
-        $this->tracker_factory = \Mockery::mock(TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-    }
-
     public function testItCollectErrors(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn('Tracker name');
-        $tracker->shouldReceive('getItemName')->andReturn('Item name');
         $trackers = [
-            $tracker,
+            TrackerTestBuilder::aTracker()->withName('Tracker name')->build(),
         ];
 
-        $checker = \Mockery::mock(TrackerCreationDataChecker::class);
-        $checker->shouldReceive('areMandatoryCreationInformationValid')->andReturnFalse();
-        $this->tracker_factory->shouldReceive('getTrackerChecker')->andReturn($checker);
+        $checker = $this->createMock(TrackerCreationDataChecker::class);
+        $checker->method('areMandatoryCreationInformationValid')->willReturn(false);
 
-        $result = $this->tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo($trackers, 101);
+        $tracker_factory = $this->createPartialMock(TrackerFactory::class, ['getTrackerChecker']);
+        $tracker_factory->method('getTrackerChecker')->willReturn($checker);
+
+        $result = $tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo($trackers, 101);
 
         $this->assertEquals(['Tracker name'], $result);
     }
 
     public function testItDoesNotHaveErrorIfEverythingIsValid(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn('Tracker name');
-        $tracker->shouldReceive('getItemName')->andReturn('Item name');
         $trackers = [
-            $tracker,
+            TrackerTestBuilder::aTracker()->withName('Tracker name')->build(),
         ];
 
-        $checker = \Mockery::mock(TrackerCreationDataChecker::class);
-        $checker->shouldReceive('areMandatoryCreationInformationValid')->andReturnTrue();
-        $this->tracker_factory->shouldReceive('getTrackerChecker')->andReturn($checker);
+        $checker = $this->createMock(TrackerCreationDataChecker::class);
+        $checker->method('areMandatoryCreationInformationValid')->willReturn(true);
 
-        $result = $this->tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo($trackers, 101);
+        $tracker_factory = $this->createPartialMock(TrackerFactory::class, ['getTrackerChecker']);
+        $tracker_factory->method('getTrackerChecker')->willReturn($checker);
+
+        $result = $tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo($trackers, 101);
 
         $this->assertEquals([], $result);
     }

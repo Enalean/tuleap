@@ -21,13 +21,15 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalResponseMock;
 
     public function testValidateField(): void
     {
@@ -68,17 +70,16 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
             [1, 1, 1, 1, 'V', 1, 1],
         ];
 
-        $artifact_update = Mockery::mock(Artifact::class);
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
+        $artifact_update = $this->createMock(Artifact::class);
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
 
         foreach ($matrix as $case) {
             $this->setUp();
 
-            $field = Mockery::mock(Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods(
-            );
-            $field->shouldReceive('getId')->andReturn(101);
-            $field->shouldReceive('getLabel')->andReturn('Summary');
-            $field->shouldReceive('getName')->andReturn('summary');
+            $field = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getId', 'getLabel', 'getName', 'userCanUpdate', 'isRequired', 'isValid', 'setHasErrors']);
+            $field->method('getId')->willReturn(101);
+            $field->method('getLabel')->willReturn('Summary');
+            $field->method('getName')->willReturn('summary');
 
             if ($case[0]) {
                 $last_changeset_value = $changeset_value;
@@ -91,41 +92,41 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
                 $submitted_value = null; //null === no submitted value /!\ != from '' or '0' /!\
             }
             if ($case[2]) {
-                $field->shouldReceive('userCanUpdate')->andReturn(true);
+                $field->method('userCanUpdate')->willReturn(true);
             } else {
-                $field->shouldReceive('userCanUpdate')->andReturn(false);
+                $field->method('userCanUpdate')->willReturn(false);
             }
             if ($case[3]) {
-                $field->shouldReceive('isRequired')->andReturn(true);
+                $field->method('isRequired')->willReturn(true);
             } else {
-                $field->shouldReceive('isRequired')->andReturn(false);
+                $field->method('isRequired')->willReturn(false);
             }
             // 4 => Is valid?
             switch ((string) $case[4]) {
                 // no need to check
                 case '-':
-                    $field->shouldReceive('isValid')->never();
-                    $field->shouldReceive('setHasErrors')->never();
+                    $field->expects($this->never())->method('isValid');
+                    $field->expects($this->never())->method('setHasErrors');
                     $is_valid = true;
                     break;
                 // Error due to required
                 case 'R':
-                    $field->shouldReceive('isValid')->never();
-                    $field->shouldReceive('setHasErrors')->andReturn([true]);
+                    $field->expects($this->never())->method('isValid');
+                    $field->method('setHasErrors')->willReturn([true]);
                     $GLOBALS['Response']->method('addFeedback')->with('error');
                     $is_valid = false;
                     break;
                 // Error due to perms
                 case 'P':
-                    $field->shouldReceive('isValid')->never();
-                    $field->shouldReceive('setHasErrors')->andReturn([true]);
+                    $field->expects($this->never())->method('isValid');
+                    $field->method('setHasErrors')->willReturn([true]);
                     $GLOBALS['Response']->method('addFeedback')->with('error');
                     $is_valid = false;
                     break;
                 // Depends on field->isValid()
                 case 'V':
-                    $field->shouldReceive('isValid')->once()->andReturn(true);
-                    $field->shouldReceive('setHasErrors')->never();
+                    $field->expects($this->once())->method('isValid')->willReturn(true);
+                    $field->expects($this->never())->method('setHasErrors');
                     $is_valid = true;
                     break;
                 default:
@@ -135,7 +136,7 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
             $result = $field->validateFieldWithPermissionsAndRequiredStatus(
                 $artifact_update,
                 $submitted_value,
-                Mockery::mock(PFUser::class),
+                $this->createMock(PFUser::class),
                 $last_changeset_value
             );
             $this->assertEquals($is_valid, $result);
@@ -144,13 +145,11 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     public function testIsValidNotRequired(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $field    = Mockery::mock(Tracker_FormElement_Field::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getLabel')->andReturn('Status');
-        $field->shouldReceive('isRequired')->andReturn(false);
-        $field->shouldReceive('validate')->withArgs([Mockery::any(), ''])->andReturn(true);
-        $field->shouldReceive('validate')->withArgs([Mockery::any(), '123'])->andReturn(false);
+        $artifact = $this->createMock(Artifact::class);
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getLabel', 'getName', 'isRequired', 'validate']);
+        $field->method('getLabel')->willReturn('Status');
+        $field->method('isRequired')->willReturn(false);
+        $field->method('validate')->willReturnCallback(static fn (Artifact $artifact, mixed $value) => $value === '');
 
         $this->assertFalse($field->hasErrors());
 
@@ -163,13 +162,12 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     public function testIsValidRequired(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $field    = Mockery::mock(Tracker_FormElement_Field::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getLabel')->andReturn('Status');
-        $field->shouldReceive('getName')->andReturn('status');
-        $field->shouldReceive('isRequired')->andReturn(true)->twice();
-        $field->shouldReceive('validate')->andReturn(true)->once();
+        $artifact = $this->createMock(Artifact::class);
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getLabel', 'getName', 'isRequired', 'validate']);
+        $field->method('getLabel')->willReturn('Status');
+        $field->method('getName')->willReturn('status');
+        $field->expects($this->exactly(2))->method('isRequired')->willReturn(true);
+        $field->expects($this->once())->method('validate')->willReturn(true);
 
         $this->assertFalse($field->hasErrors());
 
@@ -185,8 +183,7 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     public function itReturnsTheValueIndexedByFieldName(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
+        $field = StringFieldBuilder::aStringField(101)->build();
 
         $value = [
             'field_id' => 587,

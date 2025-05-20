@@ -19,137 +19,142 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_URLTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
     private PFUser $user;
-    /**
-     * @var Artifact&\Mockery\MockInterface
-     */
-    private $artifact;
-    /**
-     * @var Tracker_Report&\Mockery\MockInterface
-     */
-    private $report;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    private $tracker;
-    /**
-     * @var Tracker_FormElement_Interface&\Mockery\MockInterface
-     */
-    private $formElement;
-    /**
-     * @var \Mockery\MockInterface&Tracker_URL
-     */
-    private $url;
+    private Tracker_URL&MockObject $url;
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(666)->build();
 
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $af             = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $af->shouldReceive('getArtifactById')->with('1')->andReturns($this->artifact);
+        $tracker = TrackerTestBuilder::aTracker()->withUserCanView(true)->build();
 
-        $this->report = \Mockery::spy(\Tracker_Report::class);
-        $rf           = \Mockery::spy(\Tracker_ReportFactory::class);
-        $rf->shouldReceive('getReportById')->with('2', $this->user->getId(), true)->andReturns($this->report);
+        $tracker_factory = $this->createMock(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->with(3)->willReturn($tracker);
 
-        $this->tracker = \Mockery::spy(\Tracker::class);
-        $this->tracker->shouldReceive('isActive')->andReturns(true);
-        $this->tracker->shouldReceive('userCanView')->andReturns(true);
-        $tf = \Mockery::spy(\TrackerFactory::class);
-        $tf->shouldReceive('getTrackerById')->with(3)->andReturns($this->tracker);
+        $report = $this->createMock(\Tracker_Report::class);
+        $report->method('getTracker')->willReturn($tracker);
 
-        $this->formElement = \Mockery::spy(\Tracker_FormElement_Interface::class);
-        $ff                = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $ff->shouldReceive('getFormElementById')->with('4')->andReturns($this->formElement);
+        $report_factory = $this->createMock(\Tracker_ReportFactory::class);
+        $report_factory->method('getReportById')->with('2', $this->user->getId(), true)->willReturn($report);
 
-        $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->report->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->formElement->shouldReceive('getTracker')->andReturns($this->tracker);
+        $form_element = DateFieldBuilder::aDateField(4)->inTracker($tracker)->build();
 
-        $this->url = \Mockery::mock(\Tracker_URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->url->shouldReceive('getTrackerFactory')->andReturns($tf);
-        $this->url->shouldReceive('getTracker_FormElementFactory')->andReturns($ff);
-        $this->url->shouldReceive('getArtifactFactory')->andReturns($af);
-        $this->url->shouldReceive('getArtifactReportFactory')->andReturns($rf);
+        $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $form_element_factory->method('getFormElementById')->with($form_element->getId())->willReturn($form_element);
+
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
+
+        $artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
+        $artifact_factory->method('getArtifactById')->with(1)->willReturn($artifact);
+
+        $this->url = $this->createPartialMock(\Tracker_URL::class, [
+            'getTrackerFactory',
+            'getTracker_FormElementFactory',
+            'getArtifactFactory',
+            'getArtifactReportFactory',
+        ]);
+        $this->url->method('getTrackerFactory')->willReturn($tracker_factory);
+        $this->url->method('getTracker_FormElementFactory')->willReturn($form_element_factory);
+        $this->url->method('getArtifactFactory')->willReturn($artifact_factory);
+        $this->url->method('getArtifactReportFactory')->willReturn($report_factory);
     }
 
-    public function testGetArtifact()
+    public function testGetArtifact(): void
     {
-        $request_artifact = \Mockery::spy(\Codendi_Request::class);
-        $request_artifact->shouldReceive('get')->with('aid')->andReturns('1');
-        $request_artifact->shouldReceive('get')->with('report')->andReturns('2');
-        $request_artifact->shouldReceive('get')->with('tracker')->andReturns(3);
-        $request_artifact->shouldReceive('get')->with('formElement')->andReturns('4');
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
+        $request_artifact = HTTPRequestBuilder::get()
+            ->withParams([
+                'aid' => '1',
+                'report' => '2',
+                'tracker' => '3',
+                'formElement' => '4',
+                'group_id' => '5',
+            ])->build();
+
         $this->assertInstanceOf(
             Artifact::class,
             $this->url->getDispatchableFromRequest($request_artifact, $this->user),
         );
     }
 
-    public function testGetReport()
+    public function testGetReport(): void
     {
-        $request_artifact = \Mockery::spy(\Codendi_Request::class);
-        $request_artifact->shouldReceive('get')->with('report')->andReturns('2');
-        $request_artifact->shouldReceive('get')->with('tracker')->andReturns(3);
-        $request_artifact->shouldReceive('get')->with('formElement')->andReturns('4');
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
+        $request_artifact = HTTPRequestBuilder::get()
+            ->withParams([
+                'report' => '2',
+                'tracker' => '3',
+                'formElement' => '4',
+                'group_id' => '5',
+            ])->build();
+
         $this->assertInstanceOf(
             Tracker_Report::class,
             $this->url->getDispatchableFromRequest($request_artifact, $this->user),
         );
     }
 
-    public function testGetTracker()
+    public function testGetTracker(): void
     {
-        $request_artifact = \Mockery::spy(\Codendi_Request::class);
-        $request_artifact->shouldReceive('get')->with('tracker')->andReturns(3);
-        $request_artifact->shouldReceive('get')->with('formElement')->andReturns('4');
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
+        $request_artifact = HTTPRequestBuilder::get()
+            ->withParams([
+                'tracker' => '3',
+                'formElement' => '4',
+                'group_id' => '5',
+            ])->build();
+
         $this->assertInstanceOf(
             Tracker::class,
             $this->url->getDispatchableFromRequest($request_artifact, $this->user)
         );
     }
 
-    public function testGetTrackerWithAtid()
+    public function testGetTrackerWithAtid(): void
     {
-        $request_artifact = \Mockery::spy(\Codendi_Request::class);
-        $request_artifact->shouldReceive('get')->with('atid')->andReturns(3);
-        $request_artifact->shouldReceive('get')->with('formElement')->andReturns('4');
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
+        $request_artifact = HTTPRequestBuilder::get()
+            ->withParams([
+                'atid' => '3',
+                'formElement' => '4',
+                'group_id' => '5',
+            ])->build();
+
         $this->assertInstanceOf(
             Tracker::class,
             $this->url->getDispatchableFromRequest($request_artifact, $this->user)
         );
     }
 
-    public function testGetField()
+    public function testGetField(): void
     {
-        $request_artifact = \Mockery::spy(\Codendi_Request::class);
-        $request_artifact->shouldReceive('get')->with('formElement')->andReturns('4');
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
+        $request_artifact = HTTPRequestBuilder::get()
+            ->withParams([
+                'formElement' => '4',
+                'group_id' => '5',
+            ])->build();
+
         $this->assertInstanceOf(
             Tracker_FormElement_Interface::class,
             $this->url->getDispatchableFromRequest($request_artifact, $this->user),
         );
     }
 
-    public function testGetNotMatchingElement()
+    public function testGetNotMatchingElement(): void
     {
-        $request_artifact = \Mockery::spy(\Codendi_Request::class);
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
+        $request_artifact = HTTPRequestBuilder::get()
+            ->withParams([
+                'group_id' => '5',
+            ])->build();
+
 
         $this->expectException(Tracker_NoMachingResourceException::class);
 

@@ -20,62 +20,38 @@
 
 declare(strict_types=1);
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var Tracker_ReferenceManager
-     */
-    private $tracker_reference_manager;
-    /**
-     * @var string
-     */
-    private $keyword;
-    /**
-     * @var int
-     */
-    private $artifact_id;
-    /**
-     * @var Artifact
-     */
-    private $artifact;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private Tracker_ReferenceManager $tracker_reference_manager;
+    private string $keyword  = 'art';
+    private int $artifact_id = 101;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->reference_manager = \Mockery::spy(\ReferenceManager::class);
-        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
 
         $this->tracker_reference_manager = new Tracker_ReferenceManager(
-            $this->reference_manager,
+            ReferenceManager::instance(),
             $this->artifact_factory
         );
 
-        $this->keyword     = 'art';
-        $this->artifact_id = 101;
-        $tracker           = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $tracker->shouldReceive('getName')->andReturn('My tracker');
-        $this->artifact = new Artifact($this->artifact_id, 101, null, 10, null);
+        $tracker        = TrackerTestBuilder::aTracker()->build();
+        $this->artifact = new Artifact($this->artifact_id, $tracker->getId(), null, 10, null);
         $this->artifact->setTracker($tracker);
     }
 
     public function testItReturnsNullIfThereIsNoArtifactMatching(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(101)->andReturns(null);
+        $this->artifact_factory->method('getArtifactById')->with(101)->willReturn(null);
 
         $reference = $this->tracker_reference_manager->getReference(
             $this->keyword,
@@ -87,7 +63,7 @@ final class Tracker_ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheTV5LinkIfIdIsMatching(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(101)->andReturns($this->artifact);
+        $this->artifact_factory->method('getArtifactById')->with(101)->willReturn($this->artifact);
 
         $reference = $this->tracker_reference_manager->getReference(
             $this->keyword,
