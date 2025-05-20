@@ -26,18 +26,17 @@ use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
+use Tuleap\Tracker\Artifact\Changeset\NoChangeFault;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
-use Tuleap\Tracker\REST\FaultMapper;
-use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
+use Tuleap\Tracker\REST\PUTHandlerFaultMapper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class FaultMapperTest extends TestCase
+final class PUTHandlerFaultMapperTest extends TestCase
 {
     public static function dataProviderFaults(): iterable
     {
         yield 'Artifact does not exists' => [ArtifactDoesNotExistFault::build(10), 400];
         yield 'Artifact link field does not exist' => [ArtifactLinkFieldDoesNotExistFault::build(15), 400];
-        yield 'Semantic is not supported' => [SemanticNotSupportedFault::fromSemanticName('status'), 400];
         yield 'Default to error 500 for unknown Fault' => [Fault::fromMessage('Unmapped fault'), 500];
     }
 
@@ -46,6 +45,12 @@ final class FaultMapperTest extends TestCase
     {
         $this->expectException(RestException::class);
         $this->expectExceptionCode($expected_status_code);
-        FaultMapper::mapToRestException($fault);
+        PUTHandlerFaultMapper::mapToRestException($fault);
+    }
+
+    public function testItIgnoresNoChangeFault(): void
+    {
+        $this->expectNotToPerformAssertions();
+        PUTHandlerFaultMapper::mapToRestException(NoChangeFault::build(new \Tracker_NoChangeException(460, 'art #460')));
     }
 }
