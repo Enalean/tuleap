@@ -37,12 +37,14 @@ use Tracker_IDisplayTrackerLayout;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\NoChangeFault;
 use Tuleap\Tracker\Artifact\ChangesetValue\BuildChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
+use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
@@ -182,7 +184,21 @@ final readonly class UpdateArtifactAction
             $render->display($request, $current_user);
             exit();
         }
-        $base_layout->addFeedback(Feedback::ERROR, (string) $fault);
+        $error_message = match ($fault::class) {
+            ArtifactDoesNotExistFault::class => sprintf(
+                dgettext('tuleap-tracker', 'You tried to create a link to Artifact #%s, but it could not be found.'),
+                $fault->artifact_id
+            ),
+            ArtifactLinkFieldDoesNotExistFault::class => sprintf(
+                dgettext(
+                    'tuleap-tracker',
+                    'You tried to create a link to Artifact #%s, but there is no artifact links field in its tracker.'
+                ),
+                $fault->artifact_id
+            ),
+            default => (string) $fault,
+        };
+        $base_layout->addFeedback(Feedback::ERROR, $error_message);
         $base_layout->redirect($redirect->toUrl());
     }
 

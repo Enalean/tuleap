@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -5092,6 +5092,20 @@ msgid ""
 msgstr ""
 "Vous devez définir la <a href=\"%1$s\">sémantique %2$s</a> afin de pouvoir "
 "definir la permission 'confiés au groupe'"
+
+#, php-format
+msgid "You tried to create a link to Artifact #%s, but it could not be found."
+msgstr ""
+"Vous essayez de créer un lien vers l'Artifact #%s, mais celui-ci n'a pas été "
+"trouvé."
+
+#, php-format
+msgid ""
+"You tried to create a link to Artifact #%s, but there is no artifact links "
+"field in its tracker."
+msgstr ""
+"Vous essayez de créer un lien vers l'Artifact #%s, mais il n'y a pas de "
+"champ liens entre artifacts dans son tracker."
 
 msgid ""
 "You will be notified for any changes if you make a comment or change a value "

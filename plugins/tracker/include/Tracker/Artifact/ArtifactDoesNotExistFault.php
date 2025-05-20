@@ -29,8 +29,13 @@ use Tuleap\NeverThrow\Fault;
  */
 final readonly class ArtifactDoesNotExistFault extends Fault
 {
+    private function __construct(public int $artifact_id)
+    {
+        parent::__construct(sprintf('Artifact #%d does not exist', $artifact_id));
+    }
+
     public static function build(int $artifact_id): Fault
     {
-        return new self(sprintf('Artifact #%d does not exist', $artifact_id));
+        return new self($artifact_id);
     }
 }
