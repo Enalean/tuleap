@@ -94,9 +94,11 @@
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { useRootStore } from "../stores/root";
 import { STEP_GITLAB_SERVER } from "../types";
 
+const { $gettext } = useGettext();
 const root_store = useRootStore();
 </script>
 

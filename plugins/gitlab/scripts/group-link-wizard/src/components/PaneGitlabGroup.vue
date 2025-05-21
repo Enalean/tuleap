@@ -132,6 +132,7 @@
 import { ref, computed } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
+import { useGettext } from "vue3-gettext";
 
 import { STEP_GITLAB_GROUP, STEP_GITLAB_SERVER, STEP_GITLAB_CONFIGURATION } from "../types";
 import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
@@ -139,6 +140,7 @@ import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
 import { useGitLabGroupsStore } from "../stores/groups";
 import type { GitlabGroup } from "../stores/types";
 
+const { $gettext } = useGettext();
 const groups_store = useGitLabGroupsStore();
 const selected_group: Ref<GitlabGroup | null> = ref(groups_store.selected_group);
 const router = useRouter();

@@ -68,7 +68,7 @@ describe("PaneGitlabConfiguration", () => {
     });
 
     describe("When user submits", () => {
-        let wrapper: VueWrapper<InstanceType<typeof PaneGitlabConfiguration>>;
+        let wrapper: VueWrapper;
 
         beforeEach(() => {
             wrapper = shallowMount(PaneGitlabConfiguration, {
