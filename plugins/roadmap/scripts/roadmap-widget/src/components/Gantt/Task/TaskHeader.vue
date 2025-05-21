@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-task-header" v-bind:class="classes" v-on:click="toggle">
+    <div class="roadmap-gantt-task-header" v-bind:class="classes" v-on:click="toggle" ref="element">
         <div
             class="roadmap-gantt-task-header-caret"
             v-if="does_at_least_one_task_have_subtasks"
@@ -38,90 +38,73 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import type { Task } from "../../../type";
-import { namespace } from "vuex-class";
-import HeaderLink from "./HeaderLink.vue";
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { useNamespacedGetters, useNamespacedActions } from "vuex-composition-helpers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import { createPopover } from "@tuleap/tlp-popovers";
+import type { Task } from "../../../type";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
+import HeaderLink from "./HeaderLink.vue";
 import HeaderInvalidIcon from "./HeaderInvalidIcon.vue";
 
-const tasks = namespace("tasks");
-@Component({
-    components: { HeaderInvalidIcon, HeaderLink },
-})
-export default class TaskHeader extends Vue {
-    @Prop({ required: true })
-    readonly task!: Task;
+const props = defineProps<{
+    task: Task;
+    popover_element_id: string;
+}>();
 
-    @tasks.Getter
-    readonly does_at_least_one_task_have_subtasks!: boolean;
+const popover = ref<Popover | undefined>();
+const element = ref<HTMLElement>();
 
-    @tasks.Action
-    readonly toggleSubtasks!: (task: Task) => void;
+const { does_at_least_one_task_have_subtasks } = useNamespacedGetters("tasks", [
+    "does_at_least_one_task_have_subtasks",
+]);
+const { toggleSubtasks } = useNamespacedActions("tasks", ["toggleSubtasks"]);
 
-    @Prop({ required: true })
-    private readonly popover_element_id!: string;
+const is_task_invalid = computed(() => !doesTaskHaveEndDateGreaterOrEqualToStartDate(props.task));
 
-    private popover: Popover | undefined;
+onMounted(() => {
+    const popover_element = document.getElementById(props.popover_element_id);
+    if (
+        is_task_invalid.value &&
+        element.value instanceof HTMLElement &&
+        popover_element instanceof HTMLElement
+    ) {
+        popover.value = createPopover(element.value, popover_element, {
+            placement: "right",
+        });
+    }
+});
+onBeforeUnmount(() => {
+    popover.value?.destroy();
+});
 
-    mounted(): void {
-        const popover_element = document.getElementById(this.popover_element_id);
-        if (
-            this.is_task_invalid &&
-            this.$el instanceof HTMLElement &&
-            popover_element instanceof HTMLElement
-        ) {
-            this.popover = createPopover(this.$el, popover_element, {
-                placement: "right",
-            });
-        }
+const caret_class = computed(() => (props.task.is_expanded ? "fa-caret-down" : "fa-caret-right"));
+
+const classes = computed(() => {
+    const classes = ["roadmap-gantt-task-header-" + props.task.color_name];
+
+    if (props.task.has_subtasks) {
+        classes.push("roadmap-gantt-task-header-with-subtasks");
     }
 
-    beforeDestroy(): void {
-        if (this.popover) {
-            this.popover.destroy();
-        }
+    if (is_task_invalid.value) {
+        classes.push("roadmap-gantt-task-header-for-invalid-task");
     }
 
-    get caret_class(): string {
-        return this.task.is_expanded ? "fa-caret-down" : "fa-caret-right";
+    return classes;
+});
+
+function toggle(event: Event): void {
+    if (
+        event.target instanceof HTMLElement &&
+        event.target.closest(".roadmap-gantt-task-header-xref, .roadmap-gantt-task-header-title")
+    ) {
+        return;
     }
 
-    get classes(): string[] {
-        const classes = ["roadmap-gantt-task-header-" + this.task.color_name];
-
-        if (this.task.has_subtasks) {
-            classes.push("roadmap-gantt-task-header-with-subtasks");
-        }
-
-        if (this.is_task_invalid) {
-            classes.push("roadmap-gantt-task-header-for-invalid-task");
-        }
-
-        return classes;
-    }
-
-    get is_task_invalid(): boolean {
-        return !doesTaskHaveEndDateGreaterOrEqualToStartDate(this.task);
-    }
-
-    toggle(event: Event): void {
-        if (
-            event.target instanceof HTMLElement &&
-            event.target.closest(
-                ".roadmap-gantt-task-header-xref, .roadmap-gantt-task-header-title",
-            )
-        ) {
-            return;
-        }
-
-        if (this.task.has_subtasks) {
-            this.toggleSubtasks(this.task);
-        }
+    if (props.task.has_subtasks) {
+        toggleSubtasks(props.task);
     }
 }
 </script>
