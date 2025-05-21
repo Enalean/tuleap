@@ -113,6 +113,7 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
@@ -134,6 +135,7 @@ import { buildProjectPrivacy } from "../../helpers/privacy-builder";
 import { useStore } from "../../stores/root";
 import { useRouter } from "../../helpers/use-router";
 
+const { $gettext } = useGettext();
 const root_store = useStore();
 
 const router = useRouter();

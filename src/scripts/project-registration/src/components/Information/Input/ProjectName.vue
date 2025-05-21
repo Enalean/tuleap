@@ -60,22 +60,17 @@ const has_error = ref(false);
 const min_project_length = 3;
 const max_project_length = 40;
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
-const info_project_name_size = gettext_provider.interpolate(
-    gettext_provider.$gettext("Between %{ min } and %{ max } characters length"),
+const info_project_name_size = $gettext("Between %{ min } and %{ max } characters length", {
+    min: String(min_project_length),
+    max: String(max_project_length),
+});
+const error_project_name_size = $gettext(
+    "Project name must be between %{ min } and %{ max } characters length.",
     {
-        min: min_project_length,
-        max: max_project_length,
-    },
-);
-const error_project_name_size = gettext_provider.interpolate(
-    gettext_provider.$gettext(
-        "Project name must be between %{ min } and %{ max } characters length.",
-    ),
-    {
-        min: min_project_length,
-        max: max_project_length,
+        min: String(min_project_length),
+        max: String(max_project_length),
     },
 );
 

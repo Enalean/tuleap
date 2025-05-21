@@ -49,9 +49,11 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 import { onMounted, ref, watch } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { TemplateData } from "../../../../type";
 import { useStore } from "../../../../stores/root";
 
+const { $gettext } = useGettext();
 const root_store = useStore();
 
 const default_option = {

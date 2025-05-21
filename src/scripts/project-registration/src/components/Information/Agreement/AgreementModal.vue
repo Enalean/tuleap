@@ -55,8 +55,11 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
+import { useGettext } from "vue3-gettext";
 import { getTermOfService } from "../../../api/rest-querier";
 import emitter from "../../../helpers/emitter";
+
+const { $gettext } = useGettext();
 
 let modal: Modal | null = null;
 

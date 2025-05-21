@@ -54,8 +54,10 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 import { useStore } from "../../stores/root";
 
+const { $gettext } = useGettext();
 const root_store = useStore();
 
 const get_icon = computed((): string => {
