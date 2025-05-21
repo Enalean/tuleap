@@ -53,230 +53,191 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import type {
-    Task,
-    TaskDimension,
-    TaskDimensionMap,
-    TasksDependencies,
-    TimePeriod,
-} from "../../../type";
-import BackgroundGrid from "./BackgroundGrid.vue";
-import TaskBar from "./TaskBar.vue";
-import DependencyArrow from "./DependencyArrow.vue";
-import { getDimensions } from "../../../helpers/tasks-dimensions";
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { useNamespacedGetters, useState } from "vuex-composition-helpers";
 import { createPopover } from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
+import type { Task, TaskDimensionMap, TasksDependencies } from "../../../type";
 import { Styles } from "../../../helpers/styles";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
-import { namespace, State } from "vuex-class";
+import { getDimensions } from "../../../helpers/tasks-dimensions";
+import TaskBar from "./TaskBar.vue";
+import DependencyArrow from "./DependencyArrow.vue";
+import BackgroundGrid from "./BackgroundGrid.vue";
 
-const timeperiod = namespace("timeperiod");
+const { time_period } = useNamespacedGetters("timeperiod", ["time_period"]);
+const { show_closed_elements } = useState(["show_closed_elements"]);
 
-@Component({
-    components: { DependencyArrow, TaskBar, BackgroundGrid },
-})
-export default class GanttTask extends Vue {
-    override $refs!: {
-        bar: TaskBar;
-    };
+const props = defineProps<{
+    task: Task;
+    dimensions_map: TaskDimensionMap;
+    nb_additional_units: number;
+    dependencies: TasksDependencies;
+    dependencies_nature_to_display?: string | null;
+    popover_element_id: string;
+}>();
 
-    @timeperiod.Getter
-    readonly time_period!: TimePeriod;
+const bar = ref<HTMLElement | undefined>();
+const popover = ref<Popover | undefined>();
 
-    @Prop({ required: true })
-    readonly task!: Task;
+const doesTextFitsIn = (width: number) =>
+    width > Styles.TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX;
 
-    @Prop({ required: true })
-    readonly dimensions_map!: TaskDimensionMap;
+const is_task_valid = computed(() => doesTaskHaveEndDateGreaterOrEqualToStartDate(props.task));
 
-    @Prop({ required: true })
-    readonly nb_additional_units!: number;
-
-    @Prop({ required: true })
-    readonly dependencies!: TasksDependencies;
-
-    @Prop({ required: true })
-    readonly dependencies_nature_to_display!: string | null;
-
-    @Prop({ required: true })
-    private readonly popover_element_id!: string;
-
-    @State
-    private readonly show_closed_elements!: boolean;
-
-    private popover: Popover | undefined;
-
-    mounted(): void {
-        const popover_element = document.getElementById(this.popover_element_id);
-        if (
-            this.is_task_valid &&
-            this.$refs.bar.$el instanceof HTMLElement &&
-            popover_element instanceof HTMLElement
-        ) {
-            this.popover = createPopover(this.$refs.bar.$el, popover_element, {
-                placement: "right-start",
-                middleware: {
-                    flip: {
-                        fallbackPlacements: ["left-start", "top"],
-                    },
-                    offset: {
-                        alignmentAxis: 0,
-                    },
+onMounted(() => {
+    const popover_element = document.getElementById(props.popover_element_id);
+    if (
+        is_task_valid.value &&
+        bar.value instanceof HTMLElement &&
+        popover_element instanceof HTMLElement
+    ) {
+        popover.value = createPopover(bar.value, popover_element, {
+            placement: "right-start",
+            middleware: {
+                flip: {
+                    fallbackPlacements: ["left-start", "top"],
                 },
-            });
-        }
-    }
-
-    beforeDestroy(): void {
-        if (this.popover) {
-            this.popover.destroy();
-        }
-    }
-
-    getDependencyKey(dependency: Task): string {
-        return (
-            "dependency-" +
-            dependency.id +
-            (dependency.parent ? "-parent-" + dependency.parent.id : "")
-        );
-    }
-
-    get dimensions(): TaskDimension {
-        return getDimensions(this.task, this.dimensions_map);
-    }
-
-    get dependencies_to_display(): Task[] {
-        if (this.dependencies_nature_to_display === null) {
-            return [];
-        }
-
-        const dependencies_for_current_task = this.dependencies.get(this.task);
-        if (!dependencies_for_current_task) {
-            return [];
-        }
-        let dependencies_to_filter = dependencies_for_current_task.get(
-            this.dependencies_nature_to_display,
-        );
-
-        let dependencies_to_display: Task[] = [];
-        if (!dependencies_to_filter) {
-            return [];
-        }
-        dependencies_to_filter.forEach((dependencie) => {
-            if (dependencie.is_open || this.show_closed_elements) {
-                dependencies_to_display.push(dependencie);
-            }
+                offset: {
+                    alignmentAxis: 0,
+                },
+            },
         });
-
-        return dependencies_to_display;
     }
+});
 
-    get percentage(): string {
-        if (this.task.progress === null) {
-            return "";
-        }
+onBeforeUnmount(() => {
+    popover.value?.destroy();
+});
 
-        return Math.round(this.task.progress * 100) + "%";
-    }
-
-    get normalized_progress(): number {
-        return Math.max(0, Math.min(1, this.task.progress || 0));
-    }
-
-    get space_inside_progress_bar_in_px(): number {
-        return this.dimensions.width * this.normalized_progress;
-    }
-
-    get remaining_space_at_the_right_of_the_progress_bar_in_px(): number {
-        return this.dimensions.width * (1 - this.normalized_progress);
-    }
-
-    get is_text_displayed_inside_progress_bar(): boolean {
-        if (this.task.is_milestone) {
-            return false;
-        }
-
-        if (this.task.progress === null) {
-            return false;
-        }
-
-        if (this.is_text_displayed_outside_progress_bar) {
-            return false;
-        }
-
-        return this.does_text_fit_in_space_inside_progress;
-    }
-
-    get is_text_displayed_outside_progress_bar(): boolean {
-        if (this.task.is_milestone) {
-            return false;
-        }
-
-        if (this.task.progress === null) {
-            return false;
-        }
-
-        return this.does_text_fit_in_remaining_space_at_the_right_of_the_progress_bar;
-    }
-
-    get is_text_displayed_outside_bar(): boolean {
-        if (this.task.is_milestone) {
-            return false;
-        }
-
-        if (this.task.progress === null) {
-            return false;
-        }
-
-        return (
-            !this.does_text_fit_in_space_inside_progress &&
-            !this.is_text_displayed_outside_progress_bar
-        );
-    }
-
-    get does_text_fit_in_space_inside_progress(): boolean {
-        return this.doesTextFitsIn(this.space_inside_progress_bar_in_px);
-    }
-
-    get does_text_fit_in_remaining_space_at_the_right_of_the_progress_bar(): boolean {
-        return this.doesTextFitsIn(this.remaining_space_at_the_right_of_the_progress_bar_in_px);
-    }
-
-    doesTextFitsIn(width: number): boolean {
-        return width > Styles.TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX;
-    }
-
-    get is_error_sign_displayed_outside_bar(): boolean {
-        if (this.task.is_milestone) {
-            return false;
-        }
-
-        return (
-            this.is_progress_in_error &&
-            this.dimensions.width < Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX
-        );
-    }
-
-    get is_error_sign_displayed_inside_bar(): boolean {
-        if (this.task.is_milestone) {
-            return false;
-        }
-
-        return (
-            this.is_progress_in_error &&
-            this.dimensions.width >= Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX
-        );
-    }
-
-    get is_progress_in_error(): boolean {
-        return this.task.progress_error_message.length > 0;
-    }
-
-    get is_task_valid(): boolean {
-        return doesTaskHaveEndDateGreaterOrEqualToStartDate(this.task);
-    }
+function getDependencyKey(dependency: Task): string {
+    return (
+        "dependency-" + dependency.id + (dependency.parent ? "-parent-" + dependency.parent.id : "")
+    );
 }
+
+const dimensions = computed(() => getDimensions(props.task, props.dimensions_map));
+
+const dependencies_to_display = computed(() => {
+    if (
+        props.dependencies_nature_to_display === null ||
+        props.dependencies_nature_to_display === undefined
+    ) {
+        return [];
+    }
+
+    const dependencies_for_current_task = props.dependencies.get(props.task);
+    if (!dependencies_for_current_task) {
+        return [];
+    }
+    let dependencies_to_filter = dependencies_for_current_task.get(
+        props.dependencies_nature_to_display,
+    );
+
+    let dependencies_to_display: Task[] = [];
+    if (!dependencies_to_filter) {
+        return [];
+    }
+    dependencies_to_filter.forEach((dependency) => {
+        if (dependency.is_open || show_closed_elements.value) {
+            dependencies_to_display.push(dependency);
+        }
+    });
+
+    return dependencies_to_display;
+});
+
+const percentage = computed(() => {
+    if (props.task.progress === null) {
+        return "";
+    }
+
+    return Math.round(props.task.progress * 100) + "%";
+});
+
+const normalized_progress = computed(() => Math.max(0, Math.min(1, props.task.progress || 0)));
+
+const space_inside_progress_bar_in_px = computed(
+    () => dimensions.value.width * normalized_progress.value,
+);
+
+const remaining_space_at_the_right_of_the_progress_bar_in_px = computed(
+    () => dimensions.value.width * (1 - normalized_progress.value),
+);
+
+const does_text_fit_in_remaining_space_at_the_right_of_the_progress_bar = computed(() =>
+    doesTextFitsIn(remaining_space_at_the_right_of_the_progress_bar_in_px.value),
+);
+
+const is_text_displayed_outside_progress_bar = computed(() => {
+    if (props.task.is_milestone) {
+        return false;
+    }
+
+    if (props.task.progress === null) {
+        return false;
+    }
+
+    return does_text_fit_in_remaining_space_at_the_right_of_the_progress_bar.value;
+});
+
+const does_text_fit_in_space_inside_progress = computed(() =>
+    doesTextFitsIn(space_inside_progress_bar_in_px.value),
+);
+
+const is_text_displayed_inside_progress_bar = computed(() => {
+    if (props.task.is_milestone) {
+        return false;
+    }
+
+    if (props.task.progress === null) {
+        return false;
+    }
+
+    if (is_text_displayed_outside_progress_bar.value) {
+        return false;
+    }
+
+    return does_text_fit_in_space_inside_progress.value;
+});
+
+const is_text_displayed_outside_bar = computed(() => {
+    if (props.task.is_milestone) {
+        return false;
+    }
+
+    if (props.task.progress === null) {
+        return false;
+    }
+
+    return (
+        !does_text_fit_in_space_inside_progress.value &&
+        !is_text_displayed_outside_progress_bar.value
+    );
+});
+
+const is_progress_in_error = computed(() => props.task.progress_error_message.length > 0);
+
+const is_error_sign_displayed_outside_bar = computed(() => {
+    if (props.task.is_milestone) {
+        return false;
+    }
+
+    return (
+        is_progress_in_error.value &&
+        dimensions.value.width < Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX
+    );
+});
+
+const is_error_sign_displayed_inside_bar = computed(() => {
+    if (props.task.is_milestone) {
+        return false;
+    }
+
+    return (
+        is_progress_in_error.value &&
+        dimensions.value.width >= Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX
+    );
+});
 </script>
