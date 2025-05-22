@@ -28,16 +28,20 @@ import { DateTime } from "luxon";
 
 jest.useFakeTimers();
 
+type ScrollingAreaExposed = { empty_pixel: HTMLElement };
+
 describe("ScrollingArea", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
-    const elementScrollTo = Element.prototype.scrollTo;
+    const elementScrollTo = (Element.prototype.scrollTo = (): void => {
+        // mock implementation
+    });
 
     afterEach(() => {
         window.IntersectionObserver = windowIntersectionObserver;
         Element.prototype.scrollTo = elementScrollTo;
     });
 
-    function aScrollingArea(): Wrapper<ScrollingArea> {
+    function aScrollingArea(): Wrapper<Vue & ScrollingAreaExposed> {
         return shallowMount(ScrollingArea, {
             propsData: {
                 now: DateTime.now(),
@@ -68,9 +72,6 @@ describe("ScrollingArea", () => {
         });
         window.IntersectionObserver = mockIntersectionObserver;
 
-        Element.prototype.scrollTo = (): void => {
-            // mock implementation
-        };
         const scrollTo = jest.spyOn(Element.prototype, "scrollTo");
 
         aScrollingArea();
@@ -92,9 +93,6 @@ describe("ScrollingArea", () => {
         });
         window.IntersectionObserver = mockIntersectionObserver;
 
-        Element.prototype.scrollTo = (): void => {
-            // mock implementation
-        };
         const scrollTo = jest.spyOn(Element.prototype, "scrollTo");
 
         const wrapper = aScrollingArea();
@@ -120,8 +118,8 @@ describe("ScrollingArea", () => {
 
         const wrapper = aScrollingArea();
 
-        expect(wrapper.vm.$refs.empty_pixel).toBeTruthy();
-        expect(observe).toHaveBeenCalledWith(wrapper.vm.$refs.empty_pixel);
+        expect(wrapper.vm.empty_pixel).toBeTruthy();
+        expect(observe).toHaveBeenCalledWith(wrapper.vm.empty_pixel);
     });
 
     it("emits is_scrolling = true if pixel is not anymore intersecting with the scrolling area", async () => {
@@ -137,7 +135,7 @@ describe("ScrollingArea", () => {
         const wrapper = aScrollingArea();
 
         const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-        await observerCallback([{ isIntersecting: false, target: wrapper.vm.$refs.empty_pixel }]);
+        await observerCallback([{ isIntersecting: false, target: wrapper.vm.empty_pixel }]);
 
         const events = wrapper.emitted();
         expect(events).toEqual({ is_scrolling: [[true]] });
@@ -156,7 +154,7 @@ describe("ScrollingArea", () => {
         const wrapper = aScrollingArea();
 
         const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-        await observerCallback([{ isIntersecting: true, target: wrapper.vm.$refs.empty_pixel }]);
+        await observerCallback([{ isIntersecting: true, target: wrapper.vm.empty_pixel }]);
 
         const events = wrapper.emitted();
         expect(events).toEqual({ is_scrolling: [[false]] });
