@@ -41,7 +41,7 @@ describe("GanttTask", () => {
         tasks_by_nature: TasksByNature | null = null,
         dependencies_nature_to_display: string | null = null,
         show_closed_elements: boolean | null = false,
-    ): Wrapper<GanttTask> {
+    ): Wrapper<Vue> {
         const defaults: Task = {
             id: 123,
             title: "Do this",
@@ -233,12 +233,16 @@ describe("GanttTask", () => {
 
     describe("percentage", () => {
         it("should round the percentage to be displayed", () => {
-            const wrapper = mountGanttTask({
-                start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
-                end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
-                progress: 0.42,
-                is_milestone: false,
-            } as Task);
+            const wrapper = mountGanttTask(
+                {
+                    start: DateTime.fromObject({ year: 2020, month: 4, day: 5 }),
+                    end: DateTime.fromObject({ year: 2020, month: 4, day: 6 }),
+                    progress: 0.42,
+                    is_milestone: false,
+                } as Task,
+                null,
+                null,
+            );
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
             expect(task_bar_props.percentage).toBe("42%");
