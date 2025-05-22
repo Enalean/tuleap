@@ -50,7 +50,6 @@ final class WasmtimeCacheConfigurationBuilder implements WASMCacheConfigurationB
     {
         return <<<EOF
         [cache]
-        enabled = true
         directory = "$cache_path"
         cleanup-interval = "12h"
         EOF;

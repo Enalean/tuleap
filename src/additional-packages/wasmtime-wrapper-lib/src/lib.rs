@@ -23,9 +23,10 @@ use std::path::Path;
 use std::sync::Arc;
 use std::time::Instant;
 use wasmtime::*;
-use wasmtime_wasi::pipe::{MemoryInputPipe, MemoryOutputPipe};
+use wasmtime_wasi::p2::pipe::{MemoryInputPipe, MemoryOutputPipe};
 use wasmtime_wasi::preview1::WasiP1Ctx;
-use wasmtime_wasi::{DirPerms, FilePerms, WasiCtxBuilder};
+use wasmtime_wasi::p2::WasiCtxBuilder;
+use wasmtime_wasi::{DirPerms, FilePerms};
 use wire::{
     ExecConfig, InternalErrorJson, Limitations, MountPoint, Stats, SuccessResponseJson,
     UserErrorJson,
@@ -177,7 +178,7 @@ fn compile_and_exec(
     config.epoch_interruption(true);
 
     if let Some(cache_config_file) = possible_cache_config_file {
-        config.cache_config_load(Path::new(cache_config_file))?;
+        Cache::from_file(Some(&Path::new(cache_config_file))).map(|cache| config.cache(Some(cache)))?;
         config.cranelift_opt_level(OptLevel::Speed);
     }
 

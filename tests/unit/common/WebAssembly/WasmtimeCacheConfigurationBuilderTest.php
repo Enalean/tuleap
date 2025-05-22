@@ -39,7 +39,7 @@ final class WasmtimeCacheConfigurationBuilderTest extends TestCase
         $path           = $config_builder->buildCacheConfiguration()->unwrapOr('/file_does_not_exist');
 
         self::assertFileExists($path);
-        self::assertStringContainsString('enabled = true', file_get_contents($path));
+        self::assertStringContainsString('directory = ', file_get_contents($path));
     }
 
     public function testCleanupsConfig(): void
