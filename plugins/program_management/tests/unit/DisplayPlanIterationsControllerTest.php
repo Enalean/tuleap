@@ -24,15 +24,14 @@ namespace Tuleap\ProgramManagement;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\IterationView\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueUserCanSeeStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserPreferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -44,7 +43,6 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayPlanIterationsControllerTest extends TestCase
@@ -94,13 +92,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
             $this->iteration_tracker_retriever,
             RetrieveIterationLabelsStub::buildLabels('Cycles', 'cycle'),
             RetrieveUserPreferenceStub::withNameAndValue('accessibility_mode', '1'),
-            new TitleValueRetriever(
-                RetrieveFullArtifactStub::withArtifact(
-                    ArtifactTestBuilder::anArtifact(1)
-                        ->withTitle('Title')
-                        ->build()
-                )
-            )
+            RetrieveTitleValueUserCanSeeStub::withValue('Title'),
         );
 
         $user      = $this->getUser();

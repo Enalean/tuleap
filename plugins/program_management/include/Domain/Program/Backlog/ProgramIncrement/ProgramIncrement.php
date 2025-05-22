@@ -56,24 +56,24 @@ final class ProgramIncrement
         RetrieveCrossRef $retrieve_cross_ref,
         VerifyUserCanUpdateTimebox $verify_user_can_update,
         UserCanPlanInProgramIncrementVerifier $plan_verifier,
-        UserIdentifier $user,
+        UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $program_increment,
     ): ?self {
-        $title = $retrieve_title_value->getTitle($program_increment);
+        $title = $retrieve_title_value->getTitle($program_increment, $user_identifier);
         if (! $title) {
             return null;
         }
-        $status     = $retrieve_status_value->getLabel($program_increment, $user);
-        $start_date = $retrieve_timeframe_value->getStartDateValueTimestamp($program_increment, $user);
-        $end_date   = $retrieve_timeframe_value->getEndDateValueTimestamp($program_increment, $user);
+        $status     = $retrieve_status_value->getLabel($program_increment, $user_identifier);
+        $start_date = $retrieve_timeframe_value->getStartDateValueTimestamp($program_increment, $user_identifier);
+        $end_date   = $retrieve_timeframe_value->getEndDateValueTimestamp($program_increment, $user_identifier);
 
         return new self(
             $program_increment->getId(),
             $title,
             $retrieve_uri->getUri($program_increment),
             $retrieve_cross_ref->getXRef($program_increment),
-            $verify_user_can_update->canUserUpdate($program_increment, $user),
-            $plan_verifier->userCanPlan($program_increment, $user),
+            $verify_user_can_update->canUserUpdate($program_increment, $user_identifier),
+            $plan_verifier->userCanPlan($program_increment, $user_identifier),
             $status,
             $start_date,
             $end_date,

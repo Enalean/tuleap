@@ -55,17 +55,17 @@ final class Feature
         RetrieveBackgroundColor $background_retriever,
         RetrieveTrackerOfFeature $tracker_retriever,
         FeatureIdentifier $feature_identifier,
-        UserIdentifier $user,
+        UserIdentifier $user_identifier,
     ): self {
         return new self(
             $feature_identifier,
             $uri_retriever->getFeatureURI($feature_identifier),
             $cross_reference_retriever->getFeatureCrossReference($feature_identifier),
-            $title_retriever->getFeatureTitle($feature_identifier),
+            $title_retriever->getFeatureTitle($feature_identifier, $user_identifier),
             $open_verifier->isFeatureOpen($feature_identifier),
-            $planned_verifier->hasAtLeastOnePlannedUserStory($feature_identifier, $user),
-            $story_verifier->hasStoryLinked($feature_identifier, $user),
-            $background_retriever->retrieveBackgroundColor($feature_identifier, $user),
+            $planned_verifier->hasAtLeastOnePlannedUserStory($feature_identifier, $user_identifier),
+            $story_verifier->hasStoryLinked($feature_identifier, $user_identifier),
+            $background_retriever->retrieveBackgroundColor($feature_identifier, $user_identifier),
             FeatureTrackerIdentifier::fromFeature($tracker_retriever, $feature_identifier),
         );
     }

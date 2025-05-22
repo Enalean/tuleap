@@ -131,7 +131,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $visibility_verifier,
             new ContentDao(),
             $visibility_verifier,
-            new TitleValueRetriever($artifact_retriever),
+            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance()),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new TrackerOfArtifactRetriever($artifact_retriever),
@@ -341,7 +341,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             new IterationsLinkedToProgramIncrementDAO(),
             new StatusValueRetriever($artifact_retriever, $user_retriever),
-            new TitleValueRetriever($artifact_retriever),
+            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance()),
             new TimeframeValueRetriever(
                 $artifact_retriever,
                 $user_retriever,
@@ -409,7 +409,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
-        $title_retriever                = new TitleValueRetriever($artifact_retriever);
+        $title_retriever                = new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance());
         $uri_retriever                  = new URIRetriever($artifact_retriever);
         $background_color_retriever     = new BackgroundColorRetriever(
             new BackgroundColorBuilder(new BindDecoratorRetriever()),

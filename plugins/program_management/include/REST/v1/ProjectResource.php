@@ -189,7 +189,7 @@ final class ProjectResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
             new ProgramIncrementRetriever(
                 new StatusValueRetriever($artifact_retriever, $this->user_manager_adapter),
-                new TitleValueRetriever($artifact_retriever),
+                new TitleValueRetriever($artifact_retriever, $this->user_manager_adapter, \Tracker_Semantic_TitleFactory::instance()),
                 new TimeframeValueRetriever(
                     $artifact_retriever,
                     $this->user_manager_adapter,
@@ -384,7 +384,7 @@ final class ProjectResource extends AuthenticatedResource
             CachedProgramBuilder::instance(),
             new FeaturesDao(),
             $visibility_verifier,
-            new TitleValueRetriever($artifact_retriever),
+            new TitleValueRetriever($artifact_retriever, $this->user_manager_adapter, \Tracker_Semantic_TitleFactory::instance()),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new TrackerOfArtifactRetriever($artifact_retriever),

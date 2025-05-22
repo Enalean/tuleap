@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUserCanSee;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveTitleValueUserCanSeeStub implements RetrieveTitleValueUserCanSee
 {
@@ -42,7 +43,7 @@ final class RetrieveTitleValueUserCanSeeStub implements RetrieveTitleValueUserCa
         return new self(null);
     }
 
-    public function getTitle(TimeboxIdentifier $timebox_identifier): ?string
+    public function getTitle(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?string
     {
         return $this->value;
     }

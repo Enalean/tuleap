@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
+use Tracker_Artifact_ChangesetValue_Text;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureTitle;
@@ -30,27 +32,60 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTitleValueUs
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 
-final class TitleValueRetriever implements RetrieveTitleValueUserCanSee, RetrieveUserStoryTitle, RetrieveFeatureTitle
+final readonly class TitleValueRetriever implements RetrieveTitleValueUserCanSee, RetrieveUserStoryTitle, RetrieveFeatureTitle
 {
-    public function __construct(private RetrieveFullArtifact $artifact_retriever)
-    {
+    public function __construct(
+        private RetrieveFullArtifact $artifact_retriever,
+        private RetrieveUser $retrieve_user,
+        private GetTitleSemantic $get_title_semantic,
+    ) {
     }
 
-    public function getTitle(TimeboxIdentifier $timebox_identifier): ?string
+    public function getTitle(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?string
     {
-        $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
-        return $artifact->getTitle();
+        return $this->getArtifactTitleUserCanRead(
+            $this->artifact_retriever->getNonNullArtifact($timebox_identifier),
+            $this->retrieve_user->getUserWithId($user_identifier),
+        );
     }
 
-    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier): ?string
+    public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier, UserIdentifier $user_identifier): ?string
     {
-        $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
-        return $artifact->getTitle();
+        return $this->getArtifactTitleUserCanRead(
+            $this->artifact_retriever->getNonNullArtifact($user_story_identifier),
+            $this->retrieve_user->getUserWithId($user_identifier),
+        );
     }
 
-    public function getFeatureTitle(FeatureIdentifier $feature_identifier): ?string
+    public function getFeatureTitle(FeatureIdentifier $feature_identifier, UserIdentifier $user_identifier): ?string
     {
-        return $this->artifact_retriever->getNonNullArtifact($feature_identifier)->getTitle();
+        return $this->getArtifactTitleUserCanRead(
+            $this->artifact_retriever->getNonNullArtifact($feature_identifier),
+            $this->retrieve_user->getUserWithId($user_identifier),
+        );
+    }
+
+    private function getArtifactTitleUserCanRead(Artifact $artifact, \PFUser $user): ?string
+    {
+        $title_field = $this->get_title_semantic->getByTracker($artifact->getTracker())->getField();
+        if (! $title_field || ! $title_field->userCanRead($user)) {
+            return null;
+        }
+
+        $last_changeset = $artifact->getLastChangeset();
+        if (! $last_changeset) {
+            return null;
+        }
+
+        $last_changeset_value = $last_changeset->getValue($title_field);
+        if (! $last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Text) {
+            return null;
+        }
+
+        return $last_changeset_value->getContentAsText();
     }
 }
