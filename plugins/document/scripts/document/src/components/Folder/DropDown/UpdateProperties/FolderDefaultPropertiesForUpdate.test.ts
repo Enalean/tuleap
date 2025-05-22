@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-
-const emitMock = jest.fn();
-
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -29,19 +26,17 @@ import { TYPE_FOLDER } from "../../../../constants";
 import type { Folder, Property, ListValue } from "../../../../type";
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
+import emitter from "../../../../helpers/emitter";
 
-jest.mock("../../../../helpers/emitter", () => {
-    return {
-        emit: emitMock,
-    };
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
 });
 
 describe("FolderDefaultPropertiesForUpdate", () => {
-    let load_properties: jest.Mock;
+    let load_properties: vi.Mock;
 
     beforeEach(() => {
-        load_properties = jest.fn();
-        emitMock.mockClear();
+        load_properties = vi.fn();
     });
 
     function createWrapper(
@@ -185,6 +180,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
     describe("Apply bindings -", () => {
         it(`Emit event on check recursion for item`, () => {
+            const emitMock = vi.spyOn(emitter, "emit");
             const list_value = {
                 id: 103,
             } as ListValue;
@@ -272,6 +268,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 } as unknown as Property,
             ];
 
+            const emitMock = vi.spyOn(emitter, "emit");
             const wrapper = createWrapper(true, true, item, item_property);
 
             wrapper
@@ -316,6 +313,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             } as unknown as Property,
         ];
 
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = createWrapper(false, true, item, item_property);
 
         wrapper
@@ -359,6 +357,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             } as unknown as Property,
         ];
 
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = createWrapper(true, true, item, item_property);
 
         wrapper
@@ -402,6 +401,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             } as unknown as Property,
         ];
 
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = createWrapper(true, true, item, item_property);
 
         wrapper

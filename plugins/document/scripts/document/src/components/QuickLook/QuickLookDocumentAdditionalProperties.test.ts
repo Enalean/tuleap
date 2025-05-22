@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentAdditionalProperties from "./QuickLookDocumentAdditionalProperties.vue";
@@ -36,7 +36,7 @@ describe("QuickLookDocumentAdditionalProperties", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 directives: {
-                    "dompurify-html": jest.fn(),
+                    "dompurify-html": vi.fn(),
                 },
             },
         });

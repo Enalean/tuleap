@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyText from "./CustomPropertyText.vue";
 import type { Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
 
-jest.mock("../../../../../helpers/emitter");
+vi.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyText", () => {
     function createWrapper(

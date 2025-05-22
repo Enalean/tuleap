@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ItemPermissionError displays the error with a for to send custom email 1`] = `
+exports[`ItemPermissionError > displays the error with a for to send custom email 1`] = `
 <section
   class="empty-state-page document-folder-with-error"
   data-test="document-user-can-not-read-document"

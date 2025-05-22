@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FolderLoadingScreen displays the folder loading screen 1`] = `
+exports[`FolderLoadingScreen > displays the folder loading screen 1`] = `
 <div
   class="tlp-card"
 >

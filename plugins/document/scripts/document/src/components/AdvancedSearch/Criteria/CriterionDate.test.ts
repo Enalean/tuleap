@@ -17,22 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
-
-const emitMock = jest.fn();
-
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount, mount } from "@vue/test-utils";
 import CriterionDate from "./CriterionDate.vue";
 import type { SearchDate } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import emitter from "../../../helpers/emitter";
 
-jest.mock("../../../helpers/emitter", () => {
+vi.mock("tlp", () => {
     return {
-        emit: emitMock,
+        datePicker: (): { setDate(): void } => ({
+            setDate: (): void => {
+                // Do nothing
+            },
+        }),
     };
 });
 
 describe("CriterionDate", () => {
+    let emitMock: Mock;
+
+    beforeEach(() => {
+        emitMock = vi.spyOn(emitter, "emit");
+    });
+
     it("should render the component when no date set", () => {
         const wrapper = shallowMount(CriterionDate, {
             props: {

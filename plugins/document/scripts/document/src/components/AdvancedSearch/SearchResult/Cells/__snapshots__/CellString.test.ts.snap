@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CellString should display the text as is 1`] = `
+exports[`CellString > should display the text as is 1`] = `
 <td>
   
   Lorem ipsum

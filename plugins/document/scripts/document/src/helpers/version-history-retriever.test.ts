@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import * as version_rest_querier from "../api/version-rest-querier";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_FOLDER, TYPE_LINK } from "../constants";
 import type { FileHistory, Item } from "../type";
@@ -25,7 +25,7 @@ import { getVersionHistory } from "./version-history-retriever";
 
 describe("getVersionHistory", () => {
     it("retrieve the version history if the item given is a file", async () => {
-        const version_querier = jest.spyOn(version_rest_querier, "getFileVersionHistory");
+        const version_querier = vi.spyOn(version_rest_querier, "getFileVersionHistory");
         version_querier.mockResolvedValue([
             {
                 id: 3,
@@ -57,7 +57,7 @@ describe("getVersionHistory", () => {
         [{ id: 25, type: TYPE_EMBEDDED } as Item],
         [{ id: 25, type: "move" } as Item],
     ])("throw an error when the item is not a file", async (item: Item) => {
-        const version_querier = jest.spyOn(version_rest_querier, "getFileVersionHistory");
+        const version_querier = vi.spyOn(version_rest_querier, "getFileVersionHistory");
         version_querier.mockResolvedValue([
             {
                 id: 3,

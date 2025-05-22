@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CriterionOwner should render the component with an already selected user 1`] = `
+exports[`CriterionOwner > should render the component with an already selected user 1`] = `
 <div
   class="tlp-form-element document-search-criterion document-search-criterion-owner"
 >

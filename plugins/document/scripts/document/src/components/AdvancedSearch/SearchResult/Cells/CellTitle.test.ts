@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { FileProperties, ItemSearchResult, OtherItemTypeCollection } from "../../../../type";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
@@ -28,7 +28,7 @@ import type { Dropdown } from "@tuleap/tlp-dropdown";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import { OTHER_ITEM_TYPES } from "../../../../injection-keys";
 
-jest.mock("@tuleap/tlp-dropdown");
+vi.mock("@tuleap/tlp-dropdown");
 
 describe("CellTitle", () => {
     function getWrapper(
@@ -139,11 +139,11 @@ describe("CellTitle", () => {
 
     it("should output a route link for Embedded", () => {
         const fake_dropdown_object = {
-            addEventListener: jest.fn(),
-            removeEventListener: jest.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
         } as unknown as Dropdown;
 
-        jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
+        vi.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
 
         const item = {
             id: 123,

@@ -18,13 +18,17 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 
 import UpdateFolderPropertiesModal from "./UpdateFolderPropertiesModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
 
 describe("UpdateFolderPropertiesModal", () => {
     let factory, store;
@@ -94,7 +98,7 @@ describe("UpdateFolderPropertiesModal", () => {
             });
         };
 
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

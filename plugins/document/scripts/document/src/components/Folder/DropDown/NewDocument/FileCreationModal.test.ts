@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { Modal } from "@tuleap/tlp-modal";
@@ -30,11 +30,11 @@ import { TYPE_FILE } from "../../../../constants";
 import { buildFakeItem } from "../../../../helpers/item-builder";
 
 describe("FileCreationModal", () => {
-    const add_event_listener = jest.fn();
-    const modal_show = jest.fn();
-    const remove_backdrop = jest.fn();
-    let create_new_item: jest.Mock;
-    let reset_error_modal: jest.Mock;
+    const add_event_listener = vi.fn();
+    const modal_show = vi.fn();
+    const remove_backdrop = vi.fn();
+    let create_new_item: vi.Mock;
+    let reset_error_modal: vi.Mock;
 
     function getWrapper(
         dropped_file: File,
@@ -77,7 +77,7 @@ describe("FileCreationModal", () => {
     }
 
     beforeEach(() => {
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
                 addEventListener: add_event_listener,
                 show: modal_show,
@@ -85,8 +85,8 @@ describe("FileCreationModal", () => {
             } as unknown as Modal;
         });
 
-        create_new_item = jest.fn();
-        reset_error_modal = jest.fn();
+        create_new_item = vi.fn();
+        reset_error_modal = vi.fn();
     });
 
     it("does not close the modal if there is an error during the creation", async () => {

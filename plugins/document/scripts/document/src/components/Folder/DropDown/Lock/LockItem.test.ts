@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import LockItem from "./LockItem.vue";
@@ -25,10 +25,10 @@ import type { ItemFile, LockInfo } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("LockItem", () => {
-    let lock_document: jest.Mock;
+    let lock_document: vi.Mock;
 
     beforeEach(() => {
-        lock_document = jest.fn();
+        lock_document = vi.fn();
     });
 
     function createWrapper(item: ItemFile): VueWrapper<InstanceType<typeof LockItem>> {

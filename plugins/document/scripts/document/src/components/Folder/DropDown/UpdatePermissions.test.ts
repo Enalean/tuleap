@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import UpdatePermissions from "./UpdatePermissions.vue";
@@ -25,7 +25,7 @@ import emitter from "../../../helpers/emitter";
 import type { Item } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.mock("../../../helpers/emitter");
+vi.mock("../../../helpers/emitter");
 
 describe("UpdatePermissions", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof UpdatePermissions>> {

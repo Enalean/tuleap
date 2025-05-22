@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CriterionNumber should render the component 1`] = `
+exports[`CriterionNumber > should render the component 1`] = `
 <div
   class="tlp-form-element document-search-criterion document-search-criterion-number"
 >

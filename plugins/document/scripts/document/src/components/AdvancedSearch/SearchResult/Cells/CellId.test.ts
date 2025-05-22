@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import type { ItemSearchResult } from "../../../../type";
 import { shallowMount } from "@vue/test-utils";
 import CellId from "./CellId.vue";

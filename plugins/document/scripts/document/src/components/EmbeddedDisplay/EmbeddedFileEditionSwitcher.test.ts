@@ -18,7 +18,7 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
@@ -27,12 +27,12 @@ import type { PreferenciesState } from "../../store/preferencies/preferencies-de
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("EmbeddedFileEditionSwitcher", () => {
-    let display_in_large_mode: jest.Mock;
-    let display_in_narrow_mode: jest.Mock;
+    let display_in_large_mode: vi.Mock;
+    let display_in_narrow_mode: vi.Mock;
 
     beforeEach(() => {
-        display_in_large_mode = jest.fn();
-        display_in_narrow_mode = jest.fn();
+        display_in_large_mode = vi.fn();
+        display_in_narrow_mode = vi.fn();
     });
 
     function getWrapper(

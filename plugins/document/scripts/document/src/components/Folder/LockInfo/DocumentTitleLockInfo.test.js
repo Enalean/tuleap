@@ -17,23 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it } from "@jest/globals";
+import { beforeEach, describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import DocumentTitleLockInfo from "./DocumentTitleLockInfo.vue";
 import { TYPE_EMBEDDED } from "../../../constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("DocumentTitleLockInfo", () => {
     let document_locked_factory;
 
     beforeEach(() => {
-        const store = createStoreMock({});
-
         document_locked_factory = (props = {}) => {
             return shallowMount(DocumentTitleLockInfo, {
                 props: { ...props },
-                mocks: { $store: store },
                 global: { ...getGlobalTestOptions({}) },
             });
         };

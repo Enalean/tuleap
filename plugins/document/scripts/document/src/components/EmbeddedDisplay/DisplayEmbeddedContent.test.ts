@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
@@ -31,6 +31,10 @@ import { routes } from "../../router/router";
 const router = createRouter({
     history: createWebHistory(),
     routes: routes,
+});
+
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
 });
 
 describe("DisplayEmbeddedContent", () => {
@@ -50,7 +54,7 @@ describe("DisplayEmbeddedContent", () => {
                 plugins: [router],
                 ...getGlobalTestOptions({ state }),
                 directives: {
-                    "dompurify-html": jest.fn().mockImplementation(() => {
+                    "dompurify-html": vi.fn().mockImplementation(() => {
                         return content_to_display;
                     }),
                 },

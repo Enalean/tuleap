@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import HistoryLogsContent from "./HistoryLogsContent.vue";
 import type { LogEntry } from "../../api/log-rest-querier";

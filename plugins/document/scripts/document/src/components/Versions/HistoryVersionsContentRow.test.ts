@@ -16,25 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import type { Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Modal } from "@tuleap/tlp-modal";
-
-jest.mock("@tuleap/tlp-modal", () => {
-    return {
-        createModal: (): Modal =>
-            ({
-                addEventListener: jest.fn(),
-            }) as unknown as Modal,
-    };
-});
-
-const deleteFileVersion = jest.fn();
-jest.mock("../../api/version-rest-querier", () => {
-    return {
-        deleteFileVersion,
-    };
-});
-
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import UserBadge from "../User/UserBadge.vue";
@@ -45,11 +29,14 @@ import type { RestUser } from "../../api/rest-querier";
 import type { FileHistory, Item, ItemFile } from "../../type";
 import { FEEDBACK, SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import * as VersionRestQuerier from "../../api/version-rest-querier";
+import * as tlp_modal from "@tuleap/tlp-modal";
 
 describe("HistoryVersionsContentRow", () => {
     let location: Pick<Location, "reload">;
     let loadVersions: () => void;
     let success: () => void;
+    let deleteFileVersion: Mock;
 
     function getWrapper(
         item: Item,
@@ -89,13 +76,20 @@ describe("HistoryVersionsContentRow", () => {
     }
 
     beforeEach(() => {
-        location = { reload: jest.fn() };
-        loadVersions = jest.fn();
-        success = jest.fn();
+        location = { reload: vi.fn() };
+        loadVersions = vi.fn();
+        success = vi.fn();
+        deleteFileVersion = vi.spyOn(VersionRestQuerier, "deleteFileVersion");
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(
+            () =>
+                ({
+                    addEventListener: vi.fn(),
+                }) as unknown as Modal,
+        );
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it("should display a user badge for each author and two coauthors", () => {

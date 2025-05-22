@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cancelFileUpload, cancelFolderUpload, cancelVersionUpload } from "./actions-cancel";
 import * as rest_querier from "../api/rest-querier";
 import type { ActionContext } from "vuex";
@@ -31,8 +31,8 @@ describe("actions-cancel", () => {
     beforeEach(() => {
         const project_id = "101";
         context = {
-            commit: jest.fn(),
-            dispatch: jest.fn(),
+            commit: vi.fn(),
+            dispatch: vi.fn(),
             state: {
                 configuration: { project_id } as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
@@ -46,7 +46,7 @@ describe("actions-cancel", () => {
         beforeEach(() => {
             item = {
                 uploader: {
-                    abort: jest.fn(),
+                    abort: vi.fn(),
                 } as unknown as Upload,
             } as ItemFile;
         });
@@ -56,7 +56,7 @@ describe("actions-cancel", () => {
             expect(item.uploader?.abort).toHaveBeenCalled();
         });
         it("asks to tus server to abort the upload, because tus client does not do it for us", async () => {
-            const cancelUpload = jest.spyOn(rest_querier, "cancelUpload").mockImplementation();
+            const cancelUpload = vi.spyOn(rest_querier, "cancelUpload").mockImplementation();
             await cancelFileUpload(context, item);
             expect(cancelUpload).toHaveBeenCalledWith(item);
         });
@@ -65,7 +65,7 @@ describe("actions-cancel", () => {
             expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", item);
         });
         it("remove item from the store even if there is an error on cancelUpload", async () => {
-            jest.spyOn(rest_querier, "cancelUpload").mockImplementation(() => {
+            vi.spyOn(rest_querier, "cancelUpload").mockImplementation(() => {
                 throw new Error("Failed to fetch");
             });
             await cancelFileUpload(context, item);
@@ -78,7 +78,7 @@ describe("actions-cancel", () => {
         beforeEach(() => {
             item = {
                 uploader: {
-                    abort: jest.fn(),
+                    abort: vi.fn(),
                 } as unknown as Upload,
             } as ItemFile;
         });
@@ -103,12 +103,12 @@ describe("actions-cancel", () => {
                 parent_id: folder.id,
                 is_uploading_new_version: false,
                 uploader: {
-                    abort: jest.fn(),
+                    abort: vi.fn(),
                 } as unknown as Upload,
             } as ItemFile;
 
             context = {
-                commit: jest.fn(),
+                commit: vi.fn(),
                 state: {
                     files_uploads_list: [item],
                 } as RootState,

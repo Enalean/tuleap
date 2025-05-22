@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CellLocation should display path via the router link and the folder separators 1`] = `
+exports[`CellLocation > should display path via the router link and the folder separators 1`] = `
 <td>
   
   

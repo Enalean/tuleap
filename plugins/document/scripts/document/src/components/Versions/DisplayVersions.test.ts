@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -35,13 +35,13 @@ import * as router from "vue-router";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 
-jest.mock("vue-router");
+vi.mock("vue-router");
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("DisplayVersions", () => {
     beforeEach(() => {
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             params: { item_id: "101" },
         } as unknown as RouteLocationNormalizedLoaded);
     });
@@ -54,7 +54,7 @@ describe("DisplayVersions", () => {
         [TYPE_WIKI, false],
         [TYPE_EMPTY, false],
     ])("should display a %s with versions: %s", async (type, should_versions_be_displayed) => {
-        const load_with_hierarchy = jest.fn().mockImplementation(() => {
+        const load_with_hierarchy = vi.fn().mockImplementation(() => {
             return Promise.resolve({
                 id: 42,
                 type,
@@ -76,7 +76,7 @@ describe("DisplayVersions", () => {
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryVersions).exists()).toBe(should_versions_be_displayed);
     });

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Embedded, Empty, Folder, Item, ItemFile, Link, State, Wiki } from "../type";
 import {
     CLIPBOARD_OPERATION_COPY,
@@ -35,24 +35,25 @@ import type { PastePayload } from "./clipboard";
 import { useClipboardStore } from "./clipboard";
 import emitter from "../helpers/emitter";
 import type { Store } from "vuex";
+import type { Ref } from "vue";
 import { ref } from "vue";
-import * as vueuse from "@vueuse/core";
 
-const mocked_store = { dispatch: jest.fn() };
-jest.mock("../store", () => ({ store: { dispatch: jest.fn() } as unknown as Store<State> }));
+const mocked_store = { dispatch: vi.fn() };
+vi.mock("../store", () => ({ store: { dispatch: vi.fn() } as unknown as Store<State> }));
+vi.mock("@vueuse/core", () => ({
+    useLocalStorage: (_: string, value: unknown): Ref<unknown> => ref(value),
+}));
 
 describe("Clipboard Store", () => {
-    let emit: jest.SpyInstance;
+    let emit: vi.SpyInstance;
     const copied_item_id = 852;
     const moved_item_id = 852;
 
     beforeEach(() => {
         setActivePinia(createPinia());
-        emit = jest.spyOn(emitter, "emit");
-        jest.spyOn(vueuse, "useLocalStorage").mockImplementation((key: string, value) =>
-            ref(value),
-        );
+        emit = vi.spyOn(emitter, "emit");
     });
+
     describe("PasteItem", () => {
         it(`When an item is already being pasted
         Then it does nothing`, async () => {
@@ -60,7 +61,7 @@ describe("Clipboard Store", () => {
             store.$patch({
                 pasting_in_progress: true,
             });
-            const empty_clipboard_mock = jest.spyOn(store, "emptyClipboard");
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard");
 
             await store.pasteItem({} as PastePayload);
 
@@ -72,7 +73,7 @@ describe("Clipboard Store", () => {
             store.$patch({
                 operation_type: "unknown_operation",
             });
-            const empty_clipboard_mock = jest.spyOn(store, "emptyClipboard");
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard");
 
             await store.pasteItem({} as PastePayload);
             expect(empty_clipboard_mock).toHaveBeenCalled();
@@ -84,7 +85,7 @@ describe("Clipboard Store", () => {
             store.$patch({
                 item_type: "unknown_type",
             });
-            const empty_clipboard_mock = jest.spyOn(store, "emptyClipboard").mockImplementation();
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation();
 
             await store.pasteItem({} as PastePayload);
             expect(empty_clipboard_mock).toHaveBeenCalled();
@@ -101,10 +102,10 @@ describe("Clipboard Store", () => {
                 item_type: TYPE_EMPTY,
             });
 
-            const mocked_move = jest.spyOn(rest_querier, "moveDocument");
+            const mocked_move = vi.spyOn(rest_querier, "moveDocument");
             mocked_move.mockRejectedValue("Forbidden");
 
-            const pasting_has_failed_mock = jest.spyOn(store, "pastingHasFailed");
+            const pasting_has_failed_mock = vi.spyOn(store, "pastingHasFailed");
 
             await store.pasteItem({} as PastePayload);
 
@@ -125,7 +126,7 @@ describe("Clipboard Store", () => {
                 operation_type: CLIPBOARD_OPERATION_COPY,
             });
 
-            const empty_clipboard_mock = jest.spyOn(store, "emptyClipboard").mockImplementation();
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation();
 
             const current_folder = { id: 147 } as Folder;
             const destination_folder = { id: 147 } as Folder;
@@ -135,7 +136,7 @@ describe("Clipboard Store", () => {
         };
 
         it("Paste a file", async () => {
-            const copyFile = jest.spyOn(rest_querier, "copyFile");
+            const copyFile = vi.spyOn(rest_querier, "copyFile");
             copyFile.mockReturnValue(Promise.resolve({ id: 123 } as ItemFile));
 
             await testPasteSuccess(TYPE_FILE);
@@ -145,7 +146,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Paste a folder", async () => {
-            const copyFolder = jest.spyOn(rest_querier, "copyFolder");
+            const copyFolder = vi.spyOn(rest_querier, "copyFolder");
             copyFolder.mockReturnValue(Promise.resolve({ id: 123 } as Folder));
 
             await testPasteSuccess(TYPE_FOLDER);
@@ -155,7 +156,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Paste an empty document", async () => {
-            const copyEmpty = jest.spyOn(rest_querier, "copyEmpty");
+            const copyEmpty = vi.spyOn(rest_querier, "copyEmpty");
             copyEmpty.mockReturnValue(Promise.resolve({ id: 123 } as Empty));
 
             await testPasteSuccess(TYPE_EMPTY);
@@ -165,7 +166,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Paste a wiki document", async () => {
-            const copyWiki = jest.spyOn(rest_querier, "copyWiki");
+            const copyWiki = vi.spyOn(rest_querier, "copyWiki");
             copyWiki.mockReturnValue(Promise.resolve({ id: 123 } as Wiki));
 
             await testPasteSuccess(TYPE_WIKI);
@@ -175,7 +176,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Paste an embedded file", async () => {
-            const copyEmbedded = jest.spyOn(rest_querier, "copyEmbedded");
+            const copyEmbedded = vi.spyOn(rest_querier, "copyEmbedded");
             copyEmbedded.mockReturnValue(Promise.resolve({ id: 123 } as Embedded));
 
             await testPasteSuccess(TYPE_EMBEDDED);
@@ -185,7 +186,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Paste a link", async () => {
-            const copyLink = jest.spyOn(rest_querier, "copyLink");
+            const copyLink = vi.spyOn(rest_querier, "copyLink");
             copyLink.mockReturnValue(Promise.resolve({ id: 123 } as Link));
 
             await testPasteSuccess(TYPE_LINK);
@@ -195,7 +196,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Paste another type of document", async () => {
-            const copyOtherType = jest.spyOn(rest_querier, "copyOtherType");
+            const copyOtherType = vi.spyOn(rest_querier, "copyOtherType");
             copyOtherType.mockReturnValue(Promise.resolve({ id: 123 } as Item));
 
             await testPasteSuccess("whatever");
@@ -207,7 +208,7 @@ describe("Clipboard Store", () => {
 
     describe("Cut/PasteItem", () => {
         it("Paste a document", async () => {
-            const moveDocument = jest.spyOn(rest_querier, "moveDocument");
+            const moveDocument = vi.spyOn(rest_querier, "moveDocument");
             moveDocument.mockReturnValue(Promise.resolve());
 
             const store = useClipboardStore(mocked_store, "1", "1");
@@ -218,7 +219,7 @@ describe("Clipboard Store", () => {
                 operation_type: CLIPBOARD_OPERATION_CUT,
             });
 
-            const empty_clipboard_mock = jest.spyOn(store, "emptyClipboard").mockImplementation();
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation();
 
             const current_folder = { id: 147 } as Folder;
             const destination_folder = { id: 147 } as Folder;

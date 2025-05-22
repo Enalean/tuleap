@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 
 import NewItemModal from "./NewItemModal.vue";
@@ -27,11 +27,15 @@ import { TYPE_FILE, TYPE_FOLDER } from "../../../../constants";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
 
 describe("NewItemModal", () => {
     let factory;
-    const load_projects_ugroups = jest.fn();
+    const load_projects_ugroups = vi.fn();
 
     const current_folder = {
         id: 42,
@@ -120,7 +124,7 @@ describe("NewItemModal", () => {
             });
         };
 
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             removeEventListener: () => {},
             show: () => {},
@@ -180,7 +184,7 @@ describe("NewItemModal", () => {
         emitter.emit("createItem", {
             item: current_folder,
         });
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.item.properties).toStrictEqual(item_to_create.properties);
         wrapper.unmount();
@@ -239,7 +243,7 @@ describe("NewItemModal", () => {
     });
 
     it("should update the filename accordingly to title when created from empty", async function () {
-        jest.spyOn(get_office_file, "getEmptyOfficeFileFromMimeType").mockResolvedValue({
+        vi.spyOn(get_office_file, "getEmptyOfficeFileFromMimeType").mockResolvedValue({
             badge_class: "document-document-badge",
             extension: "docx",
             file: new File([], "document.docx", { type: "application/docx" }),
@@ -261,7 +265,7 @@ describe("NewItemModal", () => {
             },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         emitter.emit("update-title-property", "Specs V1");
         expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.docx");

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`HistoryLogsContent should collapse cols when there is no new value 1`] = `
+exports[`HistoryLogsContent > should collapse cols when there is no new value 1`] = `
 <tbody>
   
   <tr>
@@ -31,7 +31,7 @@ exports[`HistoryLogsContent should collapse cols when there is no new value 1`] 
 </tbody>
 `;
 
-exports[`HistoryLogsContent should collapse cols when there is no new value nor old value 1`] = `
+exports[`HistoryLogsContent > should collapse cols when there is no new value nor old value 1`] = `
 <tbody>
   
   <tr>
@@ -62,7 +62,7 @@ exports[`HistoryLogsContent should collapse cols when there is no new value nor 
 </tbody>
 `;
 
-exports[`HistoryLogsContent should collapse cols when there is no old value 1`] = `
+exports[`HistoryLogsContent > should collapse cols when there is no old value 1`] = `
 <tbody>
   
   <tr>
@@ -93,7 +93,7 @@ exports[`HistoryLogsContent should collapse cols when there is no old value 1`] 
 </tbody>
 `;
 
-exports[`HistoryLogsContent should display a link to a diff 1`] = `
+exports[`HistoryLogsContent > should display a link to a diff 1`] = `
 <tbody>
   
   <tr>
@@ -128,7 +128,7 @@ exports[`HistoryLogsContent should display a link to a diff 1`] = `
 </tbody>
 `;
 
-exports[`HistoryLogsContent should display old and new value 1`] = `
+exports[`HistoryLogsContent > should display old and new value 1`] = `
 <tbody>
   
   <tr>

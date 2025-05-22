@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import type { RestUser } from "../../api/rest-querier";
@@ -26,7 +26,7 @@ import { retrieveSelectedOwner } from "./retrieve-selected-owner";
 
 describe("getSelectedOwner", () => {
     it("returns the wanted user", async () => {
-        const get_spy = jest.spyOn(rest_querier, "getUserByName");
+        const get_spy = vi.spyOn(rest_querier, "getUserByName");
         get_spy.mockReturnValue(
             okAsync([{ display_name: "John Doe", username: "jdoe" } as RestUser]),
         );
@@ -38,7 +38,7 @@ describe("getSelectedOwner", () => {
     });
 
     it("display the searched username if something went wrong", async () => {
-        const get_spy = jest.spyOn(rest_querier, "getUserByName");
+        const get_spy = vi.spyOn(rest_querier, "getUserByName");
         get_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
         const user = await retrieveSelectedOwner("jdoe");
@@ -48,7 +48,7 @@ describe("getSelectedOwner", () => {
     });
 
     it("return an empty user when no user have been retrieved", async () => {
-        const get_spy = jest.spyOn(rest_querier, "getUserByName");
+        const get_spy = vi.spyOn(rest_querier, "getUserByName");
         get_spy.mockReturnValue(okAsync([]));
 
         const user = await retrieveSelectedOwner("jdoe");

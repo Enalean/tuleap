@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SearchItemDropdown from "./SearchItemDropdown.vue";
@@ -29,15 +29,15 @@ import { EVENT_TLP_DROPDOWN_SHOWN } from "@tuleap/tlp-dropdown";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../store/configuration";
 
-jest.mock("@tuleap/tlp-dropdown");
+vi.mock("@tuleap/tlp-dropdown");
 
-const observe = jest.fn();
+const observe = vi.fn();
 
 window.ResizeObserver =
     window.ResizeObserver ||
-    jest.fn().mockImplementation(() => ({
+    vi.fn().mockImplementation(() => ({
         observe,
-        unobserve: jest.fn(),
+        unobserve: vi.fn(),
     }));
 
 describe("SearchItemDropdown", () => {
@@ -54,9 +54,9 @@ describe("SearchItemDropdown", () => {
                     dropdown_shown_callback = callback;
                 }
             },
-            removeEventListener: jest.fn(),
+            removeEventListener: vi.fn(),
         } as unknown as Dropdown;
-        jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
+        vi.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
 
         const loadDocument = (): Promise<Item> =>
             Promise.resolve({

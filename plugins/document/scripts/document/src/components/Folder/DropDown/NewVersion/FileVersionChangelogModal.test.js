@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import FileVersionChangelogModal from "./FileVersionChangelogModal.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import { nextTick } from "vue";
 
 describe("FileVersionChangelogModal", () => {
-    let create_file_version = jest.fn();
+    let create_file_version = vi.fn();
 
     function getWrapper() {
         return shallowMount(FileVersionChangelogModal, {
@@ -44,7 +44,7 @@ describe("FileVersionChangelogModal", () => {
                         error: {
                             namespaced: true,
                             mutations: {
-                                resetModalError: jest.fn(),
+                                resetModalError: vi.fn(),
                             },
                         },
                     },
@@ -54,7 +54,7 @@ describe("FileVersionChangelogModal", () => {
     }
 
     beforeEach(() => {
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

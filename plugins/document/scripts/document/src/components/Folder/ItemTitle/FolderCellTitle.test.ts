@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderCellTitle from "./FolderCellTitle.vue";
@@ -27,29 +27,29 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("FolderCellTitle", () => {
-    let initialize_folder_properties: jest.Mock;
-    let unfold_folder_content: jest.Mock;
-    let get_sub_folder_content: jest.Mock;
-    let toggle_collapse_folder_has_uploading_content: jest.Mock;
-    let set_user_preferences: jest.Mock;
-    let fold_folder_content: jest.Mock;
-    let append_folder_to_hierarchy: jest.Mock;
+    let initialize_folder_properties: vi.Mock;
+    let unfold_folder_content: vi.Mock;
+    let get_sub_folder_content: vi.Mock;
+    let toggle_collapse_folder_has_uploading_content: vi.Mock;
+    let set_user_preferences: vi.Mock;
+    let fold_folder_content: vi.Mock;
+    let append_folder_to_hierarchy: vi.Mock;
     const item = { id: 10 } as Folder;
     beforeEach(() => {
-        const mock_resolve = jest.fn().mockReturnValue({ href: "/my-url" });
-        jest.spyOn(router, "useRouter").mockImplementation(() => {
-            return { resolve: mock_resolve, push: jest.fn() } as unknown as Router;
+        const mock_resolve = vi.fn().mockReturnValue({ href: "/my-url" });
+        vi.spyOn(router, "useRouter").mockImplementation(() => {
+            return { resolve: mock_resolve, push: vi.fn() } as unknown as Router;
         });
-        initialize_folder_properties = jest.fn();
-        unfold_folder_content = jest.fn();
-        get_sub_folder_content = jest.fn();
-        toggle_collapse_folder_has_uploading_content = jest.fn();
-        set_user_preferences = jest.fn();
-        fold_folder_content = jest.fn();
-        append_folder_to_hierarchy = jest.fn();
+        initialize_folder_properties = vi.fn();
+        unfold_folder_content = vi.fn();
+        get_sub_folder_content = vi.fn();
+        toggle_collapse_folder_has_uploading_content = vi.fn();
+        set_user_preferences = vi.fn();
+        fold_folder_content = vi.fn();
+        append_folder_to_hierarchy = vi.fn();
     });
 
     function getWrapper(
@@ -102,7 +102,7 @@ describe("FolderCellTitle", () => {
         Then we should dynamically load its content`, async () => {
         const wrapper = getWrapper(true, false);
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(initialize_folder_properties).toHaveBeenCalled();
         expect(unfold_folder_content).toHaveBeenCalled();
@@ -119,7 +119,7 @@ describe("FolderCellTitle", () => {
         Then we don't load anything and render directly it`, async () => {
         const wrapper = getWrapper(false, false);
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(initialize_folder_properties).toHaveBeenCalled();
         const toggle = wrapper.get("[data-test=toggle]");
@@ -136,7 +136,7 @@ describe("FolderCellTitle", () => {
             wrapper.get("[data-test=toggle]").trigger("click");
 
             expect(initialize_folder_properties).toHaveBeenCalled();
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
             const toggle = wrapper.get("[data-test=toggle]");
             await toggle.trigger("click");
             expect(toggle.classes()).toContain("fa-caret-down");
@@ -203,9 +203,9 @@ describe("FolderCellTitle", () => {
     });
 
     describe("go to folder", () => {
-        let abortCurrentUploads: jest.SpyInstance;
+        let abortCurrentUploads: vi.SpyInstance;
         beforeEach(() => {
-            abortCurrentUploads = jest.spyOn(abort_current_uploads, "abortCurrentUploads");
+            abortCurrentUploads = vi.spyOn(abort_current_uploads, "abortCurrentUploads");
         });
 
         it(`Given there is an on going upload and user refuse confirmation

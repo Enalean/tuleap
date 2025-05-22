@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
@@ -35,7 +35,7 @@ import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
 
-jest.mock("../../../../helpers/emitter");
+vi.mock("../../../../helpers/emitter");
 
 describe("NewItemMenuOptions", function () {
     const CURRENT_FOLDER: Item = {
@@ -44,7 +44,7 @@ describe("NewItemMenuOptions", function () {
     } as Item;
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     function getWrapper(

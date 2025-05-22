@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import DisplayHistory from "./DisplayHistory.vue";
 import {
@@ -35,18 +35,18 @@ import * as router from "vue-router";
 import type { Item } from "../../type";
 import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 
-jest.mock("vue-router");
+vi.mock("vue-router");
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("DisplayHistory", () => {
-    let load_document: jest.Mock;
+    let load_document: vi.Mock;
 
     beforeEach(() => {
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             params: { item_id: "101" },
         } as unknown as RouteLocationNormalizedLoaded);
-        load_document = jest.fn();
+        load_document = vi.fn();
     });
 
     it("should display logs", async () => {
@@ -68,7 +68,7 @@ describe("DisplayHistory", () => {
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.html()).toContain("history-logs-stub");
     });
@@ -101,7 +101,7 @@ describe("DisplayHistory", () => {
             });
 
             // wait for loadDocumentWithAscendentHierarchy() to be called
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.item_has_versions).toBe(should_versions_link_be_displayed);
         },

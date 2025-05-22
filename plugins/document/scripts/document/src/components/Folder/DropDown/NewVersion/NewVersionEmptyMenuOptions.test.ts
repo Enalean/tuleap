@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
@@ -28,7 +28,7 @@ import emitter, { default as real_emitter } from "../../../../helpers/emitter";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("NewVersionEmptyMenuOptions", function () {
     const CURRENT_ITEM: Empty = {
@@ -36,18 +36,18 @@ describe("NewVersionEmptyMenuOptions", function () {
         type: TYPE_EMPTY,
         title: "Specs",
     } as Empty;
-    let emit: jest.SpyInstance;
+    let emit: vi.SpyInstance;
     let location: Location;
-    let create_version_from_empty: jest.Mock;
+    let create_version_from_empty: vi.Mock;
 
     beforeEach(() => {
-        emit = jest.spyOn(emitter, "emit");
+        emit = vi.spyOn(emitter, "emit");
         location = { href: "" } as Location;
-        create_version_from_empty = jest.fn();
+        create_version_from_empty = vi.fn();
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     function getWrapper(
@@ -158,7 +158,7 @@ describe("NewVersionEmptyMenuOptions", function () {
 
     it("should convert an empty to an alternative and open the file after conversion", async function () {
         const file = new File([], "document.docx", { type: "application/docx" });
-        jest.spyOn(get_office_file, "getEmptyOfficeFileFromMimeType").mockResolvedValue({
+        vi.spyOn(get_office_file, "getEmptyOfficeFileFromMimeType").mockResolvedValue({
             badge_class: "document-document-badge",
             extension: "docx",
             file,
@@ -178,7 +178,7 @@ describe("NewVersionEmptyMenuOptions", function () {
 
         await alternatives.at(0).trigger("click");
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(create_version_from_empty).toHaveBeenCalled();
         expect(create_version_from_empty.mock.calls[0][1][2].file_properties.file.name).toBe(

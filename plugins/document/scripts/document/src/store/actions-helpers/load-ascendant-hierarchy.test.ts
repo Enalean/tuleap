@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
 import { loadAscendantHierarchy } from "./load-ascendant-hierarchy";
 import type { ActionContext } from "vuex";
@@ -26,14 +25,14 @@ import type { Folder, Item, RootState } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("loadAscendantHierarchy", () => {
-    let context: ActionContext<RootState, RootState>, getParents: jest.SpyInstance;
+    let context: ActionContext<RootState, RootState>, getParents: vi.SpyInstance;
 
     beforeEach(() => {
         context = {
-            commit: jest.fn(),
+            commit: vi.fn(),
         } as unknown as ActionContext<RootState, RootState>;
 
-        getParents = jest.spyOn(rest_querier, "getParents");
+        getParents = vi.spyOn(rest_querier, "getParents");
     });
 
     it("loads the folder parents and sets loading flag", async () => {
@@ -102,20 +101,25 @@ describe("loadAscendantHierarchy", () => {
         } as Folder;
 
         const error_message = "The folder does not exist.";
-        mockFetchError(getParents, {
-            status: 404,
-            error_json: {
-                error: {
-                    i18n_error_message: error_message,
-                },
-            },
-        });
+        getParents.mockRejectedValue(
+            new FetchWrapperError("", {
+                status: 404,
+                json: (): Promise<{ error: { i18n_error_message: string } }> =>
+                    Promise.resolve({ error: { i18n_error_message: error_message } }),
+            } as Response),
+        );
 
         await loadAscendantHierarchy(context, 3, Promise.resolve(item));
 
+        expect(context.commit).toHaveBeenNthCalledWith(1, "beginLoadingAscendantHierarchy");
+        expect(context.commit).toHaveBeenNthCalledWith(2, "resetAscendantHierarchy");
         expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
-        expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
-        expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
+        expect(context.commit).toHaveBeenNthCalledWith(3, "stopLoadingAscendantHierarchy");
+        expect(context.commit).toHaveBeenNthCalledWith(
+            4,
+            "error/setFolderLoadingError",
+            error_message,
+        );
     });
 
     it("When the item can't be found, another error screen will be shown", async () => {
@@ -145,14 +149,13 @@ describe("loadAscendantHierarchy", () => {
     });
 
     it("When the user does not have access to the folder, an error will be raised", async () => {
-        mockFetchError(getParents, {
-            status: 403,
-            error_json: {
-                error: {
-                    i18n_error_message: "No you cannot",
-                },
-            },
-        });
+        getParents.mockRejectedValue(
+            new FetchWrapperError("", {
+                status: 403,
+                json: (): Promise<{ error: { i18n_error_message: string } }> =>
+                    Promise.reject({ error: { i18n_error_message: "No you cannot" } }),
+            } as Response),
+        );
 
         const item = {
             id: 3,

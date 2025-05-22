@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/preferencies-rest-querier";
 import {
     displayEmbeddedInLargeMode,
@@ -30,14 +30,14 @@ import type { PreferenciesState } from "./preferencies-default-state";
 import type { ActionContext } from "vuex";
 
 describe("setUserPreferenciesForFolder", () => {
-    let patchUserPreferenciesForFolderInProject: jest.SpyInstance;
-    let deleteUserPreferenciesForFolderInProject: jest.SpyInstance;
+    let patchUserPreferenciesForFolderInProject: vi.SpyInstance;
+    let deleteUserPreferenciesForFolderInProject: vi.SpyInstance;
 
     beforeEach(() => {
-        patchUserPreferenciesForFolderInProject = jest
+        patchUserPreferenciesForFolderInProject = vi
             .spyOn(rest_querier, "patchUserPreferenciesForFolderInProject")
             .mockReturnValue(Promise.resolve());
-        deleteUserPreferenciesForFolderInProject = jest
+        deleteUserPreferenciesForFolderInProject = vi
             .spyOn(rest_querier, "deleteUserPreferenciesForFolderInProject")
             .mockReturnValue(Promise.resolve());
     });
@@ -84,10 +84,10 @@ describe("displayEmbeddedInLargeMode", () => {
             rootState: {
                 configuration: { user_id: 102, project_id: 110 },
             },
-            commit: jest.fn(),
+            commit: vi.fn(),
         } as unknown as ActionContext<PreferenciesState, RootState>;
 
-        jest.spyOn(rest_querier, "removeUserPreferenceForEmbeddedDisplay").mockReturnValue(
+        vi.spyOn(rest_querier, "removeUserPreferenceForEmbeddedDisplay").mockReturnValue(
             Promise.resolve(),
         );
     });
@@ -112,10 +112,10 @@ describe("displayEmbeddedInNarrowMode", () => {
             rootState: {
                 configuration: { user_id: 102, project_id: 110 },
             },
-            commit: jest.fn(),
+            commit: vi.fn(),
         } as unknown as ActionContext<PreferenciesState, RootState>;
 
-        jest.spyOn(rest_querier, "setNarrowModeForEmbeddedDisplay").mockReturnValue(
+        vi.spyOn(rest_querier, "setNarrowModeForEmbeddedDisplay").mockReturnValue(
             Promise.resolve(),
         );
     });

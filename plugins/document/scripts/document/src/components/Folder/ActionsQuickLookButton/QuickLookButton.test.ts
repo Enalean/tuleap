@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookButton from "./QuickLookButton.vue";
@@ -26,7 +26,7 @@ import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.mock("../../../helpers/emitter");
+vi.mock("../../../helpers/emitter");
 
 describe("QuickLookButton", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof QuickLookButton>> {

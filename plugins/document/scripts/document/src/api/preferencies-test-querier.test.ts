@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
@@ -40,7 +40,7 @@ describe("User preferences", () => {
 
     describe("patchUserPreferenciesForFolderInProject() -", () => {
         it("should set the current user's preferencies for a given folder on 'expanded'", async () => {
-            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+            const tlpPatch = vi.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
             await patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
 
@@ -56,7 +56,7 @@ describe("User preferences", () => {
 
     describe("deleteUserPreferenciesForFolderInProject() -", () => {
         it("should delete the current user's preferencies for a given folder (e.g collapsed)", async () => {
-            const tlpDel = jest.spyOn(tlp_fetch, "del");
+            const tlpDel = vi.spyOn(tlp_fetch, "del");
             mockFetchSuccess(tlpDel);
             await deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
 

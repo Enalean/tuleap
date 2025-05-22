@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { highlightItem } from "./highlight-items-helper";
 import { TYPE_FILE, TYPE_FOLDER } from "../constants";
 import type { Folder, ItemFile } from "../type";

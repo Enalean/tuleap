@@ -18,13 +18,17 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import emitter from "../../../../helpers/emitter";
 
 import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
+});
 
 describe("UpdatePropertiesModal", () => {
     let factory;
@@ -80,7 +84,7 @@ describe("UpdatePropertiesModal", () => {
             });
         };
 
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

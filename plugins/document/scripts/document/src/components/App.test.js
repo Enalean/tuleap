@@ -18,7 +18,7 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { RouterViewStub, shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 
@@ -31,7 +31,7 @@ import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 
 describe("App", () => {
     let factory;
-    const set_root_title = jest.fn();
+    const set_root_title = vi.fn();
     let has_folder_permission_error,
         has_folder_loading_error,
         has_document_permission_error,

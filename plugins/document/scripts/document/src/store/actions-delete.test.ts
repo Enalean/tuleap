@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -28,19 +28,20 @@ import {
 } from "../constants";
 import * as rest_querier from "../api/rest-querier";
 import { deleteItem } from "./actions-delete";
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { Item, RootState } from "../type";
 import type { ActionContext } from "vuex";
 import emitter from "../helpers/emitter";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 let pinia: TestingPinia;
 
-jest.mock("../helpers/emitter");
+vi.mock("../helpers/emitter");
 
-const empty_clipboard = jest.fn();
+const empty_clipboard = vi.fn();
 describe("actions-delete", () => {
     const useStore = defineStore("root", {
         state: () => ({
@@ -62,14 +63,14 @@ describe("actions-delete", () => {
             const project_id = 101;
             const user_id = 101;
             context = {
-                commit: jest.fn(),
+                commit: vi.fn(),
                 state: {
                     configuration: { project_id, user_id },
                 },
             } as unknown as ActionContext<RootState, RootState>;
-            jest.clearAllMocks();
+            vi.clearAllMocks();
 
-            pinia = createTestingPinia({});
+            pinia = createTestingPinia({ createSpy: vi.fn });
             useStore(pinia);
         });
 
@@ -80,7 +81,7 @@ describe("actions-delete", () => {
                 type: TYPE_FILE,
             } as Item;
 
-            const deleteFile = jest.spyOn(rest_querier, "deleteFile");
+            const deleteFile = vi.spyOn(rest_querier, "deleteFile");
             mockFetchSuccess(deleteFile);
 
             await deleteItem(context, {
@@ -99,7 +100,7 @@ describe("actions-delete", () => {
                 type: TYPE_LINK,
             } as Item;
 
-            mockFetchSuccess(jest.spyOn(rest_querier, "deleteLink"));
+            mockFetchSuccess(vi.spyOn(rest_querier, "deleteLink"));
 
             await deleteItem(context, {
                 item: link_item,
@@ -116,7 +117,7 @@ describe("actions-delete", () => {
                 type: TYPE_EMBEDDED,
             } as Item;
 
-            const deleteEmbeddedFile = jest.spyOn(rest_querier, "deleteEmbeddedFile");
+            const deleteEmbeddedFile = vi.spyOn(rest_querier, "deleteEmbeddedFile");
             mockFetchSuccess(deleteEmbeddedFile);
 
             await deleteItem(context, {
@@ -135,7 +136,7 @@ describe("actions-delete", () => {
                 type: TYPE_WIKI,
             } as Item;
 
-            const deleteWiki = jest.spyOn(rest_querier, "deleteWiki");
+            const deleteWiki = vi.spyOn(rest_querier, "deleteWiki");
             mockFetchSuccess(deleteWiki);
 
             const additional_options = { delete_associated_wiki_page: true };
@@ -157,7 +158,7 @@ describe("actions-delete", () => {
                 type: TYPE_EMPTY,
             } as Item;
 
-            const deleteEmptyDocument = jest.spyOn(rest_querier, "deleteEmptyDocument");
+            const deleteEmptyDocument = vi.spyOn(rest_querier, "deleteEmptyDocument");
             mockFetchSuccess(deleteEmptyDocument);
 
             await deleteItem(context, {
@@ -176,7 +177,7 @@ describe("actions-delete", () => {
                 type: TYPE_FOLDER,
             } as Item;
 
-            const deleteFolder = jest.spyOn(rest_querier, "deleteFolder");
+            const deleteFolder = vi.spyOn(rest_querier, "deleteFolder");
             mockFetchSuccess(deleteFolder);
 
             await deleteItem(context, {
@@ -195,7 +196,7 @@ describe("actions-delete", () => {
                 type: "whatever",
             } as Item;
 
-            const deleteOtherType = jest.spyOn(rest_querier, "deleteOtherType");
+            const deleteOtherType = vi.spyOn(rest_querier, "deleteOtherType");
             mockFetchSuccess(deleteOtherType);
 
             await deleteItem(context, {
@@ -214,7 +215,7 @@ describe("actions-delete", () => {
                 type: TYPE_FILE,
             } as Item;
 
-            mockFetchSuccess(jest.spyOn(rest_querier, "deleteFile"));
+            mockFetchSuccess(vi.spyOn(rest_querier, "deleteFile"));
 
             await deleteItem(context, {
                 item: item_to_delete,
@@ -236,9 +237,11 @@ describe("actions-delete", () => {
                 type: TYPE_FOLDER,
             } as Item;
 
-            mockFetchError(jest.spyOn(rest_querier, "deleteFolder"), {
-                status: 400,
-            });
+            vi.spyOn(rest_querier, "deleteFolder").mockRejectedValue(
+                new FetchWrapperError("", {
+                    status: 400,
+                } as Response),
+            );
 
             await deleteItem(context, {
                 item: folder_item,
@@ -258,14 +261,13 @@ describe("actions-delete", () => {
                 type: TYPE_FOLDER,
             } as Item;
 
-            mockFetchError(jest.spyOn(rest_querier, "deleteFolder"), {
-                error_json: {
-                    error: {
-                        code: 404,
-                        i18n_error_message: "not found",
-                    },
-                },
-            });
+            vi.spyOn(rest_querier, "deleteFolder").mockRejectedValue(
+                new FetchWrapperError("", {
+                    status: 404,
+                    json: (): Promise<{ error: { code: number; i18n_error_message: string } }> =>
+                        Promise.resolve({ error: { code: 404, i18n_error_message: "not found" } }),
+                } as Response),
+            );
 
             await deleteItem(context, {
                 item: folder_item,

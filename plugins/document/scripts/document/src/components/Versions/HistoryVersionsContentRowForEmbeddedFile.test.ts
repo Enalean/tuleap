@@ -16,25 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import type { Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Modal } from "@tuleap/tlp-modal";
-
-jest.mock("@tuleap/tlp-modal", () => {
-    return {
-        createModal: (): Modal =>
-            ({
-                addEventListener: jest.fn(),
-            }) as unknown as Modal,
-    };
-});
-
-const deleteEmbeddedFileVersion = jest.fn();
-jest.mock("../../api/version-rest-querier", () => {
-    return {
-        deleteEmbeddedFileVersion,
-    };
-});
-
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { VueWrapper } from "@vue/test-utils";
@@ -44,11 +28,14 @@ import type { RestUser } from "../../api/rest-querier";
 import type { EmbeddedFileVersion, User } from "../../type";
 import { FEEDBACK } from "../../injection-keys";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import * as VersionRestQuerier from "../../api/version-rest-querier";
+import * as tlp_modal from "@tuleap/tlp-modal";
 
 describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     let location: Pick<Location, "reload">;
     let loadVersions: () => void;
     let success: () => void;
+    let deleteEmbeddedFileVersion: Mock;
 
     function getWrapper(
         item: User,
@@ -80,13 +67,20 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     }
 
     beforeEach(() => {
-        location = { reload: jest.fn() };
-        loadVersions = jest.fn();
-        success = jest.fn();
+        location = { reload: vi.fn() };
+        loadVersions = vi.fn();
+        success = vi.fn();
+        deleteEmbeddedFileVersion = vi.spyOn(VersionRestQuerier, "deleteEmbeddedFileVersion");
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(
+            (): Modal =>
+                ({
+                    addEventListener: vi.fn(),
+                }) as unknown as Modal,
+        );
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it("should display a link to the approval table", () => {

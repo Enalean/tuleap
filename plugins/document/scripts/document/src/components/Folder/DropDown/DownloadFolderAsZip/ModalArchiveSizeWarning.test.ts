@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ModalArchiveSizeWarningModal from "./ModalArchiveSizeWarning.vue";
@@ -60,10 +60,10 @@ describe("ModalArchiveSizeWarningModal", () => {
                     close_callback = callback;
                 }
             },
-            show: jest.fn(),
-            hide: jest.fn(),
+            show: vi.fn(),
+            hide: vi.fn(),
         } as unknown as Modal;
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
     });
 
     it("shows itself when it is mounted", () => {

@@ -16,17 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import GlobalUploadProgressBar from "../Folder/ProgressBar/GlobalUploadProgressBar.vue";
-
-const createModal = jest.fn();
-
-jest.mock("@tuleap/tlp-modal", () => {
-    return {
-        createModal,
-    };
-});
-
 import OngoingUploadModal from "./OngoingUploadModal.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -34,9 +26,11 @@ import type { Modal } from "@tuleap/tlp-modal";
 import type { ItemFile, RootState } from "../../type";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import * as tlp_modal from "@tuleap/tlp-modal";
 
 describe("OngoingUploadModal", () => {
-    let modal: Modal, addEventListener: jest.SpyInstance, show: jest.SpyInstance;
+    let modal: Modal, addEventListener: vi.SpyInstance, show: vi.SpyInstance;
+    let createModal: Mock;
 
     function getWrapper(
         files_uploads_list: Array<ItemFile>,
@@ -53,15 +47,16 @@ describe("OngoingUploadModal", () => {
     }
 
     beforeEach(() => {
-        show = jest.fn();
-        addEventListener = jest.fn();
+        show = vi.fn();
+        addEventListener = vi.fn();
 
         modal = {
             show,
             addEventListener,
-            removeEventListener: jest.fn(),
+            removeEventListener: vi.fn(),
         } as unknown as Modal;
 
+        createModal = vi.spyOn(tlp_modal, "createModal");
         createModal.mockImplementation(() => {
             return modal;
         });

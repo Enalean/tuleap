@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "./ugroups";
 import type { UserGroup } from "../../type";
 
 describe("User groups", () => {
     it("filters special service user groups from the list", async () => {
-        const getProjectUserGroupsSpy = jest.spyOn(rest_querier, "getProjectUserGroups");
+        const getProjectUserGroupsSpy = vi.spyOn(rest_querier, "getProjectUserGroups");
 
         const project_members_ugroup: UserGroup = {
             id: "102_3",

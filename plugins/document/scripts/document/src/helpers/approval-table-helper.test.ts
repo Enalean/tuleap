@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import type { ApprovalTableBadge } from "./approval-table-helper";
 import { extractApprovalTableData, hasAnApprovalTable } from "./approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";

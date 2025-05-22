@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookFolder from "./QuickLookFolder.vue";
 import { TYPE_FOLDER } from "../../constants";

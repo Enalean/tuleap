@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DropDownButton from "./DropDownButton.vue";
@@ -26,19 +26,19 @@ import emitter from "../../../helpers/emitter";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.mock("../../../helpers/emitter");
+vi.mock("../../../helpers/emitter");
 
 describe("DropDownButton", () => {
     let fake_dropdown_object: Dropdown;
     beforeEach(() => {
         fake_dropdown_object = {
-            addEventListener: jest.fn(),
-            removeEventListener: jest.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
         } as unknown as Dropdown;
 
-        jest.spyOn(document, "addEventListener");
-        jest.spyOn(document, "removeEventListener");
-        jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
+        vi.spyOn(document, "addEventListener");
+        vi.spyOn(document, "removeEventListener");
+        vi.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
     });
 
     function createWrapper(

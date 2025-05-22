@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyListMultipleValue from "./CustomPropertyListMultipleValue.vue";
@@ -27,7 +27,7 @@ import type { ListValue, Property } from "../../../../../type";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 import type { PropertiesState } from "../../../../../store/properties/module";
 
-jest.mock("../../../../../helpers/emitter");
+vi.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyListMultipleValue", () => {
     const allowed_list_values: Array<ListValue> = [

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SearchResultTable from "./SearchResultTable.vue";
 import TableBodySkeleton from "./TableBodySkeleton.vue";
@@ -38,12 +38,12 @@ import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
 
 describe("SearchResultTable", () => {
-    let mock_push: jest.Mock;
-    let mock_replace: jest.Mock;
+    let mock_push: vi.Mock;
+    let mock_replace: vi.Mock;
     beforeEach(() => {
-        mock_push = jest.fn();
-        mock_replace = jest.fn();
-        jest.spyOn(router, "useRouter").mockImplementation(() => {
+        mock_push = vi.fn();
+        mock_replace = vi.fn();
+        vi.spyOn(router, "useRouter").mockImplementation(() => {
             return { push: mock_push, replace: mock_replace } as unknown as Router;
         });
     });

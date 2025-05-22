@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import type { Item, Property } from "../../type";
 import type { RestItem } from "../../api/rest-querier";
 import { convertArrayOfItems } from "./metadata-to-properties";

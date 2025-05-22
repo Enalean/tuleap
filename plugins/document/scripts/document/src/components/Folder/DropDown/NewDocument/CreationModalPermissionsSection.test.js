@@ -18,7 +18,7 @@
  *
  */
 
-import { beforeEach, describe, expect, it } from "@jest/globals";
+import { beforeEach, describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";

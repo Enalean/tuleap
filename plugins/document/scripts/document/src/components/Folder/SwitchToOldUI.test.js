@@ -18,13 +18,13 @@
  *
  */
 
-import { beforeEach, describe, it, jest } from "@jest/globals";
+import { beforeEach, describe, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SwitchToOldUI from "./SwitchToOldUI.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import * as router from "vue-router";
 
-jest.mock("vue-router");
+vi.mock("vue-router");
 
 describe("SwitchToOldUI", () => {
     let factory;
@@ -53,7 +53,7 @@ describe("SwitchToOldUI", () => {
     it(`Given an user who browse a folder ( != root folder)
         The user wants to switch to old UI from this folder
         Then he is redirected on the old UI into the good folder`, () => {
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             params: { name: "folder" },
         });
 
@@ -64,7 +64,7 @@ describe("SwitchToOldUI", () => {
     it(`Given an user toggle the quick look of an item
         The user wants to switch to old UI
         Then he is redirected on the old UI into the current folder`, () => {
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             params: { name: "prview" },
         });
         current_folder = { id: 25 };
@@ -76,7 +76,7 @@ describe("SwitchToOldUI", () => {
     it(`Given an user who browse the root folder
         The user wants to switch to old UI
         Then he is redirected on the old UI into the root folder`, () => {
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             params: { name: "root_folder" },
         });
         const wrapper = factory();

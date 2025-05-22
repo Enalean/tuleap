@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -26,7 +26,7 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import type { ErrorState } from "../../../store/error/module";
 
-let reset_error: jest.Mock;
+let reset_error: vi.Mock;
 
 function createWrapper(error_message: string): VueWrapper<InstanceType<typeof GlobalErrorModal>> {
     return shallowMount(GlobalErrorModal, {
@@ -50,14 +50,14 @@ function createWrapper(error_message: string): VueWrapper<InstanceType<typeof Gl
 
 describe(`GlobalErrorModal`, () => {
     beforeEach(() => {
-        reset_error = jest.fn();
+        reset_error = vi.fn();
     });
     it(`shows the modal when mounted`, () => {
-        const modal_show = jest.fn();
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        const modal_show = vi.fn();
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
                 show: modal_show,
-                addEventListener: jest.fn(),
+                addEventListener: vi.fn(),
             } as unknown as Modal;
         });
         createWrapper("Full error message with details");
@@ -65,10 +65,10 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`displays more details when user clicks on show error`, async () => {
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
-                show: jest.fn(),
-                addEventListener: jest.fn(),
+                show: vi.fn(),
+                addEventListener: vi.fn(),
             } as unknown as Modal;
         });
 
@@ -82,10 +82,10 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`warns user that something is wrong without any details`, () => {
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
-                show: jest.fn(),
-                addEventListener: jest.fn(),
+                show: vi.fn(),
+                addEventListener: vi.fn(),
             } as unknown as Modal;
         });
 
@@ -95,9 +95,9 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`when I hide the modal, it resets the error`, () => {
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
-                show: jest.fn(),
+                show: vi.fn(),
                 addEventListener: (event_name: string, handler: () => void) => handler(),
             } as unknown as Modal;
         });
@@ -107,10 +107,10 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`when I click on the "reload" button, it reloads the page`, () => {
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
-                show: jest.fn(),
-                addEventListener: jest.fn(),
+                show: vi.fn(),
+                addEventListener: vi.fn(),
             } as unknown as Modal;
         });
 
@@ -121,7 +121,7 @@ describe(`GlobalErrorModal`, () => {
         delete window.location;
 
         window.location = {
-            reload: jest.fn(),
+            reload: vi.fn(),
         } as unknown as Location;
         const wrapper = createWrapper("");
         wrapper.get("[data-test=reload]").trigger("click");

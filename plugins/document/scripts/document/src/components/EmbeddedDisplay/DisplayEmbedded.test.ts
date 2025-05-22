@@ -18,10 +18,8 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-
-const getEmbeddedFileVersionContent = jest.fn();
-
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -31,20 +29,20 @@ import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ErrorState } from "../../store/error/module";
 import type { Embedded, Item } from "../../type";
+import * as VersionRestQuerier from "../../api/version-rest-querier";
 
-jest.mock("../../api/version-rest-querier", () => {
-    return {
-        getEmbeddedFileVersionContent,
-    };
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
 });
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("DisplayEmbedded", () => {
     let loadDocument: () => Promise<Item>;
-    let update_currently_previewed_item: jest.Mock;
-    let get_preferencies: jest.Mock;
-    let display_in_large_mode: jest.Mock;
+    let update_currently_previewed_item: vi.Mock;
+    let get_preferencies: vi.Mock;
+    let display_in_large_mode: vi.Mock;
+    let getEmbeddedFileVersionContent: Mock;
 
     beforeEach(() => {
         loadDocument = (): Promise<Item> =>
@@ -55,9 +53,13 @@ describe("DisplayEmbedded", () => {
                     content: "<p>my custom content </p>",
                 },
             } as Embedded);
-        update_currently_previewed_item = jest.fn();
-        get_preferencies = jest.fn();
-        display_in_large_mode = jest.fn();
+        update_currently_previewed_item = vi.fn();
+        get_preferencies = vi.fn();
+        display_in_large_mode = vi.fn();
+        getEmbeddedFileVersionContent = vi.spyOn(
+            VersionRestQuerier,
+            "getEmbeddedFileVersionContent",
+        );
     });
 
     function getWrapperWithError(
@@ -166,7 +168,7 @@ describe("DisplayEmbedded", () => {
         );
 
         const wrapper = getWrapper(null);
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
         expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(
@@ -187,7 +189,7 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = getWrapper(3);
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
         expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(

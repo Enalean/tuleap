@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
@@ -25,6 +25,10 @@ import type { Property, ListValue } from "../../../../../type";
 import type { ConfigurationState } from "../../../../../store/configuration";
 import type { PropertiesState } from "../../../../../store/properties/module";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
 
 describe("FolderDefaultPropertiesForCreate", () => {
     function createWrapper(

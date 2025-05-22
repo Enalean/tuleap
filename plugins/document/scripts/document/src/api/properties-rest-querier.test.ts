@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import {
@@ -40,7 +40,7 @@ describe("properties rest querier", () => {
     const properties = null;
 
     it("Update properties of a file", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putFileProperties(
@@ -67,7 +67,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of an embbeded file", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putEmbeddedFileProperties(
@@ -94,7 +94,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of an link", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putLinkProperties(
@@ -121,7 +121,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of empty", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putEmptyDocumentProperties(
@@ -148,7 +148,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of an other type document", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putOtherTypeDocumentProperties(
@@ -175,7 +175,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of folder", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putFolderDocumentProperties(
@@ -202,7 +202,7 @@ describe("properties rest querier", () => {
     });
 
     it("get project properties", async () => {
-        const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
+        const tlpRecursiveGet = vi.spyOn(tlp_fetch, "recursiveGet");
         mockFetchSuccess(tlpRecursiveGet);
 
         const project_id = 101;

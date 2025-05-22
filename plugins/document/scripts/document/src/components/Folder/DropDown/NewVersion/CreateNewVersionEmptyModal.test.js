@@ -18,7 +18,7 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
 import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../../constants";
@@ -27,8 +27,8 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 
 describe("CreateNewVersionEmptyModal", () => {
     let factory;
-    let create_new_version = jest.fn();
-    let reset_error_modal = jest.fn();
+    let create_new_version = vi.fn();
+    let reset_error_modal = vi.fn();
 
     beforeEach(() => {
         factory = (props) => {
@@ -61,7 +61,7 @@ describe("CreateNewVersionEmptyModal", () => {
             });
         };
 
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

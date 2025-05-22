@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 
@@ -26,9 +26,9 @@ import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { buildFakeItem } from "../../../helpers/item-builder";
 
-jest.mock("../../../helpers/emitter");
+vi.mock("../../../helpers/emitter");
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("DragNDropHandler", () => {
     let main, drop_event, drag_event, add_upload_file_mock, create_new_file_version_mock;
@@ -88,7 +88,7 @@ describe("DragNDropHandler", () => {
                 }),
             },
         });
-        jest.spyOn(wrapper.vm, "isDragNDropingOnAModal").mockReturnValue(false);
+        vi.spyOn(wrapper.vm, "isDragNDropingOnAModal").mockReturnValue(false);
 
         return wrapper;
     }
@@ -101,8 +101,8 @@ describe("DragNDropHandler", () => {
             user_can_write: true,
         };
 
-        add_upload_file_mock = jest.fn();
-        create_new_file_version_mock = jest.fn();
+        add_upload_file_mock = vi.fn();
+        create_new_file_version_mock = vi.fn();
         drop_event = {
             stopPropagation: () => {},
             preventDefault: () => {},
@@ -123,7 +123,7 @@ describe("DragNDropHandler", () => {
 
         main = document.createElement("div");
 
-        jest.spyOn(document, "querySelector").mockReturnValue(main);
+        vi.spyOn(document, "querySelector").mockReturnValue(main);
     });
 
     describe("Errors handling", () => {
@@ -246,7 +246,7 @@ describe("DragNDropHandler", () => {
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
                 await wrapper.vm.ondrop(drop_event);
-                await jest.runOnlyPendingTimersAsync();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(create_new_file_version_mock).not.toHaveBeenCalled();
                 expect(wrapper.vm.error_modal_shown).toStrictEqual(wrapper.vm.EDITION_LOCKED);

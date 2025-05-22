@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder plus a link to search in root folder 1`] = `
+exports[`SearchCriteriaBreadcrumb > should display a link to each ascendant folder plus a link to search in root folder 1`] = `
 <p
   class="document-search-breadcrumbs"
 >
@@ -44,7 +44,7 @@ exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder
 </p>
 `;
 
-exports[`SearchCriteriaBreadcrumb should display a spinner while ascendant hierarchy is loading 1`] = `
+exports[`SearchCriteriaBreadcrumb > should display a spinner while ascendant hierarchy is loading 1`] = `
 <p
   class="document-search-breadcrumbs"
 >

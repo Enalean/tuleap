@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import DeleteItem from "./DeleteItem.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -27,7 +27,7 @@ import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../store/configuration";
 
-jest.mock("../../../../helpers/emitter");
+vi.mock("../../../../helpers/emitter");
 
 describe("DeleteItem", () => {
     function createWrapper(

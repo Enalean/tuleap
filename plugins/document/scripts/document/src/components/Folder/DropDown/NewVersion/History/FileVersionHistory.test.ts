@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FileVersionHistory from "./FileVersionHistory.vue";
@@ -28,9 +28,9 @@ import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-
 import type { ConfigurationState } from "../../../../../store/configuration";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-jest.mock("vue-router");
+vi.mock("vue-router");
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("FileVersionHistory", () => {
     function createWrapper(
@@ -65,7 +65,7 @@ describe("FileVersionHistory", () => {
     }
 
     it("displays the version history", async () => {
-        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        const version_history_spy = vi.spyOn(version_history_retriever, "getVersionHistory");
         const versions = [
             {
                 number: 10,
@@ -84,14 +84,14 @@ describe("FileVersionHistory", () => {
 
         const wrapper = createWrapper();
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(2);
         expect(wrapper.vm.are_versions_loading).toBe(false);
     });
 
     it("displays the latest version text and the file history link", async () => {
-        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        const version_history_spy = vi.spyOn(version_history_retriever, "getVersionHistory");
         const versions = [
             {
                 number: 10,
@@ -128,18 +128,18 @@ describe("FileVersionHistory", () => {
 
         const wrapper = createWrapper();
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(5);
         expect(wrapper.vm.are_versions_loading).toBe(false);
     });
 
     it("displays the empty message when there is no version", async () => {
-        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        const version_history_spy = vi.spyOn(version_history_retriever, "getVersionHistory");
         version_history_spy.mockResolvedValue([] as ReadonlyArray<FileHistory>);
         const wrapper = createWrapper();
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(0);
         expect(wrapper.vm.are_versions_loading).toBe(false);
@@ -147,7 +147,7 @@ describe("FileVersionHistory", () => {
     });
 
     it("displays the error if an error occurred when retrieving the history version", async () => {
-        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        const version_history_spy = vi.spyOn(version_history_retriever, "getVersionHistory");
         version_history_spy.mockRejectedValue(
             new FetchWrapperError("Lorem ipsum", {
                 json: () =>
@@ -162,26 +162,26 @@ describe("FileVersionHistory", () => {
         );
         const wrapper = createWrapper(true);
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(0);
         expect(wrapper.vm.get_has_error).toBe(true);
     });
 
     it("displays nothing if when filename pattern is not enabled", async () => {
-        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        const version_history_spy = vi.spyOn(version_history_retriever, "getVersionHistory");
         const is_filename_pattern_enforced = false;
 
         const wrapper = createWrapper(false, is_filename_pattern_enforced);
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(version_history_spy).not.toHaveBeenCalled();
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("displays the skeleton during the loading of the history", () => {
-        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        const version_history_spy = vi.spyOn(version_history_retriever, "getVersionHistory");
         version_history_spy.mockResolvedValue([] as ReadonlyArray<FileHistory>);
 
         const is_loading = true;
