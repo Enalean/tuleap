@@ -83,81 +83,51 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Task } from "../../../type";
 import MilestoneBar from "./MilestoneBar.vue";
 
-@Component({
-    components: { MilestoneBar },
-})
-export default class TaskBar extends Vue {
-    @Prop({ required: true })
-    readonly left!: number;
+const props = defineProps<{
+    left: number;
+    width: number;
+    task: Task;
+    percentage: string;
+    is_text_displayed_inside_progress_bar: boolean;
+    is_text_displayed_outside_progress_bar: boolean;
+    is_text_displayed_outside_bar: boolean;
+    is_error_sign_displayed_outside_bar: boolean;
+    is_error_sign_displayed_inside_bar: boolean;
+}>();
 
-    @Prop({ required: true })
-    readonly width!: number;
+const container_classes = computed(
+    () => "roadmap-gantt-task-bar-container-" + props.task.color_name,
+);
+const is_progress_in_error = computed(() => props.task.progress_error_message.length > 0);
+const style_container = computed(() => `left: ${props.left}px;`);
+const style_bar = computed(() => `width: ${props.width}px;`);
 
-    @Prop({ required: true })
-    readonly task!: Task;
+const bar_classes = computed(() => {
+    const classes = [];
 
-    @Prop({ required: true })
-    readonly percentage!: string;
-
-    @Prop({ required: true })
-    readonly is_text_displayed_inside_progress_bar!: boolean;
-
-    @Prop({ required: true })
-    readonly is_text_displayed_outside_progress_bar!: boolean;
-
-    @Prop({ required: true })
-    readonly is_text_displayed_outside_bar!: boolean;
-
-    @Prop({ required: true })
-    readonly is_error_sign_displayed_outside_bar!: boolean;
-
-    @Prop({ required: true })
-    readonly is_error_sign_displayed_inside_bar!: boolean;
-
-    get container_classes(): string {
-        return "roadmap-gantt-task-bar-container-" + this.task.color_name;
+    if (is_progress_in_error.value) {
+        classes.push("roadmap-gantt-task-bar-with-progress-in-error");
     }
 
-    get bar_classes(): string[] {
-        const classes = [];
-
-        if (this.is_progress_in_error) {
-            classes.push("roadmap-gantt-task-bar-with-progress-in-error");
-        }
-
-        if (this.task.are_dates_implied) {
-            classes.push("roadmap-gantt-task-bar-with-dates-implied");
-        }
-
-        return classes;
+    if (props.task.are_dates_implied) {
+        classes.push("roadmap-gantt-task-bar-with-dates-implied");
     }
 
-    get is_progress_in_error(): boolean {
-        return this.task.progress_error_message.length > 0;
+    return classes;
+});
+
+const progress_style = computed(() => {
+    if (props.task.progress === null) {
+        return "";
     }
 
-    get style_container(): string {
-        return `left: ${this.left}px;`;
-    }
+    const width_in_percent = Math.max(0, Math.min(100, props.task.progress * 100));
 
-    get style_bar(): string {
-        return `width: ${this.width}px;`;
-    }
-
-    get progress_style(): string {
-        if (this.task.progress === null) {
-            return "";
-        }
-
-        const width_in_percent = Math.max(0, Math.min(100, this.task.progress * 100));
-
-        return `width: ${width_in_percent}%;`;
-    }
-}
+    return `width: ${width_in_percent}%;`;
+});
 </script>
