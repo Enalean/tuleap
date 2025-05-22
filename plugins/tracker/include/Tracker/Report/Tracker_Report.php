@@ -954,7 +954,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                         $parameters['only-renderer']    = 1;
                     }
 
-                    $url   = $active ? '#' : '?' . http_build_query($parameters);
+                    $url   = $active ? '' : '?' . http_build_query($parameters);
                     $html .= '<li id="tracker_report_renderer_' . $r->id . '"
                                   class="' . $active . '
                                             tracker_report_renderer_tab

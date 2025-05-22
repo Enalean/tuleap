@@ -40,7 +40,7 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         observeRequiredElements();
         initDoubleArtifactFormSubmitionGuard();
 
-        if ($("#artifact_informations").size() > 0) {
+        if ($("#artifact_informations").length > 0) {
             bindSubmissionBarToFollowups(
                 document,
                 CKEDITOR.instances.tracker_followup_comment_new,
@@ -64,7 +64,7 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     };
 
     var toggleFieldsIfAlreadySubmittedArtifact = function () {
-        if ($(".submitted_artifact").size() > 0) {
+        if ($(".submitted_artifact").length > 0) {
             $(".tracker_artifact_field").each(function (index, element) {
                 if (fieldIsEditable(element)) {
                     toggleField(element);
@@ -95,9 +95,9 @@ tuleap.tracker.artifact.editionSwitcher = function () {
             }
 
             if (
-                field.find(".highlight").size() > 0 &&
-                field.find(".empty_value").size() > 0 &&
-                field.find(".has-reverse-links").size() === 0
+                field.find(".highlight").length > 0 &&
+                field.find(".empty_value").length > 0 &&
+                field.find(".has-reverse-links").length === 0
             ) {
                 toggleField(field);
             }
@@ -379,11 +379,11 @@ tuleap.tracker.artifact.editionSwitcher = function () {
     };
 
     var fieldIsEditable = function (element) {
-        return $(".tracker_hidden_edition_field", element).size() > 0;
+        return $(".tracker_hidden_edition_field", element).length > 0;
     };
 
     var fieldIsCreatable = function (element) {
-        return $(".add-field", element).size() > 0;
+        return $(".add-field", element).length > 0;
     };
 
     var toggleHiddenImageViewing = function () {

@@ -178,7 +178,7 @@ readonly class ArtifactViewEdit extends TrackerArtifactView
 
         $html  = '<div class="tracker_artifact_followup_comments_display_settings">';
         $html .= '<div class="btn-group">';
-        $html .= '<a href="#" class="btn btn-small dropdown-toggle" data-toggle="dropdown">';
+        $html .= '<a class="btn btn-small dropdown-toggle" data-toggle="dropdown">';
         $html .= '<i class="fa fa-cog"></i> ' . $settings_label . ' <span class="caret"></span>';
         $html .= '</a>';
         $html .= '<ul class="dropdown-menu pull-right">';

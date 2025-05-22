@@ -89,6 +89,12 @@ dependencies:
   dragula:
     specifier: ^3.7.2
     version: 3.7.3
+  jquery:
+    specifier: ^3.7.1
+    version: 3.7.1
+  jquery-ui:
+    specifier: ^1.14.1
+    version: 1.14.1
   lit-html:
     specifier: ^2.8.0
     version: 2.8.0
@@ -125,8 +131,8 @@ devDependencies:
     specifier: ^4.9.10
     version: 4.9.10
   '@types/jquery':
-    specifier: ^3.5.5
-    version: 3.5.5
+    specifier: ^3.5.32
+    version: 3.5.32
   '@types/mustache':
     specifier: ^4.1.2
     version: 4.1.2
@@ -139,9 +145,6 @@ devDependencies:
   '@types/sprintf-js':
     specifier: ^1.1.2
     version: 1.1.2
-  jquery:
-    specifier: ^3.6.0
-    version: 3.6.0
 
 packages:
 
@@ -198,7 +201,7 @@ packages:
   /@types/bootstrap@4.5.1:
     resolution: {integrity: sha512-5iAWnZnqHucloYQFlozKUTPw0+fLfKo8d4flGCiE1B1w91z/91UIqMDht/31RQJIwx0+u5SL4CJCbs79Z15M+A==}
     dependencies:
-      '@types/jquery': 3.5.5
+      '@types/jquery': 3.5.32
       popper.js: 1.16.1
     dev: true
 
@@ -206,8 +209,8 @@ packages:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
     dev: true
 
-  /@types/jquery@3.5.5:
-    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
+  /@types/jquery@3.5.32:
+    resolution: {integrity: sha512-b9Xbf4CkMqS02YH8zACqN1xzdxc3cO735Qe5AbSUFmyOiaWAbcpqh9Wna+Uk0vgACvoQHpWDg2rGdHkYPLmCiQ==}
     dependencies:
       '@types/sizzle': 2.3.2
     dev: true
@@ -322,14 +325,20 @@ packages:
     resolution: {integrity: sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ==}
     dev: false
 
-  /jquery@3.6.0:
-    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
-    dev: true
+  /jquery-ui@1.14.1:
+    resolution: {integrity: sha512-DhzsYH8VeIvOaxwi+B/2BCsFFT5EGjShdzOcm5DssWjtcpGWIMsn66rJciDA6jBruzNiLf1q0KvwMoX1uGNvnQ==}
+    dependencies:
+      jquery: 3.7.1
+    dev: false
+
+  /jquery@3.7.1:
+    resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
+    dev: false
 
   /jsonfile@4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.11
     dev: false
 
   /jsonfile@5.0.0:

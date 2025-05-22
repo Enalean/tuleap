@@ -33,6 +33,8 @@
     "ckeditor4": "^4.18.0",
     "dompurify": "^3.2.4",
     "dragula": "^3.7.2",
+    "jquery": "^3.7.1",
+    "jquery-ui": "^1.14.1",
     "lit-html": "^2.8.0",
     "marked": "^4.0.10",
     "moment": "^2.29.4",
@@ -46,12 +48,11 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
-    "@types/jquery": "^3.5.5",
+    "@types/jquery": "^3.5.32",
     "@types/mustache": "^4.1.2",
     "@types/node": "^14.14.31",
     "@types/prismjs": "^1.26.1",
-    "@types/sprintf-js": "^1.1.2",
-    "jquery": "^3.6.0"
+    "@types/sprintf-js": "^1.1.2"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
