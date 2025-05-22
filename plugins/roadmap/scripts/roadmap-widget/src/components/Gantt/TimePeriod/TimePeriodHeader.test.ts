@@ -17,24 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import TimePeriodHeader from "./TimePeriodHeader.vue";
-import { TimePeriodMonth } from "../../../helpers/time-period-month";
-import TimePeriodYears from "./TimePeriodYears.vue";
-import { NbUnitsPerYear } from "../../../type";
-import TimePeriodUnits from "./TimePeriodUnits.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { TimeperiodState } from "../../../store/timeperiod/type";
-import type { RootState } from "../../../store/type";
 import { DateTime, Settings } from "luxon";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
+import { TimePeriodMonth } from "../../../helpers/time-period-month";
+import type { RootState } from "../../../store/type";
+import type { TimeperiodState } from "../../../store/timeperiod/type";
+import { NbUnitsPerYear } from "../../../type";
+import TimePeriodHeader from "./TimePeriodHeader.vue";
+import TimePeriodUnits from "./TimePeriodUnits.vue";
+import TimePeriodYears from "./TimePeriodYears.vue";
 
 Settings.defaultZone = "UTC";
 
 describe("TimePeriodHeader", () => {
-    it("should display years and units", () => {
-        const wrapper = shallowMount(TimePeriodHeader, {
+    let nb_additional_units = 2,
+        time_period: TimePeriodMonth = new TimePeriodMonth(
+            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
+            "en-US",
+        );
+
+    async function getWrapper(): Promise<Wrapper<Vue>> {
+        return shallowMount(TimePeriodHeader, {
+            localVue: await createRoadmapLocalVue(),
             propsData: {
-                nb_additional_units: 2,
+                nb_additional_units,
             },
             mocks: {
                 $store: createStoreMock({
@@ -42,15 +52,15 @@ describe("TimePeriodHeader", () => {
                         timeperiod: {} as TimeperiodState,
                     } as RootState,
                     getters: {
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
+                        "timeperiod/time_period": time_period,
                     },
                 }),
             },
         });
+    }
+
+    it("should display years and units", async () => {
+        const wrapper = await getWrapper();
 
         expect(wrapper.findComponent(TimePeriodYears).props().years).toEqual(
             new NbUnitsPerYear([[2020, 5]]),
@@ -64,26 +74,14 @@ describe("TimePeriodHeader", () => {
         ]);
     });
 
-    it("should count how much units the years are spanning on", () => {
-        const wrapper = shallowMount(TimePeriodHeader, {
-            propsData: {
-                nb_additional_units: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        timeperiod: {} as TimeperiodState,
-                    } as RootState,
-                    getters: {
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2019-12-15T22:00:00.000Z"),
-                            DateTime.fromISO("2021-05-15T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                    },
-                }),
-            },
-        });
+    it("should count how much units the years are spanning on", async () => {
+        nb_additional_units = 0;
+        time_period = new TimePeriodMonth(
+            DateTime.fromISO("2019-12-15T22:00:00.000Z"),
+            DateTime.fromISO("2021-05-15T22:00:00.000Z"),
+            "en-US",
+        );
+        const wrapper = await getWrapper();
 
         expect(wrapper.findComponent(TimePeriodYears).props().years).toEqual(
             new NbUnitsPerYear([
