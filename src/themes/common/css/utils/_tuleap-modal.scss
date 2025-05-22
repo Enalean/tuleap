@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "basepath";
 @use "sass:color";
 
 .tuleap-modal-background {
@@ -24,8 +44,9 @@
     margin-top: -($loading-size / 2);
     margin-left: -($loading-size / 2);
     border-radius: 50%;
-    background: #303030 url("#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif")
-        no-repeat center center;
+    background: #303030
+        url("#{basepath.$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif") no-repeat
+        center center;
 }
 
 .tuleap-modal {

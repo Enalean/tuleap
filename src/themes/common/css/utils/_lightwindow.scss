@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "basepath";
+
 /* stylelint-disable selector-id-pattern, selector-class-pattern, selector-no-qualifying-type */
 
 /* http://www.p51labs.com/lightwindow/ */
@@ -165,8 +167,8 @@
     display: block;
     width: 49%;
     height: 100%;
-    background: transparent url("#{$tuleap-common-theme-basepath}images/lightwindow/blank.gif")
-        no-repeat; /* Trick IE into showing hover */
+    background: transparent
+        url("#{basepath.$tuleap-common-theme-basepath}images/lightwindow/blank.gif") no-repeat; /* Trick IE into showing hover */
 }
 
 #lightwindow_previous {
@@ -181,14 +183,14 @@
 
 #lightwindow_previous:hover,
 #lightwindow_previous:active {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/prevlabel.gif") left 15%
-        no-repeat;
+    background: url("#{basepath.$tuleap-common-theme-basepath}images/lightwindow/prevlabel.gif")
+        left 15% no-repeat;
 }
 
 #lightwindow_next:hover,
 #lightwindow_next:active {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/nextlabel.gif") right 15%
-        no-repeat;
+    background: url("#{basepath.$tuleap-common-theme-basepath}images/lightwindow/nextlabel.gif")
+        right 15% no-repeat;
 }
 
 #lightwindow_previous_title,
@@ -220,8 +222,8 @@ a:visited#lightwindow_galleries_tab {
     width: 77px;
     height: 20px;
     float: right;
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0
-        transparent;
+    background: url("#{basepath.$tuleap-common-theme-basepath}images/lightwindow/black-70.png")
+        repeat 0 0 transparent;
     color: #ffffbe;
     font-size: 11px;
     font-weight: bold;
@@ -252,20 +254,20 @@ a:active#lightwindow_galleries_tab {
 }
 
 #lightwindow_galleries_tab .up {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-up.gif") no-repeat
-        60px 5px transparent;
+    background: url("#{basepath.$tuleap-common-theme-basepath}images/lightwindow/arrow-up.gif")
+        no-repeat 60px 5px transparent;
 }
 
 #lightwindow_galleries_tab .down {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-down.gif") no-repeat
-        60px 6px transparent;
+    background: url("#{basepath.$tuleap-common-theme-basepath}images/lightwindow/arrow-down.gif")
+        no-repeat 60px 6px transparent;
 }
 
 #lightwindow_galleries_list {
     height: 0;
     overflow: hidden;
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0
-        transparent;
+    background: url("#{basepath.$tuleap-common-theme-basepath}images/lightwindow/black-70.png")
+        repeat 0 0 transparent;
 }
 
 * html #lightwindow_galleries_list {

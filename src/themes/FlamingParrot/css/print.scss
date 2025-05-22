@@ -17,9 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tuleap-common-theme-basepath: "../../../www/themes/common/";
-
-@import "../../common/css/utils/utils";
+@use "../../common/css/utils/utils";
 
 body {
     padding: 0;

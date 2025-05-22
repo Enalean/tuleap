@@ -22,7 +22,7 @@
 );
 @use "sass:map";
 @use "global-variables";
-@import "../../../common/css/project-background/project-background";
+@use "../../../common/css/project-background/project-background" as project-background2;
 
 @each $identifier, $definition in project-background.$definitions {
     .project-admin-background-preview-#{$identifier} {
