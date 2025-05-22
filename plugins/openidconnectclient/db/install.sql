@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_user_mapping (
     user_openidconnect_identifier TEXT NOT NULL,
     last_used INT(11) UNSIGNED NOT NULL,
     PRIMARY KEY(id),
-    INDEX idx_mapping_provider_user(provider_id, user_id)
+    INDEX idx_mapping_provider_user(provider_id, user_id),
+    INDEX idx_user(user_id)
 );
 
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider (
