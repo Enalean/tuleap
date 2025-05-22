@@ -23,26 +23,16 @@ declare(strict_types=1);
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Test\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private TrackerXmlFieldsMapping_FromAnotherPlatform $xml_open_fields_mapping;
 
-    /**
-     * @var TrackerXmlFieldsMapping_FromAnotherPlatform
-     */
-    private $xml_open_fields_mapping;
+    private TrackerXmlFieldsMapping_FromAnotherPlatform $xml_ugroup_fields_mapping;
 
-    /**
-     * @var TrackerXmlFieldsMapping_FromAnotherPlatform
-     */
-    private $xml_ugroup_fields_mapping;
-
-    /**
-     * @var TrackerXmlFieldsMapping_FromAnotherPlatform
-     */
-    private $xml_static_fields_mapping;
+    private TrackerXmlFieldsMapping_FromAnotherPlatform $xml_static_fields_mapping;
 
     protected function setUp(): void
     {
@@ -53,7 +43,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
         $static_value_05 = $this->getBindValueWithId(24080);
         $static_value_06 = $this->getBindValueWithId(24081);
 
-        $list_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
+        $list_field = ListFieldBuilder::aListField(101)->build();
 
         $xml_static_mapping = [
             'F21840' => $list_field,
