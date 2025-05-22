@@ -387,16 +387,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
     }
 
     /**
-     * Get the FormElement factory
-     *
-     * @return Tracker_FormElementFactory
-     */
-    public function getFormElementFactory()
-    {
-        return Tracker_FormElementFactory::instance();
-    }
-
-    /**
      * Say if the field is updateable
      *
      * @return bool

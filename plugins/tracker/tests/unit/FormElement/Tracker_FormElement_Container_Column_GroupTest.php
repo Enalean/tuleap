@@ -23,33 +23,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Container_Column_Group;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ignore
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Container_Column_GroupTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testFetchArtifact()
+    public function testFetchArtifact(): void
     {
-        $artifact         = Mockery::mock(Artifact::class);
+        $artifact         = ArtifactTestBuilder::anArtifact(65412)->build();
         $submitted_values = [];
 
-        $column_01 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_01->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C1');
+        $column_01 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_01->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C1');
 
-        $column_02 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_02->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C2');
+        $column_02 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_02->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C2');
 
-        $column_03 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_03->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C3');
+        $column_03 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_03->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C3');
 
-        $column_04 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_04->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C4');
+        $column_04 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_04->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C4');
 
         $empty = [];
         $one   = [$column_01];
@@ -57,18 +55,18 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
 
         $column_group = new Tracker_FormElement_Container_Column_Group();
 
-        $this->assertEquals(
+        self::assertEquals(
             '',
             $column_group->fetchArtifact($empty, $artifact, $submitted_values)
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             '<table width="100%"><tbody><tr valign="top">' .
             '<td>C1</td>' .
             '</tr></tbody></table>',
             $column_group->fetchArtifact($one, $artifact, $submitted_values)
         );
-        $this->assertEquals(
+        self::assertEquals(
             '<table width="100%"><tbody><tr valign="top">' .
             '<td>C1</td>' .
             '<td>C2</td>' .
@@ -79,22 +77,22 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
         );
     }
 
-    public function testFetchArtifactWithEmptyColumns()
+    public function testFetchArtifactWithEmptyColumns(): void
     {
-        $artifact         = Mockery::mock(Artifact::class);
+        $artifact         = ArtifactTestBuilder::anArtifact(65412)->build();
         $submitted_values = [];
 
-        $column_01 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_01->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('');
+        $column_01 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_01->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('');
 
-        $column_02 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_02->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C2');
+        $column_02 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_02->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C2');
 
-        $column_03 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_03->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('');
+        $column_03 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_03->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('');
 
-        $column_04 = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column_04->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C4');
+        $column_04 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_04->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C4');
 
         $one_c1 = [$column_01];
         $one_c2 = [$column_02];
@@ -102,15 +100,15 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
 
         $column_group = new Tracker_FormElement_Container_Column_Group();
 
-        $this->assertEquals('', $column_group->fetchArtifact($one_c1, $artifact, $submitted_values));
+        self::assertEquals('', $column_group->fetchArtifact($one_c1, $artifact, $submitted_values));
 
-        $this->assertEquals(
+        self::assertEquals(
             '<table width="100%"><tbody><tr valign="top">' .
             '<td>C2</td>' .
             '</tr></tbody></table>',
             $column_group->fetchArtifact($one_c2, $artifact, $submitted_values)
         );
-        $this->assertEquals(
+        self::assertEquals(
             '<table width="100%"><tbody><tr valign="top">' .
             '<td>C2</td>' .
             '<td>C4</td>' .

@@ -23,37 +23,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElement_Container_Fieldset;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FieldsetContainerBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Container_FieldsetTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|TrackerXmlImportFeedbackCollector
-     */
-    private $feedback_collector;
-
-    public function setUp(): void
-    {
-        $this->feedback_collector = \Mockery::spy(TrackerXmlImportFeedbackCollector::class);
-    }
-
     //testing field import
-    public function testImportFormElement()
+    public function testImportFormElement(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" standalone="yes"?>
@@ -83,31 +74,28 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
 
         $mapping = [];
 
-        $a_formelement = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $a_formelement = DateFieldBuilder::aDateField(650)->build();
 
-        $factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $factory->shouldReceive('getInstanceFromXML')->andReturn($a_formelement)->once();
-        $factory->shouldReceive('getInstanceFromXML')->andReturn(null)->once();
+        $factory         = $this->createMock(Tracker_FormElementFactory::class);
+        $invocation_rule = $this->exactly(2);
+        $factory->expects($invocation_rule)->method('getInstanceFromXML')->willReturnCallback(static fn() => match ($invocation_rule->numberOfInvocations()) {
+            1 => $a_formelement,
+            2 => null,
+        });
 
-        $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-
-        $container_fieldset->shouldReceive('getFormElementFactory')->andReturn($factory);
-        $container_fieldset->setTracker($tracker);
+        $tracker            = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $container_fieldset = FieldsetContainerBuilder::aFieldset(651)->inTracker($tracker)->build();
+        $container_fieldset->setFormElementFactory($factory);
 
         $container_fieldset->continueGetInstanceFromXML(
             $xml,
             $mapping,
-            Mockery::mock(IFindUserFromXMLReference::class),
-            $this->feedback_collector
+            IFindUserFromXMLReferenceStub::buildWithUser(UserTestBuilder::buildWithDefaults()),
+            new TrackerXmlImportFeedbackCollector(),
         );
 
         $container_should_load_child = [$a_formelement];
-        $this->assertEquals($container_should_load_child, $container_fieldset->getFormElements());
+        self::assertEquals($container_should_load_child, $container_fieldset->getFormElements());
     }
 
     public function testImportFormElementReturnNullWhenNoInstance(): void
@@ -130,94 +118,67 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
 
         $mapping = [];
 
-        $form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $form_element_factory->shouldReceive('getInstanceFromXML')->andReturn(null);
-        $form_element_factory->shouldReceive('getUsedFormElementsByParentId')->andReturn(null);
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getInstanceFromXML')->willReturn(null);
+        $form_element_factory->method('getUsedFormElementsByParentId')->willReturn(null);
 
-        $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-
-        $container_fieldset->shouldReceive('getFormElementFactory')->andReturn($form_element_factory);
-        $container_fieldset->setTracker($tracker);
+        $tracker            = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $container_fieldset = FieldsetContainerBuilder::aFieldset(650)->inTracker($tracker)->build();
+        $container_fieldset->setFormElementFactory($form_element_factory);
 
         $container_fieldset->continueGetInstanceFromXML(
             $xml,
             $mapping,
-            Mockery::mock(IFindUserFromXMLReference::class),
-            $this->feedback_collector
+            $this->createStub(IFindUserFromXMLReference::class),
+            new TrackerXmlImportFeedbackCollector(),
         );
 
-        $this->assertNull($container_fieldset->getFormElements());
+        self::assertNull($container_fieldset->getFormElements());
     }
 
-    public function testAfterSaveObject()
+    public function testAfterSaveObject(): void
     {
-        $a_formelement = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $factory       = Mockery::mock(Tracker_FormElementFactory::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $a_formelement      = DateFieldBuilder::aDateField(650)->build();
+        $factory            = $this->createMock(Tracker_FormElementFactory::class);
+        $tracker            = TrackerTestBuilder::aTracker()->build();
+        $container_fieldset = FieldsetContainerBuilder::aFieldset(66)->containsFormElements($a_formelement)->build();
+        $container_fieldset->setFormElementFactory($factory);
 
-        $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $container_fieldset->shouldReceive('getFormElementFactory')->andReturn($factory);
-        $container_fieldset->shouldReceive('getFormElements')->andReturn([$a_formelement]);
-        $container_fieldset->shouldReceive('getId')->andReturn(66);
-
-        $factory->shouldReceive('saveObject')
-            ->with($tracker, $a_formelement, 66, false, false)
-            ->once();
+        $factory->expects($this->once())->method('saveObject')->with($tracker, $a_formelement, 66, false, false);
 
         $container_fieldset->afterSaveObject($tracker, false, false);
     }
 
-    public function testIsNotDeletableWithFields()
+    public function testIsNotDeletableWithFields(): void
     {
-        $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $a_formelement      = DateFieldBuilder::aDateField(650)->build();
+        $container_fieldset = FieldsetContainerBuilder::aFieldset(651)->containsFormElements($a_formelement)->build();
 
-        $a_formelement = Mockery::mock(Tracker_FormElement_Field_Date::class);
-
-        $container_fieldset->shouldReceive('getFormElements')->andReturn([$a_formelement]);
-
-        $this->assertFalse($container_fieldset->canBeRemovedFromUsage());
+        self::assertFalse($container_fieldset->canBeRemovedFromUsage());
     }
 
-    public function testIsDeletableWithoutFields()
+    public function testIsDeletableWithoutFields(): void
     {
-        $hidden_dao = Mockery::mock(HiddenFieldsetsDao::class);
-        $hidden_dao->shouldReceive('isFieldsetUsedInPostAction')->andReturn(false);
+        $hidden_dao = $this->createMock(HiddenFieldsetsDao::class);
+        $hidden_dao->method('isFieldsetUsedInPostAction')->willReturn(false);
 
-        $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $container_fieldset = $this->createPartialMock(Tracker_FormElement_Container_Fieldset::class, ['getHiddenFieldsetsDao', 'getFormElements']);
 
-        $container_fieldset->shouldReceive('getFormElements')->andReturn(null);
-        $container_fieldset->shouldReceive('getHiddenFieldsetsDao')->andReturn($hidden_dao);
+        $container_fieldset->method('getFormElements')->willReturn(null);
+        $container_fieldset->method('getHiddenFieldsetsDao')->willReturn($hidden_dao);
 
-        $this->assertTrue($container_fieldset->canBeRemovedFromUsage());
+        self::assertTrue($container_fieldset->canBeRemovedFromUsage());
     }
 
-    public function itCallsExportPermissionsToXMLForEachSubfield()
+    public function testItCallsExportPermissionsToXMLForEachSubfield(): void
     {
-        $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $container_fieldset = $this->createPartialMock(Tracker_FormElement_Container_Fieldset::class, ['getAllFormElements']);
 
-        $field_01 = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $field_02 = Mockery::mock(Tracker_FormElement_Field_Float::class);
-        $field_03 = Mockery::mock(Tracker_FormElement_Field_Text::class);
+        $field_01 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field_02 = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field_03 = $this->createMock(Tracker_FormElement_Field_Text::class);
 
-        $container_fieldset->shouldReceive('getAllFormElements')->andReturn([
-            $field_01,
-            $field_02,
-            $field_03,
-        ]);
+        $container_fieldset->method('getAllFormElements')->willReturn([$field_01, $field_02, $field_03]);
 
         $data    = '<?xml version="1.0" encoding="UTF-8"?>
                     <permissions/>';
@@ -225,9 +186,9 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
         $mapping = [];
         $ugroups = [];
 
-        $field_01->shouldReceive('exportPermissionsToXML')->once();
-        $field_02->shouldReceive('exportPermissionsToXML')->once();
-        $field_03->shouldReceive('exportPermissionsToXML')->once();
+        $field_01->expects($this->once())->method('exportPermissionsToXML');
+        $field_02->expects($this->once())->method('exportPermissionsToXML');
+        $field_03->expects($this->once())->method('exportPermissionsToXML');
 
         $container_fieldset->exportPermissionsToXML($xml, $ugroups, $mapping);
     }
