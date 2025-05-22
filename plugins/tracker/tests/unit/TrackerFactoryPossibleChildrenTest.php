@@ -19,30 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\GlobalResponseMock;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFactoryPossibleChildrenTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerFactoryPossibleChildrenTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    public function testGetPossibleChildrenShouldNotContainSelf()
+    public function testGetPossibleChildrenShouldNotContainSelf(): void
     {
-        $current_tracker = Mockery::mock(Tracker::class);
-        $current_tracker->shouldReceive('getId')->andReturn(1);
-        $current_tracker->shouldReceive('getName')->andReturn('Stories');
-        $current_tracker->shouldReceive('getGroupId')->andReturn(101);
-
-        $bugs_tracker = Mockery::mock(Tracker::class);
-        $bugs_tracker->shouldReceive('getId')->andReturn(2);
-        $bugs_tracker->shouldReceive('getName')->andReturn('Bugs');
-
-        $tasks_tracker = Mockery::mock(Tracker::class);
-        $tasks_tracker->shouldReceive('getId')->andReturn(3);
-        $tasks_tracker->shouldReceive('getName')->andReturn('Tasks');
+        $current_tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $bugs_tracker    = TrackerTestBuilder::aTracker()->withId(2)->build();
+        $tasks_tracker   = TrackerTestBuilder::aTracker()->withId(3)->build();
 
         $expected_children = [
             '2' => $bugs_tracker,
@@ -52,8 +43,8 @@ class TrackerFactoryPossibleChildrenTest extends \Tuleap\Test\PHPUnit\TestCase
         $all_project_trackers      = $expected_children;
         $all_project_trackers['1'] = $current_tracker;
 
-        $tracker_factory = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tracker_factory->shouldReceive('getTrackersByGroupId')->andReturns($all_project_trackers);
+        $tracker_factory = $this->createPartialMock(\TrackerFactory::class, ['getTrackersByGroupId']);
+        $tracker_factory->method('getTrackersByGroupId')->willReturn($all_project_trackers);
 
         $possible_children = $tracker_factory->getPossibleChildren($current_tracker);
 

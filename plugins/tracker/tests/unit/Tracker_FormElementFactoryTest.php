@@ -19,65 +19,55 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use Tuleap\GlobalLanguageMock;
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\TemporaryTestDirectory;
 
-    /**
-     * @var int
-     */
-    private $template_id;
+    private int $template_id = 29;
 
-    /**
-     * @var int
-     */
-    private $project_id;
+    private int $project_id = 3;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FieldDao
-     */
-    private $dao;
+    private FieldDao&MockObject $dao;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
+    private Tracker $tracker;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private PFUser $user;
 
-    /**
-     * @var Mockery\Mock|Tracker_FormElementFactory
-     */
-    private $factory;
+    private Tracker_FormElementFactory&MockObject $factory;
 
     protected function setUp(): void
     {
-        $GLOBALS['HTML'] = Mockery::spy(Layout::class);
+        $GLOBALS['HTML'] = $this->createMock(Layout::class);
+        $GLOBALS['HTML']->method('getImagePath');
+        $GLOBALS['HTML']->method('selectRank');
 
-        $this->dao = Mockery::spy(FieldDao::class);
+        $this->dao = $this->createMock(FieldDao::class);
 
-        $this->factory = Mockery::spy(Tracker_FormElementFactory::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->factory = $this->createPartialMock(Tracker_FormElementFactory::class, [
+            'getDao',
+            'createFormElement',
+            'getFormElementById',
+            'getShareableFieldById',
+            'getUsedArtifactLinkFields',
+        ]);
 
-        $this->factory->shouldReceive('getDao')->andReturns($this->dao);
+        $this->factory->method('getDao')->willReturn($this->dao);
 
-        $this->user    = Mockery::spy(PFUser::class);
-        $this->tracker = Mockery::spy(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(66);
-
-        $this->project_id  = 3;
-        $this->template_id = 29;
+        $this->user    = UserTestBuilder::buildWithDefaults();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(66)->build();
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
     }
@@ -89,13 +79,14 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSaveObject(): void
     {
-        $a_formelement = Mockery::spy(Tracker_FormElement_Container_Fieldset::class);
+        $a_formelement = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
 
-        $a_formelement->shouldReceive('afterSaveObject')->once();
-        $a_formelement->shouldReceive('setId')->with(66)->once();
-        $a_formelement->shouldReceive('getFlattenPropertiesValues')->andReturns([]);
+        $a_formelement->method('getFormElementDataForCreation');
+        $a_formelement->expects($this->once())->method('afterSaveObject');
+        $a_formelement->expects($this->once())->method('setId')->with(66);
+        $a_formelement->method('getFlattenPropertiesValues')->willReturn([]);
 
-        $this->factory->shouldReceive('createFormElement')->andReturns(66);
+        $this->factory->method('createFormElement')->willReturn(66);
 
         $this->assertEquals(
             66,
@@ -161,12 +152,16 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFieldById(): void
     {
-        $date     = Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        $fieldset = Mockery::spy(\Tracker_FormElement_Container_Fieldset::class);
+        $date     = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $fieldset = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
 
-        $this->factory->shouldReceive('getFormElementById')->with(123)->andReturn($date);
-        $this->factory->shouldReceive('getFormElementById')->with(456)->andReturn($fieldset);
-        $this->factory->shouldReceive('getFormElementById')->with(789)->andReturn(null);
+        $this->factory->method('getFormElementById')->willReturnCallback(
+            static fn (int $id) => match ($id) {
+                123 => $date,
+                456 => $fieldset,
+                default => null,
+            }
+        );
 
         $this->assertInstanceOf(Tracker_FormElement_Field::class, $this->factory->getFieldById(123));
         $this->assertNull($this->factory->getFieldById(456), 'A fieldset is not a Field');
@@ -183,12 +178,14 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function whenIDisplayCreateFormElement(): string
     {
-        $tracker_manager = Mockery::spy(\TrackerManager::class);
-        $request         = Mockery::spy(\HTTPRequest::class);
-        $tracker         = Mockery::spy(\Tracker::class);
+        $tracker_manager = $this->createMock(\TrackerManager::class);
+        $request         = HTTPRequestBuilder::get()->build();
+        $tracker         = $this->createMock(Tracker::class);
+        $tracker->method('getId');
+        $tracker->method('displayAdminFormElementsHeader');
+        $tracker->method('displayFooter');
 
-        $this->dao->shouldReceive('searchUsedByTrackerId')->andReturn([]);
-        $this->factory->shouldReceive('getDao')->andReturn($this->dao);
+        $this->dao->method('searchUsedByTrackerId')->willReturn([]);
 
         $csrf_token = new CSRFSynchronizerToken('form_element', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());
 
@@ -203,8 +200,8 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsEmptyArrayWhenNoSharedFields(): void
     {
         $project_id = 1;
-        $this->dao->shouldReceive('searchProjectSharedFieldsOriginals')
-            ->withArgs([$project_id])->andReturns(TestHelper::emptyDar());
+        $this->dao->method('searchProjectSharedFieldsOriginals')
+            ->with($project_id)->willReturn(TestHelper::emptyDar());
         $this->thenICompareProjectSharedFieldsWithExpectedResult($project_id, []);
     }
 
@@ -220,11 +217,10 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $sharedRow2
         );
 
-        $this->dao->shouldReceive('searchProjectSharedFieldsOriginals')
-            ->withArgs([$project_id])->andReturns($dar);
+        $this->dao->method('searchProjectSharedFieldsOriginals')
+            ->with($project_id)->willReturn($dar);
 
-        $project = Mockery::spy(\Project::class);
-        $project->shouldReceive('getID')->andReturns($project_id);
+        $project = ProjectTestBuilder::aProject()->withId($project_id)->build();
 
         $result = $this->factory->getProjectSharedFields($project);
 
@@ -248,8 +244,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function thenICompareProjectSharedFieldsWithExpectedResult($project_id, $expectedResult): void
     {
-        $project = Mockery::spy(\Project::class);
-        $project->shouldReceive('getID')->andReturns($project_id);
+        $project = ProjectTestBuilder::aProject()->withId($project_id)->build();
 
         $this->assertEquals($expectedResult, $this->factory->getProjectSharedFields($project));
     }
@@ -279,14 +274,14 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_project_shared_fields  = [];
         $field_mapping              = [];
 
-        $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)->andReturns(
+        $this->dao->method('searchProjectSharedFieldsTargets')->with($this->project_id)->willReturn(
             $new_project_shared_fields
         );
-        $this->dao->shouldReceive('searchFieldIdsByGroupId')->with($this->template_id)->andReturns(
+        $this->dao->method('searchFieldIdsByGroupId')->with($this->template_id)->willReturn(
             $template_project_field_ids
         );
 
-        $this->dao->shouldReceive('updateOriginalFieldId')->never();
+        $this->dao->expects($this->never())->method('updateOriginalFieldId');
 
         $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }
@@ -297,14 +292,14 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $new_project_shared_fields  = [];
         $field_mapping              = [['from' => 321, 'to' => 101]];
 
-        $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)->andReturns(
+        $this->dao->method('searchProjectSharedFieldsTargets')->with($this->project_id)->willReturn(
             $new_project_shared_fields
         );
-        $this->dao->shouldReceive('searchFieldIdsByGroupId')->with($this->template_id)->andReturns(
+        $this->dao->method('searchFieldIdsByGroupId')->with($this->template_id)->willReturn(
             $template_project_field_ids
         );
 
-        $this->dao->shouldReceive('updateOriginalFieldId')->never();
+        $this->dao->expects($this->never())->method('updateOriginalFieldId');
 
         $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }
@@ -324,22 +319,30 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['from' => 666, 'to' => 777, 'values' => [3 => 4, 5 => 6]],
         ];
 
-        $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)
-            ->andReturns($new_project_shared_fields);
-        $this->dao->shouldReceive('searchFieldIdsByGroupId')->with($this->template_id)
-            ->andReturns($template_project_field_ids);
+        $this->dao->method('searchProjectSharedFieldsTargets')->with($this->project_id)
+            ->willReturn($new_project_shared_fields);
+        $this->dao->method('searchFieldIdsByGroupId')->with($this->template_id)
+            ->willReturn($template_project_field_ids);
 
-        $this->dao->shouldReceive('updateOriginalFieldId')->with(234, 777)->ordered();
-        $this->dao->shouldReceive('updateOriginalFieldId')->with(567, 888)->ordered();
+        $this->dao->method('updateOriginalFieldId')->willReturnCallback(
+            static fn (int $id, int $original_field_id) => match (true) {
+                $id === 234 && $original_field_id === 777,
+                    $id === 567 && $original_field_id === 888 => true,
+            }
+        );
 
-        $field_234 = \Mockery::spy(\Tracker_FormElement_Field_Shareable::class);
-        $this->factory->shouldReceive('getShareableFieldById')->with(234)->andReturns($field_234);
+        $field_234 = $this->createMock(\Tracker_FormElement_Field_Shareable::class);
 
-        $field_567 = \Mockery::spy(\Tracker_FormElement_Field_Shareable::class);
-        $this->factory->shouldReceive('getShareableFieldById')->with(567)->andReturns($field_567);
+        $field_567 = $this->createMock(\Tracker_FormElement_Field_Shareable::class);
+        $this->factory->method('getShareableFieldById')->willReturnCallback(
+            static fn (int $id) => match ($id) {
+                234 => $field_234,
+                567 => $field_567,
+            }
+        );
 
-        $field_234->shouldReceive('fixOriginalValueIds')->with([3 => 4, 5 => 6])->ordered()->atLeast()->once();
-        $field_567->shouldReceive('fixOriginalValueIds')->with([1 => 2])->ordered()->atLeast()->once();
+        $field_234->expects($this->atLeast(1))->method('fixOriginalValueIds')->with([3 => 4, 5 => 6]);
+        $field_567->expects($this->atLeast(1))->method('fixOriginalValueIds')->with([1 => 2]);
 
         $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }
@@ -358,41 +361,41 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['from' => 666, 'to' => 777, 'values' => [1 => 2, 3 => 4]],
         ];
 
-        $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)
-            ->andReturns($new_project_shared_fields);
-        $this->dao->shouldReceive('searchFieldIdsByGroupId')->with($this->template_id)
-            ->andReturns($template_project_field_ids);
+        $this->dao->method('searchProjectSharedFieldsTargets')->with($this->project_id)
+            ->willReturn($new_project_shared_fields);
+        $this->dao->method('searchFieldIdsByGroupId')->with($this->template_id)
+            ->willReturn($template_project_field_ids);
 
-        $field_234 = \Mockery::spy(\Tracker_FormElement_Field_Shareable::class);
-        $this->factory->shouldReceive('getShareableFieldById')->with(234)->andReturns($field_234);
+        $field_234 = $this->createMock(\Tracker_FormElement_Field_Shareable::class);
+        $this->factory->method('getShareableFieldById')->with(234)->willReturn($field_234);
 
-        $this->dao->shouldReceive('updateOriginalFieldId')->with(234, 777)->once();
-        $field_234->shouldReceive('fixOriginalValueIds')->with([1 => 2, 3 => 4])->once();
+        $this->dao->expects($this->once())->method('updateOriginalFieldId')->with(234, 777);
+        $field_234->expects($this->once())->method('fixOriginalValueIds')->with([1 => 2, 3 => 4]);
 
         $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }
 
     public function testItReturnsNullIfThereAreNoArtifactLinkFields(): void
     {
-        $this->factory->shouldReceive('getUsedArtifactLinkFields')->with($this->tracker)->andReturns([]);
+        $this->factory->method('getUsedArtifactLinkFields')->with($this->tracker)->willReturn([]);
         $this->assertNull($this->factory->getAnArtifactLinkField($this->user, $this->tracker));
     }
 
     public function testItReturnsNullIfUserCannotSeeArtifactLinkField(): void
     {
-        $field = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
-        $field->shouldReceive('userCanRead')->with($this->user)->andReturnFalse();
+        $field = $this->createMock(ArtifactLinkField::class);
+        $field->method('userCanRead')->with($this->user)->willReturn(false);
 
-        $this->factory->shouldReceive('getUsedArtifactLinkFields')->with($this->tracker)->andReturn([$field]);
+        $this->factory->method('getUsedArtifactLinkFields')->with($this->tracker)->willReturn([$field]);
         $this->assertNull($this->factory->getAnArtifactLinkField($this->user, $this->tracker));
     }
 
     public function testItReturnsFieldIfUserCanSeeArtifactLinkField(): void
     {
-        $field = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
-        $field->shouldReceive('userCanRead')->with($this->user)->andReturnTrue();
+        $field = $this->createMock(ArtifactLinkField::class);
+        $field->method('userCanRead')->with($this->user)->willReturn(true);
 
-        $this->factory->shouldReceive('getUsedArtifactLinkFields')->with($this->tracker)->andReturn([$field]);
+        $this->factory->method('getUsedArtifactLinkFields')->with($this->tracker)->willReturn([$field]);
         $this->assertEquals($field, $this->factory->getAnArtifactLinkField($this->user, $this->tracker));
     }
 }
