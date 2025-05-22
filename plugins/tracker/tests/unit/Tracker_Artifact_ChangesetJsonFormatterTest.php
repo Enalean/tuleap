@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_Artifact_ChangesetJsonFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Artifact_ChangesetJsonFormatterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
 
     public function testItHasJsonRepresentation(): void
@@ -34,20 +36,22 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends \Tuleap\Test\PHPUnit\T
             ->with('system', 'datefmt')
             ->willReturn('d/m/Y H:i');
 
-        $artifact  = Mockery::mock(Artifact::class);
+        $artifact  = ArtifactTestBuilder::anArtifact(101)->build();
         $timestamp = mktime(1, 1, 1, 9, 25, 2013);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class, [15, $artifact, 45, $timestamp, ''])
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
 
-        $template_renderer = \Mockery::spy(\TemplateRenderer::class);
-        $template_renderer->shouldReceive('renderToString')->andReturn('body');
+        $changeset = ChangesetTestBuilder::aChangeset(15)
+            ->submittedBy(45)
+            ->submittedOn($timestamp)
+            ->withTextComment('')
+            ->ofArtifact($artifact)
+            ->build();
+
+        $template_renderer = $this->createMock(\TemplateRenderer::class);
+        $template_renderer->method('renderToString')->willReturn('body');
 
         $json_formatter = new Tracker_Artifact_ChangesetJsonFormatter($template_renderer);
 
-        $current_user = Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('getPreference');
-        $current_user->shouldReceive('getLocale');
+        $current_user = UserTestBuilder::buildWithDefaults();
         $this->assertEquals(
             $json_formatter->format($changeset, $current_user),
             [

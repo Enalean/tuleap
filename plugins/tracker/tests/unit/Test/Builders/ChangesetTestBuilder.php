@@ -53,7 +53,9 @@ final class ChangesetTestBuilder
 
     public function submittedBy(int $user_id): self
     {
-        $this->submitted_by_id = $user_id;
+        $this->submitted_by_id    = $user_id;
+        $this->submitted_by_email = '';
+
         return $this;
     }
 
