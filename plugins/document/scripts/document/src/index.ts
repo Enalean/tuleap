@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/document.scss";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 

@@ -7,6 +7,7 @@
   "type": "module",
   "dependencies": {
     "@tuleap/autocomplete-for-select2": "workspace:*",
+    "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/core-constants": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
