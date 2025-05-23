@@ -172,17 +172,9 @@ class Tracker_RuleFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
     }
 
     /**
-     * Creates a Tracker_Semantic Object
-     *
-     * Called by TrackerFactory::getInstanceFromXML()
-     *
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic
-     * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the rule is attached
-     *
-     * @return Tracker_Rule_List The rule object, or null if error
+     * @return array<string, Tracker_Rule_List[]>
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker)
+    public function getInstanceFromXML(SimpleXMLElement $xml, array &$xmlMapping, Tracker $tracker): array
     {
         $rules = [];
         //test this better

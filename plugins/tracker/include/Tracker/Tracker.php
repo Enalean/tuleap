@@ -247,15 +247,13 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     // (before Database import) during XML import
     // they are not used after the import
     public $tooltip;
-    public $cannedResponses = [];
-    public $formElements    = [];
-    public $reports         = [];
+    public array $cannedResponses = [];
+    public array $formElements    = [];
+    public array $reports         = [];
     public $workflow;
-    public $webhooks = [];
-    /**
-     * @var array
-     */
-    public $semantics = [];
+    public array $webhooks  = [];
+    public array $semantics = [];
+    public array $rules     = [];
 
     private $is_project_allowed_to_use_type;
 
