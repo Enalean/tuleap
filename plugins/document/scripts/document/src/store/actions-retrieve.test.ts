@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as load_folder_content from "./actions-helpers/load-folder-content";
 import * as rest_querier from "../api/rest-querier";
 import * as error_handler from "./actions-helpers/handle-errors";
@@ -33,7 +33,6 @@ import type { Folder, Item, RootState, Wiki } from "../type";
 import type { ProjectService, RestFolder } from "../api/rest-querier";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_FOLDER } from "../constants";
 
 describe("actions-get", () => {
@@ -42,13 +41,13 @@ describe("actions-get", () => {
     beforeEach(() => {
         const project_id = 101;
         context = {
-            commit: jest.fn(),
+            commit: vi.fn(),
             state: {
                 configuration: { project_id },
                 current_folder_ascendant_hierarchy: [],
             },
         } as unknown as ActionContext<RootState, RootState>;
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     describe("loadRootFolder()", () => {
@@ -81,12 +80,12 @@ describe("actions-get", () => {
                 root_item,
             } as ProjectService;
 
-            const loadFolderContent = jest.spyOn(load_folder_content, "loadFolderContent");
-            jest.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockResolvedValue(
+            const loadFolderContent = vi.spyOn(load_folder_content, "loadFolderContent");
+            vi.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockResolvedValue(
                 service,
             );
-            jest.spyOn(rest_querier, "getFolderContent").mockResolvedValue([item]);
-            const handle_error = jest.spyOn(error_handler, "handleErrors");
+            vi.spyOn(rest_querier, "getFolderContent").mockResolvedValue([item]);
+            const handle_error = vi.spyOn(error_handler, "handleErrors");
 
             await loadRootFolder(context);
 
@@ -106,7 +105,7 @@ describe("actions-get", () => {
         });
 
         it("When the user does not have access to the project, an error will be raised", async () => {
-            jest.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockReturnValue(
+            vi.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockReturnValue(
                 Promise.reject(
                     new FetchWrapperError("", {
                         ok: false,
@@ -130,7 +129,7 @@ describe("actions-get", () => {
 
         it("When the project can't be found, an error will be raised", async () => {
             const error_message = "Project does not exist.";
-            jest.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockReturnValue(
+            vi.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockReturnValue(
                 Promise.reject(
                     new FetchWrapperError("", {
                         ok: false,
@@ -157,7 +156,7 @@ describe("actions-get", () => {
 
         it("When an error occurred, then the translated exception will be raised", async () => {
             const error_message = "My translated exception";
-            jest.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockReturnValue(
+            vi.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockReturnValue(
                 Promise.reject(
                     new FetchWrapperError("", {
                         ok: false,
@@ -184,16 +183,16 @@ describe("actions-get", () => {
     });
 
     describe("loadFolder", () => {
-        let getItem: jest.SpyInstance,
-            loadFolderContent: jest.SpyInstance,
-            loadAscendantHierarchy: jest.SpyInstance;
+        let getItem: vi.SpyInstance,
+            loadFolderContent: vi.SpyInstance,
+            loadAscendantHierarchy: vi.SpyInstance;
 
         beforeEach(() => {
-            getItem = jest.spyOn(rest_querier, "getItem");
-            loadFolderContent = jest
+            getItem = vi.spyOn(rest_querier, "getItem");
+            loadFolderContent = vi
                 .spyOn(load_folder_content, "loadFolderContent")
                 .mockReturnValue(Promise.resolve());
-            loadAscendantHierarchy = jest
+            loadAscendantHierarchy = vi
                 .spyOn(load_ascendant_hierarchy, "loadAscendantHierarchy")
                 .mockReturnValue(Promise.resolve());
         });
@@ -385,10 +384,10 @@ describe("actions-get", () => {
     });
 
     describe("loadDocumentWithAscendentHierarchy", () => {
-        let loadAscendantHierarchy: jest.SpyInstance;
+        let loadAscendantHierarchy: vi.SpyInstance;
 
         beforeEach(() => {
-            loadAscendantHierarchy = jest.spyOn(load_ascendant_hierarchy, "loadAscendantHierarchy");
+            loadAscendantHierarchy = vi.spyOn(load_ascendant_hierarchy, "loadAscendantHierarchy");
         });
 
         it("loads ascendant hierarchy and content of item", async () => {
@@ -417,7 +416,7 @@ describe("actions-get", () => {
 
             const retrieved_folder_promise = Promise.resolve(current_folder);
 
-            jest.spyOn(rest_querier, "getItem").mockImplementation((item_id: number) => {
+            vi.spyOn(rest_querier, "getItem").mockImplementation((item_id: number) => {
                 if (item_id === 42) {
                     return Promise.resolve(item);
                 } else if (item_id === 3) {
@@ -436,7 +435,7 @@ describe("actions-get", () => {
         });
 
         it("throw error if something went wrong", async () => {
-            jest.spyOn(rest_querier, "getItem").mockImplementation(() => {
+            vi.spyOn(rest_querier, "getItem").mockImplementation(() => {
                 throw new Error("nope");
             });
 
@@ -449,10 +448,12 @@ describe("actions-get", () => {
         });
 
         it("throw error permission error if user does not have enough permissions", async () => {
-            const getItem: jest.SpyInstance = jest.spyOn(rest_querier, "getItem");
-            mockFetchError(getItem, {
-                status: 403,
-            });
+            const getItem: vi.SpyInstance = vi.spyOn(rest_querier, "getItem");
+            getItem.mockRejectedValue(
+                new FetchWrapperError("", {
+                    status: 403,
+                } as Response),
+            );
 
             await loadDocumentWithAscendentHierarchy(context, 42);
             expect(loadAscendantHierarchy).not.toHaveBeenCalled();
@@ -461,15 +462,18 @@ describe("actions-get", () => {
         });
 
         it("throw translated exceptions", async () => {
-            const getItem: jest.SpyInstance = jest.spyOn(rest_querier, "getItem");
-            mockFetchError(getItem, {
-                status: 400,
-                error_json: {
-                    error: {
-                        i18n_error_message: "My translated error",
-                    },
-                },
-            });
+            const getItem: vi.SpyInstance = vi.spyOn(rest_querier, "getItem");
+            getItem.mockRejectedValue(
+                new FetchWrapperError("", {
+                    status: 400,
+                    json: () =>
+                        Promise.resolve({
+                            error: {
+                                i18n_error_message: "My translated error",
+                            },
+                        }),
+                } as Response),
+            );
 
             await loadDocumentWithAscendentHierarchy(context, 42);
             expect(loadAscendantHierarchy).not.toHaveBeenCalled();
@@ -481,10 +485,12 @@ describe("actions-get", () => {
         });
 
         it("throw internal server error if something bad happens", async () => {
-            const getItem: jest.SpyInstance = jest.spyOn(rest_querier, "getItem");
-            mockFetchError(getItem, {
-                status: 400,
-            });
+            const getItem: vi.SpyInstance = vi.spyOn(rest_querier, "getItem");
+            getItem.mockRejectedValue(
+                new FetchWrapperError("", {
+                    status: 400,
+                } as Response),
+            );
 
             await loadDocumentWithAscendentHierarchy(context, 42);
             expect(loadAscendantHierarchy).not.toHaveBeenCalled();
@@ -508,7 +514,7 @@ describe("actions-get", () => {
                 last_update_date: "2018-08-21T17:01:49+02:00",
             } as Item;
 
-            const getItem = jest
+            const getItem = vi
                 .spyOn(rest_querier, "getItem")
                 .mockReturnValue(Promise.resolve(item));
 
@@ -518,7 +524,7 @@ describe("actions-get", () => {
         });
 
         it("handle error when document load fails", async () => {
-            const getItem = jest
+            const getItem = vi
                 .spyOn(rest_querier, "getItem")
                 .mockReturnValue(Promise.reject("error"));
 
@@ -528,14 +534,14 @@ describe("actions-get", () => {
     });
 
     describe("getWikisReferencingSameWikiPage()", () => {
-        let getItemsReferencingSameWikiPage: jest.SpyInstance, getParents: jest.SpyInstance;
+        let getItemsReferencingSameWikiPage: vi.SpyInstance, getParents: vi.SpyInstance;
 
         beforeEach(() => {
-            getItemsReferencingSameWikiPage = jest.spyOn(
+            getItemsReferencingSameWikiPage = vi.spyOn(
                 rest_querier,
                 "getItemsReferencingSameWikiPage",
             );
-            getParents = jest.spyOn(rest_querier, "getParents");
+            getParents = vi.spyOn(rest_querier, "getParents");
         });
 
         it("should return a collection of the items referencing the same wiki page", async () => {

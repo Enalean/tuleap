@@ -18,7 +18,7 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmbeddedCellTitle from "./EmbeddedCellTitle.vue";
@@ -30,8 +30,8 @@ import type { Router } from "vue-router";
 
 describe("EmbeddedCellTitle", () => {
     beforeEach(() => {
-        const mock_resolve = jest.fn().mockReturnValue({ href: "/my-url" });
-        jest.spyOn(router, "useRouter").mockImplementation(() => {
+        const mock_resolve = vi.fn().mockReturnValue({ href: "/my-url" });
+        vi.spyOn(router, "useRouter").mockImplementation(() => {
             return { resolve: mock_resolve } as unknown as Router;
         });
     });

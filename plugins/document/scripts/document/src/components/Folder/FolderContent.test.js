@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import FolderContent from "./FolderContent.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
@@ -32,12 +32,12 @@ describe("FolderContent", () => {
             id: 1,
         },
     };
-    const replace = jest.fn();
+    const replace = vi.fn();
     const mockRouter = {
         replace,
     };
-    let update_currently_previewed_item_mock = jest.fn();
-    let toggle_quick_look_mock = jest.fn();
+    let update_currently_previewed_item_mock = vi.fn();
+    let toggle_quick_look_mock = vi.fn();
 
     beforeEach(() => {
         factory = () => {

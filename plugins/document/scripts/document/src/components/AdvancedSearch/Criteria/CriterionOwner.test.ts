@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import CriterionOwner from "./CriterionOwner.vue";
 import type { Select2Plugin } from "tlp";
@@ -27,9 +27,11 @@ import type { RestUser } from "../../../api/rest-querier";
 import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.mock("tlp");
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
+});
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 interface Select2Mock extends Select2Plugin {
     trigger(): this;
@@ -39,7 +41,7 @@ interface Select2Mock extends Select2Plugin {
 
 describe("CriterionOwner", () => {
     it("should render the component with an already selected user", async () => {
-        const autocompleter = jest.spyOn(autocomplete, "autocomplete_users_for_select2");
+        const autocompleter = vi.spyOn(autocomplete, "autocomplete_users_for_select2");
         let select2 = {} as Select2Mock;
         select2 = {
             trigger: (): Select2Mock => select2,
@@ -47,7 +49,7 @@ describe("CriterionOwner", () => {
         } as unknown as Select2Mock;
         autocompleter.mockReturnValue(select2);
 
-        const get_spy = jest.spyOn(retrieve_selected_owner, "retrieveSelectedOwner");
+        const get_spy = vi.spyOn(retrieve_selected_owner, "retrieveSelectedOwner");
         const current_user = { display_name: "John Doe", username: "jdoe" } as RestUser;
         get_spy.mockResolvedValue(current_user);
 
@@ -70,7 +72,7 @@ describe("CriterionOwner", () => {
                 }),
             },
         });
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
         expect(wrapper.element).toMatchSnapshot();
         expect(wrapper.vm.get_currently_selected_user).toStrictEqual(current_user);
     });

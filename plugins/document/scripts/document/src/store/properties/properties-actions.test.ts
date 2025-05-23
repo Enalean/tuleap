@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
     getFolderProperties,
@@ -50,23 +50,23 @@ import type {
 import type { PropertiesState } from "./module";
 import emitter from "../../helpers/emitter";
 
-jest.mock("../../helpers/emitter");
+vi.mock("../../helpers/emitter");
 
 describe("Properties actions", () => {
-    let context: ActionContext<PropertiesState, RootState>, getProjectProperties: jest.SpyInstance;
+    let context: ActionContext<PropertiesState, RootState>, getProjectProperties: vi.SpyInstance;
 
     beforeEach(() => {
         context = {
             rootState: {
                 configuration: { project_id: 102 },
             },
-            commit: jest.fn(),
-            dispatch: jest.fn(),
+            commit: vi.fn(),
+            dispatch: vi.fn(),
         } as unknown as ActionContext<PropertiesState, RootState>;
 
-        getProjectProperties = jest.spyOn(properties_rest_querier, "getProjectProperties");
+        getProjectProperties = vi.spyOn(properties_rest_querier, "getProjectProperties");
 
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it(`load project properties definition`, async () => {
@@ -100,23 +100,23 @@ describe("Properties actions", () => {
     });
 
     describe("replacePropertiesWithUpdatesOnes", () => {
-        let context: ActionContext<PropertiesState, RootState>, getItem: jest.SpyInstance;
+        let context: ActionContext<PropertiesState, RootState>, getItem: vi.SpyInstance;
 
         beforeEach(() => {
             context = {
                 rootState: {
                     configuration: { is_status_property_used: false },
                 },
-                commit: jest.fn(),
-                dispatch: jest.fn(),
+                commit: vi.fn(),
+                dispatch: vi.fn(),
             } as unknown as ActionContext<PropertiesState, RootState>;
 
-            getItem = jest.spyOn(rest_querier, "getItem");
+            getItem = vi.spyOn(rest_querier, "getItem");
         });
 
         describe("Given item is not the current folder -", () => {
             it("should send null when obsolescence date is permanent", async () => {
-                jest.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
 
@@ -172,7 +172,7 @@ describe("Properties actions", () => {
             });
 
             it("should update file properties", async () => {
-                jest.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putFileProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
 
@@ -224,7 +224,7 @@ describe("Properties actions", () => {
                 );
             });
             it("should update embedded file properties", async () => {
-                jest.spyOn(properties_rest_querier, "putEmbeddedFileProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putEmbeddedFileProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
                 const item = {
@@ -279,7 +279,7 @@ describe("Properties actions", () => {
                 );
             });
             it("should update link document properties", async () => {
-                jest.spyOn(properties_rest_querier, "putLinkProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putLinkProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
                 const item = {
@@ -335,7 +335,7 @@ describe("Properties actions", () => {
             });
 
             it("should update wiki document properties", async () => {
-                jest.spyOn(properties_rest_querier, "putWikiProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putWikiProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
                 const item = {
@@ -390,7 +390,7 @@ describe("Properties actions", () => {
                 );
             });
             it("should update empty document properties", async () => {
-                jest.spyOn(properties_rest_querier, "putEmptyDocumentProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putEmptyDocumentProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
                 const item = {
@@ -446,7 +446,7 @@ describe("Properties actions", () => {
             });
 
             it("should update folder properties", async () => {
-                jest.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
                 const item = {
@@ -524,11 +524,11 @@ describe("Properties actions", () => {
                             is_status_property_used: true,
                         },
                     },
-                    commit: jest.fn(),
-                    dispatch: jest.fn(),
+                    commit: vi.fn(),
+                    dispatch: vi.fn(),
                 } as unknown as ActionContext<PropertiesState, RootState>;
 
-                const put_rest_mock = jest
+                const put_rest_mock = vi
                     .spyOn(properties_rest_querier, "putFolderDocumentProperties")
                     .mockReturnValue(Promise.resolve({} as unknown as Response));
                 const item = {
@@ -600,11 +600,11 @@ describe("Properties actions", () => {
                         is_status_property_used: false,
                     },
                 },
-                commit: jest.fn(),
-                dispatch: jest.fn(),
+                commit: vi.fn(),
+                dispatch: vi.fn(),
             } as unknown as ActionContext<PropertiesState, RootState>;
 
-            const put_rest_mock = jest
+            const put_rest_mock = vi
                 .spyOn(properties_rest_querier, "putFolderDocumentProperties")
                 .mockReturnValue(Promise.resolve({} as unknown as Response));
             const item = {
@@ -670,7 +670,7 @@ describe("Properties actions", () => {
 
         describe("Given I'm updating current folder -", () => {
             it("should update file properties", async () => {
-                jest.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
+                vi.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response),
                 );
 
@@ -729,7 +729,7 @@ describe("Properties actions", () => {
 
     describe("getFolderProperties", () => {
         it("Given a folder item, it's properties are fetched and returned", async () => {
-            const getItemWithSize = jest.spyOn(rest_querier, "getItemWithSize").mockReturnValue(
+            const getItemWithSize = vi.spyOn(rest_querier, "getItemWithSize").mockReturnValue(
                 Promise.resolve({
                     id: 3,
                     title: "Project Documentation",
@@ -753,7 +753,7 @@ describe("Properties actions", () => {
         });
 
         it("Handles errors when it fails", async () => {
-            const getItemWithSize = jest
+            const getItemWithSize = vi
                 .spyOn(rest_querier, "getItemWithSize")
                 .mockReturnValue(Promise.reject("error"));
 

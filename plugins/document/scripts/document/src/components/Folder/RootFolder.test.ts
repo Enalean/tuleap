@@ -18,21 +18,25 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import RootFolder from "./RootFolder.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
+
 describe("RootFolder", () => {
-    let load_root_folder: jest.Mock;
-    let remove_quick_look: jest.Mock;
-    let reset_ascendent_hierarchy: jest.Mock;
+    let load_root_folder: vi.Mock;
+    let remove_quick_look: vi.Mock;
+    let reset_ascendent_hierarchy: vi.Mock;
 
     beforeEach(() => {
-        load_root_folder = jest.fn();
-        remove_quick_look = jest.fn();
-        reset_ascendent_hierarchy = jest.fn();
+        load_root_folder = vi.fn();
+        remove_quick_look = vi.fn();
+        reset_ascendent_hierarchy = vi.fn();
     });
 
     function createWrapper(): VueWrapper<InstanceType<typeof RootFolder>> {

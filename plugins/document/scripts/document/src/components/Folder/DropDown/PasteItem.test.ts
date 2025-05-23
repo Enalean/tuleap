@@ -17,17 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ConfigurationState } from "../../../store/configuration";
-
-const emitMock = jest.fn();
-jest.mock("../../../helpers/emitter", () => {
-    return {
-        emit: emitMock,
-    };
-});
-const mocked_store = { store: { dispatch: jest.fn() } } as unknown as Store<RootState>;
-
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import type { VueWrapper } from "@vue/test-utils";
@@ -44,6 +36,9 @@ import {
 import type { Folder, Item, RootState } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { Store } from "vuex";
+import emitter from "../../../helpers/emitter";
+
+const mocked_store = { store: { dispatch: vi.fn() } } as unknown as Store<RootState>;
 
 describe("PasteItem", () => {
     const destination = {
@@ -52,6 +47,11 @@ describe("PasteItem", () => {
     } as Item;
     const current_folder = {} as Folder;
     let store: ReturnType<typeof useClipboardStore>;
+    let emitMock: Mock;
+
+    beforeEach(() => {
+        emitMock = vi.spyOn(emitter, "emit");
+    });
 
     function createWrapper(
         destination: Item,
@@ -71,6 +71,7 @@ describe("PasteItem", () => {
                     item_id: 123,
                 },
             },
+            createSpy: vi.fn,
         });
 
         store = useClipboardStore(mocked_store, "1", "1", pinia);
@@ -191,7 +192,7 @@ describe("PasteItem", () => {
     it(`Given a document is in the clipboard to be moved
         And the inspected item is a folder containing a document with the same name
         Then the item can not be pasted`, () => {
-        jest.spyOn(check_item_title, "doesDocumentNameAlreadyExist").mockReturnValue(true);
+        vi.spyOn(check_item_title, "doesDocumentNameAlreadyExist").mockReturnValue(true);
 
         const wrapper = createWrapper(
             destination,
@@ -208,7 +209,7 @@ describe("PasteItem", () => {
     it(`Given a folder is in the clipboard to be moved
         And the inspected item is a folder containing a folder with the same name
         Then the item can not be pasted`, () => {
-        jest.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(true);
+        vi.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(true);
 
         const wrapper = createWrapper(
             destination,
@@ -224,8 +225,8 @@ describe("PasteItem", () => {
     it(`Given a folder is in the clipboard to be moved
         And the inspected item is a subfolder
         Then the item can not be pasted`, () => {
-        jest.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(false);
-        jest.spyOn(clipboard_helpers, "isItemDestinationIntoItself").mockReturnValue(true);
+        vi.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(false);
+        vi.spyOn(clipboard_helpers, "isItemDestinationIntoItself").mockReturnValue(true);
 
         const wrapper = createWrapper(
             destination,

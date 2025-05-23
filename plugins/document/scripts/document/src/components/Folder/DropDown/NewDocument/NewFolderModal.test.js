@@ -18,7 +18,7 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import NewFolderModal from "./NewFolderModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
@@ -26,10 +26,14 @@ import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
 
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
+
 describe("NewFolderModal", () => {
     let factory;
 
-    const load_projects_ugroups = jest.fn();
+    const load_projects_ugroups = vi.fn();
     const current_folder = {
         id: 42,
         title: "My current folder",
@@ -107,7 +111,7 @@ describe("NewFolderModal", () => {
             });
         };
 
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

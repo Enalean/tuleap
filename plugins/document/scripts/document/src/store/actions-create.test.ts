@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../api/rest-querier";
 import {
     addNewUploadFile,
@@ -35,7 +35,7 @@ import emitter from "../helpers/emitter";
 import * as flag_item_as_created from "./actions-helpers/flag-item-as-created";
 import { buildFakeItem } from "../helpers/item-builder";
 
-jest.mock("../helpers/emitter");
+vi.mock("../helpers/emitter");
 
 describe("actions-create", () => {
     let context: ActionContext<RootState, RootState>;
@@ -43,22 +43,22 @@ describe("actions-create", () => {
     beforeEach(() => {
         const project_id = "101";
         context = {
-            commit: jest.fn(),
-            dispatch: jest.fn(),
+            commit: vi.fn(),
+            dispatch: vi.fn(),
             state: {
                 configuration: { project_id } as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe("createNewItem", () => {
-        let addNewEmpty: jest.SpyInstance, getItem: jest.SpyInstance;
+        let addNewEmpty: vi.SpyInstance, getItem: vi.SpyInstance;
 
         beforeEach(() => {
-            addNewEmpty = jest.spyOn(rest_querier, "addNewEmpty");
-            getItem = jest.spyOn(rest_querier, "getItem");
+            addNewEmpty = vi.spyOn(rest_querier, "addNewEmpty");
+            getItem = vi.spyOn(rest_querier, "getItem");
         });
 
         it("Replace the obsolescence date with null when date is permantent", async () => {
@@ -142,7 +142,10 @@ describe("actions-create", () => {
                 "addJustCreatedItemToFolderContent",
                 expect.any(Object),
             );
-            expect(context.dispatch).toHaveBeenCalledWith("error/handleErrorsForModal", Error());
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleErrorsForModal",
+                expect.any(Object),
+            );
         });
 
         it("displays the created item when it is created in the current folder", async () => {
@@ -217,7 +220,7 @@ describe("actions-create", () => {
             context.state.folder_content = [{ id: 10 } as Folder];
             const created_item_reference = { id: 66 } as CreatedItem;
 
-            jest.spyOn(rest_querier, "addNewFile").mockResolvedValue(created_item_reference);
+            vi.spyOn(rest_querier, "addNewFile").mockResolvedValue(created_item_reference);
             const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
             const item = {
                 id: 66,
@@ -236,7 +239,7 @@ describe("actions-create", () => {
             const folder_of_created_item = { id: 10 } as Folder;
             const current_folder = { id: 10 } as Folder;
             const uploader = {} as Upload;
-            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
             const fake_item = buildFakeItem();
 
             const expected_fake_item_with_uploader: FakeItem = {
@@ -277,7 +280,7 @@ describe("actions-create", () => {
             context.state.folder_content = [{ id: 10 } as Folder];
             const created_item_reference = { id: 66 } as CreatedItem;
 
-            jest.spyOn(rest_querier, "addNewFile").mockResolvedValue(created_item_reference);
+            vi.spyOn(rest_querier, "addNewFile").mockResolvedValue(created_item_reference);
             const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
             const item = {
                 id: 66,
@@ -295,7 +298,7 @@ describe("actions-create", () => {
                 is_expanded: false,
             } as Folder;
             const uploader = {} as Upload;
-            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
             const fake_item = buildFakeItem();
 
             const expected_fake_item_with_uploader: FakeItem = {
@@ -345,7 +348,7 @@ describe("actions-create", () => {
             context.state.folder_content = [{ id: 10 } as Folder];
             const created_item_reference = { id: 66 } as CreatedItem;
 
-            jest.spyOn(rest_querier, "addNewFile").mockResolvedValue(created_item_reference);
+            vi.spyOn(rest_querier, "addNewFile").mockResolvedValue(created_item_reference);
             const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
             const item = {
                 id: 66,
@@ -363,7 +366,7 @@ describe("actions-create", () => {
                 is_expanded: true,
             } as Folder;
             const uploader = {} as Upload;
-            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
             const fake_item = buildFakeItem();
 
             const expected_fake_item_with_uploader: FakeItem = {
@@ -419,11 +422,11 @@ describe("actions-create", () => {
             const fake_item = buildFakeItem();
 
             const created_item_reference = { id: 66 } as CreatedItem;
-            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+            vi.spyOn(rest_querier, "addNewFile").mockReturnValue(
                 Promise.resolve(created_item_reference),
             );
             const uploader = {} as Upload;
-            jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            vi.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
 
             await addNewUploadFile(context, [
                 dropped_file,
@@ -461,11 +464,11 @@ describe("actions-create", () => {
             const parent = { id: 42 } as Folder;
 
             const created_item_reference = { id: 66 } as CreatedItem;
-            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+            vi.spyOn(rest_querier, "addNewFile").mockReturnValue(
                 Promise.resolve(created_item_reference),
             );
             const uploader = {} as Upload;
-            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
             const fake_item = buildFakeItem();
 
             await addNewUploadFile(context, [
@@ -508,10 +511,10 @@ describe("actions-create", () => {
             const fake_item = buildFakeItem();
 
             const created_item_reference = { id: 66 } as CreatedItem;
-            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+            vi.spyOn(rest_querier, "addNewFile").mockReturnValue(
                 Promise.resolve(created_item_reference),
             );
-            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockImplementation();
+            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockImplementation();
 
             await addNewUploadFile(context, [
                 dropped_file,
@@ -532,14 +535,14 @@ describe("actions-create", () => {
             const fake_item = buildFakeItem();
 
             const created_item_reference = { id: 66 } as CreatedItem;
-            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+            vi.spyOn(rest_querier, "addNewFile").mockReturnValue(
                 Promise.resolve(created_item_reference),
             );
 
             const created_item = { id: 66, parent_id: 42, type: "file" } as ItemFile;
-            jest.spyOn(rest_querier, "getItem").mockResolvedValue(created_item);
+            vi.spyOn(rest_querier, "getItem").mockResolvedValue(created_item);
 
-            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockImplementation();
+            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockImplementation();
 
             await addNewUploadFile(context, [
                 dropped_file,
@@ -560,18 +563,18 @@ describe("actions-create", () => {
 
     describe("adjustItemToContentAfterItemCreationInAFolder", () => {
         let context: ActionContext<State, State>,
-            flagItemAsCreated: jest.SpyInstance,
-            getItem: jest.SpyInstance;
+            flagItemAsCreated: vi.SpyInstance,
+            getItem: vi.SpyInstance;
 
         beforeEach(() => {
             context = {
-                commit: jest.fn(),
+                commit: vi.fn(),
                 state: {} as State,
             } as unknown as ActionContext<State, State>;
 
-            flagItemAsCreated = jest.spyOn(flag_item_as_created, "flagItemAsCreated");
+            flagItemAsCreated = vi.spyOn(flag_item_as_created, "flagItemAsCreated");
 
-            getItem = jest.spyOn(rest_querier, "getItem");
+            getItem = vi.spyOn(rest_querier, "getItem");
         });
 
         it("Item is added to folded content when we are adding content into tree view collapsed folder", async () => {

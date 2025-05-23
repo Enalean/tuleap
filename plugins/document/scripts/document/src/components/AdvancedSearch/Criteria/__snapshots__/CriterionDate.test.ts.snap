@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CriterionDate should render the component when date is set 1`] = `
+exports[`CriterionDate > should render the component when date is set 1`] = `
 <div
   class="tlp-form-element document-search-criterion"
 >
@@ -43,7 +43,7 @@ exports[`CriterionDate should render the component when date is set 1`] = `
 </div>
 `;
 
-exports[`CriterionDate should render the component when no date set 1`] = `
+exports[`CriterionDate > should render the component when no date set 1`] = `
 <div
   class="tlp-form-element document-search-criterion"
 >

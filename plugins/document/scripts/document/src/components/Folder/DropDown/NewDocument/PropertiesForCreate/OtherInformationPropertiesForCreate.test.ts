@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import OtherInformationPropertiesForCreate from "./OtherInformationPropertiesForCreate.vue";
@@ -27,13 +27,17 @@ import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-
 import type { ConfigurationState } from "../../../../../store/configuration";
 import type { PropertiesState } from "../../../../../store/properties/module";
 
-jest.mock("../../../../../helpers/emitter");
+vi.mock("../../../../../helpers/emitter");
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
 
 describe("OtherInformationPropertiesForCreate", () => {
-    let load_properties: jest.Mock;
+    let load_properties: vi.Mock;
 
     beforeEach(() => {
-        load_properties = jest.fn();
+        load_properties = vi.fn();
     });
 
     function createWrapper(

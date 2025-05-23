@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -35,7 +35,7 @@ import type { ActionContext } from "vuex";
 import type { PermissionsState } from "./permissions-default-state";
 import emitter from "../../helpers/emitter";
 
-jest.mock("../../helpers/emitter");
+vi.mock("../../helpers/emitter");
 
 describe("UpdatePermissions()", () => {
     const updated_permissions = {
@@ -49,13 +49,13 @@ describe("UpdatePermissions()", () => {
 
     beforeEach(() => {
         context = {
-            commit: jest.fn(),
-            dispatch: jest.fn(),
+            commit: vi.fn(),
+            dispatch: vi.fn(),
             rootState: {
                 current_folder: { id: 999, type: TYPE_FOLDER } as Folder,
             } as RootState,
         } as unknown as ActionContext<PermissionsState, RootState>;
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     const testPermissionsUpdateSuccess = async (type: string): Promise<void> => {
@@ -64,13 +64,13 @@ describe("UpdatePermissions()", () => {
             type: type,
         } as Item;
 
-        jest.spyOn(rest_querier, "getItem").mockResolvedValue(item);
+        vi.spyOn(rest_querier, "getItem").mockResolvedValue(item);
 
         await updatePermissions(context, { item, updated_permissions });
     };
 
     it("Can update file permissions", async () => {
-        const putFilePermissions = jest
+        const putFilePermissions = vi
             .spyOn(permissions_rest_querier, "putFilePermissions")
             .mockResolvedValue();
 
@@ -96,7 +96,7 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Can update embedded file permissions", async () => {
-        const putEmbeddedFilePermissions = jest
+        const putEmbeddedFilePermissions = vi
             .spyOn(permissions_rest_querier, "putEmbeddedFilePermissions")
             .mockResolvedValue();
 
@@ -122,7 +122,7 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Can update link permissions", async () => {
-        const putLinkPermissions = jest
+        const putLinkPermissions = vi
             .spyOn(permissions_rest_querier, "putLinkPermissions")
             .mockResolvedValue();
 
@@ -148,7 +148,7 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Can update wiki permissions", async () => {
-        const putWikiPermissions = jest
+        const putWikiPermissions = vi
             .spyOn(permissions_rest_querier, "putWikiPermissions")
             .mockResolvedValue();
 
@@ -174,7 +174,7 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Can update empty document permissions", async () => {
-        const putEmptyDocumentPermissions = jest
+        const putEmptyDocumentPermissions = vi
             .spyOn(permissions_rest_querier, "putEmptyDocumentPermissions")
             .mockResolvedValue();
 
@@ -200,7 +200,7 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Can update other type document permissions", async () => {
-        const putOtherTypeDocumentPermissions = jest
+        const putOtherTypeDocumentPermissions = vi
             .spyOn(permissions_rest_querier, "putOtherTypeDocumentPermissions")
             .mockResolvedValue();
 
@@ -226,7 +226,7 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Can update folder permissions", async () => {
-        const putFolderPermissions = jest
+        const putFolderPermissions = vi
             .spyOn(permissions_rest_querier, "putFolderPermissions")
             .mockResolvedValue();
 
@@ -252,14 +252,14 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Can update folder permissions when it is the current folder", async () => {
-        const putFolderPermissions = jest
+        const putFolderPermissions = vi
             .spyOn(permissions_rest_querier, "putFolderPermissions")
             .mockResolvedValue();
 
         const folder = { id: 123, type: TYPE_FOLDER } as Folder;
         context.rootState.current_folder = folder;
 
-        jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(folder));
+        vi.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(folder));
 
         await updatePermissions(context, { item: folder, updated_permissions });
 
@@ -272,12 +272,12 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Set an error in modal when is raised while updating permissions", async () => {
-        jest.spyOn(permissions_rest_querier, "putEmptyDocumentPermissions").mockRejectedValue({
+        vi.spyOn(permissions_rest_querier, "putEmptyDocumentPermissions").mockRejectedValue({
             status: 500,
         });
 
         const item = { id: 123, type: TYPE_EMPTY } as Empty;
-        const getItem = jest.spyOn(rest_querier, "getItem");
+        const getItem = vi.spyOn(rest_querier, "getItem");
 
         await updatePermissions(context, { item, updated_permissions });
 
@@ -290,7 +290,7 @@ describe("loadProjectUserGroupsIfNeeded", () => {
 
     beforeEach(() => {
         context = {
-            commit: jest.fn(),
+            commit: vi.fn(),
             rootState: {
                 current_folder: { id: 123, type: TYPE_FOLDER } as Folder,
                 permissions: { project_ugroups: null } as PermissionsState,
@@ -299,7 +299,7 @@ describe("loadProjectUserGroupsIfNeeded", () => {
     });
 
     it("Retrieve the project user groups when they are never been loaded", async () => {
-        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jest.spyOn(
+        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = vi.spyOn(
             permissions_groups,
             "getProjectUserGroupsWithoutServiceSpecialUGroups",
         );
@@ -315,7 +315,7 @@ describe("loadProjectUserGroupsIfNeeded", () => {
     });
 
     it("Does not retrieve the project user groups when they have already been retrieved", async () => {
-        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jest.spyOn(
+        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = vi.spyOn(
             permissions_groups,
             "getProjectUserGroupsWithoutServiceSpecialUGroups",
         );

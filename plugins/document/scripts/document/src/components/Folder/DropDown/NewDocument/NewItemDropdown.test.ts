@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import NewItemDropdown from "./NewItemDropdown.vue";
 import type { Item } from "../../../../type";
@@ -26,16 +26,16 @@ import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { TYPE_FOLDER } from "../../../../constants";
 import { ItemType } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-jest.mock("@tuleap/tlp-dropdown");
+vi.mock("@tuleap/tlp-dropdown");
 
 describe("NewItemDropdown", function () {
     let fake_dropdown_object: Dropdown;
-    let createDropdown: jest.SpyInstance;
+    let createDropdown: vi.SpyInstance;
 
     beforeEach(() => {
         fake_dropdown_object = {} as Dropdown;
 
-        createDropdown = jest.spyOn(tlp_dropdown, "createDropdown");
+        createDropdown = vi.spyOn(tlp_dropdown, "createDropdown");
         createDropdown.mockReturnValue(fake_dropdown_object);
     });
 

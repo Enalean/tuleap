@@ -17,20 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
-
-const emitMock = jest.fn();
-
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount, mount } from "@vue/test-utils";
 import CriterionNumber from "./CriterionNumber.vue";
-
-jest.mock("../../../helpers/emitter", () => {
-    return {
-        emit: emitMock,
-    };
-});
+import emitter from "../../../helpers/emitter";
 
 describe("CriterionNumber", () => {
+    let emitMock: Mock;
+
+    beforeEach(() => {
+        emitMock = vi.spyOn(emitter, "emit");
+    });
+
     it("should render the component", () => {
         const wrapper = shallowMount(CriterionNumber, {
             props: {

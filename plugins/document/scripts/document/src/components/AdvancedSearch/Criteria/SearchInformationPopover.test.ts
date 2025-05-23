@@ -18,12 +18,12 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.mock("@tuleap/tlp-popovers");
+vi.mock("@tuleap/tlp-popovers");
 
 describe("SearchInformationPopover", () => {
     it("should display a popover content", () => {

@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
-
-const getLogs = jest.fn();
-
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { LogEntry } from "../../api/log-rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import HistoryLogs from "./HistoryLogs.vue";
@@ -31,16 +29,17 @@ import HistoryLogsContent from "./HistoryLogsContent.vue";
 import { shallowMount } from "@vue/test-utils";
 import type { Embedded } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import * as log_rest_querier from "../../api/log-rest-querier";
 
-jest.mock("../../api/log-rest-querier", () => {
-    return {
-        getLogs,
-    };
-});
-
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("HistoryLogs", () => {
+    let getLogs: Mock;
+
+    beforeEach(() => {
+        getLogs = vi.spyOn(log_rest_querier, "getLogs");
+    });
+
     it("should display a loading state", () => {
         getLogs.mockReturnValue(okAsync([]));
 
@@ -67,7 +66,7 @@ describe("HistoryLogs", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(false);
@@ -85,7 +84,7 @@ describe("HistoryLogs", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(true);
@@ -103,7 +102,7 @@ describe("HistoryLogs", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(false);

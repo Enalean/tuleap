@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as lock_rest_querier from "../../api/lock-rest-querier";
 import * as rest_querier from "../../api/rest-querier";
 import { TYPE_EMBEDDED, TYPE_FILE } from "../../constants";
@@ -27,19 +27,16 @@ import type { ActionContext } from "vuex";
 import type { Embedded, ItemFile, State } from "../../type";
 
 describe("lock", () => {
-    let postLockFile: jest.SpyInstance;
-    let getItem: jest.SpyInstance;
+    let postLockFile: vi.SpyInstance;
+    let getItem: vi.SpyInstance;
     let context: ActionContext<State, State>;
 
     beforeEach(() => {
-        context = { commit: jest.fn(), dispatch: jest.fn() } as unknown as ActionContext<
-            State,
-            State
-        >;
+        context = { commit: vi.fn(), dispatch: vi.fn() } as unknown as ActionContext<State, State>;
 
-        postLockFile = jest.spyOn(lock_rest_querier, "postLockFile").mockResolvedValue();
-        jest.spyOn(lock_rest_querier, "postLockEmbedded").mockResolvedValue();
-        getItem = jest.spyOn(rest_querier, "getItem");
+        postLockFile = vi.spyOn(lock_rest_querier, "postLockFile").mockResolvedValue();
+        vi.spyOn(lock_rest_querier, "postLockEmbedded").mockResolvedValue();
+        getItem = vi.spyOn(rest_querier, "getItem");
     });
 
     it("should lock a file and then update its information", async () => {
@@ -116,18 +113,15 @@ describe("lock", () => {
 });
 
 describe("unlock", () => {
-    let getItem: jest.SpyInstance;
+    let getItem: vi.SpyInstance;
     let context: ActionContext<State, State>;
 
     beforeEach(() => {
-        context = { commit: jest.fn(), dispatch: jest.fn() } as unknown as ActionContext<
-            State,
-            State
-        >;
+        context = { commit: vi.fn(), dispatch: vi.fn() } as unknown as ActionContext<State, State>;
 
-        jest.spyOn(lock_rest_querier, "deleteLockFile").mockResolvedValue();
-        jest.spyOn(lock_rest_querier, "deleteLockEmbedded").mockResolvedValue();
-        getItem = jest.spyOn(rest_querier, "getItem");
+        vi.spyOn(lock_rest_querier, "deleteLockFile").mockResolvedValue();
+        vi.spyOn(lock_rest_querier, "deleteLockEmbedded").mockResolvedValue();
+        getItem = vi.spyOn(rest_querier, "getItem");
     });
 
     it("should unlock a file and then update its information", async () => {

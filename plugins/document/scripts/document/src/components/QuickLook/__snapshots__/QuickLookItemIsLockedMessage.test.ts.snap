@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`QuickLookItemIsLockedMessage renders locked message for document 1`] = `
+exports[`QuickLookItemIsLockedMessage > renders locked message for document 1`] = `
 <div
   class="tlp-alert-info document-preview-item-is-locked-icon"
 >

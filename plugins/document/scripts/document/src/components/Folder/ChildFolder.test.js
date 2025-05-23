@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import ChildFolder from "./ChildFolder.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
@@ -25,7 +25,14 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import { routes } from "../../router/router";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
+});
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
+});
 
 const router = createRouter({
     history: createWebHistory(),
@@ -53,9 +60,9 @@ describe("ChildFolder", () => {
 
     beforeEach(() => {
         state = {};
-        load_folder = jest.fn();
-        remove_quick_look = jest.fn();
-        toggle_quick_look = jest.fn();
+        load_folder = vi.fn();
+        remove_quick_look = vi.fn();
+        toggle_quick_look = vi.fn();
     });
 
     it(`Given preview_id parameter is not set
@@ -90,7 +97,7 @@ describe("ChildFolder", () => {
 
         factory();
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
         expect(load_folder).toHaveBeenCalledWith(expect.anything(), 10);
     });
 

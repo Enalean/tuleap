@@ -31,6 +31,7 @@ export default vite.defineAppConfig(
     {
         plugins: [
             POGettextPlugin.vite(),
+            viteExternalsPlugin({ tlp: "tlp" }),
             vue({
                 template: {
                     compilerOptions: {
@@ -38,7 +39,6 @@ export default vite.defineAppConfig(
                     },
                 },
             }),
-            viteExternalsPlugin({ tlp: "tlp" }),
         ],
         build: {
             rollupOptions: {

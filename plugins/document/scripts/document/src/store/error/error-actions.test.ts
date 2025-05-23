@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as actions from "./error-actions";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ActionContext } from "vuex";
@@ -30,7 +30,7 @@ describe(`Error module actions`, () => {
 
         beforeEach(() => {
             context = {
-                commit: jest.fn(),
+                commit: vi.fn(),
             } as unknown as ActionContext<State, State>;
         });
 
@@ -72,7 +72,7 @@ describe(`Error module actions`, () => {
 
         beforeEach(() => {
             context = {
-                commit: jest.fn(),
+                commit: vi.fn(),
             } as unknown as ActionContext<ErrorState, ErrorState>;
         });
 
@@ -107,7 +107,7 @@ describe(`Error module actions`, () => {
 
         beforeEach(() => {
             context = {
-                commit: jest.fn(),
+                commit: vi.fn(),
             } as unknown as ActionContext<ErrorState, RootState>;
         });
         it(`when a message is not from FetchWrapperError,

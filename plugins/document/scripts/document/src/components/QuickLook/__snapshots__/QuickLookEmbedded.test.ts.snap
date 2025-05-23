@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`QuickLookEmbedded Component can be rendered for embedded 1`] = `
+exports[`QuickLookEmbedded > Component can be rendered for embedded 1`] = `
 <div
   class="document-quick-look-document-action"
 >

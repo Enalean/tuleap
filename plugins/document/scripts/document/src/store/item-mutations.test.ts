@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { replaceFolderContentByItem } from "./item-mutations";
 import type { FakeItem, Item, LockInfo, State, User } from "../type";
 

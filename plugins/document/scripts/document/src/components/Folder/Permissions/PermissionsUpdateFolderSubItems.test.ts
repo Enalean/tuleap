@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 
@@ -61,7 +61,7 @@ describe("PermissionsUpdateFolderSubItems", () => {
     ])(
         'When the checkbox is %s, then it should emit a "update-apply-permissions-on-children" event containing the checkbox state.',
         (state, is_checked) => {
-            const emit = jest.spyOn(emitter, "emit");
+            const emit = vi.spyOn(emitter, "emit");
             const wrapper = getWrapper({ type: TYPE_FOLDER } as Folder);
             const checkbox = wrapper.find<HTMLInputElement>(
                 "[data-test=checkbox-apply-permissions-on-children]",

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -28,15 +28,19 @@ import { nextTick } from "vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ItemFile, RootState, FakeItem } from "../../type";
 
-jest.mock("@tuleap/tlp-modal", () => {
+vi.mock("@tuleap/tlp-modal", () => {
     return {
         createModal: (): Modal =>
             ({
-                addEventListener: jest.fn(),
-                show: jest.fn(),
-                removeEventListener: jest.fn(),
+                addEventListener: vi.fn(),
+                show: vi.fn(),
+                removeEventListener: vi.fn(),
             }) as unknown as Modal,
     };
+});
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
 });
 
 describe("SearchItemModals", () => {

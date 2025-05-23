@@ -14,6 +14,7 @@
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/keyboard-shortcuts": "workspace:*",
     "@tuleap/project-privacy-helper": "workspace:*",
+    "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
@@ -40,21 +41,18 @@
     "vuex-composition-helpers": "^2.0.1"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
     "@pinia/testing": "^0.0.14",
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-document-rest-api-types": "workspace:^",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@types/sprintf-js": "^1.1.2",
     "@vitejs/plugin-vue": "4.2.3",
-    "@vue/test-utils": "^2.2.10",
-    "jest-environment-jsdom": "^29.6.4"
+    "@vue/test-utils": "^2.2.10"
   },
   "scripts": {
     "build": "vite build",
     "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
-    "test": "jest"
+    "test": "vitest"
   }
 }

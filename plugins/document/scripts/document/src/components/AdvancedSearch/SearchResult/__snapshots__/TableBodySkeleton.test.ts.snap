@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TableBodySkeleton should display skeleton for different types of column 1`] = `
+exports[`TableBodySkeleton > should display skeleton for different types of column 1`] = `
 <tbody>
   
   <tr>

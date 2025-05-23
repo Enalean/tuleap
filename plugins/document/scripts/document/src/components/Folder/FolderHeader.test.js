@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import FolderHeader from "./FolderHeader.vue";
 import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
@@ -26,13 +26,17 @@ import emitter from "../../helpers/emitter";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { nextTick } from "vue";
 
-jest.mock("@tuleap/tlp-modal", () => {
+vi.mock("@tuleap/tlp-modal", () => {
     return {
         createModal: () => ({
-            addEventListener: jest.fn(),
-            show: jest.fn(),
+            addEventListener: vi.fn(),
+            show: vi.fn(),
         }),
     };
+});
+
+vi.mock("tlp", () => {
+    return { datePicker: vi.fn() };
 });
 
 describe("FolderHeader", () => {

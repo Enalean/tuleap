@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
@@ -25,14 +25,14 @@ import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("PermissionsUpdateModal", () => {
     let factory;
-    let load_project_ugroups = jest.fn().mockImplementation(() => {
+    let load_project_ugroups = vi.fn().mockImplementation(() => {
         return { id: "102_3", label: "Project members" };
     });
-    const update_permissions = jest.fn().mockImplementation(() => {
+    const update_permissions = vi.fn().mockImplementation(() => {
         return { id: "102_3", label: "Project members" };
     });
 
@@ -61,7 +61,7 @@ describe("PermissionsUpdateModal", () => {
                             error: {
                                 namespaced: true,
                                 mutations: {
-                                    resetModalError: jest.fn(),
+                                    resetModalError: vi.fn(),
                                 },
                             },
                         },
@@ -71,7 +71,7 @@ describe("PermissionsUpdateModal", () => {
         };
 
         let hideFunction = null;
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener(type, listener) {
                 hideFunction = listener;
             },
@@ -137,9 +137,9 @@ describe("PermissionsUpdateModal", () => {
     });
 
     it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
-        const handleErrors = jest.spyOn(handle_errors, "handleErrors").mockImplementation(() => {});
+        const handleErrors = vi.spyOn(handle_errors, "handleErrors").mockImplementation(() => {});
 
-        load_project_ugroups = jest.fn().mockImplementation(() => {
+        load_project_ugroups = vi.fn().mockImplementation(() => {
             return Promise.reject({});
         });
 
@@ -153,7 +153,7 @@ describe("PermissionsUpdateModal", () => {
             },
         };
         factory({ item: item_to_update });
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(handleErrors).toHaveBeenCalledTimes(1);
     });
@@ -209,7 +209,7 @@ describe("PermissionsUpdateModal", () => {
             item: item,
             updated_permissions: permissions_to_update,
         });
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
         expect(wrapper.vm.can_be_submitted).toBe(true);
     });
 

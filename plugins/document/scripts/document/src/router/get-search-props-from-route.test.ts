@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
 import { buildAdvancedSearchParams } from "../helpers/build-advanced-search-params";
 import type { RouteLocationNormalizedLoaded } from "vue-router";

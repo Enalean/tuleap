@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SearchResultError from "./SearchResultError.vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("SearchResultError", () => {
     it("should display error message", () => {
@@ -53,7 +53,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("400 Bad request");
     });
@@ -75,7 +75,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("Les paramètres ne sont pas corrects");
     });
@@ -90,7 +90,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("Lorem ipsum");
     });
@@ -105,7 +105,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("Lorem ipsum");
     });

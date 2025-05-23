@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
@@ -30,13 +30,14 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../store/configuration";
 
 let pinia: TestingPinia;
-const mocked_store = { dispatch: jest.fn() };
+const mocked_store = { dispatch: vi.fn() };
 
 function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformation> {
     pinia = createTestingPinia({
         initialState: {
             clipboard,
         },
+        createSpy: vi.fn,
     });
     useClipboardStore(mocked_store, "1", "1", pinia);
     return shallowMount(ClipboardContentInformation, {

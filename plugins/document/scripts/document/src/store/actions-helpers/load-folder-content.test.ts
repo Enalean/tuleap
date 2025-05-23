@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
 import { loadFolderContent } from "./load-folder-content";
 import type { ActionContext } from "vuex";
 import type { Folder, ItemFile, RootState } from "../../type";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("loadFolderContent", () => {
-    let context: ActionContext<RootState, RootState>, getFolderContent: jest.SpyInstance;
+    let context: ActionContext<RootState, RootState>, getFolderContent: vi.SpyInstance;
 
     beforeEach(() => {
         context = {
-            commit: jest.fn(),
+            commit: vi.fn(),
         } as unknown as ActionContext<RootState, RootState>;
 
-        getFolderContent = jest.spyOn(rest_querier, "getFolderContent");
+        getFolderContent = vi.spyOn(rest_querier, "getFolderContent");
     });
 
     it("loads the folder content and sets loading flag", async () => {
@@ -66,31 +66,34 @@ describe("loadFolderContent", () => {
 
     it("When the folder can't be found, another error screen will be shown", async () => {
         const error_message = "The folder does not exist.";
-        mockFetchError(getFolderContent, {
-            status: 404,
-            error_json: {
-                error: {
-                    i18n_error_message: error_message,
-                },
-            },
-        });
+        getFolderContent.mockRejectedValue(
+            new FetchWrapperError("", {
+                status: 404,
+                json: (): Promise<{ error: { i18n_error_message: string } }> =>
+                    Promise.resolve({ error: { i18n_error_message: error_message } }),
+            } as Response),
+        );
 
         await loadFolderContent(context, 1, Promise.resolve({} as Folder));
 
-        expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
-        expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
-        expect(context.commit).toHaveBeenCalledWith("stopLoading");
+        expect(context.commit).toHaveBeenNthCalledWith(1, "beginLoading");
+        expect(context.commit).toHaveBeenNthCalledWith(2, "saveFolderContent", []);
+        expect(context.commit).toHaveBeenNthCalledWith(3, "stopLoading");
+        expect(context.commit).toHaveBeenNthCalledWith(
+            4,
+            "error/setFolderLoadingError",
+            error_message,
+        );
     });
 
     it("When the user does not have access to the folder, an error will be raised", async () => {
-        mockFetchError(getFolderContent, {
-            status: 403,
-            error_json: {
-                error: {
-                    i18n_error_message: "No you cannot",
-                },
-            },
-        });
+        getFolderContent.mockRejectedValue(
+            new FetchWrapperError("", {
+                status: 403,
+                json: (): Promise<{ error: { i18n_error_message: string } }> =>
+                    Promise.reject({ error: { i18n_error_message: "No you cannot" } }),
+            } as Response),
+        );
 
         await loadFolderContent(context, 1, Promise.resolve({} as Folder));
 

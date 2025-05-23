@@ -18,14 +18,14 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import emitter from "../../../../../helpers/emitter";
 import DescriptionProperty from "./DescriptionProperty.vue";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
-jest.mock("../../../../../helpers/emitter");
+vi.mock("../../../../../helpers/emitter");
 
 describe("DescriptionProperty", () => {
     function createWrapper(value: string): VueWrapper<InstanceType<typeof DescriptionProperty>> {

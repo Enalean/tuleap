@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import GoBackToRootButton from "./GoBackToRootButton.vue";
@@ -25,12 +25,12 @@ import GoBackToRootButton from "./GoBackToRootButton.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import * as router from "vue-router";
 
-jest.mock("vue-router");
+vi.mock("vue-router");
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 describe("GoBackToRootButton", () => {
     beforeEach(() => {
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             params: { item_id: "101" },
         } as unknown as RouteLocationNormalizedLoaded);
     });

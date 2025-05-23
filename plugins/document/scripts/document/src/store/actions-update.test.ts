@@ -17,32 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-
-const createNewVersion = jest.fn();
-const uploadVersion = jest.fn();
-const postEmbeddedFile = jest.fn();
-const postWiki = jest.fn();
-const postNewLinkVersionFromEmpty = jest.fn();
-const postNewEmbeddedFileVersionFromEmpty = jest.fn();
-const postNewFileVersionFromEmpty = jest.fn();
-const postLinkVersion = jest.fn();
-const getItem = jest.fn();
-
-jest.mock("../api/rest-querier", () => {
-    return {
-        createNewVersion,
-        uploadVersion,
-        postEmbeddedFile,
-        postWiki,
-        postNewLinkVersionFromEmpty,
-        postNewEmbeddedFileVersionFromEmpty,
-        postNewFileVersionFromEmpty,
-        postLinkVersion,
-        getItem,
-    };
-});
-
+import type { Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NewVersionFromEmptyInformation } from "./actions-update";
 import {
     createNewEmbeddedFileVersionFromModal,
@@ -56,36 +32,57 @@ import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
 import type { Embedded, Empty, Folder, ItemFile, Link, RootState, Wiki } from "../type";
 import type { ConfigurationState } from "./configuration";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../constants";
 import type { Upload } from "tus-js-client";
 import emitter from "../helpers/emitter";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import * as RestQuerier from "../api/rest-querier";
 
 describe("actions-update", () => {
-    let context: ActionContext<RootState, RootState>, emit: jest.SpyInstance;
+    let context: ActionContext<RootState, RootState>;
+    let emit: vi.SpyInstance;
+    let createNewVersion: Mock;
+    let postEmbeddedFile: Mock;
+    let postWiki: Mock;
+    let postNewLinkVersionFromEmpty: Mock;
+    let postNewEmbeddedFileVersionFromEmpty: Mock;
+    let postNewFileVersionFromEmpty: Mock;
+    let postLinkVersion: Mock;
+    let getItem: Mock;
 
     beforeEach(() => {
         const project_id = "101";
         context = {
-            commit: jest.fn(),
-            dispatch: jest.fn(),
+            commit: vi.fn(),
+            dispatch: vi.fn(),
             state: {
                 configuration: { project_id } as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
-        emit = jest.spyOn(emitter, "emit");
+        emit = vi.spyOn(emitter, "emit");
+        createNewVersion = vi.spyOn(RestQuerier, "createNewVersion");
+        postEmbeddedFile = vi.spyOn(RestQuerier, "postEmbeddedFile");
+        postWiki = vi.spyOn(RestQuerier, "postWiki");
+        postNewLinkVersionFromEmpty = vi.spyOn(RestQuerier, "postNewLinkVersionFromEmpty");
+        postNewEmbeddedFileVersionFromEmpty = vi.spyOn(
+            RestQuerier,
+            "postNewEmbeddedFileVersionFromEmpty",
+        );
+        postNewFileVersionFromEmpty = vi.spyOn(RestQuerier, "postNewFileVersionFromEmpty");
+        postLinkVersion = vi.spyOn(RestQuerier, "postLinkVersion");
+        getItem = vi.spyOn(RestQuerier, "getItem");
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe("createNewFileVersion", () => {
-        let uploadVersion: jest.SpyInstance;
+        let uploadVersion: vi.SpyInstance;
 
         beforeEach(() => {
-            uploadVersion = jest.spyOn(upload_file, "uploadVersion");
+            uploadVersion = vi.spyOn(upload_file, "uploadVersion");
         });
 
         it("does not trigger any upload if the file is empty", async () => {
@@ -131,10 +128,10 @@ describe("actions-update", () => {
     });
 
     describe("createNewFileVersionFromModal", () => {
-        let uploadVersion: jest.SpyInstance;
+        let uploadVersion: vi.SpyInstance;
 
         beforeEach(() => {
-            uploadVersion = jest.spyOn(upload_file, "uploadVersion");
+            uploadVersion = vi.spyOn(upload_file, "uploadVersion");
         });
 
         it("uploads a new version of a file", async () => {
@@ -193,9 +190,12 @@ describe("actions-update", () => {
             context.state.folder_content = [{ id: 45 } as ItemFile];
             const update_fail = {} as File;
 
-            mockFetchError(createNewVersion, {
-                status: 400,
-            });
+            createNewVersion.mockRejectedValue(
+                new FetchWrapperError("", {
+                    status: 400,
+                    json: (): Promise<undefined> => Promise.reject(undefined),
+                } as Response),
+            );
 
             await createNewFileVersionFromModal(context, [
                 item,
@@ -219,6 +219,8 @@ describe("actions-update", () => {
         it("updates an embedded file", async () => {
             const item = { id: 45 } as Embedded;
             context.state.folder_content = [{ id: 45 } as Embedded];
+
+            postEmbeddedFile.mockImplementation(() => {});
 
             await createNewEmbeddedFileVersionFromModal(context, [
                 item,
@@ -264,6 +266,7 @@ describe("actions-update", () => {
             context.state.folder_content = [{ id: 45 } as Wiki];
 
             getItem.mockResolvedValue(item);
+            postWiki.mockImplementation(() => {});
 
             await createNewWikiVersionFromModal(context, [
                 item,
@@ -310,6 +313,7 @@ describe("actions-update", () => {
             context.state.folder_content = [{ id: 45 } as Link];
 
             getItem.mockResolvedValue(item);
+            postLinkVersion.mockImplementation(() => {});
 
             await createNewLinkVersionFromModal(context, [
                 item,
@@ -357,8 +361,8 @@ describe("actions-update", () => {
 
         beforeEach(() => {
             context = {
-                commit: jest.fn(),
-                dispatch: jest.fn(),
+                commit: vi.fn(),
+                dispatch: vi.fn(),
                 state: {
                     folder_content: [{ id: 123, type: TYPE_EMPTY } as Empty],
                 } as unknown as RootState,
@@ -462,7 +466,7 @@ describe("actions-update", () => {
                 id: 123,
                 type: TYPE_FILE,
             } as ItemFile;
-            const uploadVersionFromEmpty = jest
+            const uploadVersionFromEmpty = vi
                 .spyOn(upload_file, "uploadVersionFromEmpty")
                 .mockReturnValue({} as Upload);
             postNewFileVersionFromEmpty.mockReturnValue(Promise.resolve());

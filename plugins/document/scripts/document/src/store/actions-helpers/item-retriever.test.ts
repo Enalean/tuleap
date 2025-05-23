@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import type { FakeItem, Folder, Item } from "../../type";
 import { TYPE_EMBEDDED, TYPE_FOLDER } from "../../constants";
 import { getParentFolder } from "./item-retriever";

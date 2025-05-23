@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { clickOnDatashortcutElement } from "./click-on-datashortcut-element";
 import * as getter_focused_row from "./get-focused-row";
 
-jest.mock("./get-focused-row");
+vi.mock("./get-focused-row");
 
 describe("callNavigationShortcut", () => {
     let doc: Document;
@@ -34,19 +34,19 @@ describe("callNavigationShortcut", () => {
     const datashortcut_attribute = "datashortcut";
     const datashortcut_selector = `[${datashortcut_attribute}]`;
 
-    let focusHeaderButton: jest.SpyInstance;
-    let clickHeaderButton: jest.SpyInstance;
-    let clickRowButton: jest.SpyInstance;
+    let focusHeaderButton: vi.SpyInstance;
+    let clickHeaderButton: vi.SpyInstance;
+    let clickRowButton: vi.SpyInstance;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         setupDocumentTable(doc);
 
-        jest.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(row);
+        vi.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(row);
 
-        focusHeaderButton = jest.spyOn(header_button, "focus");
-        clickHeaderButton = jest.spyOn(header_button, "click");
-        clickRowButton = jest.spyOn(row_button, "click");
+        focusHeaderButton = vi.spyOn(header_button, "focus");
+        clickHeaderButton = vi.spyOn(header_button, "click");
+        clickRowButton = vi.spyOn(row_button, "click");
     });
 
     describe("clickOnDatashortcutElement", () => {

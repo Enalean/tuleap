@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import {
@@ -41,7 +41,7 @@ describe("Update item permissions", () => {
     } as Permissions;
 
     it("Update permissions of a file", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putFilePermissions(item_id, permissions);
@@ -53,7 +53,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of an embedded file", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putEmbeddedFilePermissions(item_id, permissions);
@@ -65,7 +65,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of a link", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putLinkPermissions(item_id, permissions);
 
@@ -76,7 +76,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of a wiki document", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putWikiPermissions(item_id, permissions);
 
@@ -87,7 +87,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of an empty document", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putEmptyDocumentPermissions(item_id, permissions);
 
@@ -98,7 +98,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of another type document", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putOtherTypeDocumentPermissions(item_id, permissions);
 
@@ -112,7 +112,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of folder", async () => {
-        const tlpPut = jest.spyOn(tlp_fetch, "put");
+        const tlpPut = vi.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putFolderPermissions(item_id, permissions);
 

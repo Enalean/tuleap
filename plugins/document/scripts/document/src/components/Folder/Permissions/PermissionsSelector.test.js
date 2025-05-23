@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 
 import PermissionsSelector from "./PermissionsSelector.vue";
 import emitter from "../../../helpers/emitter";
 import { CAN_WRITE } from "../../../constants";
 
-jest.mock("../../../helpers/emitter");
+vi.mock("../../../helpers/emitter");
 describe("PermissionsSelector", () => {
     let factory;
 

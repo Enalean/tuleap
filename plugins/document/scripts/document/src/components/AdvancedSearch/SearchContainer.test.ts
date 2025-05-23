@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-
-const searchInFolderMock = jest.fn();
-
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { RouteLocationNormalizedLoaded, Router } from "vue-router";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
 import SearchContainer from "./SearchContainer.vue";
@@ -34,31 +31,29 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as router from "../../helpers/use-router";
+import * as querier from "../../api/rest-querier";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
-jest.mock("../../api/rest-querier", () => {
-    return {
-        searchInFolder: searchInFolderMock,
-    };
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
 });
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("SearchContainer", () => {
-    let push_route_spy: jest.Mock;
+    let push_route_spy: vi.Mock;
     beforeEach(() => {
-        searchInFolderMock.mockReset();
-        push_route_spy = jest.fn();
+        push_route_spy = vi.fn();
 
-        jest.spyOn(router, "useRouter").mockImplementation(() => {
+        vi.spyOn(router, "useRouter").mockImplementation(() => {
             return { push: push_route_spy } as unknown as Router;
         });
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             query: { q: "Lorem ipsum" },
         } as unknown as RouteLocationNormalizedLoaded);
     });
 
-    const load_folder = jest.fn();
+    const load_folder = vi.fn();
 
     function getWrapper(
         query: string,
@@ -82,7 +77,12 @@ describe("SearchContainer", () => {
     }
 
     it("should automatically load the current folder so that breadcrumb is accurate when user refresh the page", () => {
-        searchInFolderMock.mockResolvedValue([]);
+        vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         shallowMount(SearchContainer, {
             props: {
@@ -103,7 +103,12 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes global search", () => {
-        searchInFolderMock.mockResolvedValue([]);
+        vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("", buildAdvancedSearchParams());
 
@@ -125,7 +130,12 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes type", () => {
-        searchInFolderMock.mockResolvedValue([]);
+        vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("", buildAdvancedSearchParams());
 
@@ -144,7 +154,12 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes title", () => {
-        searchInFolderMock.mockResolvedValue([]);
+        vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("", buildAdvancedSearchParams());
 
@@ -163,7 +178,12 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes description", () => {
-        searchInFolderMock.mockResolvedValue([]);
+        vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("", buildAdvancedSearchParams());
 
@@ -182,7 +202,12 @@ describe("SearchContainer", () => {
     });
 
     it("should not route to a new search if user didn't change the criteria but still perform the search to make sure that results are accurate", () => {
-        searchInFolderMock.mockResolvedValue([]);
+        const searchInFolderMock = vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("Lorem ipsum", buildAdvancedSearchParams());
 
@@ -197,7 +222,12 @@ describe("SearchContainer", () => {
     });
 
     it("should perform a new search if user paginates through results", async () => {
-        searchInFolderMock.mockResolvedValue([]);
+        const searchInFolderMock = vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("", buildAdvancedSearchParams({ global_search: "Lorem ipsum" }));
 
@@ -213,7 +243,12 @@ describe("SearchContainer", () => {
     });
 
     it("should perform a new search if user select another folder in the breadcrumb", async () => {
-        searchInFolderMock.mockResolvedValue([]);
+        const searchInFolderMock = vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("", buildAdvancedSearchParams({ global_search: "Lorem ipsum" }));
 
@@ -230,7 +265,12 @@ describe("SearchContainer", () => {
     });
 
     it("should search for items based on criteria", () => {
-        searchInFolderMock.mockResolvedValue([]);
+        const searchInFolderMock = vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
         const wrapper = getWrapper("", buildAdvancedSearchParams({ global_search: "Lorem ipsum" }));
 
@@ -244,7 +284,7 @@ describe("SearchContainer", () => {
     });
 
     it("should display an error state if the query failed", async () => {
-        searchInFolderMock.mockRejectedValue(
+        vi.spyOn(querier, "searchInFolder").mockRejectedValue(
             new FetchWrapperError("Not Found", {
                 status: 404,
                 json: (): Promise<{ error: { code: number; message: string } }> =>
@@ -253,7 +293,7 @@ describe("SearchContainer", () => {
         );
 
         const wrapper = getWrapper("", buildAdvancedSearchParams());
-        await jest.runOnlyPendingTimersAsync();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent("search-result-table-stub").exists()).toBe(false);
         expect(wrapper.findComponent("search-result-error-stub").exists()).toBe(true);
@@ -266,9 +306,14 @@ describe("SearchContainer", () => {
         ["item-has-just-been-deleted"],
         ["item-has-just-been-updated"],
     ])("should reload the page whenever %s", (event) => {
-        searchInFolderMock.mockResolvedValue([]);
+        vi.spyOn(querier, "searchInFolder").mockResolvedValue({
+            from: 0,
+            to: 0,
+            total: 0,
+            items: [],
+        });
 
-        const reload = jest.fn();
+        const reload = vi.fn();
         Object.defineProperty(window, "location", {
             value: {
                 reload,

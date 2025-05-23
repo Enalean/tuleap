@@ -18,7 +18,7 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../../constants";
@@ -31,31 +31,31 @@ import * as router from "../../../../helpers/use-router";
 import type { Router } from "vue-router";
 import type { ConfigurationState } from "../../../../store/configuration";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("ModalConfirmDeletion", () => {
-    let get_wikis: jest.Mock;
-    let delete_items: jest.Mock;
-    let update_preview: jest.Mock;
-    let show_notifications: jest.Mock;
-    let mock_replace: jest.Mock;
+    let get_wikis: vi.Mock;
+    let delete_items: vi.Mock;
+    let update_preview: vi.Mock;
+    let show_notifications: vi.Mock;
+    let mock_replace: vi.Mock;
     beforeEach(() => {
         const fake_modal = {
-            addEventListener: jest.fn(),
-            show: jest.fn(),
-            hide: jest.fn(),
+            addEventListener: vi.fn(),
+            show: vi.fn(),
+            hide: vi.fn(),
         } as unknown as Modal;
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
 
-        jest.spyOn(router, "useRouter").mockImplementation(() => {
-            return { replace: mock_replace, push: jest.fn() } as unknown as Router;
+        vi.spyOn(router, "useRouter").mockImplementation(() => {
+            return { replace: mock_replace, push: vi.fn() } as unknown as Router;
         });
 
-        get_wikis = jest.fn();
-        delete_items = jest.fn();
-        update_preview = jest.fn();
-        show_notifications = jest.fn();
-        mock_replace = jest.fn();
+        get_wikis = vi.fn();
+        delete_items = vi.fn();
+        update_preview = vi.fn();
+        show_notifications = vi.fn();
+        mock_replace = vi.fn();
     });
 
     function createWrapper(
@@ -63,7 +63,7 @@ describe("ModalConfirmDeletion", () => {
         currently_previewed_item: Item | null,
         wiki_referencing_same_page: Array<Wiki> | null,
     ): VueWrapper<InstanceType<typeof ModalConfirmDeletion>> {
-        get_wikis = jest.fn().mockReturnValue(wiki_referencing_same_page);
+        get_wikis = vi.fn().mockReturnValue(wiki_referencing_same_page);
 
         return shallowMount(ModalConfirmDeletion, {
             props: { item },
@@ -128,7 +128,7 @@ describe("ModalConfirmDeletion", () => {
                 } as Wiki,
             ];
             const deletion_modal = await createWrapper(item, null, wikis);
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(get_wikis).toHaveBeenCalled();
             expect(deletion_modal.vm.can_wiki_checkbox_be_shown).toBeTruthy();

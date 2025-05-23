@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
@@ -26,6 +26,10 @@ import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import emitter from "../../helpers/emitter";
+
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
+});
 
 describe("SearchCriteriaPanel", () => {
     it("should allow user to search for new terms", () => {

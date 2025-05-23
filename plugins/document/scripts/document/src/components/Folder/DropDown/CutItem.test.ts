@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-
-const emitMock = jest.fn();
-
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Store } from "vuex";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -32,17 +30,14 @@ import { createTestingPinia } from "@pinia/testing";
 import { ref } from "vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import emitter from "../../../helpers/emitter";
 
-jest.mock("../../../helpers/emitter", () => {
-    return {
-        emit: emitMock,
-    };
-});
-const mocked_store = { store: { dispatch: jest.fn() } } as unknown as Store<RootState>;
+const mocked_store = { store: { dispatch: vi.fn() } } as unknown as Store<RootState>;
 
 describe("CutItem", () => {
     let pinia: TestingPinia;
     let store: ReturnType<typeof useClipboardStore>;
+    let emitMock: Mock;
 
     function createWrapper(item: Item, pasting_in_progress: boolean): VueWrapper<CutItem> {
         pinia = createTestingPinia({
@@ -52,6 +47,7 @@ describe("CutItem", () => {
                     item_id: ref(item.id),
                 },
             },
+            createSpy: vi.fn,
         });
 
         store = useClipboardStore(mocked_store, "1", "1", pinia);
@@ -77,7 +73,7 @@ describe("CutItem", () => {
     }
 
     beforeEach(() => {
-        emitMock.mockClear();
+        emitMock = vi.spyOn(emitter, "emit");
     });
 
     it(`Given item is cut

@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import UploadProgressBar from "./UploadProgressBar.vue";
 import type { FakeItem } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-let cancel_file_upload: jest.Mock;
-let cancel_version_upload: jest.Mock;
-let cancel_folder_upload: jest.Mock;
+let cancel_file_upload: vi.Mock;
+let cancel_version_upload: vi.Mock;
+let cancel_folder_upload: vi.Mock;
 
 function getWrapper(item: FakeItem): VueWrapper<InstanceType<typeof UploadProgressBar>> {
     return shallowMount(UploadProgressBar, {
@@ -45,9 +45,9 @@ function getWrapper(item: FakeItem): VueWrapper<InstanceType<typeof UploadProgre
 
 describe("UploadProgressBar", () => {
     beforeEach(() => {
-        cancel_file_upload = jest.fn();
-        cancel_version_upload = jest.fn();
-        cancel_folder_upload = jest.fn();
+        cancel_file_upload = vi.fn();
+        cancel_version_upload = vi.fn();
+        cancel_folder_upload = vi.fn();
     });
 
     it(`Given item is uploading a new version of a file

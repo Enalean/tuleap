@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
@@ -43,7 +43,7 @@ describe("QuickLookDocumentPreview", () => {
                     } as RootState,
                 }),
                 directives: {
-                    "dompurify-html": jest.fn(),
+                    "dompurify-html": vi.fn(),
                 },
             },
         });

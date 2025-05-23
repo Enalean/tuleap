@@ -24,6 +24,7 @@ import { createStore } from "vuex";
 import type { RootState } from "../type";
 import type { Pinia } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
+import { vi } from "vitest";
 
 export function getGlobalTestOptions(
     store_options: StoreOptions<RootState>,
@@ -33,7 +34,7 @@ export function getGlobalTestOptions(
         plugins: [
             createGettext({ silent: true }),
             createStore(store_options),
-            pinia || createTestingPinia(),
+            pinia || createTestingPinia({ createSpy: vi.fn }),
         ],
     };
 }

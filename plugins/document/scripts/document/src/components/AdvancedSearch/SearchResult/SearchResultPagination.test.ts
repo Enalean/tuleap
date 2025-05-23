@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import SearchResultPagination from "./SearchResultPagination.vue";
@@ -26,7 +26,7 @@ import * as router from "vue-router";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-jest.mock("vue-router");
+vi.mock("vue-router");
 
 describe("SearchResultPagination", () => {
     const total = 172;
@@ -37,7 +37,7 @@ describe("SearchResultPagination", () => {
         query = {
             q: "Lorem ipsum",
         };
-        jest.spyOn(router, "useRoute").mockReturnValue({
+        vi.spyOn(router, "useRoute").mockReturnValue({
             params: {},
             query,
         } as unknown as RouteLocationNormalizedLoaded);
@@ -63,7 +63,7 @@ describe("SearchResultPagination", () => {
                     RouterLink: RouterLinkStub,
                 },
                 directives: {
-                    "dompurify-html": jest.fn(),
+                    "dompurify-html": vi.fn(),
                 },
             },
         });

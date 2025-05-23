@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SearchInformationPopover should display a popover content 1`] = `
+exports[`SearchInformationPopover > should display a popover content 1`] = `
 <div
   class="popover-information"
   criterion="Cars"

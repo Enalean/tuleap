@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import ItemPermissionError from "./ItemPermissionError.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";

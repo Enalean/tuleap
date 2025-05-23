@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
@@ -136,7 +136,7 @@ describe("QuickLookPropertyDate", () => {
             post_processed_value: "2019-07-02",
         } as unknown as Property;
 
-        jest.spyOn(date_formatter, "isToday").mockReturnValue(true);
+        vi.spyOn(date_formatter, "isToday").mockReturnValue(true);
 
         const wrapper = getWrapper(property_date);
 

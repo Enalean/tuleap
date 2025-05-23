@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
 import { TYPE_FILE } from "../../constants";

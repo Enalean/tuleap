@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TYPE_FILE } from "../constants";
 import * as rest_querier from "../api/rest-querier";
 import { toggleQuickLook } from "./actions-quicklook";
@@ -30,7 +30,7 @@ describe("actions-quicklook", () => {
 
         beforeEach(() => {
             context = {
-                commit: jest.fn(),
+                commit: vi.fn(),
                 state: {
                     folder_content: [{ id: 100, type: TYPE_FILE }],
                 },
@@ -50,7 +50,7 @@ describe("actions-quicklook", () => {
                 obsolescence_date: null,
             } as Item;
 
-            jest.spyOn(rest_querier, "getItem").mockResolvedValue(item);
+            vi.spyOn(rest_querier, "getItem").mockResolvedValue(item);
 
             await toggleQuickLook(context, item.id);
 

@@ -17,15 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-
-const emitMock = jest.fn();
-jest.mock("../../../../helpers/emitter", () => {
-    return {
-        emit: emitMock,
-    };
-});
-
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
@@ -35,13 +27,13 @@ import type { ConfigurationState } from "../../../../store/configuration";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { PropertiesState } from "../../../../store/properties/module";
 import type { Folder } from "../../../../type";
+import emitter from "../../../../helpers/emitter";
 
 describe("DownloadFolderAsZip", () => {
-    let load_properties: jest.Mock, item: Folder;
+    let load_properties: vi.Mock, item: Folder;
 
     beforeEach(() => {
-        emitMock.mockClear();
-        load_properties = jest.fn();
+        load_properties = vi.fn();
         item = { id: 10, type: "folder" } as Folder;
     });
 
@@ -80,6 +72,7 @@ describe("DownloadFolderAsZip", () => {
         load_properties.mockImplementation(() => {
             return Promise.resolve({ total_size: 2000000 });
         });
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
         await wrapper.trigger("click");
 
@@ -93,6 +86,7 @@ describe("DownloadFolderAsZip", () => {
         load_properties.mockImplementation(() => {
             return Promise.resolve({ total_size: 600000, nb_files: 100000 });
         });
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
         await wrapper.trigger("click");
 
@@ -112,9 +106,10 @@ describe("DownloadFolderAsZip", () => {
         load_properties.mockImplementation(() => {
             return Promise.resolve({ total_size: four_GB });
         });
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper(2 * four_GB);
 
-        jest.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
+        vi.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
 
         await wrapper.trigger("click");
 
@@ -133,9 +128,10 @@ describe("DownloadFolderAsZip", () => {
         load_properties.mockImplementation(() => {
             return Promise.resolve({ total_size: 600000, nb_files: 100000 });
         });
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
 
-        jest.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
+        vi.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
 
         await wrapper.trigger("click");
 
@@ -155,9 +151,10 @@ describe("DownloadFolderAsZip", () => {
         load_properties.mockImplementation(() => {
             return Promise.resolve({ total_size: 10 });
         });
-        const redirect = jest.spyOn(location_helper, "redirectToUrl").mockImplementation(() => {
+        const redirect = vi.spyOn(location_helper, "redirectToUrl").mockImplementation(() => {
             //Do nothing
         });
+        const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
 
         await wrapper.get("[data-test=download-as-zip-button]").trigger("click");

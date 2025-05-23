@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "vitest";
 import { saveProjectProperties } from "./properties-mutations";
 import type { PropertiesState } from "./module";
 import type { Property } from "../../type";

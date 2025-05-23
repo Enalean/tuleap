@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
@@ -26,13 +26,13 @@ import type { Embedded, Empty, Item, ItemFile, Link, Wiki } from "../../../../ty
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
-jest.mock("../../../../helpers/emitter");
+vi.mock("../../../../helpers/emitter");
 
 describe("CreateNewItemVersionButton", () => {
-    let load_document: jest.Mock;
+    let load_document: vi.Mock;
 
     beforeEach(() => {
-        load_document = jest.fn();
+        load_document = vi.fn();
     });
 
     function createWrapper(

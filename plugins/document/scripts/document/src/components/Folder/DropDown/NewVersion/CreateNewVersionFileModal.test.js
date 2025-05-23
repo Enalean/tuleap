@@ -18,9 +18,8 @@
  *
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import CreateNewVersionFileModal from "./CreateNewVersionFileModal.vue";
 import emitter from "../../../../helpers/emitter";
@@ -28,17 +27,11 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import { nextTick } from "vue";
 
 describe("CreateNewVersionFileModal", () => {
-    const add_event_listener = jest.fn();
-    const modal_show = jest.fn();
-    const remove_backdrop = jest.fn();
+    const add_event_listener = vi.fn();
+    const modal_show = vi.fn();
+    const remove_backdrop = vi.fn();
 
     function getWrapper() {
-        const state = {
-            error: { has_modal_error: false },
-        };
-        const store_option = { state };
-        const store = createStoreMock(store_option);
-
         return shallowMount(CreateNewVersionFileModal, {
             props: {
                 item: {
@@ -56,13 +49,12 @@ describe("CreateNewVersionFileModal", () => {
                     ],
                 },
             },
-            mocks: { $store: store },
             global: { ...getGlobalTestOptions({}) },
         });
     }
 
     beforeEach(() => {
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        vi.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
                 addEventListener: add_event_listener,
                 show: modal_show,

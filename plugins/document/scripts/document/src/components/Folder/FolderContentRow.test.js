@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import FolderContentRow from "./FolderContentRow.vue";
 import { TYPE_FILE } from "../../constants";
 import emitter from "../../helpers/emitter";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
-jest.mock("../../helpers/emitter");
+vi.mock("../../helpers/emitter");
 
 function getFolderContentRowInstance(props, data = {}) {
     return shallowMount(FolderContentRow, {
@@ -207,7 +207,7 @@ describe("FolderContentRow", () => {
 
     describe("test toggle-quick-look event emission", () => {
         it("Should emit toggle-quick-look event if no dropdown is displayed", () => {
-            const emitter_emit = jest.spyOn(emitter, "emit");
+            const emitter_emit = vi.spyOn(emitter, "emit");
 
             const wrapper = getFolderContentRowInstance({ item }, { is_dropdown_displayed: false });
 
@@ -219,7 +219,7 @@ describe("FolderContentRow", () => {
         });
 
         it("Should not emit toggle-quick-look event if a dropdown is displayed", () => {
-            const emitter_emit = jest.spyOn(emitter, "emit");
+            const emitter_emit = vi.spyOn(emitter, "emit");
 
             const wrapper = getFolderContentRowInstance({ item }, { is_dropdown_displayed: true });
 
