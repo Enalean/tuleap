@@ -17,43 +17,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import SubtaskHeader from "./SubtaskHeader.vue";
-import type { Project, SubtaskRow, Task } from "../../../type";
-import HeaderLink from "../Task/HeaderLink.vue";
-import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
 import { DateTime } from "luxon";
+import { shallowMount } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import type { Project, SubtaskRow, Task } from "../../../type";
+import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
+import HeaderLink from "../Task/HeaderLink.vue";
+import SubtaskHeader from "./SubtaskHeader.vue";
 
 describe("SubtaskHeader", () => {
-    it("should ask to display the project if the task is not in the same project than its parent", () => {
-        const wrapper = shallowMount(SubtaskHeader, {
+    let subtask: Task;
+
+    beforeEach(() => {
+        subtask = { project: { id: 124 } as Project } as Task;
+    });
+
+    function getWrapper(): Wrapper<Vue> {
+        return shallowMount(SubtaskHeader, {
             propsData: {
                 row: {
                     parent: { project: { id: 123 } as Project } as Task,
-                    subtask: { project: { id: 124 } as Project } as Task,
+                    subtask,
                 } as SubtaskRow,
                 popover_element_id: "id",
             },
         });
-
-        expect(wrapper.findComponent(HeaderLink).props("should_display_project")).toBe(true);
+    }
+    it("should ask to display the project if the task is not in the same project than its parent", () => {
+        expect(getWrapper().findComponent(HeaderLink).props("should_display_project")).toBe(true);
     });
 
     it("should display a warning icon if task has end date < start date", () => {
-        const wrapper = shallowMount(SubtaskHeader, {
-            propsData: {
-                row: {
-                    parent: { project: { id: 123 } as Project } as Task,
-                    subtask: {
-                        project: { id: 124 } as Project,
-                        start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
-                        end: DateTime.fromISO("2020-04-10T22:00:00.000Z"),
-                    } as Task,
-                } as SubtaskRow,
-                popover_element_id: "id",
-            },
-        });
+        subtask = {
+            project: { id: 124 } as Project,
+            start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
+            end: DateTime.fromISO("2020-04-10T22:00:00.000Z"),
+        } as Task;
 
-        expect(wrapper.findComponent(HeaderInvalidIcon).exists()).toBe(true);
+        expect(getWrapper().findComponent(HeaderInvalidIcon).exists()).toBe(true);
     });
 });
