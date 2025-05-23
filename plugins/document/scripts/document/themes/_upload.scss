@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "files-uploads-modal";
-@import "dragndrop";
+@use "files-uploads-modal";
+@use "dragndrop";
 
 $document-upload-animation-color: var(--tlp-success-color-transparent-90);
 $document-upload-animation-secondary-color: var(--tlp-success-color-transparent-95);

@@ -36,7 +36,6 @@ use Tuleap\Document\Config\ModalDisplayer;
 use Tuleap\Document\Tree\Create\NewItemAlternativeCollector;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
@@ -77,7 +76,6 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             __DIR__ . '/../../scripts/document/frontend-assets',
             '/assets/document/document'
         ), 'src/index.ts'));
-        $this->includeCssFiles($layout);
         $this->includeHeaderAndNavigationBar($layout, $project);
         $this->includeJavascriptFiles($layout, $request);
 
@@ -161,16 +159,6 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 ->inProjectNotInBreadcrumbs($project, \DocmanPlugin::SERVICE_SHORTNAME)
                 ->withMainClass(['document-main'])
                 ->build()
-        );
-    }
-
-    private function includeCssFiles(BaseLayout $layout)
-    {
-        $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                $this->getAssets(),
-                'document-style'
-            )
         );
     }
 }

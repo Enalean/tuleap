@@ -30,7 +30,6 @@ const assets_public_path = "/assets/document/";
 
 const entry_points = {
     "admin-search-view": "./scripts/admin-search-view/index.ts",
-    "document-style": "./themes/document.scss",
 };
 
 export default [
@@ -48,16 +47,12 @@ export default [
             },
         },
         module: {
-            rules: [
-                ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_scss_loader,
-            ],
+            rules: webpack_configurator.configureTypescriptRules(),
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },
 ];
