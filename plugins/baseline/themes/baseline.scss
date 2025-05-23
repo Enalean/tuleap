@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@import "baseline/baseline-content";
-@import "baseline/baselines-list";
-@import "baseline/comparisons-list";
-@import "baseline/comparison";
-@import "baseline/comparison-content";
-@import "baseline/new-baseline-modal";
-@import "baseline/new-comparison-modal";
-@import "baseline/form";
-@import "baseline/project-header-background";
+@use "baseline/baseline-content";
+@use "baseline/baselines-list";
+@use "baseline/comparisons-list";
+@use "baseline/comparison";
+@use "baseline/comparison-content";
+@use "baseline/new-baseline-modal";
+@use "baseline/new-comparison-modal";
+@use "baseline/form";
+@use "baseline/project-header-background";
 
 .baseline-title-header {
     margin: 0;

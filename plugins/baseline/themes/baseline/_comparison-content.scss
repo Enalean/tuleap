@@ -19,6 +19,7 @@
  */
 
 @use "pkg:@tuleap/tlp-swatch-colors/tlp-swatch-colors";
+@use "baseline-content";
 
 $artifact-body-padding: var(--tlp-medium-spacing);
 
