@@ -218,7 +218,7 @@ $definitions: (
 @function get-image($background, $width: 2400px) {
     $def: map.get($definitions, $background);
 
-    @if map-has-key($def, "image-" + $width) {
+    @if map.has-key($def, "image-" + $width) {
         @return map.get($def, "image-" + $width);
     }
 
