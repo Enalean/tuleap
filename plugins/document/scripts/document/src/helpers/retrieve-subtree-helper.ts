@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Item } from "../type";
+import type { FolderContentItem } from "../type";
 import { isFolder } from "./type-check-helper";
 
 export function getFolderSubtree(
-    folder_content: Array<Item>,
+    folder_content: Array<FolderContentItem>,
     subtree_root_folder_id: number,
-): Array<Item> {
+): Array<FolderContentItem> {
     const children = folder_content.filter((item) => item.parent_id === subtree_root_folder_id);
 
-    const undirect_children: Array<Item> = [];
+    const undirect_children: Array<FolderContentItem> = [];
 
     children.forEach((child) => {
         if (isFolder(child)) {

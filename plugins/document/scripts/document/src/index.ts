@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         can_user_switch_to_old_ui,
     };
 
-    const store = createInitializedStore(user_id, project_id, configuration_state);
+    const store = createInitializedStore(configuration_state);
     app.use(store);
     const gettext = await initVueGettext(
         createGettext,

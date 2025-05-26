@@ -18,14 +18,15 @@
  */
 
 import { describe, expect, it } from "vitest";
-import * as mutations from "./mutations-global.js";
+import * as mutations from "./mutations-global";
+import { StateBuilder } from "../../tests/builders/StateBuilder";
+import { ItemBuilder } from "../../tests/builders/ItemBuilder";
+import { FolderBuilder } from "../../tests/builders/FolderBuilder";
 
 describe("Store mutations", () => {
     describe("beginLoading()", () => {
         it("sets loading to true", () => {
-            const state = {
-                is_loading_folder: false,
-            };
+            const state = new StateBuilder().thatIsLoadingFolder(false).build();
 
             mutations.beginLoading(state);
 
@@ -35,9 +36,7 @@ describe("Store mutations", () => {
 
     describe("stopLoading()", () => {
         it("sets loading to false", () => {
-            const state = {
-                is_loading_folder: true,
-            };
+            const state = new StateBuilder().thatIsLoadingFolder(true).build();
 
             mutations.stopLoading(state);
 
@@ -47,32 +46,32 @@ describe("Store mutations", () => {
 
     describe("appendFolderToAscendantHierarchy", () => {
         it("get all the ids of the direct ascendants", () => {
-            const target_folder = { id: 43, parent_id: 41 };
-            const state = {
-                current_folder_ascendant_hierarchy: [],
-                folder_content: [
-                    { id: 30, parent_id: 0 },
-                    { id: 32, parent_id: 30 },
-                    { id: 34, parent_id: 32 },
-                    { id: 36, parent_id: 34 },
-                    { id: 37, parent_id: 34 },
-                    { id: 35, parent_id: 32 },
-                    { id: 38, parent_id: 35 },
-                    { id: 39, parent_id: 35 },
-                    { id: 33, parent_id: 30 },
-                    { id: 40, parent_id: 33 },
-                    { id: 41, parent_id: 33 },
+            const target_folder = new FolderBuilder(43).withParentId(41).build();
+            const state = new StateBuilder()
+                .withFolderContent([
+                    new FolderBuilder(30).withParentId(0).build(),
+                    new ItemBuilder(32).withParentId(30).build(),
+                    new ItemBuilder(34).withParentId(32).build(),
+                    new ItemBuilder(36).withParentId(34).build(),
+                    new ItemBuilder(37).withParentId(34).build(),
+                    new ItemBuilder(35).withParentId(32).build(),
+                    new ItemBuilder(38).withParentId(35).build(),
+                    new ItemBuilder(39).withParentId(35).build(),
+                    new FolderBuilder(33).withParentId(30).build(),
+                    new ItemBuilder(40).withParentId(33).build(),
+                    new FolderBuilder(41).withParentId(33).build(),
                     target_folder,
-                    { id: 42, parent_id: 33 },
-                    { id: 31, parent_id: 0 },
-                ],
-            };
+                    new ItemBuilder(42).withParentId(33).build(),
+                    new ItemBuilder(31).withParentId(0).build(),
+                ])
+                .build();
 
             mutations.appendFolderToAscendantHierarchy(state, target_folder);
+            expect(state.current_folder_ascendant_hierarchy).toHaveLength(4);
             expect(state.current_folder_ascendant_hierarchy).toEqual([
-                { id: 30, parent_id: 0 },
-                { id: 33, parent_id: 30 },
-                { id: 41, parent_id: 33 },
+                new FolderBuilder(30).withParentId(0).build(),
+                new FolderBuilder(33).withParentId(30).build(),
+                new FolderBuilder(41).withParentId(33).build(),
                 target_folder,
             ]);
         });
@@ -80,18 +79,14 @@ describe("Store mutations", () => {
 
     describe("toggle quick look", () => {
         it("toggle quick look to true", () => {
-            const state = {
-                toggle_quick_look: false,
-            };
+            const state = new StateBuilder().withToggleQuickLook(false).build();
             mutations.toggleQuickLook(state, true);
 
             expect(state.toggle_quick_look).toBe(true);
         });
 
         it("toggle quick look to false", () => {
-            const state = {
-                toggle_quick_look: true,
-            };
+            const state = new StateBuilder().withToggleQuickLook(true).build();
             mutations.toggleQuickLook(state, false);
 
             expect(state.toggle_quick_look).toBe(false);
