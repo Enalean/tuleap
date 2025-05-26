@@ -114,7 +114,7 @@ function permission_get_object_type($permission_type, $object_id)
     } elseif ($permission_type == 'TRACKER_ACCESS_FULL') {
         return 'tracker';
     } elseif ($permission_type == 'TRACKER_ACCESS_FULL') {
-        return 'artefact';
+        return 'artifact';
     } else {
         $em          = EventManager::instance();
         $object_type = false;

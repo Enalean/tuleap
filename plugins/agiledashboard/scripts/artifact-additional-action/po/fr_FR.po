@@ -6,17 +6,17 @@ msgstr "Ajouter au backlog"
 
 msgid "An error occurred while adding this artifact to backlog."
 msgstr ""
-"Une erreur s'est produite lors de l'ajout de cet artéfact dans le backlog."
+"Une erreur s'est produite lors de l'ajout de cet artifact dans le backlog."
 
 msgid "An error occurred while removing this artifact from backlog."
 msgstr ""
-"Une erreur s'est produite lors de la suppression de cet artéfact du backlog."
+"Une erreur s'est produite lors de la suppression de cet artifact du backlog."
 
 msgid "Remove from backlog"
 msgstr "Supprimer du backlog"
 
 msgid "This artifact has been added to backlog."
-msgstr "Cet artéfact a été ajouté au backlog."
+msgstr "Cet artifact a été ajouté au backlog."
 
 msgid "This artifact has been removed from backlog."
-msgstr "Cet artéfact a été supprimé du backlog."
+msgstr "Cet artifact a été supprimé du backlog."

@@ -34,7 +34,7 @@ msgid "Tests"
 msgstr "Tests"
 
 msgid "Unable to link the backlog item to the new artifact"
-msgstr "Impossible de lier l'élément du backlog au nouvel artéfact"
+msgstr "Impossible de lier l'élément du backlog au nouvel artifact"
 
 #, php-format
 msgid "You are creating a new test that will cover: %s"

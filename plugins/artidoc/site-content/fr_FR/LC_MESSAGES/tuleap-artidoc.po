@@ -19,7 +19,7 @@ msgid "Artidoc"
 msgstr "Artidoc"
 
 msgid "Artifacts as Documents"
-msgstr "Artéfacts sous forme de Documents"
+msgstr "Artifacts sous forme de Documents"
 
 msgid "Documents"
 msgstr "Documents"
@@ -34,7 +34,7 @@ msgid "Given tracker does not have a semantic title."
 msgstr "Le tracker fourni n'a pas de sémantique titre."
 
 msgid "No artifact to import or section content provided"
-msgstr "Aucun artéfact à importer ou de contenu de section n'a été fourni"
+msgstr "Aucun artifact à importer ou de contenu de section n'a été fourni"
 
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
@@ -107,7 +107,7 @@ msgstr "Il ne peut y avoir de champs requis autres que titre ou description."
 msgid ""
 "There is already an existing section with the same artifact in the document."
 msgstr ""
-"Il y a déjà une section existante avec le même artéfact dans le document."
+"Il y a déjà une section existante avec le même artifact dans le document."
 
 msgid "This document does not contain any sections."
 msgstr "Ce document ne contient pas de sections."

@@ -79,7 +79,7 @@
         <semantic type="title">
           <shortname><![CDATA[title]]></shortname>
           <label><![CDATA[Titre]]></label>
-          <description><![CDATA[Définir le titre d'un artéfact]]></description>
+          <description><![CDATA[Définir le titre d'un artifact]]></description>
           <field REF="F80600"/>
         </semantic>
         <semantic type="tooltip"/>

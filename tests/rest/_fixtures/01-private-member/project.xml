@@ -316,7 +316,7 @@
             <semantic type="description">
                 <shortname>description</shortname>
                 <label>Description</label>
-                <description>Définir la description d'un artéfact</description>
+                <description>Définir la description d'un artifact</description>
                 <field REF="F9"/>
             </semantic>
                 <semantic type="status">

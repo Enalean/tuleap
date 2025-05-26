@@ -18,7 +18,7 @@ msgstr[0] "%1$s dépôt intégré %2$s"
 msgstr[1] "%1$s dépôts intégrés %2$s"
 
 msgid "Allow artifact closure"
-msgstr "Autoriser la fermeture des artéfacts"
+msgstr "Autoriser la fermeture des artifacts"
 
 #, php-format
 msgid "An error occurred while creating the branch on GitLab: %s"
@@ -97,7 +97,7 @@ msgid ""
 "If selected, artifacts of this project can be closed with GitLab commit "
 "messages from the selected repository."
 msgstr ""
-"Si choisi, les artéfacts de ce projet pourront être fermés à l'aide des "
+"Si choisi, les artifacts de ce projet pourront être fermés à l'aide des "
 "messages de commit de GitLab depuis le dépôt sélectionné."
 
 msgid ""
@@ -264,4 +264,4 @@ msgstr ""
 "action."
 
 msgid "close artifacts"
-msgstr "fermer les artéfacts"
+msgstr "fermer les artifacts"

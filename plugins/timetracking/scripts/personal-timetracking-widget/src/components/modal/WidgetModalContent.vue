@@ -24,7 +24,7 @@
         </div>
         <div class="timetracking-details-modal-artifact-details">
             <widget-modal-artifact-info v-bind:project="project" v-bind:artifact="artifact" />
-            <div class="timetracking-details-modal-artefact-link-top-bottom-spacer">
+            <div class="timetracking-details-modal-artifact-link-top-bottom-spacer">
                 <button
                     class="tlp-button-primary"
                     data-test="button-set-add-mode"
@@ -98,7 +98,7 @@ const feedback_message = computed((): string => {
     padding: var(--tlp-medium-spacing);
 }
 
-.timetracking-details-modal-artefact-link-top-bottom-spacer {
+.timetracking-details-modal-artifact-link-top-bottom-spacer {
     margin: 25px 0;
 }
 </style>

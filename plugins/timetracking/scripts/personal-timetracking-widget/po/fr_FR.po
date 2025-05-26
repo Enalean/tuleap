@@ -19,7 +19,7 @@ msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
 msgid "Artifact"
-msgstr "Artéfact"
+msgstr "Artifact"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -49,7 +49,7 @@ msgid "No tracked time have been found for this period"
 msgstr "Aucun temps suivi n'a été trouvé pour cette période"
 
 msgid "No tracked times have been found for this period and artifact"
-msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artéfact"
+msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artifact"
 
 msgid "Please check time's format (hh:mm)"
 msgstr "Vérifiez le format du temps (hh:mm)"

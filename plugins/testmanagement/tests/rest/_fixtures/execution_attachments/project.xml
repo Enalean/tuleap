@@ -927,7 +927,7 @@
                 <semantic type="title">
                     <shortname>title</shortname>
                     <label>Titre</label>
-                    <description>Définir le titre d'un artéfact</description>
+                    <description>Définir le titre d'un artifact</description>
                     <field REF="F8"/>
                 </semantic>
                 <semantic type="status">

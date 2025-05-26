@@ -40,7 +40,7 @@ msgid "Backup old"
 msgstr "Ancienne sauvegarde"
 
 msgid "Closed (or wished end date) Artifacts (V3)"
-msgstr "Artéfacts fermés (ou date de fin souhaitée) (V3)"
+msgstr "Artifacts fermés (ou date de fin souhaitée) (V3)"
 
 msgid "Codendi Logs"
 msgstr "Logs Codendi"
@@ -194,7 +194,7 @@ msgid "No motivation"
 msgstr "Pas de motivation donnée"
 
 msgid "Opened Artifacts (V3)"
-msgstr "Artéfacts ouverts (V3)"
+msgstr "Artifacts ouverts (V3)"
 
 msgid "Project"
 msgstr "Projet"

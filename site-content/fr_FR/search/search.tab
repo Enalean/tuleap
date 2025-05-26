@@ -29,7 +29,7 @@ search_index	task_summary	Résumé de la tâche
 search_index	created_by	Créée par
 search_index	start_date	Date de début
 search_index	end_date	Date de fin
-search_index	artifact_summary	Résumé de l'artefact
+search_index	artifact_summary	Résumé de l'artifact
 search_index	invalid_search	ERREUR - Recherche invalide
 search_index	prev_res	Résultats précédents
 search_index	next_res	Résultats suivants

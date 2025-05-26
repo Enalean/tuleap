@@ -56,7 +56,7 @@ describe("rest-querier", (): void => {
     });
 
     describe("Get Report's times() -", (): void => {
-        it("the REST API will be queried : trackers withs artefacts and times are returned", async (): Promise<void> => {
+        it("the REST API will be queried : trackers withs artifacts and times are returned", async (): Promise<void> => {
             const trackers: OverviewReportTracker[] = [
                 {
                     id: 16,

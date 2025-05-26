@@ -20,10 +20,10 @@ msgid "%{from} – %{to} of %{total}"
 msgstr "%{from} – %{to} sur %{total}"
 
 msgid "All artifacts created in the last 10 days"
-msgstr "Tous les artéfacts créés ces 10 derniers jours"
+msgstr "Tous les artifacts créés ces 10 derniers jours"
 
 msgid "All open artifacts"
-msgstr "Tous les artéfacts ouverts"
+msgstr "Tous les artifacts ouverts"
 
 msgid "An error occurred: %{error}"
 msgstr "Une erreur s'est produite : %{error}"
@@ -32,10 +32,10 @@ msgid "Are you sure you want to permanently delete it?"
 msgstr "Êtes-vous de vouloir la supprimer définitivement ?"
 
 msgid "Artifact"
-msgstr "Artéfact"
+msgstr "Artifact"
 
 msgid "Artifact id"
-msgstr "ID de l'artéfact"
+msgstr "ID de l'artifact"
 
 msgid "Assigned to"
 msgstr "Assigné à"
@@ -72,7 +72,7 @@ msgstr "Erreur pendant l'export de la requête au format .xlsx: %{error}"
 
 msgid "Error while fetching the artifacts matching the query: %{error}"
 msgstr ""
-"Erreur à la récupération des artéfacts correspondant à la requête : %{error}"
+"Erreur à la récupération des artifacts correspondant à la requête : %{error}"
 
 msgid "Error while fetching the query: %{error}"
 msgstr "Erreur à la récupération de la requête : %{error}"
@@ -126,13 +126,13 @@ msgid "Next"
 msgstr "Suivant"
 
 msgid "No artifact found"
-msgstr "Aucun artéfact trouvé"
+msgstr "Aucun artifact trouvé"
 
 msgid "Open artifacts assigned to me"
-msgstr "Les artéfacts ouverts qui me sont assignés"
+msgstr "Les artifacts ouverts qui me sont assignés"
 
 msgid "Open artifacts assigned to me in my projects"
-msgstr "Les artéfacts ouverts qui me sont assignés dans mes projets"
+msgstr "Les artifacts ouverts qui me sont assignés dans mes projets"
 
 msgid "Overwrite current query"
 msgstr "Remplacer la requête actuelle"
@@ -189,7 +189,7 @@ msgid "Submitted on"
 msgstr "Date de soumission"
 
 msgid "There is no artifact matching the query."
-msgstr "Aucun artéfact ne correspond à la requête."
+msgstr "Aucun artifact ne correspond à la requête."
 
 msgid ""
 "This action cannot be undone, and you will no longer have a default query."

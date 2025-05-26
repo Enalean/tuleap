@@ -75,7 +75,7 @@ msgid ""
 "Artifact #%d not added in the backlog because it's already planned in a "
 "submilestone."
 msgstr ""
-"L'artéfact #%d n'a pas été ajouté au backlog car il est déjà présent dans un "
+"L'artifact #%d n'a pas été ajouté au backlog car il est déjà présent dans un "
 "sous jalon."
 
 #, php-format
@@ -83,7 +83,7 @@ msgid ""
 "Artifact #%d not removed from the backlog because it's already planned in a "
 "submilestone."
 msgstr ""
-"L'artéfact #%d n'a pas été supprimé du backlog car il est déjà présent dans "
+"L'artifact #%d n'a pas été supprimé du backlog car il est déjà présent dans "
 "un sous jalon."
 
 msgid "Back to semantics"
@@ -152,7 +152,7 @@ msgid "Create a new planning"
 msgstr "Créer un nouveau planning"
 
 msgid "Define the initial effort of an artifact."
-msgstr "Définir l'effort estimé d'un artéfact."
+msgstr "Définir l'effort estimé d'un artifact."
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -262,7 +262,7 @@ msgid "Milestone"
 msgstr "Jalon"
 
 msgid "Milestone artifact"
-msgstr "Artéfact du jalon"
+msgstr "Artifact du jalon"
 
 msgid "Milestones"
 msgstr "Jalons"
@@ -459,13 +459,13 @@ msgstr "Il n’y a aucun élément pour l'instant"
 
 msgid ""
 "This artifact has been successfully added to the backlog of the project."
-msgstr "Cet artéfact a été ajouté avec succès au backlog du projet."
+msgstr "Cet artifact a été ajouté avec succès au backlog du projet."
 
 msgid ""
 "This artifact has not been added to the backlog of the project because it's "
 "already planned in sub milestone of the project."
 msgstr ""
-"Cet artéfact n'a pas été ajouté au backlog car il est déjà présent dans un "
+"Cet artifact n'a pas été ajouté au backlog car il est déjà présent dans un "
 "sous jalon."
 
 msgid "This is used in the Backlog if enabled."

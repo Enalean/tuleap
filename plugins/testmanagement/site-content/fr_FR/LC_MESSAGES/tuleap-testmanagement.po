@@ -112,7 +112,7 @@ msgid ""
 "Service %s cannot be activated because the artifact link type \"%s\" is not "
 "activated"
 msgstr ""
-"Le service %s ne peut être activé car le lien entre artéfact typé \"%s\" "
+"Le service %s ne peut être activé car le lien entre artifact typé \"%s\" "
 "n'est pas activé"
 
 msgid "Start TestManagement"
@@ -149,7 +149,7 @@ msgid "Test management tool"
 msgstr "Gestion des tests"
 
 msgid "Tests campaign artifact"
-msgstr "Artéfact de la campagne de tests"
+msgstr "Artifact de la campagne de tests"
 
 msgid "Tests executions"
 msgstr "Exécution de tests"
@@ -179,7 +179,7 @@ msgid ""
 msgstr ""
 "Les post actions ne peuvent pas être enregistrées car ce tracker est utilisé "
 "dans la configuration de TestManagement et des \"champs figés\" sont définis "
-"sur un champ de type lien d'artéfacts."
+"sur un champ de type lien d'artifacts."
 
 msgid ""
 "The post actions cannot be saved because this tracker is used in "
@@ -195,7 +195,7 @@ msgstr "La configuration envoyée n'est pas valide."
 #, php-format
 msgid "The tracker id %1$s does not have artifact links field"
 msgstr ""
-"L'id de l'outil de suivi %1$s n'a pas de champs Liens vers des artéfacts"
+"L'id de l'outil de suivi %1$s n'a pas de champs Liens vers des artifacts"
 
 #, php-format
 msgid "The tracker id %1$s does not have step definition field"

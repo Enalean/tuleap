@@ -15,22 +15,22 @@ codendi.locales['tracker_artifact'] = {
     always_collapse_fieldset: 'Ce groupe est toujours ouvert. Cliquez pour toujours le fermer.',
     disable_notifications: 'Désactiver les notifications',
     enable_notifications: 'Activer les notifications',
-    disable_notifications_alternate_text: 'Ne plus recevoir les notifications de cet artéfact',
-    enable_notifications_alternate_text: 'Recevoir les notifications de cet artéfact',
+    disable_notifications_alternate_text: 'Ne plus recevoir les notifications de cet artifact',
+    enable_notifications_alternate_text: 'Recevoir les notifications de cet artifact',
     notification_update_error: 'Une erreur est survenue lors de la modification de vos paramaètres de notification',
     please_select_at_least_one: 'Merci de choisir au moins une de ces options',
     please_fill_out: 'Merci de remplir ce champ',
-    artifactlink_async_loading: 'La recherche et la prévisualisation de liens d\'artéfact ne sont pas disponible lorsque des liens sont en train d\'être chargés.'
+    artifactlink_async_loading: 'La recherche et la prévisualisation de liens d\'artifact ne sont pas disponible lorsque des liens sont en train d\'être chargés.'
 };
 codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'Vous pouvez ordonner les onglets avec le glisser/déposer'
 };
 codendi.locales['tracker_artifact_link'] = {
-    nb_artifacts: 'artéfact(s)',
+    nb_artifacts: 'artifact(s)',
     or: ' ou ',
-    select: 'Sélectionner les artéfacts à lier',
-    create: 'Créer un nouvel artéfact',
-    advanced: 'Les fonctionnalités avancées (recherche d\'artéfacts...) ne sont pas disponibles à la création d\'un artéfact.',
+    select: 'Sélectionner les artifacts à lier',
+    create: 'Créer un nouvel artifact',
+    advanced: 'Les fonctionnalités avancées (recherche d\'artifacts...) ne sont pas disponibles à la création d\'un artifact.',
     trackers_label: 'Trackers',
     type_label: 'Liens par nature'
 };
@@ -60,8 +60,8 @@ codendi.locales['tracker_report'] = {
 };
 codendi.locales['type_column_editor'] = {
     title                    : 'Configuration de la colonne',
-    how_to                   : 'Vous pouvez définir comment les artéfacts s\'afficheront dans cette colonne en utilisant le format suivant : <code>%nom_du_champ</code>.',
-    supported_types          : 'Seuls les champs de type chaîne de caractères, id de l\'artéfact, entier, flottant, ou liste de choix peuvent être formatés.',
+    how_to                   : 'Vous pouvez définir comment les artifacts s\'afficheront dans cette colonne en utilisant le format suivant : <code>%nom_du_champ</code>.',
+    supported_types          : 'Seuls les champs de type chaîne de caractères, id de l\'artifact, entier, flottant, ou liste de choix peuvent être formatés.',
     something_went_wrong     : 'Une erreur est survenue. Veuillez contacter un administrateur.',
     column_format_label      : 'Format :',
     column_format_placeholder: '#%id %titre (%statut)',

@@ -13,7 +13,7 @@ msgstr ""
 
 #, php-format
 msgid "Artifact to add %d must be a child of swimlane %d."
-msgstr "L'artéfact à ajouter %d doit être enfant de la swimlane %d."
+msgstr "L'artifact à ajouter %d doit être enfant de la swimlane %d."
 
 msgid "Board type"
 msgstr "Type de tableau"
@@ -26,7 +26,7 @@ msgstr "Cardwall (ancien, pour rétrocompatibilité)"
 
 #, php-format
 msgid "Could not find artifact to add with id %d."
-msgstr "L'artéfact à ajouter d'id %d n'a pas été trouvé."
+msgstr "L'artifact à ajouter avec l'id %d n'a pas été trouvé."
 
 msgid "Milestone not found."
 msgstr "Le jalon n'a pas été trouvé."
@@ -48,7 +48,7 @@ msgid "Taskboard not found."
 msgstr "Le tableau de tâches n'a pas été trouvé."
 
 msgid "The artifact does not have a remaining effort numeric field"
-msgstr "L'artéfact n'a pas de champ numérique pour l'effort restant"
+msgstr "L'artifact n'a pas de champ numérique pour l'effort restant"
 
 #, php-format
 msgid ""
