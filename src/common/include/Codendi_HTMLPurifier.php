@@ -36,6 +36,7 @@
  * </pre>
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Codendi_HTMLPurifier
 {
     public const CONFIG_CONVERT_HTML                  = 0;
@@ -85,6 +86,16 @@ class Codendi_HTMLPurifier
             self::$Codendi_HTMLPurifier_instance = new Codendi_HTMLPurifier();
         }
         return self::$Codendi_HTMLPurifier_instance;
+    }
+
+    public static function setInstance(self $instance): void
+    {
+        self::$Codendi_HTMLPurifier_instance = $instance;
+    }
+
+    public static function clearInstance(): void
+    {
+        self::$Codendi_HTMLPurifier_instance = null;
     }
 
     private function setConfigAttribute(HTMLPurifier_Config $config, $key, $subkey, $value)
@@ -309,10 +320,10 @@ class Codendi_HTMLPurifier
                 break;
 
             case self::CONFIG_JS_QUOTE:
-                $clean = $this->js_string_purifier($html, JSON_HEX_APOS);
+                $clean = $this->jsStringPurifier($html, JSON_HEX_APOS);
                 break;
             case self::CONFIG_JS_DQUOTE:
-                $clean = $this->js_string_purifier($html, JSON_HEX_QUOT);
+                $clean = $this->jsStringPurifier($html, JSON_HEX_QUOT);
                 break;
             case self::CONFIG_CONVERT_HTML:
             default:
@@ -322,10 +333,7 @@ class Codendi_HTMLPurifier
         return $clean;
     }
 
-    /**
-     * @return string
-     */
-    private function js_string_purifier($str, $options)
+    private function jsStringPurifier($str, $options): string
     {
         $clean_quoted = json_encode(strval($str), JSON_HEX_TAG | JSON_HEX_AMP | $options);
         $clean        = mb_substr($clean_quoted, 1, -1);
