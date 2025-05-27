@@ -168,7 +168,7 @@ msgid ""
 "href=\"%s\">tracker permission</a> set)."
 msgstr ""
 "* il est possible que ces groupes n'aient pas accès au tracker (pas de <a "
-"href=\"%s\">permission sur l'outil de suivi</a> définie)."
+"href=\"%s\">permission sur le tracker</a> définie)."
 
 msgid "-"
 msgstr "-"
@@ -248,8 +248,8 @@ msgstr ""
 msgid ""
 "<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>"
 msgstr ""
-"<p>Les artifacts de cet outil de suivi n'ont pas de sémantique <em>état</em> "
-"défini.</p>"
+"<p>Les artifacts de ce tracker n'ont pas de sémantique <em>état</em> défini."
+"</p>"
 
 #, php-format
 msgid ""
@@ -293,11 +293,11 @@ msgid_plural ""
 "Some tracker creations from Jira are being processed for %s. Your new "
 "trackers will appear as soon as the import is completed."
 msgstr[0] ""
-"La création de l'outil de suivi %s depuis Jira est en cours. Votre nouvel "
-"outil de suivi apparaîtra dès que l'import sera terminé."
+"La création du tracker %s depuis Jira est en cours. Votre nouveau tracker "
+"apparaîtra dès que l'import sera terminé."
 msgstr[1] ""
-"La création des outils de suivi depuis Jira est en cours pour %s. Vos "
-"nouveaux outils de suivi apparaîtront dès que l'import sera terminé."
+"La création des trackers depuis Jira est en cours pour %s. Vos nouveaux "
+"trackers apparaîtront dès que l'import sera terminé."
 
 msgid "A workflow already exists on the given tracker."
 msgstr "Un workflow est déjà défini pour ce tracker."
@@ -339,8 +339,8 @@ msgstr "Actions"
 
 msgid "Activate artifact links types for all the trackers of this project?"
 msgstr ""
-"Activer les liens entre artifacts typés pour l'ensemble des outils de suivi "
-"du projet ?"
+"Activer les liens entre artifacts typés pour l'ensemble des trackers du "
+"projet ?"
 
 msgid "Activate new interface for %s tracker"
 msgid_plural "Activate new interface for %s trackers"
@@ -421,7 +421,7 @@ msgid "Added: %s"
 msgstr "Ajout : %s"
 
 msgid "Admin of the tracker"
-msgstr "Administre l'outil de suivi"
+msgstr "Administre le tracker"
 
 msgid "Administration"
 msgstr "Administration"
@@ -447,8 +447,7 @@ msgstr ""
 "Permet de restreindre l'accès à un artifact pour les groupes d'utilisateurs"
 
 msgid "Allow user to interact with trackers by email."
-msgstr ""
-"Autoriser les utilisateurs à intéragir avec les outils de suivi par courriel."
+msgstr "Autoriser les utilisateurs à intéragir avec les trackers par courriel."
 
 msgid "Allowed fields"
 msgstr "Champs autorisés"
@@ -508,7 +507,7 @@ msgid "An error occured while creating a copy of the artifact #%1$s."
 msgstr "Une erreur est survenue empêchant la copie de l'artifact #%1$s."
 
 msgid "An error occured while creating the tracker."
-msgstr "Une erreur est survenue lors de la création de l'outil de suivi."
+msgstr "Une erreur est survenue lors de la création du tracker."
 
 msgid "An error occurred while clearing done values."
 msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
@@ -518,7 +517,7 @@ msgstr "Une erreur est survenue lors de suppression de la sémantique"
 
 #, php-format
 msgid "An error occurred while trying to delete the tracker %s"
-msgstr "Une erreur est survenue lors de la suppression de l'outil de suivi %s"
+msgstr "Une erreur est survenue lors de la suppression du tracker %s"
 
 msgid "An error occurred while updating done values."
 msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
@@ -550,7 +549,7 @@ msgstr ""
 "configuration de la machine sur laquelle le serveur tourne."
 
 msgid "Archive should not contain tracker data."
-msgstr "L'archive ne peut pas contenir des données d'outil de suivi."
+msgstr "L'archive ne peut pas contenir des données du tracker."
 
 msgid "Are you sure that you want to delete it?"
 msgstr "Etes-vous sûr de vouloir le supprimer?"
@@ -638,8 +637,7 @@ msgstr "Personnes ayant soumis un artifact"
 
 #, php-format
 msgid "Artifact was moved from '%s' tracker in '%s' project."
-msgstr ""
-"Cet artifact a été déplacé depuis l'outil de suivi '%s' du projet '%s'."
+msgstr "Cet artifact a été déplacé depuis le tracker '%s' du projet '%s'."
 
 #, php-format
 msgid "Artifact with the title \"%1$s\" was not created."
@@ -671,22 +669,22 @@ msgid "Artifacts fields"
 msgstr "Liste des champs des artifacts"
 
 msgid "Artifacts of this tracker cannot be duplicated."
-msgstr "Les artifacts de cet outil de suivi ne peuvent pas être dupliqués."
+msgstr "Les artifacts de ce tracker ne peuvent pas être dupliqués."
 
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
 "this tracker."
 msgstr ""
-"En tant qu'administrateur de l'outil de suivi, vous pouvez choisir le niveau "
-"de configuration des notifications par e-mail de cet outil de suivi."
+"En tant qu'administrateur du tracker, vous pouvez choisir le niveau de "
+"configuration des notifications par e-mail de ce tracker."
 
 msgid ""
 "As a tracker administrator, you can provide email addresses to which new "
 "Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
-"En tant qu'administrateur de l'outil de suivi, vous pouvez spécifier des "
-"adresses e-mail qui recevront systématiquement les notifications de "
-"soumission (et éventuellement de modification) d'artifacts."
+"En tant qu'administrateur du tracker, vous pouvez spécifier des adresses e-"
+"mail qui recevront systématiquement les notifications de soumission (et "
+"éventuellement de modification) d'artifacts."
 
 msgid "As of"
 msgstr "Le"
@@ -697,9 +695,9 @@ msgid ""
 "close. This information is used in the application to display artifact "
 "summary, and tooltip for instance."
 msgstr ""
-"Les outils de suivi étant entièrement paramétrables, vous pourriez vouloir "
-"définir à quoi correspond le titre de l'artifact, ou comment considérer si "
-"un artifact est ouvert ou fermé. Cette information est utilisée à différents "
+"Les trackers étant entièrement paramétrables, vous pourriez vouloir définir "
+"à quoi correspond le titre de l'artifact, ou comment considérer si un "
+"artifact est ouvert ou fermé. Cette information est utilisée à différents "
 "endroits dans l'application pour afficher un lien ou un résumé de l'artifact."
 
 msgid "Assigned to"
@@ -846,16 +844,16 @@ msgstr ""
 "sélection statiques"
 
 msgid "Can read tracker field"
-msgstr "Peut lire ce champ dans l'outil de suivi"
+msgstr "Peut lire ce champ dans le tracker"
 
 msgid "Can submit"
 msgstr "Peut soumettre"
 
 msgid "Can submit tracker field"
-msgstr "Peut soumettre ce champ dans l'outil de suivi"
+msgstr "Peut soumettre ce champ dans le tracker"
 
 msgid "Can update tracker field"
-msgstr "Peut éditer ce champ dans l'outil de suivi"
+msgstr "Peut éditer ce champ dans le tracker"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -1086,7 +1084,7 @@ msgid "Create a %s"
 msgstr "Créer un(e) %s"
 
 msgid "Create a New Tracker"
-msgstr "Créer un outil de suivi"
+msgstr "Créer un tracker"
 
 msgid "Create a new one"
 msgstr "Créer un nouveau"
@@ -1095,7 +1093,7 @@ msgid "Create a new response"
 msgstr "Créer une nouvelle réponse"
 
 msgid "Create a new tracker"
-msgstr "Créer un nouvel outil de suivi"
+msgstr "Créer un nouveau tracker"
 
 msgid "Create a new {{ parent_label }}"
 msgstr "Créer un nouveau {{ parent_label }}"
@@ -1117,7 +1115,7 @@ msgid ""
 "of the tracker."
 msgstr ""
 "La création d'artifacts par courriel n'est pas possible à cause de la "
-"configuration courante de l'outil de suivi."
+"configuration courante du tracker."
 
 msgid ""
 "Creating canned responses can save a lot of time if you frequently give the "
@@ -1165,7 +1163,7 @@ msgid ""
 msgstr ""
 "Actuellement, vous serez notifié seulement si vous êtes le créateur de "
 "l'artifact, y êtes assigné ou si vous avez une configuration spécifique pour "
-"l'outil de suivi."
+"le tracker."
 
 msgid "Custom columns based on..."
 msgstr "Colonnes basées sur…"
@@ -1269,10 +1267,10 @@ msgid "Delete this Canned Response : %1$s ?"
 msgstr "Détruire cette réponse type&nbsp;: %1$s ?"
 
 msgid "Delete this tracker"
-msgstr "Supprimer cet outil de suivi"
+msgstr "Supprimer ce tracker"
 
 msgid "Delete tracker"
-msgstr "Supprimer l'outil de suivi"
+msgstr "Supprimer le tracker"
 
 msgid "Delete type"
 msgstr "Supprimer une nature"
@@ -1453,7 +1451,7 @@ msgstr ""
 "par e-mail"
 
 msgid "Enable move of artifacts in this tracker"
-msgstr "Activer le déplacement des artifacts dans cet outil de suivi"
+msgstr "Activer le déplacement des artifacts dans ce tracker"
 
 msgid "Enable multisort"
 msgstr "Activer le tri multi-colonnes"
@@ -1498,8 +1496,7 @@ msgstr "Erreur lors de votre import Jira"
 
 #, php-format
 msgid "Error on the tracker #%4$s date value : %1$s must be %2$s to %3$s."
-msgstr ""
-"Erreur de dates sur l'outil de suivi #%4$s : %1$s doit être %2$s à %3$s."
+msgstr "Erreur de dates sur le tracker #%4$s : %1$s doit être %2$s à %3$s."
 
 #, php-format
 msgid "Error while updating the parent artifact %1$s: %2$s"
@@ -1685,7 +1682,7 @@ msgid "Forward label"
 msgstr "Label"
 
 msgid "From a Tracker v3"
-msgstr "A partir d'un outil de suivi v3"
+msgstr "A partir d'un tracker v3"
 
 msgid "From fields"
 msgstr "Depuis les champs"
@@ -1718,10 +1715,10 @@ msgstr "Règles globales"
 
 #, php-format
 msgid "Global rules are not respected in tracker #%d"
-msgstr "Règles globales non respectées pour l'outil de suivi #%d"
+msgstr "Règles globales non respectées pour le tracker #%d"
 
 msgid "Go see this tracker"
-msgstr "Aller voir cet outil de suivi"
+msgstr "Aller voir ce tracker"
 
 msgid "Go to diff"
 msgstr "Voir la modification"
@@ -1811,8 +1808,8 @@ msgid ""
 "restored, please contact the <a href=\"mailto:%1$s\">Site Administrator</a> "
 "within the next 10 days."
 msgstr ""
-"Dans le cas où vous auriez détruit cet outil de suivi par inadvertance et "
-"que vous souhaitiez le restaurer, veuillez contacter l'<a href=\"mailto:"
+"Dans le cas où vous auriez détruit ce tracker par inadvertance et que vous "
+"souhaitiez le restaurer, veuillez contacter l'<a href=\"mailto:"
 "%1$s\">administrateur du site</A> dans les 10 jours qui viennent."
 
 #, php-format
@@ -1856,7 +1853,7 @@ msgid "Integer"
 msgstr "Entier"
 
 msgid "Invalid color tracker name"
-msgstr "Nom de couleur pour l'outil de suivi non valide"
+msgstr "Nom de couleur pour le tracker non valide"
 
 #, php-format
 msgid "Invalid condition: the field '%1$s'must not be empty"
@@ -1885,7 +1882,7 @@ msgstr ""
 "alphanumériques ou un nom court non réservé."
 
 msgid "Invalid tracker template."
-msgstr "Le modèle d'outil de suivi sélectionné est invalide."
+msgstr "Le modèle du tracker sélectionné est invalide."
 
 #, php-format
 msgid "Invalid value %s for field %s."
@@ -1907,8 +1904,8 @@ msgstr "L'erreur suivante a été remontée :"
 
 msgid "It is inherited from a tracker of another project, this is not allowed"
 msgstr ""
-"Elle est héritée de celle d'un outil de suivi appartenant à un autre projet, "
-"ceci n'est pas autorisé"
+"Elle est héritée de celle d'un tracker appartenant à un autre projet, ceci "
+"n'est pas autorisé"
 
 msgid "Items"
 msgstr "Items"
@@ -2033,13 +2030,13 @@ msgid "Manage Semantic"
 msgstr "Gérer la sémantique"
 
 msgid "Manage Tracker Permissions"
-msgstr "Gérer les permissions de l'outil de suivi"
+msgstr "Gérer les permissions du tracker"
 
 msgid "Manage field dependencies"
 msgstr "Gérer les dépendances entre champs"
 
 msgid "Manage hierarchy of tracker %1$s"
-msgstr "Gérer la hiérarchie de l'outil de suivi %1$s"
+msgstr "Gérer la hiérarchie du tracker %1$s"
 
 msgid "Manage tooltip"
 msgstr "Gérer l'infobulle"
@@ -2114,11 +2111,10 @@ msgid "Message Body:"
 msgstr "Message&nbsp;:"
 
 msgid "Migrate a Tracker v3 content for test"
-msgstr "Tester la migration de contenu d'un outil de suivi v3"
+msgstr "Tester la migration de contenu d'un tracker v3"
 
 msgid "Migrate a Tracker v3 content keeping original ids"
-msgstr ""
-"Migrer le contenu d'un outil de suivi v3 en conservant les ids d'origine"
+msgstr "Migrer le contenu d'un tracker v3 en conservant les ids d'origine"
 
 msgid "Minimum"
 msgstr "Minimum"
@@ -2145,7 +2141,7 @@ msgstr "Modifier la réponse type"
 
 #, php-format
 msgid "Move action is not enabled for tracker %s"
-msgstr "L'outil de suivi %s n'autorise pas l'action de déplacement"
+msgstr "Le tracker %s n'autorise pas l'action de déplacement"
 
 msgid "Move artifacts"
 msgstr "Déplacement d'artifacts"
@@ -2196,13 +2192,13 @@ msgid "New artifact links interface"
 msgstr "Nouvelle interface de liens entre artifacts"
 
 msgid "New tracker"
-msgstr "Nouvel outil de suivi"
+msgstr "Nouveau tracker"
 
 msgid "No"
 msgstr "Non"
 
 msgid "No Tracker pending for Deletion"
-msgstr "Aucun outil de suivi en attente de suppression"
+msgstr "Aucun tracker en attente de suppression"
 
 msgid "No activity yet"
 msgstr "Pas encore d'activité"
@@ -2214,7 +2210,7 @@ msgid "No artifacts have been selected"
 msgstr "Aucun artifact sélectionné"
 
 msgid "No canned responses set up yet for this tracker"
-msgstr "Aucune réponse type définie pour cet outil de suivi"
+msgstr "Aucune réponse type définie pour ce tracker"
 
 #, php-format
 msgid "No changes for artifact %1$s"
@@ -2231,7 +2227,7 @@ msgstr "Aucun élément sélectionné."
 
 msgid "No fields in the artifact can be moved in the destination tracker."
 msgstr ""
-"Aucun champ de l'artifact ne peut être déplacé dans l'outil de suivi de "
+"Aucun champ de l'artifact ne peut être déplacé dans le tracker de "
 "destination."
 
 msgid "No logs yet"
@@ -2259,8 +2255,7 @@ msgstr "Aucun rapport disponible"
 
 msgid "No trackers have been set up, or you are not allowed to view them."
 msgstr ""
-"Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé à les "
-"consulter."
+"Aucun tracker n'a été créé, ou vous n'êtes pas autorisé à les consulter."
 
 msgid "No type"
 msgstr "Sans nature"
@@ -2448,8 +2443,8 @@ msgid ""
 "Oops. Something weird occured. Unable to create the tracker. Please try "
 "again."
 msgstr ""
-"Oops. Quelque chose de bizarre c'est produit. Impossible de créer l'outil de "
-"suivi. Essayer à nouveau."
+"Oops. Quelque chose de bizarre c'est produit. Impossible de créer le "
+"tracker. Essayer à nouveau."
 
 msgid "Open"
 msgstr "Ouvert"
@@ -2464,7 +2459,7 @@ msgid "Or select an existing field dependency"
 msgstr "Ou sélectionnez une dépendance existante"
 
 msgid "Or you can migrate a Tracker v3..."
-msgstr "Ou vous pouvez migrer un outil de suivi v3 …"
+msgstr "Ou vous pouvez migrer un Tracker v3 …"
 
 msgid "Other Jira users:"
 msgstr "Autre utilisateurs Jira :"
@@ -2534,7 +2529,7 @@ msgid ""
 "field</a> to your tracker first."
 msgstr ""
 "Veuillez d'abord <a href=\"{{ tracker_fields_admin_url }}\">ajouter un champ "
-"de lien d'artifacts</a> à votre outil de suivi."
+"de lien d'artifact</a> à votre tracker."
 
 msgid "Please avoid spaces and punctuation in short names"
 msgstr "Veuillez éviter les espaces et les ponctuations dans le nom court"
@@ -2567,7 +2562,7 @@ msgid "Please provide a valid query."
 msgstr "Veuillez fournir une requête valide."
 
 msgid "Please select a tracker"
-msgstr "Sélectionnez un outil de suivi"
+msgstr "Sélectionnez un tracker"
 
 msgid "Please try again or contact your administrator."
 msgstr "Merci d'essayer à nouveau ou alors contactez votre administrateur."
@@ -2677,7 +2672,7 @@ msgid "Read only"
 msgstr "Lecture seule"
 
 msgid "Read only access to information about trackers"
-msgstr "Accès en lecture seule aux informations concernant les outils de suivi"
+msgstr "Accès en lecture seule aux informations concernant les trackers"
 
 #, php-format
 msgid ""
@@ -2868,7 +2863,7 @@ msgid ""
 "See the {{ tracker_name_from_which_we_imply_the_semantic }} tracker "
 "configuration"
 msgstr ""
-"Voir la configuration de l'outil de suivi "
+"Voir la configuration du tracker "
 "{{ tracker_name_from_which_we_imply_the_semantic }}"
 
 msgid "Select Box"
@@ -3018,15 +3013,15 @@ msgid ""
 "Some child trackers don't have a \"remaining_effort\" Integer or Float or "
 "Computed field:"
 msgstr ""
-"Des outils de suivi enfants n'ont pas de champ \"remaining_effort\" de type "
-"Entier, Flottant ou Calculé :"
+"Des trackers enfants n'ont pas de champ \"remaining_effort\" de type Entier, "
+"Flottant ou Calculé :"
 
 msgid ""
 "Some migrations are being processed. Your new trackers will appear as soon "
 "as the migrations are completed."
 msgstr ""
-"Des migrations sont en cours. Les nouveaux outils de suivi apparaîtront dès "
-"que les migrations seront terminées."
+"Des migrations sont en cours. Les nouveaux trackers apparaîtront dès que les "
+"migrations seront terminées."
 
 msgid ""
 "Some selected values was not saved because they are used in another semantic."
@@ -3037,8 +3032,8 @@ msgstr ""
 msgid ""
 "Some trackers inherit their semantics timeframe from the current tracker:"
 msgstr ""
-"Certains outils de suivi héritent leurs sémantiques Plage de temps de celle "
-"de l'outil de suivi actuel :"
+"Certains trackers héritent leurs sémantiques Plage de temps de celle du "
+"tracker actuel :"
 
 msgid "Something went wrong, the follow up content couldn't be loaded"
 msgstr "Quelque chose s'est mal passé, l'historique n'a pas pu être chargé"
@@ -3059,7 +3054,7 @@ msgid "Start date"
 msgstr "Date de début"
 
 msgid "Start using my tracker"
-msgstr "Commencer à utiliser mon outil de suivi"
+msgstr "Commencer à utiliser mon tracker"
 
 msgid "Static Text"
 msgstr "Texte statique"
@@ -3075,8 +3070,8 @@ msgstr "État"
 
 msgid "Status cannot be unset, because this tracker uses Done semantic"
 msgstr ""
-"L'état ne peut pas être réinitialisé, car l'outil de suivi utilise la "
-"sémantique fini"
+"L'état ne peut pas être réinitialisé, car le tracker utilise la sémantique "
+"fini"
 
 msgid "Status change notifications"
 msgstr "Notifications lors de la mise à jour de l'état"
@@ -3162,7 +3157,7 @@ msgid "Switch to markup diff"
 msgstr "Basculer le diff en mode balise"
 
 msgid "Switch to new tracker creation flow"
-msgstr "Basculer sur le nouveau flux de création d'outil de suivi"
+msgstr "Basculer sur le nouveau flux de création de tracker"
 
 msgid "Switch to:"
 msgstr "Transformer en :"
@@ -3180,12 +3175,12 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "That tracker does not exist."
-msgstr "Cet outil de suivi n'existe pas."
+msgstr "Ce tracker n'existe pas."
 
 msgid ""
 "The %s tracker has been created\n"
 "                successfully."
-msgstr "L'outil de suivi %s a été créé avec succès."
+msgstr "Le tracker %s a été créé avec succès."
 
 #, php-format
 msgid "The 'FROM' part of the query is invalid, it contains an error: '%s'"
@@ -3233,7 +3228,7 @@ msgid ""
 "permission to modify it, please reconfigure your tracker"
 msgstr ""
 "L'artifact n'a pas de champ de type lien vers artifact ou alors vous n'avez "
-"pas la permission de le modifier, merci de reconfigurer l'outil de suivi"
+"pas la permission de le modifier, merci de reconfigurer le tracker"
 
 #, php-format
 msgid "The artifact has too many children (limit is set to %1$s)."
@@ -3284,25 +3279,23 @@ msgstr "L'artifact sera lié à %1$s"
 
 #, php-format
 msgid "The artifacts of this tracker do not have any %s description %s yet."
-msgstr ""
-"Les artifacts de cet outil de suivi n'ont pas de %s description %s définie."
+msgstr "Les artifacts de ce tracker n'ont pas de %s description %s définie."
 
 #, php-format
 msgid "The artifacts of this tracker do not have any %s title %s yet."
-msgstr "Les artifacts de cet outil de suivi n'ont pas de %s titre %s défini."
+msgstr "Les artifacts de ce tracker n'ont pas de %s titre %s défini."
 
 msgid ""
 "The artifacts of this tracker does not have any contributor/assignee yet."
-msgstr ""
-"Les artifacts de cet outil de suivi n'ont pas encore de contributeur/assigné."
+msgstr "Les artifacts de ce tracker n'ont pas encore de contributeur/assigné."
 
 #, php-format
 msgid "The artifacts of this tracker will be described by the field %s."
-msgstr "Les artifacts de cet outil de suivi seront décrits par le champ %s."
+msgstr "Les artifacts de ce tracker seront décrits par le champ %s."
 
 #, php-format
 msgid "The artifacts of this tracker will be summarized by the field %s."
-msgstr "Les artifacts de cet outil de suivi seront résumés par le champ %s."
+msgstr "Les artifacts de ce tracker seront résumés par le champ %s."
 
 msgid "The changeset cannot be stored."
 msgstr "Le changeset n'a pas pu être sauvegardé."
@@ -3387,8 +3380,8 @@ msgstr "L'adresse a été copiée dans votre presse-papier"
 
 msgid "The feature is deactivated, nobody can interact with trackers by email."
 msgstr ""
-"La fonctionnalité est désactivée, personne ne peut intéragir avec les outils "
-"de suivi par courriel."
+"La fonctionnalité est désactivée, personne ne peut intéragir avec les "
+"trackers par courriel."
 
 #, php-format
 msgid "The field \"%1$s\" cannot be stored."
@@ -3586,7 +3579,7 @@ msgstr "Les informations suivantes seront affichées dans l'infobulle :"
 msgid ""
 "The following trackers cannot be displayed (data seems missing in database):"
 msgstr ""
-"Les outils de suivi suivant ne peuvent être affichés (des données semblent "
+"Les trackers suivant ne peuvent être affichés (des données semblent "
 "manquantes en base de données) :"
 
 #, php-format
@@ -3742,8 +3735,8 @@ msgid ""
 "The provided field can't be shared with this tracker because the project it "
 "comes from is not active."
 msgstr ""
-"Le champ entré ne peut pas être partagé avec cet outil de suivi parce que "
-"son projet d'origine n'est pas actif."
+"Le champ entré ne peut pas être partagé avec ce tracker parce que son projet "
+"d'origine n'est pas actif."
 
 msgid "The provided file is not a valid file"
 msgstr "Le fichier fourni est invalide"
@@ -3795,8 +3788,8 @@ msgid ""
 "The semantic %stimeframe%s cannot be inherited from another tracker to "
 "activate this setting."
 msgstr ""
-"La sémantique %stimeframe%s ne peut pas être héritée d'un autre outil de "
-"suivi pour activer la fonctionnalité."
+"La sémantique %stimeframe%s ne peut pas être héritée d'un autre tracker pour "
+"activer la fonctionnalité."
 
 msgid "The semantic %stimeframe%s is requested to activate this setting."
 msgstr ""
@@ -3839,8 +3832,8 @@ msgstr "L'URL soumise n'est pas valide."
 #, php-format
 msgid "The template id %s used for tracker creation was not found."
 msgstr ""
-"Le patron avec l'identifiant %s utilisé pour la création de l'outil de suivi "
-"n'a pas été trouvé."
+"Le patron avec l'identifiant %s utilisé pour la création du tracker n'a pas "
+"été trouvé."
 
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
@@ -3881,28 +3874,28 @@ msgid_plural ""
 "able to remove those trackers from the hierarchy until the triggers "
 "implicating them are removed."
 msgstr[0] ""
-"L'outil de suivi %s est impliqué dans des règles globales sur les "
-"déclencheurs. Il ne sera pas possible de l'enlever de la hiérarchie tant que "
-"des déclencheurs l'impliquent."
+"Le tracker %s est impliqué dans des règles globales sur les déclencheurs. Il "
+"ne sera pas possible de l'enlever de la hiérarchie tant que des déclencheurs "
+"l'impliquent."
 msgstr[1] ""
-"Les outils de suivi %s sont impliqués dans des règles globales sur les "
+"Les trackers %s sont impliqués dans des règles globales sur les "
 "déclencheurs. Il ne sera pas possible de les enlever de la hiérarchie tant "
 "que des déclencheurs les impliquent."
 
 #, php-format
 msgid "The tracker '%1$s' cannot be created."
-msgstr "L'outil de suivi '%1$s' ne peut être créé."
+msgstr "Le tracker '%1$s' ne peut être créé."
 
 #, php-format
 msgid "The tracker '%1$s' has been properly restored"
-msgstr "L'outil de suivi '%1$s' a été proprement restauré"
+msgstr "Le tracker '%1$s' a été proprement restauré"
 
 msgid ""
 "The tracker does not have an artifact link field, nothing can be displayed "
 "here."
 msgstr ""
-"L'outil de suivi n'a pas de champ liens entre artifacts, nous ne pouvons "
-"rien afficher ici."
+"Le tracker n'a pas de champ liens entre artifacts, nous ne pouvons rien "
+"afficher ici."
 
 msgid ""
 "The tracker does not seem to have the create/reply by mail feature enabled."
@@ -3912,36 +3905,36 @@ msgid ""
 "The tracker doesn't have a \"capacity\" Integer or Computed field or you "
 "don't have the permission to access it."
 msgstr ""
-"L'outil de suivi n'a pas de champ \"capacity\" de type Entier ou Calculé ou "
-"bien vous n'avez pas la permission d'y accéder."
+"Le tracker n'a pas de champ \"capacity\" de type Entier ou Calculé ou bien "
+"vous n'avez pas la permission d'y accéder."
 
 msgid ""
 "The tracker doesn't have a \"capacity\" Integer or Float or Computed field "
 "or you don't have the permission to access it."
 msgstr ""
-"L'outil de suivi n'a pas de champ \"capacity\" de type Entier, Flottant ou "
-"Calculé ou bien vous n'avez pas la permission d'y accéder."
+"Le tracker n'a pas de champ \"capacity\" de type Entier, Flottant ou Calculé "
+"ou bien vous n'avez pas la permission d'y accéder."
 
 msgid ""
 "The tracker doesn't have a \"duration\" Integer field or you don't have the "
 "permission to access it."
 msgstr ""
-"L'outil de suivi n'a pas de champ \"duration\" de type Entier ou bien vous "
-"n'avez pas la permission d'y accéder."
+"Le tracker n'a pas de champ \"duration\" de type Entier ou bien vous n'avez "
+"pas la permission d'y accéder."
 
 msgid ""
 "The tracker doesn't have a \"end_date\" Date field or you don't have the "
 "permission to access it."
 msgstr ""
-"L'outil de suivi n'a pas de champ \"end_date\" de type Date ou bien vous "
-"n'avez pas la permission d'y accéder."
+"Le tracker n'a pas de champ \"end_date\" de type Date ou bien vous n'avez "
+"pas la permission d'y accéder."
 
 msgid ""
 "The tracker doesn't have a \"start_date\" Date field or you don't have the "
 "permission to access it."
 msgstr ""
-"L'outil de suivi n'a pas de champ \"start_date\" de type Date ou bien vous "
-"n'avez pas la permission d'y accéder."
+"Le tracker n'a pas de champ \"start_date\" de type Date ou bien vous n'avez "
+"pas la permission d'y accéder."
 
 #, php-format
 msgid "The tracker name %s is already used. Please use another one."
@@ -3967,8 +3960,7 @@ msgstr "La transition vers la valeur \"Aucun\" est invalide."
 
 msgid "The triggers definitions are based on the tracker hierarchy."
 msgstr ""
-"La définition de déclencheurs s'appuie sur la hiérarchie entre outils de "
-"suivi."
+"La définition de déclencheurs s'appuie sur la hiérarchie entre trackers."
 
 msgid "The triggers will be applied on each creation/update of artifacts."
 msgstr ""
@@ -4011,8 +4003,7 @@ msgstr "Alors le champ"
 
 msgid "Then, fill the name, description and short name of this new tracker:"
 msgstr ""
-"Veuillez remplir le nom, la description et le nom court de cet outil de "
-"suivi&nbsp;:"
+"Veuillez remplir le nom, la description et le nom court de ce tracker&nbsp;:"
 
 msgid "There are no child trackers defined for this tracker"
 msgstr "Ce tracker n'a pas de trackers enfants"
@@ -4042,7 +4033,7 @@ msgid "There isn't any information in the tooltip yet."
 msgstr "Il n'y a aucune information dans l'infobulle pour l'instant."
 
 msgid "There isn't any trackers yet"
-msgstr "Il n'y pas encore d'outil de suivi"
+msgstr "Il n'y pas encore de tracker"
 
 msgid "There must be at least one authorized user group."
 msgstr ""
@@ -4099,14 +4090,13 @@ msgid ""
 "This artifact doesn't respect tracker's rules. It will not be imported : "
 "CSV's line %s."
 msgstr ""
-"Cet artifact ne respecte pas les règles de l'outil de suivi. Il ne sera pas "
-"importé: ligne %s du fichier CSV."
+"Cet artifact ne respecte pas les règles du tracker. Il ne sera pas importé: "
+"ligne %s du fichier CSV."
 
 #, php-format
 msgid "This field is shared from tracker <a href=\"%s\">%s</a> from project %s"
 msgstr ""
-"Ce champ est partagé depuis l'outil de suivi <a href=\"%s\">%s</a> du projet "
-"%s"
+"Ce champ est partagé depuis le tracker <a href=\"%s\">%s</a> du projet %s"
 
 msgid ""
 "This field is the title of the artifact. It is not allowed to masschange it."
@@ -4115,7 +4105,7 @@ msgstr ""
 "massivement à jour."
 
 msgid "This field is used by the following trackers:"
-msgstr "Ce champ est utilisé par les outils de suivi suivants :"
+msgstr "Ce champ est utilisé par les trackers suivants :"
 
 msgid "This file has been removed meantime."
 msgstr "Ce fichier a été supprimé entre temps."
@@ -4125,7 +4115,7 @@ msgid ""
 "new tracker creation flow."
 msgstr ""
 "Cette page est dépréciée et sera bientôt supprimée. Vous devriez utiliser le "
-"nouveau flux de création des outils de suivi."
+"nouveau flux de création des trackers."
 
 msgid ""
 "This permission grants tracker administration rights on all trackers on all "
@@ -4171,10 +4161,10 @@ msgid "This template does not use trackers"
 msgstr "Ce modèle n'utilise pas les trackers"
 
 msgid "This tracker does not exist."
-msgstr "Cet outil de suivi n'existe pas."
+msgstr "Ce tracker n'existe pas."
 
 msgid "This tracker has no workflow."
-msgstr "Cet outil de suivi n'a pas de workflow."
+msgstr "Ce tracker n'a pas de workflow."
 
 msgid "This tracker is deleted"
 msgstr "Ce tracker a été supprimé"
@@ -4225,8 +4215,7 @@ msgstr ""
 #, php-format
 msgid "Timeframes will be inherited from %s linking artifacts of this tracker."
 msgstr ""
-"Les plages de temps seront héritées des %s liant les artifacts de cet outil "
-"de suivi."
+"Les plages de temps seront héritées des %s liant les artifacts de ce tracker."
 
 msgid "Title"
 msgstr "Titre"
@@ -4263,66 +4252,66 @@ msgid "Total number of artifacts"
 msgstr "Nombre total d'artifacts"
 
 msgid "Tracker"
-msgstr "Outil de suivi"
+msgstr "Tracker"
 
 #, php-format
 msgid ""
 "Tracker #%d add rule #%d - source field #%s should be %s than target field "
 "#%s"
 msgstr ""
-"Outil de suivi #%d ajout de la règle #%d - le champ source #%s doit être %s "
-"au champ destination #%s"
+"Tracker #%d ajout de la règle #%d - le champ source #%s doit être %s au "
+"champ destination #%s"
 
 #, php-format
 msgid "Tracker #%d new children: %s (previous children: %s)"
-msgstr "Outil de suivi #%d nouveaux enfants: %s (enfant précédents: %s)"
+msgstr "Tracker #%d nouveaux enfants: %s (enfant précédents: %s)"
 
 #, php-format
 msgid "Tracker #%d rule #%d deleted"
-msgstr "Outil de suivi #%d règle #%d supprimée"
+msgstr "Tracker #%d règle #%d supprimée"
 
 #, php-format
 msgid ""
 "Tracker #%d updated rule #%d - previous source field #%s should be %s than "
 "target field #%s - new source field #%s should be %s than target field #%s"
 msgstr ""
-"Outil de suivi #%d règle #%d mise à jour - le champ source précédent #%s "
-"devait être %s au champ destination #%s - le nouveau champ source #%s doit "
-"être %s au champ destination #%s"
+"Tracker #%d règle #%d mise à jour - le champ source précédent #%s devait "
+"être %s au champ destination #%s - le nouveau champ source #%s doit être %s "
+"au champ destination #%s"
 
 #, php-format
 msgid "Tracker %1$s not duplicated"
-msgstr "L'outil de suivi %1$s n'a pas été copié"
+msgstr "Le tracker %1$s n'a pas été copié"
 
 #, php-format
 msgid ""
 "Tracker %d has too many artifacts (%d) while limit was set to %d. Please "
 "refine your query"
 msgstr ""
-"L'outil de suivi %d contient trop d'artifacts (%d) alors que la limite a été "
-"fixée à %d. Merci de raffiner votre requête"
+"Le tracker %d contient trop d'artifacts (%d) alors que la limite a été fixée "
+"à %d. Merci de raffiner votre requête"
 
 #, php-format
 msgid "Tracker %s : field %s (%s) has no permission"
-msgstr "Outil de suivi %s : le champ %s (%s) n'a pas de permissons"
+msgstr "Tracker %s : le champ %s (%s) n'a pas de permissons"
 
 #, php-format
 msgid "Tracker %s has been successfully deleted"
-msgstr "L'outil de suivi %s a été supprimé"
+msgstr "Le tracker %s a été supprimé"
 
 #, php-format
 msgid ""
 "Tracker %s will now appear in the +New dropdown on every page of the project"
 msgstr ""
-"L'outil de suivi %s apparaîtra dans le menu déroulant +Nouveau sur toutes "
-"les pages du projet"
+"Le tracker %s apparaîtra dans le menu déroulant +Nouveau sur toutes les "
+"pages du projet"
 
 #, php-format
 msgid ""
 "Tracker %s will now appear in the sidebar or the +New dropdown on every page "
 "of the project"
 msgstr ""
-"L'outil de suivi %s apparaîtra dans la barre latérale et le menu déroulant "
+"Le tracker %s apparaîtra dans la barre latérale et le menu déroulant "
 "+Nouveau sur toutes les pages du projet"
 
 #, php-format
@@ -4330,16 +4319,16 @@ msgid ""
 "Tracker %s won't appear anymore in the +New dropdown on every page of the "
 "project"
 msgstr ""
-"L'outil de suivi %s n'apparaîtra plus dans le menu déroulant +Nouveau sur "
-"toutes les pages du projet"
+"Le tracker %s n'apparaîtra plus dans le menu déroulant +Nouveau sur toutes "
+"les pages du projet"
 
 #, php-format
 msgid ""
 "Tracker %s won't appear anymore in the sidebar or the +New dropdown on every "
 "page of the project"
 msgstr ""
-"L'outil de suivi %s n'apparaîtra plus dans la barre latérale et le menu "
-"déroulant +Nouveau sur toutes les pages du projet"
+"Le tracker %s n'apparaîtra plus dans la barre latérale et le menu déroulant "
+"+Nouveau sur toutes les pages du projet"
 
 msgid "Tracker (read only)"
 msgstr "Tracker (lecture seule)"
@@ -4351,34 +4340,34 @@ msgstr ""
 "sont pas listées."
 
 msgid "Tracker deleted"
-msgstr "Outil de suivi supprimé"
+msgstr "Tracker supprimé"
 
 msgid "Tracker does not exist"
-msgstr "L'outil de suivi n'existe pas"
+msgstr "Le tracker n'existe pas"
 
 msgid "Tracker email format"
-msgstr "Format du courriel pour les outils de suivi"
+msgstr "Format du courriel pour les trackers"
 
 msgid "Tracker global administration"
-msgstr "Administration globale des outils de suivi"
+msgstr "Administration globale des trackers"
 
 msgid "Tracker hierarchy"
-msgstr "Hiérarchie de l'outil de suivi"
+msgstr "Hiérarchie du tracker"
 
 msgid "Tracker hierarchy is Cyclic"
 msgstr "La hiérarchie est cyclique"
 
 msgid "Tracker id"
-msgstr "Id de l'outil de suivi"
+msgstr "Id du tracker"
 
 msgid "Tracker name"
-msgstr "Nom de l'outil de suivi"
+msgstr "Nom du tracker"
 
 msgid "Tracker not in hierarchy"
 msgstr "Le tracker n'appartient pas à la hiérarchie"
 
 msgid "Tracker permissions"
-msgstr "Permissions de l'outil de suivi"
+msgstr "Permissions du tracker"
 
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
@@ -4391,33 +4380,33 @@ msgid_plural ""
 "Tracker service cannot be deactivated because the following services are in "
 "use: %s"
 msgstr[0] ""
-"Le service Suivi ne peut être désactivé car il est utilisé par le service "
+"Le service Tracker ne peut être désactivé car il est utilisé par le service "
 "suivant : %s"
 msgstr[1] ""
-"Le service Suivi ne peut être désactivé car il est utilisé par les services "
-"suivants : %s"
+"Le service Tracker ne peut être désactivé car il est utilisé par les "
+"services suivants : %s"
 
 msgid "Tracker service is disabled."
 msgstr "Le service tracker est désactivé."
 
 msgid "Tracker shortname"
-msgstr "Nom court de l'outil de suivi"
+msgstr "Nom court du tracker"
 
 msgid "Tracker shortname length must be inferior to 25 characters."
 msgstr ""
 "La longeur du nom court de tracker doit être inférieure à 25 caractères."
 
 msgid "Tracker successfully updated."
-msgstr "Outil de suivi mis à jour avec succès."
+msgstr "Tracker mis à jour avec succès."
 
 msgid "Trackers"
-msgstr "Outils de suivi"
+msgstr "Trackers"
 
 msgid "Trackers Pending for Deletion"
-msgstr "Outils de suivi en attente de suppression"
+msgstr "Trackers en attente de suppression"
 
 msgid "Trackers new generation"
-msgstr "Outil de suivi nouvelle génération"
+msgstr "Tracker nouvelle génération"
 
 msgid "Transition not found."
 msgstr "Transition non trouvée."
@@ -4483,8 +4472,8 @@ msgid ""
 "Unable to retrieve the time period: Too many artifacts from tracker %s are "
 "linking artifact #%d. There should only be one."
 msgstr ""
-"Impossible de récupérer la période : Trop d'artifacts provenant de l'outil "
-"de suivi %s lient l'artifact #%d. Il ne devrait y en avoir qu'un seul."
+"Impossible de récupérer la période : Trop d'artifacts provenant du tracker "
+"%s lient l'artifact #%d. Il ne devrait y en avoir qu'un seul."
 
 msgid "Unable to save the contributor/assignee"
 msgstr "Impossible de sauvegarder la sémantique contributeur"
@@ -4589,7 +4578,7 @@ msgid ""
 "Tracker report context"
 msgstr ""
 "L'utilisation de 'SELECT', 'FROM', 'ORDER BY' et 'WHERE' n'est pas autorisée "
-"dans le contexte du rapport de l'outil de suivi"
+"dans le contexte du rapport du tracker"
 
 msgid "Use"
 msgstr "Utiliser"
@@ -4624,7 +4613,7 @@ msgid ""
 "of a forged email, we can moderately trust the sender.<br>As of today, only "
 "reply (add a follow-up comment) by email is supported by this option."
 msgstr ""
-"Les utilisateurs peuvent intéragir avec les outils de suivi par courriel. "
+"Les utilisateurs peuvent intéragir avec les trackers par courriel. "
 "L'authentification est effectuée grâce à un jeton injecté dans les entêtes "
 "des courriels. Ceci réduit les risques de courriel forgé, nous pouvons "
 "modérément avoir confiance en l'émetteur. <br /> Actuellement, seulement les "
@@ -4639,14 +4628,13 @@ msgid ""
 "they are not.</span><br>As of today, users can create artifacts and reply "
 "(add a follow-up comment) by email with this option."
 msgstr ""
-"Les utilisateurs peuvent intéragir avec les outils de suivi par courriel. Il "
-"n'y a aucune authentification. <span class=\"text-error\">Avec cette option, "
-"nous <strong>ne pouvons pas avoir confiance en l'émetteur du courriel</"
-"strong>. Ce qui veut dire que des personnes mal intentionnées peuvent "
-"facilement forger un courriel et se faire passer pour quelqu'un d'autre.</"
-"span><br />Actuellement, les utilisateurs peuvent créer des artifacts et "
-"répondre (ajout d'un commentaire à un artifact) par courriel avec cette "
-"option."
+"Les utilisateurs peuvent intéragir avec les trackers par courriel. Il n'y a "
+"aucune authentification. <span class=\"text-error\">Avec cette option, nous "
+"<strong>ne pouvons pas avoir confiance en l'émetteur du courriel</strong>. "
+"Ce qui veut dire que des personnes mal intentionnées peuvent facilement "
+"forger un courriel et se faire passer pour quelqu'un d'autre.</span><br /"
+">Actuellement, les utilisateurs peuvent créer des artifacts et répondre "
+"(ajout d'un commentaire à un artifact) par courriel avec cette option."
 
 msgid "Users having unsubscribed from the notifications"
 msgstr "Utilisateurs s'étant désabonnés des notifications"
@@ -4784,8 +4772,8 @@ msgstr ""
 
 msgid "You are about to delete the tracker %s. Please, confirm your action."
 msgstr ""
-"Vous êtes sur le point de supprimer l'outil de suivi %s. Veuillez confirmer "
-"la suppression."
+"Vous êtes sur le point de supprimer le tracker %s. Veuillez confirmer la "
+"suppression."
 
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
@@ -4840,7 +4828,7 @@ msgid ""
 "You can add an artifact link field %sin your tracker fields administration%s."
 msgstr ""
 "Vous pouvez ajouter un champ liens entre artifacts %sdans l'administration "
-"des champs de votre outil de suivi%s."
+"des champs de votre tracker%s."
 
 #, php-format
 msgid ""
@@ -4921,26 +4909,25 @@ msgid ""
 "You can't choose your notifications level for this tracker because tracker "
 "administrator has suspended all notifications."
 msgstr ""
-"Vous ne pouvez pas choisir votre mode de notification pour cet outil de "
-"suivi parce que l'administrateur a suspendu toutes les notifications."
+"Vous ne pouvez pas choisir votre mode de notification pour ce tracker parce "
+"que l'administrateur a suspendu toutes les notifications."
 
 msgid ""
 "You can't delete this tracker because it has at least one source shared "
 "field."
 msgstr ""
-"Cet outil de suivi ne peut pas être supprimé car il définit au moins un "
-"champ source de champ partagé."
+"Ce tracker ne peut pas être supprimé car il définit au moins un champ source "
+"de champ partagé."
 
 msgid ""
 "You can't delete this tracker because it is source or target of triggers."
 msgstr ""
-"Cet outil de suivi ne peut pas être supprimé car il est source ou cible de "
+"Ce tracker ne peut pas être supprimé car il est source ou cible de "
 "déclencheurs."
 
 #, php-format
 msgid "You can't delete this tracker because it is used in: %1$s"
-msgstr ""
-"Cet outil de suivi ne peut pas être supprimé car il est utilisé dans: %1$s"
+msgstr "Ce tracker ne peut pas être supprimé car il est utilisé dans: %1$s"
 
 msgid ""
 "You can't submit an artifact because you do not have the right to submit all "
@@ -4957,28 +4944,28 @@ msgid ""
 "field in the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique <em>titre</em> car il n'y a aucun "
-"champ texte dans votre outil de suivi"
+"champ texte dans votre tracker"
 
 msgid ""
 "You cannot define the contributor/assignee semantic since there isn't any "
 "user list field in the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique contributeur/assigné car il n'y a "
-"pas de champ liste utilisateur dans cet outil de suivi"
+"pas de champ liste utilisateur dans ce tracker"
 
 msgid ""
 "You cannot define the description semantic since there isn't any text field "
 "in the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique description car il n'y a aucun "
-"champ texte dans votre outil de suivi"
+"champ texte dans votre tracker"
 
 msgid ""
 "You cannot define the status semantic since there isn't any list field in "
 "the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique État car il n'y a aucun champ de "
-"type liste dans l'outil de suivi"
+"type liste dans le tracker"
 
 msgid ""
 "You cannot hide this value since it is used in a semantic, in workflow, in "
@@ -5006,8 +4993,8 @@ msgid ""
 "You cannot reset this semantic because some trackers inherit their own "
 "semantic timeframe from this one."
 msgstr ""
-"Vous ne pouvez pas réinitialiser cette sémantique car certains outils de "
-"suivi héritent leurs propres sémantiques Plage de temps de celle-ci."
+"Vous ne pouvez pas réinitialiser cette sémantique car certains trackers "
+"héritent leurs propres sémantiques Plage de temps de celle-ci."
 
 msgid "You do not have the necessary right to edit this artifact."
 msgstr "Vous n'avez pas les droits nécessaires pour l'édition de cet artifact."
@@ -5034,15 +5021,15 @@ msgstr ""
 "que vous êtes anonyme, essayez de vous <a href=\"%1$s\">connecter</a>."
 
 msgid "You don't have the permissions to view this tracker."
-msgstr "Vous n'avez pas les permissions pour visualiser cet outil de suivi."
+msgstr "Vous n'avez pas les permissions pour visualiser ce tracker."
 
 #, php-format
 msgid ""
 "You don't have the permissions to view this tracker. Given that you are "
 "anonymous, please try to <a href=\"%1$s\">login</a>."
 msgstr ""
-"Vous n'avez pas les permissions pour visualiser cet outil de suivi. Etant "
-"donné que vous êtes anonyme, essayez de vous <a href=\"%1$s\">connecter</a>."
+"Vous n'avez pas les permissions pour visualiser ce tracker. Etant donné que "
+"vous êtes anonyme, essayez de vous <a href=\"%1$s\">connecter</a>."
 
 msgid ""
 "You have reached the limit of artifacts deletion for the next 24 hours. "
@@ -5174,7 +5161,7 @@ msgid "and it's now placed before"
 msgstr "et il est maintenant placé avant"
 
 msgid "are admin of the tracker"
-msgstr "administrateur de l'outil de suivi"
+msgstr "administrateur du tracker"
 
 msgid "assigned to me [A]"
 msgstr "assigned to me [A]"
@@ -5326,11 +5313,11 @@ msgstr "sémantique %s"
 
 #, php-format
 msgid "semantic %s of tracker %s"
-msgstr "sémantique %s de l'outil de suivi %s"
+msgstr "sémantique %s du tracker %s"
 
 #, php-format
 msgid "semantic %s of tracker %s in project %s"
-msgstr "sémantique %s de l'outil de suivi %s du projet %s"
+msgstr "sémantique %s du tracker %s du projet %s"
 
 msgid "set to"
 msgstr "valué à"

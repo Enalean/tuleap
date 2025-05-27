@@ -43,7 +43,7 @@ msgid "Error while retrieving the list of projects: %s"
 msgstr "Erreur pendant la récupération de la liste des projets : %s"
 
 msgid "Error while retrieving the list of trackers: %s"
-msgstr "Erreur pendant la récupération de la liste des outils de suivi : %s"
+msgstr "Erreur pendant la récupération de la liste des trackers : %s"
 
 msgid "Error while retrieving the possible parents: %s"
 msgstr "Erreur pendant la récupération des parents possibles : %s"
@@ -87,7 +87,7 @@ msgid "Project"
 msgstr "Projet"
 
 msgid "Projects and trackers are loading"
-msgstr "Les projets et les outils de suivi sont en cours de chargement"
+msgstr "Les projets et les trackers sont en cours de chargement"
 
 msgid "Recently viewed artifacts"
 msgstr "Artifacts vus récemment"
@@ -105,7 +105,7 @@ msgid "Search results"
 msgstr "Résultats de recherche"
 
 msgid "Select the tracker"
-msgstr "Sélectionner l'outil de suivi"
+msgstr "Sélectionner le tracker"
 
 msgid "Something went wrong during the artifact creation."
 msgstr "Quelque chose s'est mal passé pendant la création d'artifact."
@@ -117,7 +117,7 @@ msgid "Title"
 msgstr "Titre"
 
 msgid "Trackers"
-msgstr "Outils de suivi"
+msgstr "Trackers"
 
 msgid "Unable to retrieve the linked artifacts: %s"
 msgstr "Impossible de récupérer les artifacts liés : %s"
