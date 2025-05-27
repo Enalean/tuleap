@@ -40,14 +40,12 @@ use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
-use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\RetrieveTracker;
 
-final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
+final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers, InstantiateRetrievedQueryTrackerIds
 {
     public function __construct(
         private ExpertQueryValidator $expert_query_validator,
-        private ParserCacheProxy $parser,
         private FromBuilderVisitor $from_builder,
         private RetrieveUserPermissionOnTrackers $trackers_permissions,
         private CrossTrackerTQLQueryDao $tql_query_dao,
@@ -59,7 +57,7 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
     ) {
     }
 
-    public function getQueryTrackers(CrossTrackerQuery $query, PFUser $current_user, int $limit): array
+    public function getQueryTrackers(ParsedCrossTrackerQuery $query, PFUser $current_user, int $limit): array
     {
         return $this->retrieveForQuery($query, $current_user, $limit);
     }
@@ -70,12 +68,10 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
      * @throws FromIsInvalidException
      * @throws MissingFromException
      */
-    private function retrieveForQuery(CrossTrackerQuery $query, PFUser $current_user, int $limit): array
+    private function retrieveForQuery(ParsedCrossTrackerQuery $query, PFUser $current_user, int $limit): array
     {
-        $parsed_query = $this->parser->parse($query->getQuery());
-
         $this->expert_query_validator->validateFromQuery(
-            $parsed_query,
+            $query->parsed_query,
             new InvalidFromCollectionBuilder(
                 new InvalidFromTrackerCollectorVisitor($this->in_project_checker),
                 new InvalidFromProjectCollectorVisitor(
@@ -89,8 +85,8 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
             $current_user,
         );
 
-        assert($parsed_query->getFrom() !== null); // From part is checked for expert query, so it cannot be null
-        $additional_from = $this->from_builder->buildFromWhere($parsed_query->getFrom(), $query->getWidgetId(), $current_user);
+        assert($query->parsed_query->getFrom() !== null); // From part is checked for expert query, so it cannot be null
+        $additional_from = $this->from_builder->buildFromWhere($query->parsed_query->getFrom(), $query->getWidgetId(), $current_user);
         $trackers        = $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
             $this->getTrackers(array_map(
@@ -109,7 +105,7 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
      * @param int[] $trackers_ids
      * @return Tracker[]
      */
-    private function getTrackers(array $trackers_ids): array
+    public function getTrackers(array $trackers_ids): array
     {
         $event = $this->event_dispatcher->dispatch(new RetrievedQueryTrackerIds($trackers_ids));
 

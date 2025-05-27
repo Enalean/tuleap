@@ -386,6 +386,8 @@ final class CrossTrackerArtifactQueryFactoryBuilder
         );
         $field_checker             = $this->getDuckTypedFieldChecker();
         $metadata_checker          = $this->getMetadataChecker();
+        $query_trackers_retriever  = $this->getQueryTrackersRetriever();
+
         return new CrossTrackerArtifactQueryFactory(
             $this->getQueryValidator(),
             $this->getQueryBuilderVisitor(),
@@ -398,10 +400,14 @@ final class CrossTrackerArtifactQueryFactoryBuilder
             new InvalidSelectablesCollectorVisitor($field_checker, $metadata_checker),
             $field_checker,
             $metadata_checker,
-            $this->getQueryTrackersRetriever(),
+            $query_trackers_retriever,
             $this->getInstrumentation(),
             $trackers_permissions,
             $tracker_artifact_factory,
+            new ForwardLinkFromWhereBuilder($tracker_artifact_factory),
+            new ReverseLinkFromWhereBuilder($tracker_artifact_factory),
+            $query_trackers_retriever,
+            TrackersPermissionsRetriever::build(),
         );
     }
 
@@ -410,7 +416,6 @@ final class CrossTrackerArtifactQueryFactoryBuilder
         $widget_dao = new CrossTrackerWidgetDao();
         return new QueryTrackersRetriever(
             $this->getQueryValidator(),
-            $this->getParser(),
             $this->getFromBuilderVisitor(),
             TrackersPermissionsRetriever::build(),
             new CrossTrackerTQLQueryDao(),

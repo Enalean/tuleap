@@ -30,6 +30,48 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class CrossTrackerTQLQueryDao extends DataAccessObject
 {
+    public function getTrackersIdsForForwardLink(int $artifact_id): array
+    {
+        return $this->getDB()->col(
+            <<<EOS
+            SELECT DISTINCT link.tracker_id AS id
+            FROM tracker_artifact AS link
+                INNER JOIN tracker_changeset_value AS TCV
+                    ON (link.last_changeset_id = TCV.changeset_id)
+                INNER JOIN tracker_changeset_value_artifactlink AS TCVAL
+                    ON (TCVAL.changeset_value_id = TCV.id AND TCVAL.artifact_id = ?)
+                INNER JOIN tracker
+                    ON (tracker.id = link.tracker_id AND tracker.deletion_date IS NULL)
+                INNER JOIN `groups` AS project
+                    ON (project.group_id = tracker.group_id AND project.status = 'A')
+            EOS,
+            0,
+            $artifact_id
+        );
+    }
+
+    public function getTrackersIdsForReverseLink(int $artifact_id): array
+    {
+        return $this->getDB()->col(
+            <<<EOS
+            SELECT DISTINCT link.tracker_id AS id
+            FROM tracker_artifact AS source
+                INNER JOIN tracker_changeset_value AS TCV
+                    ON (source.id = ? AND source.last_changeset_id = TCV.changeset_id)
+                INNER JOIN tracker_changeset_value_artifactlink AS TCVAL
+                    ON (TCVAL.changeset_value_id = TCV.id)
+                INNER JOIN tracker_artifact AS link
+                    ON (TCVAL.artifact_id = link.id)
+                INNER JOIN tracker
+                    ON (tracker.id = link.tracker_id AND tracker.deletion_date IS NULL)
+                INNER JOIN `groups` AS project
+                    ON (project.group_id = tracker.group_id AND project.status = 'A')
+            EOS,
+            0,
+            $artifact_id
+        );
+    }
+
     /**
      * @return list<array{id: int}>
      */

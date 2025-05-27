@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\CrossTracker\Query;
 
-use PFUser;
 use Tracker;
-use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 
-interface RetrieveQueryTrackers
+interface InstantiateRetrievedQueryTrackerIds
 {
     /**
+     * @param int[] $trackers_ids
      * @return Tracker[]
-     * @throws SyntaxError
-     * @throws MissingFromException
-     * @throws FromIsInvalidException
      */
-    public function getQueryTrackers(ParsedCrossTrackerQuery $query, PFUser $current_user, int $limit): array;
+    public function getTrackers(array $trackers_ids): array;
 }

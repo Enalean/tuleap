@@ -40,6 +40,7 @@ final class CrossTrackerQueryTest extends RestBase
         parent::setUp();
 
         $this->getEpicArtifactIds();
+        $this->getReleaseArtifactIds();
 
         $response      = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::WIDGET_ID));
         $json_response = decode($response->getBody()->getContents());
@@ -121,6 +122,41 @@ final class CrossTrackerQueryTest extends RestBase
 
         self::assertCount(1, $json_response['artifacts']);
         self::assertEquals($this->epic_artifact_ids[1], $json_response['artifacts'][0]['@id']['value']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
+    public function testGetForwardLinks(): void
+    {
+        $query_id = urlencode($this->query_id);
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "crosstracker_query/$query_id/forward_links?source_artifact_id=" . $this->epic_artifact_ids[1] . '&limit=50&offset=0'),
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        $json_response = decode($response->getBody()->getContents());
+        self::assertCount(2, $json_response['selected']);
+        self::assertSame('@artifact', $json_response['selected'][0]['name']);
+        self::assertSame('@id', $json_response['selected'][1]['name']);
+
+        self::assertCount(0, $json_response['artifacts']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
+    public function testGetReverseLinks(): void
+    {
+        $query_id = urlencode($this->query_id);
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "crosstracker_query/$query_id/reverse_links?target_artifact_id=" . $this->epic_artifact_ids[1] . '&limit=50&offset=0'),
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        $json_response = decode($response->getBody()->getContents());
+        self::assertCount(2, $json_response['selected']);
+        self::assertSame('@artifact', $json_response['selected'][0]['name']);
+        self::assertSame('@id', $json_response['selected'][1]['name']);
+
+        self::assertCount(1, $json_response['artifacts']);
+        self::assertEquals($this->release_artifact_ids[1], $json_response['artifacts'][0]['@id']['value']);
     }
 
     public function testGetQueryWithoutArtifacts(): void
