@@ -16,10 +16,10 @@ msgid "Arch."
 msgstr "Arch."
 
 msgid "Artifact"
-msgstr "Artéfact"
+msgstr "Artifact"
 
 msgid "Artifact Links"
-msgstr "Liens entre artéfacts"
+msgstr "Liens entre artifacts"
 
 msgid ""
 "By downloading this software you implicitly recognize that you have <a ng-"
@@ -55,7 +55,7 @@ msgid "Link"
 msgstr "Lien"
 
 msgid "Linked Artifacts"
-msgstr "Artéfacts liés"
+msgstr "Artifacts liés"
 
 msgid "Links"
 msgstr "Liens"
@@ -103,7 +103,7 @@ msgid "There are neither release notes nor files in this release."
 msgstr "Il n'y a ni notes ni fichiers dans cette version."
 
 msgid "There are no artifact links defined in this release."
-msgstr "Aucun lien d'artéfact n'a été créé pour cette version."
+msgstr "Aucun lien d'artifact n'a été créé pour cette version."
 
 msgid "There are no files in this release."
 msgstr "Il n'y a aucun fichier dans cette version."
@@ -112,7 +112,7 @@ msgid ""
 "There was an error while getting the list of linked artifacts: {{ $ctrl."
 "getError().rest_error }}"
 msgstr ""
-"Une erreur est survenue pendant la récupération des artéfacts liés : "
+"Une erreur est survenue pendant la récupération des artifacts liés : "
 "{{ $ctrl.getError().rest_error }}"
 
 msgid ""

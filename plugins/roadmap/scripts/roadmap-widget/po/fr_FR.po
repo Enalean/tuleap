@@ -19,7 +19,7 @@ msgid "An error occurred while retrieving the children."
 msgstr "Une erreur est survenue lors de la récupération des enfants."
 
 msgid "Displayed artifacts don't have any links to each other."
-msgstr "Les artéfacts affichés ne possèdent pas de liens entre eux."
+msgstr "Les artifacts affichés ne possèdent pas de liens entre eux."
 
 msgid "Linked to"
 msgstr "Lié à"

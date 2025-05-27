@@ -76,7 +76,7 @@ msgid ""
 "artifact or field link."
 msgstr ""
 "La fonctionnalité n'est pas planifiable, l'utilisateur n'a pas les "
-"permissions pour modifier l'artéfact ou le champs lien."
+"permissions pour modifier l'artifact ou le champ lien."
 
 msgid "The retrieval of the elements to be planned in program has failed"
 msgstr "La récupération des éléments à planifier dans le programme a échoué"

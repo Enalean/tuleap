@@ -112,7 +112,7 @@ msgid "The time is missing"
 msgstr "Le temps est manquant"
 
 msgid "This artifact does not exist"
-msgstr "Cet artéfact n'existe pas"
+msgstr "Cet artifact n'existe pas"
 
 msgid "This time does not belong to you."
 msgstr "Ce temps ne vous appartient pas."
@@ -139,7 +139,7 @@ msgid "Time tracking"
 msgstr "Suivi de temps"
 
 msgid "Time tracking for Tuleap artifacts"
-msgstr "Suivi de temps pour les artéfacts de Tuleap"
+msgstr "Suivi de temps pour les artifacts de Tuleap"
 
 msgid "Time tracking is disabled for tracker."
 msgstr "Le suivi de temps est désactivé pour ce tracker."

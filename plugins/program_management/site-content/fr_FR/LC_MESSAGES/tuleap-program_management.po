@@ -32,7 +32,7 @@ msgid ""
 "artifact link field"
 msgstr ""
 "<a href='%s'>L'outil de suivi %s</a> du projet %s n'a pas de champ lien "
-"entre artéfact"
+"entre artifact"
 
 msgid "Add to backlog"
 msgstr "Ajouter au backlog"
@@ -70,12 +70,12 @@ msgstr ""
 #, php-format
 msgid "Artifact links with \"%s\" type cannot be removed."
 msgstr ""
-"Les liens entre artéfacts de type \"%s\" ne peuvent pas être supprimés."
+"Les liens entre artifacts de type \"%s\" ne peuvent pas être supprimés."
 
 #, php-format
 msgid "Artifact links with \"%s\" type cannot be updated."
 msgstr ""
-"Les liens entre artéfacts de type \"%s\" ne peuvent pas être mis à jour."
+"Les liens entre artifacts de type \"%s\" ne peuvent pas être mis à jour."
 
 msgid ""
 "Backlog service cannot be enabled when the project also uses the Program "
@@ -343,7 +343,7 @@ msgstr "Le Programme %d ne peut pas être à la fois un Programme et une Équipe
 
 #, php-format
 msgid "Program Increment artifact #%d could not be found"
-msgstr "L'artéfact Incrément de Programme #%d n'a pas été trouvé"
+msgstr "L'artifact Incrément de Programme #%d n'a pas été trouvé"
 
 msgid ""
 "Program Increment tracker id must not be contained into plannable tracker ids"
@@ -487,7 +487,7 @@ msgstr "Outil de suivi source pour les Incréments de Programme"
 msgid ""
 "Status semantic is not defined, the artifact cannot be added to the backlog"
 msgstr ""
-"La sémantique status n'est pas définie, l'artéfact ne peut pas être ajouté "
+"La sémantique status n'est pas définie, l'artifact ne peut pas être ajouté "
 "au backlog"
 
 msgid ""
@@ -554,15 +554,15 @@ msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
 
 msgid "This artifact cannot be moved because it is a program increment."
 msgstr ""
-"Cet artéfact ne peut pas être déplacé car c'est un incrément de programme."
+"Cet artifact ne peut pas être déplacé car c'est un incrément de programme."
 
 msgid "This artifact cannot be moved because it is a program iteration."
 msgstr ""
-"Cet artéfact ne peut pas être déplacé car c'est une itération de programme."
+"Cet artifact ne peut pas être déplacé car c'est une itération de programme."
 
 msgid "This artifact cannot be moved because it is part of a program plan."
 msgstr ""
-"Cet artéfact ne peut pas être déplacé car il fait partie de la planification "
+"Cet artifact ne peut pas être déplacé car il fait partie de la planification "
 "d'un programme."
 
 msgid "This team is being synchronized"
@@ -577,7 +577,7 @@ msgstr "Titre"
 msgid ""
 "Title semantic is not defined, the artifact cannot be added to the backlog"
 msgstr ""
-"La sémantique titre n'est pas définie, l'artéfact ne peut pas être ajouté au "
+"La sémantique titre n'est pas définie, l'artifact ne peut pas être ajouté au "
 "backlog"
 
 msgid "To be planned"
@@ -604,7 +604,7 @@ msgstr ""
 
 #, php-format
 msgid "Tracker with id #%d has no artifact link field"
-msgstr "L'outil de suivi avec l'id #%d n'a pas de champ de lien d'artéfacts"
+msgstr "L'outil de suivi avec l'id #%d n'a pas de champ de lien d'artifacts"
 
 msgid "Unchanged"
 msgstr "Inchangé"
@@ -636,7 +636,7 @@ msgstr "L'utilisateur %s ne peut pas accéder au Programme #%d"
 
 msgid "User can not submit artifact in Team tracker #%s"
 msgstr ""
-"L'utilisateur ne peut pas soumettre d'artéfact dans l'outil de suivi de "
+"L'utilisateur ne peut pas soumettre d'artifact dans l'outil de suivi de "
 "l'Équipe #%s"
 
 msgid ""

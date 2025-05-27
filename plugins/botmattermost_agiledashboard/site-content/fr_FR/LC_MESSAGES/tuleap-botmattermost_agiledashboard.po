@@ -17,7 +17,7 @@ msgid "Add notification"
 msgstr "Ajouter une notification"
 
 msgid "Artifact ID"
-msgstr "ID de l'artéfact"
+msgstr "ID de l'artifact"
 
 msgid "Bot Mattermost-Agile Dashboard"
 msgstr "Robot Mattermost Agile Dashboard"

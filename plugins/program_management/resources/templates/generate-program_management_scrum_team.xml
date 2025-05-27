@@ -1088,13 +1088,13 @@
         <semantic type="title">
           <shortname><![CDATA[title]]></shortname>
           <label><![CDATA[Titre]]></label>
-          <description><![CDATA[Définir le titre d'un artéfact]]></description>
+          <description><![CDATA[Définir le titre d'un artifact]]></description>
           <field REF="F26114"/>
         </semantic>
         <semantic type="description">
           <shortname><![CDATA[description]]></shortname>
           <label><![CDATA[Description]]></label>
-          <description><![CDATA[Définir la description d'un artéfact]]></description>
+          <description><![CDATA[Définir la description d'un artifact]]></description>
           <field REF="F26116"/>
         </semantic>
         <semantic type="status">
@@ -1120,7 +1120,7 @@
         <semantic type="contributor">
           <shortname><![CDATA[contributor]]></shortname>
           <label><![CDATA[Contributeur]]></label>
-          <description><![CDATA[Définir le contributeur d'un artéfact]]></description>
+          <description><![CDATA[Définir le contributeur d'un artifact]]></description>
           <field REF="F26127"/>
         </semantic>
         <semantic type="progress">
@@ -1135,7 +1135,7 @@
         <semantic type="initial_effort">
           <shortname><![CDATA[initial_effort]]></shortname>
           <label><![CDATA[Effort Estimé]]></label>
-          <description><![CDATA[Définir l'effort estimé d'un artéfact]]></description>
+          <description><![CDATA[Définir l'effort estimé d'un artifact]]></description>
           <field REF="F26123"/>
         </semantic>
         <semantic type="timeframe">

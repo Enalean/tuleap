@@ -132,7 +132,7 @@ msgid "Allow all the projects to use this Gerrit server."
 msgstr "Autoriser tous les projets à utiliser ce serveur Gerrit."
 
 msgid "Allow artifact closure"
-msgstr "Autoriser la fermeture des artéfacts"
+msgstr "Autoriser la fermeture des artifacts"
 
 msgid ""
 "Allow usage of regular expressions in branches and tags during repository "
@@ -199,10 +199,10 @@ msgid "Archive should not contain git data."
 msgstr "L'archive ne peut pas contenir des données git."
 
 msgid "Artifact closure is not allowed anymore for repository"
-msgstr "La fermeture des artéfacts n'est plus autorisée pour ce dépôt"
+msgstr "La fermeture des artifacts n'est plus autorisée pour ce dépôt"
 
 msgid "Artifact closure is now allowed for repository"
-msgstr "La fermeture des artéfacts est maintenant autorisée pour ce dépôt"
+msgstr "La fermeture des artifacts est maintenant autorisée pour ce dépôt"
 
 #, php-format
 msgid ""
@@ -589,7 +589,7 @@ msgid ""
 "If selected, artifacts of this project can be closed with commit messages "
 "from the repository."
 msgstr ""
-"Si choisi, les artéfacts de ce projet pourront être fermés à l'aide des "
+"Si choisi, les artifacts de ce projet pourront être fermés à l'aide des "
 "messages de commit de ce dépôt."
 
 msgid ""
@@ -1551,7 +1551,7 @@ msgstr ""
 "permissions %1$s n'ont pas été dupliquées."
 
 msgid "close artifacts"
-msgstr "fermer les artéfacts"
+msgstr "fermer les artifacts"
 
 msgid "disabled"
 msgstr "désactivées"

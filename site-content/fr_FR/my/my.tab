@@ -8,7 +8,7 @@
 my_index	my_dashboard	Mon tableau de bord
 my_index	account_maintenance	Mon compte
 my_index	title	Page personnelle de $1
-my_index	message	Votre page personnelle contient la liste des artéfacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssignés avec leur niveau de complétion, les forums et les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
+my_index	message	Votre page personnelle contient la liste des artifacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssignés avec leur niveau de complétion, les forums et les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
 my_index	err_artf	Impossible de créer un ArtifactTypeFactory
 my_index	my_bugs	Mes bugs
 my_index	my_srs	Mes demandes de support
@@ -20,8 +20,8 @@ my_index	my_files_msg	<b>Vous ne surveillez aucun fichier.</b><P>En surveillant 
 my_index	stop_file	Arrêter la surveillance du paquet ?
 my_index	stop_monitor	Arrêter la surveillance
 my_index	my_tasks	Mes Tâches
-my_index	my_arts	Mes artéfacts (anciens trackers)
-my_index	display_arts	Afficher les artéfacts :
+my_index	my_arts	Mes artifacts (anciens trackers)
+my_index	display_arts	Afficher les artifacts :
 my_index	my_bookmarks	Mes favoris
 my_index	no_bookmark	Vous n'avez pas encore de favori enregistré
 my_index	edit_link	Editer
@@ -36,7 +36,7 @@ my_index	my_projects_legend	Légende :
 #my_index	a	A
 #my_index	s	S
 #my_index	as	AS
-my_index	no_info	N'afficher aucun artéfact
+my_index	no_info	N'afficher aucun artifact
 my_index	a_info	assignés à moi [A]
 my_index	s_info	soumis par moi [S]
 my_index	as_info	assignés à moi ou soumis par moi [AS]

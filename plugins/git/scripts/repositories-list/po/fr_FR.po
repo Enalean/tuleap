@@ -35,7 +35,7 @@ msgid "Administration"
 msgstr "Administration"
 
 msgid "Allow artifact closure"
-msgstr "Autoriser la fermeture des artéfacts"
+msgstr "Autoriser la fermeture des artifacts"
 
 msgid "Allowed characters: a-zA-Z0-9/_.-"
 msgstr "Caractères autorisés : a-zA-Z0-9/_.-"
@@ -55,14 +55,14 @@ msgid "An error occurred while creating the repository."
 msgstr "Une erreur est survenue lors de la création du dépôt."
 
 msgid "Artifact closure"
-msgstr "Fermeture d'artéfact"
+msgstr "Fermeture d'artifact"
 
 msgid "Artifact closure is now allowed for '%{repository}'!"
-msgstr "La fermeture d'artéfacts est maintenant activée pour '%{repository}' !"
+msgstr "La fermeture d'artifacts est maintenant activée pour '%{repository}' !"
 
 msgid "Artifact closure is now disabled for '%{repository}'!"
 msgstr ""
-"La fermeture d'artéfacts est maintenant désactivée pour '%{repository}' !"
+"La fermeture d'artifacts est maintenant désactivée pour '%{repository}' !"
 
 msgid "Back"
 msgstr "Retour"
@@ -147,7 +147,7 @@ msgid ""
 "If selected, artifacts of this project can be closed with GitLab commit "
 "messages from the selected repository."
 msgstr ""
-"Si choisi, les artéfacts de ce projet pourront être fermés à l'aide des "
+"Si choisi, les artifacts de ce projet pourront être fermés à l'aide des "
 "messages de commit\n"
 "                    de GitLab depuis le dépôt sélectionné."
 

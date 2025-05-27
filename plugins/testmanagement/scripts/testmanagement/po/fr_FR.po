@@ -70,13 +70,13 @@ msgid "An error occurred while loading the tests."
 msgstr "Une erreur est survenue pendant le chargement des tests."
 
 msgid "Artifact ID"
-msgstr "Artéfact ID"
+msgstr "Artifact ID"
 
 msgid "Artifacts referenced by “%s”"
-msgstr "Les artéfacts qui sont référencés par “%s”"
+msgstr "Les artifacts qui sont référencés par “%s”"
 
 msgid "Artifacts that reference “%s”"
-msgstr "Les artéfacts qui référencent “%s”"
+msgstr "Les artifacts qui référencent “%s”"
 
 msgid "Attach files..."
 msgstr "Joindre des fichiers..."
@@ -511,7 +511,7 @@ msgid "There isn't any requirements to put in the traceability matrix."
 msgstr "Il n'y a aucune exigences pour la matrice de traçabilité."
 
 msgid "This artifact is already linked to this test."
-msgstr "Cet artéfact est déjà lié à ce test."
+msgstr "Cet artifact est déjà lié à ce test."
 
 msgid "This file has already been attached to this comment"
 msgstr "Ce fichier a déjà été attaché à ce commentaire"

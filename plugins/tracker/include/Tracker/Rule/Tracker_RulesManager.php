@@ -77,7 +77,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     }
 
     /**
-     * Check if all the selected values of a submitted artefact
+     * Check if all the selected values of a submitted artifact
      * are coherent regarding the rules
      *
      * @param int $tracker_id the artifact id to test

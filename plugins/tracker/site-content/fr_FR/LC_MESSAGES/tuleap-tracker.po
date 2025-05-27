@@ -15,7 +15,7 @@ msgstr ""
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
 "Le champ de type \"Fichiers à transmettre\" ne peut être modifié durant une "
-"copie d'un artéfact."
+"copie d'un artifact."
 
 msgid ""
 "\"FROM\" keyword is missing from your query, it is mandatory in expert mode"
@@ -48,15 +48,15 @@ msgstr[1] "%1$d ouverts / %2$d total"
 
 #, php-format
 msgid "%1$s : artifact #%2$s does not exist."
-msgstr "%1$s : %2$s n'est pas un artéfact existant."
+msgstr "%1$s : %2$s n'est pas un artifact existant."
 
 #, php-format
 msgid "%1$s Artifact(s) created"
-msgstr "%1$s artéfact(s) créé(s)"
+msgstr "%1$s artifact(s) créé(s)"
 
 #, php-format
 msgid "%1$s Artifact(s) updated"
-msgstr "%1$s artéfact(s) mis à jour"
+msgstr "%1$s artifact(s) mis à jour"
 
 #, php-format
 msgid "%1$s can contain neiher carriage return nor null char."
@@ -81,7 +81,7 @@ msgstr "%1$s jour(s) %2$s"
 
 #, php-format
 msgid "%1$s has just updated the artifact"
-msgstr "%1$s vient de mettre à jour l'artéfact"
+msgstr "%1$s vient de mettre à jour l'artifact"
 
 #, php-format
 msgid "%1$s is not a date."
@@ -108,12 +108,12 @@ msgid ""
 "%1$s was asked to remind you today that the '%2$s' in the artifact below is "
 "%3$s."
 msgstr ""
-"%1$s a été chargé de vous rappeler aujourd'hui que '%2$s' dans l'artéfact "
+"%1$s a été chargé de vous rappeler aujourd'hui que '%2$s' dans l'artifact "
 "suivant est %3$s."
 
 #, php-format
 msgid "%1$s: %2$s is not an artifact id."
-msgstr "%1$s : %2$s n'est pas un id d'artéfact."
+msgstr "%1$s : %2$s n'est pas un id d'artifact."
 
 #, php-format
 msgid "%1s - open %2s"
@@ -147,7 +147,7 @@ msgstr[1] "%s jours ouvrables"
 #, php-format
 msgid "'%s' is not a valid value for reminder notify closed artifacts"
 msgstr ""
-"'%s' n'est pas une valeur valide pour la notification des artéfacts fermés"
+"'%s' n'est pas une valeur valide pour la notification des artifacts fermés"
 
 #, php-format
 msgid "'%s' is not supported for the operator %s."
@@ -226,13 +226,13 @@ msgstr ""
 "<h5>Veuillez mettre à jour ce champ calculé</h5><p>L'ancien mode de "
 "fonctionnement des champs calculés sera indisponible à partir de Tuleap 9.4."
 "<br/>Une fois mis à jour, les changements suivants seront apportés :</"
-"p><ul><li>Le calcul prendra en compte récursivement tous les artéfacts liés, "
+"p><ul><li>Le calcul prendra en compte récursivement tous les artifacts liés, "
 "sans tenir compte des natures de liens.</li><li>Le champ cible ne sera plus "
 "configurable, le nom du champ sera utilisé à la place.</li><li>Les "
-"permissions ne seront pas vérifiées sur les artéfacts liés.</li></ul><p>Par "
-"exemple, un utilisateur peut voir un artéfact A lié à B et C. L'artéfact A a "
+"permissions ne seront pas vérifiées sur les artifacts liés.</li></ul><p>Par "
+"exemple, un utilisateur peut voir un artifact A lié à B et C. L'artifact A a "
 "un champ calculé nommé \"Effort restant\".<br/>Même si l'utilisateur n'a pas "
-"accès aux artéfacts B ou C, le champ \"Effort restant\" de A sera la somme "
+"accès aux artifacts B ou C, le champ \"Effort restant\" de A sera la somme "
 "des champs \"Effort restant\" de B et C.</p>"
 
 msgid ""
@@ -240,7 +240,7 @@ msgid ""
 "acknowledge all notifications before submit.</p><p>Beware, on submit, your "
 "modifications will be applied on top of previous changes.</p>"
 msgstr ""
-"<p>Quelqu'un a modifié l'artéfact pendant que vous l'éditiez.</p><p>Merci "
+"<p>Quelqu'un a modifié l'artifact pendant que vous l'éditiez.</p><p>Merci "
 "d'accuser réception des notifications.</p><p>Attention, lors de la mise à "
 "jour, vos modifications seront appliquées par dessus les autres changements."
 "</p>"
@@ -248,7 +248,7 @@ msgstr ""
 msgid ""
 "<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>"
 msgstr ""
-"<p>Les artéfacts de cet outil de suivi n'ont pas de sémantique <em>état</em> "
+"<p>Les artifacts de cet outil de suivi n'ont pas de sémantique <em>état</em> "
 "défini.</p>"
 
 #, php-format
@@ -320,26 +320,26 @@ msgid "Access permissions"
 msgstr "Droits d'accès"
 
 msgid "Access to all tracker artifacts"
-msgstr "Accès à tous les artéfacts du tracker"
+msgstr "Accès à tous les artifacts du tracker"
 
 msgid "Access to an artifact"
-msgstr "Accès à un artéfact"
+msgstr "Accès à un artifact"
 
 msgid "Access to tracker artifacts assigned to group"
-msgstr "Accès à tous les artéfacts confiés au groupe"
+msgstr "Accès à tous les artifacts confiés au groupe"
 
 msgid "Access to tracker artifacts submitted by group"
-msgstr "Accès à tous les artéfacts soumis par le groupe"
+msgstr "Accès à tous les artifacts soumis par le groupe"
 
 msgid "Access to tracker artifacts the user submitted"
-msgstr "Accès à tous les artéfacts soumis par l'utilisateur"
+msgstr "Accès à tous les artifacts soumis par l'utilisateur"
 
 msgid "Actions"
 msgstr "Actions"
 
 msgid "Activate artifact links types for all the trackers of this project?"
 msgstr ""
-"Activer les liens entre artéfacts typés pour l'ensemble des outils de suivi "
+"Activer les liens entre artifacts typés pour l'ensemble des outils de suivi "
 "du projet ?"
 
 msgid "Activate new interface for %s tracker"
@@ -380,7 +380,7 @@ msgid ""
 "updated. The URL will be called using HTTP POST method."
 msgstr ""
 "Ajoutez une URL cible qui sera appelée à chaque création et mise à jour "
-"d'artéfact. Cette URL sera appelée avec HTTP POST."
+"d'artifact. Cette URL sera appelée avec HTTP POST."
 
 msgid "Add field to tooltip"
 msgstr "Ajouter un champ à l'infobulle"
@@ -433,18 +433,18 @@ msgid ""
 "After artifact edition, all the disabled types used will be cleared without "
 "removing the existing link."
 msgstr ""
-"Suite à une mise à jour d'artéfact, les types de lien désactivés seront "
+"Suite à une mise à jour d'artifact, les types de lien désactivés seront "
 "supprimés sans enlever les liens existants."
 
 msgid "Allow duplication of artifacts"
-msgstr "Autoriser la duplication des artéfacts"
+msgstr "Autoriser la duplication des artifacts"
 
 msgid "Allow to permanently delete an artifact."
-msgstr "Cette opération efface de manière permanente un artéfact."
+msgstr "Cette opération efface de manière permanente un artifact."
 
 msgid "Allow user to give permissions to an artifact"
 msgstr ""
-"Permet de restreindre l'accès à un artéfact pour les groupes d'utilisateurs"
+"Permet de restreindre l'accès à un artifact pour les groupes d'utilisateurs"
 
 msgid "Allow user to interact with trackers by email."
 msgstr ""
@@ -467,14 +467,14 @@ msgid ""
 "An artifact could be considered <strong>done</strong> only if a semantic "
 "status is defined."
 msgstr ""
-"Un artéfact sera considéré comme <strong>fini</strong> seulement lorsqu'une "
+"Un artifact sera considéré comme <strong>fini</strong> seulement lorsqu'une "
 "sémantique État sera définie."
 
 msgid ""
 "An artifact is considered to be <strong>done</strong> when its field %s will "
 "have one of the following closed values:"
 msgstr ""
-"Un artéfact sera considéré comme <strong>fini</strong> lorsque son champ %s "
+"Un artifact sera considéré comme <strong>fini</strong> lorsque son champ %s "
 "aura une des valeurs fermées suivantes :"
 
 #, php-format
@@ -482,7 +482,7 @@ msgid ""
 "An artifact is considered to be open when its field %s will have one of the "
 "following values:"
 msgstr ""
-"Un artéfact sera considéré ouvert quand son champ %s aura une des valeurs "
+"Un artifact sera considéré ouvert quand son champ %s aura une des valeurs "
 "suivantes :"
 
 msgid ""
@@ -505,7 +505,7 @@ msgstr "Une erreur est survenue, le workflow ne peut pas être modifié."
 
 #, php-format
 msgid "An error occured while creating a copy of the artifact #%1$s."
-msgstr "Une erreur est survenue empêchant la copie de l'artéfact #%1$s."
+msgstr "Une erreur est survenue empêchant la copie de l'artifact #%1$s."
 
 msgid "An error occured while creating the tracker."
 msgstr "Une erreur est survenue lors de la création de l'outil de suivi."
@@ -535,7 +535,7 @@ msgid ""
 "Archive deleted items plugin is enabled. Each deleted artifact will be "
 "archived in the folder defined in the plugin configuration."
 msgstr ""
-"Le plugin Archivage d'éléments supprimés est activé. Chaque artéfact "
+"Le plugin Archivage d'éléments supprimés est activé. Chaque artifact "
 "supprimé sera archivé dans le dossier défini dans la configuration du plugin."
 
 msgid ""
@@ -545,7 +545,7 @@ msgid ""
 "settings of the machine on which the server is running."
 msgstr ""
 "Le plugin Archivage d'éléments supprimés n'est pas installé ou activé. "
-"Chaque artéfact supprimé sera exporté et placé dans le dossier temporaire "
+"Chaque artifact supprimé sera exporté et placé dans le dossier temporaire "
 "défini dans le fichier local.inc. Ils seront purgés automatiquement selon la "
 "configuration de la machine sur laquelle le serveur tourne."
 
@@ -559,119 +559,119 @@ msgid "Are you sure you want to change the type of this field?"
 msgstr "Etes-vous certain de vouloir changer le type de ce champ ?"
 
 msgid "Artifact"
-msgstr "Artéfact"
+msgstr "Artifact"
 
 #, php-format
 msgid "Artifact #%1$s was not updated."
-msgstr "L'artéfact #%1$s n'a pas pu être mis à jour."
+msgstr "L'artifact #%1$s n'a pas pu être mis à jour."
 
 #, php-format
 msgid "Artifact %1$s doesn't exist or doesn't belong to current tracker"
-msgstr "L'artéfact %1$s n'existe pas ou n'appartient pas à ce tracker"
+msgstr "L'artifact %1$s n'existe pas ou n'appartient pas à ce tracker"
 
 #, php-format
 msgid "Artifact %1$s has more than one parent: %2$s"
-msgstr "L'artéfact %1$s a plusieurs parents: %2$s"
+msgstr "L'artifact %1$s a plusieurs parents: %2$s"
 
 #, php-format
 msgid "Artifact %1$s successfully deleted"
-msgstr "L'artéfact %1$s a été supprimé"
+msgstr "L'artifact %1$s a été supprimé"
 
 #, php-format
 msgid ""
 "Artifact %s was linked as child of the current artifact but is not part of "
 "hierarchy. It will not be taken into account in triggers."
 msgstr ""
-"L'artéfact %s a été lié à cet artéfact en tant qu'enfant mais ne fait pas "
+"L'artifact %s a été lié à cet artifact en tant qu'enfant mais ne fait pas "
 "part de la hiérarchie définie. Il ne sera donc pas pris en compte par les "
 "déclencheurs."
 
 #, php-format
 msgid "Artifact (%s) does not belong to this tracker."
-msgstr "L'artéfact (%s) n'appartient pas à ce tracker."
+msgstr "L'artifact (%s) n'appartient pas à ce tracker."
 
 msgid "Artifact ID"
-msgstr "ID de l'artéfact"
+msgstr "ID de l'artifact"
 
 #, php-format
 msgid "Artifact Id %1$s does not exist"
-msgstr "L'artéfact Id %1$s n'existe pas"
+msgstr "L'artifact Id %1$s n'existe pas"
 
 msgid "Artifact Link"
-msgstr "Liens vers des artéfacts"
+msgstr "Liens vers des artifacts"
 
 msgid "Artifact Links Types"
-msgstr "Natures de liens entre artéfacts"
+msgstr "Natures de liens entre artifacts"
 
 #, php-format
 msgid "Artifact Successfully Created (%1$s)"
-msgstr "Artéfact créé avec succès (%1$s)"
+msgstr "Artifact créé avec succès (%1$s)"
 
 msgid "Artifact id(s)"
-msgstr "Artéfact id(s)"
+msgstr "Artifact id(s)"
 
 msgid "Artifact is not found or not accessible by user."
 msgstr ""
-"L'artéfact n'a pas été trouvé ou n'est pas disponible pour l'utilisateur."
+"L'artifact n'a pas été trouvé ou n'est pas disponible pour l'utilisateur."
 
 msgid "Artifact link types has been enabled."
-msgstr "Les liens entre artéfacts typés ont été activés."
+msgstr "Les liens entre artifacts typés ont été activés."
 
 msgid "Artifact links"
-msgstr "Liens entre artéfacts"
+msgstr "Liens entre artifacts"
 
 msgid "Artifact links count based"
-msgstr "Basé sur le nombre d'artéfacts liés"
+msgstr "Basé sur le nombre d'artifacts liés"
 
 msgid ""
 "Artifact links edition in artifact view has been revamped and is activated "
 "by default for new trackers."
 msgstr ""
-"L'édition des liens entre artéfacts dans la vue d'artéfact a été améliorée "
+"L'édition des liens entre artifacts dans la vue d'artifact a été améliorée "
 "et est activé par défaut pour les nouveaux trackers."
 
 msgid "Artifact links types"
-msgstr "Liens entre artéfacts typés"
+msgstr "Liens entre artifacts typés"
 
 msgid "Artifact submitters"
-msgstr "Personnes ayant soumis un artéfact"
+msgstr "Personnes ayant soumis un artifact"
 
 #, php-format
 msgid "Artifact was moved from '%s' tracker in '%s' project."
 msgstr ""
-"Cet artéfact a été déplacé depuis l'outil de suivi '%s' du projet '%s'."
+"Cet artifact a été déplacé depuis l'outil de suivi '%s' du projet '%s'."
 
 #, php-format
 msgid "Artifact with the title \"%1$s\" was not created."
-msgstr "L'artéfact avec le titre \"%1$s\" n'a pas pu être créé."
+msgstr "L'artifact avec le titre \"%1$s\" n'a pas pu être créé."
 
 msgid "Artifacts"
-msgstr "Artéfacts"
+msgstr "Artifacts"
 
 msgid ""
 "Artifacts cannot be considered <strong>done</strong> because there is no "
 "value selected for this semantic."
 msgstr ""
-"Les artéfacts ne peuvent être considérés comme <strong>fini</strong> car il "
+"Les artifacts ne peuvent être considérés comme <strong>fini</strong> car il "
 "n'y aucune valeur selectionnée pour cette sémantique."
 
 msgid "Artifacts deletion"
-msgstr "Suppression d'artéfacts"
+msgstr "Suppression d'artifacts"
 
 msgid "Artifacts deletion configuration"
-msgstr "Configuration de la suppression d'artéfacts"
+msgstr "Configuration de la suppression d'artifacts"
 
 msgid ""
 "Artifacts deletion is deactivated. Please contact your site administrator."
 msgstr ""
-"La suppression d'artéfacts est désactivée. Veuillez contacter "
+"La suppression d'artifacts est désactivée. Veuillez contacter "
 "l'administrateur du site."
 
 msgid "Artifacts fields"
-msgstr "Liste des champs des artéfacts"
+msgstr "Liste des champs des artifacts"
 
 msgid "Artifacts of this tracker cannot be duplicated."
-msgstr "Les artéfacts de cet outil de suivi ne peuvent pas être dupliqués."
+msgstr "Les artifacts de cet outil de suivi ne peuvent pas être dupliqués."
 
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
@@ -686,7 +686,7 @@ msgid ""
 msgstr ""
 "En tant qu'administrateur de l'outil de suivi, vous pouvez spécifier des "
 "adresses e-mail qui recevront systématiquement les notifications de "
-"soumission (et éventuellement de modification) d'artéfacts."
+"soumission (et éventuellement de modification) d'artifacts."
 
 msgid "As of"
 msgstr "Le"
@@ -698,9 +698,9 @@ msgid ""
 "summary, and tooltip for instance."
 msgstr ""
 "Les outils de suivi étant entièrement paramétrables, vous pourriez vouloir "
-"définir à quoi correspond le titre de l'artéfact, ou comment considérer si "
-"un artéfact est ouvert ou fermé. Cette information est utilisée à différents "
-"endroits dans l'application pour afficher un lien ou un résumé de l'artéfact."
+"définir à quoi correspond le titre de l'artifact, ou comment considérer si "
+"un artifact est ouvert ou fermé. Cette information est utilisée à différents "
+"endroits dans l'application pour afficher un lien ou un résumé de l'artifact."
 
 msgid "Assigned to"
 msgstr "Assigné à"
@@ -762,14 +762,14 @@ msgid ""
 "Be careful, all the artifact content is sent in the payload without "
 "permission checks."
 msgstr ""
-"Attention, tout le contenu de l'artéfact est envoyé dans le payload sans "
+"Attention, tout le contenu de l'artifact est envoyé dans le payload sans "
 "prise en compte des permissions."
 
 msgid ""
 "Be careful: An artifact deletion is an action hardly reversible. Choose "
 "wisely."
 msgstr ""
-"Attention : Une suppression d'artéfact est une action difficilement "
+"Attention : Une suppression d'artifact est une action difficilement "
 "réversible. Réfléchissez bien."
 
 msgid "Before"
@@ -931,7 +931,7 @@ msgstr "Changement non trouvé."
 
 #, php-format
 msgid "Changing %1$s artifact(s):"
-msgstr "Changer %1$s artéfact(s) :"
+msgstr "Changer %1$s artifact(s) :"
 
 msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"
@@ -975,7 +975,7 @@ msgstr "Colonnes"
 #, php-format
 msgid "Columns using type will not be taken into account during import : %1$s."
 msgstr ""
-"Les colonnes basées sur les natures de liens entre artéfacts ne sont pas "
+"Les colonnes basées sur les natures de liens entre artifacts ne sont pas "
 "pris en compte lors de l'import : %1$s."
 
 msgid "Comment"
@@ -1006,9 +1006,9 @@ msgid ""
 "artifacts permissions AND will only calculate the field values of linked "
 "artifacts that have the same field name.</li></ul>"
 msgstr ""
-"Calcule la valeur (somme des valeurs) du champ en fonction des artéfacts "
+"Calcule la valeur (somme des valeurs) du champ en fonction des artifacts "
 "liés.<p><strong>Note</strong> : <ul><li>Le calcul ne vérifie pas les "
-"permissions sur les artéfacts liés <strong>ET</strong> se base sur le nom du "
+"permissions sur les artifacts liés <strong>ET</strong> se base sur le nom du "
 "champs pour faire la somme des artifacts liés.</li></ul>"
 
 msgid "Computed value"
@@ -1101,10 +1101,10 @@ msgid "Create a new {{ parent_label }}"
 msgstr "Créer un nouveau {{ parent_label }}"
 
 msgid "Create artifact by email"
-msgstr "Créer un artéfact par courriel"
+msgstr "Créer un artifact par courriel"
 
 msgid "Create artifact by mail is <b>not</b> possible:"
-msgstr "Créer un artéfact par courriel <b>n'est pas</b> possible :"
+msgstr "Créer un artifact par courriel <b>n'est pas</b> possible :"
 
 msgid "Create by email..."
 msgstr "Créer par courriel..."
@@ -1116,7 +1116,7 @@ msgid ""
 "Creating artifact by mail is not possible due to the current configuration "
 "of the tracker."
 msgstr ""
-"La création d'artéfacts par courriel n'est pas possible à cause de la "
+"La création d'artifacts par courriel n'est pas possible à cause de la "
 "configuration courante de l'outil de suivi."
 
 msgid ""
@@ -1140,9 +1140,9 @@ msgstr "Hiérarchie actuellement définie"
 
 msgid "Current artifact children satisfy the following condition:"
 msgid_plural "Current artifact children satisfy the following conditions:"
-msgstr[0] "Les enfants de l'artéfact courant satisfont la condition suivante :"
+msgstr[0] "Les enfants de l'artifact courant satisfont la condition suivante :"
 msgstr[1] ""
-"Les enfants de l'artéfact courant satisfont les conditions suivantes :"
+"Les enfants de l'artifact courant satisfont les conditions suivantes :"
 
 msgid ""
 "Currently the new interface is activated for every tracker on the platform."
@@ -1164,7 +1164,7 @@ msgid ""
 "assignee or if you have specific configuration for a tracker."
 msgstr ""
 "Actuellement, vous serez notifié seulement si vous êtes le créateur de "
-"l'artéfact, y êtes assigné ou si vous avez une configuration spécifique pour "
+"l'artifact, y êtes assigné ou si vous avez une configuration spécifique pour "
 "l'outil de suivi."
 
 msgid "Custom columns based on..."
@@ -1225,32 +1225,32 @@ msgstr ""
 "Définissez les valeurs fermées de la sémantique État considérées comme finies"
 
 msgid "Define the contributor/assignee of an artifact"
-msgstr "Définir le contributeur d'un artéfact"
+msgstr "Définir le contributeur d'un artifact"
 
 msgid "Define the description of an artifact"
-msgstr "Définir la description d'un artéfact"
+msgstr "Définir la description d'un artifact"
 
 msgid "Define the field to use to compute artifacts timeframes."
 msgstr ""
-"Définit le champ à utiliser pour calculer les plages de temps des artéfacts."
+"Définit le champ à utiliser pour calculer les plages de temps des artifacts."
 
 msgid ""
 "Define the method and the fields to use to compute artifacts progression."
 msgstr ""
 "Définit la méthode et les champs à utiliser pour calculer la progression des "
-"artéfacts."
+"artifacts."
 
 msgid "Define the status of an artifact"
 msgstr "Définir l'état d'un artifact"
 
 msgid "Define the title of an artifact"
-msgstr "Définir le titre d'un artéfact"
+msgstr "Définir le titre d'un artifact"
 
 msgid "Delete"
 msgstr "Supprimer"
 
 msgid "Delete artifacts"
-msgstr "Suppression d'artéfacts"
+msgstr "Suppression d'artifacts"
 
 msgid "Delete canceled"
 msgstr "Suppression annulée"
@@ -1278,7 +1278,7 @@ msgid "Delete type"
 msgstr "Supprimer une nature"
 
 msgid "Deletion of artifacts is not allowed"
-msgstr "La suppression d'artéfact n'est pas autorisée"
+msgstr "La suppression d'artifact n'est pas autorisée"
 
 msgid "Description"
 msgstr "Description"
@@ -1312,7 +1312,7 @@ msgid "Disable notifications"
 msgstr "Désactiver les notifications"
 
 msgid "Display artifacts:"
-msgstr "Afficher les artéfacts :"
+msgstr "Afficher les artifacts :"
 
 msgid "Display in & out references"
 msgstr "Liste des objets étant référencés par cet objet ou le référençant"
@@ -1333,25 +1333,25 @@ msgstr ""
 "que ce champ évoluera dans le futur."
 
 msgid "Display the burndown chart for the artifact"
-msgstr "Diagramme de complétion pour l'artéfact"
+msgstr "Diagramme de complétion pour l'artifact"
 
 msgid "Display the cross references for the artifact"
-msgstr "Affiche les références croisées de l'artéfact"
+msgstr "Affiche les références croisées de l'artifact"
 
 msgid "Display the date the artifact was submitted on"
-msgstr "Affiche la date de soumission de l'artéfact"
+msgstr "Affiche la date de soumission de l'artifact"
 
 msgid "Display the id of the artifact"
-msgstr "Affiche l'identifiant de l'artéfact"
+msgstr "Affiche l'identifiant de l'artifact"
 
 msgid "Display the in-tracker numerotation"
-msgstr "Affiche l'identifiant de cet artéfact dans le tracker"
+msgstr "Affiche l'identifiant de cet artifact dans le tracker"
 
 msgid "Display the last update date of the artifact"
-msgstr "Affiche la date de dernière mise à jour de l'artéfact"
+msgstr "Affiche la date de dernière mise à jour de l'artifact"
 
 msgid "Display the user who submitted the artifact"
-msgstr "Affiche l'auteur de l'artéfact"
+msgstr "Affiche l'auteur de l'artifact"
 
 msgid "Display time"
 msgstr "Afficher l'heure"
@@ -1382,7 +1382,7 @@ msgstr ""
 "la forme simple comme `%s` ou `%s`"
 
 msgid "Duplicate this artifact"
-msgstr "Dupliquer cet artéfact"
+msgstr "Dupliquer cet artifact"
 
 msgid "Dynamic fields"
 msgstr "Champs dynamiques"
@@ -1453,7 +1453,7 @@ msgstr ""
 "par e-mail"
 
 msgid "Enable move of artifacts in this tracker"
-msgstr "Activer le déplacement des artéfacts dans cet outil de suivi"
+msgstr "Activer le déplacement des artifacts dans cet outil de suivi"
 
 msgid "Enable multisort"
 msgstr "Activer le tri multi-colonnes"
@@ -1469,7 +1469,7 @@ msgstr ""
 "notifications."
 
 msgid "Enable to create/reply to artifacts by mail"
-msgstr "Autoriser la création/réponse à des artéfacts par courriel"
+msgstr "Autoriser la création/réponse à des artifacts par courriel"
 
 msgid "End"
 msgstr "Fin"
@@ -1481,7 +1481,7 @@ msgid "End date is lesser than start date!"
 msgstr "La date de fin est antérieure à la date de début !"
 
 msgid "Enter artifact ids separated with a comma"
-msgstr "Entrez des ids d'artéfacts séparés par une virgule"
+msgstr "Entrez des ids d'artifacts séparés par une virgule"
 
 msgid "Enter description..."
 msgstr "Entrez la description…"
@@ -1503,7 +1503,7 @@ msgstr ""
 
 #, php-format
 msgid "Error while updating the parent artifact %1$s: %2$s"
-msgstr "Erreur lors de la mise à jour de l'artéfact %1$s : %2$s"
+msgstr "Erreur lors de la mise à jour de l'artifact %1$s : %2$s"
 
 #, php-format
 msgid "Error with the field '%s'. The user '%s' does not exist."
@@ -1666,13 +1666,13 @@ msgid ""
 "values...)"
 msgstr ""
 "Pour toutes les mises à jour après que vous ayez effectué un changement sur "
-"un artéfact (commentaire, changement de valeurs...)"
+"un artifact (commentaire, changement de valeurs...)"
 
 msgid ""
 "For instance, when you create an artifact or add a comment. %s(Historical "
 "Tuleap behavior with high traffic).%s"
 msgstr ""
-"Par exemple, quand vous créez un artéfact ou ajoutez un commentaire. "
+"Par exemple, quand vous créez un artifact ou ajoutez un commentaire. "
 "%s(Comportement historique de Tuleap ayant un fort trafic)%s"
 
 msgid "Force cache regeneration"
@@ -1764,23 +1764,23 @@ msgid "Hint"
 msgstr "Indication"
 
 msgid "Id of the artifact"
-msgstr "Identifiant de l'artéfact"
+msgstr "Identifiant de l'artifact"
 
 msgid "Id of the artifact to delete"
-msgstr "Identifiant de l'artéfact à supprimer"
+msgstr "Identifiant de l'artifact à supprimer"
 
 msgid ""
 "If you know the artifact id, feel free to enter it manually in the text "
 "field below. Use a comma to separate each ids if you have more than one."
 msgstr ""
-"Si vous connaissez l'id de l'artéfact, entrez-le manuellement dans le champs "
+"Si vous connaissez l'id de l'artifact, entrez-le manuellement dans le champ "
 "texte ci-dessous. Le champ attends une liste d'ids séparés par des virgules."
 
 msgid "Import / Export"
 msgstr "Import / Export"
 
 msgid "Import Artifacts"
-msgstr "Importer des artéfacts"
+msgstr "Importer des artifacts"
 
 msgid "Import failed."
 msgstr "Import non réalisé."
@@ -1820,7 +1820,7 @@ msgid ""
 "In order to edit artifact links, please <a href=\"%1$s\">switch to the full "
 "edit mode</a>."
 msgstr ""
-"Pour éditer les liens entre artéfacts, veuillez <a href=\"%1$s\">passer en "
+"Pour éditer les liens entre artifacts, veuillez <a href=\"%1$s\">passer en "
 "mode édition complet</a>."
 
 msgid ""
@@ -1837,11 +1837,11 @@ msgid ""
 "artifact"
 msgstr ""
 "Inclure un marqueur [Assigné à moi même] dans le sujet pour les personnes "
-"étant assignées à l'artéfact"
+"étant assignées à l'artifact"
 
 msgid "Include calendar event in the artifact email notification"
 msgstr ""
-"Inclure l'évènement de calendrier dans la notification email de l'artéfact"
+"Inclure l'évènement de calendrier dans la notification email de l'artifact"
 
 msgid "Include week-ends"
 msgstr "Inclure les week-ends"
@@ -1955,7 +1955,7 @@ msgid "Last Updated By"
 msgstr "Dernière Modification Par"
 
 msgid "Last artifact created"
-msgstr "Dernier artéfact crée"
+msgstr "Dernier artifact créé"
 
 msgid "Last push"
 msgstr "Dernier push"
@@ -1970,7 +1970,7 @@ msgid "Launch a continuous integration build"
 msgstr "Lancer un build de l'intégration continue"
 
 msgid "Lets the user attach files to the artifact"
-msgstr "Permet d'attacher des fichiers à l'artéfact"
+msgstr "Permet d'attacher des fichiers à l'artifact"
 
 msgid "Limit"
 msgstr "Limite"
@@ -1994,22 +1994,22 @@ msgid ""
 "Links between artifacts may have a type for a better semantics between "
 "artifacts. Here is the list of allowed types for this platform."
 msgstr ""
-"Les liens entre artéfacts peuvent être typés en spécifiant pour chaque lien "
+"Les liens entre artifacts peuvent être typés en spécifiant pour chaque lien "
 "sa nature. La liste des natures possibles est définie ci-dessous."
 
 msgid "Links from and to current artifact"
-msgstr "Liens depuis et vers l'artéfact courant"
+msgstr "Liens depuis et vers l'artifact courant"
 
 msgid "Links to other artifacts"
-msgstr "Liens vers d'autres artéfacts"
+msgstr "Liens vers d'autres artifacts"
 
 msgid "List artifacts you have submitted or assigned to you, by project."
 msgstr ""
-"Affiche la liste des artéfacts par projet que vous avez soumis ou qui vous "
+"Affiche la liste des artifacts par projet que vous avez soumis ou qui vous "
 "ont été assignés."
 
 msgid "Load artifacts"
-msgstr "Charger les artéfacts"
+msgstr "Charger les artifacts"
 
 msgid "Log priority changes in follow-up comments"
 msgstr "Enregistrer les changements de rang dans les commentaires"
@@ -2084,7 +2084,7 @@ msgstr "Mise à jour massive"
 
 #, php-format
 msgid "Mass Change All (%1$s artifacts)"
-msgstr "Tous les mettre à jour (%1$s artéfacts)"
+msgstr "Tous les mettre à jour (%1$s artifacts)"
 
 msgid "Mass Change Checked"
 msgstr "Mettre à jour"
@@ -2094,7 +2094,7 @@ msgstr "Informations de la modification en masse"
 
 #, php-format
 msgid "Matching artifacts: <strong>%1$s</strong>"
-msgstr "Artéfact(s) : <strong>%1$s</strong>"
+msgstr "Artifact(s) : <strong>%1$s</strong>"
 
 msgid "Max. characters"
 msgstr "Max. caractères"
@@ -2106,7 +2106,7 @@ msgid ""
 "Maximum number of artifacts users can delete or move from the REST API and "
 "from the user interface on a 24 hours sliding window."
 msgstr ""
-"Nombre maximum d'artéfacts que les utilisateurs peuvent supprimer ou "
+"Nombre maximum d'artifacts que les utilisateurs peuvent supprimer ou "
 "déplacer depuis l'API REST ou l'interface utilisateur sur une période de 24 "
 "heures."
 
@@ -2127,7 +2127,7 @@ msgid "Missing Parameters"
 msgstr "Paramètres manquants"
 
 msgid "Missing artifact link field"
-msgstr "Champ de lien d'artéfacts manquant"
+msgstr "Champ de lien d'artifacts manquant"
 
 msgid "Missing field in data:"
 msgstr "Valeur de champ manquant:"
@@ -2148,16 +2148,16 @@ msgid "Move action is not enabled for tracker %s"
 msgstr "L'outil de suivi %s n'autorise pas l'action de déplacement"
 
 msgid "Move artifacts"
-msgstr "Déplacement d'artéfacts"
+msgstr "Déplacement d'artifacts"
 
 msgid "Move of artifacts successfully enabled in tracker."
-msgstr "Le déplacement des artéfacts a été activé avec succès."
+msgstr "Le déplacement des artifacts a été activé avec succès."
 
 msgid "Move of artifacts successfully forbidden in tracker."
-msgstr "Le déplacement des artéfacts a été interdit avec succès."
+msgstr "Le déplacement des artifacts a été interdit avec succès."
 
 msgid "Move this artifact"
-msgstr "Déplacer l'artéfact"
+msgstr "Déplacer l'artifact"
 
 msgid "Multi Select Box"
 msgstr "Liste à choix multiple"
@@ -2168,10 +2168,10 @@ msgid ""
 msgstr ""
 "Plusieurs utilisateurs correspondent à votre adresse email. Votre "
 "utilisateur doit posséder une adresse mail unique pour permettre l'édition "
-"d'artéfact par mail."
+"d'artifact par mail."
 
 msgid "My Artifacts"
-msgstr "Mes Artéfacts"
+msgstr "Mes Artifacts"
 
 msgid "My notifications"
 msgstr "Mes notifications"
@@ -2193,7 +2193,7 @@ msgid "New %s"
 msgstr "Ajouter un(e) %s"
 
 msgid "New artifact links interface"
-msgstr "Nouvelle interface de liens entre artéfacts"
+msgstr "Nouvelle interface de liens entre artifacts"
 
 msgid "New tracker"
 msgstr "Nouvel outil de suivi"
@@ -2208,17 +2208,17 @@ msgid "No activity yet"
 msgstr "Pas encore d'activité"
 
 msgid "No artifact links"
-msgstr "Aucun lien entre artéfacts"
+msgstr "Aucun lien entre artifacts"
 
 msgid "No artifacts have been selected"
-msgstr "Aucun artéfact sélectionné"
+msgstr "Aucun artifact sélectionné"
 
 msgid "No canned responses set up yet for this tracker"
 msgstr "Aucune réponse type définie pour cet outil de suivi"
 
 #, php-format
 msgid "No changes for artifact %1$s"
-msgstr "Aucun changement pour l'artéfact %1$s"
+msgstr "Aucun changement pour l'artifact %1$s"
 
 msgid "No comment"
 msgstr "Aucun commentaire"
@@ -2231,7 +2231,7 @@ msgstr "Aucun élément sélectionné."
 
 msgid "No fields in the artifact can be moved in the destination tracker."
 msgstr ""
-"Aucun champ de l'artéfact ne peut être déplacé dans l'outil de suivi de "
+"Aucun champ de l'artifact ne peut être déplacé dans l'outil de suivi de "
 "destination."
 
 msgid "No logs yet"
@@ -2329,28 +2329,28 @@ msgid "Notified people"
 msgstr "Personnes notifiées"
 
 msgid "Notify closed artifacts"
-msgstr "Notifier les artéfacts fermés"
+msgstr "Notifier les artifacts fermés"
 
 msgid ""
 "Notify me on all update of artifacts I touch (assignee, submitter, cc, "
 "commentator, change of value, ...)."
 msgstr ""
-"Me notifier pour toutes les mises à jour d'artéfacts où je suis impliqué "
+"Me notifier pour toutes les mises à jour d'artifacts où je suis impliqué "
 "(assigné, créé, cc, commentaire)."
 
 msgid ""
 "Notify me on all updates I do on artifacts but not when other users further "
 "change artifact, unless I'm creator or assignee."
 msgstr ""
-"Me notifier pour toutes mes propres mises à jour d'artéfacts. Ne pas me "
-"notifier lorsque d'autres utilisateurs mettent à jour les artéfacts, sauf si "
+"Me notifier pour toutes mes propres mises à jour d'artifacts. Ne pas me "
+"notifier lorsque d'autres utilisateurs mettent à jour les artifacts, sauf si "
 "je suis le créateur ou assigné."
 
 msgid ""
 "Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, "
 "comment)"
 msgstr ""
-"Me notifier pour toutes les mises à jour d'artéfact où je suis impliqué "
+"Me notifier pour toutes les mises à jour d'artifact où je suis impliqué "
 "(assigné, créé, cc, commentaire)"
 
 msgid "Notify me on every change"
@@ -2360,25 +2360,25 @@ msgid "Notify me on status change"
 msgstr "Me notifier à chaque changement d'état"
 
 msgid "Notify me when artifacts are created"
-msgstr "Me notifier lors de la création d'un nouvel artéfact"
+msgstr "Me notifier lors de la création d'un nouvel artifact"
 
 msgid ""
 "Notify me when other users change an artifact I touched (assignee, "
 "submitter, cc, commentator, change of value, ...)."
 msgstr ""
-"Me notifier quand un autre utilisateur change un artéfact où je suis "
+"Me notifier quand un autre utilisateur change un artifact où je suis "
 "impliqué (assigné, cc, commentaire, changement de valeur)."
 
 msgid ""
 "Notify me when other users change artifacts I created or I'm assigned to "
 "(and all fields that can trigger notifications)."
 msgstr ""
-"Me notifier quand d'autres utilisateurs changent des artéfacts que j'ai créé "
+"Me notifier quand d'autres utilisateurs changent des artifacts que j'ai créé "
 "ou auxquels je suis assigné (et tous les champs qui déclenchent des "
 "notifications)."
 
 msgid "Number of open artifacts"
-msgstr "Nombre d'artéfacts ouverts"
+msgstr "Nombre d'artifacts ouverts"
 
 msgid "OK, got it!"
 msgstr "OK, vu!"
@@ -2403,14 +2403,14 @@ msgid ""
 "One will be considered as a contributor/assignee of this artifact if her "
 "name appears in the field %1$s."
 msgstr ""
-"Un utilisateur sera considéré comme contributeur de l'artéfact si la valeur "
+"Un utilisateur sera considéré comme contributeur de l'artifact si la valeur "
 "du champ %1$s est valuée avec son nom."
 
 msgid ""
 "Only artifacts linked with the type \"Child\" will be taken into account in "
 "the computation of the progress."
 msgstr ""
-"Seuls les artéfacts liés avec le type \"Enfant\" seront pris en compte dans "
+"Seuls les artifacts liés avec le type \"Enfant\" seront pris en compte dans "
 "le calcul de la progression."
 
 msgid ""
@@ -2425,7 +2425,7 @@ msgid ""
 "want to create artifacts by email."
 msgstr ""
 "Seuls les champs définis dans la sémantique titre et description peuvent "
-"être requis afin de permettre la création d'artéfacts par mail."
+"être requis afin de permettre la création d'artifacts par mail."
 
 msgid ""
 "Only formatting have been changed, you should switch to markup to see the "
@@ -2492,7 +2492,7 @@ msgid ""
 "Override link type \"%2$s\" to artifact #%1$s with type \"%3$s\" returned by "
 "another service"
 msgstr ""
-"La nature \"%2$s\" du lien vers l'artéfact #%1$s a été remplacée par "
+"La nature \"%2$s\" du lien vers l'artifact #%1$s a été remplacée par "
 "\"%3$s\" par un autre service"
 
 msgid "Paragraph, long text field"
@@ -2502,7 +2502,7 @@ msgid "Parent"
 msgstr "Parent"
 
 msgid "Parent artifact:"
-msgstr "Artéfact parent :"
+msgstr "Artifact parent :"
 
 msgid "Paste the patch here (text only)"
 msgstr "Coller le code du correctif ici (texte uniquement)"
@@ -2517,7 +2517,7 @@ msgid "Permissions"
 msgstr "Permissions"
 
 msgid "Permissions on artifact"
-msgstr "Permissions sur un artéfact"
+msgstr "Permissions sur un artifact"
 
 msgid "Personal report"
 msgid_plural "Personal reports"
@@ -2526,7 +2526,7 @@ msgstr[1] "Rapports personnels"
 
 msgid "Pick artifacts to be linked from your recently viewed items:"
 msgstr ""
-"Sélectionnez les artéfacts à lier parmis ceux que vous avez visités "
+"Sélectionnez les artifacts à lier parmi ceux que vous avez visités "
 "récemment&nbsp;:"
 
 msgid ""
@@ -2534,7 +2534,7 @@ msgid ""
 "field</a> to your tracker first."
 msgstr ""
 "Veuillez d'abord <a href=\"{{ tracker_fields_admin_url }}\">ajouter un champ "
-"de lien d'artéfacts</a> à votre outil de suivi."
+"de lien d'artifacts</a> à votre outil de suivi."
 
 msgid "Please avoid spaces and punctuation in short names"
 msgstr "Veuillez éviter les espaces et les ponctuations dans le nom court"
@@ -2609,7 +2609,7 @@ msgid ""
 "link field in tracker %s."
 msgstr ""
 "La sémantique de progression n'est pas correctement configurée : Impossible "
-"de trouver le champ de liens d'artéfacts dans le tracker %s."
+"de trouver le champ de liens d'artifacts dans le tracker %s."
 
 msgid ""
 "Progress semantic is not properly configured: total effort and remaining "
@@ -2684,23 +2684,23 @@ msgid ""
 "Ready to import %1$s artifact(s): %2$s new artifact(s), %3$s existing "
 "artifact(s)"
 msgstr ""
-"Prêt à importer %1$s artéfact(s)&nbsp;: %2$s artéfact(s) nouveau(x) , %3$s "
-"artéfact(s) existant(s)"
+"Prêt à importer %1$s artifact(s)&nbsp;: %2$s artifact(s) nouveau(x) , %3$s "
+"artifact(s) existant(s)"
 
 msgid "Receive emails:"
 msgstr "Recevoir du courriel :"
 
 msgid "Receive notifications for this artifact"
-msgstr "Recevoir les notifications de cet artéfact"
+msgstr "Recevoir les notifications de cet artifact"
 
 msgid "Recent artifacts"
-msgstr "Artéfacts récents"
+msgstr "Artifacts récents"
 
 msgid "Referenced by {{ artifact_xref }}"
 msgstr "Référencé par {{ artifact_xref }}"
 
 msgid "References list is empty"
-msgstr "Cet artéfact n'est pas référencé, et n'est pas source de références"
+msgstr "Cet artifact n'est pas référencé, et n'est pas source de références"
 
 msgid "Referencing {{ artifact_xref }}"
 msgstr "Référençant {{ artifact_xref }}"
@@ -2748,10 +2748,10 @@ msgid "Renderer name is mandatory."
 msgstr "Le nom est obligatoire."
 
 msgid "Reply artifact by email"
-msgstr "Répondre à un artéfact par courriel"
+msgstr "Répondre à un artifact par courriel"
 
 msgid "Reply to artifact by mail is possible"
-msgstr "Répondre à un artéfact par courriel est possible"
+msgstr "Répondre à un artifact par courriel est possible"
 
 msgid "Report"
 msgstr "Rapport"
@@ -2793,13 +2793,13 @@ msgstr "Restaurer"
 
 msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
-"Restreindre l'accès à cet artéfact pour les groupes d'utilisateurs suivants :"
+"Restreindre l'accès à cet artifact pour les groupes d'utilisateurs suivants :"
 
 msgid "Return type"
 msgstr "Retour"
 
 msgid "Reverse artifact links"
-msgstr "Artéfacts qui référencent cet artéfact"
+msgstr "Artifacts qui référencent cet artifact"
 
 msgid "Reverse label"
 msgstr "Label inverse"
@@ -2862,7 +2862,7 @@ msgid "Search"
 msgstr "Rechercher"
 
 msgid "Search artifacts"
-msgstr "Rechercher des artéfacts"
+msgstr "Rechercher des artifacts"
 
 msgid ""
 "See the {{ tracker_name_from_which_we_imply_the_semantic }} tracker "
@@ -2884,7 +2884,7 @@ msgstr ""
 "entre ces champs."
 
 msgid "Select artifacts to link to&nbsp;"
-msgstr "Sélectionner les artéfacts à lier à&nbsp;"
+msgstr "Sélectionner les artifacts à lier à&nbsp;"
 
 msgid "Select default value"
 msgstr "Sélectionner la valeur par défaut"
@@ -2941,7 +2941,7 @@ msgid ""
 "defined."
 msgstr ""
 "Les sémantiques titre et description permettant d'utiliser la création des "
-"artéfacts par mail ne sont pas définies."
+"artifacts par mail ne sont pas définies."
 
 msgid "Semantic title and/or description are not configured"
 msgstr "La sémantique titre et/ou description ne sont pas configurées"
@@ -2962,7 +2962,7 @@ msgid "Send an email to"
 msgstr "Envoyer un email à"
 
 msgid "Send notifications to people monitoring these artifacts"
-msgstr "Envoyer les notifications aux personnes suivant ces artéfacts"
+msgstr "Envoyer les notifications aux personnes suivant ces artifacts"
 
 msgid "Send notifications to selected people"
 msgstr "Envoyer des notifications aux personnes sélectionnées"
@@ -3091,14 +3091,14 @@ msgstr ""
 msgid ""
 "Status semantic allows to define how an artifact is considered to be open."
 msgstr ""
-"La sémantique État permet de définir comment un artéfact est considéré "
+"La sémantique État permet de définir comment un artifact est considéré "
 "ouvert."
 
 msgid "Std deviation"
 msgstr "Écart type"
 
 msgid "Stop receiving notifications for this artifact"
-msgstr "Ne plus recevoir les notifications de cet artéfact"
+msgstr "Ne plus recevoir les notifications de cet artifact"
 
 msgid "String"
 msgstr "Chaîne de caractères"
@@ -3129,7 +3129,7 @@ msgid "Submit permissions"
 msgstr "Valider les permissions"
 
 msgid "Submitted By"
-msgstr "Auteur de l'artéfact"
+msgstr "Auteur de l'artifact"
 
 msgid "Submitted On"
 msgstr "Date de soumission"
@@ -3223,7 +3223,7 @@ msgstr ""
 
 #, php-format
 msgid "The artifact #%d is not located in an active project."
-msgstr "L'artéfact #%d ne se trouve pas dans un projet actif."
+msgstr "L'artifact #%d ne se trouve pas dans un projet actif."
 
 msgid "The artifact cannot be created because there are several errors:"
 msgstr "L'artifact n'a pu être créé à cause des erreurs suivantes :"
@@ -3232,51 +3232,51 @@ msgid ""
 "The artifact doesn't have an artifact link field or you have not the "
 "permission to modify it, please reconfigure your tracker"
 msgstr ""
-"L'artéfact n'a pas de champ de type lien vers artéfact ou alors vous n'avez "
+"L'artifact n'a pas de champ de type lien vers artifact ou alors vous n'avez "
 "pas la permission de le modifier, merci de reconfigurer l'outil de suivi"
 
 #, php-format
 msgid "The artifact has too many children (limit is set to %1$s)."
-msgstr "L'artéfact a trop d'enfants (la limite est de %1$s)."
+msgstr "L'artifact a trop d'enfants (la limite est de %1$s)."
 
 msgid "The artifact is not linked to any changeset."
 msgstr "L'artifact n'est relié à aucun changeset."
 
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
-msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé"
+msgstr "Le lien entre artifacts typé \"%s\" ne peut être désactivé"
 
 #, php-format
 msgid ""
 "The artifact link type \"%s\" cannot be used to link artifact #%s manually"
 msgstr ""
-"Le lien entre artéfacts typé \"%s\" ne peut pas être utilisé pour "
-"manuellement lier l'artéfact #%s"
+"Le lien entre artifacts typé \"%s\" ne peut pas être utilisé pour "
+"manuellement lier l'artifact #%s"
 
 #, php-format
 msgid ""
 "The artifact link type \"%s\" is disabled and cannot be used to link "
 "artifact #%s"
 msgstr ""
-"Le lien entre artéfacts typé \"%s\" est désactivé et ne peut être utilisé "
-"pour lier l'artéfact #%s"
+"Le lien entre artifacts typé \"%s\" est désactivé et ne peut être utilisé "
+"pour lier l'artifact #%s"
 
 #, php-format
 msgid "The artifact link type \"%s\" is now disabled"
-msgstr "Le lien entre artéfacts typé \"%s\" a été désactivé"
+msgstr "Le lien entre artifacts typé \"%s\" a été désactivé"
 
 #, php-format
 msgid "The artifact link type \"%s\" is now enabled"
-msgstr "Le lien entre artéfacts typé \"%s\" a été activé"
+msgstr "Le lien entre artifacts typé \"%s\" a été activé"
 
 msgid "The artifact link type does not exist"
-msgstr "Le lien entre artéfacts typé n'existe pas"
+msgstr "Le lien entre artifacts typé n'existe pas"
 
 msgid "The artifact was not created"
-msgstr "L'artéfact n'a pas été créé"
+msgstr "L'artifact n'a pas été créé"
 
 msgid "The artifact was not updated"
-msgstr "L'artéfact n'a pas été mis à jour"
+msgstr "L'artifact n'a pas été mis à jour"
 
 #, php-format
 msgid "The artifact will be linked to %1$s"
@@ -3285,24 +3285,24 @@ msgstr "L'artifact sera lié à %1$s"
 #, php-format
 msgid "The artifacts of this tracker do not have any %s description %s yet."
 msgstr ""
-"Les artéfacts de cet outil de suivi n'ont pas de %s description %s définie."
+"Les artifacts de cet outil de suivi n'ont pas de %s description %s définie."
 
 #, php-format
 msgid "The artifacts of this tracker do not have any %s title %s yet."
-msgstr "Les artéfacts de cet outil de suivi n'ont pas de %s titre %s défini."
+msgstr "Les artifacts de cet outil de suivi n'ont pas de %s titre %s défini."
 
 msgid ""
 "The artifacts of this tracker does not have any contributor/assignee yet."
 msgstr ""
-"Les artéfacts de cet outil de suivi n'ont pas encore de contributeur/assigné."
+"Les artifacts de cet outil de suivi n'ont pas encore de contributeur/assigné."
 
 #, php-format
 msgid "The artifacts of this tracker will be described by the field %s."
-msgstr "Les artéfacts de cet outil de suivi seront décrits par le champ %s."
+msgstr "Les artifacts de cet outil de suivi seront décrits par le champ %s."
 
 #, php-format
 msgid "The artifacts of this tracker will be summarized by the field %s."
-msgstr "Les artéfacts de cet outil de suivi seront résumés par le champ %s."
+msgstr "Les artifacts de cet outil de suivi seront résumés par le champ %s."
 
 msgid "The changeset cannot be stored."
 msgstr "Le changeset n'a pas pu être sauvegardé."
@@ -3318,7 +3318,7 @@ msgid ""
 "work needed to complete the artifact."
 msgstr ""
 "Le contributeur(s)/assigné(s) est la personne qui est responsable du travail "
-"nécessaire à la complétion de l'artéfact."
+"nécessaire à la complétion de l'artifact."
 
 #, php-format
 msgid "The contributor/assignee is now: %1$s"
@@ -3380,7 +3380,7 @@ msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ date '%s' ne peut pas être comparé à la chaîne '%s'."
 
 msgid "The description is a free-text account of the artifact."
-msgstr "La description est un résumé ou un texte libre à propos de l'artéfact."
+msgstr "La description est un résumé ou un texte libre à propos de l'artifact."
 
 msgid "The email has been copied to clipboard"
 msgstr "L'adresse a été copiée dans votre presse-papier"
@@ -3448,23 +3448,23 @@ msgstr ""
 msgid "The field is automatically set to artifact submission date"
 msgstr ""
 "Le champ est automatiquement renseigné avec la date de soumission de "
-"l'artéfact"
+"l'artifact"
 
 msgid "The field is automatically set to artifact submission user"
 msgstr ""
 "Le champ est automatiquement renseigné avec l'utilisateur qui a soumis "
-"l'artéfact"
+"l'artifact"
 
 msgid "The field is automatically set to last artifact update date"
 msgstr ""
 "Le champ est automatiquement renseigné avec la date de dernière modification "
-"de l'artéfact"
+"de l'artifact"
 
 msgid ""
 "The field is automatically set to the last person who modified the artifact"
 msgstr ""
 "Le champ est automatiquement renseigné avec l'utilisateur qui a mis à jour "
-"l'artéfact en dernier"
+"l'artifact en dernier"
 
 msgid "The field you submitted is not a list field"
 msgstr "Le champ soumis n'est pas un champ de type liste"
@@ -3578,7 +3578,7 @@ msgstr "Le champ flottant '%s' ne peut pas être comparé à la chaîne '%s'."
 
 #, php-format
 msgid "The following artifacts were not updated (%1$s)"
-msgstr "Les artéfacts suivant n'ont pas été mis à jour (%1$s)"
+msgstr "Les artifacts suivant n'ont pas été mis à jour (%1$s)"
 
 msgid "The following information will be displayed in the tooltip:"
 msgstr "Les informations suivantes seront affichées dans l'infobulle :"
@@ -3662,7 +3662,7 @@ msgstr "La dernière personne à avoir modifié l'artifact"
 msgid ""
 "The limit of artifacts deletions has been reached for the previous 24 hours."
 msgstr ""
-"La limite de suppressions d'artéfacts a été atteinte pour les dernières 24 "
+"La limite de suppressions d'artifacts a été atteinte pour les dernières 24 "
 "heures."
 
 msgid "The limit value is incorrect."
@@ -3712,7 +3712,7 @@ msgid "The notification could not be saved."
 msgstr "La notification n’a pas pu être enregistrée."
 
 msgid "The priority has been"
-msgstr "La priorité de cet artéfact a été"
+msgstr "La priorité de cet artifact a été"
 
 #, php-format
 msgid ""
@@ -3720,7 +3720,7 @@ msgid ""
 "dividing the current value of the \"%s\" field by the current value of the "
 "\"%s\" field."
 msgstr ""
-"La progression des artéfacts est basée sur l'effort et sera calculée en "
+"La progression des artifacts est basée sur l'effort et sera calculée en "
 "divisant la valeur actuelle du champ \"%s\" par la valeur actuelle du champ "
 "\"%s\"."
 
@@ -3728,8 +3728,8 @@ msgid ""
 "The progress of artifacts will be based on the ratio of nb open/nb total of "
 "children artifacts."
 msgstr ""
-"La progression des artéfacts sera basée sur le ratio nb ouvert/nb total "
-"d'artéfacts enfants."
+"La progression des artifacts sera basée sur le ratio nb ouvert/nb total "
+"d'artifacts enfants."
 
 msgid ""
 "The progress will be computed by dividing the total number of direct "
@@ -3782,7 +3782,7 @@ msgstr ""
 "temps."
 
 msgid "The selected values will define the artifact as done:"
-msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
+msgstr "Les valeurs sélectionnées définissent l'artifact comme fini :"
 
 msgid ""
 "The semantic %stimeframe%s and %stitle%s are requested to activate this "
@@ -3856,21 +3856,21 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
 
 #, php-format
 msgid "The timeframe semantic summarizes the duration of artifact in %s."
-msgstr "La sémantique plage de temps résume la durée de l'artéfact dans %s."
+msgstr "La sémantique plage de temps résume la durée de l'artifact dans %s."
 
 msgid ""
 "The title summarizes an artifact and will be used in various places: "
 "widgets, artifact links, email notifications, ..."
 msgstr ""
-"Le titre décrit un artéfact et sera utilisé dans les flux RSS ou dans le "
-"widget Mes Artéfacts."
+"Le titre décrit un artifact et sera utilisé dans les flux RSS ou dans le "
+"widget Mes Artifacts."
 
 msgid ""
 "The title summarizes an artifact and will be used in various places: "
 "widgets, artifact links, email notifications, …"
 msgstr ""
-"Le titre décrit un artéfact et sera utilisé dans de nombreux endrits : les "
-"widgets, les liens d'artéfacts, les notifications emails …"
+"Le titre décrit un artifact et sera utilisé dans de nombreux endroits : les "
+"widgets, les liens d'artifacts, les notifications par email …"
 
 msgid ""
 "The tracker %s is implicated in cross-tracker triggers. You will not be able "
@@ -3901,12 +3901,12 @@ msgid ""
 "The tracker does not have an artifact link field, nothing can be displayed "
 "here."
 msgstr ""
-"L'outil de suivi n'a pas de champ liens entre artéfacts, nous ne pouvons "
+"L'outil de suivi n'a pas de champ liens entre artifacts, nous ne pouvons "
 "rien afficher ici."
 
 msgid ""
 "The tracker does not seem to have the create/reply by mail feature enabled."
-msgstr "Le tracker ne semble pas permettre l'édition d'artéfact par mail."
+msgstr "Le tracker ne semble pas permettre l'édition d'artifact par mail."
 
 msgid ""
 "The tracker doesn't have a \"capacity\" Integer or Computed field or you "
@@ -3972,7 +3972,7 @@ msgstr ""
 
 msgid "The triggers will be applied on each creation/update of artifacts."
 msgstr ""
-"Ces déclencheurs s'appliqueront à chaque création/ modification d'artéfacts."
+"Ces déclencheurs s'appliqueront à chaque création/ modification d'artifacts."
 
 msgid "The two fields must be different"
 msgstr "Les deux champs doivent être différents"
@@ -3980,7 +3980,7 @@ msgstr "Les deux champs doivent être différents"
 #, php-format
 msgid "The type \"%s\" of the link to artifact #%s has been set to \"no type\""
 msgstr ""
-"Le type de lien \"%s\" vers l'artéfact #%s a été défini à \"pas de type\""
+"Le type de lien \"%s\" vers l'artifact #%s a été défini à \"pas de type\""
 
 #, php-format
 msgid "The type %1$s has been successfully created."
@@ -4023,7 +4023,7 @@ msgid ""
 "this artifact and %s is not parent/child."
 msgstr ""
 "Il y'a une hiérarchie définie entre \"%s\" et \"%s\", mais le lien entre cet "
-"artéfact et %s n'est pas défini comme parent/enfant."
+"artifact et %s n'est pas défini comme parent/enfant."
 
 #, php-format
 msgid "There is no field with ID:%1$s"
@@ -4050,7 +4050,7 @@ msgstr ""
 "transition."
 
 msgid "There no artifact links types"
-msgstr "Il n'y a aucune nature de liens entre artéfacts"
+msgstr "Il n'y a aucune nature de liens entre artifacts"
 
 msgid "There should not be duplicate field_ids for 'frozen_fields' actions."
 msgstr ""
@@ -4086,20 +4086,20 @@ msgstr ""
 
 #, php-format
 msgid "This artifact (of %2$s) will be linked to %1$s"
-msgstr "Cet artéfact (de %2$s) sera lié à %1$s"
+msgstr "Cet artifact (de %2$s) sera lié à %1$s"
 
 msgid "This artifact cannot be duplicated."
-msgstr "Cet artéfact ne peut pas être dupliqué."
+msgstr "Cet artifact ne peut pas être dupliqué."
 
 msgid "This artifact does not exist."
-msgstr "Cet artéfact n'existe pas."
+msgstr "Cet artifact n'existe pas."
 
 #, php-format
 msgid ""
 "This artifact doesn't respect tracker's rules. It will not be imported : "
 "CSV's line %s."
 msgstr ""
-"Cet artéfact ne respecte pas les règles de l'outil de suivi. Il ne sera pas "
+"Cet artifact ne respecte pas les règles de l'outil de suivi. Il ne sera pas "
 "importé: ligne %s du fichier CSV."
 
 #, php-format
@@ -4111,7 +4111,7 @@ msgstr ""
 msgid ""
 "This field is the title of the artifact. It is not allowed to masschange it."
 msgstr ""
-"Ce champ est le titre de l'artéfact. Il est interdit de le mettre "
+"Ce champ est le titre de l'artifact. Il est interdit de le mettre "
 "massivement à jour."
 
 msgid "This field is used by the following trackers:"
@@ -4200,7 +4200,7 @@ msgstr ""
 "Liens"
 
 msgid "Those rules will be applied on each creation/update of artifacts."
-msgstr "Ces règles s'appliqueront à chaque création/ modification d'artéfacts."
+msgstr "Ces règles s'appliqueront à chaque création/ modification d'artifacts."
 
 msgid "Time"
 msgstr "Date"
@@ -4225,7 +4225,7 @@ msgstr ""
 #, php-format
 msgid "Timeframes will be inherited from %s linking artifacts of this tracker."
 msgstr ""
-"Les plages de temps seront héritées des %s liant les artéfacts de cet outil "
+"Les plages de temps seront héritées des %s liant les artifacts de cet outil "
 "de suivi."
 
 msgid "Title"
@@ -4250,7 +4250,7 @@ msgid ""
 "Tooltips are shown everywhere in Tuleap when an artifact is hovered, giving "
 "more information coming from the artifact's data."
 msgstr ""
-"Les infobulles sont affichées partout dans Tuleap quand un artéfact est "
+"Les infobulles sont affichées partout dans Tuleap quand un artifact est "
 "survolé, donnant plus d'information à propos des données de celui-ci."
 
 msgid "Total effort"
@@ -4260,7 +4260,7 @@ msgid "Total effort cannot be negative."
 msgstr "L'effort total ne peux pas être négatif."
 
 msgid "Total number of artifacts"
-msgstr "Nombre total d'artéfacts"
+msgstr "Nombre total d'artifacts"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
@@ -4299,7 +4299,7 @@ msgid ""
 "Tracker %d has too many artifacts (%d) while limit was set to %d. Please "
 "refine your query"
 msgstr ""
-"L'outil de suivi %d contient trop d'artefacts (%d) alors que la limite a été "
+"L'outil de suivi %d contient trop d'artifacts (%d) alors que la limite a été "
 "fixée à %d. Merci de raffiner votre requête"
 
 #, php-format
@@ -4347,7 +4347,7 @@ msgstr "Tracker (lecture seule)"
 msgid ""
 "Tracker configuration permission and artifacts permissions are not listed."
 msgstr ""
-"Les permissions des configurations de tracker et celles des artéfacts ne "
+"Les permissions des configurations de tracker et celles des artifacts ne "
 "sont pas listées."
 
 msgid "Tracker deleted"
@@ -4451,7 +4451,7 @@ msgstr "Type '%s' inexistant. Ce champ sera ignoré. (Nom : '%s', ID: '%s')."
 
 #, php-format
 msgid "Type is missing for artifact #%1$s."
-msgstr "L'artéfact #%1$s n'est associé à aucune nature."
+msgstr "L'artifact #%1$s n'est associé à aucune nature."
 
 msgid "URL"
 msgstr "URL"
@@ -4461,7 +4461,7 @@ msgid ""
 msgstr "Impossible de changer le nom du champ car il est utilisé ailleurs"
 
 msgid "Unable to create artifact"
-msgstr "Impossible de créer l'artéfact"
+msgstr "Impossible de créer l'artifact"
 
 #, php-format
 msgid "Unable to create the requested type: %1$s"
@@ -4483,8 +4483,8 @@ msgid ""
 "Unable to retrieve the time period: Too many artifacts from tracker %s are "
 "linking artifact #%d. There should only be one."
 msgstr ""
-"Impossible de récupérer la période : Trop d'artéfacts provenant de l'outil "
-"de suivi %s lient l'artéfact #%d. Il ne devrait y en avoir qu'un seul."
+"Impossible de récupérer la période : Trop d'artifacts provenant de l'outil "
+"de suivi %s lient l'artifact #%d. Il ne devrait y en avoir qu'un seul."
 
 msgid "Unable to save the contributor/assignee"
 msgstr "Impossible de sauvegarder la sémantique contributeur"
@@ -4500,7 +4500,7 @@ msgstr "Impossible de sauvegarder le titre"
 
 #, php-format
 msgid "Unable to update artifact %1$s"
-msgstr "Impossible de mettre à jour l'artéfact %1$s"
+msgstr "Impossible de mettre à jour l'artifact %1$s"
 
 #, php-format
 msgid "Unable to update calendar events configuration: %s"
@@ -4508,7 +4508,7 @@ msgstr ""
 "Impossible de mettre à jour la configuration des événement de calendrier : %s"
 
 msgid "Unable to update the artifact"
-msgstr "Impossible de mettre à jour l'artéfact"
+msgstr "Impossible de mettre à jour l'artifact"
 
 msgid "Unchanged"
 msgstr "Inchangé"
@@ -4542,7 +4542,7 @@ msgid "Unsubscribe a user"
 msgstr "Désabonner un utilisateur"
 
 msgid "Unsubscribe me from these artifacts' notifications"
-msgstr "Me désinscrire des notifications de ces artéfacts"
+msgstr "Me désinscrire des notifications de ces artifacts"
 
 msgid "Unsubscribers"
 msgstr "Désabonnés"
@@ -4665,7 +4665,7 @@ msgid "Values added by users"
 msgstr "Valeurs ajoutées par des utilisateurs"
 
 msgid "Values that make an artifact open"
-msgstr "Valeurs qui font qu'un artéfact est ouvert"
+msgstr "Valeurs qui font qu'un artifact est ouvert"
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."
@@ -4677,7 +4677,7 @@ msgid ""
 "Warning: There is no way to restore the artifact. This operation should be "
 "an exception."
 msgstr ""
-"Attention: Il n'y a aucun moyen de restaurer l'artéfact. Cette opération "
+"Attention: Il n'y a aucun moyen de restaurer l'artifact. Cette opération "
 "doit rester exceptionnelle."
 
 msgid "Warning: concurrent edit"
@@ -4806,7 +4806,7 @@ msgstr ""
 
 #, php-format
 msgid "You are currently copying the artifact %1$s."
-msgstr "Vous copiez actuellement l'artéfact %1$s."
+msgstr "Vous copiez actuellement l'artifact %1$s."
 
 msgid "You are not allowed to access this field."
 msgstr "Vous n'avez pas la permission d'accéder à ce champ."
@@ -4816,30 +4816,30 @@ msgid "You are not allowed to update the field %1$s."
 msgstr "Vous n'êtes pas autorisé à modifier le champ %1$s."
 
 msgid "You are not allowed to update this artifact"
-msgstr "Vous n'êtes pas autorisé à modifier cet artéfact"
+msgstr "Vous n'êtes pas autorisé à modifier cet artifact"
 
 msgid "You are not logged in."
 msgstr "Vous n'êtes pas connecté."
 
 msgid "You are now receiving notifications for this artifact"
-msgstr "Vous avez réactivé les notifications pour cet artéfact"
+msgstr "Vous avez réactivé les notifications pour cet artifact"
 
 #, php-format
 msgid "You are unsubscribed from notifications of artifacts %1$s"
-msgstr "Vous êtes desinscrit des notifications des artéfacts %1$s"
+msgstr "Vous êtes desinscrit des notifications des artifacts %1$s"
 
 #, php-format
 msgid "You can access the artifact <a href=\"%1$s\">here</a>."
-msgstr "Vous pouvez accéder à l'artéfact <a href=\"%1$s\">ici</a>."
+msgstr "Vous pouvez accéder à l'artifact <a href=\"%1$s\">ici</a>."
 
 #, php-format
 msgid "You can access the artifact here: %1$s"
-msgstr "Vous pouvez accéder à l'artéfact ici: %1$s"
+msgstr "Vous pouvez accéder à l'artifact ici: %1$s"
 
 msgid ""
 "You can add an artifact link field %sin your tracker fields administration%s."
 msgstr ""
-"Vous pouvez ajouter un champ liens entre artéfacts %sdans l'administration "
+"Vous pouvez ajouter un champ liens entre artifacts %sdans l'administration "
 "des champs de votre outil de suivi%s."
 
 #, php-format
@@ -4847,7 +4847,7 @@ msgid ""
 "You can also reply to this artifact <a href=\"#\" class=\"email-tracker "
 "email-tracker-reply\" data-email=\"%1$s\"><span>by email</span></a>."
 msgstr ""
-"Vous pouvez également répondre à cet artéfact <a href=\"#\" class=\"email-"
+"Vous pouvez également répondre à cet artifact <a href=\"#\" class=\"email-"
 "tracker email-tracker-reply\" data-email=\"%1$s\"><span>par courriel</span></"
 "a>."
 
@@ -4861,7 +4861,7 @@ msgid ""
 "creation and updates."
 msgstr ""
 "Vous pouvez définir plusieurs webhooks qui seront envoyés après chaque "
-"création et édition d'artéfact."
+"création et édition d'artifact."
 
 msgid "You can retrieve the imported data here:"
 msgstr "Vous pouvez retrouver les données importées ici :"
@@ -4882,14 +4882,14 @@ msgid ""
 "artifact:"
 msgstr ""
 "Vous pouvez envoyer un courriel à l'adresse suivante afin de créer un "
-"artéfact :"
+"artifact :"
 
 msgid ""
 "You can send an email to the following email address in order to reply to "
 "this artifact:"
 msgstr ""
 "Vous pouvez envoyer un courriel à l'adresse suivante afin de répondre à cet "
-"artéfact :"
+"artifact :"
 
 msgid ""
 "You can use variables to customize the sender field. The available variables "
@@ -4900,7 +4900,7 @@ msgstr ""
 "Vous pouvez utiliser des variables pour personnaliser le champ expéditeur. "
 "Les variables disponibles sont %%realname et %%username.\n"
 "    Celles-ci seront remplacées par le nom complet et le nom d'utilisateur "
-"de la personne qui a mis uà jour l'artéfact."
+"de la personne qui a mis à jour l'artifact."
 
 #, php-format
 msgid ""
@@ -4946,7 +4946,7 @@ msgid ""
 "You can't submit an artifact because you do not have the right to submit all "
 "required fields"
 msgstr ""
-"Vous ne pouvez pas soumettre d'artéfacts car vous devez avoir le droit de "
+"Vous ne pouvez pas soumettre d'artifacts car vous devez avoir le droit de "
 "soumettre tous les champs requis"
 
 msgid "You cannot access to this tracker"
@@ -5010,27 +5010,27 @@ msgstr ""
 "suivi héritent leurs propres sémantiques Plage de temps de celle-ci."
 
 msgid "You do not have the necessary right to edit this artifact."
-msgstr "Vous n'avez pas les droits nécessaires pour l'édition de cet artéfact."
+msgstr "Vous n'avez pas les droits nécessaires pour l'édition de cet artifact."
 
 #, php-format
 msgid "You do not have the right to submit '%s' field"
 msgstr "Vous n'avez pas le droit de soumettre le champs '%s'"
 
 msgid "You don't have any artifacts yet"
-msgstr "Vous n'avez pas encore d'artéfact"
+msgstr "Vous n'avez pas encore d'artifact"
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de consulter les groupes d'utilisateur."
 
 msgid "You don't have the permissions to view this artifact."
-msgstr "Vous n'avez pas les permissions pour visualiser cet artéfact."
+msgstr "Vous n'avez pas les permissions pour visualiser cet artifact."
 
 #, php-format
 msgid ""
 "You don't have the permissions to view this artifact. Given that you are "
 "anonymous, please try to <a href=\"%1$s\">login</a>."
 msgstr ""
-"Vous n'avez pas les permissions pour visualiser cet artéfact. Etant donné "
+"Vous n'avez pas les permissions pour visualiser cet artifact. Etant donné "
 "que vous êtes anonyme, essayez de vous <a href=\"%1$s\">connecter</a>."
 
 msgid "You don't have the permissions to view this tracker."
@@ -5048,7 +5048,7 @@ msgid ""
 "You have reached the limit of artifacts deletion for the next 24 hours. "
 "Please come back later."
 msgstr ""
-"Vous avez atteint la limite de suppression d'artéfacts pour les prochaines "
+"Vous avez atteint la limite de suppression d'artifacts pour les prochaines "
 "24 heures. Veuillez revenir plus tard."
 
 msgid ""
@@ -5112,10 +5112,10 @@ msgid ""
 "in an artifact."
 msgstr ""
 "Vous serez notifié pour tous les changements si vous écrivez un commentaire "
-"ou changez une valeur dans un artéfact."
+"ou changez une valeur dans un artifact."
 
 msgid "You will no-longer receive notifications for this artifact"
-msgstr "Vous êtes désinscrit des notifications de cet artéfact"
+msgstr "Vous êtes désinscrit des notifications de cet artifact"
 
 #, php-format
 msgid ""
@@ -5252,19 +5252,19 @@ msgid "fixed_in"
 msgstr "fixed_in"
 
 msgid "have access to all artifacts"
-msgstr "accès à tous les artéfacts"
+msgstr "accès à tous les artifacts"
 
 msgid "have access to artifacts assigned to group"
-msgstr "accès aux artéfacts confiés au groupe"
+msgstr "accès aux artifacts confiés au groupe"
 
 msgid "have access to artifacts assigned to or submitted by group"
-msgstr "accès aux artéfacts confiés au groupe ou soumis par le groupe"
+msgstr "accès aux artifacts confiés au groupe ou soumis par le groupe"
 
 msgid "have access to artifacts submitted by group"
-msgstr "accès aux artéfacts soumis par le groupe"
+msgstr "accès aux artifacts soumis par le groupe"
 
 msgid "have access to artifacts they submitted"
-msgstr "accès seulement aux artéfacts qu'ils ont soumis"
+msgstr "accès seulement aux artifacts qu'ils ont soumis"
 
 msgid "in"
 msgstr "dans"

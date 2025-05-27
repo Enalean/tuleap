@@ -347,7 +347,7 @@
                 <semantic type="title">
                     <shortname>title</shortname>
                     <label>Titre</label>
-                    <description>Définir le titre d'un artéfact</description>
+                    <description>Définir le titre d'un artifact</description>
                     <field REF="F699"/>
                 </semantic>
                 <semantic type="tooltip"/>
@@ -683,7 +683,7 @@
                 <semantic type="title">
                     <shortname>title</shortname>
                     <label>Titre</label>
-                    <description> Définir le titre d'un artéfact</description>
+                    <description> Définir le titre d'un artifact</description>
                     <field REF="F5119"/>
                 </semantic>
                 <semantic type="status">

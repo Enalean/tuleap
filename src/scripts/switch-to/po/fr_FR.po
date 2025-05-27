@@ -55,7 +55,7 @@ msgid "Recent items"
 msgstr "Éléments récents"
 
 msgid "Search in artifacts only"
-msgstr "Recherche dans les artéfacts uniquement"
+msgstr "Recherche dans les artifacts uniquement"
 
 msgid "Search results"
 msgstr "Résultats de recherche"

@@ -11,7 +11,7 @@ msgstr ""
 "%{ current_project_name } n'est actuellement pas lié avec un groupe GitLab"
 
 msgid "Allow artifact closure"
-msgstr "Autoriser la fermeture des artéfacts"
+msgstr "Autoriser la fermeture des artifacts"
 
 msgid ""
 "An error occurred while linking the selected group and synchronizing its "
@@ -60,7 +60,7 @@ msgid ""
 "If selected, artifacts of this project can be closed with GitLab commit "
 "messages from the selected repository."
 msgstr ""
-"Si choisi, les artéfacts de ce projet pourront être fermés à l'aide des "
+"Si choisi, les artifacts de ce projet pourront être fermés à l'aide des "
 "messages de commit de GitLab depuis le dépôt sélectionné."
 
 msgid ""

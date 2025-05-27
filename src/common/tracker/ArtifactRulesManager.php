@@ -28,6 +28,7 @@ require_once('ArtifactRuleFactory.php');
 * This is only a proxy to access the factory.
 * Maybe there is no need to have this intermediary?
 */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class ArtifactRulesManager
 {
     public function __construct()
@@ -68,7 +69,7 @@ class ArtifactRulesManager
         return $fact->deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value);
     }
 
-    public function _getArtifactRuleFactory()
+    public function _getArtifactRuleFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return ArtifactRuleFactory::instance();
     }
@@ -98,7 +99,7 @@ class ArtifactRulesManager
     }
 
     /**
-     * Check if all the selected values of a submitted artefact are coherent regarding the dependences
+     * Check if all the selected values of a submitted artifact are coherent regarding the dependencies
      *
      * @param int $artifact_type_id the artifact id to test
      * @param array $value_field_list the selected values to test for the artifact
@@ -211,7 +212,7 @@ class ArtifactRulesManager
      *
      * @access protected
      */
-    public function _getSelectedValuesForField($db_result, $field_id, $field_values)
+    public function _getSelectedValuesForField($db_result, $field_id, $field_values) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! is_array($field_values)) {
             $field_values = [$field_values];

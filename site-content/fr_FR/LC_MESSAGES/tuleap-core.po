@@ -1079,7 +1079,7 @@ msgstr "Données"
 
 msgid "Data (like artifacts or users) won't be included."
 msgstr ""
-"Les données (comme les artéfacts ou les utilisateurs) ne seront pas inclus."
+"Les données (comme les artifacts ou les utilisateurs) ne seront pas inclus."
 
 msgid "Date"
 msgstr "Date"

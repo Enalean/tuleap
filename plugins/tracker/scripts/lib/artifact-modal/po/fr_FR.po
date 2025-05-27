@@ -25,7 +25,7 @@ msgid "Add another file"
 msgstr "Ajouter un autre fichier"
 
 msgid "An error occurred while saving the artifact."
-msgstr "Une erreur s'est produite pendant la sauvegarde de cet artéfact."
+msgstr "Une erreur s'est produite pendant la sauvegarde de cet artifact."
 
 msgid "An image in a text field or in a new comment is being uploaded"
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "téléversement"
 
 msgid "Artifact is saving"
-msgstr "L'artéfact est en cours d'enregistrement"
+msgstr "L'artifact est en cours d'enregistrement"
 
 msgid "Auto-compute"
 msgstr "Calcul automatique"
@@ -71,13 +71,13 @@ msgid "Empty"
 msgstr "Aucun(e)"
 
 msgid "Error while creating the new artifact: %s"
-msgstr "Erreur pendant la création du nouvel artéfact : %s"
+msgstr "Erreur pendant la création du nouvel artifact : %s"
 
 msgid "Error while retrieving recently viewed artifacts: %s"
-msgstr "Erreur pendant la récupération des artéfacts vus récemment : %s"
+msgstr "Erreur pendant la récupération des artifacts vus récemment : %s"
 
 msgid "Error while retrieving the artifact to link: %s"
-msgstr "Erreur pendant la récupération de l'artéfact à lier : %s"
+msgstr "Erreur pendant la récupération de l'artifact à lier : %s"
 
 msgid "Error while retrieving the comments: %s"
 msgstr "Erreur pendant la récupération des commentaires : %s"
@@ -86,7 +86,7 @@ msgid "Error while retrieving the possible parents: %s"
 msgstr "Erreur pendant la récupération des parents possibles : %s"
 
 msgid "Error while searching for artifacts: %s"
-msgstr "Erreur pendant la recherche d'artéfacts : %s"
+msgstr "Erreur pendant la recherche d'artifacts : %s"
 
 msgid "Error while uploading %(file_name)s: %(error)s"
 msgstr "Erreur pendant le téléversement de %(file_name)s: %(error)s"
@@ -143,14 +143,14 @@ msgid "Preview"
 msgstr "Aperçu"
 
 msgid "References list is empty."
-msgstr "Cet artéfact n'est pas référencé, et n'est pas source de références."
+msgstr "Cet artifact n'est pas référencé, et n'est pas source de références."
 
 msgid "Reset"
 msgstr "Annuler"
 
 msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
-"Restreindre l'accès à cet artéfact pour les groupes d'utilisateurs suivants :"
+"Restreindre l'accès à cet artifact pour les groupes d'utilisateurs suivants :"
 
 msgid "Save changes"
 msgstr "Enregistrer les changements"
@@ -163,7 +163,7 @@ msgid ""
 "your modifications will be applied on top of previous changes. You need to "
 "confirm your action to submit your modification."
 msgstr ""
-"Quelqu'un a modifié l'artéfact pendant que vous l'éditiez. Merci de noter "
+"Quelqu'un a modifié l'artifact pendant que vous l'éditiez. Merci de noter "
 "que vos modification seront appliquées par dessus les autres changements. "
 "Vous devez confirmer pour soumettre vos modifications."
 
@@ -171,7 +171,7 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "The artifact will be linked to %s"
-msgstr "L'artéfact sera lié à %s"
+msgstr "L'artifact sera lié à %s"
 
 msgid "There was an error in the Markdown preview:"
 msgstr "Il y a eu une erreur dans l'aperçu Markdown :"
@@ -187,7 +187,7 @@ msgid "Type..."
 msgstr "Ecrivez..."
 
 msgid "Unable to retrieve the parent artifact: %s"
-msgstr "Impossible de retrouver l'artéfact parent : %s"
+msgstr "Impossible de retrouver l'artifact parent : %s"
 
 msgid "Unable to upload the file"
 msgstr "Impossible de téléverser le fichier"

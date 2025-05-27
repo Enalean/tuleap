@@ -32,7 +32,7 @@ class TransitionValidator
      * Checks params from_id and to_id.
      * Destination id must exist for the workflow field.
      * Source id must exist for the workflow field.
-     * If source is a new artefact (from_id = 0), it returns null value.
+     * If source is a new artifact (from_id = 0), it returns null value.
      *
      * @throws I18NRestException 400
      * @throws I18NRestException 404

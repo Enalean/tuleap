@@ -19,16 +19,16 @@ msgid "After %s and before %s"
 msgstr "Après le %S et avant le %s"
 
 msgid "Artifact ID"
-msgstr "Artéfact ID"
+msgstr "Artifact ID"
 
 msgid "Artifacts"
-msgstr "Artéfacts"
+msgstr "Artifacts"
 
 msgid "Artifacts referenced by “%s”"
-msgstr "Les artéfacts qui sont référencés par “%s”"
+msgstr "Les artifacts qui sont référencés par “%s”"
 
 msgid "Artifacts that reference “%s”"
-msgstr "Les artéfacts qui référencent “%s”"
+msgstr "Les artifacts qui référencent “%s”"
 
 msgid "As of %s"
 msgstr "Le %s"

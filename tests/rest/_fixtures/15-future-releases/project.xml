@@ -218,13 +218,13 @@
         <semantic type="title">
           <shortname>title</shortname>
           <label>Titre</label>
-          <description>Définir le titre d'un artéfact</description>
+          <description>Définir le titre d'un artifact</description>
           <field REF="F2074"/>
         </semantic>
         <semantic type="description">
           <shortname>description</shortname>
           <label>Description</label>
-          <description>Définir la description d'un artéfact</description>
+          <description>Définir la description d'un artifact</description>
           <field REF="F2075"/>
         </semantic>
         <semantic type="status">
@@ -249,7 +249,7 @@
         <semantic type="contributor">
           <shortname>contributor</shortname>
           <label>Contributeur</label>
-          <description>Définir le contributeur d'un artéfact</description>
+          <description>Définir le contributeur d'un artifact</description>
           <field REF="F2084"/>
         </semantic>
         <semantic type="tooltip">
@@ -267,7 +267,7 @@
         <semantic type="initial_effort">
           <shortname>initial_effort</shortname>
           <label>Effort Estimé</label>
-          <description>Définir l'effort estimé d'un artéfact</description>
+          <description>Définir l'effort estimé d'un artifact</description>
           <field REF="F2081"/>
         </semantic>
       </semantics>
@@ -823,13 +823,13 @@
         <semantic type="title">
           <shortname>title</shortname>
           <label>Titre</label>
-          <description>Définir le titre d'un artéfact</description>
+          <description>Définir le titre d'un artifact</description>
           <field REF="F2099"/>
         </semantic>
         <semantic type="description">
           <shortname>description</shortname>
           <label>Description</label>
-          <description>Définir la description d'un artéfact</description>
+          <description>Définir la description d'un artifact</description>
           <field REF="F2102"/>
         </semantic>
         <semantic type="status">
@@ -1047,7 +1047,7 @@
         <semantic type="title">
           <shortname>title</shortname>
           <label>Titre</label>
-          <description>Définir le titre d'un artéfact</description>
+          <description>Définir le titre d'un artifact</description>
           <field REF="F2114"/>
         </semantic>
         <semantic type="status">
@@ -1567,7 +1567,7 @@
         <semantic type="title">
           <shortname>title</shortname>
           <label>Titre</label>
-          <description>Définir le titre d'un artéfact</description>
+          <description>Définir le titre d'un artifact</description>
           <field REF="F2138"/>
         </semantic>
         <semantic type="status">
@@ -1602,7 +1602,7 @@
         <semantic type="initial_effort">
           <shortname>initial_effort</shortname>
           <label>Effort Estimé</label>
-          <description>Définir l'effort estimé d'un artéfact</description>
+          <description>Définir l'effort estimé d'un artifact</description>
           <field REF="F2143"/>
         </semantic>
       </semantics>
@@ -1833,13 +1833,13 @@
         <semantic type="title">
           <shortname>title</shortname>
           <label>Titre</label>
-          <description>Définir le titre d'un artéfact</description>
+          <description>Définir le titre d'un artifact</description>
           <field REF="F2163"/>
         </semantic>
         <semantic type="description">
           <shortname>description</shortname>
           <label>Description</label>
-          <description>Définir la description d'un artéfact</description>
+          <description>Définir la description d'un artifact</description>
           <field REF="F2166"/>
         </semantic>
         <semantic type="status">
@@ -1862,7 +1862,7 @@
         <semantic type="contributor">
           <shortname>contributor</shortname>
           <label>Contributeur</label>
-          <description>Définir le contributeur d'un artéfact</description>
+          <description>Définir le contributeur d'un artifact</description>
           <field REF="F2168"/>
         </semantic>
         <semantic type="tooltip">
@@ -2223,7 +2223,7 @@
         <semantic type="title">
           <shortname>title</shortname>
           <label>Titre</label>
-          <description>Définir le titre d'un artéfact</description>
+          <description>Définir le titre d'un artifact</description>
           <field REF="F2186"/>
         </semantic>
         <semantic type="status">
@@ -2256,7 +2256,7 @@
         <semantic type="initial_effort">
           <shortname>initial_effort</shortname>
           <label>Effort Estimé</label>
-          <description>Définir l'effort estimé d'un artéfact</description>
+          <description>Définir l'effort estimé d'un artifact</description>
           <field REF="F2193"/>
         </semantic>
       </semantics>
