@@ -49,7 +49,9 @@ and publish your ssh key (not needed if you are using http as
 transport). In Tuleap folder:
 
 ``` bash
-$> git remote add gerrit ssh://USERNAME@gerrit.tuleap.net:29418/tuleap && scp -p -P 29418 USERNAME@gerrit.tuleap.net:hooks/commit-msg .git/hooks/
+$> git remote add gerrit ssh://USERNAME@gerrit.tuleap.net:29418/tuleap
+
+$> mkdir -p `git rev-parse --git-dir`/hooks/ && curl -Lo `git rev-parse --git-dir`/hooks/commit-msg https://gerrit.tuleap.net/tools/hooks/commit-msg && chmod +x `git rev-parse --git-dir`/hooks/commit-msg
 ```
 
 ## Push you changes
@@ -162,7 +164,7 @@ You are ready to publish !
 4.  Send for review
 
 ``` bash
-$> git push origin HEAD:refs/for/master%wip
+$> git push gerrit HEAD:refs/for/master
 ```
 
 5.  Check result on gerrit
