@@ -91,4 +91,4 @@ msgid "Third level"
 msgstr "Troisième niveau"
 
 msgid "Tracker"
-msgstr "Outil de suivi"
+msgstr "Tracker"

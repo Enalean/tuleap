@@ -55,15 +55,15 @@ msgid ""
 "Tracker %s has no list field mapped to column %s, please check its "
 "configuration."
 msgstr ""
-"L'outil de suivi %s n'a pas de champ liste associé à la colonne %s, veuillez "
+"Le tracker %s n'a pas de champ liste associé à la colonne %s, veuillez "
 "vérifier sa configuration."
 
 #, php-format
 msgid ""
 "Tracker %s has no value mapped to column %s, please check its configuration."
 msgstr ""
-"L'outil de suivi %s n'a pas de valeur associée à la colonne %s, veuillez "
-"vérifier sa configuration."
+"Le tracker %s n'a pas de valeur associée à la colonne %s, veuillez vérifier "
+"sa configuration."
 
 msgid ""
 "Visually keep track of things that need to get done in a task board, used in "

@@ -164,7 +164,7 @@ msgid "No matching for this column"
 msgstr "Aucune correspondance"
 
 msgid "Now a cardwall exists on top of the tracker"
-msgstr "Un cardwall existe maintenant au dessus de l'outil de suivi"
+msgstr "Un cardwall existe maintenant au dessus de tracker"
 
 msgid "On Going"
 msgstr "En Cours"

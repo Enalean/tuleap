@@ -240,7 +240,7 @@ msgid "Focus graph"
 msgstr "Recentrer le graphe"
 
 msgid "From Test definition tracker reports"
-msgstr "Rapports de l’outil de suivi de définition des tests"
+msgstr "Rapports du tracker de définition des tests"
 
 msgid "Hide closed campaigns"
 msgstr "Cacher les campagnes fermées"

@@ -75,7 +75,7 @@ msgid "Graphic Report updated successfully"
 msgstr "Le rapport graphique a été mis à jour avec succès"
 
 msgid "Graphs On Trackers v5"
-msgstr "Graphiques sur les outils de suivi v5"
+msgstr "Graphiques sur les Trackers v5"
 
 msgid "Group by"
 msgstr "Grouper par"
@@ -113,8 +113,7 @@ msgstr "Veuillez choisir une période plus courte, ou augmenter l'échelle."
 
 msgid "Plugin that allow drawing graphic on trackers v5"
 msgstr ""
-"Plugin permettant la création de rapports graphiques sur les outils de suivi "
-"v5"
+"Plugin permettant la création de rapports graphiques sur les trackers v5"
 
 msgid "Preview"
 msgstr "Aperçu"
@@ -182,4 +181,4 @@ msgid "Width"
 msgstr "Largeur"
 
 msgid "graph on tracker"
-msgstr "graphiques d'outil de suivi"
+msgstr "graphiques de tracker"

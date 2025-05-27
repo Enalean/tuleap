@@ -204,7 +204,7 @@ msgid "Title"
 msgstr "Titre"
 
 msgid "Tracker"
-msgstr "Outil de suivi"
+msgstr "Tracker"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"

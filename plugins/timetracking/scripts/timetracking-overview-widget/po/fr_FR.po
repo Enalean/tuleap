@@ -28,7 +28,7 @@ msgid "Hide void trackers"
 msgstr "Cacher les trackers vides"
 
 msgid "No time have been found for this period and these trackers"
-msgstr "Aucun temps n'a été trouvé pour cette période et ces outils de suivi"
+msgstr "Aucun temps n'a été trouvé pour cette période et ces trackers"
 
 msgid "No trackers selected"
 msgstr "Aucun élément séléctionné"
@@ -61,4 +61,4 @@ msgid "To"
 msgstr "Au"
 
 msgid "Tracker"
-msgstr "Outil de suivi"
+msgstr "Tracker"
