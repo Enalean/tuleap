@@ -35,9 +35,7 @@ use ReferenceManager;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
@@ -84,7 +82,9 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetr
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
@@ -200,7 +200,7 @@ class MilestoneResource extends AuthenticatedResource
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
             new ArtifactsInExplicitBacklogDao(),
-            new Tracker_Artifact_PriorityDao(),
+            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
 
@@ -212,11 +212,12 @@ class MilestoneResource extends AuthenticatedResource
             $this->backlog_item_collection_factory,
         );
 
-        $priority_manager = new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
+        $priority_manager = new PriorityManager(
+            new PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             UserManager::instance(),
-            $this->tracker_artifact_factory
+            $this->tracker_artifact_factory,
+            DBFactory::getMainTuleapDBConnection()->getDB(),
         );
 
         $this->event_manager = EventManager::instance();

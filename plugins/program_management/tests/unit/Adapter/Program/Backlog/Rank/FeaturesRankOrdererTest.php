@@ -33,14 +33,13 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FeaturesRankOrderer $orderer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_Artifact_PriorityManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Artifact\PriorityManager
      */
     private $priority_manager;
 
     protected function setUp(): void
     {
-        $this->priority_manager = $this->createMock(\Tracker_Artifact_PriorityManager::class);
-        $this->priority_manager->method('enableExceptionsOnError');
+        $this->priority_manager = $this->createMock(\Tuleap\Tracker\Artifact\PriorityManager::class);
 
         $this->orderer = new FeaturesRankOrderer($this->priority_manager);
     }

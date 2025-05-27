@@ -25,9 +25,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use AgileDashBoard_Semantic_InitialEffort;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -40,13 +38,16 @@ use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\DB\DBFactory;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -90,11 +91,12 @@ class BacklogItemResource extends AuthenticatedResource
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
         $this->user_manager     = UserManager::instance();
 
-        $priority_manager = new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
+        $priority_manager = new PriorityManager(
+            new PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             $this->user_manager,
-            $this->artifact_factory
+            $this->artifact_factory,
+            DBFactory::getMainTuleapDBConnection()->getDB(),
         );
 
         $this->tracker_factory                  = TrackerFactory::instance();

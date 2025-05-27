@@ -22,14 +22,14 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class ResourcesPatcher
 {
     /**
-     * @var Tracker_Artifact_PriorityManager
+     * @var PriorityManager
      */
     private $priority_manager;
 
@@ -46,12 +46,11 @@ class ResourcesPatcher
     public function __construct(
         ArtifactLinkUpdater $artifactlink_updater,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_Artifact_PriorityManager $priority_manager,
+        PriorityManager $priority_manager,
     ) {
         $this->artifactlink_updater = $artifactlink_updater;
         $this->artifact_factory     = $artifact_factory;
         $this->priority_manager     = $priority_manager;
-        $this->priority_manager->enableExceptionsOnError();
     }
 
     public function startTransaction()

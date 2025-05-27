@@ -32,7 +32,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
-use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_Integer;
 use Tuleap\AgileDashboard\BacklogItemDao;
@@ -44,6 +43,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
@@ -51,7 +51,7 @@ use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    private Tracker_Artifact_PriorityDao&MockObject $artifact_priority_dao;
+    private PriorityDao&MockObject $artifact_priority_dao;
     private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&MockObject $collection_factory;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private Planning_MilestoneFactory&MockObject $milestone_factory;
@@ -72,7 +72,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         );
         $this->remaining_effort_value_retriever  = $this->createMock(RemainingEffortValueRetriever::class);
         $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
-        $this->artifact_priority_dao             = $this->createMock(Tracker_Artifact_PriorityDao::class);
+        $this->artifact_priority_dao             = $this->createMock(PriorityDao::class);
 
         $this->collection_factory = $this->getMockBuilder(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class)
             ->setConstructorArgs([

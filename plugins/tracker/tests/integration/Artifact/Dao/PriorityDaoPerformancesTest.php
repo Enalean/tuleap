@@ -21,10 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Tracker\Artifact\Dao;
 
 use PHPUnit\Framework\Attributes\Group;
-use Tracker_Artifact_PriorityDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -35,12 +34,12 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[Group('ToFatToRun')]
 final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
 {
-    private Tracker_Artifact_PriorityDao $dao;
+    private PriorityDao $dao;
     private \ParagonIE\EasyDB\EasyDB $db;
 
     public function setUp(): void
     {
-        $this->dao = new Tracker_Artifact_PriorityDao();
+        $this->dao = new PriorityDao();
         $this->db  = DBFactory::getMainTuleapDBConnection()->getDB();
     }
 

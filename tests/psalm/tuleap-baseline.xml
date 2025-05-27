@@ -11666,7 +11666,6 @@
   </file>
   <file src="plugins/document/include/Tree/DocumentTreeController.php">
     <MissingReturnType>
-      <code><![CDATA[includeCssFiles]]></code>
       <code><![CDATA[includeHeaderAndNavigationBar]]></code>
     </MissingReturnType>
   </file>
@@ -18381,10 +18380,6 @@
     <PossiblyFalseArgument>
       <code><![CDATA[json_encode($request_data)]]></code>
     </PossiblyFalseArgument>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $response->getStatusCode()]]></code>
-      <code><![CDATA[(int) $response->getStatusCode()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/gitlab/include/API/GitlabProjectBuilder.php">
     <RiskyTruthyFalsyComparison>
@@ -31927,6 +31922,23 @@
       <code><![CDATA[$user]]></code>
     </MissingParamType>
   </file>
+  <file src="plugins/tracker/include/Artifact/PriorityManager.php">
+    <InvalidArgument>
+      <code><![CDATA[$list_of_artifact_ids]]></code>
+    </InvalidArgument>
+    <InvalidArrayOffset>
+      <code><![CDATA[$list_of_artifact_ids[$i - 1]]]></code>
+    </InvalidArrayOffset>
+    <PossiblyNullArgument>
+      <code><![CDATA[$old_global_rank]]></code>
+      <code><![CDATA[$rank_after_move]]></code>
+      <code><![CDATA[$rank_after_move]]></code>
+      <code><![CDATA[$this->tracker_artifact_factory->getArtifactById($row['artifact_id_higher'])]]></code>
+      <code><![CDATA[$this->tracker_artifact_factory->getArtifactById($row['artifact_id_lower'])]]></code>
+      <code><![CDATA[$this->tracker_artifact_factory->getArtifactById($row['moved_artifact_id'])]]></code>
+      <code><![CDATA[$this->user_manager->getUserById($row['prioritized_by'])]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/tracker/include/Artifact/Renderer/ViewCollection.php">
     <FalsableReturnStatement>
       <code><![CDATA[current($this->views)]]></code>
@@ -33950,6 +33962,11 @@
       <code><![CDATA[EasyStatement::open()->in('linked_art.id NOT IN (?*)', $excluded_ids)]]></code>
     </ImplicitToStringCast>
   </file>
+  <file src="plugins/tracker/include/Tracker/Artifact/Dao/PriorityDao.php">
+    <RedundantFunctionCall>
+      <code><![CDATA[printf]]></code>
+    </RedundantFunctionCall>
+  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Exception/CannotCreateChangeset.php">
     <MissingParamType>
       <code><![CDATA[$message]]></code>
@@ -34359,7 +34376,6 @@
       <code><![CDATA[fetchFollowUps]]></code>
       <code><![CDATA[getFollowupsContent]]></code>
       <code><![CDATA[getPriorityHistory]]></code>
-      <code><![CDATA[getPriorityManager]]></code>
       <code><![CDATA[sendErrorsAsJson]]></code>
       <code><![CDATA[updateArtifact]]></code>
     </MissingReturnType>
@@ -35024,73 +35040,6 @@
       <code><![CDATA[hasBeenRaised]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_PriorityManager.php">
-    <DeprecatedMethod>
-      <code><![CDATA[commit]]></code>
-      <code><![CDATA[enableExceptionsOnError]]></code>
-      <code><![CDATA[rollBack]]></code>
-      <code><![CDATA[startTransaction]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$artifact_higher_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_lower_id]]></code>
-      <code><![CDATA[$context_id]]></code>
-      <code><![CDATA[$context_id]]></code>
-      <code><![CDATA[$context_id]]></code>
-      <code><![CDATA[$context_id]]></code>
-      <code><![CDATA[$context_id]]></code>
-      <code><![CDATA[$context_id]]></code>
-      <code><![CDATA[$list_of_artifact_ids]]></code>
-      <code><![CDATA[$moved_artifact_id]]></code>
-      <code><![CDATA[$old_global_rank]]></code>
-      <code><![CDATA[$predecessor_id]]></code>
-      <code><![CDATA[$predecessor_id]]></code>
-      <code><![CDATA[$predecessor_id]]></code>
-      <code><![CDATA[$predecessor_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$rank]]></code>
-      <code><![CDATA[$rank_after_move]]></code>
-      <code><![CDATA[$rank_before_move]]></code>
-      <code><![CDATA[$row]]></code>
-      <code><![CDATA[$successor_id]]></code>
-      <code><![CDATA[$successor_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[commit]]></code>
-      <code><![CDATA[deletePriority]]></code>
-      <code><![CDATA[didArtifactRankChange]]></code>
-      <code><![CDATA[enableExceptionsOnError]]></code>
-      <code><![CDATA[getArtifactPriorityHistory]]></code>
-      <code><![CDATA[getGlobalRank]]></code>
-      <code><![CDATA[getGlobalRanks]]></code>
-      <code><![CDATA[logPriorityChange]]></code>
-      <code><![CDATA[logPriorityChangesWhenMovingListOfArtifactsAfter]]></code>
-      <code><![CDATA[logPriorityChangesWhenMovingListOfArtifactsBefore]]></code>
-      <code><![CDATA[moveArtifactAfter]]></code>
-      <code><![CDATA[moveArtifactAfterWithHistoryChangeLogging]]></code>
-      <code><![CDATA[moveListOfArtifactsAfter]]></code>
-      <code><![CDATA[moveListOfArtifactsBefore]]></code>
-      <code><![CDATA[putArtifactAtAGivenRank]]></code>
-      <code><![CDATA[remove]]></code>
-      <code><![CDATA[rollback]]></code>
-      <code><![CDATA[startTransaction]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->tracker_artifact_factory->getArtifactById($row['artifact_id_higher'])]]></code>
-      <code><![CDATA[$this->tracker_artifact_factory->getArtifactById($row['artifact_id_lower'])]]></code>
-      <code><![CDATA[$this->tracker_artifact_factory->getArtifactById($row['moved_artifact_id'])]]></code>
-      <code><![CDATA[$this->user_manager->getUserById($row['prioritized_by'])]]></code>
-    </PossiblyNullArgument>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XML/XMLArtifact.php">
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
@@ -35272,57 +35221,6 @@
       <code><![CDATA[keep]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/dao/PriorityDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$predecessor_id]]></code>
-      <code><![CDATA[$predecessor_id]]></code>
-      <code><![CDATA[$rank]]></code>
-      <code><![CDATA[$reference_id]]></code>
-      <code><![CDATA[$successor_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[debug]]></code>
-      <code><![CDATA[getGlobalRanks]]></code>
-      <code><![CDATA[moveListOfArtifacts]]></code>
-      <code><![CDATA[putArtifactAtAGivenRank]]></code>
-      <code><![CDATA[remove]]></code>
-    </MissingReturnType>
-    <PossiblyFalseIterator>
-      <code><![CDATA[$res]]></code>
-    </PossiblyFalseIterator>
-    <RedundantFunctionCall>
-      <code><![CDATA[printf]]></code>
-    </RedundantFunctionCall>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/dao/Tracker_ArtifactDao.php">
     <DeprecatedMethod>
       <code><![CDATA[count]]></code>
@@ -35501,7 +35399,6 @@
       <code><![CDATA[getMyArtifactOrderAndPaginateStatement]]></code>
       <code><![CDATA[getPaginatedChildren]]></code>
       <code><![CDATA[getParents]]></code>
-      <code><![CDATA[getPriorityDao]]></code>
       <code><![CDATA[getTitles]]></code>
       <code><![CDATA[save]]></code>
       <code><![CDATA[searchById]]></code>
@@ -40062,7 +39959,6 @@
       <code><![CDATA[fetchArtifactValueWithEditionFormIfEditable]]></code>
       <code><![CDATA[getArtifactRank]]></code>
       <code><![CDATA[getAugmentedFieldValue]]></code>
-      <code><![CDATA[getPriorityManager]]></code>
     </MissingReturnType>
     <PossiblyNullReference>
       <code><![CDATA[getId]]></code>
@@ -48802,6 +48698,57 @@
       <code><![CDATA[(string) 'ugroup_nobody_name_key']]></code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/tests/integration/Artifact/Dao/PriorityDaoPerformancesTest.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$times]]></code>
+      <code><![CDATA[$times]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidOperand>
+      <code><![CDATA[$avg]]></code>
+      <code><![CDATA[array_sum($times) * 1000]]></code>
+      <code><![CDATA[round(max($times) * 1000)]]></code>
+      <code><![CDATA[round(min($times) * 1000)]]></code>
+    </InvalidOperand>
+    <MissingParamType>
+      <code><![CDATA[$done]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$n]]></code>
+      <code><![CDATA[$new_rank]]></code>
+      <code><![CDATA[$new_rank]]></code>
+      <code><![CDATA[$times]]></code>
+      <code><![CDATA[$total]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[addToCSV]]></code>
+      <code><![CDATA[benchmarkMove10Before1rank]]></code>
+      <code><![CDATA[benchmarkMove10BeforeRank]]></code>
+      <code><![CDATA[benchmarkMoveBefore1rank]]></code>
+      <code><![CDATA[benchmarkMoveBeforeAll]]></code>
+      <code><![CDATA[benchmarkMoveBeforeMiddle]]></code>
+      <code><![CDATA[benchmarkMoveBeforeRank]]></code>
+      <code><![CDATA[benchmarkPutAtTheEnd]]></code>
+      <code><![CDATA[displayStats]]></code>
+      <code><![CDATA[generateRandomArtifactPriorities]]></code>
+      <code><![CDATA[progress]]></code>
+      <code><![CDATA[testBenchmark]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$out]]></code>
+      <code><![CDATA[$out]]></code>
+    </PossiblyFalseArgument>
+    <UndefinedMethod>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+    </UndefinedMethod>
+  </file>
   <file src="plugins/tracker/tests/integration/Notifications/Settings/NotificationSettingsDuplicatorTest.php">
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$notifications[0]]]></code>
@@ -48879,94 +48826,6 @@
       <code><![CDATA[$ugroups]]></code>
       <code><![CDATA[$users]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/tests/integration/PriorityDaoPerformancesTest.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$times]]></code>
-      <code><![CDATA[$times]]></code>
-    </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <InvalidOperand>
-      <code><![CDATA[$avg]]></code>
-      <code><![CDATA[array_sum($times) * 1000]]></code>
-      <code><![CDATA[round(max($times) * 1000)]]></code>
-      <code><![CDATA[round(min($times) * 1000)]]></code>
-    </InvalidOperand>
-    <MissingParamType>
-      <code><![CDATA[$done]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$n]]></code>
-      <code><![CDATA[$new_rank]]></code>
-      <code><![CDATA[$new_rank]]></code>
-      <code><![CDATA[$times]]></code>
-      <code><![CDATA[$total]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addToCSV]]></code>
-      <code><![CDATA[benchmarkMove10Before1rank]]></code>
-      <code><![CDATA[benchmarkMove10BeforeRank]]></code>
-      <code><![CDATA[benchmarkMoveBefore1rank]]></code>
-      <code><![CDATA[benchmarkMoveBeforeAll]]></code>
-      <code><![CDATA[benchmarkMoveBeforeMiddle]]></code>
-      <code><![CDATA[benchmarkMoveBeforeRank]]></code>
-      <code><![CDATA[benchmarkPutAtTheEnd]]></code>
-      <code><![CDATA[displayStats]]></code>
-      <code><![CDATA[generateRandomArtifactPriorities]]></code>
-      <code><![CDATA[progress]]></code>
-      <code><![CDATA[testBenchmark]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$out]]></code>
-      <code><![CDATA[$out]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyFalseIterator>
-      <code><![CDATA[$this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE `rank` >= $n - 10")]]></code>
-    </PossiblyFalseIterator>
-    <PossiblyFalseReference>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getRow]]></code>
-    </PossiblyFalseReference>
-  </file>
-  <file src="plugins/tracker/tests/integration/PriorityDaoTest.php">
-    <MissingReturnType>
-      <code><![CDATA[assertOrder]]></code>
-      <code><![CDATA[setInitialOrder]]></code>
-      <code><![CDATA[test1HasAGreaterPriorityThan101]]></code>
-      <code><![CDATA[test1HasAnHigherPriorityThan123]]></code>
-      <code><![CDATA[test42HasALowerPriorityThan1]]></code>
-      <code><![CDATA[test42HasAnHigherPriorityThan1]]></code>
-      <code><![CDATA[test42HasAnHigherPriorityThan101]]></code>
-      <code><![CDATA[testItDeletes123]]></code>
-      <code><![CDATA[testItDoesntRelyOnMysqlInsertOrder]]></code>
-      <code><![CDATA[testItHasThreeMoreElementsAddedAtTheEnd]]></code>
-      <code><![CDATA[testItInsertAnElementAtTheEnd]]></code>
-      <code><![CDATA[testItInsertOneElement]]></code>
-      <code><![CDATA[testItMovesExtremitiesAtTheMiddle]]></code>
-      <code><![CDATA[testItMovesManyArtifactsAtOnceAfter66]]></code>
-      <code><![CDATA[testItMovesManyArtifactsAtOnceAtTheBeforeLastPosition]]></code>
-      <code><![CDATA[testItMovesManyArtifactsAtOnceAtTheBeginning]]></code>
-      <code><![CDATA[testItMovesManyArtifactsAtOnceAtTheSamePosition]]></code>
-      <code><![CDATA[testItMovesManyArtifactsAtOnceAtTheSecondPosition]]></code>
-      <code><![CDATA[testItMovesManyArtifactsAtOnceAtTheVeryEnd]]></code>
-      <code><![CDATA[testItMovesManyArtifactsAtOnceBefore42]]></code>
-      <code><![CDATA[testItRaisesAnExceptionIfWeWantToMove1Before1]]></code>
-      <code><![CDATA[testItStartsWithEmptyTable]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/tests/unit/Action/CreateArtifactActionTest.php">
     <InaccessibleMethod>

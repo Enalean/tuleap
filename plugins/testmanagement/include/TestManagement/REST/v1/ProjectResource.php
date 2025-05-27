@@ -133,7 +133,7 @@ class ProjectResource
                 ),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
-            \Tracker_Artifact_PriorityManager::build(),
+            \Tuleap\Tracker\Artifact\PriorityManager::build(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 

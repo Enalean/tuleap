@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use PermissionsManager;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -46,7 +46,7 @@ final class ArtifactDependenciesDeletorTest extends TestCase
     protected function setUp(): void
     {
         $permissions_manager               = $this->createMock(PermissionsManager::class);
-        $tracker_artifact_priority_manager = $this->createMock(Tracker_Artifact_PriorityManager::class);
+        $tracker_artifact_priority_manager = $this->createMock(PriorityManager::class);
         $dao                               = $this->createMock(Tracker_ArtifactDao::class);
         $computed_dao_cache                = $this->createMock(ComputedFieldDaoCache::class);
         $recently_visited_dao              = $this->createMock(RecentlyVisitedDao::class);

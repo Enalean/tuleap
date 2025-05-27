@@ -28,12 +28,12 @@ use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use Planning_MilestoneFactory;
 use PlanningFactory;
-use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 
 class ContentForMiletoneProvider
 {
@@ -76,7 +76,7 @@ class ContentForMiletoneProvider
                     Tracker_FormElementFactory::instance()
                 ),
                 new ArtifactsInExplicitBacklogDao(),
-                new Tracker_Artifact_PriorityDao(),
+                new PriorityDao(),
                 \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             )
         );

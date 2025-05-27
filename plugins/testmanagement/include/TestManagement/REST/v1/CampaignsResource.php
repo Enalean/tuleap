@@ -33,9 +33,7 @@ use ProjectManager;
 use TemplateRenderer;
 use Tracker_AfterSaveException;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_ChangesetCommitException;
 use Tracker_ChangesetNotCreatedException;
@@ -125,7 +123,9 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
@@ -315,7 +315,7 @@ class CampaignsResource
                     ),
                     new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 ),
-                \Tracker_Artifact_PriorityManager::build(),
+                \Tuleap\Tracker\Artifact\PriorityManager::build(),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             $this->provide_user_avatar_url,
@@ -354,9 +354,8 @@ class CampaignsResource
 
         $usage_dao            = new ArtifactLinksUsageDao();
         $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
-        $transaction_executor = new DBTransactionExecutorWithConnection(
-            DBFactory::getMainTuleapDBConnection()
-        );
+        $db_connection        = DBFactory::getMainTuleapDBConnection();
+        $transaction_executor = new DBTransactionExecutorWithConnection($db_connection);
 
         $user_manager      = UserManager::instance();
         $changeset_creator = new NewChangesetCreator(
@@ -468,11 +467,12 @@ class CampaignsResource
             )
         );
 
-        $priority_manager = new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
+        $priority_manager = new PriorityManager(
+            new PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             $this->user_manager,
-            $this->artifact_factory
+            $this->artifact_factory,
+            $db_connection->getDB(),
         );
 
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());

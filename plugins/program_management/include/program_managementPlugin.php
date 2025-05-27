@@ -1283,7 +1283,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     private function getTopBacklogChangeProcessor(): TopBacklogChangeProcessor
     {
         $artifact_factory               = Tracker_ArtifactFactory::instance();
-        $priority_manager               = \Tracker_Artifact_PriorityManager::build();
+        $priority_manager               = \Tuleap\Tracker\Artifact\PriorityManager::build();
         $user_manager_adapter           = new UserManagerAdapter(UserManager::instance());
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
         $project_manager_adapter        = new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter);

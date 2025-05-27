@@ -56,9 +56,6 @@ use Tracker_Artifact_CopyRenderer;
 use Tracker_Artifact_EditOverlayRenderer;
 use Tracker_Artifact_Followup_Item;
 use Tracker_Artifact_PaginatedArtifacts;
-use Tracker_Artifact_PriorityDao;
-use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_ReadOnlyRenderer;
 use Tracker_Artifact_Redirect;
 use Tracker_Artifact_Renderer_EditInPlaceRenderer;
@@ -1079,15 +1076,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->getTracker()->getGroupId();
     }
 
-    /** @return Tracker_Artifact_PriorityManager */
-    protected function getPriorityManager()
+    protected function getPriorityManager(): PriorityManager
     {
-        return new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
-            new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance(),
-            Tracker_ArtifactFactory::instance()
-        );
+        return PriorityManager::build();
     }
 
     /** @return Artifact[] */

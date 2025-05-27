@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
@@ -443,7 +444,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $row            = $this->retrieveFirstRow($sql);
         $per_tracker_id = $row['per_tracker_artifact_id'];
 
-        if ($artifact_id && $this->getPriorityDao()->putArtifactAtTheEndWithoutTransaction($artifact_id)) {
+        if ($artifact_id && $this->getPriorityDao()->putArtifactAtTheEndWithoutTransaction((int) $artifact_id)) {
             // We do not keep trace of the history change here because it doesn't have any sense to say
             // the newly created artifact has less priority than the one at the bottom of the priority chain.
             $sql = "INSERT INTO $this->table_name
@@ -482,9 +483,9 @@ class Tracker_ArtifactDao extends DataAccessObject
         return $dao->deleteReference($id);
     }
 
-    private function getPriorityDao()
+    private function getPriorityDao(): PriorityDao
     {
-        return new Tracker_Artifact_PriorityDao();
+        return new PriorityDao();
     }
 
     /**

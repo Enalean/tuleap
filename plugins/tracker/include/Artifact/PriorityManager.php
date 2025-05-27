@@ -18,90 +18,75 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_Artifact_PriorityManager
+namespace Tuleap\Tracker\Artifact;
+
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
+use ProjectManager;
+use Tracker_Artifact_Exception_CannotRankWithMyself;
+use Tracker_Artifact_PriorityHistoryChange;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_ArtifactFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+use UserManager;
+
+class PriorityManager
 {
-    /**
-     * @var Tracker_Artifact_PriorityDao
-     */
-    private $priority_dao;
-
-    /**
-     * @var Tracker_Artifact_PriorityHistoryDao
-     */
-    private $priority_history_dao;
-
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $tracker_artifact_factory;
-
-
     public function __construct(
-        Tracker_Artifact_PriorityDao $priority_dao,
-        Tracker_Artifact_PriorityHistoryDao $priority_history_dao,
-        UserManager $user_manager,
-        Tracker_ArtifactFactory $tracker_artifact_factory,
+        private readonly PriorityDao $priority_dao,
+        private readonly Tracker_Artifact_PriorityHistoryDao $priority_history_dao,
+        private readonly UserManager $user_manager,
+        private readonly Tracker_ArtifactFactory $tracker_artifact_factory,
+        private readonly EasyDB $db,
     ) {
-        $this->priority_dao             = $priority_dao;
-        $this->priority_history_dao     = $priority_history_dao;
-        $this->user_manager             = $user_manager;
-        $this->tracker_artifact_factory = $tracker_artifact_factory;
     }
 
     public static function build(): self
     {
         return new self(
-            new Tracker_Artifact_PriorityDao(),
+            new PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             UserManager::instance(),
-            Tracker_ArtifactFactory::instance()
+            Tracker_ArtifactFactory::instance(),
+            DBFactory::getMainTuleapDBConnection()->getDB(),
         );
     }
 
-    public function enableExceptionsOnError()
+    public function startTransaction(): void
     {
-        $this->priority_dao->enableExceptionsOnError();
+        $this->db->beginTransaction();
     }
 
-    public function startTransaction()
+    public function commit(): void
     {
-        $this->priority_dao->startTransaction();
+        $this->db->commit();
     }
 
-    public function commit()
+    public function rollback(): void
     {
-        $this->priority_dao->commit();
+        $this->db->rollBack();
     }
 
-    public function rollback()
-    {
-        $this->priority_dao->rollBack();
-    }
-
-    public function remove($artifact_id)
-    {
-        return $this->priority_dao->remove($artifact_id);
-    }
-
-    public function getGlobalRank($artifact_id)
+    public function getGlobalRank(int $artifact_id): ?int
     {
         return $this->priority_dao->getGlobalRank($artifact_id);
     }
 
-    public function moveArtifactAfter($artifact_id, $predecessor_id)
+    /**
+     * @throws Tracker_Artifact_Exception_CannotRankWithMyself
+     */
+    public function moveArtifactAfter(int $artifact_id, int $predecessor_id): void
     {
         $this->priority_dao->moveArtifactAfter($artifact_id, $predecessor_id);
     }
 
-    public function moveArtifactAfterWithHistoryChangeLogging($artifact_id, $predecessor_id, $context_id, $project_id)
+    /**
+     * @throws Tracker_Artifact_Exception_CannotRankWithMyself
+     */
+    public function moveArtifactAfterWithHistoryChangeLogging(int $artifact_id, int $predecessor_id, int $context_id, int $project_id): void
     {
         $old_global_rank = $this->getGlobalRank($artifact_id);
         $this->priority_dao->moveArtifactAfter($artifact_id, $predecessor_id);
@@ -113,9 +98,11 @@ class Tracker_Artifact_PriorityManager
     }
 
     /**
+     * @param list<int> $list_of_artifact_ids
      * @throws Tracker_Artifact_Exception_CannotRankWithMyself
+     * @throws MustBeNonEmpty
      */
-    public function moveListOfArtifactsBefore(array $list_of_artifact_ids, $successor_id, $context_id, $project_id)
+    public function moveListOfArtifactsBefore(array $list_of_artifact_ids, int $successor_id, int $context_id, int $project_id): void
     {
         $ranks_before_move = $this->getGlobalRanks($list_of_artifact_ids);
 
@@ -124,8 +111,17 @@ class Tracker_Artifact_PriorityManager
         $this->logPriorityChangesWhenMovingListOfArtifactsBefore($list_of_artifact_ids, $ranks_before_move, $successor_id, $context_id, $project_id);
     }
 
-    private function logPriorityChangesWhenMovingListOfArtifactsBefore(array $list_of_artifact_ids, array $ranks_before_move, $successor_id, $context_id, $project_id)
-    {
+    /**
+     * @param list<int> $list_of_artifact_ids
+     * @param array<int, int> $ranks_before_move
+     */
+    private function logPriorityChangesWhenMovingListOfArtifactsBefore(
+        array $list_of_artifact_ids,
+        array $ranks_before_move,
+        int $successor_id,
+        int $context_id,
+        int $project_id,
+    ): void {
         for ($i = 0; $i < count($list_of_artifact_ids); $i++) {
             $artifact_id       = $list_of_artifact_ids[$i];
             $artifact_lower_id = $successor_id;
@@ -142,7 +138,12 @@ class Tracker_Artifact_PriorityManager
         }
     }
 
-    public function moveListOfArtifactsAfter(array $list_of_artifact_ids, $predecessor_id, $context_id, $project_id)
+    /**
+     * @param list<int> $list_of_artifact_ids
+     * @throws MustBeNonEmpty
+     * @throws Tracker_Artifact_Exception_CannotRankWithMyself
+     */
+    public function moveListOfArtifactsAfter(array $list_of_artifact_ids, int $predecessor_id, int $context_id, int $project_id): void
     {
         $ranks_before_move = $this->getGlobalRanks($list_of_artifact_ids);
 
@@ -151,8 +152,17 @@ class Tracker_Artifact_PriorityManager
         $this->logPriorityChangesWhenMovingListOfArtifactsAfter($list_of_artifact_ids, $ranks_before_move, $predecessor_id, $context_id, $project_id);
     }
 
-    private function logPriorityChangesWhenMovingListOfArtifactsAfter(array $list_of_artifact_ids, array $ranks_before_move, $predecessor_id, $context_id, $project_id)
-    {
+    /**
+     * @param list<int> $list_of_artifact_ids
+     * @param array<int, int> $ranks_before_move
+     */
+    private function logPriorityChangesWhenMovingListOfArtifactsAfter(
+        array $list_of_artifact_ids,
+        array $ranks_before_move,
+        int $predecessor_id,
+        int $context_id,
+        int $project_id,
+    ): void {
         for ($i = 0; $i < count($list_of_artifact_ids); $i++) {
             $artifact_id        = $list_of_artifact_ids[$i];
             $artifact_higher_id = $predecessor_id;
@@ -169,12 +179,17 @@ class Tracker_Artifact_PriorityManager
         }
     }
 
-    private function didArtifactRankChange($rank_before_move, $rank_after_move)
+    private function didArtifactRankChange(int $rank_before_move, int $rank_after_move): bool
     {
         return $rank_after_move !== $rank_before_move;
     }
 
-    private function getGlobalRanks($list_of_artifact_ids)
+    /**
+     * @param list<int> $list_of_artifact_ids
+     * @return array<int, int>
+     * @throws MustBeNonEmpty
+     */
+    private function getGlobalRanks(array $list_of_artifact_ids): array
     {
         $rows  = $this->priority_dao->getGlobalRanks($list_of_artifact_ids);
         $ranks = [];
@@ -184,7 +199,7 @@ class Tracker_Artifact_PriorityManager
         return $ranks;
     }
 
-    public function getArtifactPriorityHistory(Artifact $artifact)
+    public function getArtifactPriorityHistory(Artifact $artifact): array
     {
         $rows                     = $this->priority_history_dao->getArtifactPriorityHistory($artifact->getId());
         $priority_history_changes = [];
@@ -196,8 +211,14 @@ class Tracker_Artifact_PriorityManager
         return $priority_history_changes;
     }
 
-    private function logPriorityChange($moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $old_global_rank)
-    {
+    private function logPriorityChange(
+        int $moved_artifact_id,
+        int $artifact_higher_id,
+        int $artifact_lower_id,
+        int $context_id,
+        int $project_id,
+        int $old_global_rank,
+    ): void {
         $artifact = $this->tracker_artifact_factory->getArtifactById($moved_artifact_id);
 
         if ($artifact) {
@@ -218,10 +239,7 @@ class Tracker_Artifact_PriorityManager
         }
     }
 
-    /**
-     * @return Tracker_Artifact_PriorityHistoryChange
-     */
-    public function getInstanceFromRow($row)
+    public function getInstanceFromRow(array $row): Tracker_Artifact_PriorityHistoryChange
     {
         return new Tracker_Artifact_PriorityHistoryChange(
             $this->tracker_artifact_factory,
@@ -237,13 +255,13 @@ class Tracker_Artifact_PriorityManager
         );
     }
 
-    public function deletePriority(Artifact $artifact)
+    public function deletePriority(Artifact $artifact): bool
     {
         return $this->priority_dao->remove($artifact->getId()) &&
-        $this->priority_history_dao->deletePriorityChangesHistory($artifact->getId());
+               $this->priority_history_dao->deletePriorityChangesHistory($artifact->getId());
     }
 
-    public function putArtifactAtAGivenRank(Artifact $artifact, $rank)
+    public function putArtifactAtAGivenRank(Artifact $artifact, int $rank): void
     {
         $this->priority_dao->putArtifactAtAGivenRank($artifact->getId(), $rank);
     }

@@ -22,68 +22,60 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
+use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use UserManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_PriorityManagerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class PriorityManagerTest extends TestCase
 {
-    private Tracker_Artifact_PriorityManager $priority_manager;
-    private Tracker_Artifact_PriorityDao&MockObject $priority_dao;
+    private PriorityManager $priority_manager;
+    private PriorityDao&MockObject $priority_dao;
     private Tracker_Artifact_PriorityHistoryDao&MockObject $priority_history_dao;
     private UserManager&MockObject $user_manager;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private EasyDB&MockObject $db;
 
     protected function setUp(): void
     {
-        $this->priority_dao         = $this->createMock(Tracker_Artifact_PriorityDao::class);
+        $this->priority_dao         = $this->createMock(PriorityDao::class);
         $this->priority_history_dao = $this->createMock(Tracker_Artifact_PriorityHistoryDao::class);
         $this->user_manager         = $this->createMock(UserManager::class);
         $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
-        $this->priority_manager     = new Tracker_Artifact_PriorityManager(
+        $this->db                   = $this->createMock(EasyDB::class);
+        $this->priority_manager     = new PriorityManager(
             $this->priority_dao,
             $this->priority_history_dao,
             $this->user_manager,
-            $this->artifact_factory
+            $this->artifact_factory,
+            $this->db,
         );
-    }
-
-    public function testEnableExceptionsOnErrorProxiesToDao(): void
-    {
-        $this->priority_dao->expects($this->once())->method('enableExceptionsOnError');
-        $this->priority_manager->enableExceptionsOnError();
     }
 
     public function testStartTransactionProxiesToDao(): void
     {
-        $this->priority_dao->expects($this->once())->method('startTransaction');
+        $this->db->expects($this->once())->method('beginTransaction');
         $this->priority_manager->startTransaction();
     }
 
     public function testCommitProxiesToDao(): void
     {
-        $this->priority_dao->expects($this->once())->method('commit');
+        $this->db->expects($this->once())->method('commit');
         $this->priority_manager->commit();
     }
 
     public function testRollbackProxiesToDao(): void
     {
-        $this->priority_dao->expects($this->once())->method('rollBack');
+        $this->db->expects($this->once())->method('rollBack');
         $this->priority_manager->rollback();
-    }
-
-    public function testRemoveProxiesToDao(): void
-    {
-        $this->priority_dao->expects($this->once())->method('remove')->with(58);
-        $this->priority_manager->remove(58);
     }
 
     public function testGetGlobalRankReturnsInt(): void

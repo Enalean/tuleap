@@ -24,11 +24,12 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 
 /**
  * A pane to be displayed in AgileDashboard
  */
-class Cardwall_Pane extends AgileDashboard_Pane
+class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var CardwallPaneInfo
@@ -227,7 +228,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
                 $this->tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new Tracker_Artifact_PriorityDao(),
+            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
 

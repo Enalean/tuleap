@@ -40,6 +40,7 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 
 /**
  * Wrapper for backlog related REST methods
@@ -94,7 +95,7 @@ class ProjectBacklogResource
                 $tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new \Tracker_Artifact_PriorityDao(),
+            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
 

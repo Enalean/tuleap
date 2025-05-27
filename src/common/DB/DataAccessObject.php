@@ -42,6 +42,11 @@ abstract class DataAccessObject
         return $this->db_connection->getDB();
     }
 
+    final protected function getDBTransactionExecutor(): DBTransactionExecutor
+    {
+        return new DBTransactionExecutorWithConnection($this->db_connection);
+    }
+
     /**
      * Returns the number of affected rows by the LAST query.
      * Must be called immediately after performing a query.

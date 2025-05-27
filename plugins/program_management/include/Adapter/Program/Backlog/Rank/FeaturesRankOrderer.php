@@ -29,9 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class FeaturesRankOrderer implements OrderFeatureRank
 {
-    public function __construct(private \Tracker_Artifact_PriorityManager $priority_manager)
+    public function __construct(private \Tuleap\Tracker\Artifact\PriorityManager $priority_manager)
     {
-        $this->priority_manager->enableExceptionsOnError();
     }
 
     /**
@@ -42,9 +41,9 @@ final class FeaturesRankOrderer implements OrderFeatureRank
         try {
             if ($order->isBefore()) {
                 $this->priority_manager->moveListOfArtifactsBefore(
-                    $order->getIds(),
+                    array_values($order->getIds()),
                     $order->getComparedTo(),
-                    $context_id,
+                    (int) $context_id,
                     $program->getID()
                 );
 
@@ -52,9 +51,9 @@ final class FeaturesRankOrderer implements OrderFeatureRank
             }
 
             $this->priority_manager->moveListOfArtifactsAfter(
-                $order->getIds(),
+                array_values($order->getIds()),
                 $order->getComparedTo(),
-                $context_id,
+                (int) $context_id,
                 $program->getID()
             );
         } catch (\Tracker_Artifact_Exception_CannotRankWithMyself $e) {

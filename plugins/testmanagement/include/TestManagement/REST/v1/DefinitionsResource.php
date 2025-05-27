@@ -23,11 +23,15 @@ namespace Tuleap\TestManagement\REST\v1;
 use Codendi_HTMLPurifier;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
@@ -42,10 +46,6 @@ use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
-use Tracker_FormElementFactory;
-use Tuleap\TestManagement\ConfigConformanceValidator;
-use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\Dao;
 
 class DefinitionsResource
 {
@@ -100,7 +100,7 @@ class DefinitionsResource
                 ),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
-            \Tracker_Artifact_PriorityManager::build(),
+            \Tuleap\Tracker\Artifact\PriorityManager::build(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }

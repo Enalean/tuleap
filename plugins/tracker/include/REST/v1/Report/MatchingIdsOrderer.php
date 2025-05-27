@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Report;
 
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+
 class MatchingIdsOrderer
 {
-    public function __construct(private readonly \Tracker_Artifact_PriorityDao $artifact_priority_dao)
+    public function __construct(private readonly PriorityDao $artifact_priority_dao)
     {
     }
 
@@ -43,6 +45,10 @@ class MatchingIdsOrderer
         if (! is_array($all_matching_artifact_ids) || ! is_array($all_matching_last_changeset_ids)) {
             throw new \LogicException();
         }
+        $all_matching_artifact_ids = array_map(
+            static fn(string $id) => (int) $id,
+            $all_matching_artifact_ids,
+        );
 
         $rank = [];
         foreach ($this->artifact_priority_dao->getGlobalRanks($all_matching_artifact_ids) as $row) {

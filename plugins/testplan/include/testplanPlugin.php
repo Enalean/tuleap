@@ -41,10 +41,12 @@ use Tuleap\TestPlan\TestPlanPaneInfo;
 use Tuleap\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\TestPlan\TestPlanTestDefinitionTrackerRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -258,11 +260,12 @@ final class testplanPlugin extends Plugin
     {
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
 
-        $priority_manager = new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
+        $priority_manager = new PriorityManager(
+            new PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             UserManager::instance(),
-            $tracker_artifact_factory
+            $tracker_artifact_factory,
+            \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB(),
         );
 
         $artifactlink_updater = new ArtifactLinkUpdater(

@@ -25,9 +25,7 @@ use ForgeConfig;
 use PermissionsDao;
 use PermissionsManager;
 use Psr\Log\LoggerInterface;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLExport;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
@@ -66,8 +64,10 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -115,10 +115,11 @@ class ArchiveAndDeleteArtifactTaskBuilder
         $cross_references_dao     = new CrossReferencesDao();
         $cross_reference_manager  = new CrossReferenceManager($cross_references_dao);
         $tracker_artifact_dao     = new Tracker_ArtifactDao();
+        $db_connection            = DBFactory::getMainTuleapDBConnection();
         $artifact_linker          = new ArtifactLinker(
             Tracker_FormElementFactory::instance(),
             new NewChangesetCreator(
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new DBTransactionExecutorWithConnection($db_connection),
                 ArtifactChangesetSaver::build(),
                 new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
                 \WorkflowFactory::instance(),
@@ -211,11 +212,12 @@ class ArchiveAndDeleteArtifactTaskBuilder
             ),
             new ArtifactDependenciesCleaner(
                 new PermissionsManager(new PermissionsDao()),
-                new Tracker_Artifact_PriorityManager(
-                    new Tracker_Artifact_PriorityDao(),
+                new PriorityManager(
+                    new PriorityDao(),
                     new Tracker_Artifact_PriorityHistoryDao(),
                     $user_manager,
-                    $tracker_artifact_factory
+                    $tracker_artifact_factory,
+                    $db_connection->getDB(),
                 ),
                 $tracker_artifact_dao,
                 new ComputedFieldDaoCache(new ComputedFieldDao()),
@@ -239,7 +241,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new \Tracker_Artifact_Changeset_CommentDao(),
             ),
             $event_manager,
-            DBFactory::getMainTuleapDBConnection(),
+            $db_connection,
             $logger
         );
     }

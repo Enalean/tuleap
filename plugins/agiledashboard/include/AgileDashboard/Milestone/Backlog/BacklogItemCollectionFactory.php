@@ -27,6 +27,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 
 /**
@@ -81,7 +82,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
      */
     private $artifacts_in_explicit_backlog_dao;
     /**
-     * @var Tracker_Artifact_PriorityDao
+     * @var PriorityDao
      */
     private $artifact_priority_dao;
     /**
@@ -97,7 +98,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
         AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
         RemainingEffortValueRetriever $remaining_effort_value_retriever,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        Tracker_Artifact_PriorityDao $artifact_priority_dao,
+        PriorityDao $artifact_priority_dao,
         private readonly RetrieveUserPermissionOnArtifacts $user_permission_on_artifacts_retriever,
     ) {
         $this->dao                               = $dao;
