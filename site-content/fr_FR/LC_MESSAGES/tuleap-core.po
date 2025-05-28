@@ -2391,7 +2391,7 @@ msgid "Pending projects"
 msgstr "Projets en attente"
 
 msgid "Pending trackers removal"
-msgstr "Outils de suivi en attente"
+msgstr "Trackers en attente"
 
 msgid "Pending users"
 msgstr "Utilisateurs en attente"
@@ -3818,9 +3818,8 @@ msgid ""
 "variants."
 msgstr ""
 "Cette option affiche des motifs sur les cartes ayant un fond coloré dans "
-"l'Agiledashboard et sur les rapports de type cardwall dans les outils de "
-"suivi. Ceci permet de mieux différencier les couleurs ainsi que leurs "
-"variantes."
+"l'Agiledashboard et sur les rapports de type cardwall dans les trackers. "
+"Ceci permet de mieux différencier les couleurs ainsi que leurs variantes."
 
 msgid ""
 "This permission grants the right to manage platform administration users. "
@@ -4003,10 +4002,10 @@ msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
 
 msgid "Trackers"
-msgstr "Outils de suivi"
+msgstr "Trackers"
 
 msgid "Trackers v3 import"
-msgstr "Import outils de suivi v3"
+msgstr "Import trackers v3"
 
 msgid "Trove categories"
 msgstr "Catégories"
