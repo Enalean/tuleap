@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
@@ -76,8 +77,10 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
 use Tuleap\OpenIDConnectClient\UserAccount\AccountTabsBuilder;
 use Tuleap\OpenIDConnectClient\UserAccount\OIDCProvidersController;
+use Tuleap\OpenIDConnectClient\UserAccount\UnlinkCommand;
 use Tuleap\OpenIDConnectClient\UserAccount\UnlinkController;
 use Tuleap\OpenIDConnectClient\UserMapping\CanRemoveUserMappingChecker;
+use Tuleap\OpenIDConnectClient\UserMapping\RemoveUserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingUsage;
@@ -552,6 +555,20 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
     public function beforeSVNLogin(BeforeSVNLogin $event): void
     {
         $this->beforeLogin($event);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectCLICommands(CLICommandsCollector $commands_collector): void
+    {
+        $commands_collector->addCommand(
+            UnlinkCommand::NAME,
+            function (): UnlinkCommand {
+                return new UnlinkCommand(
+                    UserManager::instance(),
+                    new RemoveUserMappingDao(),
+                );
+            },
+        );
     }
 
     private function beforeLogin(BeforeLogin $event): void
