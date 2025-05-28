@@ -131,10 +131,10 @@ msgid "Traceability Matrix"
 msgstr "Matrice de traçabilité"
 
 msgid "Tracker"
-msgstr "Outil de suivi"
+msgstr "Tracker"
 
 msgid "Tracker Report"
-msgstr "Rapport de l'outil de suivi"
+msgstr "Rapport de tracker"
 
 msgid "Value"
 msgstr "Valeur"

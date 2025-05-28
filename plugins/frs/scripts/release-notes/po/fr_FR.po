@@ -128,7 +128,7 @@ msgstr ""
 "raisons de votre refus."
 
 msgid "Tracker"
-msgstr "Suivi"
+msgstr "Tracker"
 
 msgid "Type"
 msgstr "Type"
