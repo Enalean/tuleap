@@ -954,12 +954,15 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                         $parameters['only-renderer']    = 1;
                     }
 
-                    $url   = $active ? '' : '?' . http_build_query($parameters);
+                    $href = '';
+                    if (! $active) {
+                        $href = 'href="' . $hp->purify('?' . http_build_query($parameters)) . '"';
+                    }
                     $html .= '<li id="tracker_report_renderer_' . $r->id . '"
                                   class="' . $active . '
                                             tracker_report_renderer_tab
                                             tracker_report_renderer_tab_' . $r->getType() . '">
-                              <a href="' . $url . '" title="' .  $hp->purify($r->description, CODENDI_PURIFIER_CONVERT_HTML)  . '" ' . ($active ? 'class="dropdown-toggle" data-toggle="dropdown"' : '') . '>';
+                              <a ' . $href . ' title="' .  $hp->purify($r->description, CODENDI_PURIFIER_CONVERT_HTML)  . '" ' . ($active ? 'class="dropdown-toggle" data-toggle="dropdown"' : '') . '>';
                     $html .= '<input type="hidden" name="tracker_report_renderer_rank" value="' . (int) $r->rank . '" />';
                     $html .= '<i class="' . $r->getIcon() . '"></i>';
                     $html .= ' ' . $hp->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML);
@@ -980,7 +983,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
             if ($report_can_be_modified && ! $current_user->isAnonymous()) {
                 $html .= '<li class="tracker_report_renderers-add dropdown">
                     <a id="tracker_renderer_add_handle"
-                       href="#"
                        class="dropdown-toggle"
                        data-toggle="dropdown">';
                 $html .=  '<i class="fa fa-plus"></i>';
