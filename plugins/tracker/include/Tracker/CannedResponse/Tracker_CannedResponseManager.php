@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+
 class Tracker_CannedResponseManager
 {
     /**
@@ -31,41 +33,43 @@ class Tracker_CannedResponseManager
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $tracker_manager, $request, $current_user)
+    public function process(TrackerManager $tracker_manager, HTTPRequest $request, PFUser $current_user): void
     {
+        if (! $request->isPost()) {
+            if ($request->get('edit') !== false) {
+                $this->displayAdminResponse($tracker_manager, $request);
+            }
+            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+                'canned-responses.js'
+            ));
+            $this->displayAdminAllResponses($tracker_manager);
+            return;
+        }
+        $this->getCSRFTokenAdmin()->check();
         if ($request->get('create')) {
             if ($request->existAndNonEmpty('title') && $request->existAndNonEmpty('body')) {
                 if (Tracker_CannedResponseFactory::instance()->create($this->tracker, $request->get('title'), $request->get('body'))) {
                     $GLOBALS['Response']->addFeedback('info', 'Created');
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
-                        'tracker' => (int) $this->tracker->id,
-                        'func'    => 'admin-canned',
-                    ]));
+                    $GLOBALS['Response']->redirect($this->getURLAdmin());
                 }
             }
         } elseif ($canned_id = (int) $request->get('delete')) {
             if (Tracker_CannedResponseFactory::instance()->delete($canned_id)) {
                 $GLOBALS['Response']->addFeedback('info', 'Deleted');
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
-                    'tracker' => (int) $this->tracker->id,
-                    'func'    => 'admin-canned',
-                ]));
+                $GLOBALS['Response']->redirect($this->getURLAdmin());
             }
         } elseif ($canned_id = (int) $request->get('update')) {
             if (Tracker_CannedResponseFactory::instance()->update($canned_id, $this->tracker, trim($request->get('title')), $request->get('body'))) {
                 $GLOBALS['Response']->addFeedback('info', 'Updated');
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
-                    'tracker' => (int) $this->tracker->id,
-                    'func'    => 'admin-canned',
-                ]));
+                $GLOBALS['Response']->redirect($this->getURLAdmin());
             }
-        } elseif ($canned_id = (int) $request->get('edit')) {
-            $this->displayAdminResponse($tracker_manager, $request, $current_user);
         }
-        $this->displayAdminAllResponses($tracker_manager, $request, $current_user);
+
+        $GLOBALS['Response']->redirect($this->getURLAdmin());
     }
 
-    protected function displayAdminAllResponses(TrackerManager $tracker_manager, $request, $current_user)
+    protected function displayAdminAllResponses(TrackerManager $tracker_manager): void
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Canned responses');
@@ -98,13 +102,15 @@ class Tracker_CannedResponseManager
                 echo '</td>';
 
                 //delete
-                echo '<td><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
-                    'tracker' => (int) $this->tracker->id,
-                    'func'    => 'admin-canned',
-                    'delete'  => (int) $response->id,
-                ]) . '" onClick="return confirm(\'' . addslashes(sprintf(dgettext('tuleap-tracker', 'Delete this Canned Response : %1$s ?'), $response->title)) . '\')">';
-                echo $GLOBALS['HTML']->getImage('ic/cross.png');
-                echo '</a></td></tr>';
+                echo '<td>';
+                $confirmation_message = sprintf(dgettext('tuleap-tracker', 'Delete this Canned Response: %1$s?'), $response->title);
+                echo '<form class="delete-canned-response" method="post" href="' . $this->getURLAdmin() . '" data-confirmation-message="' . $hp->purify($confirmation_message) . '">';
+                echo '<input type="hidden" name="delete" value="' . $hp->purify($response->id) . '"/>';
+                echo $this->getCSRFTokenAdmin()->fetchHTMLInput();
+                echo '<button class="btn-link" type="submit">';
+                echo $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => dgettext('tuleap-tracker', 'Delete the canned response')]);
+                echo '</button>';
+                echo '</form></td></tr>';
             }
             echo '</table>';
         } else {
@@ -120,6 +126,7 @@ class Tracker_CannedResponseManager
             'tracker' => (int) $this->tracker->id,
             'func'    => 'admin-canned',
         ]) . '" method="POST">';
+        echo $this->getCSRFTokenAdmin()->fetchHTMLInput();
         echo '<b>' . dgettext('tuleap-tracker', 'Title') . ':</b><br />';
         echo '<input type="text" name="title" value="" size="50">';
         echo '<p>';
@@ -132,7 +139,7 @@ class Tracker_CannedResponseManager
         $this->tracker->displayFooter($tracker_manager);
     }
 
-    protected function displayAdminResponse(TrackerManager $tracker_manager, $request, $current_user)
+    protected function displayAdminResponse(TrackerManager $tracker_manager, $request): void
     {
         if ($response = Tracker_CannedResponseFactory::instance()->getCannedResponse($this->tracker, (int) $request->get('edit'))) {
             $hp    = Codendi_HTMLPurifier::instance();
@@ -152,6 +159,7 @@ class Tracker_CannedResponseManager
                 'func'    => 'admin-canned',
                 'update'  => (int) $response->id,
             ]) . '" method="POST">';
+            echo $this->getCSRFTokenAdmin()->fetchHTMLInput();
             echo '<b>' . dgettext('tuleap-tracker', 'Title') . ':</b><br />';
             echo '<input type="text" name="title" value="' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '" size="50">';
             echo '<p>';
@@ -167,5 +175,18 @@ class Tracker_CannedResponseManager
             $this->tracker->displayFooter($tracker_manager);
             exit;
         }
+    }
+
+    private function getURLAdmin(): string
+    {
+        return TRACKER_BASE_URL . '/?' . http_build_query([
+            'tracker' => (int) $this->tracker->id,
+            'func'    => 'admin-canned',
+        ]);
+    }
+
+    private function getCSRFTokenAdmin(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken($this->getURLAdmin());
     }
 }

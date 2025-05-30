@@ -24,6 +24,7 @@ module.exports = [
     {
         entry: {
             "done-semantic": "./src/semantics/status/done-picker.ts",
+            "canned-responses": "./src/canned-responses.ts",
             "field-permissions": "./src/field-permissions.ts",
             "progress-semantic": "./src/semantics/progress/admin-selectors.ts",
             "semantics-homepage": "./src/semantics/homepage.ts",

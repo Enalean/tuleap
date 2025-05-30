@@ -1258,6 +1258,9 @@ msgstr "Suppression annulée"
 msgid "Delete permanently the field"
 msgstr "Supprimer définitivement le champ"
 
+msgid "Delete the canned response"
+msgstr "Supprimer la réponse type"
+
 msgid "Delete the reference?"
 msgstr "Supprimer la référence ?"
 
@@ -1265,7 +1268,7 @@ msgid "Delete the value"
 msgstr "Supprimer la valeur"
 
 #, php-format
-msgid "Delete this Canned Response : %1$s ?"
+msgid "Delete this Canned Response: %1$s?"
 msgstr "Détruire cette réponse type&nbsp;: %1$s ?"
 
 msgid "Delete this tracker"
