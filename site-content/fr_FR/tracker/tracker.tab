@@ -5,7 +5,7 @@
 #-----------------------------------------------
 # Script: SF/www/tracker/add.php
 #
-tracker_add	invalid	Cet outil de suivi n'est plus valide.
+tracker_add	invalid	Ce tracker n'est plus valide.
 tracker_add	add_a	Créer un(e)
 #
 #-----------------------------------------------
@@ -30,7 +30,7 @@ tracker_fieldeditor	warning	Vos modifications n'ont pas été sauvées. N'oublie
 tracker_gotoid	art_belongs_to	Note&nbsp;: Cet artifact appartient au projet '$1'
 tracker_gotoid	art_is_a	<br>Note&nbsp;: Cet artifact est du type '$1' (pas '$2')
 tracker_gotoid	commit_belongs_to	Note&nbsp;: Ce commit appartient au projet '$1'
-tracker_gotoid	invalid_tracker	Nom de l'outil de suivi invalide.
+tracker_gotoid	invalid_tracker	Nom du tracker invalide.
 tracker_gotoid	invalid_art_nb	Numéro d'artifact invalide&nbsp;: $1.
 #
 #-----------------------------------------------
@@ -50,20 +50,20 @@ tracker_edit_comment	upd_followup_details	Commentaire soumit $1 par $2
 # Script: SF/www/tracker/import_admin.php
 #
 tracker_import_admin	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
-tracker_import_admin	art_import	Importation d'artifacts dans un outil de suivi
-tracker_import_admin	welcome	<h3>Importation des artifacts</h3><P>Vous pouvez importer des artifacts dans un outil de suivi un partir d'un fichier texte (au format CSV). Cliquer sur les liens ci-dessous soit pour importer de nouveaux artifacts soit pour mettre à jour des artifacts existants.<P>
+tracker_import_admin	art_import	Importation d'artifacts dans un tracker
+tracker_import_admin	welcome	<h3>Importation des artifacts</h3><P>Vous pouvez importer des artifacts dans un tracker un partir d'un fichier texte (au format CSV). Cliquez sur les liens ci-dessous soit pour importer de nouveaux artifacts soit pour mettre à jour des artifacts existants.<P>
 tracker_import_admin	art_data_import	Importation des artifacts
 tracker_import_admin	import_format	Format d'importation
 tracker_import_admin	import	Importer
 tracker_import_admin	show_format	Voir le format
-tracker_import_admin	tracker	Outil de suivi
-tracker_import_admin	disabled	Les outils de suivi ont été désactivés par ce projet.
+tracker_import_admin	tracker	Tracker
+tracker_import_admin	disabled	Les trackers ont été désactivés par ce projet.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/import.php
 #
-tracker_import	art_import	Importation dans l'outil de suivi&nbsp;:
-tracker_import	parse_report	Rapport d'analyse des artifacts
+tracker_import	art_import	Importation dans le tracker&nbsp;:
+tracker_import	parse_report	Rapport d'analyse des artifact
 tracker_import	ready	Prêt à importer $1 artifact(s)&nbsp;: $2 artifact(s) nouveau(x) , $3 artifact(s) existant(s)
 tracker_import	success_import	$1 artifact(s) importé(s) avec succès
 tracker_import	check_data	Veuillez vérifier les données avant d'importer, en particulier les dates.
@@ -71,7 +71,7 @@ tracker_import	format_hdr	Format d'importation des artifacts
 tracker_import	format_msg	Pour importer les artifacts à partir d'un fichier CSV vous devez fournir les champs suivants. Les valeurs montrées en exemple indiquent le type de données. <br>Pour <b>créer</b> de nouveaux artifacts vous devez au moins fournir les champs obligatoires marqués du signe <span class="highlight"><big>*</big></b></span> sauf le numéro ID de l'artifact qui ne doit pas être spécifié. Tous les autres champs peuvent être omis de votre fichier CSV auquel cas ils seront initialisés à leur valeur par défaut. <br>Pour <b>mettre à jour</b> des artifacts existants vous devez simplement spécifier son numéro ID ainsi que les champs que vous souhaitez mettre à jour. Les champs non spécifiés resteront inchangés.<br>Notez par ailleurs que le fichier CSV doit utiliser le jeu de caractères UTF-8.
 tracker_import	sample_cvs_file	Exemple de fichier CSV&nbsp;:
 tracker_import	import_new_hdr	Importer des artifacts $1
-tracker_import	import_new_msg	Vous pouvez importer des artifacts dans cet outil de suivi en indiquant un fichier au format CSV. <br>Voir le <a href="$1">Format d'importation CSV</a> pour plus de détails.
+tracker_import	import_new_msg	Vous pouvez importer des artifacts dans ce tracker en indiquant un fichier au format CSV. <br>Voir le <a href="$1">Format d'importation CSV</a> pour plus de détails.
 tracker_import	upload_file	Télécharger le fichier&nbsp;:
 tracker_import	max_upload_size	(La taille maximum du fichier est de $1 Mb)
 tracker_import	submit_info	Charger les artifacts
@@ -82,7 +82,7 @@ tracker_import	send_notifications	Envoyer les notifications&nbsp;:
 #
 tracker_index	art_id_necessary	L'ID de l'artifact est nécessaire
 tracker_index	not_create_at	ArtifactType n'a pas pu être créé
-tracker_index	a_tracker	un outil de suivi
+tracker_index	a_tracker	un tracker
 tracker_index	an_artif	un artifact
 tracker_index	not_create_art	L'artifact n'a pas pu être créé
 tracker_index	artifact_has_changed_title	ATTENTION: Votre mise à jour n'a pas été appliquée.
@@ -94,11 +94,11 @@ tracker_index	not_create_file_obj	L'objet fichier n'a pas pu être créé&nbsp;:
 tracker_index	not_attach_file	Impossible d'attacher le fichier à l'artifact&nbsp;: $1
 tracker_index	create_success	Artifact créé avec succès ($1)
 tracker_index	invalid_filename_attach	Nom de fichier invalide pour un attachement
-tracker_index	trackers_for	Outil de suivi pour $1
-tracker_index	admin_all_trackers	Administration des outils de suivi
-tracker_index	no_accessible_trackers_hdr	Aucun outil de suivi disponible
-tracker_index	no_accessible_trackers_msg	<strong>Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé à les consulter.</strong>
-tracker_index	choose_tracker	Choisissez un outil de suivi pour visualiser, éditer ou ajouter des artifacts.
+tracker_index	trackers_for	Tracker pour $1
+tracker_index	admin_all_trackers	Administration des trackers
+tracker_index	no_accessible_trackers_hdr	Aucun tracker disponible
+tracker_index	no_accessible_trackers_msg	<strong>Aucun tracker n'a été créé, ou vous n'êtes pas autorisé à les consulter.</strong>
+tracker_index	choose_tracker	Choisissez un tracker pour visualiser, éditer ou ajouter des artifacts.
 tracker_index	total	total
 tracker_index	file_delete	Fichier détruit&nbsp;: $1
 tracker_index	file_delete_success	Fichier détruit avec succès
@@ -112,7 +112,7 @@ tracker_index	updated_aid	Modification de $1
 tracker_index	mass_change	Mise à jour massive
 tracker_index	invalid_field_dependency	Dépendance entre champs invalide
 tracker_index	missing_dependency	Veuillez sélectionner au moins une valeur pour le champ obligatoire $1!
-tracker_index	notification_stopped	Les notifications par email sont actuellement désactivées sur cet outil de suivi.
+tracker_index	notification_stopped	Les notifications par email sont actuellement désactivées sur ce tracker.
 tracker_index	report_definition_updated	Définition du rapport mise à jour.
 tracker_index	feature_is_deprecated	Cette fonctionnalité est dépréciée et sera bientôt supprimée. vous devriez utiliser <a href="/doc/fr/user-guide/trackers/tv3-migration.html">notre outil de migration</a> pour les migrer.
 #
@@ -130,14 +130,14 @@ tracker_masschange	mass_change_report	Rapport de mise à jour massive
 #-----------------------------------------------
 # Script: SF/www/tracker/tracker_import_utils.php
 #
-tracker_import_utils	field_not_known	"$1" est un champ inconnu dans cet outil de suivi $2
-tracker_import_utils	field_mandatory	"$1" est un champ obligatoire dans l'outil de suivi $2. Veuillez le spécifier dans votre fichier CSV.
+tracker_import_utils	field_not_known	"$1" est un champ inconnu dans ce tracker $2
+tracker_import_utils	field_mandatory	"$1" est un champ obligatoire dans le tracker $2. Veuillez le spécifier dans votre fichier CSV.
 tracker_import_utils	not_a_predefined_value	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>la valeur "$3" ne figure pas parmi les valeurs prédéfinies du champ "$4" ($5).
-tracker_import_utils	field_mandatory_and_current	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire pour cet outil de suivi $4. Veuillez le spécifier dans votre fichier CSV (la valeur courante est "$5").
+tracker_import_utils	field_mandatory_and_current	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire pour ce tracker $4. Veuillez le spécifier dans votre fichier CSV (la valeur courante est "$5").
 tracker_import_utils	incorrect_date	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>La date "$3" a un format incorrect (AAAA-MM-JJ).
-tracker_import_utils	field_mandatory_and_line	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire dans l'outil de suivi $4. Veuillez le spécifier dans votre fichier CSV.
+tracker_import_utils	field_mandatory_and_line	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire dans le tracker $4. Veuillez le spécifier dans votre fichier CSV.
 tracker_import_utils	already_submitted	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>L'utilisateur $3 a déjà soumis un artifact avec le même résumé ("$4"). Veuillez ne pas essayer de l'importer à nouveau.
-tracker_import_utils	art_not_exists	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>l'artifact spécifié (id=$3) n'existe pas dans l'outil de suivi $4
+tracker_import_utils	art_not_exists	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>l'artifact spécifié (id=$3) n'existe pas dans le tracker $4
 tracker_import_utils	date	Date
 tracker_import_utils	type	Type
 tracker_import_utils	comment	Commentaire
@@ -155,18 +155,18 @@ tracker_import_utils	problem_insert_followup	Erreur  l'insertion du commentaire 
 #-----------------------------------------------
 # Script: SF/www/tracker/tracker_selection.php
 #
-tracker_selection	no_tracker_available	Aucun outil de suivi disponible pour ce projet !
-tracker_selection	tracker_sel	Sélection d'un outil de suivi
+tracker_selection	no_tracker_available	Aucun tracker disponible pour ce projet !
+tracker_selection	tracker_sel	Sélection d'un tracker
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/admin_trackers.php
 #
-tracker_admin_trackers	all_admin	Administration des outils de suivi
+tracker_admin_trackers	all_admin	Administration des trackers
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/field_usage.php
 #
-tracker_admin_field_usage	tracker_admin	Administration outil de suivi
+tracker_admin_field_usage	tracker_admin	Administration tracker
 tracker_admin_field_usage	usage_admin	- Administration des champs
 #
 #-----------------------------------------------
@@ -192,7 +192,7 @@ tracker_admin_index	updated_cannedresponse	Réponse type mise à jour
 tracker_admin_index	not_delete_canneditem	ArtifactCanned Item #$1 n'a pu être détruit
 tracker_admin_index	modify_cannedresponse	Modifier la réponse type
 tracker_admin_index	create_modify_cannedresponse	Créer/Modifier les réponses type
-tracker_admin_index	art_admin	Administration outil de suivi - Options de notification personnelle
+tracker_admin_index	art_admin	Administration tracker - Options de notification personnelle
 tracker_admin_index	update_success	 - Mise à jour réussie
 tracker_admin_index	update_failed	 - La mise à jour a échoué&nbsp;: $1
 tracker_admin_index	options	 - Options
@@ -206,9 +206,9 @@ tracker_admin_index	field_updated	Champ mis à jour
 tracker_admin_index	field_deleted	Champ détruit
 tracker_admin_index	modify_usage	 - Modifier l'utilisation d'un champ
 tracker_admin_index	modify_usage_for	 - Modifier l'utilisation d'un champ pour '$1'
-tracker_admin_index	deletion_failed	Outil de suivi '$1' - La destruction a échoué -
-tracker_admin_index	delete_success	Outil de suivi '$1' - Destruction réussie
-tracker_admin_index	tracker_deleted	<H2>Outil de suivi '$1' - Détruit</H2> <p>Dans le cas où vous auriez détruit cet outil de suivi par inadvertance et que vous souhaitiez le restaurer, veuillez contacter l'<a href="mailto:$2">administrateur du site</A> dans les 10 jours qui viennent.</p>
+tracker_admin_index	deletion_failed	Tracker '$1' - La destruction a échoué -
+tracker_admin_index	delete_success	Tracker '$1' - Destruction réussie
+tracker_admin_index	tracker_deleted	<H2>Tracker '$1' - Détruit</H2> <p>Dans le cas où vous auriez détruit ce tracker par inadvertance et que vous souhaitiez le restaurer, veuillez contacter l'<a href="mailto:$2">administrateur du site</A> dans les 10 jours qui viennent.</p>
 tracker_admin_index	fieldset_created	Groupe de champs créé avec les permissions par défaut
 tracker_admin_index	fieldset_updated	Groupe de champs mis à jour
 tracker_admin_index	fieldset_deleted	Groupe de champs détruit
@@ -219,11 +219,11 @@ tracker_admin_index	modify_fieldset_for	 - Modifier le groupe de champs '$1'
 # Script: SF/www/tracker/admin/restore.php
 #
 tracker_admin_restore	restore_failed	L'opération de restauration a échoué
-tracker_admin_restore	tracker_restored	Outil de suivi restauré
+tracker_admin_restore	tracker_restored	Tracker restauré
 tracker_admin_restore	delay_failed	Echec de l'opération de report
 tracker_admin_restore	delayed_deletion	Destruction reportée
-tracker_admin_restore	pending_deletions	Outil de suivi en attente de destruction
-tracker_admin_restore	tracker_deleted	Outil de suivi détruit
+tracker_admin_restore	pending_deletions	Tracker en attente de destruction
+tracker_admin_restore	tracker_deleted	Tracker détruit
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactCannedHtml.class.php
@@ -236,7 +236,7 @@ tracker_include_canned	existing_responses	Réponses existantes&nbsp;:
 tracker_include_canned	body_extract	Message (extrait)
 tracker_include_canned	delete	Détruire ?
 tracker_include_canned	delete_canned	Détruire cette réponse type&nbsp;: $1 ?
-tracker_include_canned	no_canned_response	Aucune réponse type définie pour cet outil de suivi
+tracker_include_canned	no_canned_response	Aucune réponse type définie pour ce tracker
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactFieldHtml.class.php
@@ -338,7 +338,7 @@ tracker_include_artifact	details	Détails
 tracker_include_artifact	permissions	Permissions
 tracker_include_artifact	permissions_label	Restreindre l'accès à cet artifact pour les groupes d'utilisateurs suivants :
 tracker_include_artifact	permissions_not_restricted	Les permissions ne sont pas restreintes pour cet artifact
-tracker_include_artifact	permissions_use_default	Utiliser les permissions par défaut de l'outil de suivi
+tracker_include_artifact	permissions_use_default	Utiliser les permissions par défaut du tracker
 tracker_include_artifact	mail_direct_link	Lien direct vers l'artifact
 tracker_include_artifact	mail_comment_title	Commentaires
 tracker_include_artifact	mail_snapshot_title	État
@@ -371,7 +371,7 @@ tracker_include_report	reset_sort	réinitialiser le tri
 tracker_include_report	multicolumn_sort	Vous pouvez aussi <a href="$1"><b> $2 le tri multi-colonnes</b></a>.
 tracker_include_report	sev_colors	Echelle de sévérité&nbsp;:
 tracker_include_report	no_match	Aucun artifact correspondant
-tracker_include_report	report_mgmt	Administration Outil de suivi - Gestion des rapports de recherche
+tracker_include_report	report_mgmt	Administration Tracker - Gestion des rapports de recherche
 tracker_include_report	report_admin	  - Administration des rapports
 tracker_include_report	scope	Portée
 tracker_include_report	default	Rapport Par Défaut
@@ -409,40 +409,40 @@ tracker_include_type	field_values	Valeurs des champs
 tracker_include_type	canned_resp	Réponse type
 tracker_include_type	reports	Rapports
 tracker_include_type	mail_notif	Options de notification
-tracker_include_type	pending_removal	Destruction des outils de suivi V3
-tracker_include_type	no_pending	Aucun outil de suivi V3 en attente de destruction
-tracker_include_type	pending_deletion	Outil de suivi V3 en attente de destruction
+tracker_include_type	pending_removal	Destruction des trackers V3
+tracker_include_type	no_pending	Aucun tracker V3 en attente de destruction
+tracker_include_type	pending_deletion	Tracker V3 en attente de destruction
 tracker_include_type	deletion_date	Date de destruction
 tracker_include_type	delay	Retarder ?
 tracker_include_type	restore	Restaurer
-tracker_include_type	warning	Détruire cet outil de suivi et toutes ses dépendances (restauration impossible) ?
+tracker_include_type	warning	Détruire ce tracker et toutes ses dépendances (restauration impossible) ?
 tracker_include_type	delete	Supprimer
 tracker_include_type	cancel	Annuler
-tracker_include_type	remove_tracker	Supprimer l'outil de suivi
-tracker_include_type	delay_deletion	Retarder la destruction de cet outil de suivi ?
-tracker_include_type	manage	Gérer les outils de suivi
-tracker_include_type	admin_or_del	Administrer ou détruire un outil de suivi.
+tracker_include_type	remove_tracker	Supprimer le tracker
+tracker_include_type	delay_deletion	Retarder la destruction de ce tracker ?
+tracker_include_type	manage	Gérer les trackers
+tracker_include_type	admin_or_del	Administrer ou détruire un tracker.
 tracker_include_type	instantiate	Instancier dans les nouveaux projets
 tracker_include_type	administration	 - Administration
 tracker_include_type	mng_field_usage	Gérer l'utilisation des champs
-tracker_include_type	define_use	Définir les champs utilisés par cet outil de suivi.
+tracker_include_type	define_use	Définir les champs utilisés par ce tracker.
 tracker_include_type	mng_field_values	Gérer les valeurs des champs
-tracker_include_type	define_values	Définir les valeurs associées aux champs utilisés par cet outil de suivi.
+tracker_include_type	define_values	Définir les valeurs associées aux champs utilisés par ce tracker.
 tracker_include_type	mng_response	Gérer les réponses type
 tracker_include_type	add_del_resp	Ajouter, modifier ou détruire les réponses type.
-tracker_include_type	mng_reports	Gérer les rapports de recherche de l'outil de suivi
-tracker_include_type	define_reports	Définir les rapports de recherche de cet outil de suivi&nbsp;: quels critères de recherche et quels champs montrer dans les rapports de recherche.
-tracker_include_type	define_title	Définir le titre, la description, etc&hellip; de cet outil de suivi.
+tracker_include_type	mng_reports	Gérer les rapports de recherche de le tracker
+tracker_include_type	define_reports	Définir les rapports de recherche de ce tracker&nbsp;: quels critères de recherche et quels champs montrer dans les rapports de recherche.
+tracker_include_type	define_title	Définir le titre, la description, etc&hellip; de ce tracker.
 tracker_include_type	define_notif	Les utilisateurs peuvent définir des options de notification personnelles relatives aux modifications des artifacts de cet outil. Les administrateurs du projet peuvent aussi définir des règles de notification globale.
 tracker_include_type	user	Utilisateur
 tracker_include_type	perm	Permissions
 tracker_include_type	del_user	Détruire cet utilisateur ?
-tracker_include_type	no_user	Aucun utilisateur pour cet outil de suivi.
+tracker_include_type	no_user	Aucun utilisateur pour ce tracker.
 tracker_include_type	allow_copy	Autoriser la copie d'artifacts&nbsp;:
 tracker_include_type	submit_instr	<b>Instructions de soumissions</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
 tracker_include_type	browse_instr	<b>Instructions de navigation</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
 tracker_include_type	short_name	Nom court
-tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
+tracker_include_type	tracker_id	ID de le tracker&nbsp;:
 tracker_include_type	list_all_fields	Liste de tous les champs disponibles
 tracker_include_type	type	Type
 tracker_include_type	rank_screen	Rang à l'écran
@@ -463,7 +463,7 @@ tracker_include_type	ff	Champ flottant
 tracker_include_type	if	Champ entier
 tracker_include_type	create_field	Créer un nouveau champ
 tracker_include_type	upd_label	Modifier le champ '$1'
-tracker_include_type	imp_note	<b>** NOTE IMPORTANTE **</b> '$1' est un champ standard des outils de suivi. Son rôle est global à l'ensemble des outils de suivi et nous vous recommandons vivement de ne changer ni son nom ni sa description à moins qu'ils aient une signification identique ce qui préservera le rôle du champ.
+tracker_include_type	imp_note	<b>** NOTE IMPORTANTE **</b> '$1' est un champ standard des trackers. Son rôle est global à l'ensemble des trackers et nous vous recommandons vivement de ne changer ni son nom ni sa description à moins qu'ils aient une signification identique ce qui préservera le rôle du champ.
 tracker_include_type	field_ident	Identification et description du champ
 tracker_include_type	field_type	Type du champ
 tracker_include_type	display_info	Informations d'affichage
@@ -477,9 +477,9 @@ tracker_include_type	bind_to_list	associer le champ à une liste de valeurs
 tracker_include_type	bind_to	Associer à
 tracker_include_type	group_members	Membres du projet
 tracker_include_type	group_admins	Administrateurs du projet
-tracker_include_type	tracker_admins	Administrateurs de l'outil de suivi
+tracker_include_type	tracker_admins	Administrateurs du tracker
 tracker_include_type	submitters	Personnes ayant soumis un artifact
-tracker_include_type	techicians	Techniciens de l'outil de suivi
+tracker_include_type	techicians	Techniciens de tracker
 tracker_include_type	bind	Associer
 tracker_include_type	create_value	Créer une nouvelle valeur de champ
 tracker_include_type	update_value	Modifier la valeur de champ
@@ -498,16 +498,16 @@ tracker_include_type	no_hidden_val	---- AUCUNE VALEUR CACHÉE ----
 tracker_include_type	hidden_val	---- VALEURS CACHÉES ----
 tracker_include_type	toggle_notification	Suspension des notifications
 tracker_include_type	notification_suspended	Notifications Suspendues
-tracker_include_type	toggle_notif_note	<B>En tant qu'administrateur de l'outil de suivi</B>, vous pouvez temporairement suspendre toutes les notifications par e-mail de cet outil de suivi, quels que soient les paramètres de notification spécifiés ci-dessous.
-tracker_include_type	toggle_notif_warn	L'administrateur de l'outi de suivi a temporairement suspendu les notifications par e-mail de cet outil de suivi. Les paramètres ci-dessous ne sont donc pas pris en compte.
+tracker_include_type	toggle_notif_note	<B>En tant qu'administrateur du tracker</B>, vous pouvez temporairement suspendre toutes les notifications par e-mail de ce tracker, quels que soient les paramètres de notification spécifiés ci-dessous.
+tracker_include_type	toggle_notif_warn	L'administrateur du tracker temporairement suspendu les notifications par e-mail de ce tracker. Les paramètres ci-dessous ne sont donc pas pris en compte.
 tracker_include_type	stop_notification	Suspendre les notifications par e-mail
 tracker_include_type	global_mail_notif	Notification e-mail globale
-tracker_include_type	admin_note	<B>En tant qu'administrateur de l'outil de suivi</B> vous pouvez spécifier des adresses e-mail (séparées par des virgules) qui recevront systématiquement les notifications de soumission (et éventuellement de modification) d'artifacts.
+tracker_include_type	admin_note	<B>En tant qu'administrateur du tracker</B> vous pouvez spécifier des adresses e-mail (séparées par des virgules) qui recevront systématiquement les notifications de soumission (et éventuellement de modification) d'artifacts.
 tracker_include_type	send_all	Envoyer à chaque modification
 tracker_include_type	check_perms	Vérifier les permissions
-tracker_include_type	admin_conf	<P>L'administrateur de l'outil de suivi a spécifié que les adresses e-mails suivantes reçoivent les notifications de soumissions (et éventuellement de modification) d'artifacts.<P><u>Destinataires</u>&nbsp;:
+tracker_include_type	admin_conf	<P>L'administrateur du tracker a spécifié que les adresses e-mails suivantes reçoivent les notifications de soumissions (et éventuellement de modification) d'artifacts.<P><u>Destinataires</u>&nbsp;:
 tracker_include_type	send_all_or_not	(Envoyer à chaque modification&nbsp;: $1)
-tracker_include_type	admin_not_conf	<P>L'administrateur de l'outil de suivi n'a pas encore spécifié d'adresses e-mail qui recevront systématiquement une notification par e-mail des nouveaux artifacts soumis.
+tracker_include_type	admin_not_conf	<P>L'administrateur du tracker n'a pas encore spécifié d'adresses e-mail qui recevront systématiquement une notification par e-mail des nouveaux artifacts soumis.
 tracker_include_type	perso_mail_notif	Notification e-mail personnelle
 tracker_include_type	users_to_watch	Utilisateurs à suivre
 tracker_include_type	backup_person	Vous pouvez demander à recevoir une copie de toutes les notifications envoyées à un ou plusieurs utilisateurs. Donner la liste des noms de login des utilisateurs à suivre, séparés par des virgules.</b>
@@ -520,7 +520,7 @@ tracker_include_type	def_default	Définir la valeur par défaut
 tracker_include_type	val	Valeur
 tracker_include_type	unknown_stat	Statut inconnu
 tracker_include_type	report_system	Système d'analyse
-tracker_include_type	tracker_report_syst	Système d'analyse des outils de suivi
+tracker_include_type	tracker_report_syst	Système d'analyse des trackers
 tracker_include_type	aging_rep	Analyse de la durée de vie
 tracker_include_type	tracker_aging_rep	Analyse de la durée de vie
 tracker_include_type	avg_time	Analyse de la durée de vie moyenne pour les $1 fermé(es)
@@ -535,20 +535,20 @@ tracker_include_type	notify_me	Je veux être notifié lorsque&nbsp;:
 tracker_include_type	permissions	Permissions
 tracker_include_type	manage_permissions	Gérer les Permissions
 tracker_include_type	manage_permissions_title	 - Gérer les Permissions
-tracker_include_type	define_manage_permissions	Définir des permissions sur l'outil de suivi et ses champs
-tracker_include_type	manage_tracker_permissions	Gérer les permissions de l'outil de suivi
-tracker_include_type	manage_tracker_permissions_title	 - Gérer les permissions de l'outil de suivi
-tracker_include_type	define_manage_tracker_permissions	Permet de définir des droits d'accès à l'outil de suivi.
+tracker_include_type	define_manage_permissions	Définir des permissions sur le tracker et ses champs
+tracker_include_type	manage_tracker_permissions	Gérer les permissions du tracker
+tracker_include_type	manage_tracker_permissions_title	 - Gérer les permissions du tracker
+tracker_include_type	define_manage_tracker_permissions	Permet de définir des droits d'accès à le tracker.
 tracker_include_type	manage_fields_tracker_permissions	Gérer les permissions des champs
 tracker_include_type	manage_fields_tracker_permissions_title	 - Gérer les permissions des champs
-tracker_include_type	define_manage_fields_tracker_permissions	Permet de définir des droits d'accès aux champs de l'outil de suivi.
+tracker_include_type	define_manage_fields_tracker_permissions	Permet de définir des droits d'accès aux champs du tracker.
 tracker_include_type	edit_field_perm	Editer les permissions du champ
 tracker_include_type	field_dependencies	Dépendances&nbsp;entre&nbsp;champs
 tracker_include_type	mng_field_dependencies	Gérer les dépendances entre champs
 tracker_include_type	mng_field_dependencies_title	 - Gérer les dépendances entre champs
 tracker_include_type	define_field_dependencies	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ.
 tracker_include_type	manage_fieldsets	Gérer les groupes de champs
-tracker_include_type	define_manage_fieldsets	Définir les groupes de champs de l'outil de suivi.
+tracker_include_type	define_manage_fieldsets	Définir les groupes de champs du tracker.
 tracker_include_type	fieldsets	Groupes de champs
 tracker_include_type	fieldset	Groupe du champs
 tracker_include_type	create_fieldset	Créer un nouveau groupe de champs
@@ -587,7 +587,7 @@ tracker_common_canned	missing_param	Paramètres manquants
 #-----------------------------------------------
 # Script: SF/common/tracker/Artifact.class.php
 #
-tracker_common_artifact	view_private	Vous n'êtes pas autorisé à accéder à cet outil de suivi
+tracker_common_artifact	view_private	Vous n'êtes pas autorisé à accéder à ce tracker
 tracker_common_artifact	view_private_artifact	Vous n'êtes pas autorisé à accéder à cet artifact
 tracker_common_artifact	invalid_id	ID Artifact invalide
 tracker_common_artifact	row	Enregistrement $1&nbsp;:
@@ -697,7 +697,7 @@ tracker_common_type	perm_fail	La création des permissions utilisateurs a échou
 tracker_common_type	name_requ	Le nom , la description et la nom court sont obligatoires.
 tracker_common_type	invalid_shortname	Nom court invalide&nbsp;: $1. Veuillez utiliser uniquement des caractères alphanumériques ou un nom court non réservé. Retournez à la page précédente et modifiez ce champ.
 tracker_common_type	invalid_templ	group_id_template invalide.
-tracker_common_type	load_fail	impossible de charger le nouvel outil de suivi
+tracker_common_type	load_fail	impossible de charger le nouveau tracker
 tracker_common_type	invalid_at	ArtifactTypeID invalide
 tracker_common_type	invalid_date	La date de report ne doit pas se situer dans le passé
 tracker_common_type	perm_err	Erreur lors de la mise à jour des permissions utilisateur - user_id=$1 - $2
@@ -707,7 +707,7 @@ tracker_common_type	notif_fail	Erreur lors de l'insertion du rôle de la notific
 tracker_common_type	del_err	Erreur lors de la destruction des dépendances $1 : $2
 tracker_common_type	none_found	Aucun trouvé
 tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
-tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
+tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser ce tracker.
 tracker_common_type	shortname_already_exists	Le nom court "$1" est déjà utilisé. Veuillez en choisir un autre. Retournez à la page précédente et modifiez ce champ.
 tracker_common_type	name_already_exists	Le nom du tracker est déjà utilisé. Veuillez en choisir un autre. Retournez à la page précédente et modifiez ce champ.
 
@@ -715,29 +715,29 @@ tracker_common_type	name_already_exists	Le nom du tracker est déjà utilisé. V
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactTypes.class.php
 #
-tracker_common_types	err_bugs	Erreur à la création de ArtifactType pour l'outil de suivi de Bug
+tracker_common_types	err_bugs	Erreur à la création de ArtifactType pour le tracker de Bug
 tracker_common_types	bugs	Bugs
-tracker_common_types	bug_desc	Outil de suivi des bugs
+tracker_common_types	bug_desc	Tracker des bugs
 tracker_common_types	bug_ex	Interface (exemple)
 tracker_common_types	v1_ex	v1.0 (exemple)
-tracker_common_types	fail_bug	La création de l'outil de suivi Bug a échoué&nbsp;: $1
-tracker_common_types	err_sr	Erreur à la création de ArtifactType pour l'outil de suivi de support
+tracker_common_types	fail_bug	La création du tracker Bug a échoué&nbsp;: $1
+tracker_common_types	err_sr	Erreur à la création de ArtifactType pour le tracker de support
 tracker_common_types	sr	Demande de support
-tracker_common_types	sr_desc	Outils de suivi de demandes de support
+tracker_common_types	sr_desc	Trackers de demandes de support
 tracker_common_types	sr_ex	Problème d'installation (exemple)
-tracker_common_types	fail_sr	Erreur à la création de l'outil de suivi des demandes de support&nbsp;: $1
-tracker_common_types	err_patch	Erreur à la création de ArtifactType pour l'outil de suivi des corrections
+tracker_common_types	fail_sr	Erreur à la création du tracker des demandes de support&nbsp;: $1
+tracker_common_types	err_patch	Erreur à la création de ArtifactType pour le tracker des corrections
 tracker_common_types	patch	Corrections
-tracker_common_types	patch_desc	Outil de suivi des corrections
+tracker_common_types	patch_desc	Tracker des corrections
 tracker_common_types	patch_ex1	Widget (exemple)
 tracker_common_types	patch_ex2	instable (exemple)
-tracker_common_types	fail_patch	Erreur à la création de l'outil de suivi des corrections&nbsp;: $1
-tracker_common_types	err_fr	Erreur à la création de ArtifactType pour l'outil de suivi des demandes de fonctionnalités
+tracker_common_types	fail_patch	Erreur à la création du tracker des corrections&nbsp;: $1
+tracker_common_types	err_fr	Erreur à la création de ArtifactType pour le tracker des demandes de fonctionnalités
 tracker_common_types	fr	Demandes de fonctionnalités
-tracker_common_types	fr_desc	Outil de suivi demandes de fonctionnalités
+tracker_common_types	fr_desc	Tracker demandes de fonctionnalités
 tracker_common_types	fr_ex1	Amélioration d'interface (exemple)
 tracker_common_types	fr_ex2	Prochaine version (exemple)
-tracker_common_types	fail_fr	Erreur à la création de l'outil de suivi des demandes de fonctionnalités&nbsp;: $1
+tracker_common_types	fail_fr	Erreur à la création du tracker des demandes de fonctionnalités&nbsp;: $1
 tracker_common_types	role_SUBMITTER_short_desc	A soumis
 tracker_common_types	role_ASSIGNEE_short_desc	En charge
 tracker_common_types	role_CC_short_desc	CC
@@ -797,7 +797,7 @@ tracker_admin_permissions	tracker_ignore_g_regis_submitter	Le groupe '$1' est ig
 tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	Le groupe '$1' est ignoré car le groupe '$2' a accès aux artifacts confiés au groupe, ou soumis par le groupe
 tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	Groupes d'utilisateurs
-tracker_admin_permissions	ug_may_have_no_access	<div>* il est possible que ces groupes n'aient pas accès au tracker (pas de <a href="$1">permission sur l'outil de suivi</a> définie).</div>
+tracker_admin_permissions	ug_may_have_no_access	<div>* il est possible que ces groupes n'aient pas accès au tracker (pas de <a href="$1">permission sur le tracker</a> définie).</div>
 #
 # Tracker field dependencies
 #
@@ -814,7 +814,7 @@ tracker_field_dependencies	inline_help	Selectionnez un champ source et un champ 
 # Tracker fieldsets
 # Script: SF/www/tracker/admin/fieldset.php
 #
-tracker_admin_fieldset	tracker_admin	Administration outil de suivi
+tracker_admin_fieldset	tracker_admin	Administration tracker
 tracker_admin_fieldset	fieldset_admin	Administration des groupes de champs
 #
 #-----------------------------------------------

@@ -52,8 +52,8 @@ project_admin_editservice	service_news_lbl_key	Annonces
 project_admin_editservice	service_news_desc_key	Annonces du projet
 project_admin_editservice	service_file_lbl_key	Fichiers
 project_admin_editservice	service_file_desc_key	Publication de fichiers
-project_admin_editservice	service_tracker_lbl_key	Suivi v3
-project_admin_editservice	service_tracker_desc_key	Outils de suivi (version 3) du projet
+project_admin_editservice	service_tracker_lbl_key	Tracker v3
+project_admin_editservice	service_tracker_desc_key	Trackers (version 3) du projet
 project_admin_editservice	service_svn_lbl_key	Subversion
 project_admin_editservice	service_svn_desc_key	Accès Subversion
 project_admin_editservice	service_wiki_lbl_key	Wiki
@@ -83,7 +83,7 @@ project_admin_index	invalid_p	Projet invalide
 project_admin_index	p_not_found	Projet introuvable.
 project_admin_index	user_not_removed	L'utilisateur n'a pas été enlevé - Vous ne pouvez enlever un administrateur du projet. Vous devez d'abord lui ôter ces droits d'administrateur et, éventuellement, en désigner un autre.
 project_admin_index	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
-project_admin_index	del_tracker_perm_fail	L'annulation des permissions sur l'outil de suivi ($1) a échoué
+project_admin_index	del_tracker_perm_fail	L'annulation des permissions sur le tracker ($1) a échoué
 project_admin_index	del_user_from_ug_fail	Impossible d'enlever l'utilisateur des ugroups
 project_admin_index	user_removed	Utilisateur enlevé
 project_admin_index	self_user_remove	Vous n'êtes plus membre du projet
@@ -96,8 +96,8 @@ project_admin_index	support_admin	Administration du gestionnaire de demande de s
 project_admin_index	patch_admin	Administration du gestionnaire de corrections
 project_admin_index	task_admin	Administration gestionnaire de tâches
 project_admin_index	doc_admin	Administration de la documentation
-project_admin_index	tracker_admin	Administrations des outils de suivi
-project_admin_index	no_tracker_found	Aucun outil de suivi n'est accessible
+project_admin_index	tracker_admin	Administrations des trackers
+project_admin_index	no_tracker_found	Aucun tracker n'est accessible
 project_admin_index	admin	Administration
 project_admin_index	member_request_delegation_title	Délégation des demandes d'accès au projet
 project_admin_index	member_request_delegation_desc_private_group	Lorsqu'un utilisateur n'a pas accès à votre projet privé, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.
@@ -131,9 +131,9 @@ project_admin_permissions	tracker_artifact_access	Accès à un artifact
 project_admin_permissions	tracker_full_access	Accès à tous les artifacts du tracker
 project_admin_permissions	tracker_submitter_access	Accès à tous les artifacts soumis par le groupe
 project_admin_permissions	tracker_assignee_access	Accès à tous les artifacts confiés au groupe
-project_admin_permissions	tracker_field_submit	Peut soumettre ce champ dans l'outil de suivi
-project_admin_permissions	tracker_field_read	Peut lire ce champ dans l'outil de suivi
-project_admin_permissions	tracker_field_update	Peut éditer ce champ dans l'outil de suivi
+project_admin_permissions	tracker_field_submit	Peut soumettre ce champ dans le tracker
+project_admin_permissions	tracker_field_read	Peut lire ce champ dans le tracker
+project_admin_permissions	tracker_field_update	Peut éditer ce champ dans le tracker
 project_admin_permissions	wiki	wiki
 project_admin_permissions	wikiattachment	fichier joint du wiki
 project_admin_permissions	perm_type_not_def	permission_type '$1' indéfini
@@ -202,7 +202,7 @@ project_admin_utils	user_perms	Permissions utilisateurs
 project_admin_utils	references	Configuration des références
 project_admin_utils	ug_admin	Administration des groupes utilisateurs
 project_admin_utils	project_data_export	Export des données
-project_admin_utils	tracker_import	Import outils de suivi
+project_admin_utils	tracker_import	Import trackers
 project_admin_utils	access_logs	Journal des accès
 project_admin_utils	g_change_history	Historique du projet
 project_admin_utils	event	Évènement
@@ -243,7 +243,7 @@ project_admin_utils	changed_member_perm	Modification des permissions des membres
 project_admin_utils	perm_reset_for	Réinitialisation des permissions pour l'utilisateur $1
 project_admin_utils	perm_granted_for	Permission accordée à l'utilisateur $1
 project_admin_utils	changed_sr_settings	Modification de la configuration des demandes de support
-project_admin_utils	mass_change	Mise à jour massive dans un outil de suivi
+project_admin_utils	mass_change	Mise à jour massive dans un tracker
 project_admin_utils	import	Importation de données
 project_admin_utils	rename_request	Demande de renommage du projet
 project_admin_utils	rename_done	Renommage du projet effectué
@@ -254,7 +254,7 @@ project_admin_utils	restore_default_quota	Restoration de la quota disque par dé
 # There must be one message here for each return value of
 # the permission_get_object_type function in www/project/admin/permissions.php
 project_admin_utils	perm_reset_for_field	Réinitialisation des permissions pour le champ $1
-project_admin_utils	perm_reset_for_tracker	Réinitialisation des permissions pour l'outil de suivi $1
+project_admin_utils	perm_reset_for_tracker	Réinitialisation des permissions pour le tracker $1
 project_admin_utils	perm_reset_for_package	Réinitialisation des permissions pour le paquet $1
 project_admin_utils	perm_reset_for_release	Réinitialisation des permissions pour la version $1
 project_admin_utils	perm_reset_for_document	Réinitialisation des permissions pour le document $1
@@ -265,7 +265,7 @@ project_admin_utils	perm_reset_for_wikipage	Réinitialisation des permissions po
 project_admin_utils	perm_reset_for_wikiattachment	Réinitialisation des permissions pour le fichier joint wiki $1
 project_admin_utils	perm_reset_for_object	Réinitialisation des permissions pour l'objet $1
 project_admin_utils	perm_granted_for_field	Permission accordée pour le champ $1
-project_admin_utils	perm_granted_for_tracker	Permission accordée pour l'outil de suivi $1
+project_admin_utils	perm_granted_for_tracker	Permission accordée pour le tracker $1
 project_admin_utils	perm_granted_for_files	Permission accordée pour Fichiers $1
 project_admin_utils	perm_granted_for_package	Permission accordée pour le paquet $1
 project_admin_utils	perm_granted_for_release	Permission accordée pour la version $1
@@ -381,16 +381,16 @@ project_admin_userperms	unable_load_p	Impossible de charger l'objet projet
 project_admin_userperms	perm_fail_for	Erreur de permissions pour $1
 project_admin_userperms	perm_upd	Permissions mises à jour
 project_admin_userperms	user_name	Nom d'utilisateur
-project_admin_userperms	bug_track	Suivi de bugs
+project_admin_userperms	bug_track	Tracker de bugs
 project_admin_userperms	forums	Forums
 project_admin_userperms	news	Annonces
 project_admin_userperms	svn	SVN
-project_admin_userperms	task_man	Suivi de tâches
-project_admin_userperms	patch_man	Suivi de corrections
-project_admin_userperms	supp_man	Suivi de support
+project_admin_userperms	task_man	Tracker de tâches
+project_admin_userperms	patch_man	Tracker de corrections
+project_admin_userperms	supp_man	Tracker de support
 project_admin_userperms	doc_man	Gestion Documentation
 project_admin_userperms	file_man	Gestion fichiers
-project_admin_userperms	tracker	Suivi&nbsp;: $1
+project_admin_userperms	tracker	Tracker&nbsp;: $1
 project_admin_userperms	no_users_found	Aucun membre de projet trouvé
 project_admin_userperms	tech_only	Technicien
 project_admin_userperms	admin_only	Administrateur
@@ -408,10 +408,10 @@ project_export_artifact_export	depend_on	Dépend de
 project_export_artifact_export	all_followup_comments	Tout le fil de commentaires en un seul bloc de texte
 project_export_artifact_export	depend_on_list	Liste des artifacts dont celui-ci dépend
 project_export_artifact_export	art_export	Exportation des artifacts
-project_export_artifact_export	no_art_found	Aucun artifact pour cet outil de suivi. Impossible d'exporter des données.
-project_export_artifact_export	db_access_err	Erreur lors de l'accès à la base de données des outils de suivi. Veuillez informer l'administrateur $1 de cette erreur.
+project_export_artifact_export	no_art_found	Aucun artifact pour ce tracker. Impossible d'exporter des données.
+project_export_artifact_export	db_access_err	Erreur lors de l'accès à la base de données des trackers. Veuillez informer l'administrateur $1 de cette erreur.
 project_export_artifact_export	art_exp_format	Format d'exportation des artifacts
-project_export_artifact_export	art_exp_format_msg	Le format d'exportation des artifacts de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
+project_export_artifact_export	art_exp_format_msg	Le format d'exportation des artifacts de ce tracker comporte les champs suivants. Les valeurs données en exemple indiquent le type des données.
 project_export_artifact_export	add_cc_lbl	Liste CC
 project_export_artifact_export	add_cc_dsc	Liste des personnes recevant une copie carbone (CC) des notifications e-mail (en plus de la personne qui l'a soumis, a qui on l'a confie ou qui a poste un commentaire)
 project_export_artifact_export	cc_comment_lbl	Commentaire CC
@@ -437,10 +437,10 @@ project_export_artifact_history_export	mod_on_desc	Date de modification
 project_export_artifact_history_export	comment_type_desc	Type du commentaire ajouté à la fil de commentaires
 project_export_artifact_history_export	label_desc	Nom public du champ dont la valeur a été modifiée
 project_export_artifact_history_export	art_hist_export	Exportation de l'historique des changements
-project_export_artifact_history_export	no_hist_found	Aucun historique de changements pour cet outil de suivi.  Impossible d'exporter des données.
-project_export_artifact_history_export	db_access_err	Erreur lors de l'accès à la base de données de cet outil de suivi. Veuillez informer l'administrateur $1 de cette erreur.
+project_export_artifact_history_export	no_hist_found	Aucun historique de changements pour ce tracker.  Impossible d'exporter des données.
+project_export_artifact_history_export	db_access_err	Erreur lors de l'accès à la base de données de ce tracker. Veuillez informer l'administrateur $1 de cette erreur.
 project_export_artifact_history_export	hist_export_format	Format d'exportation de l'historique des changements
-project_export_artifact_history_export	hist_export_format_msg	L'exportation de l'historique des changements de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
+project_export_artifact_history_export	hist_export_format_msg	L'exportation de l'historique des changements de ce tracker comporte les champs suivants. Les valeurs données en exemple indiquent le type des données.
 #-----------------------------------------------
 # Script: SF/www/project/export/project_export_utils.php
 #

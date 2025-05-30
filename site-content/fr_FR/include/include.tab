@@ -102,7 +102,7 @@ include_menu	bugs	Bugs
 include_menu	tasks	Tâches
 include_menu	supp_requ	Demande de support
 include_menu	wiki	Wiki
-include_menu	all_trackers	Tous les outils de suivi
+include_menu	all_trackers	Tous les trackers
 include_menu	new_releases	Nouvelles versions
 include_menu	other_site_mirrors	Autres sites miroirs
 include_menu	help_index	Index de l'aide
@@ -155,11 +155,11 @@ include_project_home	proj_home	Page d'accueil Web du projet
 include_project_home	public_forums	Forums publics
 include_project_home	msg	<B>$1</B> messages dans
 include_project_home	forums	<B>$1</B> forums
-include_project_home	bug_track	Suivi de bugs
+include_project_home	bug_track	Tracker de bugs
 include_project_home	open_bugs	Bugs ouvert
-include_project_home	supp_manager	Suivi de demandes de support
+include_project_home	supp_manager	Tracker de demandes de support
 include_project_home	open_requ	<B>$1</B> demandes ouvertes
-include_project_home	tech_supp_manager	Suivi de demandes de support
+include_project_home	tech_supp_manager	Tracker de demandes de support
 include_project_home	doc	Documentation
 include_project_home	patch_manager	Gestionnaire de correction
 include_project_home	open_patches	<B>$1</B> corrections ouvertes
@@ -176,9 +176,9 @@ include_project_home	browse_svn	Parcourir l'arbre Subversion
 include_project_home	accesses	<B>$1</B> accès
 include_project_home	file_releases	Fichiers publiés
 include_project_home	packages	<B>$1</B> paquet(s)
-include_project_home	trackers	Outils de suivi
+include_project_home	trackers	Trackers
 include_project_home	no_arttypefact	Impossible d'obtenir un ArtifactTypeFactory
-include_project_home	no_trackers_accessible	Aucun outil de suivi accessible
+include_project_home	no_trackers_accessible	Aucun tracker accessible
 include_project_home	anon_ftp_space	Espace FTP anonyme
 include_project_home	latest_news	Dernières annonces
 include_project_home	start_monitoring	Surveiller ce paquet
