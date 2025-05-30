@@ -34,6 +34,9 @@ final class OnlyOfficeDocumentConfig
 {
     public array $permissions;
 
+    /**
+     * @psalm-param lowercase-string $fileType
+     */
     private function __construct(
         public string $fileType,
         public string $key,
@@ -47,7 +50,7 @@ final class OnlyOfficeDocumentConfig
     public static function fromDocument(OnlyOfficeDocument $document, ConcealedString $download_token): self
     {
         return new self(
-            pathinfo($document->filename, PATHINFO_EXTENSION),
+            strtolower(pathinfo($document->filename, PATHINFO_EXTENSION)),
             sprintf('tuleap_document_%d_%d', $document->item->getId(), $document->version_id),
             $document->filename,
             ServerHostname::HTTPSUrl() . '/onlyoffice/document_download?token=' . urlencode($download_token->getString()),
