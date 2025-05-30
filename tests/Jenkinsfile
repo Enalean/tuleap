@@ -149,6 +149,9 @@ pipeline {
                     steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests() }) } }
                     post { always { junit 'results/js-test-results/junit-*.xml' } }
                 }
+                stage ('Scan for secrets') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runSecretsScan() }) } }
+                }
             }
             post {
                 always {

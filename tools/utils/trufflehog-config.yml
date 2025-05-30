@@ -1,0 +1,11 @@
+detectors:
+  - name: tuleap-access-key
+    keywords:
+      - tlp-k1-
+      - tlp-invite-
+      - tlp-jk-hook1-
+      - tlp-oauth2-c1-
+      - tlp-oauth2-ac1-
+      - tlp-oauth2-rt1-
+    regex:
+      access-key: '(?i)tlp\-(?:k1|invite|jk\-hook1|oauth2\-c1|oauth2\-ac1|oauth2\-rt1)\-[a-z0-9-]+\.[0-9a-f]{32,}'

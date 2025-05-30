@@ -80,6 +80,12 @@ def runTabFilesCheck() {
     }
 }
 
+def runSecretsScan() {
+    dir ('sources') {
+        runInsideNixShell('make scan-secrets')
+    }
+}
+
 def runPsalm(String configPath, String root='.') {
     withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
         dir ('sources') {
