@@ -1,5 +1,5 @@
-plugin_tracker	service_lbl_key	Suivi
-plugin_tracker	service_desc_key	Outils de suivi du projet
+plugin_tracker	service_lbl_key	Tracker
+plugin_tracker	service_desc_key	Trackers du projet
 
 project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
@@ -23,9 +23,9 @@ project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajoute
 project_admin_utils	tracker_date_reminder_duplicated	Un rappel sur date avec les mêmes paramètres existe déjà, vous devez le mettre à jour
 project_admin_utils	tracker_date_reminder_optgroup_label_ugroup	Groupes d'utilisateurs
 project_admin_utils	tracker_date_reminder_optgroup_label_role	Rôles
-project_admin_utils	global_notification_update	Mise à jour des notifications globales pour l'outil de suivi $1.
-project_admin_utils	user_notification_update	L'utilisateur $1($2) a mis à jour la configuration de ses notifications pour l'outil de suivi $3
-project_admin_utils	global_notification_update_with_force	Mise à jour des notifications globales en écrasant les paramètres de notification des utilisateurs pour l'outil de suivi $1.
+project_admin_utils	global_notification_update	Mise à jour des notifications globales pour le tracker $1.
+project_admin_utils	user_notification_update	L'utilisateur $1($2) a mis à jour la configuration de ses notifications pour le tracker $3
+project_admin_utils	global_notification_update_with_force	Mise à jour des notifications globales en écrasant les paramètres de notification des utilisateurs pour le tracker $1.
 project_admin_utils	tracker_formelement_update	Mise à jour du champ
 project_admin_utils	artifact_delete_log	Artifact supprimé
-project_admin_utils	tracker_promotion	Promotion de l'outil de suivi $1
+project_admin_utils	tracker_promotion	Promotion du tracker $1

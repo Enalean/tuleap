@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 
 msgid "%{ user_group } has no permission for trackers"
-msgstr "%{ user_group } n'a aucune permission au niveau des outils de suivi"
+msgstr "%{ user_group } n'a aucune permission au niveau des trackers"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
@@ -23,7 +23,7 @@ msgid "Permissions"
 msgstr "Permissions"
 
 msgid "Project has no tracker"
-msgstr "Le projet ne possède pas d'outil de suivi"
+msgstr "Le projet ne possède pas de tracker"
 
 msgid "See all tracker permissions"
 msgstr "Voir toutes les permissions des trackers"
