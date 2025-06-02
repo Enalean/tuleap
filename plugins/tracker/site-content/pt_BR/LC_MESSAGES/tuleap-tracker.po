@@ -1099,6 +1099,9 @@ msgstr ""
 msgid "Delete permanently the field"
 msgstr ""
 
+msgid "Delete the canned response"
+msgstr ""
+
 msgid "Delete the reference?"
 msgstr ""
 
@@ -1106,7 +1109,7 @@ msgid "Delete the value"
 msgstr ""
 
 #, php-format
-msgid "Delete this Canned Response : %1$s ?"
+msgid "Delete this Canned Response: %1$s?"
 msgstr ""
 
 msgid "Delete this tracker"
