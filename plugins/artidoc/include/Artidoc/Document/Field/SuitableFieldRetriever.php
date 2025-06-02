@@ -22,6 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use PFUser;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Ugroups;
+use Tracker_FormElement_Field_String;
+use Tracker_Semantic_Description;
+use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -39,9 +45,9 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<\Tracker_FormElement_Field_String> | Err<Fault>
+     * @return Ok<Tracker_FormElement_Field_String> | Ok<Tracker_FormElement_Field_List> | Err<Fault>
      */
-    public function retrieveField(int $field_id, \PFUser $user): Ok|Err
+    public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
         $field = $this->factory->getUsedFormElementFieldById($field_id);
 
@@ -49,22 +55,32 @@ final readonly class SuitableFieldRetriever
             return Result::err(FieldNotFoundFault::build($field_id));
         }
 
-        if (! $field instanceof \Tracker_FormElement_Field_String) {
-            return Result::err(FieldNotSupportedFault::build($field_id));
-        }
+        return match (true) {
+            $field instanceof Tracker_FormElement_Field_String => $this->validateStringField($field),
+            $field instanceof Tracker_FormElement_Field_List
+            && $field->getBind()->getType() === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE => Result::ok($field),
+            default => Result::err(FieldNotSupportedFault::build($field_id))
+        };
+    }
 
-        $tracker = $field->getTracker();
+    /**
+     * @return Ok<Tracker_FormElement_Field_String>|Err<Fault>
+     */
+    private function validateStringField(
+        Tracker_FormElement_Field_String $field,
+    ): Ok|Err {
+        $field_id = $field->getId();
+        $tracker  = $field->getTracker();
 
-        $semantic_title_field = \Tracker_Semantic_Title::load($tracker)->getField();
-        if ($semantic_title_field && $semantic_title_field->getId() === $field->getId()) {
+        $semantic_title_field = Tracker_Semantic_Title::load($tracker)->getField();
+        if ($semantic_title_field && $semantic_title_field->getId() === $field_id) {
             return Result::err(FieldIsTitleSemanticFault::build($field_id));
         }
 
-        $semantic_description_field = \Tracker_Semantic_Description::load($tracker)->getField();
-        if ($semantic_description_field && $semantic_description_field->getId() === $field->getId()) {
+        $semantic_description_field = Tracker_Semantic_Description::load($tracker)->getField();
+        if ($semantic_description_field && $semantic_description_field->getId() === $field_id) {
             return Result::err(FieldIsDescriptionSemanticFault::build($field_id));
         }
-
         return Result::ok($field);
     }
 }

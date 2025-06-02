@@ -24,9 +24,11 @@ namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
 use Tuleap\Artidoc\Document\Field\GetFieldsWithValues;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserGroupsListFieldRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -82,13 +84,18 @@ final readonly class ArtifactSectionRepresentationBuilder
     }
 
     /**
-     * @return list<SectionStringFieldRepresentation>
+     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation>
      */
     private function getFieldValues(RequiredArtifactInformation $artifact_information): array
     {
-        return array_map(
-            static fn(StringFieldWithValue $field) => new SectionStringFieldRepresentation($field),
-            $this->section_fields_builder->getFieldsWithValues($artifact_information->last_changeset)
-        );
+        $fields          = $this->section_fields_builder->getFieldsWithValues($artifact_information->last_changeset);
+        $representations = [];
+        foreach ($fields as $field) {
+            $representations[] = match ($field::class) {
+                StringFieldWithValue::class => new SectionStringFieldRepresentation($field),
+                UserGroupsListFieldWithValue::class => new SectionUserGroupsListFieldRepresentation($field),
+            };
+        }
+        return $representations;
     }
 }

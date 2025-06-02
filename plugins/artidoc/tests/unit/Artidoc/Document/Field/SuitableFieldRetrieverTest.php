@@ -37,6 +37,10 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -72,7 +76,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<\Tracker_FormElement_Field_String> | Err<Fault>
+     * @return Ok<\Tracker_FormElement_Field_String> | Ok<\Tracker_FormElement_Field_List> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {
@@ -151,5 +155,52 @@ final class SuitableFieldRetrieverTest extends TestCase
         $result = $this->retrieve();
         self::assertTrue(Result::isOk($result));
         self::assertSame($string_field, $result->value);
+    }
+
+    public function testItAllowsListFieldBoundToUserGroups(): void
+    {
+        $list_field            = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField(self::FIELD_ID)
+                ->withMultipleValues()
+                ->inTracker($this->tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+        )->build()->getField();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($list_field, $result->value);
+    }
+
+    public function testItRejectsListFieldBoundToStaticValues(): void
+    {
+        $list_field            = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(self::FIELD_ID)
+                ->withMultipleValues()
+                ->inTracker($this->tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+        )->build()->getField();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldNotSupportedFault::class, $result->error);
+    }
+
+    public function testItRejectsListFieldBoundToUsers(): void
+    {
+        $list_field            = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField(self::FIELD_ID)
+                ->inTracker($this->tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+        )->build()->getField();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldNotSupportedFault::class, $result->error);
     }
 }
