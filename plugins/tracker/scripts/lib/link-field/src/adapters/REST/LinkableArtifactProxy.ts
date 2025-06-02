@@ -22,6 +22,7 @@ import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
 import { ProjectProxy } from "./ProjectProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkableArtifact } from "../../domain/links/LinkableArtifact";
+import { ArtifactUriLinkProxy } from "./ArtifactUriLinkProxy";
 
 export const LinkableArtifactProxy = {
     fromAPIArtifact: (artifact: ArtifactWithStatus): LinkableArtifact => ({
@@ -38,7 +39,7 @@ export const LinkableArtifactProxy = {
         id: entry.per_type_id,
         title: entry.title,
         xref: ArtifactCrossReferenceProxy.fromAPIUserHistory(entry),
-        uri: entry.html_url,
+        uri: ArtifactUriLinkProxy.fromAPIUserHistory(entry),
         status: entry.badges[0]
             ? { value: entry.badges[0].label, color: entry.badges[0].color }
             : null,
