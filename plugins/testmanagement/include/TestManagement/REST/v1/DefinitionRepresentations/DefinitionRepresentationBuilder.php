@@ -68,7 +68,7 @@ class DefinitionRepresentationBuilder
         \Codendi_HTMLPurifier $purifier,
         ContentInterpretor $interpreter,
         private readonly ArtifactRepresentationBuilder $artifact_representation_builder,
-        private readonly \Tracker_Artifact_PriorityManager $artifact_priority_manager,
+        private readonly \Tuleap\Tracker\Artifact\PriorityManager $artifact_priority_manager,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;

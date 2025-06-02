@@ -29,10 +29,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityHistoryChange;
-use Tracker_Artifact_PriorityManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
+use Tuleap\Tracker\Artifact\PriorityManager;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsRankOrdererTest extends TestCase
@@ -40,17 +40,16 @@ final class ArtifactsRankOrdererTest extends TestCase
     private ArtifactsRankOrderer $orderer;
     private Project $project;
     private string $context_id;
-    private Tracker_Artifact_PriorityManager&MockObject $priority_manager;
+    private PriorityManager&MockObject $priority_manager;
     private EventManager $event_manager;
 
     protected function setUp(): void
     {
         $this->project          = ProjectTestBuilder::aProject()->build();
         $this->context_id       = Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT;
-        $this->priority_manager = $this->createMock(Tracker_Artifact_PriorityManager::class);
-        $this->priority_manager->method('enableExceptionsOnError');
-        $this->event_manager = $this->createMock(EventManager::class);
-        $this->orderer       = new ArtifactsRankOrderer($this->priority_manager, $this->event_manager);
+        $this->priority_manager = $this->createMock(PriorityManager::class);
+        $this->event_manager    = $this->createMock(EventManager::class);
+        $this->orderer          = new ArtifactsRankOrderer($this->priority_manager, $this->event_manager);
     }
 
     public function testReorderThrowsWhenSameIdIsPassedInOrderAndComparedTo(): void

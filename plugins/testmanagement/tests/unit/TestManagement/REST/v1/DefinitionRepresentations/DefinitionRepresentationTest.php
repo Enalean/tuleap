@@ -67,7 +67,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
         $purifier->expects($this->once())->method('purifyHTMLWithReferences')->willReturn('description');
         $commonmark_interpreter = $this->createMock(ContentInterpretor::class);
-        $priority_manager       = $this->createStub(\Tracker_Artifact_PriorityManager::class);
+        $priority_manager       = $this->createStub(\Tuleap\Tracker\Artifact\PriorityManager::class);
         $priority_manager->method('getGlobalRank')->willReturn(1);
 
         $representation = new DefinitionTextOrHTMLRepresentation(

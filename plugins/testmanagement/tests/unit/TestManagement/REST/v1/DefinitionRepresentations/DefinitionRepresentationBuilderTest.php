@@ -58,7 +58,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->purifier                        = $this->createMock(\Codendi_HTMLPurifier::class);
         $this->interpreter                     = $this->createMock(ContentInterpretor::class);
         $this->artifact_representation_builder = $this->createMock(ArtifactRepresentationBuilder::class);
-        $priority_manager                      = $this->createStub(\Tracker_Artifact_PriorityManager::class);
+        $priority_manager                      = $this->createStub(\Tuleap\Tracker\Artifact\PriorityManager::class);
         $priority_manager->method('getGlobalRank')->willReturn(1);
 
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(

@@ -766,7 +766,6 @@
             <file name="plugins/tracker/tests/unit/Artifact/StatusBadgeBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Tracker_ArtifactNodeTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Tracker_ArtifactTest.php"/>
-            <file name="plugins/tracker/tests/unit/Artifact/Tracker_Artifact_PriorityManagerTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Tracker_Artifact_XMLExportTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/Tracker_Artifact_XMLImportTest.php"/>
             <file name="plugins/tracker/tests/unit/Artifact/XMLImport/TrackerArtifactXMLImportArtifactFieldsDataBuilderTest.php"/>

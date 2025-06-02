@@ -28,21 +28,15 @@ use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 class ArtifactsRankOrderer
 {
     public function __construct(
-        private readonly \Tracker_Artifact_PriorityManager $priority_manager,
+        private readonly \Tuleap\Tracker\Artifact\PriorityManager $priority_manager,
         private readonly \EventManager $event_manager,
     ) {
-        $this->priority_manager->enableExceptionsOnError();
     }
 
     public static function build(): self
     {
         return new self(
-            new \Tracker_Artifact_PriorityManager(
-                new \Tracker_Artifact_PriorityDao(),
-                new \Tracker_Artifact_PriorityHistoryDao(),
-                \UserManager::instance(),
-                \Tracker_ArtifactFactory::instance()
-            ),
+            \Tuleap\Tracker\Artifact\PriorityManager::build(),
             \EventManager::instance()
         );
     }
@@ -55,17 +49,17 @@ class ArtifactsRankOrderer
         try {
             if ($order->direction === OrderRepresentation::BEFORE) {
                 $this->priority_manager->moveListOfArtifactsBefore(
-                    $order->ids,
+                    array_values($order->ids),
                     $order->compared_to,
-                    $context_id,
-                    $project->getID()
+                    (int) $context_id,
+                    (int) $project->getID()
                 );
             } else {
                 $this->priority_manager->moveListOfArtifactsAfter(
-                    $order->ids,
+                    array_values($order->ids),
                     $order->compared_to,
-                    $context_id,
-                    $project->getID()
+                    (int) $context_id,
+                    (int) $project->getID()
                 );
             }
 

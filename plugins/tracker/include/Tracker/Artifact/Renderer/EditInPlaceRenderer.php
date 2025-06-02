@@ -24,11 +24,12 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Renderer\FieldsDataFromRequestRetriever;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
-class Tracker_Artifact_Renderer_EditInPlaceRenderer
+class Tracker_Artifact_Renderer_EditInPlaceRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(
         private Artifact $artifact,
@@ -116,14 +117,9 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
         return $this->getPriorityManager()->getArtifactPriorityHistory($artifact);
     }
 
-    private function getPriorityManager()
+    private function getPriorityManager(): PriorityManager
     {
-        return new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
-            new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance(),
-            Tracker_ArtifactFactory::instance()
-        );
+        return PriorityManager::build();
     }
 
     public function updateArtifact(Codendi_Request $request, PFUser $current_user)

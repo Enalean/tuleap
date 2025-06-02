@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPriva
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\Report\Renderer\Table\TableRendererForReportRetriever;
 use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
@@ -84,7 +84,7 @@ class ReportsResource extends AuthenticatedResource
         $artifact_factory              = Tracker_ArtifactFactory::instance();
         $this->report_artifact_factory = new ReportArtifactFactory(
             $artifact_factory,
-            new MatchingIdsOrderer(new Tracker_Artifact_PriorityDao()),
+            new MatchingIdsOrderer(new PriorityDao()),
         );
     }
 

@@ -21,17 +21,17 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use PermissionsManager;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 
 class ArtifactDependenciesCleaner
 {
     public function __construct(
         private readonly PermissionsManager $permissions_manager,
-        private readonly Tracker_Artifact_PriorityManager $tracker_artifact_priority_manager,
+        private readonly PriorityManager $tracker_artifact_priority_manager,
         private readonly Tracker_ArtifactDao $dao,
         private readonly ComputedFieldDaoCache $computed_dao_cache,
         private readonly RecentlyVisitedDao $recently_visited_dao,

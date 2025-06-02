@@ -24,13 +24,13 @@ namespace Tuleap\Tracker\Action;
 
 use Psr\Log\NullLogger;
 use Tracker;
-use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporter;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
@@ -46,7 +46,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
     private ArtifactsDeletionManager&\PHPUnit\Framework\MockObject\MockObject $artifacts_deletion_manager;
     private ArtifactXMLExporter&\PHPUnit\Framework\MockObject\MockObject $xml_exporter;
     private UpdateMoveChangesetXMLDuckTyping $xml_updater;
-    private Tracker_Artifact_PriorityManager&\PHPUnit\Framework\MockObject\MockObject $artifact_priority_manager;
+    private PriorityManager&\PHPUnit\Framework\MockObject\MockObject $artifact_priority_manager;
     private Tracker_Artifact_XMLImport&\PHPUnit\Framework\MockObject\MockObject $xml_import;
     private MegaMoverArtifactByDuckTyping $artifact_mover;
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
@@ -61,7 +61,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $this->artifacts_deletion_manager = $this->createMock(ArtifactsDeletionManager::class);
         $this->xml_exporter               = $this->createMock(ArtifactXMLExporter::class);
         $this->xml_updater                = UpdateMoveChangesetXMLDuckTypingStub::build();
-        $this->artifact_priority_manager  = $this->createMock(Tracker_Artifact_PriorityManager::class);
+        $this->artifact_priority_manager  = $this->createMock(PriorityManager::class);
         $transaction_executor             = new DBTransactionExecutorPassthrough();
         $this->xml_import                 = $this->createMock(Tracker_Artifact_XMLImport::class);
 

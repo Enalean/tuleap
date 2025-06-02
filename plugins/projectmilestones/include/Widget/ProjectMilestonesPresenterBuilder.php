@@ -30,7 +30,6 @@ use Planning;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
@@ -41,6 +40,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Project;
@@ -170,7 +170,7 @@ class ProjectMilestonesPresenterBuilder
                 new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
                 new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
                 new ArtifactsInExplicitBacklogDao(),
-                new Tracker_Artifact_PriorityDao(),
+                new PriorityDao(),
                 \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             ),
             $milestone_factory,

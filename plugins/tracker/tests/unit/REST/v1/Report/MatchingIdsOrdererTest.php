@@ -23,16 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Report;
 
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MatchingIdsOrdererTest extends TestCase
 {
     private MatchingIdsOrderer $orderer;
-    private \Tracker_Artifact_PriorityDao&\PHPUnit\Framework\MockObject\MockObject $dao;
+    private PriorityDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao = $this->createMock(\Tracker_Artifact_PriorityDao::class);
+        $this->dao = $this->createMock(PriorityDao::class);
 
         $this->orderer = new MatchingIdsOrderer($this->dao);
     }

@@ -30,14 +30,12 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BacklogItem\AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
+use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
@@ -49,17 +47,19 @@ use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementRemover;
 use Tuleap\AgileDashboard\REST\v1\Milestone\ProvidedRemoveIdIsNotInExplicitBacklogException;
 use Tuleap\AgileDashboard\REST\v1\Milestone\RemoveNotAvailableInClassicBacklogModeException;
-use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use UserManager;
@@ -120,7 +120,7 @@ class ProjectBacklogResource
                 $tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new Tracker_Artifact_PriorityDao(),
+            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
 
@@ -132,11 +132,12 @@ class ProjectBacklogResource
             $backlog_item_collection_factory,
         );
 
-        $priority_manager = new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
+        $priority_manager = new PriorityManager(
+            new PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             $user_manager,
-            $tracker_artifact_factory
+            $tracker_artifact_factory,
+            DBFactory::getMainTuleapDBConnection()->getDB(),
         );
 
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());

@@ -20,6 +20,7 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
@@ -303,14 +304,9 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $artifact_field_value_full_representation;
     }
 
-    private function getPriorityManager()
+    private function getPriorityManager(): PriorityManager
     {
-        return new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
-            new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance(),
-            Tracker_ArtifactFactory::instance()
-        );
+        return PriorityManager::build();
     }
 
     /**

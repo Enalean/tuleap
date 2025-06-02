@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Tracker_Artifact_PriorityDao;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -32,12 +32,12 @@ final class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ReportArtifactFactory $report_artifact_factory;
     private \Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\MockObject $tracker_artifact_factory;
-    private Tracker_Artifact_PriorityDao&\PHPUnit\Framework\MockObject\MockObject $dao;
+    private PriorityDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
     protected function setUp(): void
     {
         $this->tracker_artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
-        $this->dao                      = $this->createMock(Tracker_Artifact_PriorityDao::class);
+        $this->dao                      = $this->createMock(PriorityDao::class);
 
         $this->report_artifact_factory = new ReportArtifactFactory(
             $this->tracker_artifact_factory,

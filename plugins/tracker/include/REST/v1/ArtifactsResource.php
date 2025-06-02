@@ -33,9 +33,7 @@ use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Changeset as Changeset;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImportBuilder;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_InvalidFieldException;
@@ -117,7 +115,9 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChanges
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporterBuilder;
 use Tuleap\Tracker\Artifact\XML\Exporter\LocalAbsoluteFilePathXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
@@ -1368,6 +1368,7 @@ class ArtifactsResource extends AuthenticatedResource
             new TypeDao(),
             new ArtifactLinksUsageDao(),
         );
+        $db_connection          = DBFactory::getMainTuleapDBConnection();
 
         return new MegaMoverArtifactByDuckTyping(
             new ArtifactsDeletionManager(
@@ -1412,13 +1413,14 @@ class ArtifactsResource extends AuthenticatedResource
                 new IsPermissionsOnArtifactFieldVerifier(),
                 new IsArtifactLinkFieldVerifier(),
             ),
-            new Tracker_Artifact_PriorityManager(
-                new Tracker_Artifact_PriorityDao(),
+            new PriorityManager(
+                new PriorityDao(),
                 new Tracker_Artifact_PriorityHistoryDao(),
                 $this->user_manager,
-                $this->artifact_factory
+                $this->artifact_factory,
+                $db_connection->getDB(),
             ),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new DBTransactionExecutorWithConnection($db_connection),
             $xml_import_builder->build(
                 $user_finder,
                 new NullLogger()

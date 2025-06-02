@@ -24,15 +24,15 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Exception;
 use PFUser;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
-use Tracker_Artifact_PriorityManager;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\PriorityManager;
 
 class ArtifactLinkUpdater
 {
     /**
-     * @var Tracker_Artifact_PriorityManager
+     * @var PriorityManager
      */
     private $priority_manager;
     /**
@@ -40,7 +40,7 @@ class ArtifactLinkUpdater
      */
     private $data_formater;
 
-    public function __construct(Tracker_Artifact_PriorityManager $priority_manager, ArtifactLinkUpdaterDataFormater $data_formater)
+    public function __construct(PriorityManager $priority_manager, ArtifactLinkUpdaterDataFormater $data_formater)
     {
         $this->priority_manager = $priority_manager;
         $this->data_formater    = $data_formater;

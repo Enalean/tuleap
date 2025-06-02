@@ -216,7 +216,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $visibility_verifier     = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $artifact_link_updater = new ArtifactLinkUpdater(
-            \Tracker_Artifact_PriorityManager::build(),
+            \Tuleap\Tracker\Artifact\PriorityManager::build(),
             new ArtifactLinkUpdaterDataFormater()
         );
 
@@ -254,7 +254,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new ArtifactsExplicitTopBacklogDAO(),
                 new FeatureAdditionProcessor($artifact_retriever, $artifact_link_updater, $user_retriever)
             ),
-            new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
+            new FeaturesRankOrderer(\Tuleap\Tracker\Artifact\PriorityManager::build()),
             new FeatureDAO(),
             new UserCanPlanInProgramIncrementVerifier(
                 new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever),

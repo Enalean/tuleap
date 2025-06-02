@@ -81,9 +81,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
@@ -236,7 +236,7 @@ class ExecutionsResource
                     ),
                     $provide_user_avatar_url,
                 ),
-                \Tracker_Artifact_PriorityManager::build(),
+                \Tuleap\Tracker\Artifact\PriorityManager::build(),
                 $provide_user_avatar_url,
             ),
             $provide_user_avatar_url,

@@ -30,7 +30,6 @@ use PFUser;
 use Planning_ArtifactMilestone;
 use PluginManager;
 use RuntimeException;
-use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
@@ -48,6 +47,7 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\REST\v1\Card\CardPatcher;
 use Tuleap\Taskboard\REST\v1\Card\CardPatchRepresentation;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
@@ -235,7 +235,7 @@ class TaskboardCardResource extends AuthenticatedResource
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
-        $priority_manager            = Tracker_Artifact_PriorityManager::build();
+        $priority_manager            = PriorityManager::build();
 
         $rank = (int) $priority_manager->getGlobalRank($id);
         return $card_representation_builder->build($milestone, $artifact, $user, $rank);

@@ -52,7 +52,6 @@ use Tracker;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryChange;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
@@ -82,6 +81,7 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -259,7 +259,7 @@ final class KanbanResource extends AuthenticatedResource
 
         $report_artifact_factory = new ReportArtifactFactory(
             $this->artifact_factory,
-            new MatchingIdsOrderer(new Tracker_Artifact_PriorityDao()),
+            new MatchingIdsOrderer(new PriorityDao()),
         );
 
         $report_from_where_builder = new ReportFilterFromWhereBuilder();

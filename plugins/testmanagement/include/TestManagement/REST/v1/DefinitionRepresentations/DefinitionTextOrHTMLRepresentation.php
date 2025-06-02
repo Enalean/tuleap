@@ -78,7 +78,7 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         Artifact $artifact,
         ArtifactRepresentation $artifact_representation,
         Tracker_FormElementFactory $form_element_factory,
-        \Tracker_Artifact_PriorityManager $artifact_priority_manager,
+        \Tuleap\Tracker\Artifact\PriorityManager $artifact_priority_manager,
         PFUser $user,
         string $description_format,
         array $all_requirements,
@@ -145,7 +145,7 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         );
     }
 
-    private static function getDefinitionRank(\Tracker_Artifact_PriorityManager $artifact_priority_manager, Artifact $artifact): int
+    private static function getDefinitionRank(\Tuleap\Tracker\Artifact\PriorityManager $artifact_priority_manager, Artifact $artifact): int
     {
         return (int) $artifact_priority_manager->getGlobalRank($artifact->getId());
     }

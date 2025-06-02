@@ -24,8 +24,8 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use PFUser;
 use Tracker;
-use Tracker_Artifact_PriorityDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -136,7 +136,7 @@ class TrackersResource extends AuthenticatedResource
         $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
         $this->report_artifact_factory  = new ReportArtifactFactory(
             $this->tracker_artifact_factory,
-            new MatchingIdsOrderer(new Tracker_Artifact_PriorityDao()),
+            new MatchingIdsOrderer(new PriorityDao()),
         );
     }
 

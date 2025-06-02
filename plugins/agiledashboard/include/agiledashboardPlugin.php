@@ -131,6 +131,7 @@ use Tuleap\StatisticsCore\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
@@ -1356,7 +1357,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $presenter_builder,
             new RemainingEffortValueRetriever($form_element_factory),
             new ArtifactsInExplicitBacklogDao(),
-            new Tracker_Artifact_PriorityDao(),
+            new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
     }

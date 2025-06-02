@@ -84,7 +84,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
         Artifact $artifact,
         ArtifactRepresentation $artifact_representation,
         Tracker_FormElementFactory $form_element_factory,
-        \Tracker_Artifact_PriorityManager $artifact_priority_manager,
+        \Tuleap\Tracker\Artifact\PriorityManager $artifact_priority_manager,
         PFUser $user,
         array $all_requirements,
         ?Tracker_Artifact_Changeset $changeset = null,
@@ -174,7 +174,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
         );
     }
 
-    private static function getDefinitionRank(\Tracker_Artifact_PriorityManager $artifact_priority_manager, Artifact $artifact): int
+    private static function getDefinitionRank(\Tuleap\Tracker\Artifact\PriorityManager $artifact_priority_manager, Artifact $artifact): int
     {
         return (int) $artifact_priority_manager->getGlobalRank($artifact->getId());
     }
