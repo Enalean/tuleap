@@ -126,44 +126,76 @@ final class CrossTrackerTQLQueryDao extends DataAccessObject
     }
 
     /**
+     * @param list<IProvideParametrizedSelectAndFromSQLFragments> $select_from_fragments,
      * @param list<int> $artifact_ids
      */
     public function searchArtifactsColumnsMatchingIds(
-        IProvideParametrizedSelectAndFromSQLFragments $select_from,
+        array $select_from_fragments,
         ParametrizedFromOrder $from_order,
         array $artifact_ids,
     ): array {
-        $select    = $select_from->getSelect();
-        $from      = $select_from->getFrom() . ' ' . $from_order->getFrom();
-        $order     = $from_order->getOrderBy();
-        $condition = EasyStatement::open()->in('artifact.id IN (?*)', $artifact_ids);
+        $results = [];
+        foreach ($select_from_fragments as $select_from) {
+            $select    = $select_from->getSelect();
+            $from      = $select_from->getFrom() . ' ' . $from_order->getFrom();
+            $order     = $from_order->getOrderBy();
+            $condition = EasyStatement::open()->in('artifact.id IN (?*)', $artifact_ids);
 
-        if ($select !== '') {
-            $select = ', ' . $select;
+            if ($select !== '') {
+                $select = ', ' . $select;
+            }
+
+            if ($order === '') {
+                $order = 'artifact.id DESC';
+            }
+
+            $sql = <<<SQL
+            SELECT DISTINCT artifact.id
+            $select
+            FROM tracker_artifact AS artifact
+            INNER JOIN tracker ON (artifact.tracker_id = tracker.id)
+            INNER JOIN tracker_changeset AS changeset ON (changeset.id = artifact.last_changeset_id)
+            $from
+            WHERE $condition
+            ORDER BY $order
+            SQL;
+
+            $parameters = [
+                ...$select_from->getFromParameters(),
+                ...$from_order->getFromParameters(),
+                ...$artifact_ids,
+            ];
+
+            $results = $this->mergeArtifactColumns($results, $this->getDB()->q($sql, ...$parameters));
+        }
+        return $results;
+    }
+
+    private function mergeArtifactColumns(array $results, array $column_results): array
+    {
+        foreach ($column_results as $artifact_column) {
+            $id = $artifact_column['id'];
+            if (isset($results[$id])) {
+                foreach ($artifact_column as $name => $value) {
+                    if ($name === 'id') {
+                        continue;
+                    }
+                    if (isset($results[$id][$name])) {
+                        if (is_array($results[$id][$name])) {
+                            $results[$id][$name][] = $value;
+                        } else {
+                            $results[$id][$name] = [$results[$id][$name], $value];
+                        }
+                    } else {
+                        $results[$id][$name] = $value;
+                    }
+                }
+            } else {
+                $results[$id] = $artifact_column;
+            }
         }
 
-        if ($order === '') {
-            $order = 'artifact.id DESC';
-        }
-
-        $sql = <<<SQL
-        SELECT DISTINCT artifact.id
-        $select
-        FROM tracker_artifact AS artifact
-        INNER JOIN tracker ON (artifact.tracker_id = tracker.id)
-        INNER JOIN tracker_changeset AS changeset ON (changeset.id = artifact.last_changeset_id)
-        $from
-        WHERE $condition
-        ORDER BY $order
-        SQL;
-
-        $parameters = [
-            ...$select_from->getFromParameters(),
-            ...$from_order->getFromParameters(),
-            ...$artifact_ids,
-        ];
-
-        return $this->getDB()->q($sql, ...$parameters);
+        return $results;
     }
 
     public function countArtifactsMatchingQuery(

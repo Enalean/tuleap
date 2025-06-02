@@ -587,6 +587,18 @@ final class TrackerDatabaseBuilder
         return $ids_list;
     }
 
+    public function buildColorForStaticListValue(int $field_id, int $value_id, TrackerColor $color): void
+    {
+        $this->db->insert(
+            'tracker_field_list_bind_decorator',
+            [
+                'field_id'       => $field_id,
+                'value_id'       => $value_id,
+                'tlp_color_name' => $color->getName(),
+            ]
+        );
+    }
+
     /**
      * @param list<string> $values
      * @return array<string, int>

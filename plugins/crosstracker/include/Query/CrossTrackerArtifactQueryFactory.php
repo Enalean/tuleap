@@ -316,9 +316,9 @@ final readonly class CrossTrackerArtifactQueryFactory
         );
 
         $this->instrumentation->updateSelectCount(count($query->parsed_query->getSelect()));
-        $additional_select_from = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user);
-        $select_results         = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
-            $additional_select_from,
+        $select_from_fragments = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user);
+        $select_results        = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
+            $select_from_fragments,
             $additional_from_order,
             array_values($artifact_ids),
         );

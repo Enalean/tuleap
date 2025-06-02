@@ -40,20 +40,34 @@ final class StaticListResultBuilder
 
         foreach ($select_results as $result) {
             $id = $result['id'];
-            if (! isset($values[$id])) {
-                $values[$id] = [];
-            }
 
+            $labels = [];
             if ($result["static_list_value_$alias"] !== null) {
-                $label = $result["static_list_value_$alias"];
-            } elseif ($result["static_list_open_$alias"] !== null) {
-                $label = $result["static_list_open_$alias"];
-            } else {
-                continue;
+                if (is_array($result["static_list_value_$alias"])) {
+                    $labels = array_merge($labels, $result["static_list_value_$alias"]);
+                } else {
+                    $labels[] = $result["static_list_value_$alias"];
+                }
+            }
+            if ($result["static_list_open_$alias"] !== null) {
+                if (is_array($result["static_list_open_$alias"])) {
+                    $labels = array_merge($labels, $result["static_list_open_$alias"]);
+                } else {
+                    $labels[] = $result["static_list_open_$alias"];
+                }
             }
             $color = $result["static_list_color_$alias"];
 
-            $values[$id][] = new StaticListValueRepresentation($label, $color);
+            $i           = 0;
+            $values[$id] = array_map(
+                static function (string $label) use (&$i, $color) {
+                    return new StaticListValueRepresentation(
+                        $label,
+                        is_array($color) ? ($color[$i++] ?? null) : $color,
+                    );
+                },
+                array_filter($labels),
+            );
         }
 
         return new SelectedValuesCollection(

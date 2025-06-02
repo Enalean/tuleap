@@ -48,6 +48,20 @@ final class StatusResultBuilder
             }
             $color = $result[$alias . '_color'];
 
+            if (is_array($label)) {
+                $i           = 0;
+                $values[$id] = array_map(
+                    static function (string $one_label) use (&$i, $color) {
+                        return new StaticListValueRepresentation(
+                            $one_label,
+                            is_array($color) ? ($color[$i++] ?? null) : $color,
+                        );
+                    },
+                    array_filter($label),
+                );
+                continue;
+            }
+
             $values[$id][] = new StaticListValueRepresentation($label, $color);
         }
 

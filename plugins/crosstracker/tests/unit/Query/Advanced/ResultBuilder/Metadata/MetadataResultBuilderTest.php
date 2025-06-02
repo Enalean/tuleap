@@ -202,8 +202,7 @@ EOL
             ),
             [
                 ['id' => 31, '@status' => 'Open', '@status_color' => 'neon-green'],
-                ['id' => 32, '@status' => 'Closed', '@status_color' => 'fiesta-red'],
-                ['id' => 32, '@status' => 'Also open', '@status_color' => null],
+                ['id' => 32, '@status' => ['Closed', 'Also open'], '@status_color' => ['fiesta-red']],
                 ['id' => 33, '@status' => null, '@status_color' => null],
             ],
         );
