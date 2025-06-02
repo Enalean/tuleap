@@ -291,9 +291,9 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
 
     public function beforeUserRegistrationEvent(BeforeUserRegistrationEvent $event): void
     {
-        $link_id = $event->getRequest()->get('openidconnect_link_id');
+        $link_id = ($this->getSessionStorage())[self::SESSION_LINK_ID_KEY] ?? '';
 
-        if ($link_id) {
+        if ($link_id !== '') {
             $provider_manager         = $this->getProviderManager();
             $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
             try {
