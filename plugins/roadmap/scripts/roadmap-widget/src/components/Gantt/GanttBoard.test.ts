@@ -17,28 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DateTime, Settings } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import GanttBoard from "./GanttBoard.vue";
-import type { Iteration, Row, Task, TaskRow } from "../../type";
-import GanttTask from "./Task/GanttTask.vue";
-import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
-import { TimePeriodMonth } from "../../helpers/time-period-month";
-import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
-import ScrollingArea from "./ScrollingArea.vue";
+import type { Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { Iteration, Row, Task, TaskRow } from "../../type";
+import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
+import { TimePeriodMonth } from "../../helpers/time-period-month";
+import * as rows_sorter from "../../helpers/rows-sorter";
 import type { RootState } from "../../store/type";
 import type { TasksState } from "../../store/tasks/type";
-import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
-import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
-import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
-import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
-import BarPopover from "./Task/BarPopover.vue";
-import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
 import type { IterationsState } from "../../store/iterations/type";
-import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 import NoDataToShowEmptyState from "../NoDataToShowEmptyState.vue";
-import * as rows_sorter from "../../helpers/rows-sorter";
-import { DateTime, Settings } from "luxon";
+import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
+import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
+import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
+import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
+import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
+import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
+import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
+import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
+import BarPopover from "./Task/BarPopover.vue";
+import GanttTask from "./Task/GanttTask.vue";
+import ScrollingArea from "./ScrollingArea.vue";
+import GanttBoard from "./GanttBoard.vue";
 
 Settings.defaultZone = "UTC";
 
@@ -68,32 +70,52 @@ function getRootState(): RootState {
     } as RootState;
 }
 
+const task_a = { id: 1, dependencies: {} } as Task;
+const task_b = { id: 2, dependencies: {} } as Task;
+const task_c = { id: 3, dependencies: {} } as Task;
+const task_k = { id: 11, dependencies: {} } as Task;
+
+const task_row_a = { task: task_a, is_shown: true } as TaskRow;
+const task_row_b = { task: task_b, is_shown: true } as TaskRow;
+const task_row_c = { task: task_c, is_shown: true } as TaskRow;
+
 describe("GanttBoard", () => {
     const windowResizeObserver = window.ResizeObserver;
+    let has_at_least_one_row_shown: boolean,
+        rows: Row[],
+        lvl1_iterations_to_display: Iteration[],
+        lvl2_iterations_to_display: Iteration[],
+        tasks: Task[];
 
     beforeEach(() => {
         jest.spyOn(rows_sorter, "sortRows").mockImplementation((rows) => [...rows]);
+
+        has_at_least_one_row_shown = true;
+        rows = [];
+        lvl1_iterations_to_display = [];
+        lvl2_iterations_to_display = [];
+        tasks = [];
     });
 
     afterEach(() => {
         window.ResizeObserver = windowResizeObserver;
     });
 
-    it("Displays an empty state if there is no rows", async () => {
-        const rows = [] as Row[];
-        const wrapper = shallowMount(GanttBoard, {
+    async function getWrapper(): Promise<Wrapper<Vue>> {
+        return shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
             },
+            localVue: await createRoadmapLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/has_at_least_one_row_shown": false,
+                        "tasks/has_at_least_one_row_shown": has_at_least_one_row_shown,
                         "tasks/rows": rows,
-                        "tasks/tasks": [],
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
+                        "tasks/tasks": tasks,
+                        "iterations/lvl1_iterations_to_display": lvl1_iterations_to_display,
+                        "iterations/lvl2_iterations_to_display": lvl2_iterations_to_display,
                         "timeperiod/time_period": new TimePeriodMonth(
                             DateTime.fromISO("2020-03-31T22:00:00.000Z"),
                             DateTime.fromISO("2020-04-30T22:00:00.000Z"),
@@ -103,289 +125,122 @@ describe("GanttBoard", () => {
                 }),
             },
         });
+    }
+
+    it("Displays an empty state if there is no rows", async () => {
+        has_at_least_one_row_shown = false;
+        const wrapper = await getWrapper();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
 
-        rows.push({ task: { id: 1, dependencies: {} } as Task, is_shown: true });
+        rows.push(task_row_a);
         wrapper.vm.$store.getters["tasks/has_at_least_one_row_shown"] = true;
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
     });
 
-    it("Displays no iterations if there isn't any", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [],
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                    },
-                }),
-            },
-        });
+    it("Displays no iterations if there isn't any", async () => {
+        rows = [task_row_a];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(0);
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
     });
 
-    it("Displays level 1 iterations", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [],
-                        "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
-                        "iterations/lvl2_iterations_to_display": [],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                    },
-                }),
-            },
-        });
+    it("Displays level 1 iterations", async () => {
+        rows = [task_row_a];
+        lvl1_iterations_to_display = [{ id: 1 } as Iteration];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(1);
     });
 
-    it("Displays level 2 iterations", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [],
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [{ id: 1 } as Iteration],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                    },
-                }),
-            },
-        });
+    it("Displays level 2 iterations", async () => {
+        rows = [task_row_a];
+        lvl2_iterations_to_display = [{ id: 1 } as Iteration];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(1);
     });
 
-    it("Displays levels 1 & 2 iterations", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [],
-                        "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
-                        "iterations/lvl2_iterations_to_display": [{ id: 2 } as Iteration],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                    },
-                }),
-            },
-        });
+    it("Displays levels 1 & 2 iterations", async () => {
+        rows = [task_row_a];
+        lvl1_iterations_to_display = [{ id: 1 } as Iteration];
+        lvl2_iterations_to_display = [{ id: 2 } as Iteration];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(2);
     });
 
-    it("Displays all tasks", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            { task: { id: 2, dependencies: {} }, is_shown: true } as TaskRow,
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 2, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+    it("Displays all tasks", async () => {
+        tasks = [task_a, task_b, task_c];
+        rows = [task_row_a, task_row_b, task_row_c];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(GanttTask)).toHaveLength(3);
     });
 
-    it("Displays subtasks skeleton", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
+    it("Displays subtasks skeleton", async () => {
+        tasks = [task_a, task_c];
+        rows = [
+            task_row_a,
+            {
+                for_task: task_a,
+                is_skeleton: true,
+                is_last_one: true,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            {
-                                for_task: { id: 1, dependencies: {} } as Task,
-                                is_skeleton: true,
-                                is_last_one: true,
-                            },
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+            task_row_c,
+        ] as Row[];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(GanttTask)).toHaveLength(2);
         expect(wrapper.findAllComponents(SubtaskSkeletonBar)).toHaveLength(1);
         expect(wrapper.findAllComponents(SubtaskSkeletonHeader)).toHaveLength(1);
     });
 
-    it("Displays subtasks", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
+    it("Displays subtasks", async () => {
+        tasks = [task_a, task_k, task_c];
+        rows = [
+            task_row_a,
+            {
+                parent: task_a,
+                subtask: task_k,
+                is_last_one: true,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            {
-                                parent: { id: 1, dependencies: {} } as Task,
-                                subtask: { id: 11, dependencies: {} } as Task,
-                                is_last_one: true,
-                            },
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                        ] as Row[],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 11, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+            task_row_c,
+        ] as Row[];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(GanttTask)).toHaveLength(3);
         expect(wrapper.findAllComponents(SubtaskHeader)).toHaveLength(1);
     });
 
-    it("Displays subtasks that can have multiple parents", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
+    it("Displays subtasks that can have multiple parents", async () => {
+        tasks = [task_a, task_k, task_c, task_k];
+        rows = [
+            task_row_a,
+            {
+                parent: task_a,
+                subtask: task_k,
+                is_last_one: true,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            {
-                                parent: { id: 1, dependencies: {} } as Task,
-                                subtask: { id: 11, dependencies: {} } as Task,
-                                is_last_one: true,
-                            },
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                            {
-                                parent: { id: 3, dependencies: {} } as Task,
-                                subtask: { id: 11, dependencies: {} } as Task,
-                                is_last_one: true,
-                            },
-                        ] as Row[],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 11, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                            { id: 11, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
+            task_row_c,
+            {
+                parent: task_c,
+                subtask: task_k,
+                is_last_one: true,
             },
-        });
+        ] as Row[];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(GanttTask)).toHaveLength(4);
         expect(wrapper.findAllComponents(SubtaskHeader)).toHaveLength(2);
@@ -399,87 +254,45 @@ describe("GanttBoard", () => {
         expect(unique_popover_ids).toHaveLength(4);
     });
 
-    it("Displays subtasks error message if retrieval failed", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
+    it("Displays subtasks error message if retrieval failed", async () => {
+        tasks = [task_a, task_c];
+        rows = [
+            task_row_a,
+            {
+                for_task: task_a,
+                is_error: true,
+                is_shown: true,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            {
-                                for_task: { id: 1, dependencies: {} } as Task,
-                                is_error: true,
-                                is_shown: true,
-                            },
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                        ] as Row[],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+            task_row_c,
+        ] as Row[];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(GanttTask)).toHaveLength(2);
         expect(wrapper.findAllComponents(SubtaskMessageHeader)).toHaveLength(1);
         expect(wrapper.findAllComponents(SubtaskMessage)).toHaveLength(1);
     });
 
-    it("Displays subtasks empty message if retrieval returned no subtasks", () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
+    it("Displays subtasks empty message if retrieval returned no subtasks", async () => {
+        tasks = [task_a, task_c];
+        rows = [
+            task_row_a,
+            {
+                for_task: task_a,
+                is_empty: true,
+                is_shown: true,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            {
-                                for_task: { id: 1, dependencies: {} } as Task,
-                                is_empty: true,
-                                is_shown: true,
-                            },
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                        ] as Row[],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+            task_row_c,
+        ] as Row[];
+
+        const wrapper = await getWrapper();
 
         expect(wrapper.findAllComponents(GanttTask)).toHaveLength(2);
         expect(wrapper.findAllComponents(SubtaskMessageHeader)).toHaveLength(1);
         expect(wrapper.findAllComponents(SubtaskMessage)).toHaveLength(1);
     });
 
-    it("Observes the resize of the time period", () => {
+    it("Observes the resize of the time period", async () => {
         const observe = jest.fn();
         const mockResizeObserver = jest.fn();
         mockResizeObserver.mockReturnValue({
@@ -497,37 +310,14 @@ describe("GanttBoard", () => {
             start: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
             dependencies: {},
         } as Task;
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            {
-                                task: task_1,
-                                is_shown: true,
-                            },
-                            {
-                                task: task_2,
-                                is_shown: true,
-                            },
-                        ],
-                        "tasks/tasks": [task_1, task_2],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+
+        tasks = [task_1, task_2];
+        rows = [
+            { task: task_1, is_shown: true },
+            { task: task_2, is_shown: true },
+        ];
+
+        const wrapper = await getWrapper();
 
         const time_period = wrapper.findComponent(TimePeriodHeader);
         expect(time_period.exists()).toBe(true);
@@ -547,42 +337,21 @@ describe("GanttBoard", () => {
         });
         window.ResizeObserver = mockResizeObserver;
 
-        const rows = [{ task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow] as Row[];
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": rows,
-                        "tasks/tasks": [],
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                    },
-                }),
-            },
-        });
+        rows = [task_row_a] as Row[];
+        const wrapper = await getWrapper();
 
         const time_period = wrapper.findComponent(TimePeriodHeader);
         expect(time_period.exists()).toBe(true);
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
 
-        // User hide closed elements
+        // User hides closed elements
         rows.pop();
         wrapper.vm.$store.getters["tasks/has_at_least_one_row_shown"] = false;
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
 
-        // User show closed elements
-        rows.push({ task: { id: 1, dependencies: {} } as Task, is_shown: true });
+        // User shows closed elements
+        rows.push(task_row_a);
         wrapper.vm.$store.getters["tasks/has_at_least_one_row_shown"] = true;
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
@@ -608,37 +377,14 @@ describe("GanttBoard", () => {
             start: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
             dependencies: {},
         } as Task;
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            {
-                                task: task_1,
-                                is_shown: true,
-                            },
-                            {
-                                task: task_2,
-                                is_shown: true,
-                            },
-                        ],
-                        "tasks/tasks": [task_1, task_2],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+
+        tasks = [task_1, task_2];
+        rows = [
+            { task: task_1, is_shown: true },
+            { task: task_2, is_shown: true },
+        ];
+
+        const wrapper = await getWrapper();
 
         const time_period_header = wrapper.findComponent(TimePeriodHeader);
         expect(time_period_header.exists()).toBe(true);
@@ -656,72 +402,20 @@ describe("GanttBoard", () => {
     });
 
     it("Use a different time period if user chose a different timescale", async () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            { task: { id: 2, dependencies: {} }, is_shown: true } as TaskRow,
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 2, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+        tasks = [task_a, task_b, task_c];
+        rows = [task_row_a, task_row_b, task_row_c];
+
+        const wrapper = await getWrapper();
 
         await wrapper.findComponent(TimePeriodControl).vm.$emit("input", "quarter");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("timeperiod/setTimescale", "quarter");
     });
 
     it("switch is-scrolling class on header so that user is knowing that some data is hidden behind the header", async () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": true,
-                        "tasks/rows": [
-                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
-                            { task: { id: 2, dependencies: {} }, is_shown: true } as TaskRow,
-                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
-                        ],
-                        "tasks/tasks": [
-                            { id: 1, dependencies: {} } as Task,
-                            { id: 2, dependencies: {} } as Task,
-                            { id: 3, dependencies: {} } as Task,
-                        ],
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
-                        "iterations/lvl1_iterations_to_display": [],
-                        "iterations/lvl2_iterations_to_display": [],
-                    },
-                }),
-            },
-        });
+        tasks = [task_a, task_b, task_c];
+        rows = [task_row_a, task_row_b, task_row_c];
+
+        const wrapper = await getWrapper();
 
         const header = wrapper.find("[data-test=gantt-header]");
         expect(header.classes()).not.toContain("roadmap-gantt-header-is-scrolling");
