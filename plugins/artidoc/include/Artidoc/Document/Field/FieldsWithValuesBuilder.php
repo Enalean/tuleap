@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,36 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Artidoc\Document\Field;
 
-use Tracker_Artifact_Changeset;
-use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollection;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 
-final readonly class SectionFieldsBuilder implements BuildSectionFields
+final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
     public function __construct(private ConfiguredFieldCollection $field_collection)
     {
     }
 
-    /**
-     * @return list<SectionStringFieldRepresentation>
-     */
-    public function getFields(
-        Tracker_Artifact_Changeset $changeset,
-    ): array {
-        $fields = [];
-        foreach ($this->field_collection->getFields($changeset->getTracker()) as $configured_field) {
+    public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array
+    {
+        $fields  = [];
+        $tracker = $changeset->getTracker();
+        foreach ($this->field_collection->getFields($tracker) as $configured_field) {
             $changeset_value = $changeset->getValue($configured_field->field);
-            if (! $changeset_value instanceof \Tracker_Artifact_ChangesetValue_String) {
-                continue;
+            if ($changeset_value instanceof \Tracker_Artifact_ChangesetValue_String) {
+                $fields[] = new StringFieldWithValue(
+                    $configured_field->field->getLabel(),
+                    $configured_field->display_type,
+                    $changeset_value->getValue()
+                );
             }
-
-            $fields[] = new SectionStringFieldRepresentation(
-                $configured_field,
-                $changeset_value->getValue(),
-            );
         }
-
         return $fields;
     }
 }

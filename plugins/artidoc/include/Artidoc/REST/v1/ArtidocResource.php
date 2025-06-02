@@ -43,6 +43,7 @@ use Tuleap\Artidoc\Document\ConfigurationSaver;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
+use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
@@ -77,7 +78,6 @@ use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSectionsRetriever;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
-use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionFieldsBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
@@ -516,7 +516,7 @@ final class ArtidocResource extends AuthenticatedResource
                 ),
                 $form_element_factory
             ),
-            new SectionFieldsBuilder(
+            new FieldsWithValuesBuilder(
                 $configured_field_collection_builder->buildFromArtidoc($artidoc, $user),
             )
         );

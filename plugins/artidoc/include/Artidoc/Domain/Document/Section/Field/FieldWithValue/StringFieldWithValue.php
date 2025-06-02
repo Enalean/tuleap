@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\REST\v1;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-use Tracker_Artifact_Changeset;
-use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\BuildSectionFields;
-use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 
-final readonly class BuildSectionFieldsStub implements BuildSectionFields
+/**
+ * @psalm-immutable
+ */
+final readonly class StringFieldWithValue
 {
-    /**
-     * @param list<SectionStringFieldRepresentation> $fields
-     */
-    private function __construct(private array $fields)
-    {
-    }
-
-    public static function withoutFields(): self
-    {
-        return new self([]);
-    }
-
-    public function getFields(Tracker_Artifact_Changeset $changeset): array
-    {
-        return $this->fields;
+    public function __construct(
+        public string $label,
+        public DisplayType $display_type,
+        public string $value,
+    ) {
     }
 }

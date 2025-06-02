@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tracker_Artifact_Changeset;
-
-interface BuildSectionFields
+enum FieldType: string
 {
-    /**
-     * @return list<SectionStringFieldRepresentation>
-     */
-    public function getFields(Tracker_Artifact_Changeset $changeset): array;
+    case STRING = 'string';
 }
