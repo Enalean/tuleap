@@ -152,6 +152,10 @@ See [Psalm section on taint analysis](https://psalm.dev/docs/security_analysis/)
 Dependencies vulnerabilities scanner uses [OSV Scanner](https://google.github.io/osv-scanner/) to identify
 dependencies (php, javascript, rust, go) that are affected by a published vulnerability.
 
+### Secrets scanning
+
+Repository is scanned with [trufflehog](https://trufflesecurity.com/trufflehog) to detect committed secrets early.
+
 ## What is run and when (aka Continuous Integration rules)
 
 All automations are centralized on https://ci.tuleap.org/jenkins/. The jobs that matters regarding previous content:
@@ -174,3 +178,4 @@ All automations are centralized on https://ci.tuleap.org/jenkins/. The jobs that
 | Build & run                                | x | x | x |  |  |  |
 | Taint analysis (SAST)                      |  |  |  | x |  |  |
 | Dependencies vulnerabilities scanner (SCA) |  |  |  |  | x |  |
+| Secrets scanning                           | x | x |  |  |  |  |

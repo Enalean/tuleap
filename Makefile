@@ -297,6 +297,10 @@ docker-pull-verify-keyless-gha:
 scan-vuln-deps:
 	osv-scanner --recursive --config ./tools/utils/osv-scanner/config.toml .
 
+.PHONY:scan-secrets
+scan-secrets: ## Scan for committed secrets in the repository
+	trufflehog git --since-commit=56e5e8f1d3a37afd065d53f136be404de56ca276 file://"$(CURDIR)" --config="$(CURDIR)/tools/utils/trufflehog-config.yml" --filter-entropy=3.4 --fail
+
 #
 # Dev setup
 #
