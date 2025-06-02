@@ -71,7 +71,7 @@ textarea.not_resizable {
     }
 
     .empty-state {
-        word-break: break-word;
+        overflow-wrap: anywhere;
     }
 }
 

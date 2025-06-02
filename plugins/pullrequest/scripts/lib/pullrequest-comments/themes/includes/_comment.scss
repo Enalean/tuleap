@@ -135,7 +135,7 @@ $thread-border-width: 2px;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     font-size: 0.875rem;
     line-height: 1.375rem;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 
     pre:not([class*="language-"]) {
         border-color: var(--tlp-neutral-normal-color);

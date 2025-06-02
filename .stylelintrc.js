@@ -85,7 +85,6 @@ module.exports = {
         "@stylistic/number-no-trailing-zeros": null,
         "@stylistic/selector-list-comma-newline-after": null,
         "@stylistic/string-quotes": null,
-        "scss/dollar-variable-colon-space-after": null,
         "scss/dollar-variable-colon-space-before": null,
         "scss/operator-no-newline-after": null,
         // Plugins
