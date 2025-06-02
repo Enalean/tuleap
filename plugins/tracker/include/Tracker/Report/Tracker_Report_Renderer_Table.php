@@ -1567,7 +1567,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $html  = '';
         $html .= '<div class="btn-group">';
-        $html .= '<a href="#"
+        $html .= '<a
             class="btn btn-mini dropdown-toggle"
             title="' . dgettext('tuleap-tracker', 'Toggle an aggregate function') . '"
             data-toggle="dropdown">';
