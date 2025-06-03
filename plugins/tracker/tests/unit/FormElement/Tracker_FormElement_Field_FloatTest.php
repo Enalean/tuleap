@@ -23,34 +23,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use PHPUnit\Framework\TestCase;
-use Response;
-use Tracker_Artifact_Changeset;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use TestHelper;
 use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_FormElement_Field_Float;
 use Tracker_Report_Criteria;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueFloatTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 use UserManager;
 
-final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
+    private UserManager&MockObject $user_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->user_manager = Mockery::mock(UserManager::class);
+        $this->user_manager = $this->createMock(UserManager::class);
 
         UserManager::setInstance($this->user_manager);
     }
@@ -58,91 +58,84 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
     protected function tearDown(): void
     {
         UserManager::clearInstance();
-        unset($GLOBALS['Response']);
     }
 
     public function testNoDefaultValue(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $float_field->shouldReceive('getProperty')->andReturn(null);
-        $this->assertFalse($float_field->hasDefaultValue());
+        $float_field = FloatFieldBuilder::aFloatField(456)->build();
+        self::assertFalse($float_field->hasDefaultValue());
     }
 
     public function testDefaultValue(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $float_field->shouldReceive('getProperty')->with('default_value')->andReturn('12.34');
-        $this->assertTrue($float_field->hasDefaultValue());
-        $this->assertEquals(12.34, $float_field->getDefaultValue());
+        $float_field = FloatFieldBuilder::aFloatField(456)->withSpecificProperty('default_value', ['value' => 12.34])->build();
+        self::assertTrue($float_field->hasDefaultValue());
+        self::assertEquals(12.34, $float_field->getDefaultValue());
     }
 
     public function testGetChangesetValue(): void
     {
-        $value_dao = \Mockery::mock(FloatValueDao::class);
-        $value_dao->shouldReceive('searchById')->andReturn(
-            \TestHelper::arrayToDar(['id' => 123, 'field_id' => 1, 'value' => '1.003'])
+        $value_dao = $this->createMock(FloatValueDao::class);
+        $value_dao->method('searchById')->willReturn(
+            TestHelper::arrayToDar(['id' => 123, 'field_id' => 1, 'value' => '1.003'])
         );
 
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $float_field->shouldReceive('getValueDao')->andReturn($value_dao);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getValueDao']);
+        $float_field->method('getValueDao')->willReturn($value_dao);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             Tracker_Artifact_ChangesetValue_Float::class,
-            $float_field->getChangesetValue(\Mockery::mock(Tracker_Artifact_Changeset::class), 123, false)
+            $float_field->getChangesetValue(ChangesetTestBuilder::aChangeset(987)->build(), 123, false)
         );
     }
 
     public function testGetChangesetValueDoesNotExist(): void
     {
-        $value_dao = \Mockery::mock(FloatValueDao::class);
-        $value_dao->shouldReceive('searchById')->andReturn(\TestHelper::emptyDar());
+        $value_dao = $this->createMock(FloatValueDao::class);
+        $value_dao->method('searchById')->willReturn(TestHelper::emptyDar());
 
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $float_field->shouldReceive('getValueDao')->andReturn($value_dao);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getValueDao']);
+        $float_field->method('getValueDao')->willReturn($value_dao);
 
-        $this->assertNull($float_field->getChangesetValue(null, 123, false));
+        self::assertNull($float_field->getChangesetValue(ChangesetTestBuilder::aChangeset(987)->build(), 123, false));
     }
 
     public function testIsValidRequiredField(): void
     {
-        $GLOBALS['Response'] = \Mockery::spy(Response::class);
-
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $float_field->shouldReceive('isRequired')->andReturn(true);
-        $artifact = \Mockery::mock(Artifact::class);
-        $this->assertTrue($float_field->isValid($artifact, 2));
-        $this->assertTrue($float_field->isValid($artifact, 789));
-        $this->assertTrue($float_field->isValid($artifact, 1.23));
-        $this->assertTrue($float_field->isValid($artifact, -1.45));
-        $this->assertTrue($float_field->isValid($artifact, 0));
-        $this->assertTrue($float_field->isValid($artifact, 0.0000));
-        $this->assertTrue($float_field->isValid($artifact, '56.789'));
-        $this->assertFalse($float_field->isValid($artifact, 'toto'));
-        $this->assertFalse($float_field->isValid($artifact, '12toto'));
-        $this->assertFalse($float_field->isValid($artifact, []));
-        $this->assertFalse($float_field->isValid($artifact, [1]));
-        $this->assertFalse($float_field->isValidRegardingRequiredProperty($artifact, ''));
-        $this->assertFalse($float_field->isValidRegardingRequiredProperty($artifact, null));
+        $float_field = FloatFieldBuilder::aFloatField(456)->thatIsRequired()->build();
+        $artifact    = ArtifactTestBuilder::anArtifact(963)->build();
+        self::assertTrue($float_field->isValid($artifact, 2));
+        self::assertTrue($float_field->isValid($artifact, 789));
+        self::assertTrue($float_field->isValid($artifact, 1.23));
+        self::assertTrue($float_field->isValid($artifact, -1.45));
+        self::assertTrue($float_field->isValid($artifact, 0));
+        self::assertTrue($float_field->isValid($artifact, 0.0000));
+        self::assertTrue($float_field->isValid($artifact, '56.789'));
+        self::assertFalse($float_field->isValid($artifact, 'toto'));
+        self::assertFalse($float_field->isValid($artifact, '12toto'));
+        self::assertFalse($float_field->isValid($artifact, []));
+        self::assertFalse($float_field->isValid($artifact, [1]));
+        self::assertFalse($float_field->isValidRegardingRequiredProperty($artifact, ''));
+        self::assertFalse($float_field->isValidRegardingRequiredProperty($artifact, null));
     }
 
     public function testIsValidNotRequiredField(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $float_field->shouldReceive('isRequired')->andReturn(true);
-        $artifact = \Mockery::mock(Artifact::class);
-        $this->assertTrue($float_field->isValid($artifact, ''));
-        $this->assertTrue($float_field->isValid($artifact, null));
+        $float_field = FloatFieldBuilder::aFloatField(456)->thatIsRequired()->build();
+        $artifact    = ArtifactTestBuilder::anArtifact(963)->build();
+        self::assertTrue($float_field->isValid($artifact, ''));
+        self::assertTrue($float_field->isValid($artifact, null));
     }
 
     public function testGetFieldData(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $this->assertEquals('3.14159', $float_field->getFieldData('3.14159'));
+        $float_field = FloatFieldBuilder::aFloatField(456)->build();
+        self::assertEquals('3.14159', $float_field->getFieldData('3.14159'));
     }
 
     public function testFetchChangesetValue(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
+        $float_field = FloatFieldBuilder::aFloatField(456)->build();
         self::assertSame('3.1416', $float_field->fetchChangesetValue(123, 456, 3.14159));
         self::assertSame('0', $float_field->fetchChangesetValue(123, 456, 0));
         self::assertSame('2', $float_field->fetchChangesetValue(123, 456, 2));
@@ -151,57 +144,57 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItSearchOnZeroValue(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
-        $float_field->shouldReceive('isUsed')->andReturn(true);
-        $float_field->shouldReceive('getCriteriaValue')->andReturn(0);
+        $float_field->method('isUsed')->willReturn(true);
+        $float_field->method('getCriteriaValue')->willReturn(0);
 
-        $this->assertFalse($float_field->getCriteriaFromWhere($criteria)->isNothing());
+        self::assertFalse($float_field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItSearchOnCustomQuery(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
-        $float_field->shouldReceive('isUsed')->andReturn(true);
-        $float_field->shouldReceive('getCriteriaValue')->andReturn('>1');
+        $float_field->method('isUsed')->willReturn(true);
+        $float_field->method('getCriteriaValue')->willReturn('>1');
 
-        $this->assertFalse($float_field->getCriteriaFromWhere($criteria)->isNothing());
+        self::assertFalse($float_field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnEmptyString(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
-        $float_field->shouldReceive('isUsed')->andReturn(true);
-        $float_field->shouldReceive('getCriteriaValue')->andReturn('');
+        $float_field->method('isUsed')->willReturn(true);
+        $float_field->method('getCriteriaValue')->willReturn('');
 
-        $this->assertTrue($float_field->getCriteriaFromWhere($criteria)->isNothing());
+        self::assertTrue($float_field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnNullCriteria(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
-        $float_field->shouldReceive('isUsed')->andReturn(true);
-        $float_field->shouldReceive('getCriteriaValue')->andReturn(null);
+        $float_field->method('isUsed')->willReturn(true);
+        $float_field->method('getCriteriaValue')->willReturn(null);
 
-        $this->assertTrue($float_field->getCriteriaFromWhere($criteria)->isNothing());
+        self::assertTrue($float_field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItFetchCriteriaAndSetValueZero(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getCriteriaValue']);
+        $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->setId(1);
-        $float_field->shouldReceive('getCriteriaValue')->andReturn(0);
+        $float_field->method('getCriteriaValue')->willReturn(0);
 
-        $this->assertEquals(
+        self::assertEquals(
             '<input data-test="float-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="0" />',
             $float_field->fetchCriteriaValue($criteria)
         );
@@ -209,13 +202,13 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItFetchCriteriaAndLeaveItEmptyValue(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getCriteriaValue']);
+        $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->setId(1);
-        $float_field->shouldReceive('getCriteriaValue')->andReturn('');
+        $float_field->method('getCriteriaValue')->willReturn('');
 
-        $this->assertEquals(
+        self::assertEquals(
             '<input data-test="float-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="" />',
             $float_field->fetchCriteriaValue($criteria)
         );
@@ -223,34 +216,29 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testTheValueIndexedByFieldNameIsReturned(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
+        $float_field = FloatFieldBuilder::aFloatField(876)->build();
         $value       = [
             'field_id' => 876,
             'value'    => 3.14,
         ];
 
-        $this->assertEquals(3.14, $float_field->getFieldDataFromRESTValueByField($value));
+        self::assertEquals(3.14, $float_field->getFieldDataFromRESTValueByField($value));
     }
 
     public function testItDisplaysTheFloatValueInReadOnly(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getArtifactTimeframeHelper']);
 
-        $timeframe_helper = Mockery::mock(ArtifactTimeframeHelper::class);
-        $float_field->shouldReceive('getArtifactTimeframeHelper')
-            ->once()
-            ->andReturn($timeframe_helper);
+        $timeframe_helper = $this->createMock(ArtifactTimeframeHelper::class);
+        $float_field->expects($this->once())->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);
 
-        $timeframe_helper->shouldReceive('artifactHelpShouldBeShownToUser')->once()->andReturnFalse();
+        $timeframe_helper->expects($this->once())->method('artifactHelpShouldBeShownToUser')->willReturn(false);
 
-        $artifact        = Mockery::mock(Artifact::class);
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
-        $changeset_value->shouldReceive('getValue')->once()->andReturn(5.1);
+        $artifact        = ArtifactTestBuilder::anArtifact(963)->build();
+        $changeset_value = ChangesetValueFloatTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->build(), $float_field)
+            ->withValue(5.1)->build();
 
-        $user = Mockery::mock(PFUser::class);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
 
@@ -259,23 +247,18 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItDisplaysTheFloatValue0InReadOnly(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getArtifactTimeframeHelper']);
 
-        $timeframe_helper = Mockery::mock(ArtifactTimeframeHelper::class);
-        $float_field->shouldReceive('getArtifactTimeframeHelper')
-            ->once()
-            ->andReturn($timeframe_helper);
+        $timeframe_helper = $this->createMock(ArtifactTimeframeHelper::class);
+        $float_field->expects($this->once())->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);
 
-        $timeframe_helper->shouldReceive('artifactHelpShouldBeShownToUser')->once()->andReturnFalse();
+        $timeframe_helper->expects($this->once())->method('artifactHelpShouldBeShownToUser')->willReturn(false);
 
-        $artifact        = Mockery::mock(Artifact::class);
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
-        $changeset_value->shouldReceive('getValue')->once()->andReturn(0);
+        $artifact        = ArtifactTestBuilder::anArtifact(963)->build();
+        $changeset_value = ChangesetValueFloatTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->build(), $float_field)
+            ->withValue(0)->build();
 
-        $user = Mockery::mock(PFUser::class);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
 
@@ -284,33 +267,25 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItDisplaysEmptyMessageIfNoChangesetValue(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $float_field = FloatFieldBuilder::aFloatField(456)->build();
 
-        $artifact = Mockery::mock(Artifact::class);
-
-        $float_field->shouldReceive('getNoValueLabel')->once()->andReturn('Empty');
+        $artifact = ArtifactTestBuilder::anArtifact(963)->build();
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, null);
 
-        self::assertSame('Empty', $html_value_read_only);
+        self::assertSame("<span class='empty_value'>Empty</span>", $html_value_read_only);
     }
 
     public function testItDisplaysEmptyMessageIfNoChangesetFloatValue(): void
     {
-        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $float_field = FloatFieldBuilder::aFloatField(456)->build();
 
-        $artifact        = Mockery::mock(Artifact::class);
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
-        $changeset_value->shouldReceive('getValue')->once()->andReturnNull();
-
-        $float_field->shouldReceive('getNoValueLabel')->once()->andReturn('Empty');
+        $artifact        = ArtifactTestBuilder::anArtifact(963)->build();
+        $changeset_value = ChangesetValueFloatTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->build(), $float_field)
+            ->withValue(null)->build();
 
         $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
 
-        self::assertSame('Empty', $html_value_read_only);
+        self::assertSame("<span class='empty_value'>Empty</span>", $html_value_read_only);
     }
 }
