@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Test\Builders;
 
 final class ChangesetValueFloatTestBuilder
 {
-    private float $value = 0;
+    private ?float $value = 0;
 
     private function __construct(
         private readonly int $id,
@@ -38,7 +38,7 @@ final class ChangesetValueFloatTestBuilder
         return new self($id, $changeset, $field);
     }
 
-    public function withValue(float $value): self
+    public function withValue(?float $value): self
     {
         $this->value = $value;
         return $this;

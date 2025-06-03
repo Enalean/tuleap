@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class ReportTestBuilder
 {
     private \Tracker $tracker;
+    private int|string $id = 101;
 
     private function __construct(private readonly bool $is_public)
     {
@@ -50,10 +51,16 @@ final class ReportTestBuilder
         return $this;
     }
 
+    public function withId(int|string $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function build(): \Tracker_Report
     {
         $tracker_report = new \Tracker_Report(
-            101,
+            $this->id,
             'My bugs',
             'Description',
             0,
