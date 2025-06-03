@@ -1318,7 +1318,6 @@
             <file name="plugins/tracker/tests/unit/XML/Updater/Tracker_XML_Updater_ChangesetXMLUpdaterTest.php"/>
             <file name="plugins/tracker/tests/unit/XML/Updater/Tracker_XML_Updater_TemporaryFileCreatorTest.php"/>
             <file name="plugins/tracker/tests/unit/XML/Updater/Tracker_XML_Updater_TemporaryFileXMLUpdaterTest.php"/>
-            <file name="plugins/tracker/tests/unit/XML/XMLTrackerTest.php"/>
         </ignoreFiles>
     </projectFiles>
 
