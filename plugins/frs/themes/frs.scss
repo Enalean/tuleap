@@ -17,5 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "./includes/release";
-@import "./includes/license-modal";
+@use "includes/release";
+@use "includes/license-modal";

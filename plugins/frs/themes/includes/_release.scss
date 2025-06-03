@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "./linked-artifacts";
+@use "linked-artifacts";
 
 .frs-release-block {
     margin-left: var(--tlp-medium-spacing);
