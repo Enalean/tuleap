@@ -32,7 +32,8 @@
 
     &.loading {
         height: 100px;
-        background: var(--tlp-white-color) url("../images/spinner.gif") center center no-repeat;
+        background: var(--tlp-white-color) url("@tuleap/burningparrot-theme/images/spinner.gif")
+            center center no-repeat;
     }
 }
 
