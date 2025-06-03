@@ -20,7 +20,7 @@
 <template>
     <div class="tracker-information-selected-template">
         <div class="tlp-property" v-if="selected_template_project_name.length > 0">
-            <label class="tlp-label" v-translate>Source project</label>
+            <label class="tlp-label">{{ $gettext("Source project") }}</label>
             <p
                 class="tracker-information-selected-template-info"
                 data-test="project-of-chosen-template"
@@ -29,7 +29,7 @@
             </p>
         </div>
         <div class="tlp-property">
-            <label class="tlp-label" v-translate>Chosen template</label>
+            <label class="tlp-label">{{ $gettext("Chosen template") }}</label>
             <p class="tracker-information-selected-template-info" data-test="chosen-template">
                 {{ selected_template_name }}
             </p>

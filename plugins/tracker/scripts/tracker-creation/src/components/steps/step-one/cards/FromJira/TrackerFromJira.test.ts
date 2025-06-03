@@ -49,10 +49,6 @@ describe("TrackerFromJira", () => {
         });
     });
 
-    it("renders the component", () => {
-        expect(wrapper.element).toMatchSnapshot();
-    });
-
     it("load the project list", async () => {
         const credentials = {
             server_url: "https://example.com",

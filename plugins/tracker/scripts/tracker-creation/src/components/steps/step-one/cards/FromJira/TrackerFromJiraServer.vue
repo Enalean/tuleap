@@ -21,8 +21,8 @@
 <template>
     <div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="jira-url" name="jira-url" v-translate>
-                Your Jira server url
+            <label class="tlp-label" for="jira-url" name="jira-url">
+                {{ $gettext("Your Jira server url") }}
             </label>
             <input
                 type="url"
@@ -35,8 +35,8 @@
             />
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="jira-email" name="jira-email" v-translate>
-                User email (or jira login for Jira Server)
+            <label class="tlp-label" for="jira-email" name="jira-email">
+                {{ $gettext("User email (or jira login for Jira Server)") }}
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">@</span>
@@ -51,8 +51,8 @@
             </div>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="jira-token" name="jira-token" v-translate>
-                API Token (or password for Jira Server)
+            <label class="tlp-label" for="jira-token" name="jira-token">
+                {{ $gettext("API Token (or password for Jira Server)") }}
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend"><i class="fa fa-key"></i></span>

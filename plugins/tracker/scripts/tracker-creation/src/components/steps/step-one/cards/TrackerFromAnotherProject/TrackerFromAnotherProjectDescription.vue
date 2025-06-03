@@ -17,13 +17,29 @@
     - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<template functional>
+<template>
     <div class="card-content" data-test="template-description">
-        <h4 class="card-title" v-translate>Tracker from another project</h4>
+        <h4 class="card-title">
+            {{ $gettext("Tracker from another project") }}
+        </h4>
         <div class="card-description">
-            <span class="card-description-content" v-translate>
-                Create your new tracker by replicating the configuration of an existing one.
+            <span class="card-description-content">
+                {{
+                    $gettext(
+                        "Create your new tracker by replicating the configuration of an existing one.",
+                    )
+                }}
             </span>
         </div>
     </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+
+@Component({
+    name: "TrackerFromAnotherProjectDescription",
+})
+export default class TrackerFromAnotherProjectDescription extends Vue {}
+</script>

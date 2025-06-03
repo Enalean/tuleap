@@ -20,17 +20,24 @@
 <template>
     <div>
         <nav class="tlp-wizard">
-            <span class="tlp-wizard-step-current" v-translate>Template</span>
-            <span class="tlp-wizard-step-next" v-translate>Information</span>
+            <span class="tlp-wizard-step-current">{{ $gettext("Template") }}</span>
+            <span class="tlp-wizard-step-next">{{ $gettext("Information") }} </span>
         </nav>
 
         <step-label v-bind:step-label="$gettext('Choose a starting point')" />
-        <p v-translate>
-            The tracker template you will select provides preconfigured fields, permissions,
-            workflow...
+        <p>
+            {{
+                $gettext(
+                    "The tracker template you will select provides preconfigured fields, permissions, workflow...",
+                )
+            }}
         </p>
-        <p v-translate>
-            Don't worry, you will still be able to modify your tracker after it has been created.
+        <p>
+            {{
+                $gettext(
+                    "Don't worry, you will still be able to modify your tracker after it has been created.",
+                )
+            }}
         </p>
     </div>
 </template>

@@ -22,8 +22,8 @@
         class="tlp-form-element card-content card-tracker-template-selector"
         v-bind:class="{ 'tlp-form-element-error': has_xml_file_error }"
     >
-        <label class="tlp-label card-title" for="tracker-creation-xml-file-selector" v-translate>
-            Tracker XML file
+        <label class="tlp-label card-title" for="tracker-creation-xml-file-selector">
+            {{ $gettext("Tracker XML file") }}
         </label>
         <input
             ref="file_input"
@@ -37,7 +37,7 @@
             v-on:change="setTrackerToBeCreatedFromXml"
         />
         <p v-if="has_xml_file_error" class="tlp-text-danger tracker-creation-xml-file-error">
-            <translate>The provided file is not a valid XML file</translate>
+            {{ $gettext("The provided file is not a valid XML file") }}
             <i class="far fa-frown"></i>
         </p>
     </div>

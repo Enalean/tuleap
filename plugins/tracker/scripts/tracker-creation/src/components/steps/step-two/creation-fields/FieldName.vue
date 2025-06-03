@@ -26,7 +26,7 @@
         }"
     >
         <label class="tlp-label" for="tracker-name">
-            <translate>Name</translate>
+            {{ $gettext("Name") }}
             <i class="fa fa-asterisk"></i>
         </label>
         <input
@@ -41,9 +41,11 @@
         />
         <p class="tlp-text-danger" data-test="name-error" v-if="is_name_already_used">
             <i class="fa fa-fw fa-exclamation-circle"></i>
-            <translate>
-                The chosen name already exist in this project, please choose another one.
-            </translate>
+            {{
+                $gettext(
+                    "The chosen name already exist in this project, please choose another one.",
+                )
+            }}
         </p>
     </div>
 </template>

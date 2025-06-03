@@ -17,13 +17,24 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="card-content" data-test="template-description">
-        <h4 class="card-title" v-translate>From Jira</h4>
+        <h4 class="card-title">
+            {{ $gettext("From Jira") }}
+        </h4>
         <div class="card-description">
-            <span class="card-description-content" v-translate>
-                Create your new tracker and import its issues from Jira server
+            <span class="card-description-content">
+                {{ $gettext("Create your new tracker and import its issues from Jira server") }}
             </span>
         </div>
     </div>
 </template>
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+
+@Component({
+    name: "TrackerFromJiraDescription",
+})
+export default class TrackerFromJiraDescription extends Vue {}
+</script>

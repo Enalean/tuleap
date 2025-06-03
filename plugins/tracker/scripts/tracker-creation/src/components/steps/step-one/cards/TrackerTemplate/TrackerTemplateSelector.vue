@@ -19,8 +19,8 @@
 
 <template>
     <div class="tlp-form-element card-content card-tracker-template-selector">
-        <label class="tlp-label card-title" for="tracker-creation-template-selector" v-translate>
-            Trackers from template projects
+        <label class="tlp-label card-title" for="tracker-creation-template-selector">
+            {{ $gettext("Trackers from template projects") }}
         </label>
         <select
             class="tlp-select"
@@ -30,7 +30,9 @@
             v-model="model"
             v-on:change="setSelectedTrackerTemplate(model)"
         >
-            <option value="" disabled v-translate>Choose a tracker...</option>
+            <option value="" disabled>
+                {{ $gettext("Choose a tracker...") }}
+            </option>
             <optgroup
                 v-for="(project, index) in project_templates"
                 v-bind:label="project.project_name"

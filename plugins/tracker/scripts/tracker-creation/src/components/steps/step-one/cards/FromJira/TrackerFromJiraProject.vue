@@ -28,7 +28,7 @@
             {{ error_message }}
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="project" v-translate>Project</label>
+            <label class="tlp-label" for="project">{{ $gettext("Project") }}</label>
             <select
                 class="tlp-select"
                 id="project"
@@ -36,7 +36,9 @@
                 v-on:change="selectProject($event)"
                 data-test="project-list"
             >
-                <option value="" v-translate>Choose a project...</option>
+                <option value="">
+                    {{ $gettext("Choose a project...") }}
+                </option>
                 <option
                     v-for="project in project_list"
                     v-bind:value="JSON.stringify(project)"
@@ -56,7 +58,7 @@
         >
             <label class="tlp-label" for="tracker_name">
                 <i class="fa fa-spin fa-spinner" v-if="is_loading" />
-                <translate>Issue type</translate>
+                {{ $gettext("Issue type") }}
             </label>
             <select
                 class="tlp-select"
@@ -66,7 +68,9 @@
                 v-if="!is_loading"
                 v-on:change="selectTracker($event)"
             >
-                <option value="" selected v-translate>Choose an issue type...</option>
+                <option value="" selected>
+                    {{ $gettext("Choose an issue type...") }}
+                </option>
                 <option
                     v-for="tracker in from_jira_data.tracker_list"
                     v-bind:value="JSON.stringify(tracker)"
