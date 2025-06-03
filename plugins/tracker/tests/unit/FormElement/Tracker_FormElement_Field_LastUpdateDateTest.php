@@ -19,32 +19,31 @@
  * along with Test. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_LastUpdateDateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_LastUpdateDateTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testHasChanges(): void
     {
-        $f = $this->getLastUpdateDateField();
-        $v = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $this->assertFalse($f->hasChanges(Mockery::mock(Artifact::class), $v, null));
+        $field = LastUpdateDateFieldBuilder::aLastUpdateDateField(456)->build();
+        $value = ChangesetValueDateTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->build(), $field)->build();
+        self::assertFalse($field->hasChanges(ArtifactTestBuilder::anArtifact(963)->build(), $value, null));
     }
 
     public function testisValid(): void
     {
-        $f = $this->getLastUpdateDateField();
-        $a = Mockery::mock(Artifact::class);
-        $this->assertTrue($f->isValid($a, null));
-    }
-
-    /**
-     * @return \Mockery\Mock | Tracker_FormElement_Field_LastUpdateDate
-     */
-    protected function getLastUpdateDateField()
-    {
-        return Mockery::mock(Tracker_FormElement_Field_LastUpdateDate::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field    = LastUpdateDateFieldBuilder::aLastUpdateDateField(456)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(963)->build();
+        self::assertTrue($field->isValid($artifact, null));
     }
 }

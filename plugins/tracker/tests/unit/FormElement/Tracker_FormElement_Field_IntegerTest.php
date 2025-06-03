@@ -19,114 +19,116 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use ReflectionClass;
+use TestHelper;
+use Tracker_Artifact_ChangesetValue_Integer;
+use Tracker_FormElement_Field_Integer;
+use Tracker_Report_Criteria;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Option\Option;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
-
-    /**
-     * @return \Mockery\Mock | Tracker_FormElement_Field_Integer
-     */
-    private function getIntegerField()
-    {
-        return Mockery::mock(Tracker_FormElement_Field_Integer::class)->makePartial()->shouldAllowMockingProtectedMethods();
-    }
+    use GlobalResponseMock;
 
     public function testNoDefaultValue(): void
     {
-        $int_field = $this->getIntegerField();
-        $int_field->shouldReceive('getProperty')->withArgs(['default_value']);
-        $this->assertFalse($int_field->hasDefaultValue());
+        $int_field = IntFieldBuilder::anIntField(456)->build();
+        self::assertFalse($int_field->hasDefaultValue());
     }
 
     public function testDefaultValue(): void
     {
-        $int_field = $this->getIntegerField();
-        $int_field->shouldReceive('getProperty')->withArgs(['default_value'])->andReturn('12');
-        $this->assertTrue($int_field->hasDefaultValue());
-        $this->assertEquals(12, $int_field->getDefaultValue());
+        $int_field = IntFieldBuilder::anIntField(456)->withSpecificProperty('default_value', ['value' => 12])->build();
+        self::assertTrue($int_field->hasDefaultValue());
+        self::assertEquals(12, $int_field->getDefaultValue());
     }
 
     public function testGetChangesetValue(): void
     {
-        $value_dao = Mockery::mock(IntegerValueDao::class);
+        $value_dao = $this->createMock(IntegerValueDao::class);
 
         $result = ['id' => 123, 'field_id' => 1, 'value' => '42'];
-        $value_dao->shouldReceive('searchById')->andReturn(TestHelper::arrayToDar($result));
+        $value_dao->method('searchById')->willReturn(TestHelper::arrayToDar($result));
 
-        $integer_field = $this->getIntegerField();
-        $integer_field->shouldReceive('getValueDao')->andReturn($value_dao);
+        $integer_field = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getValueDao']);
+        $integer_field->method('getValueDao')->willReturn($value_dao);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             Tracker_Artifact_ChangesetValue_Integer::class,
-            $integer_field->getChangesetValue(Mockery::mock(Tracker_Artifact_Changeset::class), 123, false)
+            $integer_field->getChangesetValue(ChangesetTestBuilder::aChangeset(123)->build(), 123, false)
         );
     }
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = Mockery::mock(IntegerValueDao::class);
-        $value_dao->shouldReceive('searchById')->andReturn(TestHelper::arrayToDar([]));
+        $value_dao = $this->createMock(IntegerValueDao::class);
+        $value_dao->method('searchById')->willReturn(TestHelper::arrayToDar([]));
 
-        $integer_field = $this->getIntegerField();
-        $integer_field->shouldReceive('getValueDao')->andReturn($value_dao);
+        $integer_field = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getValueDao']);
+        $integer_field->method('getValueDao')->willReturn($value_dao);
 
-        $this->assertNull($integer_field->getChangesetValue(null, 123, false));
+        self::assertNull($integer_field->getChangesetValue(ChangesetTestBuilder::aChangeset(123)->build(), 123, false));
     }
 
     public function testIsValidRequiredField(): void
     {
-        $f = $this->getIntegerField();
-        $f->shouldReceive('isRequired')->andReturn(true);
-        $a = Mockery::mock(Artifact::class);
-        $this->assertTrue($f->isValid($a, 2));
-        $this->assertTrue($f->isValid($a, 789));
-        $this->assertTrue($f->isValid($a, -1));
-        $this->assertTrue($f->isValid($a, 0));
-        $this->assertTrue($f->isValid($a, '56'));
-        $this->assertFalse($f->isValid($a, 'toto'));
-        $this->assertFalse($f->isValid($a, '12toto'));
-        $this->assertFalse($f->isValid($a, 1.23));
-        $this->assertFalse($f->isValid($a, []));
-        $this->assertFalse($f->isValid($a, [1]));
-        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
-        $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
+        $field    = IntFieldBuilder::anIntField(456)->thatIsRequired()->build();
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
+        self::assertTrue($field->isValid($artifact, 2));
+        self::assertTrue($field->isValid($artifact, 789));
+        self::assertTrue($field->isValid($artifact, -1));
+        self::assertTrue($field->isValid($artifact, 0));
+        self::assertTrue($field->isValid($artifact, '56'));
+        self::assertFalse($field->isValid($artifact, 'toto'));
+        self::assertFalse($field->isValid($artifact, '12toto'));
+        self::assertFalse($field->isValid($artifact, 1.23));
+        self::assertFalse($field->isValid($artifact, []));
+        self::assertFalse($field->isValid($artifact, [1]));
+        self::assertFalse($field->isValidRegardingRequiredProperty($artifact, ''));
+        self::assertFalse($field->isValidRegardingRequiredProperty($artifact, null));
     }
 
     public function testIsValidNotRequiredField(): void
     {
-        $f = $this->getIntegerField();
-        $f->shouldReceive('isRequired')->andReturn(false);
-        $a = Mockery::mock(Artifact::class);
-        $this->assertTrue($f->isValid($a, ''));
-        $this->assertTrue($f->isValid($a, null));
+        $field    = IntFieldBuilder::anIntField(456)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
+        self::assertTrue($field->isValid($artifact, ''));
+        self::assertTrue($field->isValid($artifact, null));
     }
 
     public function testGetFieldData(): void
     {
-        $f = $this->getIntegerField();
-        $this->assertEquals('42', $f->getFieldData('42'));
+        $field = IntFieldBuilder::anIntField(456)->build();
+        self::assertEquals('42', $field->getFieldData('42'));
     }
 
     public function testBuildMatchExpression(): void
     {
-        $field      = $this->getIntegerField();
-        $reflection = new \ReflectionClass($field::class);
+        $field      = IntFieldBuilder::anIntField(456)->build();
+        $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('buildMatchExpression');
         $method->setAccessible(true);
 
-        $this->assertFragment('field = ?', [12], $method->invokeArgs($field, ['field', '12']));
-        $this->assertFragment('field < ?', [12], $method->invokeArgs($field, ['field', '<12']));
-        $this->assertFragment('field <= ?', [12], $method->invokeArgs($field, ['field', '<=12']));
-        $this->assertFragment('field > ?', [12], $method->invokeArgs($field, ['field', '>12']));
-        $this->assertFragment('field >= ?', [12], $method->invokeArgs($field, ['field', '>=12']));
-        $this->assertFragment('field >= ? AND field <= ?', [12, 34], $method->invokeArgs($field, ['field', '12-34']));
+        self::assertFragment('field = ?', [12], $method->invokeArgs($field, ['field', '12']));
+        self::assertFragment('field < ?', [12], $method->invokeArgs($field, ['field', '<12']));
+        self::assertFragment('field <= ?', [12], $method->invokeArgs($field, ['field', '<=12']));
+        self::assertFragment('field > ?', [12], $method->invokeArgs($field, ['field', '>12']));
+        self::assertFragment('field >= ?', [12], $method->invokeArgs($field, ['field', '>=12']));
+        self::assertFragment('field >= ? AND field <= ?', [12, 34], $method->invokeArgs($field, ['field', '12-34']));
         self::assertTrue($method->invokeArgs($field, ['field', ' <12'])->isNothing()); //Invalid syntax, we don't search against this field
         self::assertTrue($method->invokeArgs($field, ['field', '<=toto'])->isNothing()); //Invalid syntax, we don't search against this field
     }
@@ -147,57 +149,57 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItSearchOnZeroValue(): void
     {
-        $field    = $this->getIntegerField();
-        $criteria = $this->getCriteria();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
-        $field->shouldReceive('isUsed')->andReturn(true);
-        $field->shouldReceive('getCriteriaValue')->andReturn(0);
+        $field->method('isUsed')->willReturn(true);
+        $field->method('getCriteriaValue')->willReturn(0);
 
         self::assertFalse($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItSearchOnCustomQuery(): void
     {
-        $field    = $this->getIntegerField();
-        $criteria = $this->getCriteria();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
-        $field->shouldReceive('isUsed')->andReturn(true);
-        $field->shouldReceive('getCriteriaValue')->andReturn('>1');
+        $field->method('isUsed')->willReturn(true);
+        $field->method('getCriteriaValue')->willReturn('>1');
 
         self::assertFalse($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnEmptyString(): void
     {
-        $field    = $this->getIntegerField();
-        $criteria = $this->getCriteria();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
-        $field->shouldReceive('isUsed')->andReturn(true);
-        $field->shouldReceive('getCriteriaValue')->andReturn('');
+        $field->method('isUsed')->willReturn(true);
+        $field->method('getCriteriaValue')->willReturn('');
 
         self::assertTrue($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItDoesntSearchOnNullCriteria(): void
     {
-        $field    = $this->getIntegerField();
-        $criteria = $this->getCriteria();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
-        $field->shouldReceive('isUsed')->andReturn(true);
-        $field->shouldReceive('getCriteriaValue')->andReturn(null);
+        $field->method('isUsed')->willReturn(true);
+        $field->method('getCriteriaValue')->willReturn(null);
 
-        $this->assertTrue($field->getCriteriaFromWhere($criteria)->isNothing());
+        self::assertTrue($field->getCriteriaFromWhere($criteria)->isNothing());
     }
 
     public function testItFetchCriteriaAndSetValueZero(): void
     {
-        $field    = $this->getIntegerField();
-        $criteria = $this->getCriteria();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getCriteriaValue']);
+        $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->setId(1);
-        $field->shouldReceive('getCriteriaValue')->andReturn(0);
+        $field->method('getCriteriaValue')->willReturn(0);
 
-        $this->assertEquals(
+        self::assertEquals(
             '<input data-test="integer-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="0" />',
             $field->fetchCriteriaValue($criteria)
         );
@@ -205,13 +207,13 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItFetchCriteriaAndLeaveItEmptyValue(): void
     {
-        $field    = $this->getIntegerField();
-        $criteria = $this->getCriteria();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getCriteriaValue']);
+        $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->setId(1);
-        $field->shouldReceive('getCriteriaValue')->andReturn('');
+        $field->method('getCriteriaValue')->willReturn('');
 
-        $this->assertEquals(
+        self::assertEquals(
             '<input data-test="integer-report-criteria" type="text" name="criteria[1]" id="tracker_report_criteria_1" value="" />',
             $field->fetchCriteriaValue($criteria)
         );
@@ -219,20 +221,12 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function itReturnsTheValueIndexedByFieldName(): void
     {
-        $field = $this->getIntegerField();
+        $field = IntFieldBuilder::anIntField(873)->build();
         $value = [
             'field_id' => 873,
             'value'    => 42,
         ];
 
-        $this->assertEquals(42, $field->getFieldDataFromRESTValueByField($value));
-    }
-
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Report_Criteria
-     */
-    protected function getCriteria()
-    {
-        return Mockery::mock(Tracker_Report_Criteria::class);
+        self::assertEquals(42, $field->getFieldDataFromRESTValueByField($value));
     }
 }

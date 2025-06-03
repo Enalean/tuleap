@@ -19,27 +19,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use ProjectUGroup;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testJSonReturnsBothNameAndShortName(): void
     {
         $id         = 123;
         $name       = 'The smurfs';
         $short_name = 'blueThings';
-        $is_hidden  = false;
 
-        $ugroup = Mockery::mock(ProjectUGroup::class);
-        $ugroup->shouldReceive('getTranslatedName')->andReturn($name);
-        $ugroup->shouldReceive('getName')->andReturn($short_name);
+        $ugroup = $this->createMock(ProjectUGroup::class);
+        $ugroup->method('getTranslatedName')->willReturn($name);
+        $ugroup->method('getName')->willReturn($short_name);
 
-        $value = ListUserGroupValueBuilder::aUserGroupValue($ugroup)->withId($id)->isHidden($is_hidden)->build();
+        $value = ListUserGroupValueBuilder::aUserGroupValue($ugroup)->withId($id)->isHidden(false)->build();
 
         $value->setId($id);
-        $this->assertEquals('{"id":123,"value":"b123","caption":"The smurfs","rest_value":"blueThings"}', json_encode($value->fetchForOpenListJson()));
+        self::assertEquals('{"id":123,"value":"b123","caption":"The smurfs","rest_value":"blueThings"}', json_encode($value->fetchForOpenListJson()));
     }
 }
