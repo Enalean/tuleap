@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./mutations-global.js";
-export * from "./mutations-folder-content.js";
-export * from "./mutations-upload";
-export * from "./item-mutations";
+import type { RootState } from "../type";
+
+export const state: RootState = {
+    project_ugroups: null,
+    is_loading_folder: true,
+    folder_content: [],
+    current_folder: null,
+    current_folder_ascendant_hierarchy: [],
+    is_loading_ascendant_hierarchy: false,
+    root_title: "",
+    folded_items_ids: [],
+    folded_by_map: {},
+    files_uploads_list: [],
+    is_loading_currently_previewed_item: false,
+    currently_previewed_item: null,
+    show_post_deletion_notification: false,
+    toggle_quick_look: false,
+};

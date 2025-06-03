@@ -17,54 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    beginLoading,
-    setRootTitle,
-    stopLoading,
-    saveAscendantHierarchy,
-    resetAscendantHierarchy,
-    beginLoadingAscendantHierarchy,
-    stopLoadingAscendantHierarchy,
-    appendFolderToAscendantHierarchy,
-    setCurrentFolder,
-    updateCurrentlyPreviewedItem,
-    showPostDeletionNotification,
-    hidePostDeletionNotification,
-    replaceCurrentFolder,
-    toggleQuickLook,
-    beginLoadingCurrentlyPreviewedItem,
-    stopLoadingCurrentlyPreviewedItem,
-};
+import type { Folder, Item, State } from "../type";
+import { isFolder } from "../helpers/type-check-helper";
 
-function setRootTitle(state, root_title) {
+export function setRootTitle(state: State, root_title: string): void {
     state.root_title = root_title;
 }
 
-function saveAscendantHierarchy(state, hierarchy) {
+export function saveAscendantHierarchy(state: State, hierarchy: Array<Folder>): void {
     state.current_folder_ascendant_hierarchy = hierarchy;
 }
 
-function resetAscendantHierarchy(state) {
+export function resetAscendantHierarchy(state: State): void {
     state.current_folder_ascendant_hierarchy = [];
 }
 
-function beginLoading(state) {
+export function beginLoading(state: State): void {
     state.is_loading_folder = true;
 }
 
-function stopLoading(state) {
+export function stopLoading(state: State): void {
     state.is_loading_folder = false;
 }
 
-function beginLoadingAscendantHierarchy(state) {
+export function beginLoadingAscendantHierarchy(state: State): void {
     state.is_loading_ascendant_hierarchy = true;
 }
 
-function stopLoadingAscendantHierarchy(state) {
+export function stopLoadingAscendantHierarchy(state: State): void {
     state.is_loading_ascendant_hierarchy = false;
 }
 
-function appendFolderToAscendantHierarchy(state, folder) {
+export function appendFolderToAscendantHierarchy(state: State, folder: Folder): void {
     const parent_index_in_hierarchy = state.current_folder_ascendant_hierarchy.findIndex(
         (item) => item.id === folder.parent_id,
     );
@@ -79,8 +63,8 @@ function appendFolderToAscendantHierarchy(state, folder) {
 
     let next_parent_id = folder.parent_id;
 
-    const direct_ascendants = ascendants.reduceRight((accumulator, item) => {
-        if (item.id === next_parent_id) {
+    const direct_ascendants = ascendants.reduceRight<Folder[]>((accumulator, item) => {
+        if (item.id === next_parent_id && isFolder(item)) {
             accumulator.push(item);
 
             next_parent_id = item.parent_id;
@@ -92,10 +76,11 @@ function appendFolderToAscendantHierarchy(state, folder) {
     state.current_folder_ascendant_hierarchy.push(...direct_ascendants.reverse(), folder);
 }
 
-function setCurrentFolder(state, folder) {
+export function setCurrentFolder(state: State, folder: Folder): void {
     state.current_folder = folder;
 }
-function replaceCurrentFolder(state, folder) {
+
+export function replaceCurrentFolder(state: State, folder: Folder): void {
     state.current_folder = folder;
     const folder_in_hierarchy_index = state.current_folder_ascendant_hierarchy.findIndex(
         (item) => item.id === folder.id,
@@ -105,25 +90,26 @@ function replaceCurrentFolder(state, folder) {
     }
 }
 
-function beginLoadingCurrentlyPreviewedItem(state) {
+export function beginLoadingCurrentlyPreviewedItem(state: State): void {
     state.is_loading_currently_previewed_item = true;
 }
 
-function stopLoadingCurrentlyPreviewedItem(state) {
+export function stopLoadingCurrentlyPreviewedItem(state: State): void {
     state.is_loading_currently_previewed_item = false;
 }
-function updateCurrentlyPreviewedItem(state, item) {
+
+export function updateCurrentlyPreviewedItem(state: State, item: Item | null): void {
     state.currently_previewed_item = item;
 }
 
-function showPostDeletionNotification(state) {
+export function showPostDeletionNotification(state: State): void {
     state.show_post_deletion_notification = true;
 }
 
-function hidePostDeletionNotification(state) {
+export function hidePostDeletionNotification(state: State): void {
     state.show_post_deletion_notification = false;
 }
 
-function toggleQuickLook(state, toggle) {
+export function toggleQuickLook(state: State, toggle: boolean): void {
     state.toggle_quick_look = toggle;
 }

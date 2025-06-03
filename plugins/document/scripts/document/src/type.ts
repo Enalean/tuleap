@@ -36,16 +36,20 @@ import type { CreatedItemResponse } from "@tuleap/plugin-document-rest-api-types
 export type FolderContentItem = Item | FakeItem;
 
 export interface State {
+    project_ugroups: Array<UserGroup> | null;
     is_loading_folder: boolean;
-    current_folder: Folder;
+    current_folder: Folder | null;
     folder_content: Array<FolderContentItem>;
     current_folder_ascendant_hierarchy: Array<Folder>;
     is_loading_ascendant_hierarchy: boolean;
     is_loading_currently_previewed_item: boolean;
     root_title: string;
-    currently_previewed_item: Item | null;
+    currently_previewed_item: FolderContentItem | null;
     files_uploads_list: Array<ItemFile | FakeItem>;
     show_post_deletion_notification: boolean;
+    toggle_quick_look: boolean;
+    folded_items_ids: Array<number>;
+    folded_by_map: { [key: number]: Array<number> };
 }
 
 export interface RootState extends State {
@@ -229,6 +233,7 @@ export interface FakeItem extends Uploadable {
     approval_table: ApprovalTable | null;
     upload_error: string | null;
     is_uploading_new_version: boolean;
+    level?: number;
 }
 
 export interface Folder extends Item, Uploadable {
