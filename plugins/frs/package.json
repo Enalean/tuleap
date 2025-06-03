@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/angular-tlp": "workspace:*",
+    "@tuleap/burningparrot-theme": "workspace:^",
     "@uirouter/angularjs": "^1.0.29",
     "angular": "^1.8.2",
     "angular-filter": "^0.5.17",
