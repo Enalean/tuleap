@@ -112,9 +112,10 @@ export type Cell =
 
 export type ArtifactRow = {
     readonly uri: string;
+    readonly cells: Map<ColumnName, Cell>;
     readonly number_of_forward_link: number;
     readonly number_of_reverse_link: number;
-    readonly cells: Map<ColumnName, Cell>;
+    is_expanded: boolean;
 };
 
 export type ArtifactsTable = {

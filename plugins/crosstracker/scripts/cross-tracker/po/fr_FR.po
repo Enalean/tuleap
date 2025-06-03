@@ -93,6 +93,9 @@ msgstr "Export XSLX"
 msgid "First"
 msgstr "Premier"
 
+msgid "Hide artifact links"
+msgstr "Masquer les liens de l’artifact"
+
 msgid "Id"
 msgstr "Id"
 
@@ -178,6 +181,9 @@ msgstr "Rechercher"
 
 msgid "Semantic suggestions"
 msgstr "Suggestions de sémantiques"
+
+msgid "Show artifact links"
+msgstr "Afficher les liens de l’artifact"
 
 msgid "Status"
 msgstr "État"

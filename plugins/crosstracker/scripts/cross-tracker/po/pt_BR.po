@@ -89,6 +89,9 @@ msgstr ""
 msgid "First"
 msgstr ""
 
+msgid "Hide artifact links"
+msgstr ""
+
 msgid "Id"
 msgstr ""
 
@@ -170,6 +173,9 @@ msgid "Search"
 msgstr "Pesquisar"
 
 msgid "Semantic suggestions"
+msgstr ""
+
+msgid "Show artifact links"
 msgstr ""
 
 msgid "Status"
