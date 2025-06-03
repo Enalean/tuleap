@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", "utf-8"));
+const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", { encoding: "utf-8"}));
 
 module.exports = {
     extends: [
@@ -91,6 +91,7 @@ module.exports = {
         "order/properties-alphabetical-order": null, // Overridden by stylelint-config-property-sort-order-smacss
         "scss/at-else-empty-line-before": ["never"],
         "scss/operator-no-unspaced": true,
+        "scss/partial-no-import": true,
         "font-family-no-missing-generic-family-keyword": null,
         "no-descending-specificity": null, // Need a lot of work with existing files
         "no-invalid-position-at-import-rule": null, // Need work with existing files

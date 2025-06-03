@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "./disk-usage-pie";
+@use "disk-usage-pie";
 
 /* stylelint-disable-next-line selector-class-pattern */
 .stat_help {
