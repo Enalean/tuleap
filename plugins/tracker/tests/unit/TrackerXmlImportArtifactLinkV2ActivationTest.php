@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -30,6 +29,7 @@ use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 
@@ -46,6 +46,7 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
     private EventManager&MockObject $event_manager;
     private Project $project;
     private PFUser $user;
+    private GetInstanceFromXml&MockObject $get_instance_from_xml;
 
     protected function setUp(): void
     {
@@ -79,25 +80,21 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
         $rng_validator = $this->createMock(\XML_RNGValidator::class);
         $rng_validator->method('validate');
 
+        $this->get_instance_from_xml = $this->createMock(GetInstanceFromXml::class);
+
         $this->tracker_xml_importer = new TrackerXmlImport(
             $this->createMock(\TrackerFactory::class),
             $this->event_manager,
             $this->hierarchy_dao,
-            $this->createMock(\Tracker_CannedResponseFactory::class),
+            $this->get_instance_from_xml,
             $form_element_factory,
-            $this->createMock(\Tracker_SemanticFactory::class),
-            $this->createMock(\Tracker_RuleFactory::class),
-            $this->createMock(\Tracker_ReportFactory::class),
-            $this->createMock(\WorkflowFactory::class),
             $rng_validator,
             $this->createMock(\Tracker_Workflow_Trigger_RulesManager::class),
             $this->createMock(\Tracker_Artifact_XMLImport::class),
             $this->createMock(\User\XML\Import\IFindUserFromXMLReference::class),
-            $this->createMock(UGroupRetrieverWithLegacy::class),
             new \Psr\Log\NullLogger(),
             $this->artifact_link_usage_updater,
             $this->artifact_link_usage_dao,
-            $this->createMock(\Tuleap\Tracker\Webhook\WebhookFactory::class),
             $this->createMock(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
             $this->external_validator,
             $this->createMock(TrackerXmlImportFeedbackCollector::class),
