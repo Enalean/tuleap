@@ -26,7 +26,6 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Description;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
@@ -36,6 +35,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
@@ -80,7 +80,7 @@ final class ArtifactContentCreatorTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        Tracker_Semantic_Description::clearInstances();
+        TrackerSemanticDescription::clearInstances();
     }
 
     public function testFaultWhenDocumentDoesNotHaveATracker(): void
@@ -179,8 +179,8 @@ final class ArtifactContentCreatorTest extends TestCase
             new TrackerSemanticTitle($this->tracker, $this->submitatable_title_field),
             $this->tracker,
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, null),
             $this->tracker,
         );
 
@@ -214,8 +214,8 @@ final class ArtifactContentCreatorTest extends TestCase
             new TrackerSemanticTitle($this->tracker, $this->submitatable_title_field),
             $this->tracker,
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, $this->readonly_description_field),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, $this->readonly_description_field),
             $this->tracker,
         );
 
@@ -249,8 +249,8 @@ final class ArtifactContentCreatorTest extends TestCase
             new TrackerSemanticTitle($this->tracker, $this->submitatable_title_field),
             $this->tracker,
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, $this->submitatable_description_field),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, $this->submitatable_description_field),
             $this->tracker,
         );
 
@@ -286,8 +286,8 @@ final class ArtifactContentCreatorTest extends TestCase
             new TrackerSemanticTitle($this->tracker, $this->submitatable_title_field),
             $this->tracker,
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, $this->submitatable_description_field),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, $this->submitatable_description_field),
             $this->tracker,
         );
 
@@ -336,8 +336,8 @@ final class ArtifactContentCreatorTest extends TestCase
             new TrackerSemanticTitle($this->tracker, $this->getTextField(self::TITLE_ID, true)),
             $this->tracker,
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, $this->submitatable_description_field),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, $this->submitatable_description_field),
             $this->tracker,
         );
 
@@ -392,8 +392,8 @@ final class ArtifactContentCreatorTest extends TestCase
             new TrackerSemanticTitle($this->tracker, $this->submitatable_title_field),
             $this->tracker,
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, $this->submitatable_description_field),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, $this->submitatable_description_field),
             $this->tracker,
         );
 

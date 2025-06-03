@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Description;
 
 use Tracker;
-use Tracker_Semantic_Description;
 
 interface GetDescriptionSemantic
 {
-    public function getByTracker(Tracker $tracker): Tracker_Semantic_Description;
+    public function getByTracker(Tracker $tracker): TrackerSemanticDescription;
 }

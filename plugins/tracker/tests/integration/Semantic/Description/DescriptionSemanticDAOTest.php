@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Description;
 
-use Tracker_Semantic_DescriptionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -65,7 +64,7 @@ final class DescriptionSemanticDAOTest extends TestIntegrationTestCase
     {
         $this->dao->save(self::TRACKER_ID, self::FIELD_ID);
 
-        $factory       = new Tracker_Semantic_DescriptionFactory();
+        $factory       = new TrackerSemanticDescriptionFactory();
         $to_tracker_id = 868;
         $to_field_id   = 9541;
         $factory->duplicate(self::TRACKER_ID, $to_tracker_id, [

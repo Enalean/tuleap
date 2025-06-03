@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tracker_Semantic_Description;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
@@ -41,6 +40,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -85,8 +85,8 @@ final class PUTConfigurationHandlerTest extends TestCase
             new TrackerSemanticTitle($this->tracker, null),
             $this->tracker
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, null),
             $this->tracker
         );
 
@@ -104,7 +104,7 @@ final class PUTConfigurationHandlerTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        Tracker_Semantic_Description::clearInstances();
+        TrackerSemanticDescription::clearInstances();
     }
 
     private function handle(): Ok|Err
@@ -231,8 +231,8 @@ final class PUTConfigurationHandlerTest extends TestCase
             new TrackerSemanticTitle($another_tracker, null),
             $another_tracker
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($another_tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($another_tracker, null),
             $another_tracker
         );
 

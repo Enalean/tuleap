@@ -51,7 +51,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $title_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_DescriptionFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory
      */
     private $description_factory;
     /**
@@ -69,7 +69,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->title_factory           = $this->createStub(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::class);
-        $this->description_factory     = $this->createStub(\Tracker_Semantic_DescriptionFactory::class);
+        $this->description_factory     = $this->createStub(\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory::class);
         $this->status_factory          = $this->createStub(\Tracker_Semantic_StatusFactory::class);
         $this->timeframe_builder       = $this->createStub(SemanticTimeframeBuilder::class);
         $this->artifact_link_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
@@ -137,7 +137,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenDescriptionFieldCantBeFound(): void
     {
-        $description_semantic = new \Tracker_Semantic_Description($this->tracker);
+        $description_semantic = new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription($this->tracker);
         $this->description_factory->method('getByTracker')->willReturn($description_semantic);
 
         $this->expectException(FieldRetrievalException::class);
@@ -146,7 +146,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsDescriptionReference(): void
     {
-        $description_semantic = new \Tracker_Semantic_Description($this->tracker, $this->getTextField(693, 'Smokish'));
+        $description_semantic = new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription($this->tracker, $this->getTextField(693, 'Smokish'));
         $this->description_factory->method('getByTracker')->willReturn($description_semantic);
 
         $description = $this->getGatherer()->getDescriptionField($this->tracker_identifier);

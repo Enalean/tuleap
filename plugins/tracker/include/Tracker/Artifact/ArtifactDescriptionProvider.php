@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_Semantic_Description;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 
 class ArtifactDescriptionProvider
 {
     /**
-     * @var Tracker_Semantic_Description
+     * @var TrackerSemanticDescription
      */
     private $semantic_description;
 
-    public function __construct(Tracker_Semantic_Description $semantic_description)
+    public function __construct(TrackerSemanticDescription $semantic_description)
     {
         $this->semantic_description = $semantic_description;
     }

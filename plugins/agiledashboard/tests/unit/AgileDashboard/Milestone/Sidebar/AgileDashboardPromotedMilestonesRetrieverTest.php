@@ -27,12 +27,12 @@ use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
 use Planning_NoPlanningsException;
 use Planning_VirtualTopMilestone;
-use Tracker_Semantic_Description;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\BuildPromotedMilestoneListStub;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -42,7 +42,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Tracker_Semantic_Description::clearInstances();
+        TrackerSemanticDescription::clearInstances();
     }
 
     public function testItReturnsNoMilestoneWhenConfigShouldNotDisplay(): void
@@ -111,9 +111,9 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
         );
 
         $milestone_factory->method('getVirtualTopMilestone')->willReturn($virtual_milestone);
-        $semantic_description = $this->createMock(Tracker_Semantic_Description::class);
+        $semantic_description = $this->createMock(TrackerSemanticDescription::class);
         $semantic_description->method('getField')->willReturn(TextFieldBuilder::aTextField(1)->build());
-        Tracker_Semantic_Description::setInstance($semantic_description, $tracker);
+        TrackerSemanticDescription::setInstance($semantic_description, $tracker);
 
         $retriever = new AgileDashboardPromotedMilestonesRetriever(
             $milestone_factory,

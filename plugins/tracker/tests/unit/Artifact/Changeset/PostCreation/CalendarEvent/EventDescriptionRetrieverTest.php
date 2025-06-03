@@ -42,22 +42,22 @@ final class EventDescriptionRetrieverTest extends TestCase
 
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
-    private \Tracker_Semantic_Description|MockObject $semantic_description;
+    private \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription|MockObject $semantic_description;
 
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
 
-        $this->semantic_description = $this->createMock(\Tracker_Semantic_Description::class);
-        \Tracker_Semantic_Description::setInstance($this->semantic_description, $this->changeset->getTracker());
+        $this->semantic_description = $this->createMock(\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::class);
+        \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::setInstance($this->semantic_description, $this->changeset->getTracker());
 
         \ForgeConfig::set('sys_default_domain', 'example.com');
     }
 
     protected function tearDown(): void
     {
-        \Tracker_Semantic_Description::clearInstances();
+        \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::clearInstances();
     }
 
     /**

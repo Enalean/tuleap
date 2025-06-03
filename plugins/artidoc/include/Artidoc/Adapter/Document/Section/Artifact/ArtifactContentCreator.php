@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section\Artifact;
 
-use Tracker_Semantic_Description;
 use Tuleap\Artidoc\Document\RetrieveConfiguredTracker;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\REST\Artifact\CreateArtifact;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final readonly class ArtifactContentCreator implements CreateArtifactContent
@@ -79,7 +79,7 @@ final readonly class ArtifactContentCreator implements CreateArtifactContent
             ));
         }
 
-        $description_field = Tracker_Semantic_Description::load($tracker)->getField();
+        $description_field = TrackerSemanticDescription::load($tracker)->getField();
         if (! $description_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(

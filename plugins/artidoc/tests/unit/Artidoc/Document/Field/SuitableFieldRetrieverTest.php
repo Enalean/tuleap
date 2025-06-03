@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
 use Tracker;
-use Tracker_Semantic_Description;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -35,6 +34,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
@@ -63,8 +63,8 @@ final class SuitableFieldRetrieverTest extends TestCase
             new TrackerSemanticTitle($this->tracker, null),
             $this->tracker,
         );
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, null),
             $this->tracker,
         );
     }
@@ -72,7 +72,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        Tracker_Semantic_Description::clearInstances();
+        TrackerSemanticDescription::clearInstances();
     }
 
     /**
@@ -134,8 +134,8 @@ final class SuitableFieldRetrieverTest extends TestCase
             ->build();
         $this->field_retriever = RetrieveUsedFieldsStub::withFields($field);
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($this->tracker, $field),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($this->tracker, $field),
             $this->tracker,
         );
 

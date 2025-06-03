@@ -26,9 +26,9 @@ use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_Description;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 /**
@@ -55,7 +55,7 @@ final readonly class DocumentTrackerRepresentation
             ? new DocumentTrackerFieldStringRepresentation($title_field->getId(), $title_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field), $title_field->getDefaultRESTValue())
             : null;
 
-        $description_field = Tracker_Semantic_Description::load($tracker)->getField();
+        $description_field = TrackerSemanticDescription::load($tracker)->getField();
         $description       = $description_field && $description_field->userCanSubmit($user)
             ? new DocumentTrackerFieldTextRepresentation($description_field->getId(), $description_field->getLabel(), Tracker_FormElementFactory::instance()->getType($description_field), $description_field->getDefaultRESTValue())
             : null;

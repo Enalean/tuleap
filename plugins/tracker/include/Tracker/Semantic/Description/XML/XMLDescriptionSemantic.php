@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Description\XML;
 
-use Tracker_Semantic_Description;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReference;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 
 final class XMLDescriptionSemantic extends XMLSemantic
@@ -36,7 +36,7 @@ final class XMLDescriptionSemantic extends XMLSemantic
          */
         private XMLReference $reference,
     ) {
-        parent::__construct(Tracker_Semantic_Description::NAME);
+        parent::__construct(TrackerSemanticDescription::NAME);
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
@@ -44,7 +44,7 @@ final class XMLDescriptionSemantic extends XMLSemantic
         $child = parent::export($parent_node, $form_elements);
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
-        $cdata->insert($child, 'shortname', Tracker_Semantic_Description::NAME);
+        $cdata->insert($child, 'shortname', TrackerSemanticDescription::NAME);
         $cdata->insert($child, 'label', 'Description');
         $cdata->insert($child, 'description', 'Define the description of an artifact');
         $child->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));

@@ -28,8 +28,8 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Description;
 use Tracker_Semantic_Status;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 /**
@@ -44,7 +44,7 @@ class SemanticFieldRepository
 
     public function findDescriptionByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
     {
-        return Tracker_Semantic_Description::load($tracker)->getField();
+        return TrackerSemanticDescription::load($tracker)->getField();
     }
 
     public function findInitialEffortByTracker(Tracker $tracker): ?Tracker_FormElement_Field

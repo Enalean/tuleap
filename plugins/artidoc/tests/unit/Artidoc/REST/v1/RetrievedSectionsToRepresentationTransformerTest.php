@@ -30,7 +30,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Description;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollection;
@@ -55,6 +54,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -71,7 +71,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     private PFUser $user;
     private Tracker $tracker;
     private TrackerSemanticTitle&MockObject $semantic_title;
-    private Tracker_Semantic_Description&MockObject $semantic_description;
+    private TrackerSemanticDescription&MockObject $semantic_description;
     private RetrieveArtifactStub $artifact_retriever;
     private GetFileUploadDataStub $file_upload_provider;
 
@@ -83,10 +83,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
 
         $this->semantic_title       = $this->createMock(TrackerSemanticTitle::class);
-        $this->semantic_description = $this->createMock(Tracker_Semantic_Description::class);
+        $this->semantic_description = $this->createMock(TrackerSemanticDescription::class);
 
         TrackerSemanticTitle::setInstance($this->semantic_title, $this->tracker);
-        Tracker_Semantic_Description::setInstance($this->semantic_description, $this->tracker);
+        TrackerSemanticDescription::setInstance($this->semantic_description, $this->tracker);
         $this->artifact_retriever   = RetrieveArtifactStub::withNoArtifact();
         $this->file_upload_provider = GetFileUploadDataStub::withoutField();
     }
@@ -94,7 +94,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        Tracker_Semantic_Description::clearInstances();
+        TrackerSemanticDescription::clearInstances();
     }
 
     /**

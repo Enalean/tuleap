@@ -25,10 +25,10 @@ namespace Tuleap\Artidoc\Document\Tracker;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Description;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -40,7 +40,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        Tracker_Semantic_Description::clearInstances();
+        TrackerSemanticDescription::clearInstances();
     }
 
     public function testIdAndLabelAreExposed(): void
@@ -53,8 +53,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, null),
             $tracker,
         );
 
@@ -77,8 +77,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, null),
             $tracker,
         );
 
@@ -100,8 +100,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, null),
             $tracker,
         );
 
@@ -123,8 +123,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, null),
             $tracker,
         );
 
@@ -146,8 +146,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, null),
             $tracker,
         );
 
@@ -171,8 +171,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, null),
             $tracker,
         );
 
@@ -194,8 +194,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, null),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, null),
             $tracker,
         );
 
@@ -217,8 +217,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, $this->getTextField(1005, true)),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, $this->getTextField(1005, true)),
             $tracker,
         );
 
@@ -242,8 +242,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, $this->getTextField(1005, true)),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, $this->getTextField(1005, true)),
             $tracker,
         );
 
@@ -265,8 +265,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, $this->getTextField(1005, true)),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, $this->getTextField(1005, true)),
             $tracker,
         );
 
@@ -288,8 +288,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        Tracker_Semantic_Description::setInstance(
-            new Tracker_Semantic_Description($tracker, $this->getTextField(1005, true)),
+        TrackerSemanticDescription::setInstance(
+            new TrackerSemanticDescription($tracker, $this->getTextField(1005, true)),
             $tracker,
         );
 
