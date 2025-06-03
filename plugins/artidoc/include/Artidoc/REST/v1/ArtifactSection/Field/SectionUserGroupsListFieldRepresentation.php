@@ -20,15 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 
-interface GetFieldsWithValues
+/**
+ * @psalm-immutable
+ */
+final readonly class SectionUserGroupsListFieldRepresentation
 {
+    public string $type;
+    public string $label;
+    public string $display_type;
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue>
+     * @var list<UserGroupListValueRepresentation> $value
      */
-    public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array;
+    public array $value;
+
+    public function __construct(UserGroupsListFieldWithValue $field)
+    {
+        $this->type         = FieldType::USER_GROUPS_LIST->value;
+        $this->label        = $field->label;
+        $this->display_type = $field->display_type->value;
+        $this->value        = array_map(
+            fn(UserGroupListValue $user_group) => new UserGroupListValueRepresentation($user_group),
+            $field->user_groups
+        );
+    }
 }

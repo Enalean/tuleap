@@ -24,17 +24,27 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldsWithValuesBuilderTest extends TestCase
 {
+    use GlobalLanguageMock;
+
     private const TRACKER_ID = 66;
     private \Tracker $tracker;
     private ConfiguredFieldCollection $field_collection;
@@ -50,7 +60,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     }
 
     /**
-     * @return list<StringFieldWithValue>
+     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue>
      */
     private function getFields(): array
     {
@@ -77,14 +87,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ->build();
         $this->field_collection = new ConfiguredFieldCollection([
             self::TRACKER_ID => [
-                new ConfiguredField(
-                    $first_string_field,
-                    DisplayType::COLUMN
-                ),
-                new ConfiguredField(
-                    $second_string_field,
-                    DisplayType::BLOCK
-                ),
+                new ConfiguredField($first_string_field, DisplayType::COLUMN),
+                new ConfiguredField($second_string_field, DisplayType::BLOCK),
             ],
         ]);
 
@@ -107,6 +111,64 @@ final class FieldsWithValuesBuilderTest extends TestCase
         ], $this->getFields());
     }
 
+    public function testItBuildsSupportedFieldsWithValues(): void
+    {
+        $GLOBALS['Language']->method('getText')->willReturn('Project Members');
+        $first_list_field = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField(843)
+                ->withLabel('presearch')
+                ->inTracker($this->tracker)
+                ->build()
+        )->withUserGroups(
+            [
+                ProjectUGroupTestBuilder::aCustomUserGroup(821)->withName('haematoxylin')->build(),
+            ]
+        )->build()->getField();
+
+        $second_list_value1     = ProjectUGroupTestBuilder::buildProjectMembers();
+        $second_list_value2     = ProjectUGroupTestBuilder::aCustomUserGroup(919)->withName('Reviewers')->build();
+        $second_list_field      = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField(480)
+                ->withMultipleValues()
+                ->withLabel('trionychoidean')
+                ->inTracker($this->tracker)
+                ->build()
+        )->withUserGroups(
+            [
+                $second_list_value1,
+                $second_list_value2,
+                ProjectUGroupTestBuilder::aCustomUserGroup(794)->withName('Mentlegen')->build(),
+            ]
+        )->build()->getField();
+        $this->field_collection = new ConfiguredFieldCollection([
+            self::TRACKER_ID => [
+                new ConfiguredField($first_list_field, DisplayType::BLOCK),
+                new ConfiguredField($second_list_field, DisplayType::COLUMN),
+            ],
+        ]);
+
+        $this->changeset->setFieldValue(
+            $first_list_field,
+            ChangesetValueListTestBuilder::aListOfValue(934, $this->changeset, $first_list_field)->build()
+        );
+        $this->changeset->setFieldValue(
+            $second_list_field,
+            ChangesetValueListTestBuilder::aListOfValue(407, $this->changeset, $second_list_field)
+                ->withValues([
+                    ListUserGroupValueBuilder::aUserGroupValue($second_list_value1)->build(),
+                    ListUserGroupValueBuilder::aUserGroupValue($second_list_value2)->build(),
+                ])->build()
+        );
+
+        self::assertEquals([
+            new UserGroupsListFieldWithValue('presearch', DisplayType::BLOCK, []),
+            new UserGroupsListFieldWithValue('trionychoidean', DisplayType::COLUMN, [
+                new UserGroupListValue('Project Members'),
+                new UserGroupListValue('Reviewers'),
+            ]),
+        ], $this->getFields());
+    }
+
     public function testItSkipsMissingChangesetValues(): void
     {
         $first_string_field     = StringFieldBuilder::aStringField(268)
@@ -119,14 +181,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ->build();
         $this->field_collection = new ConfiguredFieldCollection([
             self::TRACKER_ID => [
-                new ConfiguredField(
-                    $first_string_field,
-                    DisplayType::COLUMN
-                ),
-                new ConfiguredField(
-                    $second_string_field,
-                    DisplayType::BLOCK
-                ),
+                new ConfiguredField($first_string_field, DisplayType::COLUMN),
+                new ConfiguredField($second_string_field, DisplayType::BLOCK),
             ],
         ]);
 

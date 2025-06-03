@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 
-final readonly class ConfiguredField
+/**
+ * @psalm-immutable
+ */
+final readonly class UserGroupsListFieldWithValue
 {
+    /**
+     * @param list<UserGroupListValue> $user_groups
+     */
     public function __construct(
-        public \Tracker_FormElement_Field_String|\Tracker_FormElement_Field_List $field,
+        public string $label,
         public DisplayType $display_type,
+        public array $user_groups,
     ) {
     }
 }

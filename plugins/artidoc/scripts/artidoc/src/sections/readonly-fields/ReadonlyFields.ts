@@ -19,7 +19,7 @@
 import type { ConfigurationFieldDisplayType } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 export const STRING_FIELD = "string";
-export const USER_GROUP_LIST_FIELD = "user-groups-list";
+export const USER_GROUP_LIST_FIELD = "user_groups_list";
 
 export type ReadonlyFieldString = Readonly<{
     type: typeof STRING_FIELD;

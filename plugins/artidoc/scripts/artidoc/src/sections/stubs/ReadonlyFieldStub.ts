@@ -35,7 +35,7 @@ export const ReadonlyFieldStub = {
         value: ReadonlyFieldUserGroupsListValue[],
         display_type: ConfigurationFieldDisplayType,
     ): ReadonlyFieldUserGroupsList => ({
-        type: "user-groups-list",
+        type: "user_groups_list",
         label: `Readonly user-groups-list field`,
         value,
         display_type,

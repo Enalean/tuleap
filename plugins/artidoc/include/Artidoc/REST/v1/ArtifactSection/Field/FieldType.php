@@ -24,5 +24,6 @@ namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
 enum FieldType: string
 {
-    case STRING = 'string';
+    case STRING           = 'string';
+    case USER_GROUPS_LIST = 'user_groups_list';
 }
