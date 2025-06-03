@@ -40,7 +40,7 @@
         <slot name="permission-information"></slot>
     </div>
 </template>
-<script>
+<script lang="ts">
 import emitter from "../../../helpers/emitter";
 import { CAN_READ, CAN_WRITE, CAN_MANAGE } from "../../../constants";
 

@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import CreateNewVersionEmbeddedFileModal from "./CreateNewVersionEmbeddedFileModal.vue";
@@ -32,7 +33,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
     const remove_backdrop = vi.fn();
     const load_documents = vi.fn();
 
-    function getWrapper(prop) {
+    function getWrapper(prop): VueWrapper<CreateNewVersionEmbeddedFileModal> {
         load_documents.mockImplementation(() => {
             return Promise.resolve({
                 id: 12,

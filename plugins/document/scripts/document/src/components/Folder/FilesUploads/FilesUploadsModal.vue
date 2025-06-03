@@ -67,7 +67,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
 import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../../constants";

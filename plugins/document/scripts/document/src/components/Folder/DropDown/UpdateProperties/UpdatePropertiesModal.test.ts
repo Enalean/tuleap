@@ -19,44 +19,39 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-
-import UpdateFolderPropertiesModal from "./UpdateFolderPropertiesModal.vue";
-import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
+
+import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
+vi.mock("@tuleap/autocomplete-for-select2", () => {
+    return { autocomplete_users_for_select2: vi.fn() };
 });
 
-describe("UpdateFolderPropertiesModal", () => {
-    let factory, store;
+describe("UpdatePropertiesModal", () => {
+    let factory;
 
     beforeEach(() => {
-        factory = (props = {}) => {
-            return shallowMount(UpdateFolderPropertiesModal, {
-                mocks: { $store: store },
-                props: { ...props },
+        factory = (item, has_loaded_properties): VueWrapper<UpdatePropertiesModal> => {
+            return shallowMount(UpdatePropertiesModal, {
+                props: { item },
                 global: {
                     ...getGlobalTestOptions({
                         modules: {
                             configuration: {
                                 state: {
+                                    project_id: 102,
                                     is_status_property_used: true,
-                                    project_id: "102",
+                                    has_loaded_properties,
                                 },
                                 namespaced: true,
                             },
                             error: {
                                 state: {
-                                    has_modal_error: false,
-                                },
-                                namespaced: true,
-                            },
-                            properties: {
-                                state: {
-                                    has_loaded_properties: false,
+                                    has_global_modal_error: false,
                                 },
                                 namespaced: true,
                             },
@@ -82,14 +77,6 @@ describe("UpdateFolderPropertiesModal", () => {
                                         type: "text",
                                         is_required: false,
                                     },
-                                    {
-                                        short_name: "status",
-                                        list_value: [
-                                            {
-                                                id: 103,
-                                            },
-                                        ],
-                                    },
                                 ],
                             },
                         },
@@ -104,108 +91,35 @@ describe("UpdateFolderPropertiesModal", () => {
             hide: () => {},
         });
     });
-    describe("Events received by the modal -", () => {
-        it(`Receives the property-recursion-list event,
-       Then the properties_to_update  data is updated`, () => {
-            const item = {
-                id: 7,
-                type: "folder",
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            };
 
-            const wrapper = factory({ item });
-            emitter.emit("properties-recursion-list", {
-                detail: { property_list: ["field_1"] },
-            });
+    it("Updates owner", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            description: "A custom description",
+            owner: {
+                id: 101,
+            },
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
 
-            expect(wrapper.vm.properties_to_update).toStrictEqual(["field_1"]);
-        });
-        it(`Receives the properties-recursion-option event,
-       Then the properties_to_update  data is updated`, () => {
-            const item = {
-                id: 7,
-                type: "folder",
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            };
+        const wrapper = factory(item, true);
 
-            const wrapper = factory({ item });
-            emitter.emit("properties-recursion-option", {
-                recursion_option: "all_items",
-            });
+        expect(wrapper.vm.item_to_update.owner.id).toBe(101);
 
-            expect(wrapper.vm.recursion_option).toBe("all_items");
-        });
-        it(`Receives the update-status-recursion event because status is unchecked,
-       Then the status recursion value is updated to none`, () => {
-            const item = {
-                id: 7,
-                type: "folder",
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            };
-
-            const wrapper = factory({ item });
-            emitter.emit("properties-recursion-option", {
-                recursion_option: "all_items",
-            });
-
-            emitter.emit("update-status-recursion", false);
-
-            expect(wrapper.vm.item_to_update.status.recursion).toBe("none");
-        });
-        it(`Receives the update-status-recursion event because status is checked,
-       Then the status recursion value is updated to the recurse option value`, () => {
-            const item = {
-                id: 7,
-                type: "folder",
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            };
-
-            const wrapper = factory({ item });
-            emitter.emit("properties-recursion-option", {
-                recursion_option: "all_items",
-            });
-
-            emitter.emit("update-status-recursion", true);
-
-            expect(wrapper.vm.item_to_update.status.recursion).toBe("all_items");
-        });
+        emitter.emit("update-owner-property", 200);
+        expect(wrapper.vm.item_to_update.owner.id).toBe(200);
     });
+
     it("Transform item property rest representation", () => {
         const properties_to_update = {
             short_name: "field_1234",
@@ -235,18 +149,18 @@ describe("UpdateFolderPropertiesModal", () => {
             ],
         };
 
-        const expected_properties = {
+        const properties_in_rest_format = {
             short_name: "field_1234",
             list_value: null,
+            recursion: "none",
             type: "list",
             is_multiple_value_allowed: false,
-            recursion: "none",
             value: 103,
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, false);
 
-        expect(wrapper.vm.formatted_item_properties).toEqual([expected_properties]);
+        expect(wrapper.vm.formatted_item_properties).toEqual([properties_in_rest_format]);
     });
 
     it("Updates status", () => {
@@ -265,18 +179,12 @@ describe("UpdateFolderPropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, true);
 
-        expect(wrapper.vm.item_to_update.status).toStrictEqual({
-            recursion: "none",
-            value: "rejected",
-        });
+        expect(wrapper.vm.item_to_update.status).toBe("rejected");
 
         emitter.emit("update-status-property", "draft");
-        expect(wrapper.vm.item_to_update.status).toStrictEqual({
-            recursion: "none",
-            value: "draft",
-        });
+        expect(wrapper.vm.item_to_update.status).toBe("draft");
     });
 
     it("Updates title", () => {
@@ -296,7 +204,7 @@ describe("UpdateFolderPropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, true);
 
         expect(wrapper.vm.item_to_update.title).toBe("A folder");
 
@@ -321,7 +229,7 @@ describe("UpdateFolderPropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, true);
 
         expect(wrapper.vm.item_to_update.description).toBe("A custom description");
 

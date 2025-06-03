@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FileVersionChangelogModal from "./FileVersionChangelogModal.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
@@ -27,9 +28,9 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import { nextTick } from "vue";
 
 describe("FileVersionChangelogModal", () => {
-    let create_file_version = vi.fn();
+    const create_file_version = vi.fn();
 
-    function getWrapper() {
+    function getWrapper(): VueWrapper<FileVersionChangelogModal> {
         return shallowMount(FileVersionChangelogModal, {
             props: {
                 updatedFile: { id: 12, title: "How to.pdf", properties: [] },

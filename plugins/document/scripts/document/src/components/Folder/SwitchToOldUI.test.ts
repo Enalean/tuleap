@@ -19,6 +19,7 @@
  */
 
 import { beforeEach, describe, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SwitchToOldUI from "./SwitchToOldUI.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
@@ -31,7 +32,7 @@ describe("SwitchToOldUI", () => {
     let current_folder = null;
 
     beforeEach(() => {
-        factory = () => {
+        factory = (): VueWrapper<SwitchToOldUI> => {
             return shallowMount(SwitchToOldUI, {
                 global: {
                     ...getGlobalTestOptions({

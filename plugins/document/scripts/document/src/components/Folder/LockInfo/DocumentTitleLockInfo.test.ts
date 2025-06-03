@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentTitleLockInfo from "./DocumentTitleLockInfo.vue";
 import { TYPE_EMBEDDED } from "../../../constants";
@@ -27,7 +28,7 @@ describe("DocumentTitleLockInfo", () => {
     let document_locked_factory;
 
     beforeEach(() => {
-        document_locked_factory = (props = {}) => {
+        document_locked_factory = (props = {}): VueWrapper<DocumentTitleLockInfo> => {
             return shallowMount(DocumentTitleLockInfo, {
                 props: { ...props },
                 global: { ...getGlobalTestOptions({}) },

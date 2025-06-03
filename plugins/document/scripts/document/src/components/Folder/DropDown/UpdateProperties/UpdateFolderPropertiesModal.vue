@@ -46,7 +46,7 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
 import { createModal } from "@tuleap/tlp-modal";
 import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";

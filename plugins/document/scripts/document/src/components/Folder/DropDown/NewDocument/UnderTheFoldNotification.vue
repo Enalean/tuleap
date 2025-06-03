@@ -29,7 +29,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { isFolder } from "../../../../helpers/type-check-helper";
 import emitter from "../../../../helpers/emitter";
 

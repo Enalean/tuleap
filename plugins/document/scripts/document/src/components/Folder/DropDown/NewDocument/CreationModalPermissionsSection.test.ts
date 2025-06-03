@@ -19,6 +19,7 @@
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
@@ -27,7 +28,7 @@ describe("CreationModalPermissionsSection", () => {
     let factory;
 
     beforeEach(() => {
-        factory = (props) => {
+        factory = (props): VueWrapper<CreationModalPermissionsSection> => {
             return shallowMount(CreationModalPermissionsSection, {
                 props: { ...props },
                 global: { ...getGlobalTestOptions({}) },

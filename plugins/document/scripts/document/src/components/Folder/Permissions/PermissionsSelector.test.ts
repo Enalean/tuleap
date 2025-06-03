@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 
 import PermissionsSelector from "./PermissionsSelector.vue";
@@ -29,7 +30,7 @@ describe("PermissionsSelector", () => {
     let factory;
 
     beforeEach(() => {
-        factory = (props = {}) => {
+        factory = (props = {}): VueWrapper<PermissionsSelector> => {
             return shallowMount(PermissionsSelector, {
                 props: { ...props },
             });

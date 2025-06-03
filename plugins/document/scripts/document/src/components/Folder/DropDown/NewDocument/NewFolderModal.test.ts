@@ -1,7 +1,7 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,28 +15,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-
-import NewItemModal from "./NewItemModal.vue";
-import emitter from "../../../../helpers/emitter";
+import NewFolderModal from "./NewFolderModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
-import { TYPE_FILE, TYPE_FOLDER } from "../../../../constants";
-import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
+import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-
-vi.useFakeTimers();
+import { nextTick } from "vue";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
 });
 
-describe("NewItemModal", () => {
+describe("NewFolderModal", () => {
     let factory;
-    const load_projects_ugroups = vi.fn();
 
+    const load_projects_ugroups = vi.fn();
     const current_folder = {
         id: 42,
         title: "My current folder",
@@ -79,20 +77,11 @@ describe("NewItemModal", () => {
     };
 
     beforeEach(() => {
-        factory = (item = {}) => {
-            return shallowMount(NewItemModal, {
+        factory = (item = {}): VueWrapper<NewFolderModal> => {
+            return shallowMount(NewFolderModal, {
                 data() {
                     return {
                         item,
-                        is_displayed: false,
-                        is_loading: false,
-                        modal: null,
-                        parent: {},
-                        permissions_for_groups: {
-                            can_read: [],
-                            can_write: [],
-                            can_manage: [],
-                        },
                     };
                 },
                 global: {
@@ -109,9 +98,8 @@ describe("NewItemModal", () => {
                             },
                             configuration: {
                                 state: {
-                                    project_id: 102,
                                     is_status_property_used: true,
-                                    is_obsolescence_date_property_used: true,
+                                    has_loaded_properties: true,
                                 },
                                 namespaced: true,
                             },
@@ -126,7 +114,6 @@ describe("NewItemModal", () => {
 
         vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
-            removeEventListener: () => {},
             show: () => {},
             hide: () => {},
         });
@@ -159,11 +146,21 @@ describe("NewItemModal", () => {
             value: "wololo some words",
         });
         expect(wrapper.vm.item.properties[0].value).toBe("wololo some words");
-        wrapper.unmount();
     });
 
-    it("inherit default values from parent properties", async () => {
-        const item_to_create = {
+    it("Does not load project properties, when they have already been loaded", async () => {
+        factory();
+
+        emitter.emit("show-new-document-modal", {
+            detail: { parent: current_folder },
+        });
+        await nextTick();
+
+        expect(load_projects_ugroups).not.toHaveBeenCalled();
+    });
+
+    it("inherit default values from parent properties", () => {
+        const folder_to_create = {
             properties: [
                 {
                     short_name: "custom property",
@@ -181,103 +178,31 @@ describe("NewItemModal", () => {
         };
 
         const wrapper = factory();
-        emitter.emit("createItem", {
-            item: current_folder,
-        });
-        await vi.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.item.properties).toStrictEqual(item_to_create.properties);
-        wrapper.unmount();
+        emitter.emit("show-new-folder-modal", {
+            detail: { parent: current_folder },
+        });
+        expect(wrapper.vm.item.properties).toStrictEqual(folder_to_create.properties);
+        expect(wrapper.vm.item.status).toBe("rejected");
     });
 
     it("Updates status", () => {
-        const item = {
-            id: 7,
-            title: "Color folder",
-            type: "folder",
-            status: "approved",
-            properties: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 102,
-                        },
-                    ],
-                },
-            ],
-        };
+        const wrapper = factory();
 
-        const wrapper = factory(item);
-
-        expect(wrapper.vm.item.status).toBe("approved");
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item.status).toBe("draft");
-        wrapper.unmount();
     });
 
     it("Updates title", () => {
-        const item = {
-            id: 7,
-            title: "Color folder",
-            type: "folder",
-            description: "A custom description",
-            properties: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
+        const wrapper = factory();
 
-        const wrapper = factory(item);
-
-        expect(wrapper.vm.item.title).toBe("Color folder");
         emitter.emit("update-title-property", "A folder");
         expect(wrapper.vm.item.title).toBe("A folder");
-        wrapper.unmount();
-    });
-
-    it("should update the filename accordingly to title when created from empty", async function () {
-        vi.spyOn(get_office_file, "getEmptyOfficeFileFromMimeType").mockResolvedValue({
-            badge_class: "document-document-badge",
-            extension: "docx",
-            file: new File([], "document.docx", { type: "application/docx" }),
-        });
-
-        const wrapper = factory({});
-        const parent = {
-            id: 123,
-            type: TYPE_FOLDER,
-            permissions_for_groups: { apply_permissions_on_children: true },
-            properties: [],
-        };
-        emitter.emit("createItem", {
-            item: parent,
-            type: TYPE_FILE,
-            from_alternative: {
-                mime_type: "application/word",
-                title: "Document",
-            },
-        });
-
-        await vi.runOnlyPendingTimersAsync();
-
-        emitter.emit("update-title-property", "Specs V1");
-        expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.docx");
-        emitter.emit("update-title-property", "Specs V1.final");
-        expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.final.docx");
-        wrapper.unmount();
     });
 
     it("Updates description", () => {
         const item = {
             id: 7,
-            title: "Color folder",
             type: "folder",
             description: "A custom description",
             properties: [
@@ -292,10 +217,9 @@ describe("NewItemModal", () => {
             ],
         };
 
-        const wrapper = factory(item);
-        expect(wrapper.vm.item.description).toBe("A custom description");
+        const wrapper = factory({ item });
+
         emitter.emit("update-description-property", "A description");
         expect(wrapper.vm.item.description).toBe("A description");
-        wrapper.unmount();
     });
 });
