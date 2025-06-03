@@ -17,18 +17,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DateTime } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import TaskHeader from "./TaskHeader.vue";
-import type { Task } from "../../../type";
+import type { Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../../../store/tasks/type";
-import HeaderLink from "./HeaderLink.vue";
+import type { Task } from "../../../type";
 import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
-import { DateTime } from "luxon";
+import HeaderLink from "./HeaderLink.vue";
+import TaskHeader from "./TaskHeader.vue";
+import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("TaskHeader", () => {
-    it("Displays link to the task", () => {
-        const task: Task = {
+    let task: Task, does_at_least_one_task_have_subtasks: boolean;
+
+    beforeEach(() => {
+        task = {
+            id: 123,
+            has_subtasks: false,
+        } as Task;
+        does_at_least_one_task_have_subtasks = false;
+    });
+
+    async function getWrapper(): Promise<Wrapper<Vue>> {
+        return shallowMount(TaskHeader, {
+            propsData: {
+                task,
+                popover_element_id: "id",
+            },
+            localVue: await createRoadmapLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    },
+                    getters: {
+                        "tasks/does_at_least_one_task_have_subtasks":
+                            does_at_least_one_task_have_subtasks,
+                    },
+                }),
+            },
+        });
+    }
+
+    it("Displays link to the task", async () => {
+        task = {
             id: 123,
             title: "Do this",
             xref: "task #123",
@@ -43,208 +76,79 @@ describe("TaskHeader", () => {
             has_subtasks: false,
         } as Task;
 
-        const wrapper = shallowMount(TaskHeader, {
-            propsData: {
-                task,
-                popover_element_id: "id",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        tasks: {} as TasksState,
-                    },
-                    getters: {
-                        "tasks/does_at_least_one_task_have_subtasks": false,
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper();
 
         expect(wrapper.findComponent(HeaderLink).exists()).toBeTruthy();
     });
 
-    it("should display a warning icon if task has end date < start date", () => {
-        const task: Task = {
+    it("should display a warning icon if task has end date < start date", async () => {
+        task = {
             id: 123,
             start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
             end: DateTime.fromISO("2020-04-10T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = shallowMount(TaskHeader, {
-            propsData: {
-                task,
-                popover_element_id: "id",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        tasks: {} as TasksState,
-                    },
-                    getters: {
-                        "tasks/does_at_least_one_task_have_subtasks": false,
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper();
 
         expect(wrapper.findComponent(HeaderInvalidIcon).exists()).toBe(true);
     });
 
-    it("does not need to display the project for parent tasks", () => {
-        const task: Task = {
+    it("does not need to display the project for parent tasks", async () => {
+        task = {
             id: 123,
             has_subtasks: true,
         } as Task;
+        does_at_least_one_task_have_subtasks = true;
 
-        const wrapper = shallowMount(TaskHeader, {
-            propsData: {
-                task,
-                popover_element_id: "id",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        tasks: {} as TasksState,
-                    },
-                    getters: {
-                        "tasks/does_at_least_one_task_have_subtasks": true,
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper();
 
         expect(wrapper.findComponent(HeaderLink).props("should_display_project")).toBe(false);
     });
 
-    it("should indicates that the task has subtasks", () => {
-        const task: Task = {
+    it("should indicates that the task has subtasks", async () => {
+        task = {
             id: 123,
             has_subtasks: true,
         } as Task;
+        does_at_least_one_task_have_subtasks = true;
 
-        const wrapper = shallowMount(TaskHeader, {
-            propsData: {
-                task,
-                popover_element_id: "id",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        tasks: {} as TasksState,
-                    },
-                    getters: {
-                        "tasks/does_at_least_one_task_have_subtasks": true,
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper();
 
         expect(wrapper.find("[data-test=caret]").exists()).toBeTruthy();
         expect(wrapper.classes()).toContain("roadmap-gantt-task-header-with-subtasks");
     });
 
-    it("should display the caret container if at least one task in the Gantt chart has subtasks, so that text header is nicely aligned across tasks", () => {
-        const task: Task = {
-            id: 123,
-            has_subtasks: false,
-        } as Task;
+    it(`should display the caret container if at least one task in the Gantt chart has subtasks,
+        so that text header is nicely aligned across tasks`, async () => {
+        does_at_least_one_task_have_subtasks = true;
 
-        const wrapper = shallowMount(TaskHeader, {
-            propsData: {
-                task,
-                popover_element_id: "id",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        tasks: {} as TasksState,
-                    },
-                    getters: {
-                        "tasks/does_at_least_one_task_have_subtasks": true,
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper();
 
         expect(wrapper.find("[data-test=caret-container]").exists()).toBeTruthy();
     });
 
-    it("should not display the caret container if no task in the Gantt chart has subtasks, so that text header does not have useless extra padding", () => {
-        const task: Task = {
-            id: 123,
-            has_subtasks: false,
-        } as Task;
-
-        const wrapper = shallowMount(TaskHeader, {
-            propsData: {
-                task,
-                popover_element_id: "id",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        tasks: {} as TasksState,
-                    },
-                    getters: {
-                        "tasks/does_at_least_one_task_have_subtasks": false,
-                    },
-                }),
-            },
-        });
+    it(`should not display the caret container if no task in the Gantt chart has subtasks,
+        so that text header does not have useless extra padding`, async () => {
+        const wrapper = await getWrapper();
 
         expect(wrapper.find("[data-test=caret-container]").exists()).toBeFalsy();
     });
 
     describe("onclick", () => {
         it("should toggle the subtasks", async () => {
-            const task = {
+            task = {
                 id: 123,
                 has_subtasks: true,
             } as Task;
-            const wrapper = shallowMount(TaskHeader, {
-                propsData: {
-                    task,
-                    popover_element_id: "id",
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            tasks: {} as TasksState,
-                        },
-                        getters: {
-                            "tasks/does_at_least_one_task_have_subtasks": false,
-                        },
-                    }),
-                },
-            });
 
+            const wrapper = await getWrapper();
             await wrapper.trigger("click");
 
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("tasks/toggleSubtasks", task);
         });
 
         it("should not toggle the subtasks if there is no subtasks", async () => {
-            const task = {
-                id: 123,
-                has_subtasks: false,
-            } as Task;
-            const wrapper = shallowMount(TaskHeader, {
-                propsData: {
-                    task,
-                    popover_element_id: "id",
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            tasks: {} as TasksState,
-                        },
-                        getters: {
-                            "tasks/does_at_least_one_task_have_subtasks": false,
-                        },
-                    }),
-                },
-            });
-
+            const wrapper = await getWrapper();
             await wrapper.trigger("click");
 
             expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith(
