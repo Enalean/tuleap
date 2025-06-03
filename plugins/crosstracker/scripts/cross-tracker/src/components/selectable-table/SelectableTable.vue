@@ -46,10 +46,10 @@
                     v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
                     v-on:toggle-links="toggleLinks(row)"
                 />
-                <edit-cell
+                <artifact-link-rows
                     v-if="row.is_expanded"
-                    v-bind:uri="row.uri"
-                    v-bind:even="isEven(index)"
+                    v-bind:row="row"
+                    v-bind:columns="columns"
                 />
             </template>
         </div>
@@ -78,6 +78,7 @@ import EditCell from "./EditCell.vue";
 import type { RefreshArtifactsEvent } from "../../helpers/widget-events";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
 import type { Query } from "../../type";
+import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 

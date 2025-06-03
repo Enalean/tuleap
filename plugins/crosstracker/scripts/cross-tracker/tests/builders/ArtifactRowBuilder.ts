@@ -33,6 +33,19 @@ export class ArtifactRowBuilder {
         return this;
     }
 
+    public buildWithNumberOfLinks(
+        number_of_forward_link: number,
+        number_of_reverse_link: number,
+    ): ArtifactRow {
+        return {
+            number_of_forward_link,
+            number_of_reverse_link,
+            is_expanded: false,
+            uri: "/plugins/tracker/?aid=698",
+            cells: new Map(),
+        };
+    }
+
     public build(): ArtifactRow {
         return this.#row;
     }
