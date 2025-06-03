@@ -17,43 +17,44 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectUGroup;
+use SimpleXMLElement;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Ugroups;
+use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use UGroupManager;
+use UserXMLExporter;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private Tracker_FormElement_Field_List_Bind_UgroupsValue $customers_ugroup_value;
     private Tracker_FormElement_Field_List_Bind_UgroupsValue $project_members_ugroup_value;
     private Tracker_FormElement_Field_List_Bind_UgroupsValue $hidden_ugroup_value;
     private Tracker_FormElement_Field_List_Bind_UgroupsValue $integrators_ugroup_value;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BindDefaultValueDao
-     */
-    private $default_value_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BindUgroupsValueDao
-     */
-    private $value_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $field;
+    private BindDefaultValueDao&MockObject $default_value_dao;
+    private BindUgroupsValueDao&MockObject $value_dao;
+    private UGroupManager&MockObject $ugroup_manager;
+    private Tracker_FormElement_Field_List $field;
 
     protected function setUp(): void
     {
-        $this->ugroup_manager    = Mockery::mock(UGroupManager::class);
-        $this->value_dao         = Mockery::mock(BindUgroupsValueDao::class);
-        $this->default_value_dao = Mockery::mock(BindDefaultValueDao::class);
-        $this->field             = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $this->ugroup_manager    = $this->createMock(UGroupManager::class);
+        $this->value_dao         = $this->createMock(BindUgroupsValueDao::class);
+        $this->default_value_dao = $this->createMock(BindDefaultValueDao::class);
+        $this->field             = ListFieldBuilder::aListField(10)->build();
         $uuid_factory            = new DatabaseUUIDV7Factory();
 
         $integrators_ugroup_id          = 103;
@@ -89,7 +90,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         array $default_values = [],
     ): Tracker_FormElement_Field_List_Bind_Ugroups {
         $bind = new Tracker_FormElement_Field_List_Bind_Ugroups(
-            new \Tuleap\DB\DatabaseUUIDV7Factory(),
+            new DatabaseUUIDV7Factory(),
             $this->field,
             $values,
             $default_values,
@@ -109,8 +110,8 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
 
         $root = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
-        $this->assertCount(0, $root->items->children());
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, $this->createStub(UserXMLExporter::class));
+        self::assertCount(0, $root->items->children());
     }
 
     public function testItExportsOneUgroup(): void
@@ -123,9 +124,9 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, $this->createStub(UserXMLExporter::class));
         $items = $root->items->children();
-        $this->assertEquals('Integrators', $items[0]['label']);
+        self::assertEquals('Integrators', $items[0]['label']);
     }
 
     public function testItExportsHiddenValues(): void
@@ -137,9 +138,9 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, $this->createStub(UserXMLExporter::class));
         $items = $root->items->children();
-        $this->assertTrue((bool) $items[0]['is_hidden']);
+        self::assertTrue((bool) $items[0]['is_hidden']);
     }
 
     public function testItExportsOneDynamicUgroup(): void
@@ -151,9 +152,9 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, $this->createStub(UserXMLExporter::class));
         $items = $root->items->children();
-        $this->assertEquals('ugroup_project_members_name_key', $items[0]['label']);
+        self::assertEquals('ugroup_project_members_name_key', $items[0]['label']);
     }
 
     public function testItExportsTwoUgroups(): void
@@ -166,10 +167,10 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, $this->createStub(UserXMLExporter::class));
         $items = $root->items->children();
-        $this->assertEquals('Integrators', $items[0]['label']);
-        $this->assertEquals('Customers', $items[1]['label']);
+        self::assertEquals('Integrators', $items[0]['label']);
+        self::assertEquals('Customers', $items[1]['label']);
     }
 
     public function testItExportsDefaultValues(): void
@@ -185,16 +186,16 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $bind_ugroup    = $this->buildBindUgroups($values, $default_values);
         $root           = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
+        $bind_ugroup->exportBindToXml($root, $xml_mapping, false, $this->createStub(UserXMLExporter::class));
         $items = $root->default_values->children();
-        $this->assertEquals($this->customers_ugroup_value->getUuid(), (string) $items->value['REF']);
+        self::assertEquals($this->customers_ugroup_value->getUuid(), (string) $items->value['REF']);
     }
 
     public function testItSavesNothingWhenNoValue(): void
     {
         $values = [];
         $bind   = $this->buildBindUgroups($values);
-        $this->value_dao->shouldReceive('create')->never();
+        $this->value_dao->expects($this->never())->method('create');
         $bind->saveObject();
     }
 
@@ -205,11 +206,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         ];
         $bind   = $this->buildBindUgroups($values);
 
-        $this->field->shouldReceive('getId')->andReturn(10);
-
-        $this->value_dao->shouldReceive('create')->withArgs(
-            [$this->field->getId(), $this->customers_ugroup_value->getUgroupId(), false]
-        )->once();
+        $this->value_dao->expects($this->once())->method('create')->with($this->field->getId(), $this->customers_ugroup_value->getUgroupId(), false);
         $bind->saveObject();
     }
 
@@ -219,15 +216,14 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
             $this->project_members_ugroup_value,
             $this->customers_ugroup_value,
         ];
-        $this->field->shouldReceive('getId')->andReturn(10);
 
         $bind = $this->buildBindUgroups($values);
-        $this->value_dao->shouldReceive('create')->withArgs(
-            [$this->field->getId(), ProjectUGroup::PROJECT_MEMBERS, false]
-        )->atLeast()->once();
-        $this->value_dao->shouldReceive('create')->withArgs(
-            [$this->field->getId(), $this->customers_ugroup_value->getUgroupId(), false]
-        )->atLeast()->once();
+        $this->value_dao->expects($this->atLeast(2))->method('create')
+            ->with(
+                $this->field->getId(),
+                self::callback(fn(int $ugroup_id) => $ugroup_id === ProjectUGroup::PROJECT_MEMBERS || $ugroup_id === $this->customers_ugroup_value->getUgroupId()),
+                false,
+            );
         $bind->saveObject();
     }
 
@@ -237,11 +233,9 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
             $this->hidden_ugroup_value,
         ];
         $bind   = $this->buildBindUgroups($values);
-        $this->field->shouldReceive('getId')->andReturn(10);
 
-        $this->value_dao->shouldReceive('create')->withArgs(
-            [$this->field->getId(), $this->hidden_ugroup_value->getUgroupId(), true]
-        )->atLeast()->once();
+        $this->value_dao->expects($this->atLeastOnce())->method('create')
+            ->with($this->field->getId(), $this->hidden_ugroup_value->getUgroupId(), true);
         $bind->saveObject();
     }
 
@@ -252,9 +246,8 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
             $this->integrators_ugroup_value,
         ];
         $bind   = $this->buildBindUgroups($values);
-        $this->field->shouldReceive('getId')->andReturn(10);
-        $this->value_dao->shouldReceive('create')->andReturn(11);
+        $this->value_dao->method('create')->willReturn(11);
         $bind->saveObject();
-        $this->assertEquals(11, $this->integrators_ugroup_value->getId());
+        self::assertEquals(11, $this->integrators_ugroup_value->getId());
     }
 }

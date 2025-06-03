@@ -26,12 +26,15 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class IntFieldBuilder
 {
+    use FieldBuilderWithSpecificProperties;
+
     private string $name                        = 'initial_effort';
     private string $label                       = 'Initial effort';
     private bool $read_permission               = false;
     private ?\PFUser $user_with_read_permission = null;
     private bool $use_it                        = true;
     private \Tracker $tracker;
+    private bool $is_required = false;
 
     private function __construct(private readonly int $id)
     {
@@ -76,6 +79,12 @@ final class IntFieldBuilder
         return $this;
     }
 
+    public function thatIsRequired(): self
+    {
+        $this->is_required = true;
+        return $this;
+    }
+
     public function build(): \Tracker_FormElement_Field_Integer
     {
         $field = new \Tracker_FormElement_Field_Integer(
@@ -87,7 +96,7 @@ final class IntFieldBuilder
             '',
             $this->use_it,
             'P',
-            false,
+            $this->is_required,
             '',
             10,
             null
@@ -96,6 +105,7 @@ final class IntFieldBuilder
         if ($this->user_with_read_permission !== null) {
             $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
         }
+        $this->setSpecificProperties($field);
         return $field;
     }
 }
