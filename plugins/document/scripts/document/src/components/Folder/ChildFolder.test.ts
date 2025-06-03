@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ChildFolder from "./ChildFolder.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
@@ -42,7 +43,7 @@ const router = createRouter({
 describe("ChildFolder", () => {
     let state, load_folder, remove_quick_look, toggle_quick_look;
 
-    const factory = () => {
+    const factory = (): VueWrapper<ChildFolder> => {
         const config = getGlobalTestOptions({
             state,
             actions: {

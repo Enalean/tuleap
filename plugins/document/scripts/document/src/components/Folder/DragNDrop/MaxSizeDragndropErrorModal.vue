@@ -23,7 +23,7 @@
     </error-modal>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 import ErrorModal from "./ErrorModal.vue";
 import { sprintf } from "sprintf-js";

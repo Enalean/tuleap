@@ -18,14 +18,14 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderContent from "./FolderContent.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("FolderContent", () => {
-    let factory,
-        state = {},
-        item;
+    let factory, item;
+    const state = {};
 
     const mockRoute = {
         params: {
@@ -36,11 +36,11 @@ describe("FolderContent", () => {
     const mockRouter = {
         replace,
     };
-    let update_currently_previewed_item_mock = vi.fn();
-    let toggle_quick_look_mock = vi.fn();
+    const update_currently_previewed_item_mock = vi.fn();
+    const toggle_quick_look_mock = vi.fn();
 
     beforeEach(() => {
-        factory = () => {
+        factory = (): VueWrapper<FolderContent> => {
             replace.mockReset();
             return shallowMount(FolderContent, {
                 global: {

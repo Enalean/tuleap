@@ -65,7 +65,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import PermissionsSelector from "./PermissionsSelector.vue";
 import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 

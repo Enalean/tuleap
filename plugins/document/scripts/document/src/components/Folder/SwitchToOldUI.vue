@@ -32,7 +32,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 import { useRoute } from "vue-router";
 

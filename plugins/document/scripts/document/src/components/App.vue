@@ -38,7 +38,7 @@
         <post-item-deletion-notification />
     </div>
 </template>
-<script>
+<script lang="ts">
 import { mapGetters, mapState } from "vuex";
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/Error/PermissionError.vue";

@@ -45,7 +45,7 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
 import { createModal } from "@tuleap/tlp-modal";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";

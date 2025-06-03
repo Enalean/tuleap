@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 
@@ -58,7 +59,7 @@ describe("DragNDropHandler", () => {
         max_size_upload = 1000000000,
         folder_content = [],
         user_can_dragndrop = true,
-    ) {
+    ): VueWrapper<DragNDropHandler> {
         const wrapper = shallowMount(DragNDropHandler, {
             global: {
                 ...getGlobalTestOptions({
@@ -104,20 +105,20 @@ describe("DragNDropHandler", () => {
         add_upload_file_mock = vi.fn();
         create_new_file_version_mock = vi.fn();
         drop_event = {
-            stopPropagation: () => {},
-            preventDefault: () => {},
+            stopPropagation: (): void => {},
+            preventDefault: (): void => {},
             dataTransfer: {
                 files: [],
             },
         };
         drag_event = {
-            stopPropagation: () => {},
-            preventDefault: () => {},
+            stopPropagation: (): void => {},
+            preventDefault: (): void => {},
             dataTransfer: {
                 items: [],
             },
             target: {
-                closest: () => {},
+                closest: (): void => {},
             },
         };
 

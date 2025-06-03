@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
@@ -40,7 +41,7 @@ describe("PermissionsUpdateModal", () => {
         load_project_ugroups.mockReset();
         update_permissions.mockReset();
 
-        factory = (props = {}, ugroups) => {
+        factory = (props = {}, ugroups): VueWrapper<PermissionsUpdateModal> => {
             return shallowMount(PermissionsUpdateModal, {
                 props: { ...props },
                 global: {

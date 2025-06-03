@@ -19,6 +19,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import CreateNewVersionFileModal from "./CreateNewVersionFileModal.vue";
@@ -31,7 +32,7 @@ describe("CreateNewVersionFileModal", () => {
     const modal_show = vi.fn();
     const remove_backdrop = vi.fn();
 
-    function getWrapper() {
+    function getWrapper(): VueWrapper<CreateNewVersionFileModal> {
         return shallowMount(CreateNewVersionFileModal, {
             props: {
                 item: {

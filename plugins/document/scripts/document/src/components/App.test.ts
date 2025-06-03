@@ -19,6 +19,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { RouterViewStub, shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 
@@ -52,7 +53,7 @@ describe("App", () => {
         has_document_lock_error = false;
         can_user_switch_to_old_ui = false;
 
-        factory = () => {
+        factory = (): VueWrapper<App> => {
             return shallowMount(App, {
                 props: default_prop,
                 global: {

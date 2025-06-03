@@ -86,7 +86,7 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 import { createModal } from "@tuleap/tlp-modal";
 import { CAN_READ, CAN_WRITE, CAN_MANAGE, TYPE_FILE } from "../../../../constants";

@@ -23,7 +23,7 @@
     <folder-container />
 </template>
 
-<script>
+<script lang="ts">
 import { mapState, useStore } from "vuex";
 import FolderContainer from "./FolderContainer.vue";
 import { useRoute } from "vue-router";

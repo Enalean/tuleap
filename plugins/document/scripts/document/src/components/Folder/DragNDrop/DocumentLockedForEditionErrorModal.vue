@@ -23,7 +23,7 @@
     </error-modal>
 </template>
 
-<script>
+<script lang="ts">
 import ErrorModal from "./ErrorModal.vue";
 
 export default {

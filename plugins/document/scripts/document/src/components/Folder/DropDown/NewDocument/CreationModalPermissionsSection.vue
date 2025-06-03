@@ -39,7 +39,7 @@
         />
     </div>
 </template>
-<script>
+<script lang="ts">
 import PermissionsForGroupsSelector from "../../Permissions/PermissionsForGroupsSelector.vue";
 
 export default {

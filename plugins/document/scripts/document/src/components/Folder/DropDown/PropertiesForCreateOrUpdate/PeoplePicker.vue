@@ -33,7 +33,7 @@
     </select>
 </template>
 
-<script>
+<script lang="ts">
 import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 import emitter from "../../../../helpers/emitter";
 

@@ -33,7 +33,7 @@
         <files-uploads-modal ref="uploads_modal" />
     </div>
 </template>
-<script>
+<script lang="ts">
 import { mapGetters, mapState } from "vuex";
 import { createModal } from "@tuleap/tlp-modal";
 import FilesUploadsModal from "./FilesUploadsModal.vue";

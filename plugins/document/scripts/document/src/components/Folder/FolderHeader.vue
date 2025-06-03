@@ -97,7 +97,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapGetters, mapState } from "vuex";
 import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
 import SearchBox from "./SearchBox.vue";

@@ -19,6 +19,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
 import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../../constants";
@@ -27,11 +28,11 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 
 describe("CreateNewVersionEmptyModal", () => {
     let factory;
-    let create_new_version = vi.fn();
-    let reset_error_modal = vi.fn();
+    const create_new_version = vi.fn();
+    const reset_error_modal = vi.fn();
 
     beforeEach(() => {
-        factory = (props) => {
+        factory = (props): VueWrapper<CreateNewVersionEmptyModal> => {
             return shallowMount(CreateNewVersionEmptyModal, {
                 props: { ...props },
                 global: {

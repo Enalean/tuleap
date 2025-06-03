@@ -18,6 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderContentRow from "./FolderContentRow.vue";
 import { TYPE_FILE } from "../../constants";
@@ -26,7 +27,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 vi.mock("../../helpers/emitter");
 
-function getFolderContentRowInstance(props, data = {}) {
+function getFolderContentRowInstance(props, data = {}): VueWrapper<FolderContentRow> {
     return shallowMount(FolderContentRow, {
         props: props,
         data() {

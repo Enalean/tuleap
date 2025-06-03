@@ -34,7 +34,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { isEmbedded } from "../../../../helpers/type-check-helper";
 import emitter from "../../../../helpers/emitter";
 

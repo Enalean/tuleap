@@ -19,19 +19,22 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderHeader from "./FolderHeader.vue";
 import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
 import emitter from "../../helpers/emitter";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { nextTick } from "vue";
+import type { Modal } from "@tuleap/tlp-modal/src";
 
 vi.mock("@tuleap/tlp-modal", () => {
     return {
-        createModal: () => ({
-            addEventListener: vi.fn(),
-            show: vi.fn(),
-        }),
+        createModal: (): Modal =>
+            ({
+                addEventListener: vi.fn(),
+                show: vi.fn(),
+            }) as unknown as Modal,
     };
 });
 
@@ -40,7 +43,7 @@ vi.mock("tlp", () => {
 });
 
 describe("FolderHeader", () => {
-    function factory(is_loading_ascendant_hierarchy, is_folder_empty) {
+    function factory(is_loading_ascendant_hierarchy, is_folder_empty): VueWrapper<FolderHeader> {
         const dynamic_import_stubs = [
             "confirm-deletion-modal",
             "permissions-update-modal",
