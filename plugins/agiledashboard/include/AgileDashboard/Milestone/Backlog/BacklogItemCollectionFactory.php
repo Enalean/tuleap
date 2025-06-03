@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 /**
  * I build collections of IBacklogItem
@@ -407,7 +408,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
 
         $semantics         = [];
         $allowed_semantics = [
-            Tracker_Semantic_Title::NAME,
+            TrackerSemanticTitle::NAME,
             Tracker_Semantic_Status::NAME,
         ];
 
@@ -428,10 +429,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
      */
     private function setTitleSemantic(PFUser $user, Artifact $artifact, Tracker $tracker, array $row, array &$semantics): void
     {
-        $semantics[$artifact->getId()][Tracker_Semantic_Title::NAME] = '';
+        $semantics[$artifact->getId()][TrackerSemanticTitle::NAME] = '';
         if ($this->userCanReadBacklogTitleField($user, $tracker)) {
-            $semantics[$artifact->getId()][Tracker_Semantic_Title::NAME] = $row[Tracker_Semantic_Title::NAME];
-            $semantics[$artifact->getId()]['title_format']               = $row['title_format'];
+            $semantics[$artifact->getId()][TrackerSemanticTitle::NAME] = $row[TrackerSemanticTitle::NAME];
+            $semantics[$artifact->getId()]['title_format']             = $row['title_format'];
         }
     }
 
@@ -474,7 +475,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
     protected function userCanReadBacklogTitleField(PFUser $user, Tracker $tracker): bool
     {
         if (! isset($this->cache_read_title[$tracker->getId()])) {
-            $field = Tracker_Semantic_Title::load($tracker)->getField();
+            $field = TrackerSemanticTitle::load($tracker)->getField();
             if (! $field) {
                 $this->cache_read_title[$tracker->getId()] = false;
             } else {

@@ -26,10 +26,10 @@ use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Artifact\GetFileUploadDataStub;
@@ -39,7 +39,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Tracker_Semantic_Title::clearInstances();
+        TrackerSemanticTitle::clearInstances();
         Tracker_Semantic_Description::clearInstances();
     }
 
@@ -48,8 +48,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')
             ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, null),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, null),
             $tracker,
         );
 
@@ -72,8 +72,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, null),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, null),
             $tracker,
         );
 
@@ -95,8 +95,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, TextFieldBuilder::aTextField(1004)->build()),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, TextFieldBuilder::aTextField(1004)->build()),
             $tracker,
         );
 
@@ -118,8 +118,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, false)),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, $this->getStringField(1004, false)),
             $tracker,
         );
 
@@ -141,8 +141,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, $this->getStringField(1004, true)),
             $tracker,
         );
 
@@ -166,8 +166,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, null),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, null),
             $tracker,
         );
 
@@ -189,8 +189,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, $this->getTextField(1005, false)),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, $this->getTextField(1005, false)),
             $tracker,
         );
 
@@ -212,8 +212,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, $this->getStringField(1004, true)),
             $tracker,
         );
 
@@ -237,8 +237,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, $this->getStringField(1004, true)),
             $tracker,
         );
 
@@ -260,8 +260,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, $this->getStringField(1004, true)),
             $tracker,
         );
 
@@ -283,8 +283,8 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, $this->getStringField(1004, true)),
             $tracker,
         );
 

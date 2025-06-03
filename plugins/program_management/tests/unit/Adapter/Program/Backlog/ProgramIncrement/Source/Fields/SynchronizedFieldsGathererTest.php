@@ -47,7 +47,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 37;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_TitleFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory
      */
     private $title_factory;
     /**
@@ -68,7 +68,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->title_factory           = $this->createStub(\Tracker_Semantic_TitleFactory::class);
+        $this->title_factory           = $this->createStub(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::class);
         $this->description_factory     = $this->createStub(\Tracker_Semantic_DescriptionFactory::class);
         $this->status_factory          = $this->createStub(\Tracker_Semantic_StatusFactory::class);
         $this->timeframe_builder       = $this->createStub(SemanticTimeframeBuilder::class);
@@ -98,7 +98,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTitleFieldCantBeFound(): void
     {
-        $title_semantic = new \Tracker_Semantic_Title($this->tracker);
+        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker);
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
         $this->expectException(FieldRetrievalException::class);
@@ -107,7 +107,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTitleIsNotAString(): void
     {
-        $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getTextField(1, 'Title'));
+        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, $this->getTextField(1, 'Title'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
         $this->expectException(TitleFieldHasIncorrectTypeException::class);
@@ -116,7 +116,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCollectsErrorWhenTitleIsNotAString(): void
     {
-        $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getTextField(1, 'Title'));
+        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, $this->getTextField(1, 'Title'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
         $this->expectException(TitleFieldHasIncorrectTypeException::class);
@@ -127,7 +127,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTitleReference(): void
     {
-        $title_semantic = new \Tracker_Semantic_Title($this->tracker, $this->getStringField(832, 'Semiacquaintance'));
+        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, $this->getStringField(832, 'Semiacquaintance'));
         $this->title_factory->method('getByTracker')->willReturn($title_semantic);
 
         $title = $this->getGatherer()->getTitleField($this->tracker_identifier, null);

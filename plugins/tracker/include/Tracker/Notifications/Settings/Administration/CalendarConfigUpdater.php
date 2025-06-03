@@ -84,7 +84,7 @@ final class CalendarConfigUpdater
             return Result::ok(false);
         }
 
-        if (\Tracker_Semantic_Title::load($tracker)->getField() === null) {
+        if (\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::load($tracker)->getField() === null) {
             return Result::err(dgettext('tuleap-tracker', 'Semantic title is required for calendar events'));
         }
 

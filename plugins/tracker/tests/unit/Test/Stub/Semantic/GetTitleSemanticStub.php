@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Test\Stub\Semantic;
 
 use Tracker;
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Title;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final class GetTitleSemanticStub implements GetTitleSemantic
 {
@@ -33,9 +33,9 @@ final class GetTitleSemanticStub implements GetTitleSemantic
     {
     }
 
-    public function getByTracker(Tracker $tracker): Tracker_Semantic_Title
+    public function getByTracker(Tracker $tracker): TrackerSemanticTitle
     {
-        return new Tracker_Semantic_Title($tracker, $this->text_field);
+        return new TrackerSemanticTitle($tracker, $this->text_field);
     }
 
     public static function withoutTextField(): self

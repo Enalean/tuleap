@@ -55,7 +55,7 @@ class AddInPlaceRetriever
             return null;
         }
 
-        $field_title = \Tracker_Semantic_Title::load($child_tracker)->getField();
+        $field_title = \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::load($child_tracker)->getField();
         if (! $field_title || ! $field_title->userCanSubmit($user)) {
             return null;
         }

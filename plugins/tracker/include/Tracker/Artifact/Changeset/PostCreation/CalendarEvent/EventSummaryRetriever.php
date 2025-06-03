@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
-use Tracker_Semantic_Title;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final class EventSummaryRetriever implements RetrieveEventSummary
 {
@@ -37,7 +37,7 @@ final class EventSummaryRetriever implements RetrieveEventSummary
         \PFUser $recipient,
         bool $should_check_permissions,
     ): Ok|Err {
-        $title_field = Tracker_Semantic_Title::load($changeset->getTracker())->getField();
+        $title_field = TrackerSemanticTitle::load($changeset->getTracker())->getField();
         if (! $title_field) {
             return Result::err('The tracker does not have title semantic, we cannot build calendar event');
         }

@@ -28,7 +28,6 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Semantic;
-use Tracker_Semantic_Title;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 class SemanticTooltip extends Tracker_Semantic implements TooltipFields
 {
@@ -154,7 +154,7 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
     {
         $others = [];
 
-        $title = Tracker_Semantic_Title::load($this->tracker);
+        $title = TrackerSemanticTitle::load($this->tracker);
         if ($title->getField()) {
             $others[] = $title->getLabel();
         }

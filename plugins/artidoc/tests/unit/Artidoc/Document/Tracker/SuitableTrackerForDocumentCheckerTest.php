@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -39,7 +39,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Tracker_Semantic_Title::clearInstances();
+        TrackerSemanticTitle::clearInstances();
         Tracker_Semantic_Description::clearInstances();
     }
 
@@ -109,8 +109,8 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
         );
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, null),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, null),
             $tracker,
         );
 
@@ -139,8 +139,8 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
         );
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, TextFieldBuilder::aTextField(1004)->build()),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, TextFieldBuilder::aTextField(1004)->build()),
             $tracker,
         );
 
@@ -169,8 +169,8 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
         );
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, StringFieldBuilder::aStringField(1001)->thatIsRequired()->build()),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, StringFieldBuilder::aStringField(1001)->thatIsRequired()->build()),
             $tracker,
         );
 
@@ -204,8 +204,8 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
         );
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, StringFieldBuilder::aStringField(1001)->thatIsRequired()->build()),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, StringFieldBuilder::aStringField(1001)->thatIsRequired()->build()),
             $tracker,
         );
 
@@ -239,8 +239,8 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
         );
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($tracker, StringFieldBuilder::aStringField(1001)->thatIsRequired()->build()),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($tracker, StringFieldBuilder::aStringField(1001)->thatIsRequired()->build()),
             $tracker,
         );
 

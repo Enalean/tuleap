@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic;
 
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Title;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -82,7 +82,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     {
         $this->can_submit_artifact_verifier = VerifySubmissionPermissionStub::withoutSubmitPermission();
 
-        $semantics_to_check = CollectionOfCreationSemanticToCheck::fromREST([Tracker_Semantic_Title::NAME])->value;
+        $semantics_to_check = CollectionOfCreationSemanticToCheck::fromREST([TrackerSemanticTitle::NAME])->value;
 
         $cannot_create_reasons = $this->getReasons($semantics_to_check);
 

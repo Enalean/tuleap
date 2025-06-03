@@ -503,7 +503,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
-            new \Tracker_Semantic_TitleFactory(),
+            new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             $semantic_status_factory,
             new SemanticTimeframeBuilder(
@@ -623,7 +623,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $artifact_visible_verifier,
                 new ProgramIncrementRetriever(
                     new StatusValueRetriever($artifact_retriever, $user_retriever),
-                    new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance()),
+                    new TitleValueRetriever($artifact_retriever, $user_retriever, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance()),
                     new TimeframeValueRetriever(
                         $artifact_retriever,
                         $user_retriever,
@@ -668,7 +668,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
         $project_manager_adapter  = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
         $program_dao              = new ProgramDaoProject();
-        $title_retriever          = new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance());
+        $title_retriever          = new TitleValueRetriever($artifact_retriever, $user_retriever, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance());
         $program_adapter          = CachedProgramBuilder::instance();
 
         $project_access_checker = new ProjectAccessChecker(
@@ -858,7 +858,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                         $artifact_visible_verifier,
                         new ProgramIncrementRetriever(
                             new StatusValueRetriever($artifact_retriever, $user_retriever),
-                            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tracker_Semantic_TitleFactory::instance()),
+                            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance()),
                             new TimeframeValueRetriever(
                                 $artifact_retriever,
                                 $user_retriever,
@@ -1500,7 +1500,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
-            new \Tracker_Semantic_TitleFactory(),
+            new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             $semantic_status_factory,
             new SemanticTimeframeBuilder(

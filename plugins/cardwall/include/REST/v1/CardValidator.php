@@ -20,13 +20,13 @@
 
 namespace Tuleap\Cardwall\REST\v1;
 
-use Luracast\Restler\RestException;
-use Tracker_Semantic_Title;
-use Tracker_FormElement_Field;
 use CardResourceBadValueFormatException;
 use Cardwall_FieldNotOnCardException;
 use Cardwall_SingleCard;
+use Luracast\Restler\RestException;
 use PFUser;
+use Tracker_FormElement_Field;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 class CardValidator
 {
@@ -42,7 +42,7 @@ class CardValidator
 
     private function getLabelFieldData(Cardwall_SingleCard $single_card, $label)
     {
-        $semantic_title = Tracker_Semantic_Title::load($single_card->getArtifact()->getTracker());
+        $semantic_title = TrackerSemanticTitle::load($single_card->getArtifact()->getTracker());
         if ($semantic_title) {
             return [
                 $semantic_title->getFieldId() => $label,

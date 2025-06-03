@@ -19,11 +19,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic\Title;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use Feedback;
+use PFUser;
+use SimpleXMLElement;
+use TemplateRendererFactory;
+use Tracker;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_Text;
+use Tracker_FormElementFactory;
+use Tracker_Semantic;
+use Tracker_SemanticManager;
+use TrackerManager;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
-use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 
-class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class TrackerSemanticTitle extends Tracker_Semantic
 {
     public const NAME = 'title';
 
@@ -35,7 +49,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
     /**
      * Cosntructor
      *
-     * @param Tracker                        $tracker    The tracker
+     * @param Tracker $tracker The tracker
      * @param Tracker_FormElement_Field_Text $text_field The field
      */
     public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_Text $text_field = null)
@@ -177,11 +191,12 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
     }
 
     protected static $_instances; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+
     /**
      * Load an instance of a Tracker_Semantic_Title
      *
      *
-     * @return Tracker_Semantic_Title
+     * @return TrackerSemanticTitle
      */
     public static function load(Tracker $tracker)
     {
@@ -204,7 +219,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
     /**
      * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
      */
-    public static function setInstance(Tracker_Semantic_Title $semantic_title, Tracker $tracker)
+    public static function setInstance(TrackerSemanticTitle $semantic_title, Tracker $tracker)
     {
         self::$_instances[$tracker->getId()] = $semantic_title;
     }
@@ -220,8 +235,8 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
     /**
      * Export semantic to XML
      *
-     * @param SimpleXMLElement &$root      the node to which the semantic is attached (passed by reference)
-     * @param array            $xml_mapping correspondance between real ids and xml IDs
+     * @param SimpleXMLElement &$root the node to which the semantic is attached (passed by reference)
+     * @param array $xml_mapping correspondance between real ids and xml IDs
      *
      * @return void
      */
@@ -238,7 +253,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic //phpcs:ignore PSR1.Classe
         }
     }
 
-     /**
+    /**
      * Is the field used in semantics?
      *
      * @param Tracker_FormElement_Field the field to test if it is used in semantics or not

@@ -100,7 +100,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         );
 
         $tracker              = TrackerTestBuilder::aTracker()->build();
-        $tracker->semantics[] = new \Tracker_Semantic_Title($tracker, null);
+        $tracker->semantics[] = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($tracker, null);
 
         $result = (new TrackerCreationNotificationsSettingsFromXmlBuilder())
             ->getCreationNotificationsSettings($xml_input->attributes(), $tracker);
@@ -121,7 +121,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         );
 
         $tracker              = TrackerTestBuilder::aTracker()->build();
-        $tracker->semantics[] = new \Tracker_Semantic_Title(
+        $tracker->semantics[] = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle(
             $tracker,
             TextFieldBuilder::aTextField(1)->build(),
         );
@@ -145,7 +145,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         );
 
         $tracker              = TrackerTestBuilder::aTracker()->build();
-        $tracker->semantics[] = new \Tracker_Semantic_Title(
+        $tracker->semantics[] = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle(
             $tracker,
             TextFieldBuilder::aTextField(1)->build(),
         );
@@ -173,7 +173,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         );
 
         $tracker              = TrackerTestBuilder::aTracker()->build();
-        $tracker->semantics[] = new \Tracker_Semantic_Title(
+        $tracker->semantics[] = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle(
             $tracker,
             TextFieldBuilder::aTextField(1)->build(),
         );
@@ -201,7 +201,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         );
 
         $tracker              = TrackerTestBuilder::aTracker()->build();
-        $tracker->semantics[] = new \Tracker_Semantic_Title(
+        $tracker->semantics[] = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle(
             $tracker,
             TextFieldBuilder::aTextField(1)->build(),
         );

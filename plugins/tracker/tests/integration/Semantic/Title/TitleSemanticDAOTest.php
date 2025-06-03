@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Title;
 
-use Tracker_Semantic_TitleFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
@@ -65,7 +64,7 @@ final class TitleSemanticDAOTest extends TestIntegrationTestCase
     {
         $this->dao->save(self::TRACKER_ID, self::FIELD_ID);
 
-        $factory       = new Tracker_Semantic_TitleFactory();
+        $factory       = new TrackerSemanticTitleFactory();
         $to_tracker_id = 301;
         $to_field_id   = 5654;
         $factory->duplicate(self::TRACKER_ID, $to_tracker_id, [

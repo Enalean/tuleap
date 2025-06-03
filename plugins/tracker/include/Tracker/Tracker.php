@@ -130,6 +130,7 @@ use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
@@ -3035,7 +3036,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      */
     public function hasSemanticsTitle()
     {
-        return Tracker_Semantic_Title::load($this)->getFieldId() ? true : false;
+        return TrackerSemanticTitle::load($this)->getFieldId() ? true : false;
     }
 
     /**
@@ -3045,7 +3046,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      */
     public function getTitleField()
     {
-        $title_field = Tracker_Semantic_Title::load($this)->getField();
+        $title_field = TrackerSemanticTitle::load($this)->getField();
         if ($title_field) {
             return $title_field;
         } else {

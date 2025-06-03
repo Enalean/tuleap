@@ -53,9 +53,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
@@ -158,7 +158,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
-            new \Tracker_Semantic_TitleFactory(),
+            new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
             new \Tracker_Semantic_DescriptionFactory(),
             new \Tracker_Semantic_StatusFactory(),
             new SemanticTimeframeBuilder(
