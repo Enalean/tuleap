@@ -26,7 +26,6 @@ use DateTime;
 use PlanningFactory;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_Semantic_Title;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
@@ -102,13 +102,13 @@ final class PromotedMilestoneBuilderTest extends TestCase
 
     public function testItReturnsNothingOptionWhenTitleFieldIsNotFound(): void
     {
-        Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, null), $this->tracker);
+        TrackerSemanticTitle::setInstance(new TrackerSemanticTitle($this->tracker, null), $this->tracker);
         self::assertTrue($this->builder->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 
     public function testItReturnsNothingOptionWhenTimeFrameSemanticIsNotDefined(): void
     {
-        Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, $this->title_field), $this->tracker);
+        TrackerSemanticTitle::setInstance(new TrackerSemanticTitle($this->tracker, $this->title_field), $this->tracker);
         $this->timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
             $this->tracker,
             new TimeframeNotConfigured()
@@ -133,7 +133,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
      */
     public function testItReturnsNothingOptionWhenStartDateOrEndDateAreZero(bool $start_date_zero, bool $end_date_zero): void
     {
-        Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, $this->title_field), $this->tracker);
+        TrackerSemanticTitle::setInstance(new TrackerSemanticTitle($this->tracker, $this->title_field), $this->tracker);
 
         $this->timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
@@ -156,7 +156,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
 
     public function testItReturnsNothingOptionWhenTimeFrameSemanticIsNotCurrent(): void
     {
-        Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, $this->title_field), $this->tracker);
+        TrackerSemanticTitle::setInstance(new TrackerSemanticTitle($this->tracker, $this->title_field), $this->tracker);
 
         $this->timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
@@ -179,7 +179,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
 
     public function testItReturnsNothingOptionWhenPlanningTrackerIsNotDefined(): void
     {
-        Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, $this->title_field), $this->tracker);
+        TrackerSemanticTitle::setInstance(new TrackerSemanticTitle($this->tracker, $this->title_field), $this->tracker);
         $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
             1,
             $this->changeset,
@@ -202,7 +202,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
 
     public function testItReturnsAPlanningArtifactMilestone(): void
     {
-        Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, $this->title_field), $this->tracker);
+        TrackerSemanticTitle::setInstance(new TrackerSemanticTitle($this->tracker, $this->title_field), $this->tracker);
         $this->timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,

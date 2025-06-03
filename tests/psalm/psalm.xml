@@ -1144,8 +1144,8 @@
             <file name="plugins/tracker/tests/unit/Semantic/Timeframe/TimeframeWithDurationTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Timeframe/TimeframeWithEndDateTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Title/AdminPresenterBuilderTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/Title/Tracker_Semantic_TitleFactoryTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/Title/Tracker_Semantic_TitleTest.php"/>
+            <file name="plugins/tracker/tests/unit/Semantic/Title/TrackerSemanticTitleFactoryTest.php"/>
+            <file name="plugins/tracker/tests/unit/Semantic/Title/TrackerSemanticTitleTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Tooltip/OtherSemantic/ProgressTooltipEntryTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Tooltip/OtherSemantic/TimeframeTooltipEntryTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Tooltip/SelectOptionsBuilderTest.php"/>

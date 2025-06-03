@@ -21,15 +21,13 @@
 
 namespace Tuleap\Tracker\Semantic\Title;
 
-use Tracker_Semantic_TitleFactory;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Semantic_TitleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerSemanticTitleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testImport()
+    public function testImport(): void
     {
         $xml = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticTitleTest.xml')
@@ -48,7 +46,7 @@ final class Tracker_Semantic_TitleFactoryTest extends \Tuleap\Test\PHPUnit\TestC
             'F13' => $f2,
             'F16' => $f3,
         ];
-        $semantic_title = Tracker_Semantic_TitleFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker, []);
+        $semantic_title = TrackerSemanticTitleFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker, []);
 
         $this->assertEquals('title', $semantic_title->getShortName());
         $this->assertEquals(112, $semantic_title->getFieldId());

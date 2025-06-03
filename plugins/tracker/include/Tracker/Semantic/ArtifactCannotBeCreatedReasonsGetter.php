@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\Semantic;
 
 use PFUser;
 use Tracker;
-use Tracker_Semantic_Title;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final class ArtifactCannotBeCreatedReasonsGetter
 {
@@ -84,7 +84,7 @@ final class ArtifactCannotBeCreatedReasonsGetter
         return $cannot_create_reasons;
     }
 
-    private function hasTrackerOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title, PFUser $user): bool
+    private function hasTrackerOnlyTitleRequired(Tracker $tracker, TrackerSemanticTitle $semantic_title, PFUser $user): bool
     {
         $used_fields = $this->used_fields_retriever->getUsedFields($tracker);
         foreach ($used_fields as $used_field) {

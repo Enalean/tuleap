@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\Document\Field;
 use PFUser;
 use Tracker;
 use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -36,6 +35,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
@@ -59,8 +59,8 @@ final class SuitableFieldRetrieverTest extends TestCase
         $this->user            = UserTestBuilder::buildWithDefaults();
         $this->field_retriever = RetrieveUsedFieldsStub::withNoFields();
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($this->tracker, null),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($this->tracker, null),
             $this->tracker,
         );
         Tracker_Semantic_Description::setInstance(
@@ -71,7 +71,7 @@ final class SuitableFieldRetrieverTest extends TestCase
 
     protected function tearDown(): void
     {
-        Tracker_Semantic_Title::clearInstances();
+        TrackerSemanticTitle::clearInstances();
         Tracker_Semantic_Description::clearInstances();
     }
 
@@ -116,8 +116,8 @@ final class SuitableFieldRetrieverTest extends TestCase
             ->build();
         $this->field_retriever = RetrieveUsedFieldsStub::withFields($field);
 
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($this->tracker, $field),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($this->tracker, $field),
             $this->tracker,
         );
 

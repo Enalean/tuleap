@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\RetrieveFullArtifactLinkField;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
@@ -45,7 +45,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 {
     public function __construct(
         private RetrieveFullTracker $tracker_retriever,
-        private \Tracker_Semantic_TitleFactory $title_factory,
+        private \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory $title_factory,
         private \Tracker_Semantic_DescriptionFactory $description_factory,
         private \Tracker_Semantic_StatusFactory $status_factory,
         private SemanticTimeframeBuilder $timeframe_builder,

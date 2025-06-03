@@ -31,7 +31,7 @@ use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNoti
 final class AdminPresenterBuilderTest extends TestCase
 {
     private Tracker_FormElementFactory|\PHPUnit\Framework\MockObject\MockObject $form_element_factory;
-    private \Tracker_Semantic_Title $semantic_title;
+    private \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle $semantic_title;
     private CSRFSynchronizerToken $csrf_token;
     private AdminPresenterBuilder $presenter_builder;
     private \Tracker $tracker;
@@ -51,7 +51,7 @@ final class AdminPresenterBuilderTest extends TestCase
 
     public function testItBuildsAPresenterWhenNoFieldsArePossible(): void
     {
-        $semantic_title = new \Tracker_Semantic_Title($this->tracker, null);
+        $semantic_title = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, null);
         $this->form_element_factory->method('getUsedTextFields')->willReturn([]);
         $presenter = $this->presenter_builder->build($semantic_title, $this->tracker, $this->csrf_token);
 
@@ -75,7 +75,7 @@ final class AdminPresenterBuilderTest extends TestCase
         $field_A = $this->getFieldWithIdAndLabel(1, 'field A');
         $field_B = $this->getFieldWithIdAndLabel(2, 'field B');
         $this->form_element_factory->method('getUsedTextFields')->willReturn([$field_A, $field_B]);
-        $semantic_title = new \Tracker_Semantic_Title($this->tracker, null);
+        $semantic_title = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, null);
         $presenter      = $this->presenter_builder->build($semantic_title, $this->tracker, $this->csrf_token);
 
         self::assertEquals(
@@ -98,7 +98,7 @@ final class AdminPresenterBuilderTest extends TestCase
         $field_A = $this->getFieldWithIdAndLabel(1, 'field A');
         $field_B = $this->getFieldWithIdAndLabel(2, 'field B');
         $this->form_element_factory->method('getUsedTextFields')->willReturn([$field_A, $field_B]);
-        $semantic_title = new \Tracker_Semantic_Title($this->tracker, $field_B);
+        $semantic_title = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, $field_B);
         $presenter      = $this->presenter_builder->build($semantic_title, $this->tracker, $this->csrf_token);
 
         self::assertEquals(

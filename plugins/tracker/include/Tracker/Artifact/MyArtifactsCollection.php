@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use Tracker;
-use Tracker_Semantic_Title;
 use Tuleap\Tracker\RetrieveTracker;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 class MyArtifactsCollection implements \Countable
 {
@@ -101,7 +101,7 @@ class MyArtifactsCollection implements \Countable
             }
 
             $with_title = false;
-            if (($title_field = Tracker_Semantic_Title::load($tracker)->getField()) && $title_field->userCanRead($user)) {
+            if (($title_field = TrackerSemanticTitle::load($tracker)->getField()) && $title_field->userCanRead($user)) {
                 $with_title = true;
             }
 

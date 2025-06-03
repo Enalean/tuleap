@@ -34,12 +34,12 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private MockObject&\Tracker_FormElementFactory $form_element_factory;
     private AddInPlaceRetriever $add_in_place_retriever;
-    private MockObject&\Tracker_Semantic_Title $semantic_title;
+    private MockObject&\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle $semantic_title;
     private \Tracker_FormElement_Field_Selectbox&MockObject $mapped_field;
 
     protected function setUp(): void
     {
-        $this->semantic_title         = $this->createMock(\Tracker_Semantic_Title::class);
+        $this->semantic_title         = $this->createMock(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::class);
         $this->form_element_factory   = $this->createMock(\Tracker_FormElementFactory::class);
         $this->mapped_field           = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
         $this->add_in_place_retriever = new AddInPlaceRetriever(
@@ -51,7 +51,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        \Tracker_Semantic_Title::clearInstances();
+        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::clearInstances();
     }
 
     public function testItReturnsNullWhenTrackerHasMoreThanOneChild(): void
@@ -323,7 +323,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticTitle(\Tracker $child_tracker, bool $is_set, bool $user_can_submit): void
     {
-        \Tracker_Semantic_Title::setInstance($this->semantic_title, $child_tracker);
+        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::setInstance($this->semantic_title, $child_tracker);
 
         $title_field = null;
 

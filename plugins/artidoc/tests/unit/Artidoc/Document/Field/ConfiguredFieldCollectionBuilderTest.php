@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\Document\Field;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
@@ -36,6 +35,7 @@ use Tuleap\Artidoc\Stubs\Document\Field\RetrieveConfiguredFieldStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -59,7 +59,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
 
     protected function tearDown(): void
     {
-        Tracker_Semantic_Title::clearInstances();
+        TrackerSemanticTitle::clearInstances();
         Tracker_Semantic_Description::clearInstances();
     }
 
@@ -118,8 +118,8 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
                 )
             )
         );
-        Tracker_Semantic_Title::setInstance(
-            new Tracker_Semantic_Title($this->tracker, null),
+        TrackerSemanticTitle::setInstance(
+            new TrackerSemanticTitle($this->tracker, null),
             $this->tracker
         );
         Tracker_Semantic_Description::setInstance(

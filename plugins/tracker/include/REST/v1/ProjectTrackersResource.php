@@ -25,7 +25,6 @@ use Luracast\Restler\RestException;
 use Project;
 use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
-use Tracker_Semantic_TitleFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
@@ -55,6 +54,7 @@ use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\ArtifactCannotBeCreatedReasonsGetter;
 use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -179,7 +179,7 @@ class ProjectTrackersResource extends AuthenticatedResource
         $cannot_create_reasons = new ArtifactCannotBeCreatedReasonsGetter(
             SubmissionPermissionVerifier::instance(),
             $form_element_factory,
-            Tracker_Semantic_TitleFactory::instance()
+            TrackerSemanticTitleFactory::instance()
         );
 
         $semantics_to_check = CollectionOfCreationSemanticToCheck::fromREST($with_creation_semantic_check)->match(

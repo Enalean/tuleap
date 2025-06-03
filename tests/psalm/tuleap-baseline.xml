@@ -33114,6 +33114,31 @@
       <code><![CDATA[function ($group_id) {]]></code>
     </MissingClosureReturnType>
   </file>
+  <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitle.php">
+    <MissingPropertyType>
+      <code><![CDATA[$_instances]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[clearInstances]]></code>
+      <code><![CDATA[setInstance]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$text_field]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitleFactory.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+    </PossiblyNullArrayAccess>
+  </file>
   <file src="plugins/tracker/include/ServiceTracker.php">
     <MissingParamType>
       <code><![CDATA[$breadcrumbs]]></code>
@@ -33961,11 +33986,6 @@
     <ImplicitToStringCast>
       <code><![CDATA[EasyStatement::open()->in('linked_art.id NOT IN (?*)', $excluded_ids)]]></code>
     </ImplicitToStringCast>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Dao/PriorityDao.php">
-    <RedundantFunctionCall>
-      <code><![CDATA[printf]]></code>
-    </RedundantFunctionCall>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Exception/CannotCreateChangeset.php">
     <MissingParamType>
@@ -35619,11 +35639,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/CannedResponse/Tracker_CannedResponseManager.php">
     <MissingParamType>
-      <code><![CDATA[$current_user]]></code>
-      <code><![CDATA[$current_user]]></code>
-      <code><![CDATA[$current_user]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
       <code><![CDATA[$request]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -35634,14 +35649,7 @@
       <code><![CDATA[$this->tracker->id]]></code>
       <code><![CDATA[$this->tracker->id]]></code>
       <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[displayAdminAllResponses]]></code>
-      <code><![CDATA[displayAdminResponse]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/CannedResponse/dao/Tracker_CannedResponseDao.php">
     <DeprecatedMethod>
@@ -44681,12 +44689,6 @@
     <InvalidClass>
       <code><![CDATA[Tracker_Rule_date_Dao]]></code>
     </InvalidClass>
-    <InvalidReturnStatement>
-      <code><![CDATA[$rules]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Tracker_Rule_List]]></code>
-    </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$data]]></code>
       <code><![CDATA[$field_source_id]]></code>
@@ -45314,31 +45316,6 @@
       <code><![CDATA[$to_status_field_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Title.php">
-    <MissingPropertyType>
-      <code><![CDATA[$_instances]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[clearInstances]]></code>
-      <code><![CDATA[setInstance]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$text_field]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_TitleFactory.php">
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-    </PossiblyNullArrayAccess>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLFieldsBasedSemantic.php">
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
@@ -45529,13 +45506,11 @@
     <MissingPropertyType>
       <code><![CDATA[$allow_copy]]></code>
       <code><![CDATA[$cache_permissions]]></code>
-      <code><![CDATA[$cannedResponses]]></code>
       <code><![CDATA[$children]]></code>
       <code><![CDATA[$deletion_date]]></code>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$enable_emailgateway]]></code>
       <code><![CDATA[$formElementFactory]]></code>
-      <code><![CDATA[$formElements]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$is_project_allowed_to_use_type]]></code>
@@ -45544,11 +45519,9 @@
       <code><![CDATA[$notifications_level]]></code>
       <code><![CDATA[$parent]]></code>
       <code><![CDATA[$project]]></code>
-      <code><![CDATA[$reports]]></code>
       <code><![CDATA[$sharedFormElementFactory]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$tooltip]]></code>
-      <code><![CDATA[$webhooks]]></code>
       <code><![CDATA[$workflow]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -45699,14 +45672,10 @@
     <MissingPropertyType>
       <code><![CDATA[$dao]]></code>
       <code><![CDATA[$tracker->allow_copy]]></code>
-      <code><![CDATA[$tracker->cannedResponses]]></code>
       <code><![CDATA[$tracker->description]]></code>
-      <code><![CDATA[$tracker->formElements]]></code>
       <code><![CDATA[$tracker->group_id]]></code>
       <code><![CDATA[$tracker->item_name]]></code>
       <code><![CDATA[$tracker->name]]></code>
-      <code><![CDATA[$tracker->reports]]></code>
-      <code><![CDATA[$tracker->webhooks]]></code>
       <code><![CDATA[$tracker->workflow]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -46966,14 +46935,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/TrackerXmlImport.php">
-    <ImplicitToStringCast>
-      <code><![CDATA[$old_rule]]></code>
-      <code><![CDATA[$source_field_attributes['REF']]]></code>
-      <code><![CDATA[$source_value_attributes['REF']]]></code>
-      <code><![CDATA[$target_field_attributes['REF']]]></code>
-      <code><![CDATA[$target_value_attributes['REF']]]></code>
-      <code><![CDATA[$xml->dependencies]]></code>
-    </ImplicitToStringCast>
     <InvalidReturnStatement>
       <code><![CDATA[$created_trackers_mapping]]></code>
     </InvalidReturnStatement>
@@ -46985,13 +46946,9 @@
       <code><![CDATA[$project->getID()]]></code>
     </InvalidScalarArgument>
     <MissingParamType>
-      <code><![CDATA[$att]]></code>
       <code><![CDATA[$extraction_path]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$tracker->cannedResponses]]></code>
-      <code><![CDATA[$tracker->formElements]]></code>
-      <code><![CDATA[$tracker->reports]]></code>
       <code><![CDATA[$xml_fields_mapping]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -47006,40 +46963,13 @@
       <code><![CDATA[\file_get_contents($filepath)]]></code>
       <code><![CDATA[realpath(__DIR__ . '/../resources/tracker.rng')]]></code>
     </PossiblyFalseArgument>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getId()]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[$attributes['use_private_comments']]]></code>
-      <code><![CDATA[$source_field_attributes['REF']]]></code>
-      <code><![CDATA[$source_value_attributes['REF']]]></code>
-      <code><![CDATA[$target_field_attributes['REF']]]></code>
-      <code><![CDATA[$target_value_attributes['REF']]]></code>
       <code><![CDATA[$xml_type['is_used']]]></code>
     </PossiblyNullArgument>
     <PossiblyNullArrayAccess>
-      <code><![CDATA[$source_field_attributes['REF']]]></code>
-      <code><![CDATA[$source_value_attributes['REF']]]></code>
-      <code><![CDATA[$target_field_attributes['REF']]]></code>
-      <code><![CDATA[$target_value_attributes['REF']]]></code>
       <code><![CDATA[$tracker_attributes[$attribute_name]]]></code>
     </PossiblyNullArrayAccess>
-    <PossiblyNullIterator>
-      <code><![CDATA[$xml->formElements->children()]]></code>
-    </PossiblyNullIterator>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-    <RedundantCast>
-      <code><![CDATA[(string) $description]]></code>
-      <code><![CDATA[(string) $itemname]]></code>
-      <code><![CDATA[(string) $name]]></code>
-    </RedundantCast>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $tracker_attributes[$attribute_name]]]></code>
       <code><![CDATA[! $tracker_xml]]></code>
@@ -47048,19 +46978,7 @@
     <TypeDoesNotContainType>
       <code><![CDATA[$use_natures == 'false']]></code>
       <code><![CDATA[$use_natures == 'true']]></code>
-      <code><![CDATA[isset($xml->cannedResponses)]]></code>
-      <code><![CDATA[isset($xml->dependencies)]]></code>
-      <code><![CDATA[isset($xml->permissions->permission)]]></code>
-      <code><![CDATA[isset($xml->reports)]]></code>
-      <code><![CDATA[isset($xml->rules)]]></code>
-      <code><![CDATA[isset($xml->rules)]]></code>
-      <code><![CDATA[isset($xml->rules->list_rules)]]></code>
-      <code><![CDATA[isset($xml->semantics)]]></code>
-      <code><![CDATA[isset($xml->webhooks)]]></code>
     </TypeDoesNotContainType>
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$tracker->rules]]></code>
-    </UndefinedPropertyAssignment>
   </file>
   <file src="plugins/tracker/include/Workflow/Action.php">
     <MissingReturnType>

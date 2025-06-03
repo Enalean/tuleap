@@ -27,7 +27,6 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_String;
 use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -37,6 +36,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final readonly class SuitableFieldRetriever
 {
@@ -72,7 +72,7 @@ final readonly class SuitableFieldRetriever
         $field_id = $field->getId();
         $tracker  = $field->getTracker();
 
-        $semantic_title_field = Tracker_Semantic_Title::load($tracker)->getField();
+        $semantic_title_field = TrackerSemanticTitle::load($tracker)->getField();
         if ($semantic_title_field && $semantic_title_field->getId() === $field_id) {
             return Result::err(FieldIsTitleSemanticFault::build($field_id));
         }

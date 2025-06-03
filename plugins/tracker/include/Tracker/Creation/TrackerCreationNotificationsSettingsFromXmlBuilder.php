@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Tracker_Semantic_Title;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\XML\PHPCast;
 
 final class TrackerCreationNotificationsSettingsFromXmlBuilder
@@ -47,7 +47,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilder
             $semantic_title_found     = false;
             $semantic_timeframe_found = false;
             foreach ($tracker->semantics as $semantic) {
-                if ($semantic instanceof Tracker_Semantic_Title) {
+                if ($semantic instanceof TrackerSemanticTitle) {
                     $semantic_title_found = $semantic->getField() !== null;
                     continue;
                 }

@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic;
 
-use Tracker_Semantic_Title;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreationSemanticToCheckTest extends TestCase
@@ -42,7 +42,7 @@ final class CreationSemanticToCheckTest extends TestCase
         $current_semantic = 'title';
         $result           = CreationSemanticToCheck::fromREST($current_semantic);
         self::assertTrue(Result::isOk($result));
-        self::assertSame(Tracker_Semantic_Title::NAME, $result->value->semantic_to_check);
+        self::assertSame(TrackerSemanticTitle::NAME, $result->value->semantic_to_check);
     }
 
     public function testItReturnsTrueIfTheCurrentSemanticIsTheSemanticTitle(): void

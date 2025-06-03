@@ -22,18 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic;
 
-use Tracker_Semantic_Title;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 /**
  * @psalm-immutable
  */
 final class CreationSemanticToCheck
 {
-    private const SUPPORTED_SEMANTICS = [Tracker_Semantic_Title::NAME];
+    private const SUPPORTED_SEMANTICS = [TrackerSemanticTitle::NAME];
 
     private function __construct(public readonly string $semantic_to_check)
     {
@@ -52,6 +52,6 @@ final class CreationSemanticToCheck
 
     public function isSemanticTitle(): bool
     {
-        return $this->semantic_to_check === Tracker_Semantic_Title::NAME;
+        return $this->semantic_to_check === TrackerSemanticTitle::NAME;
     }
 }

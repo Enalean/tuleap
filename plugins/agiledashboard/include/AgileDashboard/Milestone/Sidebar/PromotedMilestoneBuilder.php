@@ -27,10 +27,10 @@ use PFUser;
 use Planning_ArtifactMilestone;
 use PlanningFactory;
 use Psr\Log\LoggerInterface;
-use Tracker_Semantic_Title;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final class PromotedMilestoneBuilder implements BuildPromotedMilestone
 {
@@ -50,7 +50,7 @@ final class PromotedMilestoneBuilder implements BuildPromotedMilestone
             return Option::nothing(Planning_ArtifactMilestone::class);
         }
 
-        $title_field = Tracker_Semantic_Title::load($milestone_artifact->getTracker())->getField();
+        $title_field = TrackerSemanticTitle::load($milestone_artifact->getTracker())->getField();
         if ($title_field === null) {
             return Option::nothing(Planning_ArtifactMilestone::class);
         }

@@ -22,28 +22,15 @@
 namespace Tuleap\Tracker\Semantic\Title;
 
 use SimpleXMLElement;
-use Tracker_Semantic_Title;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_Semantic_TitleTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerSemanticTitleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml;
-
-    /**
-     * @var Tracker_Semantic_Title
-     */
-    private $semantic_title;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $root;
+    private SimpleXMLElement $xml;
+    private TrackerSemanticTitle $semantic_title;
+    private SimpleXMLElement $root;
 
     public function setUp(): void
     {
@@ -54,11 +41,11 @@ class Tracker_Semantic_TitleTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()->build();
         $field   = TextFieldBuilder::aTextField(102)->build();
 
-        $this->semantic_title = new Tracker_Semantic_Title($tracker, $field);
+        $this->semantic_title = new TrackerSemanticTitle($tracker, $field);
         $this->root           = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
     }
 
-    public function testExport()
+    public function testExport(): void
     {
         $array_mapping = ['F13' => '102'];
         $this->semantic_title->exportToXML($this->root, $array_mapping);
@@ -69,7 +56,7 @@ class Tracker_Semantic_TitleTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals((string) $this->xml->field['REF'], (string) $this->root->semantic->field['REF']);
     }
 
-    public function testItDoesntExportTheFieldIfNotDefinedInMapping()
+    public function testItDoesntExportTheFieldIfNotDefinedInMapping(): void
     {
         $this->semantic_title->exportToXML($this->root, []);
 

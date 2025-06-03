@@ -26,10 +26,10 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_Semantic_Title;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -39,20 +39,20 @@ final class EventSummaryRetrieverTest extends TestCase
 
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
-    private Tracker_Semantic_Title|MockObject $semantic_title;
+    private TrackerSemanticTitle|MockObject $semantic_title;
 
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
 
-        $this->semantic_title = $this->createMock(Tracker_Semantic_Title::class);
-        Tracker_Semantic_Title::setInstance($this->semantic_title, $this->changeset->getTracker());
+        $this->semantic_title = $this->createMock(TrackerSemanticTitle::class);
+        TrackerSemanticTitle::setInstance($this->semantic_title, $this->changeset->getTracker());
     }
 
     protected function tearDown(): void
     {
-        Tracker_Semantic_Title::clearInstances();
+        TrackerSemanticTitle::clearInstances();
     }
 
     /**

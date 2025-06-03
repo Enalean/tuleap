@@ -84,7 +84,7 @@ class TrackerPresenterCollectionBuilder
 
     private function getTitleField(TaskboardTracker $taskboard_tracker, \PFUser $user): ?TitleFieldPresenter
     {
-        $field_title = \Tracker_Semantic_Title::load($taskboard_tracker->getTracker())->getField();
+        $field_title = \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::load($taskboard_tracker->getTracker())->getField();
 
         return ($field_title !== null && $field_title->userCanUpdate($user))
             ? new TitleFieldPresenter($field_title)

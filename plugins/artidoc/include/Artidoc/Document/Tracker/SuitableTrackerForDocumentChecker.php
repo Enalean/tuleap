@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final class SuitableTrackerForDocumentChecker implements CheckTrackerIsSuitableForDocument
 {
@@ -47,7 +47,7 @@ final class SuitableTrackerForDocumentChecker implements CheckTrackerIsSuitableF
             return Result::err(TrackerNotFoundFault::forDocument($document));
         }
 
-        $title_field = Tracker_Semantic_Title::load($tracker)->getField();
+        $title_field = TrackerSemanticTitle::load($tracker)->getField();
         if (! $title_field) {
             return Result::err(NoSemanticTitleFault::forDocument($document));
         }

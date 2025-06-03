@@ -30,7 +30,6 @@ use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_Status;
-use Tracker_Semantic_Title;
 use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
 use TrackerFactory;
@@ -46,8 +45,8 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
-use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\Artifact\PriorityManager;
+use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -56,6 +55,7 @@ use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use Tuleap\Tracker\REST\Helpers\OrderValidator;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use UserManager;
 
 /**
@@ -183,7 +183,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function updateArtifactTitleSemantic(PFUser $current_user, Artifact $artifact, Tracker_SemanticCollection $semantics)
     {
-        $semantic_title = $semantics[Tracker_Semantic_Title::NAME];
+        $semantic_title = $semantics[TrackerSemanticTitle::NAME];
         $title_field    = $semantic_title->getField();
 
         if ($title_field && $title_field->userCanRead($current_user)) {

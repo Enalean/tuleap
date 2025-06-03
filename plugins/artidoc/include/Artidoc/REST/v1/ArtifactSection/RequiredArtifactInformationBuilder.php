@@ -24,13 +24,13 @@ namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Semantic_Description;
-use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final readonly class RequiredArtifactInformationBuilder implements BuildRequiredArtifactInformation
 {
@@ -61,7 +61,7 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
             ));
         }
 
-        $title_field = Tracker_Semantic_Title::load($artifact->getTracker())->getField();
+        $title_field = TrackerSemanticTitle::load($artifact->getTracker())->getField();
         if (! $title_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(

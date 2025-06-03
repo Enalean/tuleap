@@ -26,10 +26,10 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Luracast\Restler\RestException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactFactory;
-use Tracker_Semantic_Title;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
+use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
@@ -125,8 +125,8 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
 
         $tracker_factory = $this->createMock(\TrackerFactory::class);
         $tracker_factory->expects($this->once())->method('getTrackerById')->willReturn($tracker);
-        $semantic_title = new Tracker_Semantic_Title($tracker, StringFieldBuilder::aStringField(1001)->withReadPermission($this->current_user, true)->build());
-        Tracker_Semantic_Title::setInstance($semantic_title, $tracker);
+        $semantic_title = new TrackerSemanticTitle($tracker, StringFieldBuilder::aStringField(1001)->withReadPermission($this->current_user, true)->build());
+        TrackerSemanticTitle::setInstance($semantic_title, $tracker);
 
         $artifact1 = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact1->method('getId')->willReturn(455);
