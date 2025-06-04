@@ -37,6 +37,7 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\CSVExport\CSVFieldUsageChecker;
+use Tuleap\Tracker\Report\Renderer\AggregateRetriever;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
 use Tuleap\Tracker\Report\Renderer\Table\Sort\SortWithIntegrityChecked;
@@ -1379,26 +1380,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $current_user = UserManager::instance()->getCurrentUser();
         //Insert function aggregates
-        if ($use_data_from_db) {
-            $aggregate_functions_raw = [$this->getAggregatesDao()->searchByRendererId($this->getId())];
-        } else {
-            $aggregate_functions_raw = $this->getAggregates();
-        }
-        $aggregates = [];
-        foreach ($aggregate_functions_raw as $rows) {
-            if ($rows) {
-                foreach ($rows as $row) {
-                    //is the field used as a column?
-                    if (isset($columns[$row['field_id']])) {
-                        if (! isset($aggregates[$row['field_id']])) {
-                            $aggregates[$row['field_id']] = [];
-                        }
-                        $aggregates[$row['field_id']][] = $row['aggregate'];
-                    }
-                }
-            }
-        }
-        $results = [];
+        $aggregate_retriever = new AggregateRetriever($this->getAggregatesDao(), $this);
+        $aggregates          = $aggregate_retriever->retrieve($use_data_from_db, $columns);
+        $results             = [];
         if (count($aggregates) !== 0) {
             $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates);
             $dao     = new DataAccessObject();
@@ -1424,7 +1408,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 continue;
             }
 
-            $html  .= '<td data-column-id="' . $key . '">';
+            $html  .= '<td data-column-id="' . (string) $key . '">';
             $html  .= '<table><thead><tr>';
             $html  .= $this->fetchAddAggregatesUsedFunctionsHeader($field, $aggregates, $results);
             $html  .= '<th>';
