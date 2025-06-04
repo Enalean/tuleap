@@ -19,14 +19,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement;
+
+use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Project;
+use ProjectUGroup;
+use SimpleXMLElement;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_Null;
+use Tracker_FormElement_Field_List_BindDecorator;
+use Tracker_FormElement_Field_List_BindFactory;
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use User\XML\Import\IFindUserFromXMLReference;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use UGroupManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testImportStatik(): void
     {
         $xml = new SimpleXMLElement(
@@ -50,52 +69,53 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
 
         $mapping = [];
 
-        $v1 = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $v2 = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $v3 = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $d1 = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
-        $d2 = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
-        $d3 = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
+        $field  = ListFieldBuilder::aListField(456)->build();
+        $value1 = ListStaticValueBuilder::aStaticValue('Open')->build();
+        $value2 = ListStaticValueBuilder::aStaticValue('Closed')->build();
+        $value3 = ListStaticValueBuilder::aStaticValue('On going')->build();
+        $deco1  = new Tracker_FormElement_Field_List_BindDecorator($field, 'F6-V0', 255, 0, 0, '');
+        $deco2  = new Tracker_FormElement_Field_List_BindDecorator($field, 'F6-V1', 0, 255, 0, '');
+        $deco3  = new Tracker_FormElement_Field_List_BindDecorator($field, 'F6-V2', 0, 0, 0, 'graffiti-yellow');
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $bind  = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $bind->shouldReceive('getStaticValueInstance')->withArgs(['F6-V0', 'Open', '', 0, 0])->andReturn($v1);
-        $bind->shouldReceive('getStaticValueInstance')->withArgs(['F6-V1', 'Closed', '', 1, 0])->andReturn($v2);
-        $bind->shouldReceive('getStaticValueInstance')->withArgs(['F6-V2', 'On going', '', 2, 0])->andReturn($v3);
-
-        $bind->shouldReceive('getDecoratorInstance')->withArgs([$field, 'F6-V0', 255, 0, 0, ''])->andReturn($d1);
-        $bind->shouldReceive('getDecoratorInstance')->withArgs([$field, 'F6-V1', 0, 255, 0, ''])->andReturn($d2);
-        $bind->shouldReceive('getDecoratorInstance')->withArgs(
-            [$field, 'F6-V2', 0, 0, 0, 'graffiti-yellow']
-        )->andReturn($d3);
-        $bind->shouldReceive('getInstanceFromRow')->andReturn(
+        $bind = $this->createPartialMock(Tracker_FormElement_Field_List_BindFactory::class, [
+            'getStaticValueInstance', 'getDecoratorInstance', 'getInstanceFromRow',
+        ]);
+        $bind->method('getStaticValueInstance')
+            ->willReturnCallback(static fn($id, $label, $description, $rank, $is_hidden) => match ([$id, $label, $description, $rank, $is_hidden]) {
+                ['F6-V0', 'Open', '', 0, 0]     => $value1,
+                ['F6-V1', 'Closed', '', 1, 0]   => $value2,
+                ['F6-V2', 'On going', '', 2, 0] => $value3,
+            });
+        $bind->method('getDecoratorInstance')
+            ->willReturnCallback(static fn($pfield, $id, $r, $g, $b, $tlp_color_name) => match ([$pfield, $id, $r, $g, $b, $tlp_color_name]) {
+                [$field, 'F6-V0', 255, 0, 0, '']              => $deco1,
+                [$field, 'F6-V1', 0, 255, 0, '']              => $deco2,
+                [$field, 'F6-V2', 0, 0, 0, 'graffiti-yellow'] => $deco3,
+            });
+        $bind->method('getInstanceFromRow')->willReturn([
             [
-                [
-                    'type'           => 'static',
-                    'field'          => $field,
-                    'default_values' => [
-                        'F6-V0' => $v1,
-                    ],
-                    'decorators'     => [
-                        'F6-V0' => $d1,
-                        'F6-V1' => $d2,
-                        'F6-V2' => $d3,
-                    ],
-                    'is_rank_alpha'  => 1,
-                    'values'         => [
-                        'F6-V0' => $v1,
-                        'F6-V1' => $v2,
-                        'F6-V2' => $v3,
-                    ],
+                'type'           => 'static',
+                'field'          => $field,
+                'default_values' => [
+                    'F6-V0' => $value1,
                 ],
-            ]
-        );
-        $bind->getInstanceFromXML($xml, $field, $mapping, Mockery::mock(IFindUserFromXMLReference::class));
-        self::assertSame($v1, $mapping['F6-V0']);
-        self::assertSame($v2, $mapping['F6-V1']);
-        self::assertSame($v3, $mapping['F6-V2']);
+                'decorators'     => [
+                    'F6-V0' => $deco1,
+                    'F6-V1' => $deco2,
+                    'F6-V2' => $deco3,
+                ],
+                'is_rank_alpha'  => 1,
+                'values'         => [
+                    'F6-V0' => $value1,
+                    'F6-V1' => $value2,
+                    'F6-V2' => $value3,
+                ],
+            ],
+        ]);
+        $bind->getInstanceFromXML($xml, $field, $mapping, IFindUserFromXMLReferenceStub::buildWithUser(UserTestBuilder::buildWithDefaults()));
+        self::assertSame($value1, $mapping['F6-V0']);
+        self::assertSame($value2, $mapping['F6-V1']);
+        self::assertSame($value3, $mapping['F6-V2']);
     }
 
     public function testImportUsers(): void
@@ -112,50 +132,25 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
 
         $mapping = [];
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $bind  = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $bind->shouldReceive('getInstanceFromRow')->andReturn(
+        $field = ListFieldBuilder::aListField(456)->build();
+        $bind  = $this->createPartialMock(Tracker_FormElement_Field_List_BindFactory::class, ['getInstanceFromRow']);
+        $bind->method('getInstanceFromRow')->willReturn([
             [
-                [
-                    'type'           => 'users',
-                    'field'          => $field,
-                    'default_values' => null,
-                    'decorators'     => null,
-                    'value_function' => 'ugroup1,ugroup2',
-                ],
-            ]
-        );
-        $bind->getInstanceFromXML($xml, $field, $mapping, Mockery::mock(IFindUserFromXMLReference::class));
-        $this->assertEquals([], $mapping);
-    }
-
-    public function testImportUnknownType(): void
-    {
-        $mapping = [];
-
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $bind  = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $bind->shouldReceive('getInstanceFromRow')->andReturn(
-            [
-                [
-                    'type'           => 'unknown',
-                    'field'          => $field,
-                    'default_values' => [],
-                    'decorators'     => null,
-                ],
-            ]
-        );
-        $this->assertEquals([], $mapping);
+                'type'           => 'users',
+                'field'          => $field,
+                'default_values' => null,
+                'decorators'     => null,
+                'value_function' => 'ugroup1,ugroup2',
+            ],
+        ]);
+        $bind->getInstanceFromXML($xml, $field, $mapping, IFindUserFromXMLReferenceStub::buildWithUser(UserTestBuilder::buildWithDefaults()));
+        self::assertEquals([], $mapping);
     }
 
     public function testItRaisesAnErrorIfUnkownType(): void
     {
-        $logger  = new \ColinODell\PsrTestLogger\TestLogger();
-        $factory = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory(), $this->createStub(UGroupManager::class), $logger);
+        $logger  = new TestLogger();
+        $factory = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory(), $this->createStub(UGroupManager::class), $logger);
 
         self::assertInstanceOf(
             Tracker_FormElement_Field_List_Bind_Null::class,
@@ -166,8 +161,8 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
 
     public function testItImportsStaticUgroups(): void
     {
-        $ugroup_manager = Mockery::mock(UGroupManager::class);
-        $project        = Mockery::mock(Project::class);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $project        = ProjectTestBuilder::aProject()->build();
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" standalone="yes"?>
@@ -179,57 +174,41 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
                   </bind>'
         );
 
-        $ugroup_manager->shouldReceive('getUGroupByName')
-            ->withArgs([$project, 'Integrators'])
-            ->andReturn(new ProjectUGroup(['name' => 'Integrators']));
-        $ugroup_manager->shouldReceive('getUGroupByName')
-            ->withArgs([$project, 'Customers'])
-            ->andReturn(new ProjectUGroup(['name' => 'Customers']));
+        $intregrator = ProjectUGroupTestBuilder::aCustomUserGroup(10)->withName('Integrators')->build();
+        $customer    = ProjectUGroupTestBuilder::aCustomUserGroup(20)->withName('Customers')->build();
+        $ugroup_manager->expects($this->exactly(2))->method('getUGroupByName')->with($project, self::anything())
+            ->willReturnCallback(static fn(Project $project, string $name) => match ($name) {
+                'Integrators' => $intregrator,
+                'Customers'   => $customer,
+            });
 
-        $bind_factory = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class, [new DatabaseUUIDV7Factory()])
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $ugroup_manager = Mockery::mock(UGroupManager::class);
-        $intregrator    = Mockery::mock(ProjectUGroup::class);
-        $intregrator->shouldReceive('getId')->andReturn(10);
-        $intregrator->shouldReceive('getTranslatedName')->andReturn('Integrators');
-        $ugroup_manager->shouldReceive('getUGroupByName')
-            ->withArgs([Mockery::any(), 'Integrators'])
-            ->andReturn($intregrator)
-            ->once();
-        $customer = Mockery::mock(ProjectUGroup::class);
-        $customer->shouldReceive('getId')->andReturn(20);
-        $customer->shouldReceive('getTranslatedName')->andReturn('Customers');
-        $ugroup_manager->shouldReceive('getUGroupByName')
-            ->withArgs([Mockery::any(), 'Customers'])
-            ->andReturn($customer)
-            ->once();
-        $bind_factory->shouldReceive('getUgroupManager')->andReturn($ugroup_manager);
+        $bind_factory = $this->getMockBuilder(Tracker_FormElement_Field_List_BindFactory::class)
+            ->setConstructorArgs([new DatabaseUUIDV7Factory()])
+            ->onlyMethods(['getUgroupManager'])
+            ->getMock();
+        $bind_factory->method('getUgroupManager')->willReturn($ugroup_manager);
 
         $mapping = [];
 
-        $field   = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $field   = ListFieldBuilder::aListField(456)->inTracker($tracker)->build();
 
         $bind = $bind_factory->getInstanceFromXML(
             $xml,
             $field,
             $mapping,
-            Mockery::mock(IFindUserFromXMLReference::class)
+            IFindUserFromXMLReferenceStub::buildWithUser(UserTestBuilder::buildWithDefaults())
         );
 
         $values = $bind->getAllValues();
-        $this->assertEquals($values['F1-V0']->getLabel(), 'Integrators');
-        $this->assertEquals($values['F1-V1']->getLabel(), 'Customers');
+        self::assertEquals('Integrators', $values['F1-V0']->getLabel());
+        self::assertEquals('Customers', $values['F1-V1']->getLabel());
     }
 
     public function testItImportsIgnoresStaticUgroupThatDoesntBelongToProject(): void
     {
-        $ugroup_manager = Mockery::mock(UGroupManager::class);
-        $project        = Mockery::mock(Project::class);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $project        = ProjectTestBuilder::aProject()->build();
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" standalone="yes"?>
@@ -240,17 +219,17 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
             </bind>'
         );
 
-        $ugroup_manager->shouldReceive('getUGroupByName')->andReturn(null);
+        $ugroup_manager->method('getUGroupByName')->willReturn(null);
 
         $bind = $this->getListBindFactory($ugroup_manager, $project, $xml);
 
-        $this->assertCount(0, $bind->getAllValues());
+        self::assertCount(0, $bind->getAllValues());
     }
 
     public function testItImportsDynamicUgroups(): void
     {
-        $ugroup_manager = Mockery::mock(UGroupManager::class);
-        $project        = Mockery::mock(Project::class);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $project        = ProjectTestBuilder::aProject()->build();
         $xml            = new SimpleXMLElement(
             '<?xml version="1.0" standalone="yes"?>
             <bind type="ugroups">
@@ -260,20 +239,19 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
             </bind>'
         );
 
-        $ugroup_manager->shouldReceive('getUGroupByName')->withArgs(
-            [$project, 'ugroup_registered_users_name_key']
-        )->andReturn(new ProjectUGroup(['name' => 'ugroup_registered_users_name_key']));
+        $ugroup_manager->method('getUGroupByName')->with($project, 'ugroup_registered_users_name_key')
+            ->willReturn(new ProjectUGroup(['name' => 'ugroup_registered_users_name_key']));
 
         $bind = $this->getListBindFactory($ugroup_manager, $project, $xml);
 
         $values = $bind->getAllValues();
-        $this->assertEquals('Registered users', $values['F1-V0']->getLabel());
+        self::assertEquals('Registered users', $values['F1-V0']->getLabel());
     }
 
     public function testItImportsHiddenValues(): void
     {
-        $ugroup_manager = Mockery::mock(UGroupManager::class);
-        $project        = Mockery::mock(Project::class);
+        $ugroup_manager = $this->createMock(UGroupManager::class);
+        $project        = ProjectTestBuilder::aProject()->build();
         $xml            = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <bind type="ugroups">
                 <items>
@@ -281,31 +259,28 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
                 </items>
             </bind>');
 
-        $ugroup_manager->shouldReceive('getUGroupByName')
-            ->withArgs([$project, 'ugroup_registered_users_name_key'])
-            ->andReturn(new ProjectUGroup(['name' => 'ugroup_registered_users_name_key']));
+        $ugroup_manager->method('getUGroupByName')->with($project, 'ugroup_registered_users_name_key')
+            ->willReturn(new ProjectUGroup(['name' => 'ugroup_registered_users_name_key']));
 
         $bind = $this->getListBindFactory($ugroup_manager, $project, $xml);
 
         $values = $bind->getAllValues();
-        $this->assertTrue((bool) $values['F1-V0']->isHidden());
+        self::assertTrue((bool) $values['F1-V0']->isHidden());
     }
 
-    protected function getListBindFactory($ugroup_manager, $project, SimpleXMLElement $xml): Tracker_FormElement_Field_List_Bind
+    protected function getListBindFactory(UGroupManager $ugroup_manager, Project $project, SimpleXMLElement $xml): Tracker_FormElement_Field_List_Bind
     {
-        $bind_factory = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory(), $ugroup_manager);
+        $bind_factory = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory(), $ugroup_manager);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $field   = ListFieldBuilder::aListField(456)->inTracker($tracker)->build();
         $mapping = [];
 
         return $bind_factory->getInstanceFromXML(
             $xml,
             $field,
             $mapping,
-            Mockery::mock(IFindUserFromXMLReference::class)
+            IFindUserFromXMLReferenceStub::buildWithUser(UserTestBuilder::buildWithDefaults())
         );
     }
 }
