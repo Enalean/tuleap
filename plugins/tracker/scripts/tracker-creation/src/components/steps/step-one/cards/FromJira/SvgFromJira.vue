@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 79 67" height="67" width="79">
         <path
             class="card-glyph-fill"
@@ -29,3 +29,5 @@
         ></path>
     </svg>
 </template>
+
+<script setup lang="ts"></script>

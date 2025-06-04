@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const jest_base_config = defineJestConfiguration();
 export default {
@@ -26,5 +31,10 @@ export default {
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
         "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
+        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
+    },
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
     },
 };

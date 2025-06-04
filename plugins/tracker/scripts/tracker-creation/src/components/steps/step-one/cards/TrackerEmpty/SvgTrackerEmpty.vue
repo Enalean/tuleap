@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 54 54" height="54" width="54">
         <path
             stroke-linecap="round"
@@ -78,3 +78,5 @@
         ></path>
     </svg>
 </template>
+
+<script setup lang="ts"></script>

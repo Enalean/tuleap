@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <svg width="44" height="61" viewBox="0 0 44 61" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             fill-rule="evenodd"
@@ -27,3 +27,5 @@
         />
     </svg>
 </template>
+
+<script setup lang="ts"></script>
