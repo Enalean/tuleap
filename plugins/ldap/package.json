@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/html-escaper": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",

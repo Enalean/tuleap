@@ -17,5 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "project-admin-members";
-@import "project-admin-ugroups";
+@use "project-admin-members";
+@use "project-admin-ugroups";
