@@ -198,8 +198,8 @@ class Planning_MilestoneController extends BaseController
         $this->milestone = $this->milestone_factory->getBareMilestone(
             $this->getCurrentUser(),
             $this->project,
-            $this->request->get('planning_id'),
-            $this->request->get('aid')
+            (int) $this->request->get('planning_id'),
+            (int) $this->request->get('aid')
         );
     }
 
