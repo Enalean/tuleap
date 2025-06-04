@@ -18,60 +18,61 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_Users;
+use Tracker_FormElement_Field_List_BindDecorator;
+use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_BindValue
-     */
-    private $v2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_BindValue
-     */
-    private $v1;
-
-    /**
-     * @var \Mockery\Mock|Tracker_FormElement_Field_List_Bind
-     */
-    private $bind;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field
-     */
-    private $field;
+    private Tracker_FormElement_Field_List_BindValue&MockObject $value_2;
+    private Tracker_FormElement_Field_List_BindValue&MockObject $value_1;
+    private Tracker_FormElement_Field_List_Bind&MockObject $bind;
+    private Tracker_FormElement_Field_List $field;
 
     protected function setUp(): void
     {
-        $decorator   = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
-        $this->field = Mockery::mock(Tracker_FormElement_Field::class);
-        $this->bind  = Mockery::mock(Tracker_FormElement_Field_List_Bind::class, [new \Tuleap\DB\DatabaseUUIDV7Factory(), $this->field, [], $decorator])
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
+        $decorator   = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');
+        $this->field = ListFieldBuilder::aListField(42)->build();
+        $this->bind  = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Static::class)
+            ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->field, '', [], [], $decorator])
+            ->onlyMethods(['getAllValues', 'getAllVisibleValues'])
+            ->getMock();
 
-        $this->v1 = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $this->v2 = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
+        $this->value_1 = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
+        $this->value_2 = $this->createMock(Tracker_FormElement_Field_List_BindValue::class);
     }
 
     public function testItDelegatesFormattingToValues(): void
     {
-        $this->v1->shouldReceive('fetchFormattedForJson')->once();
-        $this->v2->shouldReceive('fetchFormattedForJson')->once();
+        $this->value_1->expects($this->once())->method('fetchFormattedForJson');
+        $this->value_2->expects($this->once())->method('fetchFormattedForJson');
 
-        $this->bind->shouldReceive('getAllValues')->andReturn([$this->v1, $this->v2]);
+        $this->bind->method('getAllValues')->willReturn([$this->value_1, $this->value_2]);
 
         $this->bind->fetchFormattedForJson();
     }
 
     public function testItFormatsValuesForJson(): void
     {
-        $this->v1->shouldReceive('fetchFormattedForJson')->andReturn('whatever 1');
-        $this->v2->shouldReceive('fetchFormattedForJson')->andReturn('whatever 2');
-        $this->bind->shouldReceive('getAllValues')->andReturn([$this->v1, $this->v2]);
+        $this->value_1->method('fetchFormattedForJson')->willReturn('whatever 1');
+        $this->value_2->method('fetchFormattedForJson')->willReturn('whatever 2');
+        $this->bind->method('getAllValues')->willReturn([$this->value_1, $this->value_2]);
 
         self::assertSame(
             [
@@ -84,7 +85,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
 
     public function testItSendsAnEmptyArrayInJSONFormatWhenNoValues(): void
     {
-        $this->bind->shouldReceive('getAllValues')->andReturn([]);
+        $this->bind->method('getAllValues')->willReturn([]);
         self::assertSame(
             [],
             $this->bind->fetchFormattedForJson()
@@ -93,23 +94,20 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
 
     public function testItVerifiesAValueExist(): void
     {
-        $this->bind->shouldReceive('getAllValues')->andReturn([101 => 101]);
+        $this->bind->method('getAllValues')->willReturn([101 => 101]);
 
-        $this->assertTrue($this->bind->isExistingValue(101));
-        $this->assertFalse($this->bind->isExistingValue(201));
+        self::assertTrue($this->bind->isExistingValue(101));
+        self::assertFalse($this->bind->isExistingValue(201));
     }
 
     public function testItFilterDefaultValuesReturnEmptyArrayIfNoDefaultValues(): void
     {
-        $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
+        $default_value_dao = $this->createMock(BindDefaultValueDao::class);
 
-        $this->bind->shouldReceive('filterDefaultValues')->never();
-        $this->field->shouldReceive('getId')->andReturn(42);
+        $this->bind->setDefaultValueDao($default_value_dao);
+        $this->bind->expects($this->never())->method('getAllVisibleValues')->willReturn(([]));
 
-        $this->bind->shouldReceive('getDefaultValueDao')->andReturn($default_value_dao);
-        $this->bind->shouldReceive('getAllVisibleValues')->andReturn(([]));
-
-        $default_value_dao->shouldReceive('save')->withArgs([42, []])->andReturn(true);
+        $default_value_dao->method('save')->with(42, [])->willReturn(true);
 
         $params = [];
         $this->bind->process($params, true);
@@ -117,17 +115,12 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
 
     public function testItExtractDefaultValues(): void
     {
-        $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
-        $this->field->shouldReceive('getId')->andReturn(42);
-        $this->bind->shouldReceive('getDefaultValueDao')->andReturn($default_value_dao);
+        $default_value_dao = $this->createMock(BindDefaultValueDao::class);
+        $this->bind->setDefaultValueDao($default_value_dao);
 
-        $this->bind->shouldReceive('getAllVisibleValues')->andReturn((['111' => 'value1', '112' => 'value1', '114' => 'value1']));
+        $this->bind->method('getAllVisibleValues')->willReturn((['111' => 'value1', '112' => 'value1', '114' => 'value1']));
 
-        $default_value_dao
-            ->shouldReceive('save')
-            ->withArgs([42, ['111', '112']])
-            ->andReturn(true)
-            ->atLeast()->once();
+        $default_value_dao->expects($this->atLeastOnce())->method('save')->with(42, ['111', '112'])->willReturn(true);
 
         $params = ['default' => ['111', '112', '116']];
         $this->bind->process($params, true);
@@ -135,8 +128,8 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
 
     public function testItExtractDefaultValuesFromOpenValue(): void
     {
-        $field     = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
-        $decorator = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
+        $field     = OpenListFieldBuilder::anOpenListField()->withId(42)->build();
+        $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');
 
         $user_list = [
             103 => ListUserValueBuilder::aUserWithId(103)->build(),
@@ -144,22 +137,18 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
             117 => ListUserValueBuilder::aUserWithId(117)->build(),
         ];
 
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [new DatabaseUUIDV7Factory(), $field, [], [], $decorator])
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
+        $bind = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Users::class)
+            ->setConstructorArgs([new DatabaseUUIDV7Factory(), $field, [], [], $decorator])
+            ->onlyMethods(['getAllValues'])
+            ->getMock();
 
-        $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
-        $field->shouldReceive('getId')->andReturn(42);
+        $default_value_dao = $this->createMock(BindDefaultValueDao::class);
 
-        $bind->shouldReceive('getAllValues')->andReturn($user_list);
+        $bind->method('getAllValues')->willReturn($user_list);
 
-        $default_value_dao
-            ->shouldReceive('save')
-            ->withArgs([42, ['103', '111', '117']])
-            ->andReturn(true)
-            ->once();
+        $default_value_dao->expects($this->once())->method('save')->with(42, ['103', '111', '117'])->willReturn(true);
 
-        $bind->shouldReceive('getDefaultValueDao')->andReturn($default_value_dao);
+        $bind->setDefaultValueDao($default_value_dao);
 
         $params = ['default' => ['103,111,b117']];
         $bind->process($params, true);
@@ -167,9 +156,10 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
 
     public function testItReturnOnlyValidDefaultValues(): void
     {
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [new DatabaseUUIDV7Factory(), $this->field, [], [112 => true, 0 => 103, 111 => true], []])
-                       ->shouldAllowMockingProtectedMethods()
-                       ->makePartial();
+        $bind = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Users::class)
+            ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->field, [], [112 => true, 0 => 103, 111 => true], []])
+            ->onlyMethods(['getAllValues'])
+            ->getMock();
 
         $user_list = [
             103 => ListUserValueBuilder::aUserWithId(103)->build(),
@@ -177,7 +167,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
             117 => ListUserValueBuilder::aUserWithId(117)->build(),
         ];
 
-        $bind->shouldReceive('getAllValues')->andReturn($user_list);
+        $bind->method('getAllValues')->willReturn($user_list);
 
         self::assertSame([111 => true], $bind->getDefaultValues());
     }

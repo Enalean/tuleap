@@ -22,48 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_Users;
-use Tracker_Report;
 use Tracker_Report_Criteria;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_List_CriteriaTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
     private Tracker_FormElement_Field_List $field;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Report_Criteria
-     */
-    private $criteria;
+    private Tracker_Report_Criteria&MockObject $criteria;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->field = Mockery::mock(Tracker_FormElement_Field_List::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $this->criteria = Mockery::mock(Tracker_Report_Criteria::class);
+        $this->field    = ListFieldBuilder::aListField(456)->build();
+        $this->criteria = $this->createMock(Tracker_Report_Criteria::class);
     }
 
     public function testItSetsCriteriaValueFromXML(): void
     {
         $report_id = 'XML_IMPORT_' . bin2hex(random_bytes(32));
-        $report    = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn($report_id)->getMock();
-        $this->criteria->shouldReceive('getReport')->andReturn($report);
+        $report    = ReportTestBuilder::aPublicReport()->withId($report_id)->build();
+        $this->criteria->method('getReport')->willReturn($report);
 
-        $static_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->field->shouldReceive('getBind')->andReturn($static_bind);
+        ListStaticBindBuilder::aStaticBind($this->field)->build();
 
         $xml_criteria_value = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <criteria_value type="list">
@@ -86,7 +76,7 @@ final class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHP
 
         $cache = XMLCriteriaValueCache::instance(spl_object_id($this->field));
 
-        $this->assertEquals(
+        self::assertEquals(
             [$value_01],
             $cache->get($report_id)
         );
@@ -95,11 +85,10 @@ final class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHP
     public function testItDoesNotSetCriteriaValueFromXMLIfNotAStaticBind(): void
     {
         $report_id = 'XML_IMPORT_' . bin2hex(random_bytes(32));
-        $report    = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn($report_id)->getMock();
-        $this->criteria->shouldReceive('getReport')->andReturn($report);
+        $report    = ReportTestBuilder::aPublicReport()->withId($report_id)->build();
+        $this->criteria->method('getReport')->willReturn($report);
 
-        $user_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class);
-        $this->field->shouldReceive('getBind')->andReturn($user_bind);
+        ListUserBindBuilder::aUserBind($this->field)->build();
 
         $xml_criteria_value = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <criteria_value type="list">
@@ -115,6 +104,6 @@ final class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHP
         );
 
         $cache = XMLCriteriaValueCache::instance(spl_object_id($this->field));
-        $this->assertFalse($cache->has($report_id));
+        self::assertFalse($cache->has($report_id));
     }
 }
