@@ -19,66 +19,77 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use UserHelper;
+use UserManager;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalLanguageMock;
 
     public function testGetLabel(): void
     {
-        $uh = Mockery::mock(UserHelper::class);
-        $uh->shouldReceive('getDisplayNameFromUserId')->withArgs([12])->andReturn('John Smith');
+        $user_helper = $this->createMock(UserHelper::class);
+        $user_helper->method('getDisplayNameFromUserId')->with(12)->willReturn('John Smith');
 
-        $bv = $this->getListBindUserValue();
+        $bind_value = $this->getListBindUserValue();
 
-        $bv->shouldReceive('getUserHelper')->andReturn($uh);
+        $bind_value->method('getUserHelper')->willReturn($user_helper);
 
-        $this->assertEquals('John Smith', $bv->getLabel());
+        self::assertEquals('John Smith', $bind_value->getLabel());
     }
 
     public function testGetUser(): void
     {
-        $u = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $uh = Mockery::mock(UserManager::class);
-        $uh->shouldReceive('getUserById')->withArgs([12])->andReturn($u);
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getUserById')->with(12)->willReturn($user);
 
-        $bv = $this->getListBindUserValue();
-        $bv->shouldReceive('getUserManager')->andReturn($uh);
+        $bind_value = $this->getListBindUserValue();
+        $bind_value->method('getUserManager')->willReturn($user_manager);
 
-        $this->assertEquals($u, $bv->getUser());
+        self::assertEquals($user, $bind_value->getUser());
     }
 
     public function testItReturnsTheUserNameAsWell(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getUserName')->andReturn('neo');
-        $user->shouldReceive('getRealName')->andReturn('Le roi arthur');
-        $user->shouldReceive('getAvatarUrl')->andReturn('');
-        $user->shouldReceive('isNone')->andReturn(false);
+        $user = UserTestBuilder::anActiveUser()
+            ->withUserName('neo')
+            ->withRealName('Le roi arthur')
+            ->withAvatarUrl('https://example.com')
+            ->build();
 
-        $user_manager = Mockery::mock(UserManager::class);
-        $user_manager->shouldReceive('getUserById')->withArgs([12])->andReturn($user);
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getUserById')->with(12)->willReturn($user);
 
-        $user_helper = Mockery::mock(UserHelper::class);
-        $user_helper->shouldReceive('getDisplayNameFromUserId')->andReturn('Thomas A. Anderson (neo)');
+        $user_helper = $this->createMock(UserHelper::class);
+        $user_helper->method('getDisplayNameFromUserId')->willReturn('Thomas A. Anderson (neo)');
 
         $value = $this->getListBindUserValue();
-        $value->shouldReceive('getUserManager')->andReturn($user_manager);
-        $value->shouldReceive('getUserHelper')->andReturn($user_helper);
+        $value->method('getUserManager')->willReturn($user_manager);
+        $value->method('getUserHelper')->willReturn($user_helper);
 
         $json = $value->fetchFormattedForJson();
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'id'           => '12',
                 'label'        => 'Thomas A. Anderson (neo)',
                 'is_hidden'    => false,
                 'username'     => 'neo',
                 'realname'     => 'Le roi arthur',
-                'avatar_url'   => '',
+                'avatar_url'   => 'https://example.com',
                 'display_name' => 'Le roi arthur (neo)',
             ],
             $json
@@ -89,20 +100,15 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \Tuleap\T
     {
         $value = ListUserValueBuilder::noneUser()->build();
         $json  = $value->getJsonValue();
-        $this->assertNull($json);
+        self::assertNull($json);
     }
 
-    /**
-     * @return \Mockery\Mock|Tracker_FormElement_Field_List_Bind_UsersValue
-     */
-    private function getListBindUserValue()
+    private function getListBindUserValue(): Tracker_FormElement_Field_List_Bind_UsersValue&MockObject
     {
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_UsersValue::class)
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
-
-        $bind->shouldReceive('getId')->andReturn(12);
-
+        $bind = $this->createPartialMock(Tracker_FormElement_Field_List_Bind_UsersValue::class, [
+            'getId', 'getUserManager', 'getUserHelper',
+        ]);
+        $bind->method('getId')->willReturn(12);
         return $bind;
     }
 }
