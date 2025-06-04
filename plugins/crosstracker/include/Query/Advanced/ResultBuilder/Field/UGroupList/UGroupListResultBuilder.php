@@ -53,11 +53,23 @@ final readonly class UGroupListResultBuilder
                 $values[$id] = [];
             }
 
+            $names = [];
             if ($result["user_group_list_value_$alias"] !== null) {
-                $name = $result["user_group_list_value_$alias"];
-            } elseif ($result["user_group_list_open_$alias"] !== null) {
-                $name = $result["user_group_list_open_$alias"];
-            } else {
+                if (is_array($result["user_group_list_value_$alias"])) {
+                    $names = array_merge($names, $result["user_group_list_value_$alias"]);
+                } else {
+                    $names[] = $result["user_group_list_value_$alias"];
+                }
+            }
+            if ($result["user_group_list_open_$alias"] !== null) {
+                if (is_array($result["user_group_list_open_$alias"])) {
+                    $names = array_merge($names, $result["user_group_list_open_$alias"]);
+                } else {
+                    $names[] = $result["user_group_list_open_$alias"];
+                }
+            }
+
+            if ($names === []) {
                 continue;
             }
 
@@ -65,12 +77,16 @@ final readonly class UGroupListResultBuilder
             if ($artifact === null) {
                 throw new LogicException("Artifact #$id not found");
             }
-            $user_group = $this->user_group_retriever->getUGroupByName($artifact->getTracker()->getProject(), $name);
-            if ($user_group === null) {
-                throw new LogicException("User Group $name not found");
-            }
-
-            $values[$id][] = UGroupListValueRepresentation::fromProjectUGroup($user_group);
+            $values[$id] = array_map(
+                function (string $name) use ($artifact) {
+                    $user_group = $this->user_group_retriever->getUGroupByName($artifact->getTracker()->getProject(), $name);
+                    if ($user_group === null) {
+                        throw new LogicException("User Group $name not found");
+                    }
+                    return UGroupListValueRepresentation::fromProjectUGroup($user_group);
+                },
+                array_filter($names),
+            );
         }
 
         return new SelectedValuesCollection(

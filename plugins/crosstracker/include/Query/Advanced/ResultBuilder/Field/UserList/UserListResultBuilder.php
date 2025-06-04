@@ -32,6 +32,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\Query\Advanced\SelectResultKey;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\Option\Option;
 use Tuleap\User\RetrieveUserByEmail;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\RetrieveUserByUserName;
@@ -59,23 +60,36 @@ final readonly class UserListResultBuilder
             }
 
             if ($result["user_list_value_$alias"] !== null) {
-                if ((int) $result["user_list_value_$alias"] === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
-                    continue;
-                }
-                $user = $this->user_id_retriever->getUserById((int) $result["user_list_value_$alias"]);
-                if ($user === null) {
-                    throw new LogicException("User {$result["user_list_value_$alias"]} not found");
-                }
-                $values[$id][] = UserRepresentation::fromPFUser($user, $this->user_helper);
-            } elseif ($result["user_list_open_$alias"] !== null) {
-                $user = $this->user_email_retriever->getUserByEmail((string) $result["user_list_open_$alias"]);
-                if ($user === null) {
-                    $user = $this->user_name_retriever->getUserByUserName((string) $result["user_list_open_$alias"]);
-                }
-                if ($user === null) {
-                    $values[$id][] = UserRepresentation::fromAnonymous((string) $result["user_list_open_$alias"]);
+                if (is_array($result["user_list_value_$alias"])) {
+                    foreach ($result["user_list_value_$alias"] as $user_id) {
+                        if ($user_id === null) {
+                            continue;
+                        }
+                        $this->buildUserValueFromList((int) $user_id)->apply(
+                            static function (UserRepresentation $user) use (&$values, $id): void {
+                                $values[$id][] = $user;
+                            },
+                        );
+                    }
                 } else {
-                    $values[$id][] = UserRepresentation::fromPFUser($user, $this->user_helper);
+                    $this->buildUserValueFromList((int) $result["user_list_value_$alias"])->apply(
+                        static function (UserRepresentation $user) use (&$values, $id): void {
+                            $values[$id][] = $user;
+                        },
+                    );
+                }
+            }
+
+            if ($result["user_list_open_$alias"] !== null) {
+                if (is_array($result["user_list_open_$alias"])) {
+                    foreach ($result["user_list_open_$alias"] as $user_email) {
+                        if ($user_email === null) {
+                            continue;
+                        }
+                        $values[$id][] = $this->buildUserValueFromOpenList((string) $user_email);
+                    }
+                } else {
+                    $values[$id][] = $this->buildUserValueFromOpenList((string) $result["user_list_open_$alias"]);
                 }
             }
         }
@@ -84,5 +98,33 @@ final readonly class UserListResultBuilder
             new CrossTrackerSelectedRepresentation($field->name, CrossTrackerSelectedType::TYPE_USER_LIST),
             array_map(static fn(array $selected_values) => new SelectedValue($field->name, new UserListRepresentation($selected_values)), $values),
         );
+    }
+
+    /**
+     * @return Option<UserRepresentation>
+     */
+    private function buildUserValueFromList(int $user_id): Option
+    {
+        if ($user_id === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
+            return Option::nothing(UserRepresentation::class);
+        }
+        $user = $this->user_id_retriever->getUserById($user_id);
+        if ($user === null) {
+            throw new LogicException("User $user_id not found");
+        }
+
+        return Option::fromValue(UserRepresentation::fromPFUser($user, $this->user_helper));
+    }
+
+    private function buildUserValueFromOpenList(string $user_email): UserRepresentation
+    {
+        $user = $this->user_email_retriever->getUserByEmail($user_email);
+        if ($user === null) {
+            $user = $this->user_name_retriever->getUserByUserName($user_email);
+        }
+        if ($user === null) {
+            return UserRepresentation::fromAnonymous($user_email);
+        }
+        return UserRepresentation::fromPFUser($user, $this->user_helper);
     }
 }

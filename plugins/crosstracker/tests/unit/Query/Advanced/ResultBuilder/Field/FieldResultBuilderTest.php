@@ -327,15 +327,9 @@ EOL
                 ],
                 [
                     'id'                                  => 42,
-                    "static_list_value_$this->field_hash" => null,
+                    "static_list_value_$this->field_hash" => ['disbenchment', 'quoted'],
                     "static_list_open_$this->field_hash"  => 'abnormalised',
-                    "static_list_color_$this->field_hash" => null,
-                ],
-                [
-                    'id'                                  => 42,
-                    "static_list_value_$this->field_hash" => 'disbenchment',
-                    "static_list_open_$this->field_hash"  => null,
-                    "static_list_color_$this->field_hash" => null,
+                    "static_list_color_$this->field_hash" => ['acid-green'],
                 ],
                 [
                     'id'                                  => 43,
@@ -358,7 +352,8 @@ EOL
             ])),
             42 => new SelectedValue(self::FIELD_NAME, new StaticListRepresentation([
                 new StaticListValueRepresentation('abnormalised', null),
-                new StaticListValueRepresentation('disbenchment', null),
+                new StaticListValueRepresentation('disbenchment', 'acid-green'),
+                new StaticListValueRepresentation('quoted', null),
             ])),
             43 => new SelectedValue(self::FIELD_NAME, new StaticListRepresentation([])),
         ], $result->values);
@@ -366,7 +361,7 @@ EOL
 
     public function testItReturnsValuesForUserGroupListField(): void
     {
-        $GLOBALS['Language']->expects($this->exactly(2))->method('getText')
+        $GLOBALS['Language']->expects($this->exactly(3))->method('getText')
             ->willReturnCallback(static fn(string $pagename, string $category) => match ($category) {
                 'ugroup_project_members' => 'Project members',
                 'ugroup_project_admins'  => 'Project admins',
@@ -401,12 +396,7 @@ EOL
                 ],
                 [
                     'id'                                      => 52,
-                    "user_group_list_value_$this->field_hash" => 'ugroup_project_admins_name_key',
-                    "user_group_list_open_$this->field_hash"  => null,
-                ],
-                [
-                    'id'                                      => 52,
-                    "user_group_list_value_$this->field_hash" => null,
+                    "user_group_list_value_$this->field_hash" => ['ugroup_project_admins_name_key', 'ugroup_project_members_name_key'],
                     "user_group_list_open_$this->field_hash"  => 'Custom_User_Group',
                 ],
                 [
@@ -429,6 +419,7 @@ EOL
             ])),
             52 => new SelectedValue(self::FIELD_NAME, new UGroupListRepresentation([
                 new UGroupListValueRepresentation('Project admins'),
+                new UGroupListValueRepresentation('Project members'),
                 new UGroupListValueRepresentation('Custom_User_Group'),
             ])),
             53 => new SelectedValue(self::FIELD_NAME, new UGroupListRepresentation([])),
@@ -466,12 +457,7 @@ EOL
                 ],
                 [
                     'id'                                => 62,
-                    "user_list_value_$this->field_hash" => 132,
-                    "user_list_open_$this->field_hash"  => null,
-                ],
-                [
-                    'id'                                => 62,
-                    "user_list_value_$this->field_hash" => null,
+                    "user_list_value_$this->field_hash" => [131, 132],
                     "user_list_open_$this->field_hash"  => 'windmill@example.com',
                 ],
                 [
@@ -493,6 +479,7 @@ EOL
                 new UserRepresentation('Fabrice', 'https://example.com/fabrice', '/users/fabDu38', false),
             ])),
             62 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([
+                new UserRepresentation('Fabrice', 'https://example.com/fabrice', '/users/fabDu38', false),
                 new UserRepresentation('Eugénie', 'https://example.com/eugenie', '/users/gege', false),
                 new UserRepresentation('windmill@example.com', 'https://' . PFUser::DEFAULT_AVATAR_URL, null, true),
             ])),

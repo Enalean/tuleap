@@ -33,6 +33,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
@@ -66,6 +67,12 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         $sprint_status_field_id  = $tracker_builder->buildStaticListField($sprint_tracker->getId(), 'field_status', 'sb');
         $sprint_status_values    = $tracker_builder->buildOpenAndClosedValuesForField($sprint_status_field_id, $sprint_tracker->getId(), ['Open'], ['Closed', 'Also closed']);
 
+        $tracker_builder->buildColorForStaticListValue(
+            $sprint_status_field_id,
+            $sprint_status_values['closed'][0],
+            TrackerColor::fromName('teddy-brown'),
+        );
+
         $tracker_builder->grantReadPermissionOnField(
             $release_status_field_id,
             ProjectUGroup::PROJECT_MEMBERS
@@ -87,7 +94,7 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
             $release_artifact_empty_id => [],
             $release_artifact_open_id  => [new StaticListValueRepresentation('Open', null)],
             $sprint_artifact_closed_id => [
-                new StaticListValueRepresentation('Closed', null),
+                new StaticListValueRepresentation('Closed', 'teddy-brown'),
                 new StaticListValueRepresentation('Also closed', null),
             ],
         ];

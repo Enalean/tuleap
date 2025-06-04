@@ -27,7 +27,6 @@ use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromBase;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\SelectBuilderVisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -48,22 +47,20 @@ final readonly class SelectBuilderVisitor implements SelectableVisitor
     /**
      * @param Selectable[] $selects
      * @param Tracker[] $trackers
+     * @return list<IProvideParametrizedSelectAndFromSQLFragments>
      */
     public function buildSelectFrom(
         array $selects,
         array $trackers,
         PFUser $user,
-    ): IProvideParametrizedSelectAndFromSQLFragments {
-        $base = new ParametrizedSelectFromBase();
-
-        $selects = array_unique($selects, SORT_REGULAR);
+    ): array {
+        $selects   = array_unique($selects, SORT_REGULAR);
+        $fragments = [];
         foreach ($selects as $select) {
-            $select_from = $select->acceptSelectableVisitor($this, new SelectBuilderVisitorParameters($trackers, $user));
-            $base->addSelect($select_from->getSelect());
-            $base->addFrom($select_from->getFrom(), $select_from->getFromParameters());
+            $fragments[] = $select->acceptSelectableVisitor($this, new SelectBuilderVisitorParameters($trackers, $user));
         }
 
-        return $base;
+        return $fragments;
     }
 
     public function visitField(Field $field, $parameters)
