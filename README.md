@@ -49,6 +49,7 @@ be added.
 * Guilhem Bonnefille
 * Lou-Evan Rouby
 * Jihyun Park
+* Clément Gayot
 
 ### Previous contributors (no longer active committers)
 
