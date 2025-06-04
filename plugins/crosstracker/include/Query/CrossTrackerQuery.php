@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Query;
 
 use Tuleap\DB\UUID;
 
-final readonly class CrossTrackerQuery
+readonly class CrossTrackerQuery
 {
     public function __construct(
         private UUID $uuid,

@@ -37,6 +37,8 @@ use Tuleap\CrossTracker\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilderVisitor;
+use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
+use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\CrossTrackerTQLQueryDao;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
@@ -51,11 +53,15 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LinkArtifactCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
@@ -66,6 +72,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 #[ConfigKeyCategory('CrossTracker Search')]
 final readonly class CrossTrackerArtifactQueryFactory
@@ -94,6 +101,10 @@ final readonly class CrossTrackerArtifactQueryFactory
         private CrossTrackerInstrumentation $instrumentation,
         private RetrieveUserPermissionOnArtifacts $permission_on_artifacts_retriever,
         private RetrieveArtifact $artifact_retriever,
+        private ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
+        private ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
+        private InstantiateRetrievedQueryTrackerIds $trackers_instantiator,
+        private RetrieveUserPermissionOnTrackers $trackers_permissions,
     ) {
     }
 
@@ -121,9 +132,99 @@ final readonly class CrossTrackerArtifactQueryFactory
             throw new ExpertQueryIsEmptyException();
         }
 
-        return $this->getArtifactsMatchingExpertQuery(
-            $query,
+        $parsed_query = ParsedCrossTrackerQuery::fromCrossTrackerQuery($query, $this->parser);
+
+        $trackers = $this->query_trackers_retriever->getQueryTrackers($parsed_query, $current_user, ForgeConfig::getInt(self::MAX_TRACKER_FROM));
+        $this->instrumentation->updateTrackerCount(count($trackers));
+
+        $this->validateExpertQuery($parsed_query, $current_user, $trackers);
+        if ($parsed_query->parsed_query->getOrderBy() !== null) {
+            $this->instrumentation->updateOrderByUsage();
+        }
+
+        $additional_from_where = $this->query_builder->buildFromWhere($parsed_query->parsed_query->getCondition(), $trackers, $current_user);
+
+        return $this->retrieveQueryContentRepresentation(
+            $parsed_query,
+            $trackers,
             $current_user,
+            $additional_from_where,
+            $limit,
+            $offset,
+        );
+    }
+
+    /**
+     * @throws ExpertQueryIsEmptyException
+     * @throws FromIsInvalidException
+     * @throws LimitSizeIsExceededException
+     * @throws MissingFromException
+     * @throws OrderByIsInvalidException
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
+     * @throws SelectLimitExceededException
+     * @throws SelectablesAreInvalidException
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesMustBeUniqueException
+     * @throws SyntaxError
+     */
+    public function getForwardLinks(
+        CrossTrackerQuery $query,
+        int $source_artifact_id,
+        PFUser $current_user,
+        int $limit,
+        int $offset,
+    ): CrossTrackerQueryContentRepresentation {
+        if ($query->getQuery() === '') {
+            throw new ExpertQueryIsEmptyException();
+        }
+
+        return $this->getArtifactLinksMatchingExpertQuery(
+            ParsedCrossTrackerQuery::fromCrossTrackerQuery($query, $this->parser),
+            $current_user,
+            $this->expert_query_dao->getTrackersIdsForReverseLink($source_artifact_id),
+            $this->reverse_link_from_where_builder->getFromWhereForWithReverseLink(
+                new WithReverseLink(new LinkArtifactCondition($source_artifact_id), null),
+                $current_user,
+            ),
+            $limit,
+            $offset,
+        );
+    }
+
+    /**
+     * @throws ExpertQueryIsEmptyException
+     * @throws FromIsInvalidException
+     * @throws LimitSizeIsExceededException
+     * @throws MissingFromException
+     * @throws OrderByIsInvalidException
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
+     * @throws SelectLimitExceededException
+     * @throws SelectablesAreInvalidException
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesMustBeUniqueException
+     * @throws SyntaxError
+     */
+    public function getReverseLinks(
+        CrossTrackerQuery $query,
+        int $target_artifact_id,
+        PFUser $current_user,
+        int $limit,
+        int $offset,
+    ): CrossTrackerQueryContentRepresentation {
+        if ($query->getQuery() === '') {
+            throw new ExpertQueryIsEmptyException();
+        }
+
+        return $this->getArtifactLinksMatchingExpertQuery(
+            ParsedCrossTrackerQuery::fromCrossTrackerQuery($query, $this->parser),
+            $current_user,
+            $this->expert_query_dao->getTrackersIdsForForwardLink($target_artifact_id),
+            $this->forward_link_from_where_builder->getFromWhereForWithForwardLink(
+                new WithForwardLink(new LinkArtifactCondition($target_artifact_id), null),
+                $current_user,
+            ),
             $limit,
             $offset,
         );
@@ -142,22 +243,52 @@ final readonly class CrossTrackerArtifactQueryFactory
      * @throws SelectablesMustBeUniqueException
      * @throws SyntaxError
      */
-    private function getArtifactsMatchingExpertQuery(
-        CrossTrackerQuery $query,
+    private function getArtifactLinksMatchingExpertQuery(
+        ParsedCrossTrackerQuery $query,
         PFUser $current_user,
+        array $trackers_ids,
+        IProvideParametrizedFromAndWhereSQLFragments $additional_from_where,
         int $limit,
         int $offset,
     ): CrossTrackerQueryContentRepresentation {
-        $trackers = $this->query_trackers_retriever->getQueryTrackers($query, $current_user, ForgeConfig::getInt(self::MAX_TRACKER_FROM));
+        $trackers = $this->trackers_permissions->retrieveUserPermissionOnTrackers(
+            $current_user,
+            $this->trackers_instantiator->getTrackers($trackers_ids),
+            TrackerPermissionType::PERMISSION_VIEW,
+        )->allowed;
+        if (count($trackers) === 0) {
+            return $this->buildQueryContentRepresentation(
+                $this->result_builder->buildResult(
+                    [new Metadata('artifact'), ...$query->parsed_query->getSelect()],
+                    [],
+                    $current_user,
+                    [],
+                ),
+                0
+            );
+        }
         $this->instrumentation->updateTrackerCount(count($trackers));
 
-        $parsed_query = $this->getParsedQuery($query, $current_user, $trackers);
-        if ($parsed_query->getOrderBy() !== null) {
+        $this->validateExpertQuery($query, $current_user, $trackers);
+        if ($query->parsed_query->getOrderBy() !== null) {
             $this->instrumentation->updateOrderByUsage();
         }
 
-        $additional_from_where = $this->query_builder->buildFromWhere($parsed_query->getCondition(), $trackers, $current_user);
-        $additional_from_order = $this->order_builder->buildFromOrder($parsed_query->getOrderBy(), $trackers, $current_user);
+        return $this->retrieveQueryContentRepresentation($query, $trackers, $current_user, $additional_from_where, $limit, $offset);
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     */
+    private function retrieveQueryContentRepresentation(
+        ParsedCrossTrackerQuery $query,
+        array $trackers,
+        PFUser $current_user,
+        IProvideParametrizedFromAndWhereSQLFragments $additional_from_where,
+        int $limit,
+        int $offset,
+    ): CrossTrackerQueryContentRepresentation {
+        $additional_from_order = $this->order_builder->buildFromOrder($query->parsed_query->getOrderBy(), $trackers, $current_user);
         $tracker_ids           = $this->getTrackersId($trackers);
         $artifact_ids          = $this->expert_query_dao->searchArtifactsIdsMatchingQuery(
             $additional_from_where,
@@ -184,15 +315,16 @@ final readonly class CrossTrackerArtifactQueryFactory
             $tracker_ids,
         );
 
-        $this->instrumentation->updateSelectCount(count($parsed_query->getSelect()));
-        $additional_select_from = $this->select_builder->buildSelectFrom($parsed_query->getSelect(), $trackers, $current_user);
+        $this->instrumentation->updateSelectCount(count($query->parsed_query->getSelect()));
+        $additional_select_from = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user);
         $select_results         = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $additional_select_from,
             $additional_from_order,
             array_values($artifact_ids),
         );
 
-        $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$parsed_query->getSelect()], $trackers, $current_user, $select_results);
+        $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$query->parsed_query->getSelect()], $trackers, $current_user, $select_results);
+
         return $this->buildQueryContentRepresentation($results, $total_size);
     }
 
@@ -208,11 +340,11 @@ final readonly class CrossTrackerArtifactQueryFactory
      * @throws SelectablesMustBeUniqueException
      * @throws SyntaxError
      */
-    private function getParsedQuery(
+    private function validateExpertQuery(
         CrossTrackerQuery $query,
         PFUser $current_user,
         array $trackers,
-    ): Query {
+    ): void {
         $expert_query = $query->getQuery();
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
@@ -220,7 +352,6 @@ final readonly class CrossTrackerArtifactQueryFactory
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
             new InvalidOrderByBuilder($this->field_checker, $this->metadata_checker, $trackers, $current_user),
         );
-        return $this->parser->parse($expert_query);
     }
 
     /**
