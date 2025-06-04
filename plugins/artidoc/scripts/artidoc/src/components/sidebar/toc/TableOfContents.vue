@@ -29,29 +29,15 @@
             v-bind:key="section.value.id"
             v-bind:draggable="sections_being_saved.length === 0"
             v-bind:data-internal-id="section.value.internal_id"
-            v-bind:class="{
-                'section-saved-with-success': just_saved_sections.some(
-                    (just_saved_section) =>
-                        just_saved_section.internal_id === section.value.internal_id,
-                ),
-                'section-being-saved': sections_being_saved.some(
-                    (section_being_saved) => section_being_saved === section.value,
-                ),
-                'child-of-hovered-parent': isSectionParentHovered(section.value),
-                'child-of-dragged-parent': isSectionParentDragged(section.value),
-                'with-hidden-move-controls':
-                    sections_being_dragged.length > 0 ||
-                    sections_being_saved.length > 0 ||
-                    just_saved_sections.length > 0,
-            }"
+            v-bind:class="getTOCClasses(section)"
         >
             <span
                 class="dragndrop-grip"
                 data-test="dragndrop-grip"
                 v-if="is_reorder_allowed"
                 v-bind:class="{ 'dragndrop-grip-when-sections-loading': is_loading_sections }"
-                v-on:mouseover="setSectionBeingHovered(section)"
-                v-on:mouseout="clearSectionBeingHovered()"
+                v-on:pointerenter="setSectionBeingHovered(section)"
+                v-on:pointerleave="clearSectionBeingHovered()"
             >
                 <dragndrop-grip-illustration />
             </span>
@@ -88,8 +74,8 @@
                 v-if="is_reorder_allowed"
                 v-bind:class="{ 'reorder-arrows-when-sections-loading': is_loading_sections }"
                 data-not-drag-handle="true"
-                v-on:mouseover="setSectionBeingHovered(section)"
-                v-on:mouseout="clearSectionBeingHovered()"
+                v-on:pointerenter="setSectionBeingHovered(section)"
+                v-on:pointerleave="clearSectionBeingHovered()"
                 v-on:focusin="setSectionBeingHovered(section)"
                 v-on:focusout="clearSectionBeingHovered()"
             >
@@ -109,9 +95,8 @@
 </template>
 
 <script setup lang="ts">
-import { useGettext } from "vue3-gettext";
 import { onMounted, onUnmounted, ref } from "vue";
-import type { Ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { isArtifactSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
@@ -158,10 +143,27 @@ const list = ref<HTMLElement>();
 
 let drek: Drekkenov | undefined = undefined;
 
-const just_saved_sections: Ref<InternalArtidocSectionId[]> = ref([]);
-const sections_being_saved: Ref<InternalArtidocSectionId[]> = ref([]);
-const section_being_hovered: Ref<null | InternalArtidocSectionId> = ref(null);
-const sections_being_dragged: Ref<InternalArtidocSectionId[]> = ref([]);
+const just_saved_sections = ref<InternalArtidocSectionId[]>([]);
+const sections_being_saved = ref<InternalArtidocSectionId[]>([]);
+const section_being_hovered = ref<null | InternalArtidocSectionId>(null);
+const sections_being_dragged = ref<InternalArtidocSectionId[]>([]);
+
+function getTOCClasses(section: ReactiveStoredArtidocSection): Record<string, boolean> {
+    return {
+        "section-saved-with-success": just_saved_sections.value.some(
+            (just_saved_sections) => just_saved_sections.internal_id === section.value.internal_id,
+        ),
+        "section-being-saved": sections_being_saved.value.some(
+            (section_being_saved) => section_being_saved.internal_id === section.value.internal_id,
+        ),
+        "child-of-hovered-parent": isSectionParentHovered(section.value),
+        "child-of-dragged-parent": isSectionParentDragged(section.value),
+        "with-hidden-move-controls":
+            sections_being_dragged.value.length > 0 ||
+            sections_being_saved.value.length > 0 ||
+            just_saved_sections.value.length > 0,
+    };
+}
 
 function hasArtifactParent(section: ReactiveStoredArtidocSection): boolean {
     return bad_sections.value.includes(section.value.internal_id);
@@ -180,7 +182,7 @@ const clearSectionBeingHovered = (): void => {
     section_being_hovered.value = null;
 };
 
-const isSectionParentDragged = (section: InternalArtidocSectionId): boolean => {
+function isSectionParentDragged(section: InternalArtidocSectionId): boolean {
     if (sections_being_dragged.value.length <= 1) {
         // Do nothing, no children is being dragged
         return false;
@@ -189,7 +191,7 @@ const isSectionParentDragged = (section: InternalArtidocSectionId): boolean => {
     return sections_being_dragged.value.some((child) => {
         return child === section;
     });
-};
+}
 
 const isLastSectionOrBlock = (
     section: InternalArtidocSectionId,
@@ -200,7 +202,7 @@ const isLastSectionOrBlock = (
     return end_of_block_index === sections_collection.sections.value.length - 1;
 };
 
-const isSectionParentHovered = (section: InternalArtidocSectionId): boolean => {
+function isSectionParentHovered(section: InternalArtidocSectionId): boolean {
     if (!section_being_hovered.value) {
         return false;
     }
@@ -211,7 +213,7 @@ const isSectionParentHovered = (section: InternalArtidocSectionId): boolean => {
     return children_of_current_hovered_section.some((section_child) => {
         return section_child.value.internal_id === section.internal_id;
     });
-};
+}
 
 const showJustSavedTemporaryFeedback = (moved_sections: InternalArtidocSectionId[]): void => {
     just_saved_sections.value = moved_sections;
