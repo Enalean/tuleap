@@ -19,18 +19,22 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_BindValueTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_List_BindValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testJSon(): void
     {
         $id    = 123;
         $label = 'Reopen';
-        $value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $value->shouldReceive('getLabel')->andReturn($label);
-        $value->shouldReceive('getId')->andReturn($id);
-        $this->assertEquals('{"id":123,"value":"b123","caption":"Reopen","rest_value":"Reopen"}', json_encode($value->fetchForOpenListJson()));
+        $value = ListStaticValueBuilder::aStaticValue($label)->withId($id)->build();
+        self::assertEquals('{"id":123,"value":"b123","caption":"Reopen","rest_value":"Reopen"}', json_encode($value->fetchForOpenListJson()));
     }
 }
