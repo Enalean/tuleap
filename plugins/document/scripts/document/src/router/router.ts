@@ -40,6 +40,10 @@ export const routes: RouteRecordRaw[] = [
         path: "/folder/:item_id",
         name: "folder",
         component: ChildFolder,
+        props: (route) => ({
+            item_id: Number(route.params.item_id),
+            preview_item_id: 0,
+        }),
     },
     {
         path: "/folder/:folder_id/:item_id/:version_id",
@@ -60,6 +64,10 @@ export const routes: RouteRecordRaw[] = [
         path: "/preview/:preview_item_id",
         name: "preview",
         component: ChildFolder,
+        props: (route) => ({
+            item_id: 0,
+            preview_item_id: Number(route.params.preview_item_id),
+        }),
     },
     {
         path: "/history/:item_id",

@@ -23,56 +23,50 @@
     <folder-container />
 </template>
 
-<script lang="ts">
-import { mapState, useStore } from "vuex";
+<script setup lang="ts">
+import { useStore } from "vuex";
 import FolderContainer from "./FolderContainer.vue";
 import { useRoute } from "vue-router";
-import { watch } from "vue";
+import { onMounted, watch } from "vue";
 import { useState } from "vuex-composition-helpers";
+import type { RootState } from "../../type";
 
-export default {
-    name: "ChildFolder",
-    components: { FolderContainer },
-    setup() {
-        const route = useRoute();
-        const store = useStore();
-        const { current_folder } = useState(["current_folder"]);
-        watch(
-            () => route.path,
-            () => {
-                if (route.name === "preview") {
-                    store.dispatch("toggleQuickLook", parseInt(route.params.preview_item_id, 10));
-                    return;
-                }
+const route = useRoute();
+const store = useStore();
+const props = defineProps<{
+    item_id: number;
+    preview_item_id: number;
+}>();
 
-                store.dispatch("removeQuickLook");
-                if (current_folder && current_folder.id !== route.params.item_id) {
-                    store.dispatch("loadFolder", parseInt(route.params.item_id, 10));
-                }
-            },
-        );
-    },
-    computed: {
-        ...mapState(["current_folder", "currently_previewed_item"]),
-    },
-    async mounted() {
-        const route = useRoute();
+const { current_folder, currently_previewed_item } = useState<
+    Pick<RootState, "current_folder" | "currently_previewed_item">
+>(["current_folder", "currently_previewed_item"]);
+
+watch(
+    () => route.path,
+    () => {
         if (route.name === "preview") {
-            await this.$store.dispatch(
-                "toggleQuickLook",
-                parseInt(route.params.preview_item_id, 10),
-            );
+            store.dispatch("toggleQuickLook", props.preview_item_id);
+            return;
+        }
 
-            if (!this.current_folder && this.currently_previewed_item) {
-                this.$store.dispatch(
-                    "loadFolder",
-                    parseInt(this.currently_previewed_item.parent_id, 10),
-                );
-            }
-        } else {
-            this.$store.dispatch("loadFolder", parseInt(route.params.item_id, 10));
-            this.$store.dispatch("removeQuickLook");
+        store.dispatch("removeQuickLook");
+        if (current_folder.value && current_folder.value.id !== props.item_id) {
+            store.dispatch("loadFolder", props.item_id);
         }
     },
-};
+);
+
+onMounted(async () => {
+    if (route.name === "preview") {
+        await store.dispatch("toggleQuickLook", props.preview_item_id);
+
+        if (!current_folder.value && currently_previewed_item.value) {
+            store.dispatch("loadFolder", currently_previewed_item.value.parent_id);
+        }
+    } else {
+        store.dispatch("loadFolder", props.item_id);
+        store.dispatch("removeQuickLook");
+    }
+});
 </script>
