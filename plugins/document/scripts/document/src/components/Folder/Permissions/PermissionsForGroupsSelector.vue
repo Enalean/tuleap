@@ -24,7 +24,7 @@
             v-bind:project_ugroups="project_ugroups"
             v-bind:selected_ugroups="value.can_read"
             v-bind:key="'permissions-selector-can_read'"
-            v-bind:identifier="can_read"
+            v-bind:identifier="CAN_READ"
         >
             <template #permission-information>
                 <p class="tlp-text-info">
@@ -42,7 +42,7 @@
             v-bind:project_ugroups="project_ugroups"
             v-bind:selected_ugroups="value.can_write"
             v-bind:key="'permissions-selector-can_write'"
-            v-bind:identifier="can_write"
+            v-bind:identifier="CAN_WRITE"
         >
             <template #permission-information>
                 <p class="tlp-text-info">
@@ -60,40 +60,18 @@
             v-bind:project_ugroups="project_ugroups"
             v-bind:selected_ugroups="value.can_manage"
             v-bind:key="'permission-selectors-can_manage'"
-            v-bind:identifier="can_manage"
+            v-bind:identifier="CAN_MANAGE"
         />
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import PermissionsSelector from "./PermissionsSelector.vue";
 import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
+import type { Permissions, UserGroup } from "../../../type";
 
-export default {
-    name: "PermissionsForGroupsSelector",
-    components: {
-        PermissionsSelector,
-    },
-    props: {
-        project_ugroups: {
-            type: Array,
-            required: true,
-        },
-        value: {
-            type: Object,
-            required: true,
-        },
-    },
-    computed: {
-        can_read() {
-            return CAN_READ;
-        },
-        can_write() {
-            return CAN_WRITE;
-        },
-        can_manage() {
-            return CAN_MANAGE;
-        },
-    },
-};
+defineProps<{
+    project_ugroups: Array<UserGroup>;
+    value: Permissions;
+}>();
 </script>
