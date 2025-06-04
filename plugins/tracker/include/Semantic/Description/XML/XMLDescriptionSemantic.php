@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -47,7 +46,7 @@ final class XMLDescriptionSemantic extends XMLSemantic
         $cdata->insert($child, 'shortname', TrackerSemanticDescription::NAME);
         $cdata->insert($child, 'label', 'Description');
         $cdata->insert($child, 'description', 'Define the description of an artifact');
-        $child->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));
+        $child->addChild('field')?->addAttribute('REF', $this->reference->getId($form_elements));
 
         return $child;
     }
