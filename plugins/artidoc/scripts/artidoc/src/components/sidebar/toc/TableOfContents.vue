@@ -478,18 +478,18 @@ li[draggable="false"] {
     }
 }
 
-$arrows-overflow: calc(var(--tlp-small-spacing) / 2);
-
 .reorder-arrows {
+    --arrows-overflow: calc(var(--tlp-small-spacing) / 2);
+
     display: flex;
     position: absolute;
     z-index: 1;
-    top: calc(-1 * $arrows-overflow);
+    top: calc(-1 * var(--arrows-overflow));
     right: calc(var(--tlp-medium-spacing) / 2);
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: calc(100% + 2 * $arrows-overflow);
+    height: calc(100% + 2 * var(--arrows-overflow));
     transition:
         opacity ease-in-out 250ms,
         color ease-in-out 250ms;
