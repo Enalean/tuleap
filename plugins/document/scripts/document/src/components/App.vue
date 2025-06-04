@@ -34,12 +34,11 @@
         />
         <router-view v-else />
         <global-error-modal v-if="has_global_modal_error" />
-        <switch-to-old-u-i v-if="can_user_switch" />
+        <switch-to-old-u-i v-if="can_user_switch_to_old_ui" />
         <post-item-deletion-notification />
     </div>
 </template>
-<script lang="ts">
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
@@ -47,58 +46,71 @@ import LoadingError from "./Folder/Error/LoadingError.vue";
 import GlobalErrorModal from "./Folder/Error/GlobalErrorModal.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 import PostItemDeletionNotification from "./Folder/DropDown/Delete/PostItemDeletionNotification.vue";
+import { onMounted } from "vue";
+import { useGetters, useNamespacedState, useStore } from "vuex-composition-helpers";
+import { useGettext } from "vue3-gettext";
+import type { ErrorState } from "../store/error/module";
+import type { ConfigurationState } from "../store/configuration";
+import type { RootGetter } from "../store/getters";
 
-export default {
-    name: "App",
-    components: {
-        DocumentBreadcrumb,
-        PermissionError,
-        LoadingError,
-        SwitchToOldUI,
-        ItemPermissionError,
-        PostItemDeletionNotification,
-        GlobalErrorModal,
-    },
-    props: {
-        csrf_token: String,
-        csrf_token_name: String,
-    },
-    computed: {
-        ...mapState("error", [
-            "has_folder_permission_error",
-            "has_folder_loading_error",
-            "has_document_permission_error",
-            "has_document_loading_error",
-            "has_document_lock_error",
-            "has_global_modal_error",
-        ]),
-        ...mapState("configuration", ["can_user_switch_to_old_ui"]),
-        ...mapGetters(["is_uploading"]),
-        can_user_switch() {
-            return this.can_user_switch_to_old_ui;
-        },
-    },
-    created() {
-        const base_title = document.title;
-        this.$store.watch(
-            (state, getters) => getters.current_folder_title,
-            (title, old_title) => {
-                if (title) {
-                    document.title = title + " - " + base_title;
-                } else if (old_title) {
-                    document.title = base_title;
-                }
-            },
-        );
+const { $gettext } = useGettext();
+const store = useStore();
 
-        this.$store.commit("setRootTitle", this.$gettext("Documents"));
+const {
+    has_folder_permission_error,
+    has_folder_loading_error,
+    has_document_permission_error,
+    has_document_loading_error,
+    has_document_lock_error,
+    has_global_modal_error,
+} = useNamespacedState<
+    Pick<
+        ErrorState,
+        | "has_folder_permission_error"
+        | "has_folder_loading_error"
+        | "has_document_permission_error"
+        | "has_document_loading_error"
+        | "has_document_lock_error"
+        | "has_global_modal_error"
+    >
+>("error", [
+    "has_folder_permission_error",
+    "has_folder_loading_error",
+    "has_document_permission_error",
+    "has_document_loading_error",
+    "has_document_lock_error",
+    "has_global_modal_error",
+]);
+const { can_user_switch_to_old_ui } = useNamespacedState<
+    Pick<ConfigurationState, "can_user_switch_to_old_ui">
+>("configuration", ["can_user_switch_to_old_ui"]);
+const { is_uploading } = useGetters<Pick<RootGetter, "is_uploading">>(["is_uploading"]);
 
-        window.addEventListener("beforeunload", (event) => {
-            if (this.is_uploading) {
-                event.returnValue = true;
-                event.preventDefault();
+defineProps<{
+    csrf_token: string;
+    csrf_token_name: string;
+}>();
+
+onMounted(() => {
+    const base_title = document.title;
+    store.watch(
+        (state, getters) => getters.current_folder_title,
+        (title, old_title) => {
+            if (title) {
+                document.title = title + " - " + base_title;
+            } else if (old_title) {
+                document.title = base_title;
             }
-        });
-    },
-};
+        },
+    );
+
+    store.commit("setRootTitle", $gettext("Documents"));
+
+    window.addEventListener("beforeunload", (event) => {
+        if (is_uploading.value) {
+            event.returnValue = true;
+            event.preventDefault();
+        }
+    });
+});
 </script>

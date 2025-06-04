@@ -22,7 +22,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterViewStub, shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
@@ -31,14 +30,14 @@ import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 
 describe("App", () => {
-    let factory;
+    let factory: () => VueWrapper<App>;
     const set_root_title = vi.fn();
-    let has_folder_permission_error,
-        has_folder_loading_error,
-        has_document_permission_error,
-        has_document_loading_error,
-        has_document_lock_error,
-        can_user_switch_to_old_ui;
+    let has_folder_permission_error: boolean,
+        has_folder_loading_error: boolean,
+        has_document_permission_error: boolean,
+        has_document_loading_error: boolean,
+        has_document_lock_error: boolean,
+        can_user_switch_to_old_ui: boolean;
 
     beforeEach(() => {
         const default_prop = {
@@ -125,7 +124,7 @@ describe("App", () => {
 
     it(`Displays item loading error if document load fails`, () => {
         has_document_loading_error = true;
-        const wrapper = factory(false, false, false, true, false, false);
+        const wrapper = factory();
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -153,6 +152,6 @@ describe("App", () => {
         can_user_switch_to_old_ui = true;
         const wrapper = factory();
 
-        expect(wrapper.vm.can_user_switch).toBeTruthy();
+        expect(wrapper.vm.can_user_switch_to_old_ui).toBeTruthy();
     });
 });
