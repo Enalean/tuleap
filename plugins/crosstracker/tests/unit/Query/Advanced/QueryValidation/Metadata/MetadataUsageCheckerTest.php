@@ -28,10 +28,10 @@ use Tracker;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
-use Tracker_Semantic_StatusDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\SearchTrackersWithoutDescriptionSemanticStub;
@@ -46,7 +46,7 @@ final class MetadataUsageCheckerTest extends TestCase
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private SearchTrackersWithoutTitleSemanticStub $title_verifier;
     private SearchTrackersWithoutDescriptionSemanticStub $description_verifier;
-    private Tracker_Semantic_StatusDao&MockObject $status_dao;
+    private TrackerSemanticStatusDao&MockObject $status_dao;
     private Tracker_Semantic_ContributorDao&MockObject $assigned_to;
     private Tracker $tracker_101;
     private Tracker $tracker_102;
@@ -64,7 +64,7 @@ final class MetadataUsageCheckerTest extends TestCase
         $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
         $this->title_verifier       = SearchTrackersWithoutTitleSemanticStub::withAllTrackersHaveTitle();
         $this->description_verifier = SearchTrackersWithoutDescriptionSemanticStub::withAllTrackersHaveDescription();
-        $this->status_dao           = $this->createMock(Tracker_Semantic_StatusDao::class);
+        $this->status_dao           = $this->createMock(TrackerSemanticStatusDao::class);
         $this->assigned_to          = $this->createMock(Tracker_Semantic_ContributorDao::class);
 
         $this->user = UserTestBuilder::aUser()->build();

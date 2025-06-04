@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Tracker_Semantic_StatusDao;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 
 class SemanticDoneDuplicator implements IDuplicateSemantic
 {
@@ -33,11 +33,11 @@ class SemanticDoneDuplicator implements IDuplicateSemantic
     private $semantic_done_dao;
 
     /**
-     * @var Tracker_Semantic_StatusDao
+     * @var TrackerSemanticStatusDao
      */
     private $semantic_status_dao;
 
-    public function __construct(SemanticDoneDao $semantic_done_dao, Tracker_Semantic_StatusDao $semantic_status_dao)
+    public function __construct(SemanticDoneDao $semantic_done_dao, TrackerSemanticStatusDao $semantic_status_dao)
     {
         $this->semantic_done_dao   = $semantic_done_dao;
         $this->semantic_status_dao = $semantic_status_dao;

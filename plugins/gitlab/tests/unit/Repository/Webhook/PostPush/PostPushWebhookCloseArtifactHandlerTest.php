@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
-use DateTimeImmutable;
 use ColinODell\PsrTestLogger\TestLogger;
+use DateTimeImmutable;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\API\Credentials;
@@ -34,13 +34,13 @@ use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
-use Tuleap\Tracker\Artifact\Closure\ClosingKeyword;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
+use Tuleap\Tracker\Artifact\Closure\ClosingKeyword;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;

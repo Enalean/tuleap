@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Semantic\Status;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Semantic;
-use Tracker_Semantic_StatusDao;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 
@@ -84,11 +83,11 @@ class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateS
     /**
      * Return the Dao
      *
-     * @return Tracker_Semantic_StatusDao The dao
+     * @return TrackerSemanticStatusDao The dao
      */
     public function getDao()
     {
-        return new Tracker_Semantic_StatusDao();
+        return new TrackerSemanticStatusDao();
     }
 
     /**

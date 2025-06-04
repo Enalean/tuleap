@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Closure;
 
-use PHPUnit\Framework\MockObject\Stub;
 use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\ReferenceInstance;

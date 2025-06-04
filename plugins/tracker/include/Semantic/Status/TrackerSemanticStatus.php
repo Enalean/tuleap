@@ -34,7 +34,6 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tracker_Semantic;
-use Tracker_Semantic_StatusDao;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
@@ -72,7 +71,7 @@ class TrackerSemanticStatus extends Tracker_Semantic
 
     private function getDao()
     {
-        return new Tracker_Semantic_StatusDao();
+        return new TrackerSemanticStatusDao();
     }
 
     /**
@@ -346,7 +345,7 @@ class TrackerSemanticStatus extends Tracker_Semantic
 
         $this->list_field  = null;
         $this->open_values = [];
-        $dao               = new Tracker_Semantic_StatusDao();
+        $dao               = new TrackerSemanticStatusDao();
         $dao->delete($this->tracker->getId());
     }
 
@@ -370,7 +369,7 @@ class TrackerSemanticStatus extends Tracker_Semantic
      */
     public function save()
     {
-        $dao         = new Tracker_Semantic_StatusDao();
+        $dao         = new TrackerSemanticStatusDao();
         $open_values = [];
         foreach ($this->open_values as $v) {
             if (is_scalar($v)) {
@@ -430,7 +429,7 @@ class TrackerSemanticStatus extends Tracker_Semantic
     {
         $field_id    = null;
         $open_values = [];
-        $dao         = new Tracker_Semantic_StatusDao();
+        $dao         = new TrackerSemanticStatusDao();
 
         foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {
             $field_id      = $row['field_id'];

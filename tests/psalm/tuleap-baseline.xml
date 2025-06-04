@@ -33139,6 +33139,37 @@
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
     </PossiblyNullArrayAccess>
   </file>
+  <file src="plugins/tracker/include/Semantic/Status/Done/SemanticDone.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addChild]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Status/Done/SemanticDoneDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$values]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Status/Done/SemanticDoneFactory.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $xml_semantic_status]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Status/Done/XML/XMLDoneSemantic.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addChild]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Status/StatusValuesCollection.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[reset($this->value_ids)]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[int]]></code>
+    </InvalidFalsableReturnType>
+  </file>
   <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatus.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$field]]></code>
@@ -33175,6 +33206,39 @@
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatusDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeIntImplode]]></code>
+      <code><![CDATA[escapeIntImplode]]></code>
+      <code><![CDATA[parent::__construct()]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieveFirstRow]]></code>
+      <code><![CDATA[retrieveIds]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$open_value_ids]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[save]]></code>
+      <code><![CDATA[searchByTrackerId]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$row['nb']]]></code>
+    </PossiblyInvalidArrayAccess>
+  </file>
   <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatusFactory.php">
     <PossiblyNullArrayAccess>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
@@ -33186,6 +33250,13 @@
       <code><![CDATA[! $from_status_field_id]]></code>
       <code><![CDATA[$to_status_field_id]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Status/XML/XMLStatusSemantic.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addChild]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitle.php">
     <MissingPropertyType>
@@ -45020,44 +45091,6 @@
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/SemanticDone.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/SemanticDoneDao.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$values]]></code>
-    </ArgumentTypeCoercion>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/SemanticDoneFactory.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $xml_semantic_status]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/XML/XMLDoneSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Status/StatusValuesCollection.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[reset($this->value_ids)]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[int]]></code>
-    </InvalidFalsableReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Status/XML/XMLStatusSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/Administration/SemanticTimeframeAdministrationPresenter.php">
     <PossiblyFalsePropertyAssignmentValue>
       <code><![CDATA[\json_encode($suitable_trackers)]]></code>
@@ -45331,39 +45364,6 @@
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByTrackerId]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidArrayAccess>
-      <code><![CDATA[$row['nb']]]></code>
-    </PossiblyInvalidArrayAccess>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/dao/Tracker_Semantic_StatusDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[retrieveIds]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$open_value_ids]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
@@ -66401,9 +66401,6 @@
     </UnsupportedPropertyReferenceUsage>
   </file>
   <file src="src/common/include/Codendi_Request.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[int]]></code>
-    </InvalidNullableReturnType>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$user]]></code>
       <code><![CDATA[UserManager::instance()->getCurrentUser()]]></code>
@@ -66438,15 +66435,9 @@
       <code><![CDATA[set]]></code>
       <code><![CDATA[setCurrentUser]]></code>
     </MissingReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </NullableReturnStatement>
     <PossiblyFalseArgument>
       <code><![CDATA[file_get_contents('php://input')]]></code>
     </PossiblyFalseArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/include/Codendi_UnifiedDiffFormatter.php">
     <MissingParamType>

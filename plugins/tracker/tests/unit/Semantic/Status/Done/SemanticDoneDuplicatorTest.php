@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
-use Tracker_Semantic_StatusDao;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -33,14 +33,14 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private SemanticDoneDao&MockObject $done_dao;
 
-    private Tracker_Semantic_StatusDao&MockObject $status_dao;
+    private TrackerSemanticStatusDao&MockObject $status_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->done_dao   = $this->createMock(SemanticDoneDao::class);
-        $this->status_dao = $this->createMock(Tracker_Semantic_StatusDao::class);
+        $this->status_dao = $this->createMock(TrackerSemanticStatusDao::class);
 
         $this->duplicator = new SemanticDoneDuplicator(
             $this->done_dao,

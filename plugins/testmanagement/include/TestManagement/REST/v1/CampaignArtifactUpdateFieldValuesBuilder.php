@@ -29,8 +29,8 @@ use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 

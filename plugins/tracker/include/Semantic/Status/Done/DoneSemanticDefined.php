@@ -1,9 +1,11 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU GeLneral Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
@@ -18,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Status;
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Tracker_FormElement_Field_List;
 
 /**
  * @psalm-immutable
  */
-class StatusSemanticDefined
+class DoneSemanticDefined
 {
     /**
      * @var Tracker_FormElement_Field_List
@@ -34,12 +36,12 @@ class StatusSemanticDefined
     /**
      * @var int[]
      */
-    private $open_values;
+    private $done_values;
 
-    public function __construct(Tracker_FormElement_Field_List $field, array $open_values)
+    public function __construct(Tracker_FormElement_Field_List $field, array $done_values)
     {
         $this->field       = $field;
-        $this->open_values = $open_values;
+        $this->done_values = $done_values;
     }
 
     public function getField(): Tracker_FormElement_Field_List
@@ -50,8 +52,8 @@ class StatusSemanticDefined
     /**
      * @return int[]
      */
-    public function getOpenValues(): array
+    public function getDoneValues(): array
     {
-        return $this->open_values;
+        return $this->done_values;
     }
 }
