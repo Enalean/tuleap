@@ -44948,11 +44948,6 @@
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Description/XML/XMLDescriptionSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Progress/MethodBasedOnEffort.php">
     <InvalidOperand>
       <code><![CDATA[1 - ($remaining_effort / $total_effort)]]></code>
@@ -48661,6 +48656,16 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
     </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/tests/integration/FormElement/Field/FieldDaoTest.php">
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[getRow]]></code>
+      <code><![CDATA[getRow]]></code>
+    </PossiblyInvalidMethodCall>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getRow]]></code>
+      <code><![CDATA[getRow]]></code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/tests/integration/Notifications/Settings/NotificationSettingsDuplicatorTest.php">
     <PossiblyInvalidArrayAccess>
