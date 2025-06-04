@@ -41,7 +41,7 @@ final class EventDescriptionRetriever implements RetrieveEventDescription
     ): Ok {
         $default = ServerHostname::HTTPSUrl() . $changeset->getArtifact()->getUri();
 
-        $description_field = \Tracker_Semantic_Description::load($changeset->getTracker())->getField();
+        $description_field = \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::load($changeset->getTracker())->getField();
         if (! $description_field) {
             $logger->debug('No semantic description for this tracker');
             return Result::ok($calendar_event_data->withDescription($default));

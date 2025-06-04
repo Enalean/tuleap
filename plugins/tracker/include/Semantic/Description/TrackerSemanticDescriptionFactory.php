@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic\Description;
+
+use SimpleXMLElement;
+use Tracker;
+use Tracker_Semantic;
 use Tuleap\Option\Option;
-use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
-use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetDescriptionSemantic
+class TrackerSemanticDescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetDescriptionSemantic
 {
     /**
      * Hold an instance of the class
@@ -41,14 +43,14 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            self::$instance = new self();
+             self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker): Tracker_Semantic_Description
+    public function getByTracker(Tracker $tracker): TrackerSemanticDescription
     {
-        return Tracker_Semantic_Description::load($tracker);
+        return TrackerSemanticDescription::load($tracker);
     }
 
     public function getInstanceFromXML(
@@ -64,7 +66,7 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
             return null;
         }
         $field = $xml_mapping[(string) $xml_field_attributes['REF']];
-        return new Tracker_Semantic_Description($tracker, $field);
+        return new TrackerSemanticDescription($tracker, $field);
     }
 
     /**

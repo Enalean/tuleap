@@ -1105,7 +1105,6 @@
             <file name="plugins/tracker/tests/unit/Semantic/Contributor/AdminPresenterBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/CreationSemanticToCheckTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Description/AdminPresenterBuilderTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/Description/Tracker_Semantic_DescriptionTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Progress/Administration/SemanticProgressAdminPresenterBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Progress/Events/GetSemanticProgressUsageTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Progress/InvalidMethodTest.php"/>

@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Artifact;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Description;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
@@ -36,12 +36,12 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactDescriptionProviderTest extends TestCase
 {
-    private Tracker_Semantic_Description&MockObject $semantic_description;
+    private TrackerSemanticDescription&MockObject $semantic_description;
     private ArtifactDescriptionProvider $provider;
 
     protected function setUp(): void
     {
-        $this->semantic_description = $this->createMock(Tracker_Semantic_Description::class);
+        $this->semantic_description = $this->createMock(TrackerSemanticDescription::class);
         $this->provider             = new ArtifactDescriptionProvider($this->semantic_description);
     }
 

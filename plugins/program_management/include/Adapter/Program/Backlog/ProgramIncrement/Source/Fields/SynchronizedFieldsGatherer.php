@@ -46,7 +46,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
     public function __construct(
         private RetrieveFullTracker $tracker_retriever,
         private \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory $title_factory,
-        private \Tracker_Semantic_DescriptionFactory $description_factory,
+        private \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory $description_factory,
         private \Tracker_Semantic_StatusFactory $status_factory,
         private SemanticTimeframeBuilder $timeframe_builder,
         private RetrieveFullArtifactLinkField $artifact_link_retriever,

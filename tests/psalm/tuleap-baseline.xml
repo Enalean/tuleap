@@ -33114,6 +33114,31 @@
       <code><![CDATA[function ($group_id) {]]></code>
     </MissingClosureReturnType>
   </file>
+  <file src="plugins/tracker/include/Semantic/Description/TrackerSemanticDescription.php">
+    <MissingPropertyType>
+      <code><![CDATA[$_instances]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[clearInstances]]></code>
+      <code><![CDATA[setInstance]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$text_field]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Description/TrackerSemanticDescriptionFactory.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+    </PossiblyNullArrayAccess>
+  </file>
   <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitle.php">
     <MissingPropertyType>
       <code><![CDATA[$_instances]]></code>
@@ -45237,31 +45262,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$to_contributor_field_id]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Description.php">
-    <MissingPropertyType>
-      <code><![CDATA[$_instances]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[clearInstances]]></code>
-      <code><![CDATA[setInstance]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$text_field]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_DescriptionFactory.php">
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-    </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Status.php">
     <ArgumentTypeCoercion>

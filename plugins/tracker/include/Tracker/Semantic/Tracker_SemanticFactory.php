@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
@@ -181,11 +182,11 @@ class Tracker_SemanticFactory
     /**
      * Returns an instance of Tracker_Semantic_TitleFactory
      *
-     * @return Tracker_Semantic_DescriptionFactory an instance of the factory
+     * @return TrackerSemanticDescriptionFactory an instance of the factory
      */
     public function getSemanticDescriptionFactory()
     {
-        return Tracker_Semantic_DescriptionFactory::instance();
+        return TrackerSemanticDescriptionFactory::instance();
     }
 
     /**

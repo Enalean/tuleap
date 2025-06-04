@@ -18,25 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Tracker\Semantic\Description;
 
 use SimpleXMLElement;
-use Tracker_Semantic_Description;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_Semantic_DescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerSemanticDescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var Tracker_Semantic_Description
-     */
-    private $semantic;
-    /**
-     * @var SimpleXMLElement
-     */
-    private $root;
+    private TrackerSemanticDescription $semantic;
+    private SimpleXMLElement $root;
 
     protected function setUp(): void
     {
@@ -45,10 +37,10 @@ class Tracker_Semantic_DescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()->build();
         $field   = TextFieldBuilder::aTextField(104)->build();
 
-        $this->semantic = new Tracker_Semantic_Description($tracker, $field);
+        $this->semantic = new TrackerSemanticDescription($tracker, $field);
     }
 
-    public function testExport()
+    public function testExport(): void
     {
         $array_xml_mapping = ['F14' => 104];
 
@@ -59,7 +51,7 @@ class Tracker_Semantic_DescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('description', $this->root->semantic->shortname);
     }
 
-    public function testItDoesNotExportIfFieldIsNotExported()
+    public function testItDoesNotExportIfFieldIsNotExported(): void
     {
         $this->root        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = [];

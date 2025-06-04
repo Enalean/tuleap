@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class AdminPresenterBuilderTest extends TestCase
 {
     private Tracker_FormElementFactory|\PHPUnit\Framework\MockObject\MockObject $form_element_factory;
-    private \Tracker_Semantic_Description $semantic_description;
+    private \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription $semantic_description;
     private CSRFSynchronizerToken $csrf_token;
     private AdminPresenterBuilder $presenter_builder;
     private \Tracker $tracker;
@@ -47,7 +47,7 @@ final class AdminPresenterBuilderTest extends TestCase
 
     public function testItBuildsAPresenterWhenNoFieldsArePossible(): void
     {
-        $semantic_description = new \Tracker_Semantic_Description($this->tracker, null);
+        $semantic_description = new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription($this->tracker, null);
         $this->form_element_factory->method('getUsedFormElementsByType')->willReturn([]);
         $presenter = $this->presenter_builder->build($semantic_description, $this->tracker, $this->csrf_token);
 
@@ -70,7 +70,7 @@ final class AdminPresenterBuilderTest extends TestCase
         $field_A = $this->getFieldWithIdAndLabel(1, 'field A');
         $field_B = $this->getFieldWithIdAndLabel(2, 'field B');
         $this->form_element_factory->method('getUsedFormElementsByType')->willReturn([$field_A, $field_B]);
-        $semantic_description = new \Tracker_Semantic_Description($this->tracker, null);
+        $semantic_description = new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription($this->tracker, null);
         $presenter            = $this->presenter_builder->build($semantic_description, $this->tracker, $this->csrf_token);
 
         self::assertEquals(
@@ -92,7 +92,7 @@ final class AdminPresenterBuilderTest extends TestCase
         $field_A = $this->getFieldWithIdAndLabel(1, 'field A');
         $field_B = $this->getFieldWithIdAndLabel(2, 'field B');
         $this->form_element_factory->method('getUsedFormElementsByType')->willReturn([$field_A, $field_B]);
-        $semantic_description = new \Tracker_Semantic_Description($this->tracker, $field_B);
+        $semantic_description = new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription($this->tracker, $field_B);
         $presenter            = $this->presenter_builder->build($semantic_description, $this->tracker, $this->csrf_token);
 
         self::assertEquals(

@@ -160,7 +160,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
             new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
-            new \Tracker_Semantic_DescriptionFactory(),
+            new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory(),
             new \Tracker_Semantic_StatusFactory(),
             new SemanticTimeframeBuilder(
                 new SemanticTimeframeDao(),

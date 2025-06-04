@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,10 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Option\Option;
-use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
+namespace Tuleap\Tracker\Semantic\Description;
 
-class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use Feedback;
+use PFUser;
+use SimpleXMLElement;
+use TemplateRendererFactory;
+use Tracker;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_Text;
+use Tracker_FormElementFactory;
+use Tracker_Semantic;
+use Tracker_SemanticManager;
+use TrackerManager;
+use Tuleap\Option\Option;
+
+class TrackerSemanticDescription extends Tracker_Semantic
 {
     public const NAME = 'description';
 
@@ -33,7 +47,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
     /**
      * Cosntructor
      *
-     * @param Tracker                        $tracker    The tracker
+     * @param Tracker $tracker The tracker
      * @param Tracker_FormElement_Field_Text $text_field The field
      */
     public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_Text $text_field = null)
@@ -49,7 +63,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
      */
     public function getShortName()
     {
-        return self::NAME;
+         return self::NAME;
     }
 
     /**
@@ -194,11 +208,9 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
     }
 
     protected static $_instances; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+
     /**
-     * Load an instance of a Tracker_Semantic_Description
-     *
-     *
-     * @return Tracker_Semantic_Description
+     * @return TrackerSemanticDescription
      */
     public static function load(Tracker $tracker)
     {
@@ -208,7 +220,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
         }
         $dao                           = new DescriptionSemanticDAO();
         $field                         = $dao->searchByTrackerId($tracker_id)
-            ->andThen(static fn (int $field_id) => Option::fromNullable(
+            ->andThen(static fn(int $field_id) => Option::fromNullable(
                 Tracker_FormElementFactory::instance()->getFieldById($field_id)
             ))->unwrapOr(null);
         self::$_instances[$tracker_id] = new self($tracker, $field);
@@ -218,8 +230,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
     /**
      * Export semantic to XML
      *
-     * @param SimpleXMLElement &$root      the node to which the semantic is attached (passed by reference)
-     * @param array            $xml_mapping correspondance between real ids and xml IDs
+     * @param SimpleXMLElement &$root the node to which the semantic is attached (passed by reference)
+     * @param array $xml_mapping correspondance between real ids and xml IDs
      *
      * @return void
      */
@@ -236,7 +248,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
         }
     }
 
-     /**
+    /**
      * Is the field used in semantics?
      *
      * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
@@ -251,7 +263,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic //phpcs:ignore PSR1.
     /**
      * Allows to inject a fake Semantic for tests. DO NOT USE IT IN PRODUCTION!
      */
-    public static function setInstance(Tracker_Semantic_Description $description, Tracker $tracker)
+    public static function setInstance(TrackerSemanticDescription $description, Tracker $tracker)
     {
         self::$_instances[$tracker->getId()] = $description;
     }

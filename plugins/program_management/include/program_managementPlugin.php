@@ -504,7 +504,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
             new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
-            new \Tracker_Semantic_DescriptionFactory(),
+            new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory(),
             $semantic_status_factory,
             new SemanticTimeframeBuilder(
                 $timeframe_dao,
@@ -1501,7 +1501,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
             new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
-            new \Tracker_Semantic_DescriptionFactory(),
+            new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory(),
             $semantic_status_factory,
             new SemanticTimeframeBuilder(
                 $timeframe_dao,
