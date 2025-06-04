@@ -118,6 +118,8 @@ export type PrettyTitleSelectableRepresentation = {
 
 export type ArtifactSelectableRepresentation = {
     readonly uri: string;
+    readonly number_of_forward_link: number;
+    readonly number_of_reverse_link: number;
 };
 
 export type SelectableRepresentation =

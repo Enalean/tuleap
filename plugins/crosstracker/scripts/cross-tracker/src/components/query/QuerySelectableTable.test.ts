@@ -24,7 +24,7 @@ import { Option } from "@tuleap/option";
 import { nextTick } from "vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
-import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL, PRETTY_TITLE_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
@@ -41,6 +41,7 @@ import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
 import SelectablePagination from "../selectable-table/SelectablePagination.vue";
+import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 
 vi.useFakeTimers();
 
@@ -259,6 +260,56 @@ describe(`SelectableTable`, () => {
             await vi.runOnlyPendingTimersAsync();
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(SelectablePagination).exists()).toBe(false);
+        });
+        describe("Header column name classes", () => {
+            it("should add the additional classes to the header column name, if it is a @pretty_title column or if it is the last cell of row", async () => {
+                const table = new ArtifactsTableBuilder()
+                    .withColumn(PRETTY_TITLE_COLUMN_NAME)
+                    .withColumn(NUMERIC_COLUMN_NAME)
+                    .withArtifactRow(
+                        new ArtifactRowBuilder()
+                            .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                                type: PRETTY_TITLE_CELL,
+                                title: "earthmaking",
+                                tracker_name: "lifesome",
+                                artifact_id: 512,
+                                color: "inca-silver",
+                            })
+                            .addCell(NUMERIC_COLUMN_NAME, {
+                                type: NUMERIC_CELL,
+                                value: Option.fromValue(74),
+                            })
+                            .build(),
+                    )
+                    .build();
+
+                const table_result = {
+                    table,
+                    total: 1,
+                };
+                const table_retriever = RetrieveArtifactsTableStub.withContent(
+                    table_result,
+                    table_result,
+                    [table_result.table],
+                );
+
+                const wrapper = getWrapper(table_retriever);
+
+                await vi.runOnlyPendingTimersAsync();
+
+                const headers_classes = wrapper
+                    .findAll("[data-test=column-header]")
+                    .map((header) => header.classes());
+
+                expect(headers_classes[0]).toContain("is-pretty-title-column");
+                expect(headers_classes[0]).toContain("headers-cell");
+
+                expect(headers_classes[1]).toContain("is-last-cell-of-row");
+                expect(headers_classes[1]).toContain("headers-cell");
+                expect(headers_classes[1]).not.toContain("is-pretty-title-column");
+
+                expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(2);
+            });
         });
     });
 });

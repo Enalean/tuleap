@@ -25,7 +25,7 @@
             class="pretty-title-caret"
             v-bind:class="caret_class"
             aria-hidden="true"
-            data-test="pretty-title-cell-artifact-link"
+            data-test="pretty-title-caret"
         ></i>
         <a v-bind:href="props.artifact_uri" class="link"
             ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
@@ -46,9 +46,16 @@ const can_display_artifact_link = strictInject(CAN_DISPLAY_ARTIFACT_LINK);
 const props = defineProps<{
     cell: Cell | undefined;
     artifact_uri: string;
+    number_of_forward_link: number;
+    number_of_reverse_link: number;
 }>();
 
+const has_artifact_links = props.number_of_forward_link > 0 || props.number_of_reverse_link > 0;
+
 const caret_class = computed((): string => {
+    if (!has_artifact_links) {
+        return "fa-fw fa-solid fa-caret-right hidden-caret";
+    }
     return "fa-fw fa-solid fa-caret-right";
 });
 
@@ -59,6 +66,7 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 <style scoped lang="scss">
 @use "../../../themes/links";
 @use "../../../themes/badges";
+@use "../../../themes/pretty-title";
 
 .link {
     @include links.link;
@@ -70,7 +78,11 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 
 .pretty-title-caret {
     flex-shrink: 0;
-    margin: 0 5px 0 0;
+    margin: 0 pretty-title.$caret-margin-right 0 0;
     color: var(--tlp-dimmed-color);
+}
+
+.hidden-caret {
+    visibility: hidden;
 }
 </style>

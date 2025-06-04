@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$padding-cell-template: calc(
-    8px - 4px * var(--tlp-is-condensed)
-); // Match empty cells 32px height (or 24px in condensed mode)
+@use "cell";
 
-@mixin cell-template {
-    display: flex;
-    align-items: center;
-    padding: $padding-cell-template;
-}
+$caret-width: 17.5px;
+$caret-margin-right: 5px;
+$caret-total-width: calc(#{$caret-width} + #{$caret-margin-right});
 
-.even-row {
-    background: var(--tlp-table-row-background-even);
-}
-
-.odd-row {
-    background: var(--tlp-table-row-background-odd);
+@mixin is-pretty-title-column {
+    padding: cell.$padding-cell-template cell.$padding-cell-template cell.$padding-cell-template
+        calc(#{$caret-total-width} + #{cell.$padding-cell-template});
 }

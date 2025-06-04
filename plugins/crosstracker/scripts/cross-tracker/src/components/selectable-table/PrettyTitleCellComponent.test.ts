@@ -28,10 +28,14 @@ import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
 describe("PrettyTitleCellComponent", () => {
     let artifact_uri: string;
     let can_display_artifact_link: boolean;
+    let number_of_forward_link: number;
+    let number_of_reverse_link: number;
 
     beforeEach(() => {
         artifact_uri = "/plugins/tracker/?aid=286";
-        can_display_artifact_link = false;
+        can_display_artifact_link = true;
+        number_of_forward_link = 0;
+        number_of_reverse_link = 0;
     });
 
     const getWrapper = (): VueWrapper<InstanceType<typeof PrettyTitleCellComponent>> => {
@@ -51,6 +55,8 @@ describe("PrettyTitleCellComponent", () => {
                     color: "coral-pink",
                 },
                 artifact_uri,
+                number_of_forward_link,
+                number_of_reverse_link,
             },
         });
     };
@@ -64,17 +70,35 @@ describe("PrettyTitleCellComponent", () => {
 
     describe("Feature flag", () => {
         it("when the feature flag is enabled, it should renders artifact link", () => {
-            can_display_artifact_link = true;
             const wrapper = getWrapper();
 
-            expect(wrapper.find("[data-test=pretty-title-cell-artifact-link]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=pretty-title-caret]").exists()).toBe(true);
         });
 
         it("when the feature flag is disabled, it should NOT renders artifact link", () => {
+            can_display_artifact_link = false;
             const wrapper = getWrapper();
 
-            expect(wrapper.find("[data-test=pretty-title-cell-artifact-link]").exists()).toBe(
-                false,
+            expect(wrapper.find("[data-test=pretty-title-caret]").exists()).toBe(false);
+        });
+    });
+
+    describe("Caret display", () => {
+        it("should hide the caret, when artifact has no links ", () => {
+            const wrapper = getWrapper();
+
+            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(
+                "hidden-caret",
+            );
+        });
+
+        it("should not hide the caret, when artifact has links", () => {
+            number_of_forward_link = 2;
+            number_of_reverse_link = 1;
+            const wrapper = getWrapper();
+
+            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).not.toContain(
+                "hidden-caret",
             );
         });
     });

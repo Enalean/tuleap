@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata;
 
 use LogicException;
+use PFUser;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\ArtifactRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
@@ -37,7 +38,7 @@ final readonly class ArtifactResultBuilder
     ) {
     }
 
-    public function getResult(array $select_results): SelectedValuesCollection
+    public function getResult(array $select_results, PFUser $user): SelectedValuesCollection
     {
         $values = [];
 
@@ -51,7 +52,13 @@ final readonly class ArtifactResultBuilder
             if ($artifact === null) {
                 throw new LogicException("Artifact #$id not found");
             }
-            $values[$id] = new SelectedValue('@artifact', new ArtifactRepresentation($artifact->getUri()));
+            $number_of_forward_link = count($artifact->getLinkedArtifacts($user));
+            $number_of_reverse_link = count($artifact->getLinkedAndReverseArtifacts($user)) - $number_of_forward_link;
+            $values[$id]            = new SelectedValue('@artifact', new ArtifactRepresentation(
+                $artifact->getUri(),
+                $number_of_forward_link,
+                $number_of_reverse_link,
+            ));
         }
 
         return new SelectedValuesCollection(

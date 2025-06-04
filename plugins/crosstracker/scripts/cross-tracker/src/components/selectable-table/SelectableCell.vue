@@ -81,6 +81,8 @@
             v-if="props.cell.type === PRETTY_TITLE_CELL"
             v-bind:cell="cell"
             v-bind:artifact_uri="artifact_uri"
+            v-bind:number_of_forward_link="number_of_forward_link"
+            v-bind:number_of_reverse_link="number_of_reverse_link"
             class="cell"
             v-bind:class="getCommonClasses()"
             data-test="cell"
@@ -128,6 +130,8 @@ const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 const props = defineProps<{
     cell: Cell | undefined;
     artifact_uri: string;
+    number_of_forward_link: number;
+    number_of_reverse_link: number;
     even: boolean;
     last_of_row: boolean;
 }>();

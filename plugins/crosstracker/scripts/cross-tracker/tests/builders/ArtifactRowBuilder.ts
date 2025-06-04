@@ -20,7 +20,12 @@
 import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
 
 export class ArtifactRowBuilder {
-    #row: ArtifactRow = { uri: "/plugins/tracker/?aid=698", cells: new Map() };
+    #row: ArtifactRow = {
+        number_of_forward_link: 2,
+        number_of_reverse_link: 1,
+        uri: "/plugins/tracker/?aid=698",
+        cells: new Map(),
+    };
 
     public addCell(column_name: string, cell: Cell): this {
         this.#row.cells.set(column_name, cell);

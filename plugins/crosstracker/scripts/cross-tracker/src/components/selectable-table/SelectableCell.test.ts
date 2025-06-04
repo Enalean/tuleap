@@ -64,6 +64,8 @@ describe(`SelectableCell`, () => {
             props: {
                 cell,
                 artifact_uri,
+                number_of_forward_link: 3,
+                number_of_reverse_link: 1,
                 even: is_even,
                 last_of_row: is_last_of_row,
             },

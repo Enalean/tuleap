@@ -72,15 +72,26 @@ final class ArtifactSelectTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_MEMBERS
         );
 
+        $sprint_artifact_link_field_id = $tracker_builder->buildArtifactLinkField($sprint_tracker->getId());
+        $tracker_builder->grantReadPermissionOnField($sprint_artifact_link_field_id, ProjectUGroup::PROJECT_MEMBERS);
+
         $release_artifact_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
 
-        $tracker_builder->buildLastChangeset($release_artifact_id);
+        $release_artifact_changeset_id = $tracker_builder->buildLastChangeset($release_artifact_id);
         $tracker_builder->buildLastChangeset($sprint_artifact_id);
 
+        $tracker_builder->buildArtifactLinkValue(
+            $project_id,
+            $release_artifact_changeset_id,
+            $sprint_artifact_link_field_id,
+            $sprint_artifact_id,
+            '',
+        );
+
         $this->expected_results = [
-            $release_artifact_id => new ArtifactRepresentation("/plugins/tracker/?aid=$release_artifact_id"),
-            $sprint_artifact_id  => new ArtifactRepresentation("/plugins/tracker/?aid=$sprint_artifact_id"),
+            $release_artifact_id => new ArtifactRepresentation("/plugins/tracker/?aid=$release_artifact_id", 0, 0),
+            $sprint_artifact_id  => new ArtifactRepresentation("/plugins/tracker/?aid=$sprint_artifact_id", 1, 0),
         ];
     }
 

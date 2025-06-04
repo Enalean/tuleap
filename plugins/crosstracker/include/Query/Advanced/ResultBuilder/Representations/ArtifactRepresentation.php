@@ -31,6 +31,8 @@ final readonly class ArtifactRepresentation implements SelectedValueRepresentati
 {
     public function __construct(
         public string $uri,
+        public int $number_of_forward_link,
+        public int $number_of_reverse_link,
     ) {
     }
 }
