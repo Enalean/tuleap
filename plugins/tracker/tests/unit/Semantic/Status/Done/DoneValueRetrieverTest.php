@@ -27,10 +27,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
-use Tracker_Semantic_Status;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\TrackerColor;
@@ -44,7 +44,7 @@ final class DoneValueRetrieverTest extends TestCase
     private SemanticDoneFactory&MockObject $semantic_done_factory;
     private Tracker $tracker;
     private Artifact $artifact;
-    private Tracker_Semantic_Status $semantic_status;
+    private TrackerSemanticStatus $semantic_status;
     private PFUser $user;
     private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
 
@@ -161,7 +161,7 @@ final class DoneValueRetrieverTest extends TestCase
             ->willReturn(
                 new SemanticDone(
                     $this->tracker,
-                    new Tracker_Semantic_Status(
+                    new TrackerSemanticStatus(
                         $this->tracker,
                         null,
                         []
@@ -177,7 +177,7 @@ final class DoneValueRetrieverTest extends TestCase
     {
         $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             []
@@ -190,7 +190,7 @@ final class DoneValueRetrieverTest extends TestCase
             ->willReturn(
                 new SemanticDone(
                     $this->tracker,
-                    new Tracker_Semantic_Status(
+                    new TrackerSemanticStatus(
                         $this->tracker,
                         $field,
                         []
@@ -225,7 +225,7 @@ final class DoneValueRetrieverTest extends TestCase
                 45 => $hidden_done_value,
             ]);
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             [45]
@@ -238,7 +238,7 @@ final class DoneValueRetrieverTest extends TestCase
             ->willReturn(
                 new SemanticDone(
                     $this->tracker,
-                    new Tracker_Semantic_Status(
+                    new TrackerSemanticStatus(
                         $this->tracker,
                         $field,
                         [45]
@@ -275,7 +275,7 @@ final class DoneValueRetrieverTest extends TestCase
                 45 => $done_value,
             ]);
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             [45]
@@ -319,7 +319,7 @@ final class DoneValueRetrieverTest extends TestCase
                 45 => $value2,
             ]);
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             [45]

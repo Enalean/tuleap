@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Value;
-use Tracker_Semantic_Status;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class SemanticDoneValueChecker
 {
@@ -33,7 +33,7 @@ class SemanticDoneValueChecker
      */
     public function isValueAPossibleDoneValue(
         Tracker_FormElement_Field_List_Value $value,
-        Tracker_Semantic_Status $semantic_status,
+        TrackerSemanticStatus $semantic_status,
     ) {
         return $this->isValueNotOpenAndVisible($value, $semantic_status->getOpenValues());
     }

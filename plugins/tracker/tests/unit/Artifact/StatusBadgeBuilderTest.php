@@ -31,10 +31,10 @@ final class StatusBadgeBuilderTest extends TestCase
 {
     public function testEmptyArrayWhenSemanticStatusIsNotDefined(): void
     {
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn(null);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $status_factory->method('getByTracker')->willReturn($semantic_status);
 
         $builder = new StatusBadgeBuilder($status_factory);
@@ -55,10 +55,10 @@ final class StatusBadgeBuilderTest extends TestCase
         $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
         $field->method('userCanRead')->willReturn(false);
 
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn($field);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $status_factory->method('getByTracker')->willReturn($semantic_status);
 
         $builder = new StatusBadgeBuilder($status_factory);
@@ -79,11 +79,11 @@ final class StatusBadgeBuilderTest extends TestCase
         $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
         $field->method('userCanRead')->willReturn(true);
 
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn($field);
         $semantic_status->method('isFieldBoundToStaticValues')->willReturn(false);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $status_factory->method('getByTracker')->willReturn($semantic_status);
 
         $builder = new StatusBadgeBuilder($status_factory);
@@ -106,11 +106,11 @@ final class StatusBadgeBuilderTest extends TestCase
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([]);
 
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn($field);
         $semantic_status->method('isFieldBoundToStaticValues')->willReturn(true);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $status_factory->method('getByTracker')->willReturn($semantic_status);
 
         $builder = new StatusBadgeBuilder($status_factory);
@@ -138,11 +138,11 @@ final class StatusBadgeBuilderTest extends TestCase
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([]);
 
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn($field);
         $semantic_status->method('isFieldBoundToStaticValues')->willReturn(true);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $status_factory->method('getByTracker')->willReturn($semantic_status);
 
         $builder = new StatusBadgeBuilder($status_factory);
@@ -187,11 +187,11 @@ final class StatusBadgeBuilderTest extends TestCase
             2002 => new \Tracker_FormElement_Field_List_BindDecorator(1100, 2002, null, null, null, 'fiesta-red'),
         ]);
 
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn($field);
         $semantic_status->method('isFieldBoundToStaticValues')->willReturn(true);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $status_factory->method('getByTracker')->willReturn($semantic_status);
 
         $builder = new StatusBadgeBuilder($status_factory);

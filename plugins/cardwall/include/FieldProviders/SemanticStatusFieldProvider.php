@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
+
 /**
  * Retrieves the semantic status field of the given artifact
  */
-class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Retrieves the semantic status field of the given artifact
@@ -30,7 +32,7 @@ class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_F
      */
     public function getField(Tracker $tracker)
     {
-        $field = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+        $field = TrackerSemanticStatusFactory::instance()->getByTracker($tracker)->getField();
         assert(
             $field instanceof Tracker_FormElement_Field_Selectbox ||
             $field === null

@@ -26,9 +26,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_String;
-use Tracker_Semantic_Status;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
@@ -48,7 +48,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_FormElement_Field_List $field_list;
     private Tracker $tracker;
     private MockObject&TrackerSemanticTitle $semantic_title;
-    private Tracker_Semantic_Status&MockObject $semantic_status;
+    private TrackerSemanticStatus&MockObject $semantic_status;
     private VerifySubmissionPermissionStub $verify_submission_permissions;
     private \PFUser $user;
 
@@ -64,10 +64,10 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->semantic_title  = $this->createMock(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::class);
-        $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
 
         TrackerSemanticTitle::setInstance($this->semantic_title, $this->tracker);
-        Tracker_Semantic_Status::setInstance($this->semantic_status, $this->tracker);
+        TrackerSemanticStatus::setInstance($this->semantic_status, $this->tracker);
         $this->verify_submission_permissions = VerifySubmissionPermissionStub::withSubmitPermission();
 
         $this->user = UserTestBuilder::anActiveUser()
@@ -79,7 +79,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        Tracker_Semantic_Status::clearInstances();
+        TrackerSemanticStatus::clearInstances();
         parent::tearDown();
     }
 

@@ -75,7 +75,6 @@ use Tracker_IDisplayTrackerLayout;
 use Tracker_NoChangeException;
 use Tracker_Permission_PermissionChecker;
 use Tracker_Semantic_Contributor;
-use Tracker_Semantic_Status;
 use TrackerFactory;
 use trackerPlugin;
 use TransitionFactory;
@@ -165,6 +164,7 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
@@ -790,7 +790,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function isOpen(): bool
     {
         if ($this->is_open === null) {
-            $this->is_open = Tracker_Semantic_Status::load($this->getTracker())->isOpen($this);
+            $this->is_open = TrackerSemanticStatus::load($this->getTracker())->isOpen($this);
         }
         return $this->is_open;
     }
@@ -802,7 +802,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
     public function isOpenAtGivenChangeset(Tracker_Artifact_Changeset $changeset)
     {
-        return Tracker_Semantic_Status::load($this->getTracker())->isOpenAtGivenChangeset($changeset);
+        return TrackerSemanticStatus::load($this->getTracker())->isOpenAtGivenChangeset($changeset);
     }
 
     /**
@@ -1113,7 +1113,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $presenters = [];
         foreach ($this->getChildrenForUser($current_user) as $child) {
             $tracker   = $child->getTracker();
-            $semantics = Tracker_Semantic_Status::load($tracker);
+            $semantics = TrackerSemanticStatus::load($tracker);
 
             $presenters[] = new Tracker_ArtifactChildPresenter(
                 $child,

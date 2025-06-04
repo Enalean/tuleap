@@ -32,7 +32,7 @@ final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SemanticDoneValueChecker&MockObject $value_checker;
     private SemanticDoneDao&MockObject $dao;
-    private \Tracker_Semantic_Status&MockObject $semantic_status;
+    private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus&MockObject $semantic_status;
     private Tracker $tracker;
     private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
     private Tracker_FormElement_Field_List_Bind_StaticValue $on_going_value;
@@ -45,7 +45,7 @@ final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->done_value     =            ListStaticValueBuilder::aStaticValue('done')->withId(3)->build();
 
         $this->tracker         = TrackerTestBuilder::aTracker()->build();
-        $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $this->dao             = $this->createMock(SemanticDoneDao::class);
         $this->value_checker   = $this->createMock(SemanticDoneValueChecker::class);
     }

@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\RealTimeMercure;
 
-use Tuleap\Kanban\KanbanItemDao;
 use Tracker_Artifact_ChangesetFactory;
-use Tracker_Semantic_Status;
 use Tuleap\Kanban\ColumnIdentifier;
+use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class KanbanArtifactMessageBuilderMercure
 {
@@ -47,7 +47,7 @@ class KanbanArtifactMessageBuilderMercure
     /**
      * @throws RealTimeArtifactMessageException
      */
-    public function buildArtifactMoved(Artifact $artifact, Tracker_Semantic_Status $tracker_semantic): ?KanbanArtifactMovedMessageRepresentationMercure
+    public function buildArtifactMoved(Artifact $artifact, TrackerSemanticStatus $tracker_semantic): ?KanbanArtifactMovedMessageRepresentationMercure
     {
         $status_field = $tracker_semantic->getField();
 
@@ -100,7 +100,7 @@ class KanbanArtifactMessageBuilderMercure
     /**
      * @throws RealTimeArtifactMessageException
      */
-    public function buildArtifactReordered(Artifact $artifact, Tracker_Semantic_Status $tracker_semantic): ?KanbanArtifactMovedMessageRepresentationMercure
+    public function buildArtifactReordered(Artifact $artifact, TrackerSemanticStatus $tracker_semantic): ?KanbanArtifactMovedMessageRepresentationMercure
     {
         $status_field = $tracker_semantic->getField();
 

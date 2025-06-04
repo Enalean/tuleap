@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 /**
@@ -212,7 +213,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
         foreach ($artifacts as $artifact) {
             $artifact_id = $artifact->getId();
 
-            if (! isset($semantics[$artifact_id]) || ! isset($semantics[$artifact_id][Tracker_Semantic_Status::NAME])) {
+            if (! isset($semantics[$artifact_id]) || ! isset($semantics[$artifact_id][TrackerSemanticStatus::NAME])) {
                 continue;
             }
 
@@ -221,7 +222,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirection_url, false);
             $backlog_item->setStatus(
                 $artifact->getStatus(),
-                $semantics[$artifact_id][Tracker_Semantic_Status::NAME] === 1 ? Tracker_Semantic_Status::OPEN : Tracker_Semantic_Status::CLOSED
+                $semantics[$artifact_id][TrackerSemanticStatus::NAME] === 1 ? TrackerSemanticStatus::OPEN : TrackerSemanticStatus::CLOSED
             );
             if (isset($parents[$artifact_id]) && $parents[$artifact_id]->userCanView($user)) {
                 $backlog_item->setParent($parents[$artifact_id]);
@@ -409,7 +410,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
         $semantics         = [];
         $allowed_semantics = [
             TrackerSemanticTitle::NAME,
-            Tracker_Semantic_Status::NAME,
+            TrackerSemanticStatus::NAME,
         ];
 
         foreach ($this->dao->getArtifactsSemantics($backlog_item_ids, $allowed_semantics) as $row) {
@@ -441,9 +442,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
      */
     private function setStatusSemantic(PFUser $user, Artifact $artifact, Tracker $tracker, array $row, array &$semantics): void
     {
-        $semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] = '';
+        $semantics[$artifact->getId()][TrackerSemanticStatus::NAME] = '';
         if ($this->userCanReadBacklogStatusField($user, $tracker)) {
-            $semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] = $row[Tracker_Semantic_Status::NAME];
+            $semantics[$artifact->getId()][TrackerSemanticStatus::NAME] = $row[TrackerSemanticStatus::NAME];
         }
     }
 
@@ -492,7 +493,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
     {
         if (! isset($this->cache_read_status[$tracker->getId()])) {
             $this->cache_read_status[$tracker->getId()] = false;
-            $field                                      = Tracker_Semantic_Status::load($tracker)->getField();
+            $field                                      = TrackerSemanticStatus::load($tracker)->getField();
             if ($field) {
                 $this->cache_read_status[$tracker->getId()] = $field->userCanRead($user);
             }
@@ -569,8 +570,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
     ): void {
         $artifact_id = $artifact->getId();
 
-        if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] == BacklogItemDao::STATUS_OPEN) {
-            $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::OPEN);
+        if ($semantics[$artifact_id][TrackerSemanticStatus::NAME] == BacklogItemDao::STATUS_OPEN) {
+            $backlog_item->setStatus($artifact->getStatus(), TrackerSemanticStatus::OPEN);
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
             $backlog_item->setRemainingEffort(
@@ -592,8 +593,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
             $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item->getArtifact())
         );
 
-        if ($semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] != BacklogItemDao::STATUS_OPEN) {
-            $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::CLOSED);
+        if ($semantics[$artifact->getId()][TrackerSemanticStatus::NAME] != BacklogItemDao::STATUS_OPEN) {
+            $backlog_item->setStatus($artifact->getStatus(), TrackerSemanticStatus::CLOSED);
             $this->done_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
         }
     }
@@ -798,7 +799,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
             $artifact->setTitle($this->artifact_factory->getTitleFromRowAsText($semantics[$artifact_id]));
 
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirection_url, false);
-            $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::OPEN);
+            $backlog_item->setStatus($artifact->getStatus(), TrackerSemanticStatus::OPEN);
             if (isset($parents[$artifact_id]) && $parents[$artifact_id]->userCanView($user)) {
                 $backlog_item->setParent($parents[$artifact_id]);
             }

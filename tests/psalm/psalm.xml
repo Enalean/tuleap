@@ -1127,8 +1127,8 @@
             <file name="plugins/tracker/tests/unit/Semantic/Status/StatusValueProviderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Status/StatusValueRetrieverTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Status/StatusValuesCollectionTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/Status/Tracker_Semantic_StatusFactoryTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/Status/Tracker_Semantic_StatusTest.php"/>
+            <file name="plugins/tracker/tests/unit/Semantic/Status/TrackerSemanticStatusFactoryTest.php"/>
+            <file name="plugins/tracker/tests/unit/Semantic/Status/TrackerSemanticStatusTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Timeframe/Administration/SemanticTimeframeCurrentConfigurationPresenterBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Timeframe/ArtifactTimeframeHelperTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Timeframe/SemanticTimeframeBuilderTest.php"/>

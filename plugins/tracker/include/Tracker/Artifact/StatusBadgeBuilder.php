@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact;
 
 final class StatusBadgeBuilder
 {
-    public function __construct(private \Tracker_Semantic_StatusFactory $status_factory)
+    public function __construct(private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory $status_factory)
     {
     }
 

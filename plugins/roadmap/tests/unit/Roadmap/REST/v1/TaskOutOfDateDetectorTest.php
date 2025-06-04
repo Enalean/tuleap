@@ -42,7 +42,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 final class TaskOutOfDateDetectorTest extends TestCase
 {
     private TaskOutOfDateDetector $detector;
-    private MockObject&\Tracker_Semantic_Status $semantic_status;
+    private MockObject&\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus $semantic_status;
     private Artifact $artifact;
     private \Tracker_FormElement_Field_List&MockObject $status_field;
     private LoggerInterface&MockObject $logger;
@@ -64,7 +64,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->status_field->method('getId')->willReturn(365);
 
-        $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $this->semantic_status->method('getOpenValues')->willReturn([self::TODO_VALUE_ID, self::ON_GOING_VALUE_ID]);
 
         $this->timeframe_calculator = $this->createMock(TimeframeWithEndDate::class);

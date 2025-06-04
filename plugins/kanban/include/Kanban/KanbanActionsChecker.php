@@ -24,10 +24,10 @@ namespace Tuleap\Kanban;
 
 use PFUser;
 use Tracker;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\RetrieveTracker;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 class KanbanActionsChecker
@@ -167,9 +167,9 @@ class KanbanActionsChecker
         return $tracker;
     }
 
-    public function getSemanticStatus(Tracker $tracker): Tracker_Semantic_Status
+    public function getSemanticStatus(Tracker $tracker): TrackerSemanticStatus
     {
-        $semantic = Tracker_Semantic_Status::load($tracker);
+        $semantic = TrackerSemanticStatus::load($tracker);
 
         if (! $semantic->getFieldId()) {
             throw new KanbanSemanticStatusNotDefinedException();

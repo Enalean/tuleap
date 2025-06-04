@@ -26,7 +26,6 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_BindValue;
-use Tracker_Semantic_Status;
 
 class StatusValueForChangesetProvider
 {
@@ -58,8 +57,8 @@ class StatusValueForChangesetProvider
         return current($values);
     }
 
-    protected function loadSemantic(Tracker_Artifact_Changeset $changeset): Tracker_Semantic_Status
+    protected function loadSemantic(Tracker_Artifact_Changeset $changeset): TrackerSemanticStatus
     {
-        return Tracker_Semantic_Status::load($changeset->getArtifact()->getTracker());
+        return TrackerSemanticStatus::load($changeset->getArtifact()->getTracker());
     }
 }

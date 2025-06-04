@@ -26,8 +26,6 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_List_BindValue;
-use Tracker_Semantic_Status;
-use Tracker_Semantic_StatusFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -43,10 +41,10 @@ use function PHPUnit\Framework\assertSame;
 final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusValueRetriever $retriever;
-    private Tracker_Semantic_StatusFactory&MockObject $semantic_status_factory;
+    private TrackerSemanticStatusFactory&MockObject $semantic_status_factory;
     private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
     private Artifact $artifact;
-    private Tracker_Semantic_Status $semantic_status;
+    private TrackerSemanticStatus $semantic_status;
     private PFUser $user;
     private Tracker $tracker;
 
@@ -58,7 +56,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
         $this->artifact = ArtifactTestBuilder::anArtifact(112)->inTracker($this->tracker)->build();
 
-        $this->semantic_status_factory        = $this->createMock(Tracker_Semantic_StatusFactory::class);
+        $this->semantic_status_factory        = $this->createMock(TrackerSemanticStatusFactory::class);
         $this->first_possible_value_retriever = $this->createMock(FirstPossibleValueInListRetriever::class);
 
         $this->retriever = new StatusValueRetriever(
@@ -226,7 +224,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
-                new Tracker_Semantic_Status(
+                new TrackerSemanticStatus(
                     $this->tracker,
                     null,
                     []
@@ -243,7 +241,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
-                new Tracker_Semantic_Status(
+                new TrackerSemanticStatus(
                     $this->tracker,
                     $field,
                     []
@@ -267,7 +265,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getByTracker')
             ->with($this->tracker)
             ->willReturn(
-                new Tracker_Semantic_Status(
+                new TrackerSemanticStatus(
                     $this->tracker,
                     $field,
                     [44, 45]
@@ -286,7 +284,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             45 => 'b',
         ])->build()->getField();
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             []
@@ -316,7 +314,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->build()->getField();
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             [44]
@@ -346,7 +344,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->build()->getField();
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             [45]
@@ -373,7 +371,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->build()->getField();
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             [44]
@@ -400,7 +398,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->build()->getField();
 
-        $this->semantic_status = new Tracker_Semantic_Status(
+        $this->semantic_status = new TrackerSemanticStatus(
             $this->tracker,
             $field,
             [44]

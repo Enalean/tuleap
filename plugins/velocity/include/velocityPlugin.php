@@ -27,6 +27,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Workflow\BeforeEvent;
@@ -159,7 +160,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function beforeEvent(BeforeEvent $before_event): void
     {
         $tracker         = $before_event->getArtifact()->getTracker();
-        $semantic_status = Tracker_Semantic_Status::load($tracker);
+        $semantic_status = TrackerSemanticStatus::load($tracker);
         $field           = $semantic_status->getField();
         if (! $field || $field->isMultiple()) {
             return;
@@ -172,7 +173,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $tracker = $before_event->getArtifact()->getTracker();
 
-        $semantic_status   = Tracker_Semantic_Status::load($tracker);
+        $semantic_status   = TrackerSemanticStatus::load($tracker);
         $semantic_done     = SemanticDone::load($tracker);
         $semantic_velocity = SemanticVelocity::load($tracker);
 

@@ -272,6 +272,7 @@ use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
@@ -491,7 +492,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $user_manager_adapter          = new UserManagerAdapter($user_manager);
         $form_element_factory          = \Tracker_FormElementFactory::instance();
         $timeframe_dao                 = new SemanticTimeframeDao();
-        $semantic_status_factory       = new Tracker_Semantic_StatusFactory();
+        $semantic_status_factory       = new TrackerSemanticStatusFactory();
         $logger                        = $this->getLogger();
         $planning_adapter              = new PlanningAdapter(\PlanningFactory::build(), $user_manager_adapter);
         $program_increments_dao        = new ProgramIncrementsDAO();
@@ -1487,7 +1488,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $retrieve_user                 = new UserManagerAdapter($user_manager);
         $form_element_factory          = \Tracker_FormElementFactory::instance();
         $timeframe_dao                 = new SemanticTimeframeDao();
-        $semantic_status_factory       = new Tracker_Semantic_StatusFactory();
+        $semantic_status_factory       = new TrackerSemanticStatusFactory();
         $logger                        = $this->getLogger();
         $planning_adapter              = new PlanningAdapter(\PlanningFactory::build(), $retrieve_user);
         $program_increments_dao        = new ProgramIncrementsDAO();

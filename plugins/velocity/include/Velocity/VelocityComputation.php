@@ -23,8 +23,8 @@ namespace Tuleap\Velocity;
 use Feedback;
 use PFUser;
 use Tracker_FormElement_Field;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 
@@ -48,7 +48,7 @@ class VelocityComputation
     public function compute(
         BeforeEvent $before_event,
         array &$already_computed_velocity,
-        Tracker_Semantic_Status $semantic_status,
+        TrackerSemanticStatus $semantic_status,
         SemanticDone $semantic_done,
         SemanticVelocity $semantic_velocity,
     ) {

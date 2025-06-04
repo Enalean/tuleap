@@ -32,6 +32,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDuplicator;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
@@ -192,11 +193,11 @@ class Tracker_SemanticFactory
     /**
      * Returns an instance of Tracker_Semantic_StatusFactory
      *
-     * @return Tracker_Semantic_StatusFactory an instance of the factory
+     * @return TrackerSemanticStatusFactory an instance of the factory
      */
     public function getSemanticStatusFactory()
     {
-        return Tracker_Semantic_StatusFactory::instance();
+        return TrackerSemanticStatusFactory::instance();
     }
 
     /**

@@ -22,9 +22,9 @@ declare(strict_types=1);
 namespace Tuleap\Kanban;
 
 use PFUser;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class KanbanColumnManager
 {
@@ -108,7 +108,7 @@ class KanbanColumnManager
         return $this->formelement_field_list_bind_static_value_dao->hideValue($column->getId());
     }
 
-    private function checkAllColumnsAreProvided(Tracker_Semantic_Status $semantic, array $column_ids): void
+    private function checkAllColumnsAreProvided(TrackerSemanticStatus $semantic, array $column_ids): void
     {
         $all_open_values     = $semantic->getOpenValues();
         $values_not_provided = array_diff($all_open_values, $column_ids);

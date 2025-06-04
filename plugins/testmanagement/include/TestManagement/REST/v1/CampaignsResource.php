@@ -46,7 +46,6 @@ use Tracker_NoChangeException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_ReportFactory;
-use Tracker_Semantic_StatusFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
@@ -150,6 +149,7 @@ use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -334,7 +334,7 @@ class CampaignsResource
             $this->config,
             new TestExecutionTestStatusDAO(),
             new StatusValueRetriever(
-                new Tracker_Semantic_StatusFactory(),
+                new TrackerSemanticStatusFactory(),
                 $this->getFirstPossibleValueInListRetriever()
             )
         );
@@ -461,7 +461,7 @@ class CampaignsResource
             new CampaignArtifactUpdateFieldValuesBuilder(
                 $this->formelement_factory,
                 new StatusValueRetriever(
-                    Tracker_Semantic_StatusFactory::instance(),
+                    TrackerSemanticStatusFactory::instance(),
                     $this->getFirstPossibleValueInListRetriever()
                 )
             )

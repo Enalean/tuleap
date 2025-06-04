@@ -33,10 +33,10 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Selectbox;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -280,7 +280,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticDone(): MockObject&Tracker_FormElement_Field_Selectbox
     {
         $status_field    = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
-        $semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn($status_field);
 
         $semantic_done = $this->createMock(SemanticDone::class);

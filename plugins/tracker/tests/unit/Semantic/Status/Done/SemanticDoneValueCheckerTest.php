@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_Semantic_Status;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -39,7 +39,7 @@ final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_FormElement_Field_List_Bind_StaticValue $xml_hidden_value;
     private SimpleXMLElement $xml_semantic_status;
     private SemanticDoneValueChecker $value_checker;
-    private Tracker_Semantic_Status&MockObject $semantic_status;
+    private TrackerSemanticStatus&MockObject $semantic_status;
 
     public function setUp(): void
     {
@@ -55,7 +55,7 @@ final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_done_value     = ListStaticValueBuilder::aStaticValue('done')->withXMLId('F3')->isHidden(false)->build();
         $this->xml_hidden_value   = ListStaticValueBuilder::aStaticValue('hidden')->withXMLId('F4')->isHidden(true)->build();
 
-        $this->semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $this->semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $this->semantic_status->method('getOpenValues')->willReturn([
             1,
             2,

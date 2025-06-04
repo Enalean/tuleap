@@ -26,7 +26,6 @@ use ProjectManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
-use Tracker_Semantic_StatusFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use Tuleap\Cryptography\KeyFactory;
@@ -55,6 +54,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
@@ -147,7 +147,7 @@ class ProjectResource
             new Config(new Dao(), $tracker_factory),
             new TestExecutionTestStatusDAO(),
             new StatusValueRetriever(
-                new Tracker_Semantic_StatusFactory(),
+                new TrackerSemanticStatusFactory(),
                 new FirstPossibleValueInListRetriever(
                     new FirstValidValueAccordingToDependenciesRetriever(
                         $tracker_form_element_factory

@@ -51,10 +51,10 @@ final class StatusFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $semantic = $this->createStub(\Tracker_Semantic_Status::class);
+        $semantic = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic->method('getField')->willReturn($this->field);
 
-        $factory = $this->createStub(\Tracker_Semantic_StatusFactory::class);
+        $factory = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $factory->method('getByTracker')->willReturn($semantic);
 
         $retriever = new StatusFieldRetriever($factory);

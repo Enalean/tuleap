@@ -29,10 +29,10 @@ use TestHelper;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_Status;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -82,8 +82,8 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
         $project          = ProjectTestBuilder::aProject()->withId($group_id)->build();
         $this->tracker    = TrackerTestBuilder::aTracker()->withId(3)->withProject($project)->build();
         $this->tracker_10 = TrackerTestBuilder::aTracker()->withId(10)->build();
-        Tracker_Semantic_Status::setInstance(
-            new Tracker_Semantic_Status($this->tracker_10, $status_field),
+        TrackerSemanticStatus::setInstance(
+            new TrackerSemanticStatus($this->tracker_10, $status_field),
             $this->tracker_10,
         );
         $this->tracker_20 = TrackerTestBuilder::aTracker()->withId(20)->build();

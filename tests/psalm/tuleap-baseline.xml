@@ -33139,6 +33139,54 @@
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
     </PossiblyNullArrayAccess>
   </file>
+  <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatus.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </ArgumentTypeCoercion>
+    <MissingParamType>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$_instances]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[clearInstances]]></code>
+      <code><![CDATA[doesTrackerNotificationUseStatusSemantic]]></code>
+      <code><![CDATA[exportToREST]]></code>
+      <code><![CDATA[forceLoad]]></code>
+      <code><![CDATA[getDao]]></code>
+      <code><![CDATA[isBasedOnASharedField]]></code>
+      <code><![CDATA[isFieldBoundToStaticValues]]></code>
+      <code><![CDATA[isOpen]]></code>
+      <code><![CDATA[isOpenAtGivenChangeset]]></code>
+      <code><![CDATA[isOpenValue]]></code>
+      <code><![CDATA[processDelete]]></code>
+      <code><![CDATA[removeOpenValue]]></code>
+      <code><![CDATA[setInstance]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addChild]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatusFactory.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_open_value_attributes['REF']]]></code>
+      <code><![CDATA[$xml_open_value_attributes['REF']]]></code>
+    </PossiblyNullArrayAccess>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $from_status_field_id]]></code>
+      <code><![CDATA[$to_status_field_id]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
   <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitle.php">
     <MissingPropertyType>
       <code><![CDATA[$_instances]]></code>
@@ -44948,11 +44996,6 @@
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Description/XML/XMLDescriptionSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Progress/MethodBasedOnEffort.php">
     <InvalidOperand>
       <code><![CDATA[1 - ($remaining_effort / $total_effort)]]></code>
@@ -45261,54 +45304,6 @@
     </PossiblyNullArrayAccess>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$to_contributor_field_id]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Status.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$field]]></code>
-    </ArgumentTypeCoercion>
-    <MissingParamType>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$_instances]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[clearInstances]]></code>
-      <code><![CDATA[doesTrackerNotificationUseStatusSemantic]]></code>
-      <code><![CDATA[exportToREST]]></code>
-      <code><![CDATA[forceLoad]]></code>
-      <code><![CDATA[getDao]]></code>
-      <code><![CDATA[isBasedOnASharedField]]></code>
-      <code><![CDATA[isFieldBoundToStaticValues]]></code>
-      <code><![CDATA[isOpen]]></code>
-      <code><![CDATA[isOpenAtGivenChangeset]]></code>
-      <code><![CDATA[isOpenValue]]></code>
-      <code><![CDATA[processDelete]]></code>
-      <code><![CDATA[removeOpenValue]]></code>
-      <code><![CDATA[setInstance]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_StatusFactory.php">
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_open_value_attributes['REF']]]></code>
-      <code><![CDATA[$xml_open_value_attributes['REF']]]></code>
-    </PossiblyNullArrayAccess>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $from_status_field_id]]></code>
-      <code><![CDATA[$to_status_field_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLFieldsBasedSemantic.php">

@@ -271,6 +271,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
@@ -1810,7 +1811,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
             new \Tuleap\Glyph\GlyphFinder($event_manager),
-            new StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
+            new StatusBadgeBuilder(TrackerSemanticStatusFactory::instance()),
             $event_manager
         );
         $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY, $collection->getUser());
@@ -1838,7 +1839,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->getTrackerFormElementFactory(),
             $event_dispatcher,
             new \Tuleap\Glyph\GlyphFinder($event_dispatcher),
-            new StatusBadgeBuilder(\Tracker_Semantic_StatusFactory::instance()),
+            new StatusBadgeBuilder(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::instance()),
         );
 
         $retriever->retrieveSearchResult($indexed_item_convertor);
@@ -2722,7 +2723,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function receivePotentialReferences(PotentialReferencesReceived $event): void
     {
-        $status_semantic_factory        = \Tracker_Semantic_StatusFactory::instance();
+        $status_semantic_factory        = \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::instance();
         $form_element_factory           = \Tracker_FormElementFactory::instance();
         $artifact_factory               = \Tracker_ArtifactFactory::instance();
         $user_manager                   = \UserManager::instance();

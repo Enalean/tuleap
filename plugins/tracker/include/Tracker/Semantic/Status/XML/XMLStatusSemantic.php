@@ -42,7 +42,7 @@ final class XMLStatusSemantic extends XMLSemantic
          */
         private XMLReference $reference,
     ) {
-        parent::__construct(\Tracker_Semantic_Status::NAME);
+        parent::__construct(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::NAME);
     }
 
     /**
@@ -60,7 +60,7 @@ final class XMLStatusSemantic extends XMLSemantic
         $semantic = parent::export($parent_node, $form_elements);
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
-        $cdata->insert($semantic, 'shortname', \Tracker_Semantic_Status::NAME);
+        $cdata->insert($semantic, 'shortname', \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::NAME);
         $cdata->insert($semantic, 'label', 'Status');
         $cdata->insert($semantic, 'description', 'Define the status of an artifact');
         $semantic->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));

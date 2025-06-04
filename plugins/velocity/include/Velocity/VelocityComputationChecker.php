@@ -20,15 +20,15 @@
 
 namespace Tuleap\Velocity;
 
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 class VelocityComputationChecker
 {
     public function shouldComputeCapacity(
-        Tracker_Semantic_Status $semantic_status,
+        TrackerSemanticStatus $semantic_status,
         SemanticDone $semantic_done,
         SemanticVelocity $semantic_velocity,
         BeforeEvent $before_event,
@@ -56,7 +56,7 @@ class VelocityComputationChecker
             && ! empty(array_intersect($new_semantic_status_values, $done_values));
     }
 
-    private function getLastChangesetValues(Tracker_Semantic_Status $semantic_status, BeforeEvent $before_event)
+    private function getLastChangesetValues(TrackerSemanticStatus $semantic_status, BeforeEvent $before_event)
     {
         $last_changeset        = $before_event->getArtifact()->getLastChangeset();
         $values                = [];
@@ -71,7 +71,7 @@ class VelocityComputationChecker
         return (array) $values;
     }
 
-    private function getNewChangesetValues(Tracker_Semantic_Status $semantic_status, BeforeEvent $before_event)
+    private function getNewChangesetValues(TrackerSemanticStatus $semantic_status, BeforeEvent $before_event)
     {
         $new_values           = $before_event->getFieldsData();
         $values               = [];

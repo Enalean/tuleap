@@ -1,27 +1,34 @@
 <?php
-/**
+/*
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Semantic\IDuplicateSemantic;
-use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+namespace Tuleap\Tracker\Semantic\Status;
 
-class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicateSemantic
+use SimpleXMLElement;
+use Tracker;
+use Tracker_Semantic;
+use Tracker_Semantic_StatusDao;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+
+class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateSemantic
 {
     /**
      * Hold an instance of the class
@@ -32,7 +39,7 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
     /**
      * The singleton method
      *
-     * @return Tracker_Semantic_StatusFactory an instance of the factory
+     * @return TrackerSemanticStatusFactory an instance of the factory
      */
     public static function instance()
     {
@@ -43,9 +50,9 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker): Tracker_Semantic_Status
+    public function getByTracker(Tracker $tracker): TrackerSemanticStatus
     {
-        return Tracker_Semantic_Status::load($tracker);
+        return TrackerSemanticStatus::load($tracker);
     }
 
     public function getInstanceFromXML(
@@ -71,7 +78,7 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
             $value_id      = $xml_mapping[(string) $xml_open_value_attributes['REF']];
             $open_values[] = $value_id;
         }
-        return new Tracker_Semantic_Status($tracker, $field, $open_values);
+        return new TrackerSemanticStatus($tracker, $field, $open_values);
     }
 
     /**

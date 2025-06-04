@@ -62,7 +62,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::clearInstances();
-        \Tracker_Semantic_Status::clearInstances();
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::clearInstances();
         \Tracker_Semantic_Contributor::clearInstances();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->report_factory       = Tracker_ReportFactory::instance();

@@ -21,11 +21,12 @@
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 /**
  * @psalm-immutable
  */
-class AgileDashboard_CardRepresentation
+class AgileDashboard_CardRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const ROUTE = 'cards';
 
@@ -161,7 +162,7 @@ class AgileDashboard_CardRepresentation
 
     private static function getCardStatus(Cardwall_CardInCellPresenter $card)
     {
-        $semantic = Tracker_Semantic_Status::load($card->getArtifact()->getTracker());
+        $semantic = TrackerSemanticStatus::load($card->getArtifact()->getTracker());
 
         return $semantic->getNormalizedStatusLabel($card->getArtifact());
     }

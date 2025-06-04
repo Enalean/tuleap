@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 use Tracker;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
-use Tracker_Semantic_Status;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class SemanticDoneLoader
 {
@@ -44,7 +44,7 @@ class SemanticDoneLoader
         $this->value_checker = $value_checker;
     }
 
-    public function load(Tracker $tracker, Tracker_Semantic_Status $semantic_status): SemanticDone
+    public function load(Tracker $tracker, TrackerSemanticStatus $semantic_status): SemanticDone
     {
         $semantic_status_field = $semantic_status->getField();
         $done_values           = [];

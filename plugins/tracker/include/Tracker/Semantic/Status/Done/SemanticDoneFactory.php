@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Semantic;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class SemanticDoneFactory implements IBuildSemanticFromXML
 {
@@ -61,7 +61,7 @@ class SemanticDoneFactory implements IBuildSemanticFromXML
         Tracker $tracker,
         array $tracker_mapping,
     ): ?Tracker_Semantic {
-        $semantic_status = Tracker_Semantic_Status::load($tracker);
+        $semantic_status = TrackerSemanticStatus::load($tracker);
         $done_values     = $this->getDoneValues($current_semantic_xml, $all_semantics_xml, $xml_mapping);
 
         return new SemanticDone($tracker, $semantic_status, $this->dao, $this->value_checker, $done_values);
@@ -98,7 +98,7 @@ class SemanticDoneFactory implements IBuildSemanticFromXML
     private function getXMLSemanticStatusFromAllSemanticsXML(SimpleXMLElement $full_semantic_xml): ?SimpleXMLElement
     {
         foreach ($full_semantic_xml->semantic as $xml_semantic) {
-            if ((string) $xml_semantic['type'] === Tracker_Semantic_Status::NAME) {
+            if ((string) $xml_semantic['type'] === TrackerSemanticStatus::NAME) {
                 return $xml_semantic;
             }
         }

@@ -26,9 +26,9 @@ use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
@@ -133,12 +133,12 @@ final class CountElementsCalculatorTest extends TestCase
                 4 => new Tracker_ArtifactLinkInfo(4, '', 101, $this->user_story_tracker->getId(), 1, null),
             ])
             ->build();
-        Tracker_Semantic_Status::setInstance(new Tracker_Semantic_Status(
+        TrackerSemanticStatus::setInstance(new TrackerSemanticStatus(
             $epic_tracker
         ), $epic_tracker);
 
-        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
+        $user_story_status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        TrackerSemanticStatus::setInstance($user_story_status_semantic, $this->user_story_tracker);
         $user_story_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
         $user_story_01           = ArtifactTestBuilder::anArtifact(3)
@@ -162,8 +162,8 @@ final class CountElementsCalculatorTest extends TestCase
             ])
             ->build();
 
-        $task_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($task_status_semantic, $this->task_tracker);
+        $task_status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        TrackerSemanticStatus::setInstance($task_status_semantic, $this->task_tracker);
 
         $task_01           = ArtifactTestBuilder::anArtifact(5)
             ->inTracker($this->task_tracker)
@@ -228,8 +228,8 @@ final class CountElementsCalculatorTest extends TestCase
             ]);
 
         $epic_tracker         = TrackerTestBuilder::aTracker()->build();
-        $epic_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($epic_status_semantic, $epic_tracker);
+        $epic_status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        TrackerSemanticStatus::setInstance($epic_status_semantic, $epic_tracker);
         $epic_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
         $epic           = ArtifactTestBuilder::anArtifact(2)->inTracker($epic_tracker)->build();
@@ -241,8 +241,8 @@ final class CountElementsCalculatorTest extends TestCase
             ])
             ->build();
 
-        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
+        $user_story_status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        TrackerSemanticStatus::setInstance($user_story_status_semantic, $this->user_story_tracker);
         $user_story_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
         $user_story_01           = ArtifactTestBuilder::anArtifact(3)
@@ -266,8 +266,8 @@ final class CountElementsCalculatorTest extends TestCase
             ])
             ->build();
 
-        $task_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($task_status_semantic, $this->task_tracker);
+        $task_status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        TrackerSemanticStatus::setInstance($task_status_semantic, $this->task_tracker);
 
         $task_01           = ArtifactTestBuilder::anArtifact(5)
             ->inTracker($this->task_tracker)
@@ -325,8 +325,8 @@ final class CountElementsCalculatorTest extends TestCase
                 ['id' => 4],
             ]);
 
-        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
+        $user_story_status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        TrackerSemanticStatus::setInstance($user_story_status_semantic, $this->user_story_tracker);
 
         $user_story_01           = ArtifactTestBuilder::anArtifact(2)->inTracker($this->user_story_tracker)->build();
         $changeset_user_story_01 = ChangesetTestBuilder::aChangeset(1)->build();
@@ -401,8 +401,8 @@ final class CountElementsCalculatorTest extends TestCase
                 ['id' => 4],
             ]);
 
-        $user_story_status_semantic = $this->createMock(Tracker_Semantic_Status::class);
-        Tracker_Semantic_Status::setInstance($user_story_status_semantic, $this->user_story_tracker);
+        $user_story_status_semantic = $this->createMock(TrackerSemanticStatus::class);
+        TrackerSemanticStatus::setInstance($user_story_status_semantic, $this->user_story_tracker);
         $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
         $user_story_01           = ArtifactTestBuilder::anArtifact(2)->inTracker($this->user_story_tracker)->build();

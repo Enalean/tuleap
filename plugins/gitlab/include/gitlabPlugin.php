@@ -131,9 +131,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\CommentOnlyChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
@@ -152,6 +152,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -301,7 +302,7 @@ class gitlabPlugin extends Plugin
         );
         $artifact_factory               = \Tracker_ArtifactFactory::instance();
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
-        $semantic_status_factory        = Tracker_Semantic_StatusFactory::instance();
+        $semantic_status_factory        = TrackerSemanticStatusFactory::instance();
         $tag_info_dao                   = new TagInfoDao();
         $cross_reference_manager        = new CrossReferenceManager(new CrossReferencesDao());
 
@@ -531,7 +532,7 @@ class gitlabPlugin extends Plugin
                 \Workflow_Transition_ConditionFactory::build()
             )
         );
-        $semantic_status_factory        = \Tracker_Semantic_StatusFactory::instance();
+        $semantic_status_factory        = \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::instance();
         $artifact_factory               = Tracker_ArtifactFactory::instance();
         $tag_info_dao                   = new TagInfoDao();
         $cross_reference_manager        = new CrossReferenceManager(new CrossReferencesDao());
