@@ -34,7 +34,6 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDisplayTypeIsUnknownFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDoesNotBelongToTrackerFault;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotSupportedFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -131,9 +130,6 @@ final readonly class PUTConfigurationHandler
 
         return $this->retrieve_suitable_field->retrieveField($input_field->field_id, $user)
             ->andThen(function (\Tracker_FormElement_Field_String|\Tracker_FormElement_Field_List $field) use ($display_type, $tracker) {
-                if ($field instanceof \Tracker_FormElement_Field_List) {
-                    return Result::err(FieldNotSupportedFault::build($field->getId()));
-                }
                 if ($field->getTrackerId() !== $tracker->getId()) {
                     return Result::err(
                         FieldDoesNotBelongToTrackerFault::build($field->getId(), $tracker->getId())
