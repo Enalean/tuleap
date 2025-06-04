@@ -18,16 +18,13 @@
  */
 
 import type {
-    CheckBoxFieldIdentifier,
     ColorName,
     ColumnIdentifier,
     CreatePermission,
     DateFieldIdentifier,
     FieldSetIdentifier,
     LastUpdateDateFieldIdentifier,
-    MultiSelectBoxFieldIdentifier,
     PermissionFieldIdentifier,
-    RadioButtonFieldIdentifier,
     ReadPermission,
     StringFieldIdentifier,
     SubmissionDateFieldIdentifier,
@@ -82,13 +79,6 @@ export interface ContainerFieldStructure extends BaseFieldStructure {
     readonly label: string;
 }
 
-export interface ListLikeFieldStructure extends BaseFieldStructure {
-    readonly type:
-        | RadioButtonFieldIdentifier
-        | MultiSelectBoxFieldIdentifier
-        | CheckBoxFieldIdentifier;
-}
-
 export interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
     readonly type: PermissionFieldIdentifier;
     readonly values: {
@@ -103,7 +93,6 @@ export type StructureFields =
     | ContainerFieldStructure
     | DateFieldStructure
     | ListFieldStructure
-    | ListLikeFieldStructure
     | OpenListFieldStructure
     | PermissionsOnArtifactFieldStructure
     | StringFieldStructure;

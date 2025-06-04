@@ -21,9 +21,11 @@ import type { RegisteredUserWithAvatar } from "./users";
 import type { BaseFieldStructure } from "./trackers";
 import type { UserGroupRepresentation } from "./artifacts";
 import type {
+    CheckBoxFieldIdentifier,
     ColorName,
-    SelectBoxFieldIdentifier,
     MultiSelectBoxFieldIdentifier,
+    RadioButtonFieldIdentifier,
+    SelectBoxFieldIdentifier,
     StaticBindIdentifier,
     UserGroupsBindIdentifier,
     UsersBindIdentifier,
@@ -52,7 +54,11 @@ export type UserGroupBoundListItem = {
 };
 
 type CommonListFieldStructure = BaseFieldStructure & {
-    readonly type: SelectBoxFieldIdentifier | MultiSelectBoxFieldIdentifier;
+    readonly type:
+        | SelectBoxFieldIdentifier
+        | MultiSelectBoxFieldIdentifier
+        | RadioButtonFieldIdentifier
+        | CheckBoxFieldIdentifier;
     readonly label: string;
     readonly required: boolean;
 };
