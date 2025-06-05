@@ -87,6 +87,7 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingUsage;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\RequestTime;
 use Tuleap\SVNCore\AccessControl\BeforeSVNLogin;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\PasswordPreUpdateEvent;
@@ -335,7 +336,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
                 $storage,
             );
 
-            $account_linker_controler->linkRegisteringAccount($event->getUser(), $link_id, $event->getRequest()->getTime());
+            $account_linker_controler->linkRegisteringAccount($event->getUser(), $link_id, RequestTime::getTimestamp());
         }
     }
 

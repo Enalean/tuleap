@@ -28,13 +28,8 @@ final class AfterUserRegistrationEvent implements Dispatchable
 {
     public const NAME = 'afterUserRegistrationEvent';
 
-    public function __construct(private \Codendi_Request $request, private \PFUser $user)
+    public function __construct(private \PFUser $user)
     {
-    }
-
-    public function getRequest(): \Codendi_Request
-    {
-        return $this->request;
     }
 
     public function getUser(): \PFUser

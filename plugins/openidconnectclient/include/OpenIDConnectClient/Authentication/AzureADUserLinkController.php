@@ -28,6 +28,7 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\RequestTime;
 
 class AzureADUserLinkController implements DispatchableWithRequest, DispatchableWithRequestNoAuthz
 {
@@ -43,6 +44,6 @@ class AzureADUserLinkController implements DispatchableWithRequest, Dispatchable
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $this->login_controller->login($request, $request->get('return_to'), $request->getTime());
+        $this->login_controller->login($request, $request->get('return_to'), RequestTime::getTimestamp());
     }
 }

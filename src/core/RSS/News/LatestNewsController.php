@@ -63,7 +63,7 @@ class LatestNewsController implements DispatchableWithRequest
         $feed->setDescription(sprintf(_('%s project news highlights'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
         $feed->setLink(\Tuleap\ServerHostname::HTTPSUrl());
         $feed->setLanguage('en-us');
-        $feed->setDateModified($request->getTime());
+        $feed->setDateModified(\Tuleap\Request\RequestTime::getTimestamp());
 
         foreach ($this->dao->getNewsForSitePublicRSSFeed() as $row) {
             $entry = $feed->createEntry();
