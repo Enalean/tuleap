@@ -19,10 +19,12 @@
 
 import { gap, threshold, startAt } from "./path";
 
-export function getDownRightArrow(width: number, height: number): string {
+export { gap } from "./path";
+
+export function getDownRightArrow(width: number, height: number, element_height: number): string {
     if (width <= threshold) {
         return startAt(gap, gap, width, height)
-            .halfTurnRight()
+            .halfTurnRight(element_height)
             .forwardAndStopIntoGap()
             .turnLeft()
             .forwardAndStopBeforeGap()
@@ -37,9 +39,9 @@ export function getDownRightArrow(width: number, height: number): string {
         .arrowOnTheRightGap();
 }
 
-export function getDownLeftArrow(width: number, height: number): string {
+export function getDownLeftArrow(width: number, height: number, element_height: number): string {
     return startAt(width - gap, gap, width, height)
-        .halfTurnRight()
+        .halfTurnRight(element_height)
         .forwardAndStopIntoGap()
         .turnLeft()
         .forwardAndStopBeforeGap()
@@ -47,9 +49,9 @@ export function getDownLeftArrow(width: number, height: number): string {
         .arrowOnTheLeftGap();
 }
 
-export function getUpLeftArrow(width: number, height: number): string {
+export function getUpLeftArrow(width: number, height: number, element_height: number): string {
     return startAt(width - gap, height - gap, width, height)
-        .halfTurnLeft()
+        .halfTurnLeft(element_height)
         .forwardAndStopIntoGap()
         .turnRight()
         .forwardAndStopBeforeGap()
@@ -57,10 +59,10 @@ export function getUpLeftArrow(width: number, height: number): string {
         .arrowOnTheLeftGap();
 }
 
-export function getUpRightArrow(width: number, height: number): string {
+export function getUpRightArrow(width: number, height: number, element_height: number): string {
     if (width <= threshold) {
         return startAt(gap, height - gap, width, height)
-            .halfTurnLeft()
+            .halfTurnLeft(element_height)
             .forwardAndStopIntoGap()
             .turnRight()
             .forwardAndStopBeforeGap()

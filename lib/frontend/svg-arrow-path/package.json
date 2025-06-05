@@ -1,0 +1,29 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/svg-arrow-path",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "./dist/svg-arrow-path.js",
+  "main": "./dist/svg-arrow-path.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/svg-arrow-path.js",
+      "require": "./dist/svg-arrow-path.umd.cjs"
+    }
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  }
+}

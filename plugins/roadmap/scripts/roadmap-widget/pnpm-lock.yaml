@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/svg-arrow-path':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/svg-arrow-path
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
