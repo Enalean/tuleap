@@ -32,23 +32,27 @@ final readonly class AggregateRetriever
 
     public function retrieve(bool $use_data_from_db, array $columns): array
     {
+        $aggregates = [];
         if ($use_data_from_db) {
             $aggregate_functions_raw = [$this->aggregates_dao->searchByRendererId($this->renderer->getId())];
         } else {
             $aggregate_functions_raw = $this->renderer->getAggregates();
         }
-        $aggregates = [];
+        if ($aggregate_functions_raw === null) {
+            return [];
+        }
+
         foreach ($aggregate_functions_raw as $rows) {
-            if ($rows) {
-                foreach ($rows as $row) {
-                    //is the field used as a column?
-                    if (isset($columns[$row['field_id']])) {
-                        if (! isset($aggregates[$row['field_id']])) {
-                            $aggregates[$row['field_id']] = [];
-                        }
-                        $aggregates[$row['field_id']][] = $row['aggregate'];
-                    }
+            foreach ($rows as $row) {
+                if (! isset($columns[$row['field_id']])) {
+                    continue;
                 }
+
+                if (! isset($aggregates[$row['field_id']])) {
+                    $aggregates[$row['field_id']] = [];
+                }
+
+                $aggregates[$row['field_id']][] = $row['aggregate'];
             }
         }
 
