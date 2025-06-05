@@ -25,6 +25,8 @@ describe("Git", function () {
         cy.createNewPublicProject(git_project_name, "agile_alm");
         cy.getProjectId(git_project_name).as("project_id");
         cy.createNewPublicProject(`gnotif-${now}`, "agile_alm");
+        cy.getProjectId(git_project_name).as("gnotif_project_id");
+        cy.createNewPublicProject(`gadmin-${now}`, "agile_alm");
     });
 
     context("Project administrators", function () {
@@ -132,6 +134,63 @@ describe("Git", function () {
                 cy.get("[data-test=deletion-confirmation-button]").click();
 
                 cy.get("[data-test=no-repositories]").should("be.visible");
+            });
+
+            it("other groups can be defined as git admin", function () {
+                cy.siteAdministratorSession();
+                cy.log("Create a fake gerrit server");
+                cy.visit("/admin/git/");
+                cy.get("[data-test=gerrit_servers_admin]").click();
+                cy.get("[data-test=gerrit-server-add-button]").click();
+                cy.get("[data-test=gerrit-server-url]").type("http://localhost:8080");
+                cy.get("[data-test=gerrit-server-http-port]").type("8080");
+                cy.get("[data-test=gerrit-server-ssh-port]").type("29418");
+                cy.get("[data-test=gerrit-server-login]").type("fake-admin");
+                cy.get("[data-test=gerrit-server-password]").type("example");
+                cy.get("[data-test=gerrit-identity-file]").type("/fake/path/to/identify/file");
+                cy.get("[data-test=gerrit-server-add-button-submit]").click();
+
+                cy.projectAdministratorSession();
+                cy.addProjectMember(`gadmin-${now}`, "projectMember");
+
+                cy.projectAdministratorSession();
+                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.get("[data-test=git-administration]").click({ force: true });
+                cy.get("[data-test=git-administrators]").click();
+                cy.get("[data-test=git-admins-select]").select("Project Members");
+                cy.get("[data-test=update-git-administrators]").click();
+
+                cy.log("User can paramter gerrit templates");
+                cy.projectMemberSession();
+                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.get("[data-test=git-administration]").click({ force: true });
+                cy.get("[data-test=create-new-gerrit-template]").click();
+                cy.get("[data-test=from-gerrit-config]").click();
+
+                cy.get("[data-test=git-admin-config-data]").type("fake data");
+                cy.get("[data-test=git-admin-file-name]").type("template name");
+
+                cy.get("[data-test=save-gerrit-config]").click();
+
+                cy.log("User can create repository");
+                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.get("[data-test=create-repository-button]").click();
+                cy.get("[data-test=create-repository-modal-form]").within(() => {
+                    cy.get("[data-test=create_repository_name]").type("AdminDelegationRepository");
+                    cy.root().submit();
+                });
+                cy.get("[data-test=git_repo_name]").contains("AdminDelegationRepository");
+
+                cy.log("User can change git administration permissions");
+                cy.visit(`/plugins/git/gadmin-${now}/`);
+                cy.get("[data-test=git-administration]").click({ force: true });
+                cy.get("[data-test=git-administrators]").click();
+                cy.get("[data-test=git-admins-select]").select([]);
+                cy.get("[data-test=update-git-administrators]").click();
+
+                cy.log("Project members are no longer administrators");
+                cy.visit(`/plugins/git/?group_id=${this.gnotif_project_id}&action=admin/`);
+                cy.get("[data-test=feedback]").contains("You are not allowed to access this page");
             });
         });
         context("Manage repository", function () {

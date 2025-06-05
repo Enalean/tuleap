@@ -14,12 +14,12 @@
         <div class="tlp-modal-body">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="host-required">{{ gerrit_label_host }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="host-required" name="host" placeholder="gerrit.example.com" required />
+                <input type="text" class="tlp-input" id="host-required" name="host" placeholder="gerrit.example.com" required data-test="gerrit-server-url"/>
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="http-port-required">{{ gerrit_label_http_port }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="http-port-required" name="http_port" placeholder="80" maxlength="5" size="6" required />
+                <input type="text" class="tlp-input" id="http-port-required" name="http_port" placeholder="80" maxlength="5" size="6" required data-test="gerrit-server-http-port" />
             </div>
 
             <div class="tlp-form-element">
@@ -30,7 +30,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="ssh-port-required">{{ gerrit_label_ssh_port }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="ssh-port-required" name="ssh_port" placeholder="29418" maxlength="5" size="6" required />
+                <input type="text" class="tlp-input" id="ssh-port-required" name="ssh_port" placeholder="29418" maxlength="5" size="6" required data-test="gerrit-server-ssh-port"/>
             </div>
 
             <hr class="tlp-modal-separator">
@@ -41,18 +41,18 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="login-required">{{ gerrit_label_login }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="login-required" name="login" placeholder="gerrit"  size="25" required />
+                <input type="text" class="tlp-input" id="login-required" name="login" placeholder="gerrit"  size="25" required data-test="gerrit-server-login"/>
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="http-password-required">{{ gerrit_label_http_password }} <i class="fa fa-asterisk"></i></label>
-                <input type="password" class="tlp-input" id="http-password-required" name="http_password" placeholder="************" size="40" required />
+                <input type="password" class="tlp-input" id="http-password-required" name="http_password" placeholder="************" size="40" required data-test="gerrit-server-password"/>
                  <p class="tlp-text-info"><i class="far fa-life-ring"></i>{{# dgettext }} tuleap-git | Tuleap will use Basic Auth to interact with Gerrit REST API, check you gerrit.config.{{/ dgettext }}</p>
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="identity-file-required">{{ gerrit_label_identity_file }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="identity-file-required" name="identity_file" placeholder="/var/lib/tuleap/.ssh/id_rsa-gerrit.pub" required />
+                <input type="text" class="tlp-input" id="identity-file-required" name="identity_file" placeholder="/var/lib/tuleap/.ssh/id_rsa-gerrit.pub" required data-test="gerrit-identity-file"/>
             </div>
 
             <hr class="tlp-modal-separator">
@@ -76,7 +76,7 @@
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{ btn_cancel }}
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="gerrit-server-add-button-submit">
                 <i class="fa fa-plus tlp-button-icon"></i> {{ add_server }}
             </button>
         </div>
