@@ -44,6 +44,12 @@
                     v-bind:number_of_reverse_link="row.number_of_reverse_link"
                     v-bind:even="isEven(index)"
                     v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
+                    v-on:toggle-links="toggleLinks(row)"
+                />
+                <edit-cell
+                    v-if="row.is_expanded"
+                    v-bind:uri="row.uri"
+                    v-bind:even="isEven(index)"
                 />
             </template>
         </div>
@@ -61,7 +67,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
-import type { ArtifactsTable } from "../../domain/ArtifactsTable";
+import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "../EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
@@ -156,6 +162,10 @@ const isEven = (index: number): boolean => index % 2 === 0;
 
 function isLastCellOfRow(index: number, size: number): boolean {
     return index + 1 === size;
+}
+
+function toggleLinks(row: ArtifactRow): void {
+    row.is_expanded = !row.is_expanded;
 }
 </script>
 

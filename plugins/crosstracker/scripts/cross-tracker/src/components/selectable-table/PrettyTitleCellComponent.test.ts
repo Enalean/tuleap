@@ -83,23 +83,48 @@ describe("PrettyTitleCellComponent", () => {
         });
     });
 
-    describe("Caret display", () => {
-        it("should hide the caret, when artifact has no links ", () => {
+    describe("Button", () => {
+        it("should hide the button, when artifact has no links ", () => {
             const wrapper = getWrapper();
 
-            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(
-                "hidden-caret",
-            );
+            expect(
+                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
+            ).toBe("true");
         });
 
-        it("should not hide the caret, when artifact has links", () => {
+        it("should not hide the button, when artifact has links", () => {
             number_of_forward_link = 2;
             number_of_reverse_link = 1;
             const wrapper = getWrapper();
 
-            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).not.toContain(
-                "hidden-caret",
-            );
+            expect(
+                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
+            ).toBe("false");
+        });
+    });
+
+    describe("Caret display", () => {
+        const caret_right = "fa-caret-right";
+        const caret_down = "fa-caret-down";
+
+        it("should display a caret down, when caret is clicked", async () => {
+            number_of_forward_link = 2;
+            const wrapper = getWrapper();
+
+            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
+            await wrapper.find("[data-test=pretty-title-caret]").trigger("click");
+            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_down);
+        });
+
+        it("should display a caret right, when caret is clicked again", async () => {
+            number_of_reverse_link = 1;
+            const wrapper = getWrapper();
+
+            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
+            await wrapper.find("[data-test=pretty-title-caret]").trigger("click");
+            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_down);
+            await wrapper.find("[data-test=pretty-title-caret]").trigger("click");
+            expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
         });
     });
 });

@@ -44,7 +44,9 @@
                     v-bind:number_of_forward_link="row.number_of_forward_link"
                     v-bind:even="isEven(index)"
                     v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
+                    v-on:toggle-links="toggleLinks(row)"
                 />
+                <div v-if="row.is_expanded">The artifacts links will soon be here.</div>
             </template>
         </div>
     </div>
@@ -61,7 +63,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
-import type { ArtifactsTable } from "../../domain/ArtifactsTable";
+import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
@@ -157,6 +159,10 @@ const isEven = (index: number): boolean => index % 2 === 0;
 
 function isLastCellOfRow(index: number, size: number): boolean {
     return index + 1 === size;
+}
+
+function toggleLinks(row: ArtifactRow): void {
+    row.is_expanded = !row.is_expanded;
 }
 </script>
 
