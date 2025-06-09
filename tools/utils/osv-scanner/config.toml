@@ -32,6 +32,10 @@ id = "GHSA-mqm9-c95h-x2p6" # CVE-2024-8373
 reason = "Angular is EOL. No usage of the allowlist imgSrcSanitizationTrustedUrlList."
 
 [[IgnoredVulns]]
+id = "GHSA-4p4w-6hg8-63wx" # CVE-2025-2336
+reason = "Angular is EOL. No usage of the allowlist imgSrcSanitizationTrustedUrlList."
+
+[[IgnoredVulns]]
 id = "GHSA-j58c-ww9w-pwp5" # CVE-2025-0716
 reason = "Angular is EOL. Small impact for our use cases."
 
