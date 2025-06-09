@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/svg-arrow-path": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
@@ -36,7 +37,7 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest",
-    "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && vite serve",
+    "dev:serve-arrows": "cd src/dev-arrows/ && vite serve",
     "typecheck": "vue-tsc --noEmit"
   }
 }

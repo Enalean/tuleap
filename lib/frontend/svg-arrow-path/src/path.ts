@@ -17,13 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Styles } from "./styles";
-
 const offset = 8;
 const radius = offset;
 export const gap = offset + radius + 1;
 export const threshold = 2 * offset + 2 * radius + 2 * gap;
-const half_turn_offset = Styles.TASK_HEIGHT_IN_PX / 2;
 const arrow = 5;
 
 const TOP = "top";
@@ -230,23 +227,25 @@ export class Path {
         return this;
     }
 
-    public halfTurnLeft(): Path {
+    public halfTurnLeft(height: number): Path {
         this.turnLeft();
-        this.halfTurnOffset();
+        this.halfTurnOffset(height);
         this.turnLeft();
 
         return this;
     }
 
-    public halfTurnRight(): Path {
+    public halfTurnRight(height: number): Path {
         this.turnRight();
-        this.halfTurnOffset();
+        this.halfTurnOffset(height);
         this.turnRight();
 
         return this;
     }
 
-    private halfTurnOffset(): void {
+    private halfTurnOffset(height: number): void {
+        const half_turn_offset = height / 2;
+
         if (this.orientation === RIGHT) {
             this.x += Math.max(0, half_turn_offset - 2 * radius);
         } else if (this.orientation === LEFT) {

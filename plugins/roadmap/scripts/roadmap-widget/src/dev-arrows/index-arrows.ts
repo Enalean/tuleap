@@ -18,20 +18,22 @@
  */
 
 import {
+    gap,
     getDownLeftArrow,
     getDownRightArrow,
     getUpLeftArrow,
     getUpRightArrow,
-} from "../helpers/svg-arrow-path";
-import { gap } from "../helpers/path";
+} from "@tuleap/svg-arrow-path";
 import type { SVGTemplateResult } from "lit-html";
 import { html, svg, render } from "lit-html";
+import { Styles } from "../helpers/styles";
 
 function getExampleSvg(
     width: number,
     height: number,
+    element_height: number,
     color: string,
-    callback: (width: number, height: number) => string,
+    callback: (width: number, height: number, element_height: number) => string,
 ): SVGTemplateResult {
     return svg`
         <svg style="height: ${height + 2 * gap}px; width: ${width + 2 * gap}px">
@@ -62,7 +64,7 @@ function getExampleSvg(
                 stroke-linejoin="round"
                 stroke-linecap="round"
                 fill="none"
-                d="${callback(width + 2 * gap, height + 2 * gap)}"
+                d="${callback(width + 2 * gap, height + 2 * gap, element_height)}"
             />
         </svg>
     `;
@@ -87,7 +89,13 @@ const content = [
             <h1>${title}</h1>
         `;
         for (let width = 0; width < max_width; width += step) {
-            content = html`${content}${getExampleSvg(width, height, color, callback)}`;
+            content = html`${content}${getExampleSvg(
+                width,
+                height,
+                Styles.TASK_HEIGHT_IN_PX,
+                color,
+                callback,
+            )}`;
         }
 
         return content;

@@ -33,13 +33,13 @@
 import { computed } from "vue";
 import type { Task, TaskDimension, TaskDimensionMap } from "../../../type";
 import { Styles } from "../../../helpers/styles";
-import { gap } from "../../../helpers/path";
 import {
+    gap,
     getDownLeftArrow,
     getDownRightArrow,
     getUpLeftArrow,
     getUpRightArrow,
-} from "../../../helpers/svg-arrow-path";
+} from "@tuleap/svg-arrow-path";
 import { getDimensions } from "../../../helpers/tasks-dimensions";
 
 const props = defineProps<{
@@ -134,18 +134,18 @@ const arrow_path = computed((): string => {
     const is_task_above_dependency = index_task.value < index_dependency.value;
 
     if (is_task_above_dependency && !is_task_and_text_end_after_dependency_start.value) {
-        return getDownRightArrow(width, height);
+        return getDownRightArrow(width, height, Styles.TASK_HEIGHT_IN_PX);
     }
 
     if (is_task_above_dependency && is_task_and_text_end_after_dependency_start.value) {
-        return getDownLeftArrow(width, height);
+        return getDownLeftArrow(width, height, Styles.TASK_HEIGHT_IN_PX);
     }
 
     if (!is_task_above_dependency && !is_task_and_text_end_after_dependency_start.value) {
-        return getUpRightArrow(width, height);
+        return getUpRightArrow(width, height, Styles.TASK_HEIGHT_IN_PX);
     }
 
-    return getUpLeftArrow(width, height);
+    return getUpLeftArrow(width, height, Styles.TASK_HEIGHT_IN_PX);
 });
 
 const style = computed((): string => {
