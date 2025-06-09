@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DateTime } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import BarPopover from "./BarPopover.vue";
+import type { Wrapper } from "@vue/test-utils";
+import type { UseMutationObserverReturn } from "@vueuse/core";
+import * as vueuse from "@vueuse/core";
+import * as tooltip from "@tuleap/tooltip";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Task } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as vueuse from "@vueuse/core";
-import type { UseMutationObserverReturn } from "@vueuse/core";
-import * as tooltip from "@tuleap/tooltip";
-import { DateTime } from "luxon";
+import BarPopover from "./BarPopover.vue";
 
 jest.mock("@vueuse/core");
 jest.mock("@tuleap/tooltip", () => ({
@@ -35,8 +36,14 @@ jest.mock("@tuleap/tooltip", () => ({
 jest.useFakeTimers();
 
 describe("BarPopover", () => {
-    it("should display the title of the task", async () => {
-        const wrapper = shallowMount(BarPopover, {
+    let is_milestone: boolean;
+
+    beforeEach(() => {
+        is_milestone = false;
+    });
+
+    async function getWrapper(): Promise<Wrapper<Vue>> {
+        return shallowMount(BarPopover, {
             localVue: await createRoadmapLocalVue(),
             propsData: {
                 task: {
@@ -46,7 +53,7 @@ describe("BarPopover", () => {
                     end: DateTime.fromISO("2020-01-30T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "",
-                    is_milestone: false,
+                    is_milestone,
                     time_period_error_message: "",
                 } as Task,
             },
@@ -58,6 +65,10 @@ describe("BarPopover", () => {
                 }),
             },
         });
+    }
+
+    it("should display the title of the task", async () => {
+        const wrapper = await getWrapper();
 
         expect(wrapper.classes()).not.toContain("roadmap-gantt-task-milestone-popover");
         expect(wrapper.text()).toContain("art #123");
@@ -65,28 +76,8 @@ describe("BarPopover", () => {
     });
 
     it("should add special appearance for a milestone", async () => {
-        const wrapper = shallowMount(BarPopover, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
-                task: {
-                    xref: "art #123",
-                    title: "Create button",
-                    start: DateTime.fromISO("2020-01-12T15:00:00.000Z"),
-                    end: DateTime.fromISO("2020-01-30T15:00:00.000Z"),
-                    progress: null,
-                    progress_error_message: "",
-                    is_milestone: true,
-                    time_period_error_message: "",
-                } as Task,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                    },
-                }),
-            },
-        });
+        is_milestone = true;
+        const wrapper = await getWrapper();
 
         expect(wrapper.classes()).toContain("roadmap-gantt-task-milestone-popover");
     });
@@ -113,28 +104,7 @@ describe("BarPopover", () => {
             body_as_html: "the retrieved body",
         });
 
-        const wrapper = shallowMount(BarPopover, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
-                task: {
-                    xref: "art #123",
-                    title: "Create button",
-                    start: DateTime.fromISO("2020-01-12T15:00:00.000Z"),
-                    end: DateTime.fromISO("2020-01-30T15:00:00.000Z"),
-                    progress: null,
-                    progress_error_message: "",
-                    is_milestone: false,
-                    time_period_error_message: "",
-                } as Task,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                    },
-                }),
-            },
-        });
+        const wrapper = await getWrapper();
 
         expect(wrapper.text()).not.toContain("the retrieved body");
 
