@@ -161,7 +161,7 @@ class Controller
         if ($user->isAnonymous()) {
             $this->showIndex($request);
         } else {
-            $request_time = $request->getTime();
+            $request_time = \Tuleap\Request\RequestTime::getTimestamp();
             $this->linkAccount($user, $provider, $unlinked_account, $request_time);
 
             $GLOBALS['Response']->addFeedback(

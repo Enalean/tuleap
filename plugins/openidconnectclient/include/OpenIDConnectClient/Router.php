@@ -56,7 +56,7 @@ class Router implements DispatchableWithRequestNoAuthz
                 $this->account_linker_controller->linkExistingAccount($request);
                 break;
             default:
-                $this->login_controller->login($request, $request->get('return_to'), $request->getTime());
+                $this->login_controller->login($request, $request->get('return_to'), \Tuleap\Request\RequestTime::getTimestamp());
         }
     }
 }

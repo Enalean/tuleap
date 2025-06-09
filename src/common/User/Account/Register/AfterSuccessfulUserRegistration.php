@@ -54,7 +54,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         RegisterFormContext $context,
     ): void {
         $this->event_dispatcher->dispatch(
-            new AfterUserRegistrationEvent($request, $new_user)
+            new AfterUserRegistrationEvent($new_user)
         );
 
         if ($context->is_admin) {

@@ -68,7 +68,7 @@ class LatestProjectController implements DispatchableWithRequest
         $feed->setDescription(sprintf(_('%s full project listing'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
         $feed->setLink(\Tuleap\ServerHostname::HTTPSUrl());
         $feed->setLanguage('en-us');
-        $feed->setDateModified($request->getTime());
+        $feed->setDateModified(\Tuleap\Request\RequestTime::getTimestamp());
 
         foreach ($this->dao->getLast10NewProjects() as $row) {
             $project = $this->project_manager->getProject($row['group_id']);

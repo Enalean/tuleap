@@ -21,7 +21,7 @@
 
 use Tuleap\Project\ProjectByIDFactory;
 
-class Codendi_Request
+class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var array
@@ -108,7 +108,7 @@ class Codendi_Request
      *
      * @psalm-taint-source input
      */
-    public function _get($variable, $array)
+    public function _get($variable, $array) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->_exist($variable, $array)) {
             return $array[$variable];
@@ -135,7 +135,7 @@ class Codendi_Request
      * @param string $variable Name of the parameter.
      * @return bool
      */
-    protected function _exist($variable, $array)
+    protected function _exist($variable, $array) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return isset($array[$variable]);
     }
@@ -301,13 +301,5 @@ class Codendi_Request
     public function getJsonDecodedBody()
     {
         return json_decode(file_get_contents('php://input'));
-    }
-
-    /**
-     * @return int
-     */
-    public function getTime()
-    {
-        return $_SERVER['REQUEST_TIME'];
     }
 }

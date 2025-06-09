@@ -30,7 +30,6 @@ final class AzureADUserLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $login_controller = $this->createMock(Controller::class);
         $request          = $this->createMock(\HTTPRequest::class);
-        $request->method('getTime')->willReturn(false);
         $request->method('get')->with('return_to');
 
         $login_controller->expects($this->once())->method('login');
