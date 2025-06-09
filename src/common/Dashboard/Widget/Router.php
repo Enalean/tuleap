@@ -22,7 +22,9 @@ namespace Tuleap\Dashboard\Widget;
 
 use HTTPRequest;
 use Tuleap\Dashboard\Widget\Add\AddWidgetController;
+use Tuleap\Option\Option;
 use Tuleap\Widget\WidgetFactory;
+use Widget;
 
 class Router
 {
@@ -49,7 +51,7 @@ class Router
         $this->widget_factory         = $widget_factory;
     }
 
-    public function route(HTTPRequest $request)
+    public function route(HTTPRequest $request): void
     {
         $action = $request->get('action');
 
@@ -57,47 +59,53 @@ class Router
             case 'get-add-modal-content':
                 $this->rejectIfRequestDoesNotAppearToBeFetched($request);
                 $this->add_widget_controller->display($request);
-                break;
+                return;
             case 'get-edit-modal-content':
                 $this->rejectIfRequestDoesNotAppearToBeFetched($request);
                 $this->preferences_controller->display($request);
-                break;
+                return;
             case 'add-widget':
+                if (! $request->isPost()) {
+                    $this->rejectMalformedRequest();
+                }
                 $this->add_widget_controller->create($request);
-                break;
+                return;
             case 'edit-widget':
+                if (! $request->isPost()) {
+                    $this->rejectMalformedRequest();
+                }
                 $this->preferences_controller->update($request);
-                break;
-            case 'process-widget':
-                $widget = $this->getWidgetFromUrl($request);
-
-                $owner      = $request->get('owner');
-                $owner_id   = (int) substr($owner, 1);
-                $owner_type = substr($owner, 0, 1);
-                $widget->process($owner_type, $owner_id);
-                break;
+                return;
             case 'ajax':
-                $widget = $this->getWidgetFromUrl($request);
+                $this->getWidgetFromUrl($request)
+                    ->match(
+                        function (Widget $widget) use ($request): void {
+                            $param       = $request->get('name');
+                            $param_keys  = array_keys($param);
+                            $name        = array_pop($param_keys);
+                            $instance_id = (int) $param[$name];
 
-                $param       = $request->get('name');
-                $param_keys  = array_keys($param);
-                $name        = array_pop($param_keys);
-                $instance_id = (int) $param[$name];
-
-                if ($widget->isAjax()) {
-                    $this->rejectIfRequestDoesNotAppearToBeFetched($request);
-                    $widget->loadContent($instance_id);
-                    echo $widget->getContent();
-                }
-                break;
+                            if ($widget->isAjax()) {
+                                $this->rejectIfRequestDoesNotAppearToBeFetched($request);
+                                $widget->loadContent($instance_id);
+                                echo $widget->getContent();
+                            }
+                        },
+                        fn(): never => $this->rejectMalformedRequest()
+                    );
+                return;
             case 'rss':
-                $widget = $this->getWidgetFromUrl($request);
-                if ($widget) {
-                    $this->rejectIfRequestDoesNotAppearToBeFetched($request);
-                    $widget->displayRss();
-                }
-                break;
+                $this->getWidgetFromUrl($request)
+                    ->match(
+                        function (Widget $widget) use ($request): void {
+                            $this->rejectIfRequestDoesNotAppearToBeFetched($request);
+                            $widget->displayRss();
+                        },
+                        fn(): never => $this->rejectMalformedRequest()
+                    );
+                return;
         }
+        $this->rejectMalformedRequest();
     }
 
     private function rejectIfRequestDoesNotAppearToBeFetched(HTTPRequest $request): void
@@ -118,12 +126,25 @@ class Router
         exit;
     }
 
-    private function getWidgetFromUrl(HTTPRequest $request)
+    private function rejectMalformedRequest(): never
     {
-        $param      = $request->get('name');
+        $GLOBALS['Response']->sendStatusCode(404);
+        echo 'Request appears to be malformed';
+        exit;
+    }
+
+    /**
+     * @return Option<Widget>
+     */
+    private function getWidgetFromUrl(HTTPRequest $request): Option
+    {
+        $param = $request->get('name');
+        if (! is_array($param)) {
+            return Option::nothing(Widget::class);
+        }
         $param_keys = array_keys($param);
         $name       = array_pop($param_keys);
 
-        return $this->widget_factory->getInstanceByWidgetName($name);
+        return Option::fromNullable($this->widget_factory->getInstanceByWidgetName($name));
     }
 }

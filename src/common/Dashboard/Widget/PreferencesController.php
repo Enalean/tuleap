@@ -54,12 +54,15 @@ class PreferencesController
         $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
-    public function display(HTTPRequest $request)
+    public function display(HTTPRequest $request): void
     {
         $user      = $request->getCurrentUser();
         $widget_id = $request->get('widget-id');
 
         $row = $this->dao->searchWidgetInDashboardById($widget_id)->getRow();
+        if ($row === false) {
+            $row = [];
+        }
 
         $this->checkWidgetCanBeEdited($row, $user);
         $this->forceGroupIdToBePresentInRequest($request, $row);
@@ -67,12 +70,15 @@ class PreferencesController
         echo $this->getWidget($row)->getPreferences($row['id'], $row['content_id']);
     }
 
-    public function update(HTTPRequest $request)
+    public function update(HTTPRequest $request): void
     {
         $user      = $request->getCurrentUser();
         $widget_id = $request->get('widget-id');
 
         $row = $this->dao->searchWidgetInDashboardById($widget_id)->getRow();
+        if ($row === false) {
+            $row = [];
+        }
 
         $this->checkCSRF($row);
 
@@ -101,9 +107,9 @@ class PreferencesController
         $this->redirectToDashboard($row);
     }
 
-    protected function checkWidgetCanBeEdited($row, PFUser $user)
+    protected function checkWidgetCanBeEdited(array $row, PFUser $user): void
     {
-        if (! $row) {
+        if (! isset($row['dashboard_type']) || (! isset($row['project_id']) && ! isset($row['user_id']))) {
             $GLOBALS['Response']->send400JSONErrors(_('We cannot find any edition information for the requested widget.'));
         }
 
@@ -116,16 +122,18 @@ class PreferencesController
         }
     }
 
-    protected function forceGroupIdToBePresentInRequest(HTTPRequest $request, array $row)
+    protected function forceGroupIdToBePresentInRequest(HTTPRequest $request, array $row): void
     {
-        if ($row['dashboard_type'] === 'project') {
+        if (isset($row['dashboard_type']) && $row['dashboard_type'] === 'project') {
             $request->set('group_id', $row['project_id']);
         }
     }
 
-    protected function forceContentIdToBePresentInRequest(HTTPRequest $request, array $row)
+    protected function forceContentIdToBePresentInRequest(HTTPRequest $request, array $row): void
     {
-        $request->set('content_id', $row['content_id']);
+        if (isset($row['content_id'])) {
+            $request->set('content_id', $row['content_id']);
+        }
     }
 
     protected function getWidget(array $row): \Widget
@@ -138,9 +146,10 @@ class PreferencesController
         return $widget;
     }
 
-    private function checkCSRF(array $row)
+    private function checkCSRF(array $row): void
     {
-        if ($row['dashboard_type'] === 'project') {
+        $dashboard_type = $row['dashboard_type'] ?? '';
+        if ($dashboard_type === 'project') {
             $csrf = new CSRFSynchronizerToken('/project/');
         } else {
             $csrf = new CSRFSynchronizerToken('/my/');
@@ -149,10 +158,11 @@ class PreferencesController
         $csrf->check();
     }
 
-    private function redirectToDashboard(array $row)
+    private function redirectToDashboard(array $row): void
     {
-        if ($row['dashboard_type'] === 'project') {
-            $url = '/projects/' . $row['unix_group_name'] . '/';
+        $dashboard_type = $row['dashboard_type'] ?? '';
+        if ($dashboard_type === 'project') {
+            $url = '/projects/' . urlencode($row['unix_group_name'] ?? '') . '/';
         } else {
             $url = '/my/';
         }
@@ -160,7 +170,7 @@ class PreferencesController
         $GLOBALS['Response']->redirect(
             $url . '?' . http_build_query(
                 [
-                    'dashboard_id' => $row['dashboard_id'],
+                    'dashboard_id' => $row['dashboard_id'] ?? 0,
                 ]
             )
         );
