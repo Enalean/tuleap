@@ -202,8 +202,8 @@ final class FieldResultBuilderTest extends TestCase
                 ArtifactTestBuilder::anArtifact(12)->inTracker($this->second_tracker)->build(),
             ),
             [
-                ['id' => 11, $this->field_hash => $first_date->getTimestamp()],
-                ['id' => 12, $this->field_hash => $second_date->getTimestamp()],
+                ['id' => 11, "date_$this->field_hash" => $first_date->getTimestamp()],
+                ['id' => 12, "date_$this->field_hash" => $second_date->getTimestamp()],
             ],
         );
 
@@ -237,9 +237,9 @@ final class FieldResultBuilderTest extends TestCase
                 ArtifactTestBuilder::anArtifact(23)->inTracker($this->second_tracker)->build(),
             ),
             [
-                ['id' => 21, $this->field_hash => '499P', "format_$this->field_hash" => 'text'],
-                ['id' => 22, $this->field_hash => 'V-Series.R', "format_$this->field_hash" => 'commonmark'],
-                ['id' => 23, $this->field_hash => null, "format_$this->field_hash" => null],
+                ['id' => 21, "text_$this->field_hash" => '499P', "format_$this->field_hash" => 'text'],
+                ['id' => 22, "text_$this->field_hash" => 'V-Series.R', "format_$this->field_hash" => 'commonmark'],
+                ['id' => 23, "text_$this->field_hash" => null, "format_$this->field_hash" => null],
             ],
         );
 

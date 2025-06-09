@@ -56,7 +56,7 @@ final readonly class DateResultBuilder
             if (isset($values[$id])) {
                 continue;
             }
-            $value = $result[(string) $alias];
+            $value = $result["date_$alias"];
             if ($value === null) {
                 $values[$id] = new SelectedValue($field->name, new DateResultRepresentation($value, false));
                 continue;

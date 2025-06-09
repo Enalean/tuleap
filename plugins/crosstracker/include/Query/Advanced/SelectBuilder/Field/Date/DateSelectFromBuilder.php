@@ -41,7 +41,7 @@ final class DateSelectFromBuilder
             $field->field_ids
         );
 
-        $select = "$changeset_value_date_alias.value AS $suffix";
+        $select = "$changeset_value_date_alias.value AS date_$suffix";
         $from   = <<<EOSQL
         LEFT JOIN tracker_field AS $tracker_field_alias
             ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)

@@ -51,7 +51,7 @@ final readonly class TextResultBuilder
             if (isset($values[$id])) {
                 continue;
             }
-            $value  = $result[(string) $alias];
+            $value  = $result["text_$alias"];
             $format = $result["format_$alias"];
 
             if ($value === null) {

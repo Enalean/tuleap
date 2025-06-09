@@ -40,7 +40,7 @@ final class TextSelectFromBuilder
             "$tracker_field_alias.id IN (?*)",
             $field->field_ids
         );
-        $select              = "$changeset_value_text_alias.value AS $suffix, $changeset_value_text_alias.body_format as format_$suffix";
+        $select              = "$changeset_value_text_alias.value AS text_$suffix, $changeset_value_text_alias.body_format as format_$suffix";
         $from                = <<<EOSQL
         LEFT JOIN tracker_field AS $tracker_field_alias
             ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
