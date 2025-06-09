@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Semantic;
+namespace Tuleap\Tracker\Semantic\Contributor;
 
-use Tracker_Semantic_ContributorFactory;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -47,7 +46,7 @@ final class Tracker_Semantic_ContributorFactoryTest extends \Tuleap\Test\PHPUnit
             'F13'  => $f2,
             'F16' => $f3,
         ];
-        $semantic_contributor = Tracker_Semantic_ContributorFactory::instance()->getInstanceFromXML(
+        $semantic_contributor = TrackerSemanticContributorFactory::instance()->getInstanceFromXML(
             $xml,
             $all_semantics_xml,
             $mapping,

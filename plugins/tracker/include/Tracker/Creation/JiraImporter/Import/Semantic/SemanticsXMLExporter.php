@@ -25,12 +25,12 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Semantic;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SimpleXMLElement;
-use Tracker_Semantic_Contributor;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Status\Done\XML\XMLDoneSemantic;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
@@ -145,9 +145,9 @@ class SemanticsXMLExporter
         }
 
         $semantic_node = $semantics_node->addChild('semantic');
-        $semantic_node->addAttribute('type', Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        $semantic_node->addAttribute('type', TrackerSemanticContributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
 
-        $semantic_node->addChild('shortname', Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        $semantic_node->addChild('shortname', TrackerSemanticContributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
         $semantic_node->addChild('label', dgettext('tuleap-tracker', 'Contributor/assignee'));
         $semantic_node->addChild('description', dgettext('tuleap-tracker', 'Define the contributor/assignee of an artifact'));
         $field_node = $semantic_node->addChild('field');

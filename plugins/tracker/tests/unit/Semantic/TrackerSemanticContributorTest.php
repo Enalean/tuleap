@@ -19,23 +19,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Semantic;
+namespace Tuleap\Tracker\Semantic\Contributor;
 
 use SimpleXMLElement;
-use Tracker_Semantic_Contributor;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_Semantic_Contributor $semantic;
+    private TrackerSemanticContributor $semantic;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->semantic = new Tracker_Semantic_Contributor(
+        $this->semantic = new TrackerSemanticContributor(
             TrackerTestBuilder::aTracker()->build(),
             ListFieldBuilder::aListField(102)->build(),
         );

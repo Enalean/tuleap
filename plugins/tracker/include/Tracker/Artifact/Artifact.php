@@ -74,7 +74,6 @@ use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_NoChangeException;
 use Tracker_Permission_PermissionChecker;
-use Tracker_Semantic_Contributor;
 use TrackerFactory;
 use trackerPlugin;
 use TransitionFactory;
@@ -158,6 +157,7 @@ use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
@@ -705,7 +705,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function getAssignedTo(PFUser $user)
     {
-        $assigned_to_field = Tracker_Semantic_Contributor::load($this->getTracker())->getField();
+        $assigned_to_field = TrackerSemanticContributor::load($this->getTracker())->getField();
         if ($assigned_to_field && $assigned_to_field->userCanRead($user) && $this->getLastChangeset()) {
             $field_value = $this->getLastChangeset()->getValue($assigned_to_field);
             if ($field_value) {

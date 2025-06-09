@@ -93,7 +93,7 @@ class TrackerPresenterCollectionBuilder
 
     private function getAssignToField(TaskboardTracker $taskboard_tracker, \PFUser $user): ?AssignedToFieldPresenter
     {
-        $field_contributor = \Tracker_Semantic_Contributor::load($taskboard_tracker->getTracker())->getField();
+        $field_contributor = \Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor::load($taskboard_tracker->getTracker())->getField();
 
         return ($field_contributor !== null && $field_contributor->userCanUpdate($user))
             ? new AssignedToFieldPresenter($field_contributor)

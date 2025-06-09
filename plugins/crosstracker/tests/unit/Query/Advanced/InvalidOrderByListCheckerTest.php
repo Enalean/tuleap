@@ -24,10 +24,10 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 
 use LogicException;
 use Tracker_FormElement_Field_List;
-use Tracker_Semantic_ContributorFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
@@ -49,7 +49,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
     {
         $checker = new InvalidOrderByListChecker(
             new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
-            new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
+            new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
         );
         self::expectException(LogicException::class);
         $checker->metadataListIsSortable(new Metadata('title'), [TrackerTestBuilder::aTracker()->build()]);
@@ -69,7 +69,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
     {
         $checker = new InvalidOrderByListChecker(
             new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
-            new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
+            new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
         );
         $tracker = TrackerTestBuilder::aTracker()->withId(45)->build();
         TrackerSemanticStatus::setInstance(

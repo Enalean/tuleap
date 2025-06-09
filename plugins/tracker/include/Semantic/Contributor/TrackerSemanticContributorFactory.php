@@ -1,27 +1,34 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Semantic\IDuplicateSemantic;
-use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+namespace Tuleap\Tracker\Semantic\Contributor;
 
-class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDuplicateSemantic
+use SimpleXMLElement;
+use Tracker;
+use Tracker_Semantic;
+use Tracker_Semantic_ContributorDao;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+
+class TrackerSemanticContributorFactory implements IBuildSemanticFromXML, IDuplicateSemantic
 {
     /**
      * Hold an instance of the class
@@ -32,7 +39,7 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
     /**
      * The singleton method
      *
-     * @return Tracker_Semantic_ContributorFactory an instance of the factory
+     * @return TrackerSemanticContributorFactory an instance of the factory
      */
     public static function instance()
     {
@@ -45,7 +52,7 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
 
     public function getByTracker(Tracker $tracker)
     {
-        return Tracker_Semantic_Contributor::load($tracker);
+        return TrackerSemanticContributor::load($tracker);
     }
 
     public function getInstanceFromXML(
@@ -61,7 +68,7 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
             return null;
         }
         $field = $xml_mapping[(string) $xml_field_attributes['REF']];
-        return new Tracker_Semantic_Contributor($tracker, $field);
+        return new TrackerSemanticContributor($tracker, $field);
     }
 
     /**

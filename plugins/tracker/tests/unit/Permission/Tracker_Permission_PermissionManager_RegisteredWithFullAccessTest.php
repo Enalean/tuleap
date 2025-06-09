@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -67,8 +68,8 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
         $project = ProjectTestBuilder::aProject()->withId(34)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(112)->withProject($project)->build();
 
-        Tracker_Semantic_Contributor::setInstance(
-            new Tracker_Semantic_Contributor($tracker, null),
+        TrackerSemanticContributor::setInstance(
+            new TrackerSemanticContributor($tracker, null),
             $tracker,
         );
 
@@ -83,7 +84,7 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
 
     protected function tearDown(): void
     {
-        Tracker_Semantic_Contributor::clearInstances();
+        TrackerSemanticContributor::clearInstances();
     }
 
     public function testItWarnsWhenRegisteredHaveFullAccess(): void

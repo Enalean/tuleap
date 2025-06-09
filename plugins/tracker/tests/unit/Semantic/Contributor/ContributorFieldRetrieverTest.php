@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Contributor;
 
-use Tracker_Semantic_Contributor;
-use Tracker_Semantic_ContributorFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -33,18 +31,18 @@ final class ContributorFieldRetrieverTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Tracker_Semantic_Contributor::clearInstances();
+        TrackerSemanticContributor::clearInstances();
     }
 
     public function testItRetrieveFieldGivenByFactory(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->build();
         $field   = ListFieldBuilder::aListField(103)->build();
-        Tracker_Semantic_Contributor::setInstance(
-            new Tracker_Semantic_Contributor($tracker, $field),
+        TrackerSemanticContributor::setInstance(
+            new TrackerSemanticContributor($tracker, $field),
             $tracker,
         );
-        $retriever = new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance());
+        $retriever = new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance());
         self::assertSame($field, $retriever->getContributorField($tracker));
     }
 }

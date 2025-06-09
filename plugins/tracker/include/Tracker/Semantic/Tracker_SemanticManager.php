@@ -24,6 +24,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
@@ -202,7 +203,7 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
             TrackerSemanticStatus::NAME,
             SemanticDone::load($this->tracker)
         );
-        $semantics->add(Tracker_Semantic_Contributor::load($this->tracker));
+        $semantics->add(TrackerSemanticContributor::load($this->tracker));
 
         $semantic_timeframe    = SemanticTimeframeBuilder::build()->getSemantic($this->tracker);
         $semantic_progress_dao = new SemanticProgressDao();

@@ -24,11 +24,10 @@ namespace Tuleap\Tracker\Semantic\Contributor;
 
 use Tracker;
 use Tracker_FormElement_Field_List;
-use Tracker_Semantic_ContributorFactory;
 
 final readonly class ContributorFieldRetriever implements RetrieveContributorField
 {
-    public function __construct(private Tracker_Semantic_ContributorFactory $factory)
+    public function __construct(private TrackerSemanticContributorFactory $factory)
     {
     }
 
