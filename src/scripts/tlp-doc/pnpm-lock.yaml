@@ -11,6 +11,9 @@ overrides:
   is-generator-function: npm:@nolyfill/is-generator-function@^1
 
 dependencies:
+  '@storybook/components':
+    specifier: ^8.6.14
+    version: 8.6.14(storybook@8.6.4)
   '@storybook/test':
     specifier: ^8.6.4
     version: 8.6.4(storybook@8.6.4)
@@ -41,6 +44,9 @@ dependencies:
   '@tuleap/prose-mirror-editor-toolbar':
     specifier: workspace:^
     version: link:../../../lib/frontend/prose-mirror-editor-toolbar
+  '@tuleap/svg-arrow-path':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/svg-arrow-path
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../tlp
@@ -645,6 +651,14 @@ packages:
       storybook: 8.6.4
       ts-dedent: 2.2.0
     dev: true
+
+  /@storybook/components@8.6.14(storybook@8.6.4):
+    resolution: {integrity: sha512-HNR2mC5I4Z5ek8kTrVZlIY/B8gJGs5b3XdZPBPBopTIN6U/YHXiDyOjY3JlaS4fSG1fVhp/Qp1TpMn1w/9m1pw==}
+    peerDependencies:
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+    dependencies:
+      storybook: 8.6.4
+    dev: false
 
   /@storybook/components@8.6.4(storybook@8.6.4):
     resolution: {integrity: sha512-91VEVFWOgHkEFoNFMk6gs1AuOE9Yp7N283BXQOW+AgP+atpzED6t/fIBPGqJ2ewAuzLJ+cFOrasSzoNwVfg3Jg==}

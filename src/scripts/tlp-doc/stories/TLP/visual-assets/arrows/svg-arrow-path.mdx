@@ -1,0 +1,46 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import { SyntaxHighlighter } from '@storybook/components';
+
+import * as Story from "./svg-arrow-path.stories.ts";
+
+<Meta of={Story}/>
+
+# Arrows
+
+Arrows are used in roadmap or in cross tracker search to display links between artifacts.
+
+There are 4 methods that provide the SVG path to draw an arrow:
+
+* `getDownRightArrow()`
+* `getDownLeftArrow()`
+* `getUpRightArrow()`
+* `getUpLeftArrow()`
+
+The returned value of each method is a string like `"M17 17 L25 17 Q33 17, […] L54 82"` that can be given as `d` attribute of `path` element:
+
+<SyntaxHighlighter language="css" copyable={false}>
+  {`
+    <path
+        stroke-width="1.5px"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+        fill="none"
+        stroke="#1593c4"
+        d="M17 17 L25 17 Q33 17, 33 25 L33 69 Q33 77, 41 77 L59 77 L54 72 M59 77 L54 82" />
+  `}
+</SyntaxHighlighter>
+
+This will give the following:
+
+<svg height="94" width="76">
+    <path stroke-width="1.5px" stroke-linejoin="round" stroke-linecap="round" fill="none" stroke="#1593c4" d="M17 17 L25 17 Q33 17, 33 25 L33 69 Q33 77, 41 77
+    L59 77
+    L54 72
+    M59 77
+    L54 82"></path>
+</svg>
+
+Below is a showcase of arrows with containers in different width to see how it fits well.
+It is useful to check that everything is still smooth if we need to change the computation constant (gap, radius, …).
+
+<Canvas withToolbar={false} of={Story.SvgArrowPath} sourceState="none"></Canvas>
