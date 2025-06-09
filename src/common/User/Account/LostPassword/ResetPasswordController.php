@@ -49,10 +49,10 @@ final class ResetPasswordController implements DispatchableWithRequestNoAuthz, D
     ) {
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $confirm_hash = new ConcealedString(
-            $request->get('confirm_hash') === false ? '' : $request->get('confirm_hash')
+            $request->valid(new \Valid_String('confirm_hash')) === false ? '' : $request->get('confirm_hash')
         );
 
         $this->user_retriever
