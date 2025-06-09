@@ -31,7 +31,6 @@ import type {
     FileChangesetValue,
     LastUpdateByChangesetValue,
     ListFieldStructure,
-    ListLikeFieldStructure,
     NumericChangesetValue,
     OpenListChangesetValue,
     OpenListFieldStructure,
@@ -277,7 +276,6 @@ type StructureFieldsWithoutUnusedProperties =
     | UnknownFieldStructure
     | Pick<DateFieldStructure, "field_id" | "type" | "is_time_displayed">
     | Pick<ContainerFieldStructure, "field_id" | "type" | "label">
-    | Pick<ListLikeFieldStructure, "field_id" | "type">
     | Pick<ListFieldStructure, "field_id" | "type">
     | Pick<OpenListFieldStructure, "field_id" | "type">
     | Pick<PermissionsOnArtifactFieldStructure, "field_id" | "type" | "values">

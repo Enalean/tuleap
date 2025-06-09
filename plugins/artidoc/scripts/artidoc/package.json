@@ -17,6 +17,7 @@
     "@tuleap/lazybox": "workspace:^",
     "@tuleap/list-picker": "workspace:^",
     "@tuleap/option": "workspace:^",
+    "@tuleap/plugin-tracker-constants": "workspace:^",
     "@tuleap/print-as-pdf": "workspace:^",
     "@tuleap/project-background": "workspace:^",
     "@tuleap/prose-mirror-editor": "workspace:^",

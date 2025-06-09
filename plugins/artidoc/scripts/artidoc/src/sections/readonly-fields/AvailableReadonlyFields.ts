@@ -20,7 +20,15 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { getTracker } from "@/helpers/rest-querier";
-import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    StructureFields,
+    TrackerResponseNoInstance,
+} from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    STRING_FIELD,
+    USER_GROUP_LIST_FIELD,
+} from "@/sections/readonly-fields/ReadonlyFields";
+import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
 export type TrackerForFields = Pick<TrackerResponseNoInstance, "fields" | "semantics">;
 
@@ -29,7 +37,7 @@ export const DISPLAY_TYPE_COLUMN: ConfigurationFieldDisplayType = "column";
 export const DISPLAY_TYPE_BLOCK: ConfigurationFieldDisplayType = "block";
 
 export type ConfigurationField = {
-    readonly type: "string";
+    readonly type: typeof STRING_FIELD | typeof USER_GROUP_LIST_FIELD;
     readonly field_id: number;
     readonly label: string;
     display_type: ConfigurationFieldDisplayType;
@@ -40,23 +48,28 @@ export const getAvailableFields = (
     selected_fields: ConfigurationField[],
 ): ResultAsync<ConfigurationField[], Fault> => {
     return getTracker(tracker_id).map((tracker): ConfigurationField[] => {
-        const string_fields = getStringFields(tracker.fields);
-        const available_string_fields = ignoreSemanticsTitle(tracker, string_fields);
-        return ignoreAlreadySelectedFields(available_string_fields, selected_fields);
+        const supported_fields = getSupportedFields(tracker.fields);
+
+        return filterAlreadySelectedFields(
+            filterSemanticTitleBoundField(tracker, supported_fields),
+            selected_fields,
+        );
     });
 };
 
-export function getStringFields(all_fields: TrackerForFields["fields"]): ConfigurationField[] {
-    const string_fields: ConfigurationField[] = [];
+export function getSupportedFields(
+    all_fields: ReadonlyArray<StructureFields>,
+): ConfigurationField[] {
+    const supported_fields: ConfigurationField[] = [];
     all_fields.forEach((field) => {
-        if (field.type === "string") {
-            string_fields.push({ ...field, display_type: "column" });
-        }
+        ConfigurationFieldBuilder.fromTrackerField(field).apply((configuration_field) =>
+            supported_fields.push(configuration_field),
+        );
     });
-    return string_fields;
+    return supported_fields;
 }
 
-export function ignoreSemanticsTitle(
+export function filterSemanticTitleBoundField(
     tracker: TrackerForFields,
     string_fields: ConfigurationField[],
 ): ConfigurationField[] {
@@ -64,7 +77,7 @@ export function ignoreSemanticsTitle(
     return string_fields.filter((field) => field.field_id !== title_field_id);
 }
 
-export function ignoreAlreadySelectedFields(
+export function filterAlreadySelectedFields(
     available_fields: ConfigurationField[],
     selected_fields: ConfigurationField[],
 ): ConfigurationField[] {

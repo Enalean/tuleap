@@ -17,79 +17,168 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
-    ignoreAlreadySelectedFields,
-    getStringFields,
-    ignoreSemanticsTitle,
+    filterAlreadySelectedFields,
+    getSupportedFields,
+    filterSemanticTitleBoundField,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
-import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
+import {
+    STRING_FIELD as TRACKER_STRING_FIELD,
+    SELECTBOX_FIELD,
+    MULTI_SELECTBOX_FIELD,
+    OPEN_LIST_FIELD,
+    CONTAINER_COLUMN,
+    LIST_BIND_UGROUPS,
+    LIST_BIND_STATIC,
+    LIST_BIND_USERS,
+    CHECKBOX_FIELD,
+} from "@tuleap/plugin-tracker-constants";
+import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
 describe("getAvailableFields", () => {
     const title_field_id = 599;
 
-    const field_summary = ConfigurationFieldStub.withFieldId(title_field_id);
-    const field_string = ConfigurationFieldStub.withFieldId(602);
+    const string_field = {
+        field_id: 123,
+        type: TRACKER_STRING_FIELD,
+        label: "String field",
+    } as StructureFields;
 
-    const field_other = {
-        field_id: 591,
-        label: "Access information left column",
-        type: "column",
+    const summary_field = {
+        field_id: title_field_id,
+        type: TRACKER_STRING_FIELD,
+        label: "Summary",
+    } as StructureFields;
+
+    const user_group_list_field = {
+        field_id: 125,
+        type: SELECTBOX_FIELD,
+        label: "User group",
+        bindings: { type: LIST_BIND_UGROUPS },
+    } as StructureFields;
+
+    const static_value_list_field = {
+        field_id: 126,
+        type: SELECTBOX_FIELD,
+        label: "Static value",
+        bindings: { type: LIST_BIND_STATIC },
+    } as StructureFields;
+
+    const user_value_list_field = {
+        field_id: 127,
+        type: SELECTBOX_FIELD,
+        label: "Assignee",
+        bindings: { type: LIST_BIND_USERS },
+    } as StructureFields;
+
+    const multi_user_groups_list_field = {
+        field_id: 128,
+        type: MULTI_SELECTBOX_FIELD,
+        label: "User groups",
+        bindings: { type: LIST_BIND_UGROUPS },
+    } as StructureFields;
+
+    const user_groups_open_list_field = {
+        field_id: 129,
+        type: OPEN_LIST_FIELD,
+        label: "Open user groups",
+        bindings: { type: LIST_BIND_UGROUPS },
+    } as StructureFields;
+
+    const user_groups_checkbox_field = {
+        field_id: 130,
+        type: CHECKBOX_FIELD,
+        label: "Checkbox user groups",
+        bindings: { type: LIST_BIND_UGROUPS },
+    } as unknown as StructureFields;
+
+    const user_groups_radio_button_field = {
+        field_id: 130,
+        type: CHECKBOX_FIELD,
+        label: "Checkbox user groups",
+        bindings: { type: LIST_BIND_UGROUPS },
+    } as unknown as StructureFields;
+
+    const all_fields: Readonly<StructureFields[]> = [
+        string_field,
+        summary_field,
+        user_group_list_field,
+        static_value_list_field,
+        user_value_list_field,
+        multi_user_groups_list_field,
+        user_groups_open_list_field,
+        user_groups_checkbox_field,
+        user_groups_radio_button_field,
+        {
+            field_id: 591,
+            label: "Access information left column",
+            type: CONTAINER_COLUMN,
+        } as StructureFields,
+    ];
+
+    const tracker_information = {
+        fields: all_fields,
+        semantics: { title: { field_id: title_field_id } },
     };
 
-    const semantics = { title: { field_id: title_field_id } };
-    const all_fields = [field_summary, field_string, field_other] as StructureFields[];
-    const string_fields = [field_summary, field_string];
+    describe("getSupportedFields", () => {
+        it("Given a tracker, then it should return a collection of supported ConfigurationFields", () => {
+            const supported_fields = getSupportedFields(all_fields);
 
-    const tracker_information = { fields: all_fields, semantics };
-
-    describe("getStringFields", () => {
-        it("should return only the string fields of a field list", () => {
-            const string_fields = getStringFields(all_fields);
-
-            expect(string_fields).toStrictEqual([field_summary, field_string]);
+            expect(supported_fields).toStrictEqual([
+                ConfigurationFieldBuilder.fromSupportedTrackerField(string_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(summary_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(user_group_list_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(multi_user_groups_list_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(user_groups_open_list_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(user_groups_checkbox_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(user_groups_radio_button_field),
+            ]);
         });
     });
 
-    describe("ignoreSemanticsTitle", () => {
-        it("should remove the semantics title of a field list", () => {
-            const available_fields = ignoreSemanticsTitle(tracker_information, string_fields);
+    describe("filterSemanticTitleBoundField", () => {
+        it("should remove the semantics title of a ConfigurationFields collection", () => {
+            const configuration_string_field =
+                ConfigurationFieldBuilder.fromSupportedTrackerField(string_field);
+            const available_fields = filterSemanticTitleBoundField(tracker_information, [
+                configuration_string_field,
+                ConfigurationFieldBuilder.fromSupportedTrackerField(summary_field),
+            ]);
 
-            expect(available_fields).toStrictEqual([field_string]);
+            expect(available_fields).toStrictEqual([configuration_string_field]);
         });
     });
 
-    describe("ignoreAlreadySelectedFields", () => {
-        const field_string_2 = ConfigurationFieldStub.withFieldId(603);
+    describe("filterAlreadySelectedFields", () => {
+        const selected_field_1 = ConfigurationFieldBuilder.fromSupportedTrackerField(string_field);
+        const selected_field_2 =
+            ConfigurationFieldBuilder.fromSupportedTrackerField(user_group_list_field);
 
-        let string_fields: ConfigurationField[];
+        const available_fields = [selected_field_1, selected_field_2];
         let selected_fields: ConfigurationField[];
 
-        beforeEach(() => {
-            string_fields = [field_string, field_string_2];
-            selected_fields = [];
-        });
-
         it("should return all available fields if no field is selected", () => {
-            const available_fields = ignoreAlreadySelectedFields(string_fields, selected_fields);
+            const fields = filterAlreadySelectedFields(available_fields, []);
 
-            expect(available_fields).toStrictEqual(string_fields);
+            expect(fields).toStrictEqual([selected_field_1, selected_field_2]);
         });
 
-        it("should return available fields without the selected fields if there is selected fields", () => {
-            selected_fields = [field_string];
-            const available_fields = ignoreAlreadySelectedFields(string_fields, selected_fields);
+        it("should return available fields without the selected fields if there are selected fields", () => {
+            selected_fields = [selected_field_1];
+            const fields = filterAlreadySelectedFields(available_fields, selected_fields);
 
-            expect(available_fields).toStrictEqual([field_string_2]);
+            expect(fields).toStrictEqual([selected_field_2]);
         });
 
         it("should return no available fields if all fields are selected", () => {
-            selected_fields = [field_string_2, field_string];
-            const available_fields = ignoreAlreadySelectedFields(string_fields, selected_fields);
+            selected_fields = [selected_field_1, selected_field_2];
+            const fields = filterAlreadySelectedFields(available_fields, selected_fields);
 
-            expect(available_fields).toStrictEqual([]);
+            expect(fields).toStrictEqual([]);
         });
     });
 });
