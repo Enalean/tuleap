@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@storybook/components": "^8.6.14",
     "@storybook/test": "^8.6.4",
     "@tuleap/core-constants": "workspace:*",
     "@tuleap/filter-inline-table": "workspace:^",
@@ -15,6 +16,7 @@
     "@tuleap/plugin-tracker-constants": "workspace:^",
     "@tuleap/plugin-tracker-link-field": "workspace:^",
     "@tuleap/prose-mirror-editor-toolbar": "workspace:^",
+    "@tuleap/svg-arrow-path": "workspace:^",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
     "@tuleap/tlp-date-picker": "workspace:^",

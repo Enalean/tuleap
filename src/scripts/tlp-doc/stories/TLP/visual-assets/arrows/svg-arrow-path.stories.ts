@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Meta, StoryObj } from "@storybook/web-components";
+
 import {
     gap,
     getDownLeftArrow,
@@ -24,9 +26,10 @@ import {
     getUpLeftArrow,
     getUpRightArrow,
 } from "@tuleap/svg-arrow-path";
-import type { SVGTemplateResult } from "lit-html";
-import { html, svg, render } from "lit-html";
-import { Styles } from "../helpers/styles";
+import type { SVGTemplateResult } from "lit";
+import { html, svg } from "lit";
+
+type SvgArrowPath = Record<string, never>;
 
 function getExampleSvg(
     width: number,
@@ -73,6 +76,7 @@ function getExampleSvg(
 const height = 60;
 const max_width = 60;
 const step = 2;
+const TASK_HEIGHT_IN_PX = 42;
 
 const theme_color = "#1593c4";
 const danger_color = "#da5353";
@@ -84,23 +88,34 @@ const content = [
     { title: "Up left arrows", color: danger_color, callback: getUpLeftArrow },
 ].reduce(
     (previous, { title, color, callback }) => {
-        let content = html`
-            ${previous}
-            <h1>${title}</h1>
-        `;
+        let content = html``;
         for (let width = 0; width < max_width; width += step) {
             content = html`${content}${getExampleSvg(
                 width,
                 height,
-                Styles.TASK_HEIGHT_IN_PX,
+                TASK_HEIGHT_IN_PX,
                 color,
                 callback,
             )}`;
         }
 
-        return content;
+        return html`
+            ${previous}
+            <h1>${title}</h1>
+            <p>${content}</p>
+        `;
     },
     html``,
 );
 
-render(content, document.body);
+const meta: Meta<SvgArrowPath> = {
+    title: "TLP/Visual assets/Arrows",
+    render: () => {
+        return content;
+    },
+};
+
+export default meta;
+type Story = StoryObj<SvgArrowPath>;
+
+export const SvgArrowPath: Story = {};

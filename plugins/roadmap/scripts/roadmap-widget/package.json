@@ -14,7 +14,6 @@
     "@tuleap/vue2-gettext-composition-helper": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "@vueuse/core": "^8.7.3",
-    "lit-html": "^2.8.0",
     "luxon": "^3.4.4",
     "vue": "2.7.8",
     "vuex": "^3.6.2",
@@ -37,7 +36,6 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest",
-    "dev:serve-arrows": "cd src/dev-arrows/ && vite serve",
     "typecheck": "vue-tsc --noEmit"
   }
 }
