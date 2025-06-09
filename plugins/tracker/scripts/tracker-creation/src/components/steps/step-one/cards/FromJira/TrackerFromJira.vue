@@ -34,7 +34,7 @@
             v-bind:disabled="should_be_disabled"
             v-if="should_display_connection"
         >
-            <span v-translate>Connect</span>
+            <span>{{ $gettext("Connect") }}</span>
             <i class="fa tlp-button-icon-right" v-bind:class="icon_class"></i>
         </button>
         <tracker-from-jira-project v-else-if="project_list" v-bind:project_list="project_list" />

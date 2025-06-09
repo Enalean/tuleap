@@ -17,13 +17,24 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="card-content" data-test="template-description">
-        <h4 class="card-title" v-translate>Trackers from template projects</h4>
+        <h4 class="card-title">
+            {{ $gettext("Trackers from template projects") }}
+        </h4>
         <div class="card-description">
-            <span class="card-description-content" v-translate>
-                Choose one tracker template among ones available in your platform.
+            <span class="card-description-content">
+                {{ $gettext("Choose one tracker template among ones available in your platform.") }}
             </span>
         </div>
     </div>
 </template>
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+
+@Component({
+    name: "TrackerTemplateCardDescription",
+})
+export default class TrackerTemplateCardDescription extends Vue {}
+</script>

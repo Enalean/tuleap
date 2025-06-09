@@ -20,14 +20,10 @@
 <template>
     <div>
         <nav class="tlp-wizard">
-            <router-link
-                v-bind:to="{ name: 'step-1' }"
-                class="tlp-wizard-step-previous"
-                v-translate
-            >
-                Template
+            <router-link v-bind:to="{ name: 'step-1' }" class="tlp-wizard-step-previous">
+                {{ $gettext("Template") }}
             </router-link>
-            <span class="tlp-wizard-step-current" v-translate>Information</span>
+            <span class="tlp-wizard-step-current">{{ $gettext("Information") }}</span>
         </nav>
 
         <step-label v-bind:step-label="$gettext('Give your tracker some basic info')" />

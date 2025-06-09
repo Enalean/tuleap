@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="tracker-creation-field-color">
-            <translate>Color</translate>
+            {{ $gettext("Color") }}
             <i class="fa fa-asterisk"></i>
         </label>
         <select

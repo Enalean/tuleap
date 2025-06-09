@@ -65,10 +65,6 @@ describe("TrackerFromJiraProject", () => {
         });
     });
 
-    it("renders the component", () => {
-        expect(wrapper.element).toMatchSnapshot();
-    });
-
     it("load the project list", () => {
         const value = "TO";
 

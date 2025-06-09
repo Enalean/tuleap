@@ -20,7 +20,7 @@
 
 <template>
     <a v-bind:href="url" class="tracker-creation-navigation-back-to-legacy">
-        <translate>I want to migrate a tracker v3</translate>
+        {{ $gettext("I want to migrate a tracker v3") }}
     </a>
 </template>
 <script lang="ts">

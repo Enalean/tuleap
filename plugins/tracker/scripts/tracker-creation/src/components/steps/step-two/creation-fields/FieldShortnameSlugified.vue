@@ -25,7 +25,7 @@
             for="tracker-shortname-slugified"
         >
             ↳&nbsp;
-            <translate>Tracker shortname:</translate>
+            {{ $gettext("Tracker shortname:") }}
             <span data-test="tracker-shortname-slugified" class="tracker-shortname-slugified">
                 {{ tracker_to_be_created.shortname }}
             </span>

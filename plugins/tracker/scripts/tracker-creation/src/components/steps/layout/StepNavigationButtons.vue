@@ -31,7 +31,9 @@
                 data-test="button-back"
             >
                 <i class="fas fa-long-arrow-alt-left"></i>
-                <span class="tracker-creation-previous-step-button-text" v-translate>Back</span>
+                <span class="tracker-creation-previous-step-button-text">
+                    {{ $gettext("Back") }}
+                </span>
             </router-link>
 
             <button
@@ -43,7 +45,7 @@
                 v-bind:disabled="!is_ready_for_step_2"
                 data-test="button-next"
             >
-                <translate>Next</translate>
+                {{ $gettext("Next") }}
                 <i
                     class="fa tlp-button-icon-right"
                     v-bind:class="{
@@ -63,7 +65,7 @@
                 v-bind:disabled="!is_ready_to_submit || has_form_been_submitted"
                 v-on:click="setCreationFormHasBeenSubmitted"
             >
-                <translate>Create my tracker</translate>
+                {{ $gettext("Create my tracker") }}
                 <i
                     class="tlp-button-icon-right fa"
                     v-bind:class="{

@@ -27,7 +27,7 @@
         v-else
     >
         <label class="tlp-label" for="tracker-shortname">
-            <translate>Shortname</translate>
+            {{ $gettext("Shortname") }}
             <i class="fa fa-asterisk"></i>
         </label>
         <input
@@ -44,7 +44,7 @@
         />
         <p class="tlp-text-info tracker-shortname-input-helper">
             <i class="far fa-fw fa-life-ring"></i>
-            <translate>Avoid spaces and punctuation</translate>
+            {{ $gettext("Avoid spaces and punctuation") }}
         </p>
         <p
             class="tlp-text-danger tracker-shortname-input-helper"
@@ -52,10 +52,11 @@
             v-if="!is_shortname_valid"
         >
             <i class="fa fa-fw fa-exclamation-circle"></i>
-            <translate>
-                The tracker shortname must have a length between 1 and 25 characters. It can only
-                contain alphanumerical characters and underscores.
-            </translate>
+            {{
+                $gettext(
+                    "The tracker shortname must have a length between 1 and 25 characters. It can only contain alphanumerical characters and underscores.",
+                )
+            }}
         </p>
         <p
             class="tlp-text-danger"
@@ -63,9 +64,11 @@
             v-if="is_shortname_already_used"
         >
             <i class="fa fa-fw fa-exclamation-circle"></i>
-            <translate>
-                The chosen shortname already exist in this project, please choose another one.
-            </translate>
+            {{
+                $gettext(
+                    "The chosen shortname already exist in this project, please choose another one.",
+                )
+            }}
         </p>
     </div>
 </template>

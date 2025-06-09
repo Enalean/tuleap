@@ -20,7 +20,7 @@
 <template>
     <div class="card-content">
         <div class="tlp-form-element">
-            <label class="tlp-label" for="project-selector" v-translate>Project</label>
+            <label class="tlp-label" for="project-selector">{{ $gettext("Project") }}</label>
             <select
                 data-test="project-select"
                 v-model="selected_project_model"
@@ -28,7 +28,9 @@
                 class="tlp-select"
                 id="project-selector"
             >
-                <option v-bind:value="null" disabled v-translate>Choose a project...</option>
+                <option v-bind:value="null" disabled>
+                    {{ $gettext("Choose a project...") }}
+                </option>
                 <option
                     v-for="project in available_projects"
                     v-bind:value="project"
@@ -47,7 +49,7 @@
                 'tlp-form-element-disabled': selected_project === null,
             }"
         >
-            <label class="tlp-label" for="template-selector" v-translate>Template</label>
+            <label class="tlp-label" for="template-selector">{{ $gettext("Template") }}</label>
             <select
                 data-test="project-tracker-select"
                 v-model="selected_tracker_model"
@@ -57,7 +59,9 @@
                 id="template-selector"
                 name="tracker-id-from-project"
             >
-                <option disabled v-bind:value="null" v-translate>Choose a tracker...</option>
+                <option disabled v-bind:value="null">
+                    {{ $gettext("Choose a tracker...") }}
+                </option>
                 <option
                     v-for="tracker in trackers_of_selected_project"
                     v-bind:value="tracker"

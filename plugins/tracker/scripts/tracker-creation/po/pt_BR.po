@@ -131,14 +131,12 @@ msgstr ""
 
 msgid ""
 "The tracker shortname must have a length between 1 and 25 characters. It can "
-"only\n"
-"            contain alphanumerical characters and underscores."
+"only contain alphanumerical characters and underscores."
 msgstr ""
 
 msgid ""
 "The tracker template you will select provides preconfigured fields, "
-"permissions,\n"
-"        workflow..."
+"permissions, workflow..."
 msgstr ""
 
 msgid "Tracker XML file"
