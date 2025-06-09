@@ -29,11 +29,13 @@
 
             <section class="tlp-pane-section">
                 <tracker-selection-introductory-text
-                    v-bind:configuration_helper="configuration_helper"
+                    v-bind:selected_tracker="new_selected_tracker"
                 />
                 <tracker-selection
-                    v-bind:configuration_helper="configuration_helper"
+                    v-bind:allowed_trackers="allowed_trackers"
+                    v-bind:selected_tracker="new_selected_tracker"
                     v-bind:is_tracker_selection_disabled="false"
+                    v-on:select-tracker="onSelectTracker"
                 />
             </section>
 
@@ -63,29 +65,54 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
+import { Option } from "@tuleap/option";
 import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import { TITLE } from "@/title-injection-key";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
-import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import type { Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
-const { $gettext, interpolate } = useGettext();
+const { $gettext } = useGettext();
 
 const title = strictInject(TITLE);
+const {
+    allowed_trackers,
+    error_message,
+    is_error,
+    is_saving,
+    saveTrackerConfiguration,
+    selected_tracker,
+} = strictInject(CONFIGURATION_STORE);
 
-const pane_title = interpolate($gettext("Configuration of %{ title }"), { title });
+const pane_title = $gettext("Configuration of %{ title }", { title });
 
-const configuration_helper = useConfigurationScreenHelper(strictInject(CONFIGURATION_STORE));
+const new_selected_tracker = ref<Option<Tracker>>(Option.fromNullable(selected_tracker.value));
 
-const { is_submit_button_disabled, submit_button_icon, is_error, error_message } =
-    configuration_helper;
+const is_submit_button_disabled = computed(
+    () =>
+        allowed_trackers.length === 0 ||
+        is_saving.value ||
+        new_selected_tracker.value.mapOr(
+            (tracker) => tracker.id === selected_tracker.value?.id,
+            false,
+        ),
+);
+
+const submit_button_icon = computed(() =>
+    is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
+);
 
 function onSubmit(event: Event): void {
     event.preventDefault();
-    configuration_helper.onSubmit();
+    new_selected_tracker.value.apply(saveTrackerConfiguration);
+}
+
+function onSelectTracker(tracker: Option<Tracker>): void {
+    new_selected_tracker.value = tracker;
 }
 </script>
 
