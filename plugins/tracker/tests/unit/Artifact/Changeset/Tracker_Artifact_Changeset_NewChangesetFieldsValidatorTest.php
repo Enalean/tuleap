@@ -147,7 +147,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
         $this->field3->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
         $this->factory->method('getUsedFields')
-                ->willReturn([$this->field1, $this->field2, $this->field3]);
+            ->willReturn([$this->field1, $this->field2, $this->field3]);
         $matcher = $this->exactly(3);
 
         $this->changeset->expects($matcher)->method('getValue')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -189,7 +189,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
         $this->field3->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
         $this->factory->method('getUsedFields')
-                ->willReturn([$this->field1, $this->field2, $this->field3]);
+            ->willReturn([$this->field1, $this->field2, $this->field3]);
         $matcher = $this->exactly(3);
 
         $this->changeset->expects($matcher)->method('getValue')->willReturnCallback(function (...$parameters) use ($matcher) {
@@ -237,7 +237,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
 
         $factory = $this->createMock(Tracker_FormElementFactory::class);
         $factory->method('getUsedFields')
-                ->willReturn([$artifact_link_field]);
+            ->willReturn([$artifact_link_field]);
 
         $new_changeset_fields_validator = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
             $factory,
@@ -246,6 +246,44 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
         );
 
         $user        = UserTestBuilder::aUser()->build();
+        $fields_data = [
+            '101' => ['new_values' => '184'],
+        ];
+        $context     = new ChangesetWithFieldsValidationContext(new ManualActionContext());
+        self::assertTrue(
+            $new_changeset_fields_validator->validate(
+                $this->artifact,
+                $user,
+                $fields_data,
+                $context
+            )
+        );
+    }
+
+    public function testItValidatesArtifactLinkFieldWhenNoChangesAndNoSubmitPermission(): void
+    {
+        $this->artifact_link_validator->expects($this->once())->method('isValid')->willReturn(true);
+
+        $user                = UserTestBuilder::aUser()->build();
+        $artifact_link_field = $this->createPartialMock(ArtifactLinkField::class, [
+            'getId', 'userCanUpdate', 'hasChanges', 'canEditReverseLinks',
+        ]);
+        $artifact_link_field->method('getId')->willReturn(101);
+        $artifact_link_field->expects($this->once())->method('canEditReverseLinks')->willReturn(true);
+        $artifact_link_field->expects($this->once())->method('hasChanges')->willReturn(false);
+        $artifact_link_field->expects($this->once())->method('userCanUpdate')->willReturn(false);
+
+        $this->changeset->method('getValue')->with($artifact_link_field)->willReturn($this->changeset_value1);
+
+        $factory = $this->createMock(Tracker_FormElementFactory::class);
+        $factory->method('getUsedFields')->willReturn([$artifact_link_field]);
+
+        $new_changeset_fields_validator = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+            $factory,
+            $this->artifact_link_validator,
+            $this->workflow_checker
+        );
+
         $fields_data = [
             '101' => ['new_values' => '184'],
         ];

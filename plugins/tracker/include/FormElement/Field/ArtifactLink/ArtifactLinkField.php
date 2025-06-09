@@ -1443,6 +1443,33 @@ class ArtifactLinkField extends Tracker_FormElement_Field
         return ! $this->has_errors;
     }
 
+    public function validateFieldWithPermissionsAndRequiredStatus(
+        Artifact $artifact,
+        $submitted_value,
+        PFUser $user,
+        ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        ?bool $is_submission = null,
+    ): bool {
+        if ($this->isNewFieldUpdatedWithoutChanges($is_submission, $last_changeset_value, $submitted_value, $artifact)) {
+            return parent::validateFieldWithPermissionsAndRequiredStatus($artifact, [], $user, $last_changeset_value, $is_submission);
+        }
+
+        return parent::validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $user, $last_changeset_value, $is_submission);
+    }
+
+    private function isNewFieldUpdatedWithoutChanges(
+        ?bool $is_submission,
+        ?Tracker_Artifact_ChangesetValue $last_changeset_value,
+        mixed $submitted_value,
+        Artifact $artifact,
+    ): bool {
+        return ! $is_submission &&
+               $this->canEditReverseLinks() &&
+               $last_changeset_value !== null &&
+               $submitted_value !== null &&
+               ! $this->hasChanges($artifact, $last_changeset_value, $submitted_value);
+    }
+
     /**
      * Validate a required field
      *
