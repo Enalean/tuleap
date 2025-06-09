@@ -78,7 +78,7 @@ const props = defineProps<{
     popover_element_id: string;
 }>();
 
-const bar = ref<HTMLElement | undefined>();
+const bar = ref<InstanceType<typeof TaskBar> | undefined>();
 const popover = ref<Popover | undefined>();
 
 const doesTextFitsIn = (width: number) =>
@@ -90,10 +90,10 @@ onMounted(() => {
     const popover_element = document.getElementById(props.popover_element_id);
     if (
         is_task_valid.value &&
-        bar.value instanceof HTMLElement &&
+        bar.value?.$el instanceof HTMLElement &&
         popover_element instanceof HTMLElement
     ) {
-        popover.value = createPopover(bar.value, popover_element, {
+        popover.value = createPopover(bar.value.$el, popover_element, {
             placement: "right-start",
             middleware: {
                 flip: {
