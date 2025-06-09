@@ -18,18 +18,20 @@
  *
  */
 
-import { beforeEach, describe, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SwitchToOldUI from "./SwitchToOldUI.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { RouteLocationNormalized } from "vue-router";
 import * as router from "vue-router";
+import type { Folder, RootState } from "../../type";
 
 vi.mock("vue-router");
 
 describe("SwitchToOldUI", () => {
-    let factory;
-    let current_folder = null;
+    let factory: () => VueWrapper<SwitchToOldUI>;
+    let current_folder: Folder | null = null;
 
     beforeEach(() => {
         factory = (): VueWrapper<SwitchToOldUI> => {
@@ -44,7 +46,7 @@ describe("SwitchToOldUI", () => {
                         },
                         state: {
                             current_folder,
-                        },
+                        } as unknown as RootState,
                     }),
                 },
             });
@@ -55,32 +57,39 @@ describe("SwitchToOldUI", () => {
         The user wants to switch to old UI from this folder
         Then he is redirected on the old UI into the good folder`, () => {
         vi.spyOn(router, "useRoute").mockReturnValue({
-            params: { name: "folder" },
-        });
+            name: "folder",
+            params: { item_id: "20" },
+        } as unknown as RouteLocationNormalized);
 
         const wrapper = factory();
-        wrapper.get("a").element.href = "/plugins/docman/?group_id=100&action=show&id=20";
+        expect(wrapper.get("a").element.href).toStrictEqual(
+            "http://localhost:3000/plugins/docman/?group_id=101&action=show&id=20",
+        );
     });
 
     it(`Given an user toggle the quick look of an item
         The user wants to switch to old UI
         Then he is redirected on the old UI into the current folder`, () => {
         vi.spyOn(router, "useRoute").mockReturnValue({
-            params: { name: "prview" },
-        });
-        current_folder = { id: 25 };
+            name: "preview",
+        } as unknown as RouteLocationNormalized);
+        current_folder = { id: 25 } as Folder;
 
         const wrapper = factory();
-        wrapper.get("a").element.href = "/plugins/docman/?group_id=100&action=show&id=25";
+        expect(wrapper.get("a").element.href).toStrictEqual(
+            "http://localhost:3000/plugins/docman/?group_id=101&action=show&id=25",
+        );
     });
 
     it(`Given an user who browse the root folder
         The user wants to switch to old UI
         Then he is redirected on the old UI into the root folder`, () => {
         vi.spyOn(router, "useRoute").mockReturnValue({
-            params: { name: "root_folder" },
-        });
+            name: "root_folder",
+        } as unknown as RouteLocationNormalized);
         const wrapper = factory();
-        wrapper.get("a").element.href = "/plugins/docman/?group_id=100";
+        expect(wrapper.get("a").element.href).toStrictEqual(
+            "http://localhost:3000/plugins/docman/?group_id=101",
+        );
     });
 });

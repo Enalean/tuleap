@@ -20,47 +20,50 @@
 <template>
     <div class="document-switch-to-docman">
         <a
-            v-bind:href="redirect_url"
+            v-bind:href="redirectUrl"
             class="document-switch-to-docman-link"
             data-test="document-switch-to-old-ui"
         >
             <i class="fa-solid fa-shuffle document-switch-to-docman-icon"></i>
-            <!--
-            -->
             {{ $gettext("Switch to old user interface") }}
         </a>
     </div>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
 import { useRoute } from "vue-router";
+import { computed } from "vue";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
+import type { RootState } from "../../type";
+import type { ConfigurationState } from "../../store/configuration";
 
-export default {
-    name: "SwitchToOldUI",
-    computed: {
-        ...mapState(["current_folder"]),
-        ...mapState("configuration", ["project_id"]),
-        redirect_url() {
-            const route = useRoute();
-            const encoded_project_id = encodeURIComponent(this.project_id);
-            if (route.name === "folder") {
-                return (
-                    "/plugins/docman/?group_id=" +
-                    encoded_project_id +
-                    "&action=show&id=" +
-                    encodeURIComponent(parseInt(this.$route.params.item_id, 10))
-                );
-            } else if (route.name === "preview" && this.current_folder) {
-                return (
-                    "/plugins/docman/?group_id=" +
-                    encoded_project_id +
-                    "&action=show&id=" +
-                    encodeURIComponent(parseInt(this.current_folder.id, 10))
-                );
-            }
-            return "/plugins/docman/?group_id=" + encoded_project_id;
-        },
-    },
-};
+const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
+
+const redirectUrl = computed(() => {
+    const route = useRoute();
+    const encoded_project_id = encodeURIComponent(project_id.value);
+    if (route.name === "folder") {
+        let item_id = route.params.item_id;
+        if (Array.isArray(item_id)) {
+            item_id = item_id.length > 0 ? item_id[0] : "";
+        }
+        return (
+            "/plugins/docman/?group_id=" +
+            encoded_project_id +
+            "&action=show&id=" +
+            encodeURIComponent(parseInt(item_id, 10))
+        );
+    } else if (route.name === "preview" && current_folder.value) {
+        return (
+            "/plugins/docman/?group_id=" +
+            encoded_project_id +
+            "&action=show&id=" +
+            encodeURIComponent(current_folder.value.id)
+        );
+    }
+    return "/plugins/docman/?group_id=" + encoded_project_id;
+});
 </script>
