@@ -17,36 +17,70 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import TaskBar from "./TaskBar.vue";
-import MilestoneBar from "./MilestoneBar.vue";
-import type { Task } from "../../../type";
 import { DateTime } from "luxon";
+import { shallowMount } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import type { Task } from "../../../type";
+import MilestoneBar from "./MilestoneBar.vue";
+import TaskBar from "./TaskBar.vue";
 
 describe("TaskBar", () => {
-    it("should adapt the width of the progress bar", async () => {
-        const task = {
+    let task: Task,
+        progress: number | null,
+        progress_error_message: string,
+        start: DateTime | null,
+        is_milestone: boolean,
+        width: number,
+        percentage: string | null,
+        is_text_displayed_inside_progress_bar: boolean,
+        is_text_displayed_outside_progress_bar: boolean,
+        is_text_displayed_outside_bar: boolean,
+        is_error_sign_displayed_outside_bar: boolean,
+        is_error_sign_displayed_inside_bar: boolean;
+
+    beforeEach(() => {
+        task = {} as Task;
+        progress = null;
+        progress_error_message = "";
+        start = DateTime.fromObject({ year: 2020, month: 4, day: 15 });
+        is_milestone = false;
+        width = 66;
+        percentage = "";
+        is_text_displayed_inside_progress_bar = false;
+        is_text_displayed_outside_progress_bar = false;
+        is_text_displayed_outside_bar = false;
+        is_error_sign_displayed_outside_bar = false;
+        is_error_sign_displayed_inside_bar = false;
+    });
+
+    function getWrapper(): Wrapper<Vue> {
+        task = {
             color_name: "acid-green",
-            progress: 0.4,
-            progress_error_message: "",
-            start: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
+            progress,
+            progress_error_message,
+            start,
             end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-            is_milestone: false,
+            is_milestone,
         } as Task;
 
-        const wrapper = shallowMount(TaskBar, {
+        return shallowMount(TaskBar, {
             propsData: {
                 task,
                 left: 42,
-                width: 66,
-                percentage: "40%",
-                is_text_displayed_inside_progress_bar: true,
-                is_text_displayed_outside_progress_bar: false,
-                is_text_displayed_outside_bar: false,
-                is_error_sign_displayed_outside_bar: false,
-                is_error_sign_displayed_inside_bar: false,
+                width,
+                percentage,
+                is_text_displayed_inside_progress_bar,
+                is_text_displayed_outside_progress_bar,
+                is_text_displayed_outside_bar,
+                is_error_sign_displayed_outside_bar,
+                is_error_sign_displayed_inside_bar,
             },
         });
+    }
+
+    it("should adapt the width of the progress bar", async () => {
+        progress = 0.4;
+        const wrapper = getWrapper();
 
         const progress_bar = wrapper.find("[data-test=progress]");
         expect((progress_bar.element as HTMLElement).style.width).toBe("40%");
@@ -56,109 +90,42 @@ describe("TaskBar", () => {
     });
 
     it("should display a full progress bar when the task does not have any progress", () => {
-        const wrapper = shallowMount(TaskBar, {
-            propsData: {
-                task: {
-                    color_name: "acid-green",
-                    progress: null,
-                    progress_error_message: "",
-                    start: DateTime.fromObject({ year: 2020, month: 4, day: 15 }),
-                    end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-                    is_milestone: false,
-                } as Task,
-                left: 42,
-                width: 66,
-                percentage: "",
-                is_text_displayed_inside_progress_bar: false,
-                is_text_displayed_outside_progress_bar: false,
-                is_text_displayed_outside_bar: false,
-                is_error_sign_displayed_outside_bar: false,
-                is_error_sign_displayed_inside_bar: false,
-            },
-        });
+        progress = null;
 
-        const progress_bar = wrapper.find("[data-test=progress]");
+        const progress_bar = getWrapper().find("[data-test=progress]");
         expect(progress_bar.element.getAttribute("style")).toBeFalsy();
     });
 
     it("Displays a milestone", () => {
-        const wrapper = shallowMount(TaskBar, {
-            propsData: {
-                task: {
-                    color_name: "acid-green",
-                    start: null,
-                    end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-                    progress_error_message: "",
-                    is_milestone: true,
-                } as Task,
-                left: 42,
-                width: 21,
-                percentage: "",
-                is_text_displayed_inside_progress_bar: false,
-                is_text_displayed_outside_progress_bar: false,
-                is_text_displayed_outside_bar: false,
-                is_error_sign_displayed_outside_bar: false,
-                is_error_sign_displayed_inside_bar: false,
-            },
-        });
+        start = null;
+        is_milestone = true;
+        width = 21;
 
-        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(true);
+        expect(getWrapper().findComponent(MilestoneBar).exists()).toBe(true);
     });
 
     describe("percentage", () => {
         it("should be displayed next to the progress bar if there are enough room", () => {
-            const wrapper = shallowMount(TaskBar, {
-                propsData: {
-                    task: {
-                        color_name: "acid-green",
-                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
-                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-                        progress: 0.42,
-                        progress_error_message: "",
-                        is_milestone: false,
-                    } as Task,
-                    left: 42,
-                    width: 100,
-                    percentage: "42%",
-                    is_text_displayed_inside_progress_bar: false,
-                    is_text_displayed_outside_progress_bar: true,
-                    is_text_displayed_outside_bar: false,
-                    is_error_sign_displayed_outside_bar: false,
-                    is_error_sign_displayed_inside_bar: false,
-                },
-            });
+            progress = 0.42;
+            width = 100;
+            percentage = "42%";
+            is_text_displayed_outside_progress_bar = true;
 
             expect(
-                wrapper
+                getWrapper()
                     .find("[data-test=container] > [data-test=bar] > [data-test=percentage]")
                     .text(),
             ).toBe("42%");
         });
 
         it("should be displayed inside the progress bar if there are not anymore enough room", () => {
-            const wrapper = shallowMount(TaskBar, {
-                propsData: {
-                    task: {
-                        color_name: "acid-green",
-                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
-                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-                        progress: 0.98,
-                        progress_error_message: "",
-                        is_milestone: false,
-                    } as Task,
-                    left: 42,
-                    width: 100,
-                    percentage: "98%",
-                    is_text_displayed_inside_progress_bar: true,
-                    is_text_displayed_outside_progress_bar: false,
-                    is_text_displayed_outside_bar: false,
-                    is_error_sign_displayed_outside_bar: false,
-                    is_error_sign_displayed_inside_bar: false,
-                },
-            });
+            progress = 0.98;
+            width = 100;
+            percentage = "98%";
+            is_text_displayed_inside_progress_bar = true;
 
             expect(
-                wrapper
+                getWrapper()
                     .find(
                         "[data-test=container] > [data-test=bar] > [data-test=progress] > [data-test=percentage]",
                     )
@@ -167,55 +134,29 @@ describe("TaskBar", () => {
         });
 
         it("should be displayed outside of the task bar if the latter is too small", () => {
-            const wrapper = shallowMount(TaskBar, {
-                propsData: {
-                    task: {
-                        color_name: "acid-green",
-                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
-                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-                        progress: 0.5,
-                        progress_error_message: "",
-                        is_milestone: false,
-                    } as Task,
-                    left: 42,
-                    width: 10,
-                    percentage: "50%",
-                    is_text_displayed_inside_progress_bar: false,
-                    is_text_displayed_outside_progress_bar: false,
-                    is_text_displayed_outside_bar: true,
-                    is_error_sign_displayed_outside_bar: false,
-                    is_error_sign_displayed_inside_bar: false,
-                },
-            });
+            progress = 0.5;
+            width = 10;
+            percentage = "50%";
+            is_text_displayed_outside_bar = true;
 
-            expect(wrapper.find("[data-test=container] > [data-test=percentage]").text()).toBe(
+            expect(getWrapper().find("[data-test=container] > [data-test=percentage]").text()).toBe(
                 "50%",
             );
         });
     });
 
     describe("progress in error", () => {
+        beforeEach(() => {
+            progress = null;
+            progress_error_message = "You fucked up!";
+            width = 10;
+            percentage = "50%";
+            is_text_displayed_outside_bar = true;
+        });
+
         it("should display the error sign inside the bar", () => {
-            const wrapper = shallowMount(TaskBar, {
-                propsData: {
-                    task: {
-                        color_name: "acid-green",
-                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
-                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-                        progress: null,
-                        progress_error_message: "You fucked up!",
-                        is_milestone: false,
-                    } as Task,
-                    left: 42,
-                    width: 10,
-                    percentage: "50%",
-                    is_text_displayed_inside_progress_bar: false,
-                    is_text_displayed_outside_progress_bar: false,
-                    is_text_displayed_outside_bar: true,
-                    is_error_sign_displayed_outside_bar: false,
-                    is_error_sign_displayed_inside_bar: true,
-                },
-            });
+            is_error_sign_displayed_inside_bar = true;
+            const wrapper = getWrapper();
 
             expect(
                 wrapper
@@ -231,26 +172,8 @@ describe("TaskBar", () => {
         });
 
         it("should display the error sign outside the bar", () => {
-            const wrapper = shallowMount(TaskBar, {
-                propsData: {
-                    task: {
-                        color_name: "acid-green",
-                        start: DateTime.fromObject({ year: 2020, month: 3, day: 20 }),
-                        end: DateTime.fromObject({ year: 2020, month: 4, day: 20 }),
-                        progress: null,
-                        progress_error_message: "You fucked up!",
-                        is_milestone: false,
-                    } as Task,
-                    left: 42,
-                    width: 10,
-                    percentage: "50%",
-                    is_text_displayed_inside_progress_bar: false,
-                    is_text_displayed_outside_progress_bar: false,
-                    is_text_displayed_outside_bar: true,
-                    is_error_sign_displayed_outside_bar: true,
-                    is_error_sign_displayed_inside_bar: false,
-                },
-            });
+            is_error_sign_displayed_outside_bar = true;
+            const wrapper = getWrapper();
 
             expect(
                 wrapper
