@@ -109,7 +109,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
             $this->tpl->assign('file', $this->params['file']);
         }
 
-        $filediff = new FileDiff(new BlobDataReader(), $this->project, $this->params['hashparent'], $this->params['hash']);
+        $filediff = new FileDiff(new BlobDataReader(), $this->project, $this->params['hashparent'] ?? '', $this->params['hash'] ?? '');
         $this->tpl->assign('filediff', $filediff);
 
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {

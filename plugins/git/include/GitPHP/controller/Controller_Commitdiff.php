@@ -111,7 +111,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
             /**
              * @psalm-taint-escape header
              */
-            $content_disposition_header = 'Content-disposition: attachment; filename="git-' . $this->params['hash'] . '.patch"';
+            $content_disposition_header = 'Content-disposition: attachment; filename="git-' . ($this->params['hash'] ?? '') . '.patch"';
             $this->headers[]            = $content_disposition_header;
             $this->headers[]            = 'X-Content-Type-Options: nosniff';
         }
